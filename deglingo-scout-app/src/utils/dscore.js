@@ -12,7 +12,7 @@ export function dScoreMatch(player, opp, isHome) {
   const f   = norm(p.l5, 25, 80);
   const lb  = p.l10 > p.l5 ? norm(p.l10, 30, 80) * 5 : 0;
   const aa  = norm(p.aa5, -5, 35);
-  const fl  = norm(p.floor, 15, 70);
+  const fl  = norm(p.min_15 ?? p.floor, 15, 70);
   const rg  = norm(p.regularite, 0, 100);
   const gb  = norm(p.ga_per_match || 0, 0, 0.8) * 6;
   const socle = f*13 + lb + aa*12 + fl*7 + rg*7 + gb;
@@ -48,5 +48,6 @@ export function dScoreMatch(player, opp, isHome) {
   const domBonus = isHome ? 5 : -3;
 
   const raw = socle + contexte + momentum + domBonus;
-  return Math.round(Math.max(p.floor / 100 * 55, Math.min(95, raw)));
+  const minScore = p.min_15 ?? p.floor;
+  return Math.round(Math.max(minScore / 100 * 55, Math.min(95, raw)));
 }

@@ -36,6 +36,8 @@ COMPETITIONS = {
 # Built from actual data - will be auto-completed by fuzzy matching
 TEAM_NAME_MAP = {
     # Ligue 1
+    "Lille OSC": "Lille",
+    "Racing Club de Lens": "Lens",
     "Paris Saint-Germain FC": "Paris Saint Germain",
     "Olympique de Marseille": "Marseille",
     "AS Monaco FC": "Monaco",
@@ -262,8 +264,18 @@ def fetch_next_matchday(comp_code, our_league):
         print(f"  ⚠️ Aucun match programmé")
         return []
 
-    # Find the nearest matchday
-    next_md = min(m["matchday"] for m in matches if m["matchday"])
+    # Find the nearest COMPLETE matchday (>= 5 matches, skip postponed single games)
+    from collections import Counter
+    md_counts = Counter(m["matchday"] for m in matches if m["matchday"])
+    sorted_mds = sorted(md_counts.keys())
+    next_md = None
+    for md in sorted_mds:
+        if md_counts[md] >= 5:
+            next_md = md
+            break
+    if next_md is None:
+        # Fallback: take the one with most matches
+        next_md = max(md_counts, key=md_counts.get) if md_counts else sorted_mds[0]
     md_matches = [m for m in matches if m["matchday"] == next_md]
 
     print(f"  ✅ Journée {next_md} — {len(md_matches)} matchs")

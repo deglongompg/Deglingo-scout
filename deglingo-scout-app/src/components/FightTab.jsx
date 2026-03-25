@@ -309,27 +309,50 @@ function genVerdict(p, opp, isHome, d) {
   const oppPpda = isHome ? (opp.ppda_ext || 12) : (opp.ppda_dom || 12);
   const oppXga = isHome ? (opp.xga_ext || 1.5) : (opp.xga_dom || 1.5);
   const oppXg = isHome ? (opp.xg_ext || 1.3) : (opp.xg_dom || 1.3);
-  const style = oppPpda >= 15 ? "Bloc bas" : oppPpda >= 12 ? "Équilibré" : "Pressing";
+  const lastName = p.name.split(" ").pop();
+  const sc = p.last_5 || [];
+  const l2 = sc.length >= 2 ? (sc[0] + sc[1]) / 2 : p.l5;
+  const es = p.l5 > 0 ? Math.round((l2 - p.l5) / p.l5 * 100) : 0;
+  const fl = p.min_15 ?? p.floor ?? 0;
   const haLabel = isHome ? "à domicile" : "en déplacement";
 
-  /* ── GK ── */
+  const formeTxt = es > 15 ? `${lastName} est en pleine forme (+${es}%).`
+    : es > 5 ? `${lastName} progresse (+${es}%).`
+    : es < -10 ? `${lastName} est en baisse (${es}%).`
+    : `${lastName} est régulier.`;
+
   if (p.position === "GK") {
-    const csChance = oppXg < 1.0 ? "élevée (>50%)" : oppXg < 1.3 ? "correcte (~35-45%)" : oppXg < 1.6 ? "moyenne (~25-35%)" : "faible (<25%)";
-    const csLabel = oppXg < 1.0 ? "Adversaire très peu dangereux" : oppXg < 1.3 ? "Adversaire peu offensif" : oppXg < 1.6 ? "Adversaire moyennement dangereux" : "Adversaire très offensif";
-    return `D-Score ${d}. L5=${p.l5}, AA5=${p.aa5}, Min=${p.min_15 ?? p.floor}. ${haLabel} face à ${opp.name}. Rég ${p.regularite}%. ` +
-      `${opp.name} ${isHome ? "en ext" : "à dom"}: xG=${oppXg.toFixed(2)} buts attendus/match. ${csLabel}. ` +
-      `Probabilité de Clean Sheet : ${csChance}. ${oppXg < 1.3 ? "Adversaire peu dangereux = gros potentiel CS + arrêts bonus." : oppXg < 1.6 ? "Adversaire modéré — CS possible si solide. Beaucoup d'arrêts potentiels." : "Adversaire offensif — CS difficile mais beaucoup d'arrêts attendus = AA élevé."} ` +
-      `D-Score ${d}${d >= 70 ? " — Top GK pick!" : d >= 60 ? " — Bon pick gardien." : d >= 50 ? " — Pick correct." : " — Pick risqué."}`;
+    const csChance = oppXg < 1.0 ? "très élevée (>50%)" : oppXg < 1.3 ? "correcte (35-45%)" : oppXg < 1.6 ? "moyenne (25-35%)" : "faible (<25%)";
+    return `${formeTxt} Il joue ${haLabel} face à ${opp.name}. ` +
+      `${opp.name} ${isHome ? "se déplace" : "reçoit"} et marque ${oppXg.toFixed(2)} buts attendus/match. ` +
+      `Probabilité de Clean Sheet : ${csChance}. ` +
+      `${oppXg < 1.3 ? "Attaque faible = gros potentiel CS + arrêts bonus." : oppXg < 1.6 ? "CS possible, beaucoup d'arrêts potentiels." : "CS difficile mais arrêts = AA élevé."} ` +
+      `D-Score ${d} — ${d >= 70 ? "Top GK pick !" : d >= 60 ? "Bon choix gardien." : d >= 50 ? "Pick correct." : "Pick risqué."}`;
   }
 
-  /* ── DEF / MIL / ATT (aligned with RecoTab) ── */
-  const situation = `D-Score ${d}. L5=${p.l5}, AA5=${p.aa5}, Min=${p.min_15 ?? p.floor}. ${haLabel} face à ${opp.name}. Rég ${p.regularite}%.`;
-  const adversaire = `${opp.name} ${isHome ? "en ext" : "à dom"}: xGA=${oppXga.toFixed(2)}, PPDA=${oppPpda.toFixed(1)} = ${style}.`;
-  const styleVerdict = p.aa5 >= 15
-    ? `AA élevé (${p.aa5}) = accumulation de points garantie. ${style === "Bloc bas" ? "Face au bloc bas, possession élevée = AA monster." : "Match ouvert = duels et actions."}`
-    : `Profil offensif. ${oppXga > 1.5 ? "Adversaire perméable (xGA " + oppXga.toFixed(2) + ") = occasions." : "Adversaire solide mais jouable."}`;
-  const conclusion = `D-Score ${d}${d >= 70 ? " — Top pick!" : d >= 60 ? " — Bon pick." : d >= 50 ? " — Pick correct." : " — Pick risqué."}`;
-  return `${situation} ${adversaire} ${styleVerdict} ${conclusion}`;
+  const oppDefTxt = oppXga > 1.6 ? `${opp.name} encaisse beaucoup (${oppXga.toFixed(2)} xGA) — défense poreuse.`
+    : oppXga > 1.3 ? `${opp.name} a une défense moyenne (${oppXga.toFixed(2)} xGA).`
+    : `${opp.name} est solide défensivement (${oppXga.toFixed(2)} xGA).`;
+  const oppStyleTxt = oppPpda >= 15 ? `${opp.name} joue en bloc bas — possession pour l'adversaire.`
+    : oppPpda >= 12 ? `${opp.name} joue de façon équilibrée.`
+    : `${opp.name} presse haut — espaces dans le dos.`;
+
+  let styleTxt;
+  if (p.position === "DEF") {
+    styleTxt = oppXga < 1.2 ? `CS très jouable. ${p.aa5 >= 18 ? `AA5 de ${Math.round(p.aa5)} = il monte et crée en plus.` : ""}`
+      : `CS incertain. ${p.aa5 >= 18 ? `Mais son AA5 (${Math.round(p.aa5)}) sécurise le score.` : ""}`;
+  } else if (p.position === "MIL") {
+    styleTxt = p.aa5 >= 15
+      ? `AA élevé (${Math.round(p.aa5)}) = points garantis. ${oppPpda >= 15 ? `Face au bloc bas de ${opp.name}, score monster possible.` : "Match ouvert = duels et actions."}`
+      : `${oppXga > 1.5 ? `${opp.name} est perméable — occasions à prendre.` : "Adversaire solide — miser sur la régularité."}`;
+  } else {
+    styleTxt = oppXga > 1.6 ? `Défense poreuse de ${opp.name} — contexte rêvé pour scorer.`
+      : oppXga > 1.3 ? `Des occasions à saisir face à ${opp.name}.`
+      : `${opp.name} défend bien — match compliqué.`;
+  }
+
+  return `${formeTxt} Il joue ${haLabel} face à ${opp.name}. ${oppDefTxt} ${oppStyleTxt} ${styleTxt} ` +
+    `Floor ${Math.round(fl)} pts. D-Score ${d} — ${d >= 70 ? "Top pick !" : d >= 60 ? "Bon choix." : d >= 50 ? "Pick correct." : "Pick risqué."}`;
 }
 
 /* ── Fight Animation ── */

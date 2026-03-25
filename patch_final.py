@@ -72,10 +72,12 @@ def fetch_player(slug):
     dom = [s["score"] for s in played if s.get("game",{}).get("homeTeam",{}).get("name")==club_p]
     ext = [s["score"] for s in played if s.get("game",{}).get("homeTeam",{}).get("name")!=club_p]
     apps = stats.get("appearances",len(played)); mins = stats.get("minutesPlayed",0) or 0
-    s5 = scores[:5] if len(scores)>=5 else scores; s15 = scores[:15]
+    s5 = scores[:5] if len(scores)>=5 else scores; s10 = scores[:10]; s15 = scores[:15]
     l5 = avg(scores[:5]) if len(scores)>=5 else avg(scores)
     aa5 = avg(aa_scores[:5]) if len(aa_scores)>=5 else avg(aa_scores)
     ab60 = sum(1 for s in s15 if s>60); reg = round(ab60/len(s15)*100,0) if s15 else 0
+    ab60_10 = sum(1 for s in s10 if s>60); reg10 = round(ab60_10/len(s10)*100,0) if s10 else 0
+    ds_above_10 = sum(1 for s in s10 if s>=75); ds10 = round(ds_above_10/len(s10)*100,0) if s10 else 0
 
     DEF={"won_tackle","clean_sheet_60","effective_clearance","blocked_scoring_attempt","tackle"}
     PAS={"accurate_pass","successful_final_third_passes","accurate_long_balls","long_pass_own_to_opp_success","adjusted_total_att_assist","big_chance_created"}
@@ -133,6 +135,8 @@ def fetch_player(slug):
         "l10":round(avg(scores[:10]),1) if len(scores)>=10 else round(avg(scores),1),
         "l15":round(avg(scores[:15]),1) if len(scores)>=15 else round(avg(scores),1),
         "last_5":[round(s,1) for s in scores[:5]],
+        "last_10":[round(s,1) for s in scores[:10]],
+        "reg10":reg10,"ds10":ds10,
         "aa2":round(avg(aa_scores[:2]),1),"aa5":round(aa5,1),
         "aa10":round(avg(aa_scores[:10]),1) if len(aa_scores)>=10 else round(avg(aa_scores),1),
         "ds_rate":0,"floor":round(min(s5),0),"ceiling":round(max(s5),0),

@@ -1,0 +1,280 @@
+======================================================================
+DEGLINGO SCOUT — RECLASSIFICATION V3
+Date: 2026-03-24 22:47
+======================================================================
+
+--- Ligue 1 (deglingo_ligue1_final.json) ---
+  Joueurs: 348 | Changements: 75
+  MIL Créateur → MIL Rotation: 14
+    - Matias Fernandez-Pardo
+    - Romain Faivre
+    - Pavel Šulc
+    - Benjamin Stambouli
+    - Tanguy Ndombélé
+    ... et 9 autres
+  ATT Finisseur → ATT Rotation: 12
+    - Gonçalo Ramos
+    - Mostafa Mohamed
+    - Lanroy Machine
+    - Julián Vignolo
+    - Giorgi Abuashvili
+    ... et 7 autres
+  ATT Finisseur → ATT Dribbleur: 6
+    - Ludovic Ajorque
+    - Bradley Barcola
+    - Folarin Balogun
+    - Elye Wahi
+    - Habib Diallo
+    ... et 1 autres
+  MIL Récup → MIL Rotation: 6
+    - Senny Mayulu
+    - Charles Vanhoutte
+    - Dermane Karim
+    - Julio Enciso
+    - Branco van den Boomen
+    ... et 1 autres
+  ATT Complet → ATT Rotation: 5
+    - Diego Moreira
+    - Arnaud Nordin
+    - Lassine Sinayoko
+    - Alimami Gory
+    - Enzo Koffi Vinette
+  MIL Rotation → MIL Récup: 5
+    - Aladji Bamba
+    - Simon Ebonog
+    - Mahdi Camara
+    - Morgan Sanson
+    - Geoffrey Kondogbia
+  MIL Récup → MIL GOAT: 4
+    - Lamine Camara
+    - Quentin Merlin
+    - Hugo Magnetti
+    - João Neves
+  ATT Finisseur → ATT Complet: 4
+    - Ousmane Dembélé
+    - Santiago Hidalgo
+    - Ansu Fati
+    - Ludovic Blas
+  MIL Créateur → MIL Relanceur: 3
+    - Aron Dønnum
+    - Adrien Thomasson
+    - Corentin Tolisso
+  MIL Récup → MIL B2B: 2
+    - Noah Cadiou
+    - Laurent Abergel
+  DEF Central → DEF Latéral: 2
+    - Lamine Sy
+    - Leonardo Balerdi
+  MIL Créateur → MIL GOAT: 2
+    - Valentin Rongier
+    - Mamadou Sangaré
+  MIL Relanceur → MIL GOAT: 1
+    - Vitinha
+  MIL Rotation → MIL GOAT: 1
+    - Nabil Bentaleb
+  MIL Dribbleur → MIL Relanceur: 1
+    - Przemysław Frankowski
+  MIL Récup → MIL Créateur: 1
+    - Warren Zaïre-Emery
+  MIL B2B → MIL Dribbleur: 1
+    - Ilan Kebbal
+  MIL Créateur → MIL Dribbleur: 1
+    - Sofiane Boufal
+  MIL Rotation → MIL Relanceur: 1
+    - Arthur Avom
+  ATT Complet → ATT Dribbleur: 1
+    - Moses Simon
+  ATT Complet → ATT Finisseur: 1
+    - Reda Khadra
+  ATT Complet → ATT Créateur: 1
+    - Wesley Saïd
+
+--- Premier League (deglingo_premier_league_final.json) ---
+  Joueurs: 351 | Changements: 143
+  MIL Créateur → MIL Rotation: 63
+    - David Brooks
+    - Alex Tóth
+    - Zubimendi
+    - Douglas Luiz
+    - Ross Barkley
+    ... et 58 autres
+  ATT Finisseur → ATT Dribbleur: 31
+    - Eli Junior Kroupi
+    - Leandro Trossard
+    - Noni Madueke
+    - Morgan Rogers
+    - Thiago
+    ... et 26 autres
+  MIL Créateur → MIL Récup: 17
+    - Tyler Adams
+    - Ryan Christie
+    - Lamare Bogarde
+    - Mats Wieffer
+    - Hannibal Mejbri
+    ... et 12 autres
+  ATT Finisseur → ATT Complet: 11
+    - Rayan
+    - Dango Ouattara
+    - Danny Welbeck
+    - Brennan Johnson
+    - Dwight McNeil
+    ... et 6 autres
+  MIL Créateur → MIL Relanceur: 7
+    - Pascal Gross
+    - Enzo Fernández
+    - Adam Wharton
+    - Daichi Kamada
+    - Florian Wirtz
+    ... et 2 autres
+  ATT Finisseur → ATT Créateur: 5
+    - Jadon Sancho
+    - Alejandro Garnacho
+    - Hugo Ekitike
+    - Jeremy Doku
+    - Bryan Mbeumo
+  MIL Créateur → MIL Dribbleur: 4
+    - Mikkel Damsgaard
+    - Kaoru Mitoma
+    - Habib Diarra
+    - Jeanricner Bellegarde
+  ATT Finisseur → ATT Rotation: 4
+    - Charalampos Kostoulas
+    - Wilson Odobert
+    - Callum Wilson
+    - Hwang Hee-Chan
+  MIL Créateur → MIL B2B: 1
+    - Anton Stach
+
+--- La Liga (deglingo_la_liga_final.json) ---
+  Joueurs: 375 | Changements: 155
+  MIL Créateur → MIL Rotation: 79
+    - Unai Gómez
+    - Eder García
+    - Mikel Vesga
+    - Álex Baena
+    - Dani Olmo
+    ... et 74 autres
+  ATT Finisseur → ATT Dribbleur: 30
+    - Gorka Guruzeta
+    - Williams
+    - Álex Berenguer
+    - Nicolás González
+    - Robert Lewandowski
+    ... et 25 autres
+  MIL Créateur → MIL Récup: 15
+    - Alejandro Rego
+    - Rodrigo Mendoza
+    - João Cardoso
+    - Obed Vargas
+    - Marc Bernal
+    ... et 10 autres
+  ATT Finisseur → ATT Complet: 11
+    - Ademola Lookman
+    - Lucas Cepeda
+    - Cyril Ngonge
+    - Tyrhys Dolan
+    - I.Romero
+    ... et 6 autres
+  ATT Finisseur → ATT Rotation: 6
+    - Nico Williams
+    - Yago Santiago
+    - Antoniu Roca
+    - Viktor Tsygankov
+    - Takuma Asano
+    ... et 1 autres
+  ATT Finisseur → ATT Créateur: 5
+    - Antoine Griezmann
+    - Germán Valera
+    - Bryan Gil
+    - Sergio Gómez
+    - Barrenetxea
+  MIL Créateur → MIL Relanceur: 4
+    - Koke
+    - Azzedine Ounahi
+    - Aimar
+    - Pablo Fornals
+  MIL Créateur → MIL Dribbleur: 2
+    - Oihan Sancet
+    - Olasagasti
+  MIL Dribbleur → MIL Récup: 1
+    - Febas
+  MIL B2B → MIL Relanceur: 1
+    - Federico Valverde
+  DEF Central → DEF Latéral: 1
+    - Álvaro Carreras
+
+--- Bundesliga (deglingo_bundesliga_final.json) ---
+  Joueurs: 345 | Changements: 139
+  MIL Créateur → MIL Rotation: 72
+    - Mert Kömür
+    - Anton Kade
+    - Kristijan Jakić
+    - Han-Noah Massengo
+    - Elvis Rexhbecaj
+    ... et 67 autres
+  ATT Finisseur → ATT Dribbleur: 22
+    - Christian Kofane
+    - Ibrahim Maza
+    - Ernest Poku
+    - Serge Gnabry
+    - Nicolas Jackson
+    ... et 17 autres
+  MIL Créateur → MIL Récup: 20
+    - Yannik Keitel
+    - Emre Can
+    - Jobe Bellingham
+    - Jens Castrop
+    - Yannik Engelhardt
+    ... et 15 autres
+  MIL Créateur → MIL Relanceur: 10
+    - Aleix García
+    - Konrad Laimer
+    - Lennart Karl
+    - Mario Götze
+    - Leon Avdullahu
+    ... et 5 autres
+  ATT Finisseur → ATT Rotation: 6
+    - Lucas Vázquez
+    - Alejo Sarco
+    - Rayan Philippe
+    - Robert Glatzel
+    - Ricky-Jade Jones
+    ... et 1 autres
+  ATT Finisseur → ATT Complet: 4
+    - Igor Matanović
+    - Fisnik Asllani
+    - Ragnar Ache
+    - Adam Daghim
+  MIL Créateur → MIL Dribbleur: 3
+    - Alexis Claude-Maurice
+    - Vincenzo Grifo
+    - Fábio Vieira
+  ATT Finisseur → ATT Créateur: 2
+    - Jean-Mattéo Bahoya
+    - Andrej Kramarić
+
+
+======================================================================
+RÉSUMÉ GLOBAL
+======================================================================
+Total joueurs: 1419
+Total changements: 512 (36.1%)
+
+Archétype             V1 (ancien) V3 (nouveau)    Delta
+----------------------------------------------------
+  ATT Complet                  22         44 +     22
+  ATT Créateur                  0         13 +     13
+  ATT Dribbleur                 5         95 +     90
+  ATT Finisseur               343        185    -158
+  ATT GOAT                      5          5       0
+  ATT Rotation                  0         33 +     33
+  DEF Central                 326        323      -3
+  DEF Latéral                 167        170 +      3
+  GK                           86         86       0
+  MIL B2B                       5          6 +      1
+  MIL Créateur                358         42    -316
+  MIL Dribbleur                 2         11 +      9
+  MIL GOAT                     18         26 +      8
+  MIL Relanceur                 4         30 +     26
+  MIL Rotation                 55        282 +    227
+  MIL Récup                    23         68 +     45

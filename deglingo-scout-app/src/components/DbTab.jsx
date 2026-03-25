@@ -150,23 +150,13 @@ export default function DbTab({ players, teams, fixtures, logos = {} }) {
         <div style={{ fontSize: 9, color: "rgba(255,255,255,0.4)", lineHeight: 1.5 }}>
           Socle (forme L5 + AA + floor + régularité) <span style={{ color: "rgba(255,255,255,0.15)" }}>×</span> Contexte (adversaire, PPDA, xGA, style de jeu) <span style={{ color: "rgba(255,255,255,0.15)" }}>×</span> Momentum (tendance L2, séries) <span style={{ color: "rgba(255,255,255,0.15)" }}>×</span> Dom/Ext
         </div>
-        <div style={{ display: "flex", gap: 14, marginTop: 6, alignItems: "center", fontSize: 9, color: "rgba(255,255,255,0.35)" }}>
+        <div style={{ display: "flex", gap: 14, marginTop: 6, alignItems: "center", fontSize: 9, color: "rgba(255,255,255,0.35)", flexWrap: "wrap" }}>
           <span>{filtered.length} joueurs</span>
           <span style={{ display: "inline-flex", alignItems: "center", gap: 3 }}>
             <span style={{ display: "inline-block", width: 10, height: 10, borderRadius: 3, background: "linear-gradient(135deg,#4ADE80,#22C55E)", boxShadow: "0 0 6px #4ADE80" }} />
-            L2 en explosion (+15 vs L5)
+            L2 explosion
           </span>
-          <span>Reg10 = % matchs &gt;60 sur L10</span>
-          <span>Titu10 = % titularisations sur L10</span>
-          <span style={{ color: "#A5B4FC" }}>L€</span><span> = Limited</span>
-          <span style={{ color: "#FBBF24" }}>R€</span><span> = Rare (in-season)</span>
-          <span>🏠 Dom · ✈️ Ext</span>
-          <span style={{ display: "inline-flex", gap: 4, alignItems: "center" }}>
-            <span style={{ color: "#EF4444" }}>●</span><span>0-39</span>
-            <span style={{ color: "#FBBF24" }}>●</span><span>40-59</span>
-            <span style={{ color: "#A3E635" }}>●</span><span>60-74</span>
-            <span style={{ color: "#4ADE80" }}>●</span><span>75+</span>
-          </span>
+          <span><span style={{ color: "#A5B4FC" }}>L€</span> Limited · <span style={{ color: "#FBBF24" }}>R€</span> Rare</span>
         </div>
       </div>
 

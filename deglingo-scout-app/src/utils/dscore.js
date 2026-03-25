@@ -1,3 +1,41 @@
+// Normalize name for fuzzy matching (remove accents, hyphens, dots, lowercase)
+function normName(s) {
+  return s.normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/[-.']/g, " ").replace(/\s+/g, " ").trim().toLowerCase();
+}
+
+// Find a team in the teams array by player club name (handles PSG/Bayern/etc mismatches)
+export function findTeam(teams, club) {
+  if (!teams || !club) return null;
+  // Direct includes (both directions)
+  let t = teams.find(t => club.includes(t.name) || t.name.includes(club));
+  if (t) return t;
+  // Normalized match
+  const nc = normName(club);
+  t = teams.find(t => { const nt = normName(t.name); return nc.includes(nt) || nt.includes(nc); });
+  if (t) return t;
+  // First 2 words match (avoids "Paris" matching "Paris FC" for "Paris Saint-Germain")
+  const words = nc.split(" ").slice(0, 2).join(" ");
+  if (words.length > 4) {
+    t = teams.find(t => normName(t.name).startsWith(words));
+    if (t) return t;
+  }
+  return null;
+}
+
+// League average xG for bookmaker-style lambda calculation
+const LG_AVG_XG = { PL: 1.51, L1: 1.49, Liga: 1.52, Bundes: 1.65 };
+
+// Clean Sheet probability (Poisson bookmaker method)
+// lambda = xGA_defender × xG_attacker / league_avg
+// P(CS) = e^(-lambda)
+export function csProb(defXga, oppXg, league) {
+  const avg = LG_AVG_XG[league] || 1.50;
+  const rawLambda = (defXga * oppXg) / avg;
+  // Clamp lambda [0.5, 2.0] → CS range ~13%-61% (matches bookmaker odds)
+  const lambda = Math.max(0.5, Math.min(2.0, rawLambda));
+  return Math.round(Math.exp(-lambda) * 100);
+}
+
 export function norm(v, lo, hi, inv = false) {
   if (hi === lo) return 0.5;
   let n = Math.max(0, Math.min(1, (v - lo) / (hi - lo)));

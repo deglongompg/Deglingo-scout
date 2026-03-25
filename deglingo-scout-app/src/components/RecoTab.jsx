@@ -1,6 +1,6 @@
 import { useState, useMemo } from "react";
 import { dsColor, dsBg, LEAGUE_FLAGS, LEAGUE_NAMES, POSITION_COLORS } from "../utils/colors";
-import { dScoreMatch } from "../utils/dscore";
+import { dScoreMatch, csProb, findTeam } from "../utils/dscore";
 
 const PC = POSITION_COLORS;
 
@@ -43,12 +43,15 @@ function genVerdict(p) {
   const tituTxt = p.titu_pct >= 90 ? "Titulaire indiscutable" : p.titu_pct >= 70 ? "Titulaire régulier" : p.titu_pct >= 50 ? "Temps de jeu partagé" : "Remplaçant fréquent — risque de ne pas jouer";
   const floorTxt = fl >= 55 ? `Son floor de ${Math.round(fl)} pts garantit une base solide même en soirée difficile.` : fl >= 40 ? `Son floor de ${Math.round(fl)} pts offre un filet de sécurité correct.` : `Attention : son floor est bas (${Math.round(fl)} pts), gros risque si soirée sans.`;
 
+  const defXga = p.playerTeam ? (p.isHome ? (p.playerTeam.xga_dom || 1.3) : (p.playerTeam.xga_ext || 1.5)) : 1.3;
+  const cs = csProb(defXga, oppXg, p.league);
+
   if (p.position === "GK") {
-    const csChance = oppXg < 1.0 ? "très élevée (>50%)" : oppXg < 1.3 ? "correcte (35-45%)" : oppXg < 1.6 ? "moyenne (25-35%)" : "faible (<25%)";
+    const csLabel = cs >= 45 ? "très élevée" : cs >= 30 ? "correcte" : cs >= 20 ? "moyenne" : "faible";
     return {
       situation: `${formeTxt} ${tituTxt} (${p.titu_pct}%). Il joue ${haLabel} face à ${p.oppName}.`,
-      adversaire: `${p.oppName} ${p.isHome ? "se déplace" : "reçoit"} et marque en moyenne ${oppXg.toFixed(2)} buts attendus par match (xG). ${oppXg < 1.0 ? "C'est une attaque très faible — peu de danger pour le gardien." : oppXg < 1.3 ? "Attaque modeste — le gardien devrait être tranquille." : oppXg < 1.6 ? "Attaque correcte — match ouvert, Clean Sheet pas garanti." : "Attaque dangereuse — il faudra beaucoup d'arrêts pour s'en sortir."}`,
-      style: `La probabilité de Clean Sheet est ${csChance}. ${oppXg < 1.3 ? "Contre une équipe aussi peu offensive, le bonus CS (+10 pts) est très jouable, et les arrêts bonus viendront en complément." : oppXg < 1.6 ? "Le CS reste possible si la défense tient. L'avantage : face à une attaque moyenne, il y aura des tirs à arrêter = bon potentiel All-Around." : "Le CS sera difficile à obtenir, mais la bonne nouvelle : beaucoup de tirs adverses = beaucoup d'arrêts = All-Around élevé qui compense."}`,
+      adversaire: `${p.oppName} ${p.isHome ? "se déplace" : "reçoit"} et marque en moyenne ${oppXg.toFixed(2)} buts attendus par match (xG). ${cs >= 45 ? "C'est une attaque très faible — peu de danger pour le gardien." : cs >= 30 ? "Attaque modeste — le gardien devrait être tranquille." : cs >= 20 ? "Attaque correcte — match ouvert, Clean Sheet pas garanti." : "Attaque dangereuse — il faudra beaucoup d'arrêts pour s'en sortir."}`,
+      style: `La probabilité de Clean Sheet est ${csLabel} (${cs}%). ${cs >= 30 ? "Contre une équipe aussi peu offensive, le bonus CS (+10 pts) est très jouable, et les arrêts bonus viendront en complément." : cs >= 20 ? "Le CS reste possible si la défense tient. L'avantage : face à une attaque moyenne, il y aura des tirs à arrêter = bon potentiel All-Around." : "Le CS sera difficile à obtenir, mais la bonne nouvelle : beaucoup de tirs adverses = beaucoup d'arrêts = All-Around élevé qui compense."}`,
       conclusion: `Avec un D-Score de ${p.ds}, ${lastName} est ${p.ds >= 70 ? "un top pick gardien cette semaine. Fonce !" : p.ds >= 60 ? "un bon choix en gardien. Contexte favorable." : p.ds >= 50 ? "un pick correct mais pas exceptionnel. Regarde les alternatives." : "un pick risqué. Il y a sûrement mieux cette semaine."}`,
     };
   }
@@ -64,10 +67,12 @@ function genVerdict(p) {
 
   // Style: expliquer l'impact sur le joueur
   let styleTxt;
+  const csDef = cs; // same CS% for DEF — already computed above with bookmaker formula
+
   if (p.position === "DEF") {
-    styleTxt = oppXga < 1.2 ? `Face à l'attaque faible de ${p.oppName}, le Clean Sheet est très jouable. ${p.aa5 >= 18 ? `En plus, avec un AA5 de ${Math.round(p.aa5)}, ${lastName} monte beaucoup et accumule des actions offensives — le combo CS + AA peut faire exploser le score.` : `Le bonus CS (+10 pts) peut faire une grosse différence.`}`
-      : oppXga < 1.5 ? `${p.oppName} a une attaque moyenne — le CS est possible mais pas garanti. ${p.aa5 >= 18 ? `L'atout de ${lastName}, c'est son All-Around très élevé (${Math.round(p.aa5)}) qui sécurise le score même sans CS.` : `Il faudra compter sur la solidité défensive.`}`
-      : `${p.oppName} est une équipe offensive — CS difficile. ${p.aa5 >= 18 ? `Mais ${lastName} compense avec son All-Around exceptionnel (${Math.round(p.aa5)}) : il crée, passe et monte constamment.` : `Sans CS, le score pourrait être moyen.`}`;
+    styleTxt = csDef >= 35 ? `Probabilité de CS : ${csDef}% — c'est très jouable face à ${p.oppName}. ${p.aa5 >= 18 ? `En plus, avec un AA5 de ${Math.round(p.aa5)}, ${lastName} monte beaucoup et accumule des actions offensives — le combo CS + AA peut faire exploser le score.` : `Le bonus CS (+10 pts) peut faire une grosse différence.`}`
+      : csDef >= 22 ? `Probabilité de CS : ${csDef}% — possible mais pas garanti face à ${p.oppName}. ${p.aa5 >= 18 ? `L'atout de ${lastName}, c'est son All-Around très élevé (${Math.round(p.aa5)}) qui sécurise le score même sans CS.` : `Il faudra compter sur la solidité défensive.`}`
+      : `Probabilité de CS : seulement ${csDef}% — ${p.oppName} est trop offensif. ${p.aa5 >= 18 ? `Mais ${lastName} compense avec son All-Around exceptionnel (${Math.round(p.aa5)}) : il crée, passe et monte constamment.` : `Sans CS, le score pourrait être moyen.`}`;
   } else if (p.position === "MIL") {
     if (p.aa5 >= 15) {
       styleTxt = oppPpda >= 15 ? `Jackpot pour ${lastName} ! Face au bloc bas de ${p.oppName}, son équipe va monopoliser le ballon. Avec un AA5 de ${Math.round(p.aa5)}, chaque minute de possession = passes décisives, duels gagnés, actions offensives. Score monster garanti.`
@@ -220,6 +225,8 @@ function DetailPanel({ player, logos = {} }) {
   const oppXga = player.isHome ? (player.oppTeam.xga_ext || 1.5) : (player.oppTeam.xga_dom || 1.5);
   const oppXg = player.isHome ? (player.oppTeam.xg_ext || 1.3) : (player.oppTeam.xg_dom || 1.3);
   const style = oppPpda >= 15 ? "Bloc bas" : oppPpda >= 12 ? "Équilibré" : "Pressing";
+  const defXga = player.playerTeam ? (player.isHome ? (player.playerTeam.xga_dom || 1.3) : (player.playerTeam.xga_ext || 1.5)) : 1.3;
+  const csVal = csProb(defXga, oppXg, player.league);
 
   return (
     <div style={{ background: `linear-gradient(135deg,rgba(8,8,24,0.98),rgba(15,15,40,0.98))`, border: `1px solid ${pc}20`, borderRadius: "14px", padding: "16px", marginTop: "14px", backdropFilter: "blur(20px)", boxShadow: "0 8px 32px rgba(0,0,0,0.5)" }}>
@@ -262,11 +269,16 @@ function DetailPanel({ player, logos = {} }) {
         <div style={{ display: "grid", gridTemplateColumns: "repeat(2,1fr)", gap: "8px" }}>
           {(player.position === "GK" ? [
             { l: `xG de ${player.oppName}`, desc: oppXg < 1.0 ? `${player.oppName} marque très peu → gros potentiel Clean Sheet` : oppXg < 1.3 ? `${player.oppName} est peu dangereux → CS jouable` : oppXg < 1.6 ? `${player.oppName} attaque correctement → CS 50/50` : `${player.oppName} est très offensif → CS compliqué`, v: oppXg.toFixed(2), c: oppXg < 1.2 ? "#4ADE80" : oppXg < 1.5 ? "#FCD34D" : "#F87171" },
-            { l: "Probabilité Clean Sheet", desc: oppXg < 1.0 ? "Le bonus CS (+10 pts) est quasi assuré" : oppXg < 1.3 ? "Bonus CS réaliste si la défense tient" : "Difficile — miser plutôt sur les arrêts", v: oppXg < 1.0 ? ">50%" : oppXg < 1.3 ? "~35%" : oppXg < 1.6 ? "~25%" : "<20%", c: oppXg < 1.3 ? "#4ADE80" : "#FCD34D", sm: true },
+            { l: "Probabilité Clean Sheet", desc: csVal >= 35 ? "Le bonus CS (+10 pts) est très jouable" : csVal >= 22 ? "Bonus CS réaliste si la défense tient" : "Difficile — miser plutôt sur les arrêts", v: `${csVal}%`, c: csVal >= 35 ? "#4ADE80" : csVal >= 22 ? "#FCD34D" : "#F87171" },
             { l: "Potentiel d'arrêts", desc: oppXg > 1.5 ? `${player.oppName} tire beaucoup → arrêts = AA élevé` : `${player.oppName} tire peu → moins d'arrêts mais CS probable`, v: oppXg > 1.5 ? "Élevé" : oppXg > 1.2 ? "Moyen" : "Faible", c: "#fff", sm: true },
             { l: `Forme de ${player.name.split(" ").pop()}`, desc: es > 10 ? "En pleine confiance, hausse nette" : es > 0 ? "Légère progression, bon signe" : es === 0 ? "Performances stables" : "En baisse — surveiller", v: `${es > 0 ? "+" : ""}${es}%`, c: es > 15 ? "#4ADE80" : es > 0 ? "#FCD34D" : "#F87171" },
+          ] : player.position === "DEF" ? [
+            { l: "Probabilité Clean Sheet", desc: csVal >= 35 ? `${player.oppName} est peu dangereux → CS très jouable (+10 pts)` : csVal >= 22 ? `CS possible si la défense tient face à ${player.oppName}` : `${player.oppName} est trop offensif → CS compliqué`, v: `${csVal}%`, c: csVal >= 35 ? "#4ADE80" : csVal >= 22 ? "#FCD34D" : "#F87171" },
+            { l: `Défense de ${player.oppName}`, desc: oppXga < 1.2 ? `${player.oppName} attaque peu → gros potentiel CS` : `${player.oppName} est offensif → CS compliqué`, v: oppXga.toFixed(2) + " xGA", c: oppXga < 1.2 ? "#4ADE80" : oppXga < 1.5 ? "#FCD34D" : "#F87171" },
+            { l: `Pressing de ${player.oppName}`, desc: oppPpda >= 15 ? `${player.oppName} défend bas → le joueur aura le ballon` : oppPpda >= 12 ? `${player.oppName} presse modérément → match classique` : `${player.oppName} presse très haut → duels et espaces`, v: oppPpda.toFixed(1), c: "#fff" },
+            { l: `Forme de ${player.name.split(" ").pop()}`, desc: es > 10 ? "En pleine confiance, hausse nette" : es > 0 ? "Légère progression, bon signe" : es === 0 ? "Performances stables" : "En baisse — surveiller", v: `${es > 0 ? "+" : ""}${es}%`, c: es > 15 ? "#4ADE80" : es > 0 ? "#FCD34D" : "#F87171" },
           ] : [
-            { l: `Défense de ${player.oppName}`, desc: player.position === "DEF" ? (oppXga < 1.2 ? `${player.oppName} attaque peu → gros potentiel CS` : `${player.oppName} est offensif → CS compliqué`) : (oppXga > 1.5 ? `${player.oppName} encaisse beaucoup → plein d'occasions` : `${player.oppName} est solide → moins d'espaces`), v: oppXga.toFixed(2) + " xGA", c: player.position === "DEF" ? (oppXga < 1.2 ? "#4ADE80" : oppXga < 1.5 ? "#FCD34D" : "#F87171") : (oppXga > 1.6 ? "#4ADE80" : oppXga > 1.2 ? "#FCD34D" : "#F87171") },
+            { l: `Défense de ${player.oppName}`, desc: oppXga > 1.5 ? `${player.oppName} encaisse beaucoup → plein d'occasions` : `${player.oppName} est solide → moins d'espaces`, v: oppXga.toFixed(2) + " xGA", c: oppXga > 1.6 ? "#4ADE80" : oppXga > 1.2 ? "#FCD34D" : "#F87171" },
             { l: `Pressing de ${player.oppName}`, desc: oppPpda >= 15 ? `${player.oppName} défend bas → le joueur aura le ballon` : oppPpda >= 12 ? `${player.oppName} presse modérément → match classique` : `${player.oppName} presse très haut → duels et espaces`, v: oppPpda.toFixed(1), c: "#fff" },
             { l: `Style de ${player.oppName}`, desc: style === "Bloc bas" ? `${player.oppName} joue en bloc bas → possession pour l'adversaire` : style === "Pressing" ? `${player.oppName} est agressif → match ouvert` : `${player.oppName} joue de façon équilibrée`, v: style, c: style === "Bloc bas" ? "#4ADE80" : style === "Pressing" ? "#FB923C" : "#FCD34D", sm: true },
             { l: `Forme de ${player.name.split(" ").pop()}`, desc: es > 10 ? "En pleine confiance, hausse nette" : es > 0 ? "Légère progression, bon signe" : es === 0 ? "Performances stables" : "En baisse — surveiller", v: `${es > 0 ? "+" : ""}${es}%`, c: es > 15 ? "#4ADE80" : es > 0 ? "#FCD34D" : "#F87171" },
@@ -326,7 +338,8 @@ export default function RecoTab({ players, teams, fixtures, logos = {} }) {
         isHome = true;
       }
       const ds = dScoreMatch(p, opp, isHome);
-      return { ...p, ds, oppName: opp.name, oppTeam: opp, isHome };
+      const pTeam = findTeam(lgTeams, p.club);
+      return { ...p, ds, oppName: opp.name, oppTeam: opp, playerTeam: pTeam, isHome };
     }).sort((a, b) => b.ds - a.ds);
 
     const picks = [];

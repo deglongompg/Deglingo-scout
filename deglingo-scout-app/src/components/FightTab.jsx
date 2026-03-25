@@ -1,6 +1,6 @@
 import { useState, useMemo } from "react";
 import { dsColor, dsBg, LEAGUE_FLAGS, POSITION_COLORS } from "../utils/colors";
-import { dScoreMatch } from "../utils/dscore";
+import { dScoreMatch, csProb, findTeam } from "../utils/dscore";
 
 const FIGHT_COUNT_KEY = "deglingo_fight_count";
 
@@ -304,11 +304,12 @@ function Stat({ label, v1, v2 }) {
 }
 
 /* ── Match verdict generator ── */
-function genVerdict(p, opp, isHome, d) {
+function genVerdict(p, opp, isHome, d, pTeam) {
   if (!p || !opp) return "";
   const oppPpda = isHome ? (opp.ppda_ext || 12) : (opp.ppda_dom || 12);
   const oppXga = isHome ? (opp.xga_ext || 1.5) : (opp.xga_dom || 1.5);
   const oppXg = isHome ? (opp.xg_ext || 1.3) : (opp.xg_dom || 1.3);
+  const defXga = pTeam ? (isHome ? (pTeam.xga_dom || 1.3) : (pTeam.xga_ext || 1.5)) : 1.3;
   const lastName = p.name.split(" ").pop();
   const sc = p.last_5 || [];
   const l2 = sc.length >= 2 ? (sc[0] + sc[1]) / 2 : p.l5;
@@ -321,12 +322,14 @@ function genVerdict(p, opp, isHome, d) {
     : es < -10 ? `${lastName} est en baisse (${es}%).`
     : `${lastName} est régulier.`;
 
+  const cs = csProb(defXga, oppXg, p.league);
+
   if (p.position === "GK") {
-    const csChance = oppXg < 1.0 ? "très élevée (>50%)" : oppXg < 1.3 ? "correcte (35-45%)" : oppXg < 1.6 ? "moyenne (25-35%)" : "faible (<25%)";
+    const csLabel = cs >= 45 ? "très élevée" : cs >= 30 ? "correcte" : cs >= 20 ? "moyenne" : "faible";
     return `${formeTxt} Il joue ${haLabel} face à ${opp.name}. ` +
       `${opp.name} ${isHome ? "se déplace" : "reçoit"} et marque ${oppXg.toFixed(2)} buts attendus/match. ` +
-      `Probabilité de Clean Sheet : ${csChance}. ` +
-      `${oppXg < 1.3 ? "Attaque faible = gros potentiel CS + arrêts bonus." : oppXg < 1.6 ? "CS possible, beaucoup d'arrêts potentiels." : "CS difficile mais arrêts = AA élevé."} ` +
+      `Probabilité de Clean Sheet : ${csLabel} (${cs}%). ` +
+      `${cs >= 30 ? "Attaque faible = gros potentiel CS + arrêts bonus." : cs >= 20 ? "CS possible, beaucoup d'arrêts potentiels." : "CS difficile mais arrêts = AA élevé."} ` +
       `D-Score ${d} — ${d >= 70 ? "Top GK pick !" : d >= 60 ? "Bon choix gardien." : d >= 50 ? "Pick correct." : "Pick risqué."}`;
   }
 
@@ -339,8 +342,10 @@ function genVerdict(p, opp, isHome, d) {
 
   let styleTxt;
   if (p.position === "DEF") {
-    styleTxt = oppXga < 1.2 ? `CS très jouable. ${p.aa5 >= 18 ? `AA5 de ${Math.round(p.aa5)} = il monte et crée en plus.` : ""}`
-      : `CS incertain. ${p.aa5 >= 18 ? `Mais son AA5 (${Math.round(p.aa5)}) sécurise le score.` : ""}`;
+    const csDef = cs;
+    styleTxt = csDef >= 35 ? `CS ${csDef}% — très jouable. ${p.aa5 >= 18 ? `AA5 de ${Math.round(p.aa5)} = il monte et crée en plus.` : "Le bonus CS (+10 pts) peut tout changer."}`
+      : csDef >= 22 ? `CS ${csDef}% — possible. ${p.aa5 >= 18 ? `Son AA5 (${Math.round(p.aa5)}) sécurise le score même sans CS.` : "Il faudra compter sur la solidité défensive."}`
+      : `CS seulement ${csDef}% — compliqué. ${p.aa5 >= 18 ? `Mais son AA5 (${Math.round(p.aa5)}) compense sans CS.` : "Sans CS, score moyen probable."}`;
   } else if (p.position === "MIL") {
     styleTxt = p.aa5 >= 15
       ? `AA élevé (${Math.round(p.aa5)}) = points garantis. ${oppPpda >= 15 ? `Face au bloc bas de ${opp.name}, score monster possible.` : "Match ouvert = duels et actions."}`
@@ -444,6 +449,8 @@ export default function FightTab({ players, teams, fixtures, logos = {} }) {
   const opp1 = teams.find(t => t.name === o1);
   const opp2 = teams.find(t => t.name === o2);
 
+  const pTeam1 = sel1 ? findTeam(teams, sel1.club) : null;
+  const pTeam2 = sel2 ? findTeam(teams, sel2.club) : null;
   const d1 = sel1 && opp1 ? dScoreMatch(sel1, opp1, h1) : 0;
   const d2 = sel2 && opp2 ? dScoreMatch(sel2, opp2, h2) : 0;
 
@@ -645,10 +652,10 @@ export default function FightTab({ players, teams, fixtures, logos = {} }) {
                 <div style={{ fontSize: 9, color: "#FBBF24", fontWeight: 800, letterSpacing: "0.1em", marginBottom: 8 }}>💬 ANALYSE MATCH</div>
                 <div className="fight-verdicts" style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 10 }}>
                   <div style={{ fontSize: 12, lineHeight: 1.7, color: winner === 1 ? "rgba(255,255,255,0.85)" : "rgba(255,255,255,0.35)" }}>
-                    {genVerdict(sel1, opp1, h1, d1)}
+                    {genVerdict(sel1, opp1, h1, d1, pTeam1)}
                   </div>
                   <div style={{ fontSize: 12, lineHeight: 1.7, color: winner === 2 ? "rgba(255,255,255,0.85)" : "rgba(255,255,255,0.35)" }}>
-                    {genVerdict(sel2, opp2, h2, d2)}
+                    {genVerdict(sel2, opp2, h2, d2, pTeam2)}
                   </div>
                 </div>
               </div>

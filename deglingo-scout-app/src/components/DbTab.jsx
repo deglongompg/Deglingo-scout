@@ -1,6 +1,6 @@
 import { useState, useMemo } from "react";
 import { dsColor, dsBg, POSITION_COLORS, LEAGUE_COLORS, LEAGUE_FLAGS, getArchetypeColor } from "../utils/colors";
-import { dScoreMatch } from "../utils/dscore";
+import { dScoreMatch, csProb, findTeam } from "../utils/dscore";
 import PlayerCard from "./PlayerCard";
 
 // ISO 2/3 letter country code → flag emoji
@@ -33,10 +33,17 @@ export default function DbTab({ players, teams, fixtures, logos = {} }) {
     return players.map(p => {
       const fx = pf[p.name];
       const base = { ...p, reg10: p.reg10 ?? p.regularite, ds10: p.ds10 ?? p.ds_rate };
-      if (!fx) return { ...base, dsMatch: null, oppName: null, isHome: null, matchday: null };
+      if (!fx) return { ...base, dsMatch: null, oppName: null, isHome: null, matchday: null, csPercent: null };
       const oppTeam = teams?.find(t => t.name === fx.opp);
       const ds = oppTeam ? dScoreMatch(p, oppTeam, fx.isHome) : null;
-      return { ...base, dsMatch: ds, oppName: fx.opp, isHome: fx.isHome, matchday: fx.matchday };
+      let csPercent = null;
+      if (oppTeam) {
+        const oppXg = fx.isHome ? (oppTeam.xg_ext || 1.3) : (oppTeam.xg_dom || 1.3);
+        const playerTeam = findTeam(teams, p.club);
+        const defXga = playerTeam ? (fx.isHome ? (playerTeam.xga_dom || 1.3) : (playerTeam.xga_ext || 1.5)) : 1.3;
+        csPercent = csProb(defXga, oppXg, p.league);
+      }
+      return { ...base, dsMatch: ds, oppName: fx.opp, isHome: fx.isHome, matchday: fx.matchday, csPercent };
     });
   }, [players, teams, fixtures]);
 
@@ -184,6 +191,7 @@ export default function DbTab({ players, teams, fixtures, logos = {} }) {
                 <th style={thStyle("dsMatch")} onClick={() => toggleSort("dsMatch")}>
                   <span style={{ color: sortKey === "dsMatch" ? "#C084FC" : "#C084FC80" }}>D-Score{arrow("dsMatch")}</span>
                 </th>
+                <th style={thStyle("csPercent")} onClick={() => toggleSort("csPercent")}>CS%{arrow("csPercent")}</th>
                 <th style={{ ...thStyle("oppName"), cursor: "default" }}>Adv.</th>
               </>}
               <th style={{ ...thStyle("archetype"), cursor: "default" }}>Archétype</th>
@@ -267,6 +275,13 @@ export default function DbTab({ players, teams, fixtures, logos = {} }) {
                           color: "#fff", background: dsBg(p.dsMatch),
                           boxShadow: `0 0 8px ${dsColor(p.dsMatch)}30`,
                         }}>{p.dsMatch}</span>
+                      ) : (
+                        <span style={{ fontSize: 9, color: "rgba(255,255,255,0.15)" }}>—</span>
+                      )}
+                    </td>
+                    <td style={{ textAlign: "center", fontFamily: "DM Mono", fontSize: 11 }}>
+                      {p.csPercent != null ? (
+                        <span style={{ color: p.csPercent >= 40 ? "#4ADE80" : p.csPercent >= 25 ? "#FCD34D" : p.csPercent >= 15 ? "#FB923C" : "#EF4444", fontWeight: 600 }}>{p.csPercent}%</span>
                       ) : (
                         <span style={{ fontSize: 9, color: "rgba(255,255,255,0.15)" }}>—</span>
                       )}

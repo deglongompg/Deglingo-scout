@@ -13,7 +13,7 @@ function countryFlag(code) {
   return String.fromCodePoint(...[...iso2.toUpperCase()].map(c => c.charCodeAt(0) + 127397));
 }
 
-export default function DbTab({ players, teams, fixtures }) {
+export default function DbTab({ players, teams, fixtures, logos = {} }) {
   const [search, setSearch] = useState("");
   const [league, setLeague] = useState("ALL");
   const [pos, setPos] = useState("ALL");
@@ -32,10 +32,11 @@ export default function DbTab({ players, teams, fixtures }) {
     const pf = fixtures?.player_fixtures || {};
     return players.map(p => {
       const fx = pf[p.name];
-      if (!fx) return { ...p, dsMatch: null, oppName: null, isHome: null, matchday: null };
+      const base = { ...p, reg10: p.reg10 ?? p.regularite, ds10: p.ds10 ?? p.ds_rate };
+      if (!fx) return { ...base, dsMatch: null, oppName: null, isHome: null, matchday: null };
       const oppTeam = teams?.find(t => t.name === fx.opp);
       const ds = oppTeam ? dScoreMatch(p, oppTeam, fx.isHome) : null;
-      return { ...p, dsMatch: ds, oppName: fx.opp, isHome: fx.isHome, matchday: fx.matchday };
+      return { ...base, dsMatch: ds, oppName: fx.opp, isHome: fx.isHome, matchday: fx.matchday };
     });
   }, [players, teams, fixtures]);
 
@@ -148,6 +149,8 @@ export default function DbTab({ players, teams, fixtures }) {
             <span style={{ display: "inline-block", width: 10, height: 10, borderRadius: 3, background: "linear-gradient(135deg,#4ADE80,#22C55E)", boxShadow: "0 0 6px #4ADE80" }} />
             L2 en explosion (+15 vs L5)
           </span>
+          <span>Rég10 = % matchs &gt;60 sur L10</span>
+          <span>Titu = % titularisations sur L10</span>
           <span>🏠 Dom · ✈️ Ext</span>
           <span style={{ display: "inline-flex", gap: 4, alignItems: "center" }}>
             <span style={{ color: "#EF4444" }}>●</span><span>0-39</span>
@@ -168,14 +171,15 @@ export default function DbTab({ players, teams, fixtures }) {
               <th style={{ ...thStyle("league"), cursor: "default" }}>Ligue</th>
               <th style={{ ...thStyle("l2"), background: sortKey === "l2" ? "rgba(74,222,128,0.06)" : "transparent" }} onClick={() => toggleSort("l2")}>L2{arrow("l2")}</th>
               <th style={thStyle("aa2")} onClick={() => toggleSort("aa2")}>AA2{arrow("aa2")}</th>
-              <th style={{ ...thStyle("l5"), borderLeft: "1px solid rgba(255,255,255,0.06)" }} onClick={() => toggleSort("l5")}>L5{arrow("l5")}</th>
+              <th style={{ ...thStyle("last5"), borderLeft: "1px solid rgba(255,255,255,0.06)", cursor: "default", fontSize: 8, color: "rgba(255,255,255,0.25)" }}>Last 5</th>
+              <th style={thStyle("l5")} onClick={() => toggleSort("l5")}>L5{arrow("l5")}</th>
               <th style={thStyle("aa5")} onClick={() => toggleSort("aa5")}>AA5{arrow("aa5")}</th>
               <th style={{ ...thStyle("l10"), borderLeft: "1px solid rgba(255,255,255,0.06)" }} onClick={() => toggleSort("l10")}>L10{arrow("l10")}</th>
               <th style={thStyle("aa10")} onClick={() => toggleSort("aa10")}>AA10{arrow("aa10")}</th>
               <th style={{ ...thStyle("min_15"), borderLeft: "1px solid rgba(255,255,255,0.06)" }} onClick={() => toggleSort("min_15")}>Min{arrow("min_15")}</th>
               <th style={thStyle("max_15")} onClick={() => toggleSort("max_15")}>Max{arrow("max_15")}</th>
-              <th style={{ ...thStyle("regularite"), borderLeft: "1px solid rgba(255,255,255,0.06)" }} onClick={() => toggleSort("regularite")}>Rég%{arrow("regularite")}</th>
-              <th style={thStyle("ds_rate")} onClick={() => toggleSort("ds_rate")}>DS%{arrow("ds_rate")}</th>
+              <th style={{ ...thStyle("reg10"), borderLeft: "1px solid rgba(255,255,255,0.06)" }} onClick={() => toggleSort("reg10")}>Rég10%{arrow("reg10")}</th>
+              <th style={thStyle("titu_pct")} onClick={() => toggleSort("titu_pct")}>Titu%{arrow("titu_pct")}</th>
               {hasFixtures && <>
                 <th style={thStyle("dsMatch")} onClick={() => toggleSort("dsMatch")}>
                   <span style={{ color: sortKey === "dsMatch" ? "#C084FC" : "#C084FC80" }}>D-Score{arrow("dsMatch")}</span>
@@ -203,7 +207,10 @@ export default function DbTab({ players, teams, fixtures }) {
                 >
                   <td style={{ padding: "8px 4px 8px 12px" }}>
                     <div style={{ fontWeight: 600, color: "#fff", fontSize: 12 }}>{countryFlag(p.country)} {p.name}</div>
-                    <div style={{ fontSize: 9, color: "rgba(255,255,255,0.3)", marginTop: 1 }}>{p.club}</div>
+                    <div style={{ fontSize: 9, color: "rgba(255,255,255,0.3)", marginTop: 1, display: "flex", alignItems: "center", gap: 3 }}>
+                      {logos[p.club] && <img src={`/data/logos/${logos[p.club]}`} alt="" style={{ width: 12, height: 12, objectFit: "contain" }} />}
+                      {p.club}
+                    </div>
                   </td>
                   <td style={{ textAlign: "center" }}>
                     <span style={{
@@ -229,14 +236,28 @@ export default function DbTab({ players, teams, fixtures }) {
                     }}>{R(p.l2)}</span>
                   </td>
                   <td style={{ textAlign: "center", fontFamily: "DM Mono", fontSize: 10, color: "rgba(255,255,255,0.3)" }}>{R(p.aa2)}</td>
-                  <td style={{ textAlign: "center", fontFamily: "DM Mono", fontSize: 10, color: "rgba(255,255,255,0.35)", borderLeft: "1px solid rgba(255,255,255,0.04)" }}>{R(p.l5)}</td>
+                  <td style={{ borderLeft: "1px solid rgba(255,255,255,0.04)", padding: "4px 2px", verticalAlign: "middle" }}>
+                    {p.last_5 && p.last_5.length > 0 ? (
+                      <div style={{ display: "flex", alignItems: "flex-end", gap: 1, height: 22, justifyContent: "center" }}>
+                        {p.last_5.slice().reverse().map((v, j) => (
+                          <div key={j} style={{
+                            width: 4, borderRadius: 1,
+                            height: Math.max(2, (v / 100) * 22),
+                            background: dsColor(v),
+                            opacity: 0.85,
+                          }} />
+                        ))}
+                      </div>
+                    ) : <span style={{ fontSize: 9, color: "rgba(255,255,255,0.15)" }}>—</span>}
+                  </td>
+                  <td style={{ textAlign: "center", fontFamily: "DM Mono", fontSize: 10, color: "rgba(255,255,255,0.35)" }}>{R(p.l5)}</td>
                   <td style={{ textAlign: "center", fontFamily: "DM Mono", fontSize: 10, color: "rgba(255,255,255,0.3)" }}>{R(p.aa5)}</td>
                   <td style={{ textAlign: "center", fontFamily: "DM Mono", fontWeight: 700, fontSize: 14, color: dsColor(p.l10), borderLeft: "1px solid rgba(255,255,255,0.04)" }}>{R(p.l10)}</td>
                   <td style={{ textAlign: "center", fontFamily: "DM Mono", fontSize: 10, color: "rgba(255,255,255,0.3)" }}>{R(p.aa10)}</td>
                   <td style={{ textAlign: "center", fontFamily: "DM Mono", fontSize: 11, color: dsColor(p.min_15), borderLeft: "1px solid rgba(255,255,255,0.04)" }}>{R(p.min_15)}</td>
                   <td style={{ textAlign: "center", fontFamily: "DM Mono", fontSize: 11, color: dsColor(p.max_15) }}>{R(p.max_15)}</td>
-                  <td style={{ textAlign: "center", fontFamily: "DM Mono", fontSize: 11, color: p.regularite >= 80 ? "#4ADE80" : p.regularite >= 50 ? "#FBBF24" : "#EF4444", borderLeft: "1px solid rgba(255,255,255,0.04)" }}>{R(p.regularite)}%</td>
-                  <td style={{ textAlign: "center", fontFamily: "DM Mono", fontSize: 11, color: p.ds_rate >= 50 ? "#4ADE80" : p.ds_rate >= 30 ? "#FBBF24" : "rgba(255,255,255,0.4)" }}>{R(p.ds_rate)}%</td>
+                  <td style={{ textAlign: "center", fontFamily: "DM Mono", fontSize: 11, color: (p.reg10 ?? p.regularite) >= 80 ? "#4ADE80" : (p.reg10 ?? p.regularite) >= 50 ? "#FBBF24" : "#EF4444", borderLeft: "1px solid rgba(255,255,255,0.04)" }}>{R(p.reg10 ?? p.regularite)}%</td>
+                  <td style={{ textAlign: "center", fontFamily: "DM Mono", fontSize: 11, color: p.titu_pct >= 80 ? "#4ADE80" : p.titu_pct >= 50 ? "#FBBF24" : "#EF4444" }}>{R(p.titu_pct)}%</td>
                   {hasFixtures && <>
                     <td style={{ textAlign: "center" }}>
                       {p.dsMatch !== null ? (
@@ -256,6 +277,7 @@ export default function DbTab({ players, teams, fixtures }) {
                           <span style={{ width: 14, textAlign: "center", flexShrink: 0 }}>
                             {p.isHome ? "🏠" : "✈️"}
                           </span>
+                          {logos[p.oppName] && <img src={`/data/logos/${logos[p.oppName]}`} alt="" style={{ width: 11, height: 11, objectFit: "contain", flexShrink: 0 }} />}
                           <span style={{ color: "rgba(255,255,255,0.5)" }}>{p.oppName}</span>
                         </div>
                       ) : (
@@ -283,7 +305,7 @@ export default function DbTab({ players, teams, fixtures }) {
         </div>
       )}
 
-      {selectedPlayer && <PlayerCard player={selectedPlayer} onClose={() => setSelectedPlayer(null)} />}
+      {selectedPlayer && <PlayerCard player={selectedPlayer} onClose={() => setSelectedPlayer(null)} logos={logos} />}
     </div>
   );
 }

@@ -14,7 +14,7 @@ const LG_META = {
 function getTags(p) {
   const tags = [];
   if (p.aa5 >= 20) tags.push("AA Monster");
-  if (p.floor >= 55) tags.push("Floor King");
+  if ((p.min_15 ?? p.floor) >= 55) tags.push("Floor King");
   if (p.regularite >= 90) tags.push("Régulier");
   if (p.ga_per_match >= 0.5) tags.push("DS Bomb");
   const sc = p.last_5 || [];
@@ -29,10 +29,24 @@ function genVerdict(p) {
   const es = p.l5 > 0 ? Math.round((l2 - p.l5) / p.l5 * 100) : 0;
   const oppPpda = p.isHome ? (p.oppTeam.ppda_ext || 12) : (p.oppTeam.ppda_dom || 12);
   const oppXga = p.isHome ? (p.oppTeam.xga_ext || 1.5) : (p.oppTeam.xga_dom || 1.5);
+  const oppXg = p.isHome ? (p.oppTeam.xg_ext || 1.3) : (p.oppTeam.xg_dom || 1.3);
   const style = oppPpda >= 15 ? "Bloc bas" : oppPpda >= 12 ? "Équilibré" : "Pressing";
   const haLabel = p.isHome ? "à domicile" : "en déplacement";
+  const isGK = p.position === "GK";
+
+  if (isGK) {
+    const csChance = oppXg < 1.0 ? "élevée (>50%)" : oppXg < 1.3 ? "correcte (~35-45%)" : oppXg < 1.6 ? "moyenne (~25-35%)" : "faible (<25%)";
+    const csLabel = oppXg < 1.0 ? "Adversaire très peu dangereux" : oppXg < 1.3 ? "Adversaire peu offensif" : oppXg < 1.6 ? "Adversaire moyennement dangereux" : "Adversaire très offensif";
+    return {
+      situation: `D-Score ${p.ds}. L5=${p.l5.toFixed?.(0) ?? p.l5}, AA5=${p.aa5.toFixed?.(0) ?? p.aa5}, Min=${p.min_15 ?? p.floor}. ${haLabel} face à ${p.oppName}. Rég ${p.regularite}%. Titu ${p.titu_pct}%.`,
+      adversaire: `${p.oppName} ${p.isHome ? "en ext" : "à dom"}: xG=${oppXg.toFixed(2)} buts attendus/match. ${csLabel}.`,
+      style: `Probabilité de Clean Sheet : ${csChance}. ${oppXg < 1.3 ? "Adversaire peu dangereux = gros potentiel CS + arrêts bonus." : oppXg < 1.6 ? "Adversaire modéré — CS possible si solide. Beaucoup d'arrêts potentiels." : "Adversaire offensif — CS difficile mais beaucoup d'arrêts attendus = AA élevé."}`,
+      conclusion: `D-Score ${p.ds}${p.ds >= 70 ? " — Top GK pick!" : p.ds >= 60 ? " — Bon pick gardien." : p.ds >= 50 ? " — Pick correct." : " — Pick risqué."}`,
+    };
+  }
+
   return {
-    situation: `D-Score ${p.ds}. L5=${p.l5.toFixed?.(0) ?? p.l5}, AA5=${p.aa5.toFixed?.(0) ?? p.aa5}, Floor=${p.floor}. ${haLabel} face à ${p.oppName}. Rég ${p.regularite}%.`,
+    situation: `D-Score ${p.ds}. L5=${p.l5.toFixed?.(0) ?? p.l5}, AA5=${p.aa5.toFixed?.(0) ?? p.aa5}, Min=${p.min_15 ?? p.floor}. ${haLabel} face à ${p.oppName}. Rég ${p.regularite}%. Titu ${p.titu_pct}%.`,
     adversaire: `${p.oppName} ${p.isHome ? "en ext" : "à dom"}: xGA=${oppXga.toFixed(2)}, PPDA=${oppPpda.toFixed(1)} = ${style}.`,
     style: p.aa5 >= 15
       ? `AA élevé (${p.aa5.toFixed?.(0) ?? p.aa5}) = accumulation de points garantie. ${style === "Bloc bas" ? "Face au bloc bas, possession élevée = AA monster." : "Match ouvert = duels et actions."}`
@@ -75,11 +89,20 @@ function Stars({ n }) {
   );
 }
 
-function PlayerCard({ player, isSelected, onClick }) {
+function PlayerCard({ player, isSelected, onClick, logos = {} }) {
   const pc = PC[player.position];
   const conf = player.ds >= 75 ? 5 : player.ds >= 60 ? 4 : player.ds >= 50 ? 3 : player.ds >= 40 ? 2 : player.ds >= 30 ? 1 : 0;
+
+  // Position-based card gradient (deep, diagonal, futuristic)
+  const cardBg = {
+    GK: `linear-gradient(145deg, #0a1e30 0%, #0d2a42 20%, #081c2e 45%, ${pc}15 70%, #06141f 100%)`,
+    DEF: `linear-gradient(145deg, #0d0c28 0%, #131242 20%, #0c0b30 45%, ${pc}15 70%, #080720 100%)`,
+    MIL: `linear-gradient(145deg, #180c2c 0%, #221248 20%, #180c34 45%, ${pc}15 70%, #0e0620 100%)`,
+    ATT: `linear-gradient(145deg, #280c16 0%, #381020 20%, #2a0c18 45%, ${pc}15 70%, #18060e 100%)`,
+  }[player.position] || `linear-gradient(145deg, #1a1040, #0d0820)`;
+
   return (
-    <div onClick={onClick} style={{ textAlign: "center", cursor: "pointer", width: "96px" }}>
+    <div onClick={onClick} style={{ textAlign: "center", cursor: "pointer", width: "114px" }}>
       <div style={{
         position: "relative", display: "inline-block",
         transform: isSelected ? "scale(1.06) translateY(-3px)" : "scale(1)",
@@ -87,32 +110,45 @@ function PlayerCard({ player, isSelected, onClick }) {
         filter: isSelected ? `drop-shadow(0 0 18px ${pc}50)` : "drop-shadow(0 4px 12px rgba(0,0,0,0.4))",
       }}>
         <div style={{
-          width: 92, height: 130, borderRadius: "10px",
-          background: `linear-gradient(155deg,${pc}30 0%,rgba(8,8,25,0.92) 45%,${pc}12 100%)`,
-          border: `1.5px solid ${isSelected ? `${pc}BB` : `${pc}25`}`,
+          width: 110, height: 156, borderRadius: "12px",
+          background: cardBg,
+          border: `1.5px solid ${isSelected ? `${pc}BB` : `${pc}20`}`,
           display: "flex", flexDirection: "column", alignItems: "center",
           padding: "4px 4px 0", position: "relative", overflow: "hidden",
+          boxShadow: isSelected
+            ? `inset 0 1px 0 rgba(255,255,255,0.1), 0 0 20px ${pc}25`
+            : "inset 0 1px 0 rgba(255,255,255,0.06)",
         }}>
-          {/* Glass effect */}
-          <div style={{ position: "absolute", top: 0, left: 0, right: 0, height: "45%", background: "linear-gradient(180deg,rgba(255,255,255,0.07) 0%,transparent 100%)", borderRadius: "10px 10px 0 0", pointerEvents: "none" }} />
+          {/* ── Relief: diagonal shine streak ── */}
+          <div style={{ position: "absolute", inset: 0, background: "linear-gradient(135deg, rgba(255,255,255,0.08) 0%, transparent 35%, transparent 65%, rgba(255,255,255,0.04) 100%)", pointerEvents: "none" }} />
+          {/* ── Relief: top-left radial glow ── */}
+          <div style={{ position: "absolute", top: "-20%", left: "-15%", width: "80%", height: "70%", background: `radial-gradient(ellipse, ${pc}18, transparent 65%)`, pointerEvents: "none" }} />
+          {/* ── Relief: bottom edge light ── */}
+          <div style={{ position: "absolute", bottom: 0, left: "15%", right: "15%", height: 1, background: `linear-gradient(90deg, transparent, ${pc}35, transparent)`, pointerEvents: "none" }} />
+          {/* ── Star dust texture ── */}
+          <div style={{ position: "absolute", inset: 0, opacity: 0.1, pointerEvents: "none", backgroundImage: "radial-gradient(0.7px 0.7px at 18% 22%, #fff, transparent), radial-gradient(0.5px 0.5px at 55% 68%, #fff, transparent), radial-gradient(0.8px 0.8px at 78% 15%, #fff, transparent), radial-gradient(0.6px 0.6px at 40% 85%, #fff, transparent), radial-gradient(0.5px 0.5px at 85% 55%, #fff, transparent)" }} />
+          {/* ── Top accent line ── */}
+          <div style={{ position: "absolute", top: 0, left: 0, right: 0, height: 2, background: `linear-gradient(90deg, transparent 10%, ${pc}70 50%, transparent 90%)`, pointerEvents: "none" }} />
+
           {/* Position badge */}
-          <div style={{ background: `linear-gradient(135deg,${pc},${pc}CC)`, borderRadius: "4px", padding: "2px 8px", marginTop: "2px", fontSize: "8px", fontWeight: 800, color: "#fff", letterSpacing: "0.06em" }}>{player.position}</div>
-          {/* D-Score */}
-          <div style={{ marginTop: "4px", display: "flex", flexDirection: "column", alignItems: "center" }}>
+          <div style={{ background: `linear-gradient(135deg,${pc},${pc}CC)`, borderRadius: "3px", padding: "1px 6px", marginTop: "2px", fontSize: "7px", fontWeight: 800, color: "#fff", letterSpacing: "0.06em", position: "relative", zIndex: 1, boxShadow: `0 1px 4px ${pc}40` }}>{player.position}</div>
+          {/* Score circle */}
+          <div style={{ marginTop: "5px", display: "flex", alignItems: "center", justifyContent: "center", position: "relative", zIndex: 1 }}>
             <div style={{
-              width: 32, height: 32, borderRadius: "50%", background: dsBg(player.ds),
-              boxShadow: "0 2px 8px rgba(0,0,0,0.5)", display: "flex", alignItems: "center", justifyContent: "center",
-              fontFamily: "'DM Mono',monospace", fontSize: 14, fontWeight: 700, color: "#fff", border: "2px solid rgba(255,255,255,0.25)",
+              width: 38, height: 38, borderRadius: "50%", background: dsBg(player.ds),
+              boxShadow: `0 2px 8px rgba(0,0,0,0.5), 0 0 12px ${dsColor(player.ds)}30`,
+              display: "flex", alignItems: "center", justifyContent: "center",
+              fontFamily: "'DM Mono',monospace", fontSize: 16, fontWeight: 700, color: "#fff", border: "2px solid rgba(255,255,255,0.25)",
             }}>{player.ds}</div>
-            <div style={{ fontSize: "6px", fontWeight: 800, letterSpacing: "0.12em", color: "rgba(255,255,255,0.35)", marginTop: "2px", textTransform: "uppercase" }}>D-SCORE</div>
           </div>
           {/* Name */}
-          <div style={{ fontSize: "11px", fontWeight: 700, color: "#fff", marginTop: "3px", letterSpacing: "-0.01em", lineHeight: 1.1 }}>{player.name.split(" ").pop()}</div>
-          <div style={{ display: "flex", alignItems: "center", gap: "3px", marginTop: "1px" }}>
-            <span style={{ fontSize: "8px", color: "rgba(255,255,255,0.4)", fontWeight: 500 }}>{player.club.split(" ").slice(0, 2).join(" ")}</span>
-          </div>
+          <div style={{ fontSize: "12px", fontWeight: 700, color: "#fff", marginTop: "4px", letterSpacing: "-0.01em", lineHeight: 1.1, position: "relative", zIndex: 1, textShadow: "0 1px 4px rgba(0,0,0,0.5)" }}>{player.name.split(" ").pop()}</div>
+          {/* Club name */}
+          <div style={{ fontSize: "8px", color: "rgba(255,255,255,0.4)", fontWeight: 500, marginTop: "2px", position: "relative", zIndex: 1, lineHeight: 1.15, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap", maxWidth: "100%", padding: "0 4px" }}>{player.club}</div>
+          {/* Club logo */}
+          {logos[player.club] && <img src={`/data/logos/${logos[player.club]}`} alt="" style={{ width: 26, height: 26, objectFit: "contain", marginTop: "3px", position: "relative", zIndex: 1, filter: "drop-shadow(0 1px 3px rgba(0,0,0,0.4))" }} />}
           {/* Mini histogram at bottom */}
-          <div style={{ position: "absolute", bottom: 0, left: 0, right: 0, display: "flex", justifyContent: "center" }}>
+          <div style={{ position: "absolute", bottom: 0, left: 0, right: 0, display: "flex", justifyContent: "center", zIndex: 1 }}>
             <MiniHistogram scores={player.last_5} />
           </div>
         </div>
@@ -122,13 +158,14 @@ function PlayerCard({ player, isSelected, onClick }) {
       {/* Opponent badge */}
       <div style={{ marginTop: "4px", fontSize: "8px", color: "rgba(255,255,255,0.5)", display: "inline-flex", alignItems: "center", gap: "3px", background: "rgba(0,0,0,0.5)", padding: "2px 6px", borderRadius: "4px", backdropFilter: "blur(4px)" }}>
         <span style={{ fontSize: "10px", lineHeight: 1 }}>{player.isHome ? "🏠" : "✈️"}</span>
+        {logos[player.oppName] && <img src={`/data/logos/${logos[player.oppName]}`} alt="" style={{ width: 10, height: 10, objectFit: "contain" }} />}
         <span style={{ fontWeight: 600 }}>{player.oppName}</span>
       </div>
     </div>
   );
 }
 
-function DetailPanel({ player }) {
+function DetailPanel({ player, logos = {} }) {
   if (!player) return (
     <div style={{ textAlign: "center", padding: "30px 16px", color: "rgba(255,255,255,0.15)" }}>
       <div style={{ fontSize: 36, marginBottom: 6 }}>⚽</div>
@@ -145,6 +182,7 @@ function DetailPanel({ player }) {
   const es = player.l5 > 0 ? Math.round((l2 - player.l5) / player.l5 * 100) : 0;
   const oppPpda = player.isHome ? (player.oppTeam.ppda_ext || 12) : (player.oppTeam.ppda_dom || 12);
   const oppXga = player.isHome ? (player.oppTeam.xga_ext || 1.5) : (player.oppTeam.xga_dom || 1.5);
+  const oppXg = player.isHome ? (player.oppTeam.xg_ext || 1.3) : (player.oppTeam.xg_dom || 1.3);
   const style = oppPpda >= 15 ? "Bloc bas" : oppPpda >= 12 ? "Équilibré" : "Pressing";
 
   return (
@@ -157,7 +195,7 @@ function DetailPanel({ player }) {
         </div>
         <div style={{ flex: 1 }}>
           <div style={{ fontSize: "16px", fontWeight: 700, color: "#fff" }}>{player.name}</div>
-          <div style={{ fontSize: "11px", color: "rgba(255,255,255,0.4)", marginBottom: "6px" }}>{player.club} · {player.archetype} · {player.isHome ? "🏠 DOM" : "✈️ EXT"} vs {player.oppName}</div>
+          <div style={{ fontSize: "11px", color: "rgba(255,255,255,0.4)", marginBottom: "6px", display: "flex", alignItems: "center", gap: "4px", flexWrap: "wrap" }}>{logos[player.club] && <img src={`/data/logos/${logos[player.club]}`} alt="" style={{ width: 13, height: 13, objectFit: "contain" }} />}{player.club} · {player.archetype} · {player.isHome ? "🏠 DOM" : "✈️ EXT"} vs {logos[player.oppName] && <img src={`/data/logos/${logos[player.oppName]}`} alt="" style={{ width: 13, height: 13, objectFit: "contain" }} />}{player.oppName}</div>
           <div style={{ display: "flex", gap: "4px", flexWrap: "wrap" }}>
             {tags.map(t => <span key={t} style={{ fontSize: "9px", fontWeight: 600, color: dsc, background: `${dsc}15`, border: `1px solid ${dsc}25`, padding: "2px 6px", borderRadius: "3px" }}>{t}</span>)}
           </div>
@@ -171,7 +209,7 @@ function DetailPanel({ player }) {
           {[
             { icon: "📋", title: "Situation & Forme", text: v.situation, col: `${pc}90` },
             { icon: "🎯", title: "Analyse adversaire", text: v.adversaire, col: "#F87171" },
-            { icon: "⚙", title: "Style de jeu attendu", text: v.style, col: "#FBBF24" },
+            { icon: player.position === "GK" ? "🧤" : "⚙", title: player.position === "GK" ? "Clean Sheet & Arrêts" : "Style de jeu attendu", text: v.style, col: "#FBBF24" },
             { icon: "✅", title: "Conclusion", text: v.conclusion, col: "#4ADE80" },
           ].map((s, i) => (
             <div key={i} style={{ padding: "10px 12px", borderBottom: i < 3 ? "1px solid rgba(255,255,255,0.04)" : "none", background: i === 3 ? "rgba(255,255,255,0.02)" : "transparent" }}>
@@ -186,12 +224,17 @@ function DetailPanel({ player }) {
       <div style={{ marginBottom: "14px", padding: "12px", background: `linear-gradient(135deg,${pc}08,rgba(255,255,255,0.02))`, border: `1px solid ${pc}15`, borderRadius: "8px" }}>
         <div style={{ fontSize: "10px", color: `${pc}90`, fontWeight: 800, letterSpacing: "0.12em", marginBottom: "10px" }}>📊 CONTEXTE DU MATCH — {player.name.split(" ").pop().toUpperCase()} vs {player.oppName.toUpperCase()}</div>
         <div style={{ display: "grid", gridTemplateColumns: "repeat(2,1fr)", gap: "8px" }}>
-          {[
-            { l: "Buts encaissés (xGA)", desc: player.position === "GK" || player.position === "DEF" ? "Moins l'adversaire encaisse, plus c'est dur" : "Plus l'adversaire encaisse, plus il y a d'occasions", v: oppXga.toFixed(2), c: player.position === "GK" || player.position === "DEF" ? (oppXga < 1.2 ? "#4ADE80" : oppXga < 1.5 ? "#FCD34D" : "#F87171") : (oppXga > 1.6 ? "#4ADE80" : oppXga > 1.2 ? "#FCD34D" : "#F87171") },
+          {(player.position === "GK" ? [
+            { l: "xG adverse (buts attendus)", desc: oppXg < 1.0 ? "Adversaire très peu dangereux → CS probable" : oppXg < 1.3 ? "Adversaire peu offensif → CS possible" : oppXg < 1.6 ? "Adversaire moyen → CS 50/50" : "Adversaire dangereux → CS difficile", v: oppXg.toFixed(2), c: oppXg < 1.2 ? "#4ADE80" : oppXg < 1.5 ? "#FCD34D" : "#F87171" },
+            { l: "Probabilité Clean Sheet", desc: oppXg < 1.0 ? "+10pts CS bonus très probable" : oppXg < 1.3 ? "Bonus CS jouable" : "CS bonus peu probable", v: oppXg < 1.0 ? ">50%" : oppXg < 1.3 ? "~35%" : oppXg < 1.6 ? "~25%" : "<20%", c: oppXg < 1.3 ? "#4ADE80" : "#FCD34D", sm: true },
+            { l: "Potentiel d'arrêts", desc: oppXg > 1.5 ? "Beaucoup de tirs attendus → AA élevé" : "Peu de tirs → moins d'arrêts mais CS probable", v: oppXg > 1.5 ? "Élevé" : oppXg > 1.2 ? "Moyen" : "Faible", c: "#fff", sm: true },
+            { l: "Tendance récente", desc: es > 10 ? "En forte hausse → confiance !" : es > 0 ? "Légère progression" : es === 0 ? "Forme stable" : "En baisse de régime", v: `${es > 0 ? "+" : ""}${es}%`, c: es > 15 ? "#4ADE80" : es > 0 ? "#FCD34D" : "#F87171" },
+          ] : [
+            { l: "Buts encaissés (xGA)", desc: player.position === "DEF" ? "Moins l'adversaire encaisse, plus c'est dur" : "Plus l'adversaire encaisse, plus il y a d'occasions", v: oppXga.toFixed(2), c: player.position === "DEF" ? (oppXga < 1.2 ? "#4ADE80" : oppXga < 1.5 ? "#FCD34D" : "#F87171") : (oppXga > 1.6 ? "#4ADE80" : oppXga > 1.2 ? "#FCD34D" : "#F87171") },
             { l: "Pressing adverse (PPDA)", desc: oppPpda >= 15 ? "PPDA fort = peu de pressing → possession facilitée" : oppPpda >= 12 ? "PPDA moyen = pressing modéré → match équilibré" : "PPDA faible = pressing intense → duels et récupérations", v: oppPpda.toFixed(1), c: "#fff" },
             { l: "Style de jeu adverse", desc: style === "Bloc bas" ? "Équipe qui défend bas → possession dominante" : style === "Pressing" ? "Équipe agressive → match ouvert et duels" : "Équipe équilibrée → match classique", v: style, c: style === "Bloc bas" ? "#4ADE80" : style === "Pressing" ? "#FB923C" : "#FCD34D", sm: true },
             { l: "Tendance récente", desc: es > 10 ? "En forte hausse → confiance !" : es > 0 ? "Légère progression" : es === 0 ? "Forme stable" : "En baisse de régime", v: `${es > 0 ? "+" : ""}${es}%`, c: es > 15 ? "#4ADE80" : es > 0 ? "#FCD34D" : "#F87171" },
-          ].map(item => (
+          ]).map(item => (
             <div key={item.l} style={{ textAlign: "center", background: "rgba(255,255,255,0.02)", borderRadius: "6px", padding: "8px 6px" }}>
               <div style={{ fontSize: "9px", color: "rgba(255,255,255,0.5)", fontWeight: 700, marginBottom: "2px" }}>{item.l}</div>
               <div style={{ fontFamily: item.sm ? "inherit" : "'DM Mono',monospace", fontSize: item.sm ? "14px" : "22px", fontWeight: 700, color: item.c, margin: "4px 0" }}>{item.v}</div>
@@ -206,7 +249,7 @@ function DetailPanel({ player }) {
         {[
           { label: "L2", score: Math.round(l2), aa: null },
           { label: "L5", score: Math.round(player.l5), aa: Math.round(player.aa5) },
-          { label: "FLOOR", score: player.floor, aa: null },
+          { label: "MIN", score: player.min_15 ?? player.floor, aa: null },
         ].map(s => (
           <div key={s.label} style={{ background: "rgba(255,255,255,0.03)", borderRadius: "8px", padding: "8px 6px", textAlign: "center" }}>
             <div style={{ fontSize: "8px", color: "rgba(255,255,255,0.3)", fontWeight: 700, letterSpacing: "0.06em", marginBottom: "4px" }}>{s.label}</div>
@@ -219,7 +262,7 @@ function DetailPanel({ player }) {
   );
 }
 
-export default function RecoTab({ players, teams, fixtures }) {
+export default function RecoTab({ players, teams, fixtures, logos = {} }) {
   const [league, setLeague] = useState("L1");
   const [sel, setSel] = useState(null);
 
@@ -331,22 +374,22 @@ export default function RecoTab({ players, teams, fixtures }) {
         {/* Formation */}
         <div style={{ position: "relative", zIndex: 2, display: "flex", flexDirection: "column", gap: "18px", alignItems: "center" }}>
           <div style={{ display: "flex", justifyContent: "center", gap: "80px" }}>
-            {att.map((p, i) => <PlayerCard key={i} player={p} isSelected={sel === `ATT${i}`} onClick={() => setSel(sel === `ATT${i}` ? null : `ATT${i}`)} />)}
+            {att.map((p, i) => <PlayerCard key={i} player={p} isSelected={sel === `ATT${i}`} onClick={() => setSel(sel === `ATT${i}` ? null : `ATT${i}`)} logos={logos} />)}
           </div>
           <div style={{ width: "100%", display: "flex", justifyContent: "space-between", padding: "0 25px" }}>
-            {mil.map((p, i) => <PlayerCard key={i} player={p} isSelected={sel === `MIL${i}`} onClick={() => setSel(sel === `MIL${i}` ? null : `MIL${i}`)} />)}
+            {mil.map((p, i) => <PlayerCard key={i} player={p} isSelected={sel === `MIL${i}`} onClick={() => setSel(sel === `MIL${i}` ? null : `MIL${i}`)} logos={logos} />)}
           </div>
           <div style={{ display: "flex", justifyContent: "center", gap: "60px" }}>
-            {def.map((p, i) => <PlayerCard key={i} player={p} isSelected={sel === `DEF${i}`} onClick={() => setSel(sel === `DEF${i}` ? null : `DEF${i}`)} />)}
+            {def.map((p, i) => <PlayerCard key={i} player={p} isSelected={sel === `DEF${i}`} onClick={() => setSel(sel === `DEF${i}` ? null : `DEF${i}`)} logos={logos} />)}
           </div>
           <div style={{ display: "flex", justifyContent: "center" }}>
-            {gk.map((p, i) => <PlayerCard key={i} player={p} isSelected={sel === `GK${i}`} onClick={() => setSel(sel === `GK${i}` ? null : `GK${i}`)} />)}
+            {gk.map((p, i) => <PlayerCard key={i} player={p} isSelected={sel === `GK${i}`} onClick={() => setSel(sel === `GK${i}` ? null : `GK${i}`)} logos={logos} />)}
           </div>
         </div>
       </div>
 
       {/* Detail panel */}
-      <DetailPanel player={selPlayer} />
+      <DetailPanel player={selPlayer} logos={logos} />
 
       {/* CTA */}
       <div style={{ marginTop: "12px", padding: "18px", textAlign: "center", background: "linear-gradient(135deg,rgba(34,197,94,0.05),rgba(99,102,241,0.05))", border: "1px solid rgba(34,197,94,0.12)", borderRadius: "12px" }}>

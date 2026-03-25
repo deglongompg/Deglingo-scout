@@ -2,7 +2,7 @@ import { dsColor, dsBg, POSITION_COLORS, getArchetypeColor } from "../utils/colo
 import RadarChart from "./RadarChart";
 import MiniGraph from "./MiniGraph";
 
-export default function PlayerCard({ player, onClose }) {
+export default function PlayerCard({ player, onClose, logos = {} }) {
   const p = player;
   const posCol = POSITION_COLORS[p.position] || "#6B7280";
   const archCol = getArchetypeColor(p.archetype);
@@ -24,7 +24,10 @@ export default function PlayerCard({ player, onClose }) {
         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: 20 }}>
           <div>
             <div style={{ fontSize: 22, fontWeight: 700, color: "#fff" }}>{p.name}</div>
-            <div style={{ fontSize: 13, color: "rgba(255,255,255,0.5)", marginTop: 2 }}>{p.club}</div>
+            <div style={{ fontSize: 13, color: "rgba(255,255,255,0.5)", marginTop: 2, display: "flex", alignItems: "center", gap: 5 }}>
+              {logos[p.club] && <img src={`/data/logos/${logos[p.club]}`} alt="" style={{ width: 16, height: 16, objectFit: "contain" }} />}
+              {p.club}
+            </div>
             <div style={{ display: "flex", gap: 8, marginTop: 8 }}>
               <span style={{
                 padding: "2px 10px", borderRadius: 20, fontSize: 11, fontWeight: 600,

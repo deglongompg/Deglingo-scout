@@ -156,7 +156,7 @@ export default function DbTab({ players, teams, fixtures, logos = {} }) {
             <span style={{ display: "inline-block", width: 10, height: 10, borderRadius: 3, background: "linear-gradient(135deg,#4ADE80,#22C55E)", boxShadow: "0 0 6px #4ADE80" }} />
             L2 explosion
           </span>
-          <span><span style={{ color: "#A5B4FC" }}>L€</span> Limited · <span style={{ color: "#FBBF24" }}>R€</span> Rare</span>
+          <span><span style={{ color: "#FBBF24" }}>L€</span> Limited · <span style={{ color: "#EF4444" }}>R€</span> Rare</span>
         </div>
       </div>
 
@@ -262,12 +262,12 @@ export default function DbTab({ players, teams, fixtures, logos = {} }) {
                   <td style={{ textAlign: "center", fontFamily: "DM Mono", fontSize: 11, color: p.titu_pct >= 80 ? "#4ADE80" : p.titu_pct >= 50 ? "#FBBF24" : "#EF4444" }}>{R(p.titu_pct)}%</td>
                   <td style={{ textAlign: "center", fontFamily: "DM Mono", fontSize: 10, borderLeft: "1px solid rgba(255,255,255,0.04)" }}>
                     {p.price_limited != null ? (
-                      <span style={{ color: "#A5B4FC" }}>{p.price_limited < 1 ? p.price_limited.toFixed(2) : Math.round(p.price_limited)}€</span>
+                      <span style={{ color: "#FBBF24" }}>{p.price_limited < 1 ? p.price_limited.toFixed(2) : Math.round(p.price_limited)}€</span>
                     ) : <span style={{ color: "rgba(255,255,255,0.12)" }}>—</span>}
                   </td>
                   <td style={{ textAlign: "center", fontFamily: "DM Mono", fontSize: 10 }}>
                     {p.price_rare != null ? (
-                      <span style={{ color: "#FBBF24" }}>{p.price_rare < 1 ? p.price_rare.toFixed(2) : Math.round(p.price_rare)}€</span>
+                      <span style={{ color: "#EF4444" }}>{p.price_rare < 1 ? p.price_rare.toFixed(2) : Math.round(p.price_rare)}€</span>
                     ) : <span style={{ color: "rgba(255,255,255,0.12)" }}>—</span>}
                   </td>
                   {hasFixtures && <>

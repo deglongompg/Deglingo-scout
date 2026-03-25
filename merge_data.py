@@ -24,11 +24,29 @@ for filename, league_short in LEAGUES.items():
         p["league"] = league_short
         apps = max(p.get("appearances", 1), 1)
         p["ga_per_match"] = round((p.get("goals", 0) + p.get("assists", 0)) / apps, 3)
+        # Fix titu_pct if missing or 0
         mp = p.get("matchs_played", 0) or 0
         mt = p.get("matchs_total", 0) or 0
         if mt > 0 and (not p.get("titu_pct") or p["titu_pct"] == 0):
             p["titu_pct"] = round(mp / mt * 100)
+        # Fix reg10 if missing — recalculate from last_10
+        if p.get("reg10") is None:
+            l10 = (p.get("last_10") or p.get("last_5") or [])[:10]
+            p["reg10"] = round(sum(1 for s in l10 if s > 60) / len(l10) * 100) if l10 else 0
+        # Ensure no None on critical display fields
+        for k in ["l2", "l5", "l10", "aa2", "aa5", "aa10", "floor", "ceiling",
+                   "min_15", "max_15", "regularite", "ds_rate", "titu_pct"]:
+            if p.get(k) is None:
+                p[k] = 0
         all_players.append(p)
+
+    # Validation report
+    bad_titu = sum(1 for p in all_players if p["titu_pct"] == 0 and (p.get("matchs_played", 0) or 0) > 0)
+    bad_reg = sum(1 for p in all_players if p.get("reg10") is None)
+    if bad_titu or bad_reg:
+        print(f"⚠️  Anomalies: {bad_titu} titu_pct=0 suspects, {bad_reg} reg10=None")
+    else:
+        print(f"✅ Validation OK — aucune donnée vide détectée")
 
 for outdir in ["public/data", "deglingo-scout-app/public/data"]:
     os.makedirs(outdir, exist_ok=True)

@@ -53,7 +53,7 @@
     "yellow": 1,
     "red": 0,
     "mins_per_match": 31.0,
-    "titu_pct": 0,
+    "titu_pct": 90,
     "matchs_played": 9,
     "matchs_total": 10,
     "last_date": "2026-03-22",
@@ -64,7 +64,15 @@
     "aa_negative": -12.6,
     "final_third_passes_avg": 2.5,
     "aa_matches_analyzed": 4,
-    "archetype": "MIL Rotation"
+    "archetype": "MIL Rotation",
+    "reg10": 0.0,
+    "last_10": [
+      33.0,
+      31.7,
+      28.9,
+      24.2,
+      34.6
+    ]
   },
   {
     "name": "Oihan Sancet",
@@ -120,7 +128,7 @@
     "yellow": 4,
     "red": 1,
     "mins_per_match": 68.0,
-    "titu_pct": 0,
+    "titu_pct": 80,
     "matchs_played": 8,
     "matchs_total": 10,
     "last_date": "2026-03-22",
@@ -131,7 +139,15 @@
     "aa_negative": -17.6,
     "final_third_passes_avg": 9.6,
     "aa_matches_analyzed": 5,
-    "archetype": "MIL Dribbleur"
+    "archetype": "MIL Dribbleur",
+    "reg10": 20.0,
+    "last_10": [
+      81.5,
+      38.1,
+      36.8,
+      28.7,
+      27.8
+    ]
   },
   {
     "name": "Nico Williams",
@@ -185,11 +201,17 @@
     "yellow": 1,
     "red": 0,
     "mins_per_match": 69.0,
-    "titu_pct": 0,
+    "titu_pct": 30,
     "matchs_played": 3,
     "matchs_total": 10,
     "last_date": "2026-02-08",
-    "archetype": "ATT Rotation"
+    "archetype": "ATT Rotation",
+    "reg10": 0.0,
+    "last_10": [
+      42.5,
+      43.8,
+      35.8
+    ]
   },
   {
     "name": "Aitor Paredes",
@@ -245,11 +267,19 @@
     "yellow": 4,
     "red": 0,
     "mins_per_match": 85.0,
-    "titu_pct": 0,
+    "titu_pct": 50,
     "matchs_played": 5,
     "matchs_total": 10,
     "last_date": "2026-02-15",
-    "archetype": "DEF Central"
+    "archetype": "DEF Central",
+    "reg10": 0.0,
+    "last_10": [
+      34.4,
+      47.7,
+      39.6,
+      60.0,
+      44.2
+    ]
   },
   {
     "name": "Yuri",
@@ -305,7 +335,7 @@
     "yellow": 3,
     "red": 0,
     "mins_per_match": 84.0,
-    "titu_pct": 0,
+    "titu_pct": 90,
     "matchs_played": 9,
     "matchs_total": 10,
     "last_date": "2026-03-22",
@@ -316,7 +346,15 @@
     "aa_negative": -21.8,
     "final_third_passes_avg": 13.5,
     "aa_matches_analyzed": 4,
-    "archetype": "DEF Latéral"
+    "archetype": "DEF Latéral",
+    "reg10": 60.0,
+    "last_10": [
+      38.4,
+      62.0,
+      54.6,
+      97.0,
+      93.2
+    ]
   },
   {
     "name": "Adama Boiro",
@@ -371,7 +409,7 @@
     "yellow": 1,
     "red": 0,
     "mins_per_match": 66.0,
-    "titu_pct": 0,
+    "titu_pct": 40,
     "matchs_played": 4,
     "matchs_total": 10,
     "last_date": "2026-03-07",
@@ -382,7 +420,14 @@
     "aa_negative": -13.0,
     "final_third_passes_avg": 3.0,
     "aa_matches_analyzed": 1,
-    "archetype": "DEF Central"
+    "archetype": "DEF Central",
+    "reg10": 0.0,
+    "last_10": [
+      54.1,
+      40.9,
+      46.2,
+      28.7
+    ]
   },
   {
     "name": "Eder García",
@@ -435,7 +480,7 @@
     "yellow": 5,
     "red": 0,
     "mins_per_match": 80.0,
-    "titu_pct": 0,
+    "titu_pct": 20,
     "matchs_played": 2,
     "matchs_total": 10,
     "last_date": "2026-03-07",
@@ -446,7 +491,12 @@
     "aa_negative": -6.8,
     "final_third_passes_avg": 1.5,
     "aa_matches_analyzed": 2,
-    "archetype": "MIL Rotation"
+    "archetype": "MIL Rotation",
+    "reg10": 0.0,
+    "last_10": [
+      29.6,
+      31.1
+    ]
   },
   {
     "name": "Aymeric Laporte",
@@ -502,7 +552,7 @@
     "yellow": 2,
     "red": 0,
     "mins_per_match": 82.0,
-    "titu_pct": 0,
+    "titu_pct": 70,
     "matchs_played": 7,
     "matchs_total": 10,
     "last_date": "2026-03-22",
@@ -513,7 +563,15 @@
     "aa_negative": -14.7,
     "final_third_passes_avg": 2.8,
     "aa_matches_analyzed": 5,
-    "archetype": "DEF Latéral"
+    "archetype": "DEF Latéral",
+    "reg10": 40.0,
+    "last_10": [
+      49.3,
+      87.3,
+      40.6,
+      42.7,
+      91.0
+    ]
   },
   {
     "name": "Gorosabel",
@@ -569,7 +627,7 @@
     "yellow": 2,
     "red": 0,
     "mins_per_match": 51.0,
-    "titu_pct": 0,
+    "titu_pct": 70,
     "matchs_played": 7,
     "matchs_total": 10,
     "last_date": "2026-03-14",
@@ -580,7 +638,15 @@
     "aa_negative": -12.2,
     "final_third_passes_avg": 4.0,
     "aa_matches_analyzed": 3,
-    "archetype": "DEF Central"
+    "archetype": "DEF Central",
+    "reg10": 0.0,
+    "last_10": [
+      44.0,
+      44.6,
+      47.8,
+      51.5,
+      23.1
+    ]
   },
   {
     "name": "Mikel Vesga",
@@ -636,7 +702,7 @@
     "yellow": 0,
     "red": 0,
     "mins_per_match": 20.0,
-    "titu_pct": 0,
+    "titu_pct": 80,
     "matchs_played": 8,
     "matchs_total": 10,
     "last_date": "2026-03-22",
@@ -647,7 +713,15 @@
     "aa_negative": -6.4,
     "final_third_passes_avg": 2.2,
     "aa_matches_analyzed": 5,
-    "archetype": "MIL Rotation"
+    "archetype": "MIL Rotation",
+    "reg10": 0.0,
+    "last_10": [
+      32.6,
+      50.0,
+      40.8,
+      41.2,
+      35.3
+    ]
   },
   {
     "name": "Gorka Guruzeta",
@@ -703,7 +777,7 @@
     "yellow": 3,
     "red": 1,
     "mins_per_match": 65.0,
-    "titu_pct": 0,
+    "titu_pct": 90,
     "matchs_played": 9,
     "matchs_total": 10,
     "last_date": "2026-03-22",
@@ -714,7 +788,15 @@
     "aa_negative": -8.7,
     "final_third_passes_avg": 3.0,
     "aa_matches_analyzed": 5,
-    "archetype": "ATT Dribbleur"
+    "archetype": "ATT Dribbleur",
+    "reg10": 20.0,
+    "last_10": [
+      36.2,
+      41.3,
+      37.2,
+      25.4,
+      81.1
+    ]
   },
   {
     "name": "Lekue",
@@ -767,7 +849,7 @@
     "yellow": 2,
     "red": 2,
     "mins_per_match": 68.0,
-    "titu_pct": 0,
+    "titu_pct": 20,
     "matchs_played": 2,
     "matchs_total": 10,
     "last_date": "2026-03-22",
@@ -778,7 +860,12 @@
     "aa_negative": -30.8,
     "final_third_passes_avg": 3.0,
     "aa_matches_analyzed": 1,
-    "archetype": "DEF Latéral"
+    "archetype": "DEF Latéral",
+    "reg10": 0.0,
+    "last_10": [
+      27.8,
+      35.0
+    ]
   },
   {
     "name": "Dani Vivian",
@@ -834,7 +921,7 @@
     "yellow": 8,
     "red": 1,
     "mins_per_match": 87.0,
-    "titu_pct": 0,
+    "titu_pct": 60,
     "matchs_played": 6,
     "matchs_total": 10,
     "last_date": "2026-03-22",
@@ -845,7 +932,15 @@
     "aa_negative": -25.0,
     "final_third_passes_avg": 4.8,
     "aa_matches_analyzed": 5,
-    "archetype": "DEF Central"
+    "archetype": "DEF Central",
+    "reg10": 40.0,
+    "last_10": [
+      67.6,
+      42.3,
+      45.4,
+      29.2,
+      68.7
+    ]
   },
   {
     "name": "Williams",
@@ -901,7 +996,7 @@
     "yellow": 1,
     "red": 0,
     "mins_per_match": 71.0,
-    "titu_pct": 0,
+    "titu_pct": 80,
     "matchs_played": 8,
     "matchs_total": 10,
     "last_date": "2026-03-22",
@@ -912,7 +1007,15 @@
     "aa_negative": -11.5,
     "final_third_passes_avg": 5.2,
     "aa_matches_analyzed": 5,
-    "archetype": "ATT Dribbleur"
+    "archetype": "ATT Dribbleur",
+    "reg10": 20.0,
+    "last_10": [
+      75.1,
+      43.1,
+      29.9,
+      60.0,
+      33.9
+    ]
   },
   {
     "name": "Álex Berenguer",
@@ -968,7 +1071,7 @@
     "yellow": 4,
     "red": 0,
     "mins_per_match": 74.0,
-    "titu_pct": 0,
+    "titu_pct": 70,
     "matchs_played": 7,
     "matchs_total": 10,
     "last_date": "2026-03-22",
@@ -979,7 +1082,15 @@
     "aa_negative": -8.8,
     "final_third_passes_avg": 11.2,
     "aa_matches_analyzed": 4,
-    "archetype": "ATT Dribbleur"
+    "archetype": "ATT Dribbleur",
+    "reg10": 20.0,
+    "last_10": [
+      44.3,
+      46.6,
+      59.6,
+      67.1,
+      38.3
+    ]
   },
   {
     "name": "Alejandro Rego",
@@ -1035,7 +1146,7 @@
     "yellow": 5,
     "red": 0,
     "mins_per_match": 39.0,
-    "titu_pct": 0,
+    "titu_pct": 80,
     "matchs_played": 8,
     "matchs_total": 10,
     "last_date": "2026-03-22",
@@ -1046,7 +1157,15 @@
     "aa_negative": -9.8,
     "final_third_passes_avg": 3.0,
     "aa_matches_analyzed": 4,
-    "archetype": "MIL Récup"
+    "archetype": "MIL Récup",
+    "reg10": 0.0,
+    "last_10": [
+      55.4,
+      41.5,
+      41.1,
+      36.2,
+      34.8
+    ]
   },
   {
     "name": "Urko Izeta",
@@ -1101,7 +1220,7 @@
     "yellow": 2,
     "red": 0,
     "mins_per_match": 15.0,
-    "titu_pct": 0,
+    "titu_pct": 40,
     "matchs_played": 4,
     "matchs_total": 10,
     "last_date": "2026-03-14",
@@ -1112,7 +1231,14 @@
     "aa_negative": -0.7,
     "final_third_passes_avg": 2.0,
     "aa_matches_analyzed": 2,
-    "archetype": "ATT Finisseur"
+    "archetype": "ATT Finisseur",
+    "reg10": 0.0,
+    "last_10": [
+      38.2,
+      37.7,
+      29.9,
+      38.5
+    ]
   },
   {
     "name": "Nico Serrano",
@@ -1168,7 +1294,7 @@
     "yellow": 0,
     "red": 0,
     "mins_per_match": 25.0,
-    "titu_pct": 0,
+    "titu_pct": 60,
     "matchs_played": 6,
     "matchs_total": 10,
     "last_date": "2026-03-22",
@@ -1179,7 +1305,15 @@
     "aa_negative": -1.9,
     "final_third_passes_avg": 1.5,
     "aa_matches_analyzed": 2,
-    "archetype": "ATT Finisseur"
+    "archetype": "ATT Finisseur",
+    "reg10": 20.0,
+    "last_10": [
+      35.0,
+      40.4,
+      40.3,
+      77.8,
+      32.7
+    ]
   },
   {
     "name": "Unai Simón",
@@ -1235,7 +1369,7 @@
     "yellow": 1,
     "red": 0,
     "mins_per_match": 90.0,
-    "titu_pct": 0,
+    "titu_pct": 100,
     "matchs_played": 10,
     "matchs_total": 10,
     "last_date": "2026-03-22",
@@ -1246,7 +1380,15 @@
     "aa_negative": -14.5,
     "final_third_passes_avg": 4.0,
     "aa_matches_analyzed": 5,
-    "archetype": "GK"
+    "archetype": "GK",
+    "reg10": 0.0,
+    "last_10": [
+      44.8,
+      45.8,
+      49.2,
+      57.6,
+      33.9
+    ]
   },
   {
     "name": "Ademola Lookman",
@@ -1302,7 +1444,7 @@
     "yellow": 1,
     "red": 0,
     "mins_per_match": 60.0,
-    "titu_pct": 0,
+    "titu_pct": 100,
     "matchs_played": 10,
     "matchs_total": 10,
     "last_date": "2026-03-22",
@@ -1313,7 +1455,15 @@
     "aa_negative": -4.3,
     "final_third_passes_avg": 7.2,
     "aa_matches_analyzed": 5,
-    "archetype": "ATT Complet"
+    "archetype": "ATT Complet",
+    "reg10": 40.0,
+    "last_10": [
+      68.8,
+      75.4,
+      41.0,
+      44.7,
+      41.5
+    ]
   },
   {
     "name": "Álex Baena",
@@ -1369,7 +1519,7 @@
     "yellow": 3,
     "red": 0,
     "mins_per_match": 54.0,
-    "titu_pct": 0,
+    "titu_pct": 80,
     "matchs_played": 8,
     "matchs_total": 10,
     "last_date": "2026-03-22",
@@ -1380,7 +1530,15 @@
     "aa_negative": -8.9,
     "final_third_passes_avg": 6.0,
     "aa_matches_analyzed": 3,
-    "archetype": "MIL Rotation"
+    "archetype": "MIL Rotation",
+    "reg10": 0.0,
+    "last_10": [
+      38.6,
+      34.3,
+      50.6,
+      50.8,
+      39.6
+    ]
   },
   {
     "name": "Matteo Ruggeri",
@@ -1436,7 +1594,7 @@
     "yellow": 4,
     "red": 0,
     "mins_per_match": 66.0,
-    "titu_pct": 0,
+    "titu_pct": 80,
     "matchs_played": 8,
     "matchs_total": 10,
     "last_date": "2026-03-22",
@@ -1447,7 +1605,15 @@
     "aa_negative": -17.2,
     "final_third_passes_avg": 13.0,
     "aa_matches_analyzed": 4,
-    "archetype": "DEF Latéral"
+    "archetype": "DEF Latéral",
+    "reg10": 40.0,
+    "last_10": [
+      38.9,
+      35.8,
+      52.4,
+      71.0,
+      80.1
+    ]
   },
   {
     "name": "Marc Pubill",
@@ -1503,7 +1669,7 @@
     "yellow": 1,
     "red": 0,
     "mins_per_match": 70.0,
-    "titu_pct": 0,
+    "titu_pct": 50,
     "matchs_played": 5,
     "matchs_total": 10,
     "last_date": "2026-03-14",
@@ -1514,7 +1680,15 @@
     "aa_negative": -18.3,
     "final_third_passes_avg": 4.5,
     "aa_matches_analyzed": 2,
-    "archetype": "DEF Central"
+    "archetype": "DEF Central",
+    "reg10": 20.0,
+    "last_10": [
+      54.3,
+      40.9,
+      50.7,
+      66.4,
+      34.0
+    ]
   },
   {
     "name": "Dávid Hancko",
@@ -1570,7 +1744,7 @@
     "yellow": 2,
     "red": 0,
     "mins_per_match": 81.0,
-    "titu_pct": 0,
+    "titu_pct": 70,
     "matchs_played": 7,
     "matchs_total": 10,
     "last_date": "2026-03-22",
@@ -1581,7 +1755,15 @@
     "aa_negative": -26.1,
     "final_third_passes_avg": 6.0,
     "aa_matches_analyzed": 4,
-    "archetype": "DEF Latéral"
+    "archetype": "DEF Latéral",
+    "reg10": 20.0,
+    "last_10": [
+      12.0,
+      60.0,
+      52.3,
+      40.3,
+      92.2
+    ]
   },
   {
     "name": "Robin Le Normand",
@@ -1637,7 +1819,7 @@
     "yellow": 3,
     "red": 0,
     "mins_per_match": 63.0,
-    "titu_pct": 0,
+    "titu_pct": 70,
     "matchs_played": 7,
     "matchs_total": 10,
     "last_date": "2026-03-22",
@@ -1648,7 +1830,15 @@
     "aa_negative": -11.0,
     "final_third_passes_avg": 2.3,
     "aa_matches_analyzed": 3,
-    "archetype": "DEF Central"
+    "archetype": "DEF Central",
+    "reg10": 40.0,
+    "last_10": [
+      43.5,
+      63.5,
+      76.9,
+      43.1,
+      34.9
+    ]
   },
   {
     "name": "Rodrigo Mendoza",
@@ -1703,7 +1893,7 @@
     "yellow": 5,
     "red": 0,
     "mins_per_match": 50.0,
-    "titu_pct": 0,
+    "titu_pct": 40,
     "matchs_played": 4,
     "matchs_total": 10,
     "last_date": "2026-03-07",
@@ -1714,7 +1904,14 @@
     "aa_negative": -8.9,
     "final_third_passes_avg": 4.0,
     "aa_matches_analyzed": 1,
-    "archetype": "MIL Récup"
+    "archetype": "MIL Récup",
+    "reg10": 0.0,
+    "last_10": [
+      39.1,
+      47.2,
+      32.7,
+      31.5
+    ]
   },
   {
     "name": "Jan Oblak",
@@ -1770,7 +1967,7 @@
     "yellow": 0,
     "red": 0,
     "mins_per_match": 90.0,
-    "titu_pct": 0,
+    "titu_pct": 70,
     "matchs_played": 7,
     "matchs_total": 10,
     "last_date": "2026-03-10",
@@ -1781,7 +1978,15 @@
     "aa_negative": -16.2,
     "final_third_passes_avg": 0.5,
     "aa_matches_analyzed": 2,
-    "archetype": "GK"
+    "archetype": "GK",
+    "reg10": 40.0,
+    "last_10": [
+      14.9,
+      23.4,
+      82.0,
+      82.3,
+      27.4
+    ]
   },
   {
     "name": "João Cardoso",
@@ -1837,7 +2042,7 @@
     "yellow": 5,
     "red": 0,
     "mins_per_match": 59.0,
-    "titu_pct": 0,
+    "titu_pct": 90,
     "matchs_played": 9,
     "matchs_total": 10,
     "last_date": "2026-03-22",
@@ -1848,7 +2053,15 @@
     "aa_negative": -15.3,
     "final_third_passes_avg": 5.8,
     "aa_matches_analyzed": 4,
-    "archetype": "MIL Récup"
+    "archetype": "MIL Récup",
+    "reg10": 0.0,
+    "last_10": [
+      32.0,
+      53.6,
+      34.1,
+      38.2,
+      48.5
+    ]
   },
   {
     "name": "Juan Musso",
@@ -1902,7 +2115,7 @@
     "yellow": 1,
     "red": 0,
     "mins_per_match": 90.0,
-    "titu_pct": 0,
+    "titu_pct": 30,
     "matchs_played": 3,
     "matchs_total": 10,
     "last_date": "2026-03-22",
@@ -1913,7 +2126,13 @@
     "aa_negative": -13.5,
     "final_third_passes_avg": 0.7,
     "aa_matches_analyzed": 3,
-    "archetype": "GK"
+    "archetype": "GK",
+    "reg10": 33.0,
+    "last_10": [
+      29.6,
+      53.3,
+      80.5
+    ]
   },
   {
     "name": "Antoine Griezmann",
@@ -1969,7 +2188,7 @@
     "yellow": 0,
     "red": 0,
     "mins_per_match": 36.0,
-    "titu_pct": 0,
+    "titu_pct": 90,
     "matchs_played": 9,
     "matchs_total": 10,
     "last_date": "2026-03-22",
@@ -1980,7 +2199,15 @@
     "aa_negative": -5.9,
     "final_third_passes_avg": 7.6,
     "aa_matches_analyzed": 5,
-    "archetype": "ATT Créateur"
+    "archetype": "ATT Créateur",
+    "reg10": 40.0,
+    "last_10": [
+      44.7,
+      45.0,
+      38.7,
+      85.4,
+      70.3
+    ]
   },
   {
     "name": "Nahuel Molina",
@@ -2036,7 +2263,7 @@
     "yellow": 3,
     "red": 0,
     "mins_per_match": 49.0,
-    "titu_pct": 0,
+    "titu_pct": 90,
     "matchs_played": 9,
     "matchs_total": 10,
     "last_date": "2026-03-22",
@@ -2047,7 +2274,15 @@
     "aa_negative": -22.8,
     "final_third_passes_avg": 12.0,
     "aa_matches_analyzed": 4,
-    "archetype": "DEF Latéral"
+    "archetype": "DEF Latéral",
+    "reg10": 60.0,
+    "last_10": [
+      67.0,
+      48.6,
+      81.8,
+      61.6,
+      49.7
+    ]
   },
   {
     "name": "Obed Vargas",
@@ -2100,7 +2335,7 @@
     "yellow": 6,
     "red": 0,
     "mins_per_match": 83.0,
-    "titu_pct": 0,
+    "titu_pct": 20,
     "matchs_played": 2,
     "matchs_total": 10,
     "last_date": "2026-03-14",
@@ -2111,7 +2346,12 @@
     "aa_negative": -15.7,
     "final_third_passes_avg": 11.0,
     "aa_matches_analyzed": 1,
-    "archetype": "MIL Récup"
+    "archetype": "MIL Récup",
+    "reg10": 0.0,
+    "last_10": [
+      47.7,
+      44.1
+    ]
   },
   {
     "name": "Nicolás González",
@@ -2167,7 +2407,7 @@
     "yellow": 3,
     "red": 0,
     "mins_per_match": 57.0,
-    "titu_pct": 0,
+    "titu_pct": 60,
     "matchs_played": 6,
     "matchs_total": 10,
     "last_date": "2026-03-22",
@@ -2178,7 +2418,15 @@
     "aa_negative": -8.3,
     "final_third_passes_avg": 2.8,
     "aa_matches_analyzed": 5,
-    "archetype": "ATT Dribbleur"
+    "archetype": "ATT Dribbleur",
+    "reg10": 20.0,
+    "last_10": [
+      36.2,
+      32.1,
+      43.5,
+      33.1,
+      82.7
+    ]
   },
   {
     "name": "Koke",
@@ -2234,7 +2482,7 @@
     "yellow": 4,
     "red": 0,
     "mins_per_match": 63.0,
-    "titu_pct": 0,
+    "titu_pct": 90,
     "matchs_played": 9,
     "matchs_total": 10,
     "last_date": "2026-03-22",
@@ -2245,7 +2493,15 @@
     "aa_negative": -9.6,
     "final_third_passes_avg": 13.6,
     "aa_matches_analyzed": 5,
-    "archetype": "MIL Relanceur"
+    "archetype": "MIL Relanceur",
+    "reg10": 20.0,
+    "last_10": [
+      37.6,
+      52.9,
+      58.1,
+      36.8,
+      70.7
+    ]
   },
   {
     "name": "Sorloth",
@@ -2301,7 +2557,7 @@
     "yellow": 4,
     "red": 1,
     "mins_per_match": 56.0,
-    "titu_pct": 0,
+    "titu_pct": 100,
     "matchs_played": 10,
     "matchs_total": 10,
     "last_date": "2026-03-22",
@@ -2312,7 +2568,15 @@
     "aa_negative": -9.8,
     "final_third_passes_avg": 2.0,
     "aa_matches_analyzed": 5,
-    "archetype": "ATT Finisseur"
+    "archetype": "ATT Finisseur",
+    "reg10": 0.0,
+    "last_10": [
+      39.4,
+      25.2,
+      34.4,
+      33.2,
+      60.0
+    ]
   },
   {
     "name": "José María Giménez",
@@ -2368,11 +2632,19 @@
     "yellow": 4,
     "red": 0,
     "mins_per_match": 80.0,
-    "titu_pct": 0,
+    "titu_pct": 70,
     "matchs_played": 7,
     "matchs_total": 10,
     "last_date": "2026-03-22",
-    "archetype": "DEF Latéral"
+    "archetype": "DEF Latéral",
+    "reg10": 40.0,
+    "last_10": [
+      0.9,
+      2.7,
+      81.0,
+      79.1,
+      59.4
+    ]
   },
   {
     "name": "Marcus Rashford",
@@ -2428,7 +2700,7 @@
     "yellow": 2,
     "red": 0,
     "mins_per_match": 56.0,
-    "titu_pct": 0,
+    "titu_pct": 60,
     "matchs_played": 6,
     "matchs_total": 10,
     "last_date": "2026-03-22",
@@ -2439,7 +2711,15 @@
     "aa_negative": -2.3,
     "final_third_passes_avg": 3.3,
     "aa_matches_analyzed": 3,
-    "archetype": "ATT Finisseur"
+    "archetype": "ATT Finisseur",
+    "reg10": 0.0,
+    "last_10": [
+      39.7,
+      34.6,
+      43.9,
+      44.0,
+      52.6
+    ]
   },
   {
     "name": "Ronald Araújo",
@@ -2495,7 +2775,7 @@
     "yellow": 0,
     "red": 0,
     "mins_per_match": 0.0,
-    "titu_pct": 0,
+    "titu_pct": 90,
     "matchs_played": 9,
     "matchs_total": 10,
     "last_date": "2026-03-22",
@@ -2506,7 +2786,15 @@
     "aa_negative": -11.2,
     "final_third_passes_avg": 2.6,
     "aa_matches_analyzed": 5,
-    "archetype": "DEF Central"
+    "archetype": "DEF Central",
+    "reg10": 20.0,
+    "last_10": [
+      90.0,
+      51.1,
+      30.5,
+      50.9,
+      36.4
+    ]
   },
   {
     "name": "Gerard Martín",
@@ -2562,7 +2850,7 @@
     "yellow": 5,
     "red": 0,
     "mins_per_match": 60.0,
-    "titu_pct": 0,
+    "titu_pct": 70,
     "matchs_played": 7,
     "matchs_total": 10,
     "last_date": "2026-03-22",
@@ -2573,7 +2861,15 @@
     "aa_negative": -16.6,
     "final_third_passes_avg": 7.2,
     "aa_matches_analyzed": 5,
-    "archetype": "DEF Latéral"
+    "archetype": "DEF Latéral",
+    "reg10": 40.0,
+    "last_10": [
+      53.3,
+      62.2,
+      45.1,
+      45.7,
+      76.1
+    ]
   },
   {
     "name": "Robert Lewandowski",
@@ -2629,7 +2925,7 @@
     "yellow": 2,
     "red": 0,
     "mins_per_match": 50.0,
-    "titu_pct": 0,
+    "titu_pct": 100,
     "matchs_played": 10,
     "matchs_total": 10,
     "last_date": "2026-03-22",
@@ -2640,7 +2936,15 @@
     "aa_negative": -8.5,
     "final_third_passes_avg": 2.4,
     "aa_matches_analyzed": 5,
-    "archetype": "ATT Dribbleur"
+    "archetype": "ATT Dribbleur",
+    "reg10": 20.0,
+    "last_10": [
+      33.8,
+      91.9,
+      30.0,
+      27.4,
+      34.9
+    ]
   },
   {
     "name": "Xavi Espart",
@@ -2695,7 +2999,7 @@
     "yellow": 3,
     "red": 0,
     "mins_per_match": 59.0,
-    "titu_pct": 0,
+    "titu_pct": 40,
     "matchs_played": 4,
     "matchs_total": 10,
     "last_date": "2026-03-22",
@@ -2706,7 +3010,14 @@
     "aa_negative": -8.3,
     "final_third_passes_avg": 1.8,
     "aa_matches_analyzed": 4,
-    "archetype": "DEF Central"
+    "archetype": "DEF Central",
+    "reg10": 0.0,
+    "last_10": [
+      35.6,
+      41.3,
+      57.1,
+      38.0
+    ]
   },
   {
     "name": "Jules Koundé",
@@ -2762,11 +3073,19 @@
     "yellow": 4,
     "red": 0,
     "mins_per_match": 76.0,
-    "titu_pct": 0,
+    "titu_pct": 50,
     "matchs_played": 5,
     "matchs_total": 10,
     "last_date": "2026-02-28",
-    "archetype": "DEF Latéral"
+    "archetype": "DEF Latéral",
+    "reg10": 80.0,
+    "last_10": [
+      97.9,
+      66.3,
+      71.0,
+      64.2,
+      48.6
+    ]
   },
   {
     "name": "Ferran Torres",
@@ -2789,11 +3108,11 @@
       35.2,
       33.7
     ],
-    "aa2": 0.4,
-    "aa3": 0.4,
-    "aa5": 0.0,
-    "aa10": -1.6,
-    "aa15": -1.6,
+    "aa2": 0.3,
+    "aa3": 0.3,
+    "aa5": 0.3,
+    "aa10": 0.3,
+    "aa15": 0.3,
     "ds2": 35.0,
     "ds5": 35.0,
     "ds15": 37.8,
@@ -2822,7 +3141,7 @@
     "yellow": 2,
     "red": 0,
     "mins_per_match": 60.0,
-    "titu_pct": 0,
+    "titu_pct": 90,
     "matchs_played": 9,
     "matchs_total": 10,
     "last_date": "2026-03-22",
@@ -2833,7 +3152,15 @@
     "aa_negative": -1.7,
     "final_third_passes_avg": 1.0,
     "aa_matches_analyzed": 4,
-    "archetype": "ATT Finisseur"
+    "archetype": "ATT Finisseur",
+    "reg10": 0.0,
+    "last_10": [
+      35.8,
+      35.1,
+      35.4,
+      35.2,
+      33.7
+    ]
   },
   {
     "name": "Dani Olmo",
@@ -2889,7 +3216,7 @@
     "yellow": 0,
     "red": 0,
     "mins_per_match": 63.0,
-    "titu_pct": 0,
+    "titu_pct": 100,
     "matchs_played": 10,
     "matchs_total": 10,
     "last_date": "2026-03-22",
@@ -2900,7 +3227,15 @@
     "aa_negative": -7.0,
     "final_third_passes_avg": 5.4,
     "aa_matches_analyzed": 5,
-    "archetype": "MIL Rotation"
+    "archetype": "MIL Rotation",
+    "reg10": 40.0,
+    "last_10": [
+      37.3,
+      37.7,
+      83.2,
+      63.2,
+      51.0
+    ]
   },
   {
     "name": "Pedri",
@@ -2956,7 +3291,7 @@
     "yellow": 1,
     "red": 1,
     "mins_per_match": 69.0,
-    "titu_pct": 0,
+    "titu_pct": 70,
     "matchs_played": 7,
     "matchs_total": 10,
     "last_date": "2026-03-22",
@@ -2967,7 +3302,15 @@
     "aa_negative": -9.1,
     "final_third_passes_avg": 7.4,
     "aa_matches_analyzed": 5,
-    "archetype": "MIL GOAT"
+    "archetype": "MIL GOAT",
+    "reg10": 40.0,
+    "last_10": [
+      80.9,
+      51.5,
+      39.8,
+      50.7,
+      70.4
+    ]
   },
   {
     "name": "Fermín",
@@ -3023,7 +3366,7 @@
     "yellow": 2,
     "red": 0,
     "mins_per_match": 57.0,
-    "titu_pct": 0,
+    "titu_pct": 100,
     "matchs_played": 10,
     "matchs_total": 10,
     "last_date": "2026-03-22",
@@ -3034,7 +3377,15 @@
     "aa_negative": -12.0,
     "final_third_passes_avg": 4.8,
     "aa_matches_analyzed": 5,
-    "archetype": "MIL Rotation"
+    "archetype": "MIL Rotation",
+    "reg10": 40.0,
+    "last_10": [
+      40.6,
+      75.8,
+      65.8,
+      55.2,
+      37.8
+    ]
   },
   {
     "name": "Pau Cubarsí",
@@ -3090,7 +3441,7 @@
     "yellow": 3,
     "red": 0,
     "mins_per_match": 88.0,
-    "titu_pct": 0,
+    "titu_pct": 90,
     "matchs_played": 9,
     "matchs_total": 10,
     "last_date": "2026-03-22",
@@ -3101,7 +3452,15 @@
     "aa_negative": -22.5,
     "final_third_passes_avg": 4.4,
     "aa_matches_analyzed": 5,
-    "archetype": "DEF Central"
+    "archetype": "DEF Central",
+    "reg10": 20.0,
+    "last_10": [
+      55.0,
+      35.6,
+      54.0,
+      64.7,
+      42.6
+    ]
   },
   {
     "name": "João Cancelo",
@@ -3157,7 +3516,7 @@
     "yellow": 0,
     "red": 0,
     "mins_per_match": 68.0,
-    "titu_pct": 0,
+    "titu_pct": 70,
     "matchs_played": 7,
     "matchs_total": 10,
     "last_date": "2026-03-22",
@@ -3168,7 +3527,15 @@
     "aa_negative": -24.7,
     "final_third_passes_avg": 5.6,
     "aa_matches_analyzed": 5,
-    "archetype": "DEF Latéral"
+    "archetype": "DEF Latéral",
+    "reg10": 40.0,
+    "last_10": [
+      100.0,
+      36.8,
+      83.1,
+      40.6,
+      56.8
+    ]
   },
   {
     "name": "Frenkie de Jong",
@@ -3222,11 +3589,17 @@
     "yellow": 5,
     "red": 1,
     "mins_per_match": 79.0,
-    "titu_pct": 0,
+    "titu_pct": 30,
     "matchs_played": 3,
     "matchs_total": 10,
     "last_date": "2026-02-22",
-    "archetype": "MIL GOAT"
+    "archetype": "MIL GOAT",
+    "reg10": 67.0,
+    "last_10": [
+      100.0,
+      56.1,
+      88.5
+    ]
   },
   {
     "name": "Marc Bernal",
@@ -3282,7 +3655,7 @@
     "yellow": 4,
     "red": 0,
     "mins_per_match": 32.0,
-    "titu_pct": 0,
+    "titu_pct": 100,
     "matchs_played": 10,
     "matchs_total": 10,
     "last_date": "2026-03-22",
@@ -3293,7 +3666,15 @@
     "aa_negative": -10.0,
     "final_third_passes_avg": 3.8,
     "aa_matches_analyzed": 5,
-    "archetype": "MIL Récup"
+    "archetype": "MIL Récup",
+    "reg10": 20.0,
+    "last_10": [
+      49.4,
+      63.0,
+      50.3,
+      37.2,
+      48.0
+    ]
   },
   {
     "name": "Roony Bardghji",
@@ -3349,7 +3730,7 @@
     "yellow": 0,
     "red": 0,
     "mins_per_match": 24.0,
-    "titu_pct": 0,
+    "titu_pct": 50,
     "matchs_played": 5,
     "matchs_total": 10,
     "last_date": "2026-03-15",
@@ -3360,7 +3741,15 @@
     "aa_negative": -1.6,
     "final_third_passes_avg": 2.0,
     "aa_matches_analyzed": 1,
-    "archetype": "ATT Finisseur"
+    "archetype": "ATT Finisseur",
+    "reg10": 0.0,
+    "last_10": [
+      39.7,
+      37.6,
+      41.1,
+      44.0,
+      36.3
+    ]
   },
   {
     "name": "Eric García",
@@ -3416,7 +3805,7 @@
     "yellow": 3,
     "red": 0,
     "mins_per_match": 81.0,
-    "titu_pct": 0,
+    "titu_pct": 70,
     "matchs_played": 7,
     "matchs_total": 10,
     "last_date": "2026-03-18",
@@ -3427,7 +3816,15 @@
     "aa_negative": -13.4,
     "final_third_passes_avg": 3.5,
     "aa_matches_analyzed": 2,
-    "archetype": "DEF Central"
+    "archetype": "DEF Central",
+    "reg10": 60.0,
+    "last_10": [
+      28.8,
+      93.6,
+      72.6,
+      98.1,
+      44.3
+    ]
   },
   {
     "name": "Joan García",
@@ -3483,7 +3880,7 @@
     "yellow": 1,
     "red": 0,
     "mins_per_match": 90.0,
-    "titu_pct": 0,
+    "titu_pct": 100,
     "matchs_played": 10,
     "matchs_total": 10,
     "last_date": "2026-03-22",
@@ -3494,7 +3891,15 @@
     "aa_negative": -7.9,
     "final_third_passes_avg": 0.4,
     "aa_matches_analyzed": 5,
-    "archetype": "GK"
+    "archetype": "GK",
+    "reg10": 40.0,
+    "last_10": [
+      87.7,
+      35.3,
+      49.2,
+      37.1,
+      93.8
+    ]
   },
   {
     "name": "Alejandro Balde",
@@ -3549,11 +3954,18 @@
     "yellow": 2,
     "red": 0,
     "mins_per_match": 72.0,
-    "titu_pct": 0,
+    "titu_pct": 40,
     "matchs_played": 4,
     "matchs_total": 10,
     "last_date": "2026-02-28",
-    "archetype": "DEF Central"
+    "archetype": "DEF Central",
+    "reg10": 25.0,
+    "last_10": [
+      42.2,
+      32.9,
+      58.5,
+      66.1
+    ]
   },
   {
     "name": "Marc Casadó",
@@ -3609,7 +4021,7 @@
     "yellow": 0,
     "red": 0,
     "mins_per_match": 46.0,
-    "titu_pct": 0,
+    "titu_pct": 60,
     "matchs_played": 6,
     "matchs_total": 10,
     "last_date": "2026-03-22",
@@ -3620,7 +4032,15 @@
     "aa_negative": -5.3,
     "final_third_passes_avg": 2.5,
     "aa_matches_analyzed": 4,
-    "archetype": "MIL Rotation"
+    "archetype": "MIL Rotation",
+    "reg10": 20.0,
+    "last_10": [
+      49.7,
+      41.2,
+      37.1,
+      42.6,
+      62.6
+    ]
   },
   {
     "name": "Iago Aspas",
@@ -3676,7 +4096,7 @@
     "yellow": 3,
     "red": 0,
     "mins_per_match": 34.0,
-    "titu_pct": 0,
+    "titu_pct": 80,
     "matchs_played": 8,
     "matchs_total": 10,
     "last_date": "2026-03-22",
@@ -3687,7 +4107,15 @@
     "aa_negative": -1.4,
     "final_third_passes_avg": 5.2,
     "aa_matches_analyzed": 4,
-    "archetype": "ATT Finisseur"
+    "archetype": "ATT Finisseur",
+    "reg10": 0.0,
+    "last_10": [
+      38.0,
+      46.9,
+      41.4,
+      39.6,
+      44.0
+    ]
   },
   {
     "name": "A.Nuñez",
@@ -3740,7 +4168,7 @@
     "yellow": 2,
     "red": 0,
     "mins_per_match": 84.0,
-    "titu_pct": 0,
+    "titu_pct": 20,
     "matchs_played": 2,
     "matchs_total": 10,
     "last_date": "2026-03-22",
@@ -3751,7 +4179,12 @@
     "aa_negative": -11.7,
     "final_third_passes_avg": 5.0,
     "aa_matches_analyzed": 2,
-    "archetype": "DEF Latéral"
+    "archetype": "DEF Latéral",
+    "reg10": 0.0,
+    "last_10": [
+      36.5,
+      45.7
+    ]
   },
   {
     "name": "Jones El Abdellaoui",
@@ -3807,7 +4240,7 @@
     "yellow": 0,
     "red": 0,
     "mins_per_match": 31.0,
-    "titu_pct": 0,
+    "titu_pct": 60,
     "matchs_played": 6,
     "matchs_total": 10,
     "last_date": "2026-03-22",
@@ -3818,7 +4251,15 @@
     "aa_negative": -1.9,
     "final_third_passes_avg": 2.0,
     "aa_matches_analyzed": 3,
-    "archetype": "ATT Finisseur"
+    "archetype": "ATT Finisseur",
+    "reg10": 0.0,
+    "last_10": [
+      36.4,
+      34.1,
+      39.4,
+      32.2,
+      28.5
+    ]
   },
   {
     "name": "Joseph Aidoo",
@@ -3872,7 +4313,7 @@
     "yellow": 0,
     "red": 0,
     "mins_per_match": 76.0,
-    "titu_pct": 0,
+    "titu_pct": 30,
     "matchs_played": 3,
     "matchs_total": 10,
     "last_date": "2026-03-19",
@@ -3883,7 +4324,13 @@
     "aa_negative": 0.0,
     "final_third_passes_avg": 3.0,
     "aa_matches_analyzed": 1,
-    "archetype": "DEF Central"
+    "archetype": "DEF Central",
+    "reg10": 33.0,
+    "last_10": [
+      39.8,
+      53.2,
+      68.2
+    ]
   },
   {
     "name": "Óscar Mingueza",
@@ -3939,7 +4386,7 @@
     "yellow": 4,
     "red": 0,
     "mins_per_match": 63.0,
-    "titu_pct": 0,
+    "titu_pct": 70,
     "matchs_played": 7,
     "matchs_total": 10,
     "last_date": "2026-03-22",
@@ -3950,7 +4397,15 @@
     "aa_negative": -22.1,
     "final_third_passes_avg": 8.2,
     "aa_matches_analyzed": 4,
-    "archetype": "DEF Latéral"
+    "archetype": "DEF Latéral",
+    "reg10": 20.0,
+    "last_10": [
+      34.6,
+      60.0,
+      55.7,
+      38.7,
+      79.4
+    ]
   },
   {
     "name": "Fer López",
@@ -4006,7 +4461,7 @@
     "yellow": 2,
     "red": 0,
     "mins_per_match": 44.0,
-    "titu_pct": 0,
+    "titu_pct": 90,
     "matchs_played": 9,
     "matchs_total": 10,
     "last_date": "2026-03-22",
@@ -4017,7 +4472,15 @@
     "aa_negative": -12.1,
     "final_third_passes_avg": 6.8,
     "aa_matches_analyzed": 4,
-    "archetype": "MIL Rotation"
+    "archetype": "MIL Rotation",
+    "reg10": 0.0,
+    "last_10": [
+      36.3,
+      52.5,
+      32.6,
+      35.1,
+      33.7
+    ]
   },
   {
     "name": "Javi Rueda",
@@ -4073,7 +4536,7 @@
     "yellow": 4,
     "red": 0,
     "mins_per_match": 50.0,
-    "titu_pct": 0,
+    "titu_pct": 80,
     "matchs_played": 8,
     "matchs_total": 10,
     "last_date": "2026-03-22",
@@ -4084,7 +4547,15 @@
     "aa_negative": -21.4,
     "final_third_passes_avg": 7.7,
     "aa_matches_analyzed": 3,
-    "archetype": "DEF Latéral"
+    "archetype": "DEF Latéral",
+    "reg10": 60.0,
+    "last_10": [
+      32.8,
+      65.1,
+      65.9,
+      30.1,
+      74.3
+    ]
   },
   {
     "name": "Marcos Alonso",
@@ -4140,7 +4611,7 @@
     "yellow": 3,
     "red": 0,
     "mins_per_match": 86.0,
-    "titu_pct": 0,
+    "titu_pct": 80,
     "matchs_played": 8,
     "matchs_total": 10,
     "last_date": "2026-03-19",
@@ -4151,7 +4622,15 @@
     "aa_negative": -17.1,
     "final_third_passes_avg": 8.8,
     "aa_matches_analyzed": 4,
-    "archetype": "DEF Latéral"
+    "archetype": "DEF Latéral",
+    "reg10": 40.0,
+    "last_10": [
+      60.6,
+      46.8,
+      49.0,
+      52.4,
+      63.1
+    ]
   },
   {
     "name": "Williot Swedberg",
@@ -4207,7 +4686,7 @@
     "yellow": 2,
     "red": 0,
     "mins_per_match": 42.0,
-    "titu_pct": 0,
+    "titu_pct": 90,
     "matchs_played": 9,
     "matchs_total": 10,
     "last_date": "2026-03-19",
@@ -4218,7 +4697,15 @@
     "aa_negative": -10.4,
     "final_third_passes_avg": 3.5,
     "aa_matches_analyzed": 4,
-    "archetype": "MIL Rotation"
+    "archetype": "MIL Rotation",
+    "reg10": 40.0,
+    "last_10": [
+      36.4,
+      27.6,
+      64.9,
+      63.9,
+      34.0
+    ]
   },
   {
     "name": "Ferran Jutglà",
@@ -4274,7 +4761,7 @@
     "yellow": 4,
     "red": 0,
     "mins_per_match": 55.0,
-    "titu_pct": 0,
+    "titu_pct": 100,
     "matchs_played": 10,
     "matchs_total": 10,
     "last_date": "2026-03-22",
@@ -4285,7 +4772,15 @@
     "aa_negative": -6.0,
     "final_third_passes_avg": 3.8,
     "aa_matches_analyzed": 5,
-    "archetype": "ATT Dribbleur"
+    "archetype": "ATT Dribbleur",
+    "reg10": 60.0,
+    "last_10": [
+      100.0,
+      62.9,
+      67.4,
+      32.8,
+      47.5
+    ]
   },
   {
     "name": "Matías Vecino",
@@ -4341,7 +4836,7 @@
     "yellow": 1,
     "red": 0,
     "mins_per_match": 42.0,
-    "titu_pct": 0,
+    "titu_pct": 70,
     "matchs_played": 7,
     "matchs_total": 10,
     "last_date": "2026-03-19",
@@ -4352,7 +4847,15 @@
     "aa_negative": -5.6,
     "final_third_passes_avg": 7.0,
     "aa_matches_analyzed": 3,
-    "archetype": "MIL Rotation"
+    "archetype": "MIL Rotation",
+    "reg10": 0.0,
+    "last_10": [
+      44.1,
+      39.5,
+      33.3,
+      36.7,
+      50.9
+    ]
   },
   {
     "name": "Carlos Domínguez",
@@ -4406,7 +4909,7 @@
     "yellow": 1,
     "red": 0,
     "mins_per_match": 76.0,
-    "titu_pct": 0,
+    "titu_pct": 30,
     "matchs_played": 3,
     "matchs_total": 10,
     "last_date": "2026-03-22",
@@ -4417,7 +4920,13 @@
     "aa_negative": -32.4,
     "final_third_passes_avg": 3.0,
     "aa_matches_analyzed": 1,
-    "archetype": "DEF Latéral"
+    "archetype": "DEF Latéral",
+    "reg10": 0.0,
+    "last_10": [
+      11.3,
+      44.5,
+      35.0
+    ]
   },
   {
     "name": "Javi Rodríguez",
@@ -4473,7 +4982,7 @@
     "yellow": 0,
     "red": 0,
     "mins_per_match": 0.0,
-    "titu_pct": 0,
+    "titu_pct": 100,
     "matchs_played": 10,
     "matchs_total": 10,
     "last_date": "2026-03-22",
@@ -4484,7 +4993,15 @@
     "aa_negative": -22.2,
     "final_third_passes_avg": 9.6,
     "aa_matches_analyzed": 5,
-    "archetype": "DEF Latéral"
+    "archetype": "DEF Latéral",
+    "reg10": 20.0,
+    "last_10": [
+      60.0,
+      73.2,
+      37.6,
+      44.4,
+      57.9
+    ]
   },
   {
     "name": "Borja Iglesias",
@@ -4540,7 +5057,7 @@
     "yellow": 6,
     "red": 0,
     "mins_per_match": 58.0,
-    "titu_pct": 0,
+    "titu_pct": 80,
     "matchs_played": 8,
     "matchs_total": 10,
     "last_date": "2026-03-22",
@@ -4551,7 +5068,15 @@
     "aa_negative": -8.9,
     "final_third_passes_avg": 2.2,
     "aa_matches_analyzed": 4,
-    "archetype": "ATT Finisseur"
+    "archetype": "ATT Finisseur",
+    "reg10": 20.0,
+    "last_10": [
+      37.4,
+      36.1,
+      16.1,
+      60.0,
+      67.1
+    ]
   },
   {
     "name": "Carl Starfelt",
@@ -4607,7 +5132,7 @@
     "yellow": 2,
     "red": 1,
     "mins_per_match": 79.0,
-    "titu_pct": 0,
+    "titu_pct": 70,
     "matchs_played": 7,
     "matchs_total": 10,
     "last_date": "2026-03-19",
@@ -4618,7 +5143,15 @@
     "aa_negative": -10.8,
     "final_third_passes_avg": 1.2,
     "aa_matches_analyzed": 4,
-    "archetype": "DEF Central"
+    "archetype": "DEF Central",
+    "reg10": 0.0,
+    "last_10": [
+      27.6,
+      50.8,
+      48.4,
+      56.9,
+      58.8
+    ]
   },
   {
     "name": "Ilaix Moriba",
@@ -4674,7 +5207,7 @@
     "yellow": 5,
     "red": 0,
     "mins_per_match": 65.0,
-    "titu_pct": 0,
+    "titu_pct": 90,
     "matchs_played": 9,
     "matchs_total": 10,
     "last_date": "2026-03-19",
@@ -4685,7 +5218,15 @@
     "aa_negative": -5.7,
     "final_third_passes_avg": 4.0,
     "aa_matches_analyzed": 4,
-    "archetype": "MIL Rotation"
+    "archetype": "MIL Rotation",
+    "reg10": 0.0,
+    "last_10": [
+      48.6,
+      49.0,
+      44.7,
+      45.3,
+      52.4
+    ]
   },
   {
     "name": "Ionuț Radu",
@@ -4741,7 +5282,7 @@
     "yellow": 0,
     "red": 0,
     "mins_per_match": 90.0,
-    "titu_pct": 0,
+    "titu_pct": 100,
     "matchs_played": 10,
     "matchs_total": 10,
     "last_date": "2026-03-22",
@@ -4752,7 +5293,15 @@
     "aa_negative": -12.1,
     "final_third_passes_avg": 1.2,
     "aa_matches_analyzed": 5,
-    "archetype": "GK"
+    "archetype": "GK",
+    "reg10": 40.0,
+    "last_10": [
+      30.0,
+      62.4,
+      69.6,
+      31.9,
+      30.7
+    ]
   },
   {
     "name": "Pablo Durán",
@@ -4808,7 +5357,7 @@
     "yellow": 0,
     "red": 0,
     "mins_per_match": 50.0,
-    "titu_pct": 0,
+    "titu_pct": 60,
     "matchs_played": 6,
     "matchs_total": 10,
     "last_date": "2026-03-22",
@@ -4819,7 +5368,15 @@
     "aa_negative": -5.5,
     "final_third_passes_avg": 4.0,
     "aa_matches_analyzed": 4,
-    "archetype": "ATT Finisseur"
+    "archetype": "ATT Finisseur",
+    "reg10": 0.0,
+    "last_10": [
+      34.0,
+      28.4,
+      36.6,
+      37.5,
+      35.2
+    ]
   },
   {
     "name": "Sergio Carreira",
@@ -4875,7 +5432,7 @@
     "yellow": 2,
     "red": 0,
     "mins_per_match": 80.0,
-    "titu_pct": 0,
+    "titu_pct": 90,
     "matchs_played": 9,
     "matchs_total": 10,
     "last_date": "2026-03-22",
@@ -4886,7 +5443,15 @@
     "aa_negative": -15.1,
     "final_third_passes_avg": 13.2,
     "aa_matches_analyzed": 5,
-    "archetype": "DEF Latéral"
+    "archetype": "DEF Latéral",
+    "reg10": 20.0,
+    "last_10": [
+      31.3,
+      72.4,
+      49.9,
+      38.5,
+      41.2
+    ]
   },
   {
     "name": "Guridi",
@@ -4942,7 +5507,7 @@
     "yellow": 1,
     "red": 0,
     "mins_per_match": 36.0,
-    "titu_pct": 0,
+    "titu_pct": 70,
     "matchs_played": 7,
     "matchs_total": 10,
     "last_date": "2026-03-22",
@@ -4953,7 +5518,15 @@
     "aa_negative": -5.7,
     "final_third_passes_avg": 2.3,
     "aa_matches_analyzed": 3,
-    "archetype": "MIL Rotation"
+    "archetype": "MIL Rotation",
+    "reg10": 0.0,
+    "last_10": [
+      38.3,
+      36.9,
+      50.9,
+      40.1,
+      33.7
+    ]
   },
   {
     "name": "Jonny",
@@ -5009,7 +5582,7 @@
     "yellow": 5,
     "red": 0,
     "mins_per_match": 88.0,
-    "titu_pct": 0,
+    "titu_pct": 90,
     "matchs_played": 9,
     "matchs_total": 10,
     "last_date": "2026-03-22",
@@ -5020,7 +5593,15 @@
     "aa_negative": -22.8,
     "final_third_passes_avg": 11.6,
     "aa_matches_analyzed": 5,
-    "archetype": "DEF Latéral"
+    "archetype": "DEF Latéral",
+    "reg10": 20.0,
+    "last_10": [
+      39.6,
+      44.6,
+      34.5,
+      66.0,
+      38.9
+    ]
   },
   {
     "name": "Guevara",
@@ -5076,7 +5657,7 @@
     "yellow": 3,
     "red": 1,
     "mins_per_match": 28.0,
-    "titu_pct": 0,
+    "titu_pct": 70,
     "matchs_played": 7,
     "matchs_total": 10,
     "last_date": "2026-03-08",
@@ -5087,7 +5668,15 @@
     "aa_negative": -4.7,
     "final_third_passes_avg": 1.7,
     "aa_matches_analyzed": 3,
-    "archetype": "MIL Rotation"
+    "archetype": "MIL Rotation",
+    "reg10": 0.0,
+    "last_10": [
+      28.0,
+      40.0,
+      35.3,
+      47.0,
+      36.7
+    ]
   },
   {
     "name": "Jon Pacheco",
@@ -5143,7 +5732,7 @@
     "yellow": 4,
     "red": 1,
     "mins_per_match": 84.0,
-    "titu_pct": 0,
+    "titu_pct": 70,
     "matchs_played": 7,
     "matchs_total": 10,
     "last_date": "2026-03-22",
@@ -5154,7 +5743,15 @@
     "aa_negative": -25.2,
     "final_third_passes_avg": 6.0,
     "aa_matches_analyzed": 2,
-    "archetype": "DEF Latéral"
+    "archetype": "DEF Latéral",
+    "reg10": 20.0,
+    "last_10": [
+      21.0,
+      39.6,
+      60.3,
+      21.6,
+      47.0
+    ]
   },
   {
     "name": "A. Rebbach",
@@ -5210,7 +5807,7 @@
     "yellow": 4,
     "red": 0,
     "mins_per_match": 39.0,
-    "titu_pct": 0,
+    "titu_pct": 60,
     "matchs_played": 6,
     "matchs_total": 10,
     "last_date": "2026-03-22",
@@ -5221,7 +5818,15 @@
     "aa_negative": -2.3,
     "final_third_passes_avg": 1.3,
     "aa_matches_analyzed": 3,
-    "archetype": "ATT Finisseur"
+    "archetype": "ATT Finisseur",
+    "reg10": 20.0,
+    "last_10": [
+      82.1,
+      31.4,
+      40.1,
+      32.3,
+      37.2
+    ]
   },
   {
     "name": "C. Benavìdez",
@@ -5276,7 +5881,7 @@
     "yellow": 1,
     "red": 1,
     "mins_per_match": 27.0,
-    "titu_pct": 0,
+    "titu_pct": 40,
     "matchs_played": 4,
     "matchs_total": 10,
     "last_date": "2026-03-08",
@@ -5287,7 +5892,14 @@
     "aa_negative": -2.3,
     "final_third_passes_avg": 0.0,
     "aa_matches_analyzed": 2,
-    "archetype": "MIL Rotation"
+    "archetype": "MIL Rotation",
+    "reg10": 0.0,
+    "last_10": [
+      47.3,
+      37.1,
+      37.6,
+      42.0
+    ]
   },
   {
     "name": "Denis Suárez",
@@ -5343,7 +5955,7 @@
     "yellow": 4,
     "red": 0,
     "mins_per_match": 48.0,
-    "titu_pct": 0,
+    "titu_pct": 60,
     "matchs_played": 6,
     "matchs_total": 10,
     "last_date": "2026-03-22",
@@ -5354,7 +5966,15 @@
     "aa_negative": -8.9,
     "final_third_passes_avg": 5.0,
     "aa_matches_analyzed": 3,
-    "archetype": "MIL Rotation"
+    "archetype": "MIL Rotation",
+    "reg10": 20.0,
+    "last_10": [
+      37.8,
+      70.5,
+      38.5,
+      36.3,
+      32.3
+    ]
   },
   {
     "name": "Ibáñez",
@@ -5410,7 +6030,7 @@
     "yellow": 5,
     "red": 0,
     "mins_per_match": 63.0,
-    "titu_pct": 0,
+    "titu_pct": 90,
     "matchs_played": 9,
     "matchs_total": 10,
     "last_date": "2026-03-22",
@@ -5421,7 +6041,15 @@
     "aa_negative": -15.2,
     "final_third_passes_avg": 7.2,
     "aa_matches_analyzed": 4,
-    "archetype": "MIL Récup"
+    "archetype": "MIL Récup",
+    "reg10": 20.0,
+    "last_10": [
+      36.8,
+      41.6,
+      61.9,
+      43.4,
+      46.7
+    ]
   },
   {
     "name": "Toni Martínez",
@@ -5477,7 +6105,7 @@
     "yellow": 1,
     "red": 0,
     "mins_per_match": 69.0,
-    "titu_pct": 0,
+    "titu_pct": 100,
     "matchs_played": 10,
     "matchs_total": 10,
     "last_date": "2026-03-22",
@@ -5488,7 +6116,15 @@
     "aa_negative": -10.4,
     "final_third_passes_avg": 7.0,
     "aa_matches_analyzed": 5,
-    "archetype": "ATT Dribbleur"
+    "archetype": "ATT Dribbleur",
+    "reg10": 40.0,
+    "last_10": [
+      96.7,
+      49.0,
+      67.9,
+      47.9,
+      29.4
+    ]
   },
   {
     "name": "Ville Koski",
@@ -5542,7 +6178,7 @@
     "yellow": 3,
     "red": 0,
     "mins_per_match": 76.0,
-    "titu_pct": 0,
+    "titu_pct": 30,
     "matchs_played": 3,
     "matchs_total": 10,
     "last_date": "2026-03-22",
@@ -5553,7 +6189,13 @@
     "aa_negative": -2.4,
     "final_third_passes_avg": 0.0,
     "aa_matches_analyzed": 2,
-    "archetype": "DEF Central"
+    "archetype": "DEF Central",
+    "reg10": 0.0,
+    "last_10": [
+      40.0,
+      36.7,
+      47.7
+    ]
   },
   {
     "name": "Calebe",
@@ -5608,7 +6250,7 @@
     "yellow": 4,
     "red": 0,
     "mins_per_match": 42.0,
-    "titu_pct": 0,
+    "titu_pct": 40,
     "matchs_played": 4,
     "matchs_total": 10,
     "last_date": "2026-02-23",
@@ -5619,7 +6261,14 @@
     "aa_negative": -3.6,
     "final_third_passes_avg": 2.0,
     "aa_matches_analyzed": 1,
-    "archetype": "MIL Rotation"
+    "archetype": "MIL Rotation",
+    "reg10": 0.0,
+    "last_10": [
+      34.2,
+      33.5,
+      53.6,
+      38.1
+    ]
   },
   {
     "name": "Víctor Parada",
@@ -5675,7 +6324,7 @@
     "yellow": 7,
     "red": 1,
     "mins_per_match": 67.0,
-    "titu_pct": 0,
+    "titu_pct": 60,
     "matchs_played": 6,
     "matchs_total": 10,
     "last_date": "2026-03-22",
@@ -5686,7 +6335,15 @@
     "aa_negative": -21.6,
     "final_third_passes_avg": 3.8,
     "aa_matches_analyzed": 4,
-    "archetype": "DEF Central"
+    "archetype": "DEF Central",
+    "reg10": 20.0,
+    "last_10": [
+      60.0,
+      37.4,
+      21.1,
+      69.9,
+      15.8
+    ]
   },
   {
     "name": "Carles Aleñà",
@@ -5742,7 +6399,7 @@
     "yellow": 4,
     "red": 0,
     "mins_per_match": 63.0,
-    "titu_pct": 0,
+    "titu_pct": 100,
     "matchs_played": 10,
     "matchs_total": 10,
     "last_date": "2026-03-22",
@@ -5753,7 +6410,15 @@
     "aa_negative": -17.2,
     "final_third_passes_avg": 6.6,
     "aa_matches_analyzed": 5,
-    "archetype": "MIL Rotation"
+    "archetype": "MIL Rotation",
+    "reg10": 0.0,
+    "last_10": [
+      32.5,
+      37.8,
+      33.1,
+      43.6,
+      34.1
+    ]
   },
   {
     "name": "Sivera",
@@ -5809,7 +6474,7 @@
     "yellow": 2,
     "red": 0,
     "mins_per_match": 90.0,
-    "titu_pct": 0,
+    "titu_pct": 100,
     "matchs_played": 10,
     "matchs_total": 10,
     "last_date": "2026-03-22",
@@ -5820,7 +6485,15 @@
     "aa_negative": -19.8,
     "final_third_passes_avg": 3.2,
     "aa_matches_analyzed": 5,
-    "archetype": "GK"
+    "archetype": "GK",
+    "reg10": 0.0,
+    "last_10": [
+      33.6,
+      45.7,
+      42.5,
+      19.1,
+      33.5
+    ]
   },
   {
     "name": "Antonio Blanco",
@@ -5876,7 +6549,7 @@
     "yellow": 6,
     "red": 0,
     "mins_per_match": 86.0,
-    "titu_pct": 0,
+    "titu_pct": 100,
     "matchs_played": 10,
     "matchs_total": 10,
     "last_date": "2026-03-22",
@@ -5887,7 +6560,15 @@
     "aa_negative": -16.7,
     "final_third_passes_avg": 6.6,
     "aa_matches_analyzed": 5,
-    "archetype": "MIL Récup"
+    "archetype": "MIL Récup",
+    "reg10": 20.0,
+    "last_10": [
+      34.2,
+      41.9,
+      49.9,
+      48.0,
+      66.7
+    ]
   },
   {
     "name": "Facundo Garcés",
@@ -5942,7 +6623,7 @@
     "yellow": 3,
     "red": 0,
     "mins_per_match": 79.0,
-    "titu_pct": 0,
+    "titu_pct": 40,
     "matchs_played": 4,
     "matchs_total": 10,
     "last_date": "2026-02-27",
@@ -5953,7 +6634,14 @@
     "aa_negative": -9.6,
     "final_third_passes_avg": 0.0,
     "aa_matches_analyzed": 1,
-    "archetype": "DEF Central"
+    "archetype": "DEF Central",
+    "reg10": 0.0,
+    "last_10": [
+      38.2,
+      40.9,
+      32.9,
+      31.8
+    ]
   },
   {
     "name": "Ángel Pérez",
@@ -6009,7 +6697,7 @@
     "yellow": 3,
     "red": 0,
     "mins_per_match": 66.0,
-    "titu_pct": 0,
+    "titu_pct": 90,
     "matchs_played": 9,
     "matchs_total": 10,
     "last_date": "2026-03-22",
@@ -6020,7 +6708,15 @@
     "aa_negative": -29.2,
     "final_third_passes_avg": 9.8,
     "aa_matches_analyzed": 5,
-    "archetype": "DEF Latéral"
+    "archetype": "DEF Latéral",
+    "reg10": 20.0,
+    "last_10": [
+      83.1,
+      43.1,
+      42.2,
+      24.0,
+      15.8
+    ]
   },
   {
     "name": "Youssef Lekhedim",
@@ -6076,7 +6772,7 @@
     "yellow": 0,
     "red": 0,
     "mins_per_match": 0.0,
-    "titu_pct": 0,
+    "titu_pct": 70,
     "matchs_played": 7,
     "matchs_total": 10,
     "last_date": "2026-03-13",
@@ -6087,7 +6783,15 @@
     "aa_negative": -25.1,
     "final_third_passes_avg": 5.3,
     "aa_matches_analyzed": 3,
-    "archetype": "DEF Central"
+    "archetype": "DEF Central",
+    "reg10": 20.0,
+    "last_10": [
+      41.1,
+      16.8,
+      76.1,
+      38.8,
+      32.9
+    ]
   },
   {
     "name": "Adam El Mokhtari",
@@ -6141,7 +6845,7 @@
     "yellow": 1,
     "red": 0,
     "mins_per_match": 32.0,
-    "titu_pct": 0,
+    "titu_pct": 30,
     "matchs_played": 3,
     "matchs_total": 10,
     "last_date": "2026-02-20",
@@ -6152,7 +6856,13 @@
     "aa_negative": -1.3,
     "final_third_passes_avg": 0.0,
     "aa_matches_analyzed": 1,
-    "archetype": "ATT Finisseur"
+    "archetype": "ATT Finisseur",
+    "reg10": 33.0,
+    "last_10": [
+      35.7,
+      40.0,
+      64.7
+    ]
   },
   {
     "name": "Yago Santiago",
@@ -6206,11 +6916,17 @@
     "yellow": 1,
     "red": 1,
     "mins_per_match": 34.0,
-    "titu_pct": 0,
+    "titu_pct": 30,
     "matchs_played": 3,
     "matchs_total": 10,
     "last_date": "2026-02-13",
-    "archetype": "ATT Rotation"
+    "archetype": "ATT Rotation",
+    "reg10": 0.0,
+    "last_10": [
+      35.0,
+      33.7,
+      30.7
+    ]
   },
   {
     "name": "John C.",
@@ -6264,11 +6980,17 @@
     "yellow": 2,
     "red": 0,
     "mins_per_match": 32.0,
-    "titu_pct": 0,
+    "titu_pct": 30,
     "matchs_played": 3,
     "matchs_total": 10,
     "last_date": "2026-02-13",
-    "archetype": "MIL Créateur"
+    "archetype": "MIL Créateur",
+    "reg10": 0.0,
+    "last_10": [
+      33.6,
+      37.6,
+      24.4
+    ]
   },
   {
     "name": "Léo Pétrot",
@@ -6324,7 +7046,7 @@
     "yellow": 2,
     "red": 0,
     "mins_per_match": 48.0,
-    "titu_pct": 0,
+    "titu_pct": 100,
     "matchs_played": 10,
     "matchs_total": 10,
     "last_date": "2026-03-21",
@@ -6335,7 +7057,15 @@
     "aa_negative": -18.0,
     "final_third_passes_avg": 5.0,
     "aa_matches_analyzed": 5,
-    "archetype": "DEF Latéral"
+    "archetype": "DEF Latéral",
+    "reg10": 0.0,
+    "last_10": [
+      32.5,
+      31.4,
+      47.3,
+      38.7,
+      39.3
+    ]
   },
   {
     "name": "Marc Aguado",
@@ -6391,7 +7121,7 @@
     "yellow": 2,
     "red": 0,
     "mins_per_match": 69.0,
-    "titu_pct": 0,
+    "titu_pct": 100,
     "matchs_played": 10,
     "matchs_total": 10,
     "last_date": "2026-03-21",
@@ -6402,7 +7132,15 @@
     "aa_negative": -9.4,
     "final_third_passes_avg": 6.2,
     "aa_matches_analyzed": 5,
-    "archetype": "MIL Rotation"
+    "archetype": "MIL Rotation",
+    "reg10": 20.0,
+    "last_10": [
+      49.8,
+      31.7,
+      42.7,
+      63.2,
+      44.5
+    ]
   },
   {
     "name": "Grady Diangana",
@@ -6458,7 +7196,7 @@
     "yellow": 2,
     "red": 0,
     "mins_per_match": 45.0,
-    "titu_pct": 0,
+    "titu_pct": 80,
     "matchs_played": 8,
     "matchs_total": 10,
     "last_date": "2026-03-21",
@@ -6469,7 +7207,15 @@
     "aa_negative": -6.7,
     "final_third_passes_avg": 3.0,
     "aa_matches_analyzed": 4,
-    "archetype": "ATT Finisseur"
+    "archetype": "ATT Finisseur",
+    "reg10": 0.0,
+    "last_10": [
+      35.0,
+      30.9,
+      36.4,
+      43.0,
+      36.0
+    ]
   },
   {
     "name": "Buba Sangaré",
@@ -6524,7 +7270,7 @@
     "yellow": 3,
     "red": 0,
     "mins_per_match": 58.0,
-    "titu_pct": 0,
+    "titu_pct": 40,
     "matchs_played": 4,
     "matchs_total": 10,
     "last_date": "2026-03-21",
@@ -6535,7 +7281,14 @@
     "aa_negative": -16.0,
     "final_third_passes_avg": 2.2,
     "aa_matches_analyzed": 4,
-    "archetype": "DEF Central"
+    "archetype": "DEF Central",
+    "reg10": 0.0,
+    "last_10": [
+      39.1,
+      46.2,
+      14.7,
+      29.5
+    ]
   },
   {
     "name": "Febas",
@@ -6591,7 +7344,7 @@
     "yellow": 7,
     "red": 0,
     "mins_per_match": 89.0,
-    "titu_pct": 0,
+    "titu_pct": 90,
     "matchs_played": 9,
     "matchs_total": 10,
     "last_date": "2026-03-21",
@@ -6602,7 +7355,15 @@
     "aa_negative": -15.7,
     "final_third_passes_avg": 10.0,
     "aa_matches_analyzed": 5,
-    "archetype": "MIL Récup"
+    "archetype": "MIL Récup",
+    "reg10": 20.0,
+    "last_10": [
+      61.8,
+      58.6,
+      42.0,
+      57.5,
+      38.9
+    ]
   },
   {
     "name": "Iñaki Peña",
@@ -6657,11 +7418,18 @@
     "yellow": 0,
     "red": 0,
     "mins_per_match": 90.0,
-    "titu_pct": 0,
+    "titu_pct": 40,
     "matchs_played": 4,
     "matchs_total": 10,
     "last_date": "2026-02-07",
-    "archetype": "GK"
+    "archetype": "GK",
+    "reg10": 0.0,
+    "last_10": [
+      34.3,
+      42.1,
+      33.1,
+      42.2
+    ]
   },
   {
     "name": "André Silva",
@@ -6717,7 +7485,7 @@
     "yellow": 2,
     "red": 0,
     "mins_per_match": 59.0,
-    "titu_pct": 0,
+    "titu_pct": 80,
     "matchs_played": 8,
     "matchs_total": 10,
     "last_date": "2026-03-14",
@@ -6728,7 +7496,15 @@
     "aa_negative": -7.1,
     "final_third_passes_avg": 6.2,
     "aa_matches_analyzed": 4,
-    "archetype": "ATT Dribbleur"
+    "archetype": "ATT Dribbleur",
+    "reg10": 20.0,
+    "last_10": [
+      31.5,
+      60.0,
+      47.1,
+      67.2,
+      37.7
+    ]
   },
   {
     "name": "Martim Neto",
@@ -6784,7 +7560,7 @@
     "yellow": 2,
     "red": 0,
     "mins_per_match": 54.0,
-    "titu_pct": 0,
+    "titu_pct": 70,
     "matchs_played": 7,
     "matchs_total": 10,
     "last_date": "2026-03-14",
@@ -6795,7 +7571,15 @@
     "aa_negative": -10.9,
     "final_third_passes_avg": 9.5,
     "aa_matches_analyzed": 2,
-    "archetype": "MIL Rotation"
+    "archetype": "MIL Rotation",
+    "reg10": 20.0,
+    "last_10": [
+      43.7,
+      63.4,
+      33.5,
+      19.5,
+      36.8
+    ]
   },
   {
     "name": "Germán Valera",
@@ -6851,7 +7635,7 @@
     "yellow": 3,
     "red": 0,
     "mins_per_match": 80.0,
-    "titu_pct": 0,
+    "titu_pct": 100,
     "matchs_played": 10,
     "matchs_total": 10,
     "last_date": "2026-03-21",
@@ -6862,7 +7646,15 @@
     "aa_negative": -5.4,
     "final_third_passes_avg": 10.2,
     "aa_matches_analyzed": 5,
-    "archetype": "ATT Créateur"
+    "archetype": "ATT Créateur",
+    "reg10": 60.0,
+    "last_10": [
+      81.6,
+      37.7,
+      64.4,
+      39.0,
+      78.7
+    ]
   },
   {
     "name": "Tete Morente",
@@ -6918,7 +7710,7 @@
     "yellow": 3,
     "red": 0,
     "mins_per_match": 59.0,
-    "titu_pct": 0,
+    "titu_pct": 60,
     "matchs_played": 6,
     "matchs_total": 10,
     "last_date": "2026-03-21",
@@ -6929,7 +7721,15 @@
     "aa_negative": -9.3,
     "final_third_passes_avg": 7.3,
     "aa_matches_analyzed": 3,
-    "archetype": "MIL Rotation"
+    "archetype": "MIL Rotation",
+    "reg10": 20.0,
+    "last_10": [
+      71.8,
+      43.8,
+      41.4,
+      27.3,
+      35.1
+    ]
   },
   {
     "name": "Lucas Cepeda",
@@ -6985,7 +7785,7 @@
     "yellow": 4,
     "red": 0,
     "mins_per_match": 84.0,
-    "titu_pct": 0,
+    "titu_pct": 80,
     "matchs_played": 8,
     "matchs_total": 10,
     "last_date": "2026-03-14",
@@ -6996,7 +7796,15 @@
     "aa_negative": -6.7,
     "final_third_passes_avg": 10.0,
     "aa_matches_analyzed": 3,
-    "archetype": "ATT Complet"
+    "archetype": "ATT Complet",
+    "reg10": 0.0,
+    "last_10": [
+      33.7,
+      50.2,
+      43.0,
+      50.4,
+      41.2
+    ]
   },
   {
     "name": "Federico Redondo",
@@ -7052,7 +7860,7 @@
     "yellow": 5,
     "red": 1,
     "mins_per_match": 34.0,
-    "titu_pct": 0,
+    "titu_pct": 50,
     "matchs_played": 5,
     "matchs_total": 10,
     "last_date": "2026-03-21",
@@ -7063,7 +7871,15 @@
     "aa_negative": -7.1,
     "final_third_passes_avg": 5.3,
     "aa_matches_analyzed": 3,
-    "archetype": "MIL Rotation"
+    "archetype": "MIL Rotation",
+    "reg10": 20.0,
+    "last_10": [
+      44.6,
+      63.4,
+      38.0,
+      28.3,
+      34.4
+    ]
   },
   {
     "name": "Adrià Pedrosa",
@@ -7119,7 +7935,7 @@
     "yellow": 4,
     "red": 0,
     "mins_per_match": 41.0,
-    "titu_pct": 0,
+    "titu_pct": 80,
     "matchs_played": 8,
     "matchs_total": 10,
     "last_date": "2026-03-21",
@@ -7130,7 +7946,15 @@
     "aa_negative": -12.2,
     "final_third_passes_avg": 3.0,
     "aa_matches_analyzed": 4,
-    "archetype": "DEF Central"
+    "archetype": "DEF Central",
+    "reg10": 0.0,
+    "last_10": [
+      34.4,
+      18.7,
+      49.5,
+      30.7,
+      33.2
+    ]
   },
   {
     "name": "Víctor Chust",
@@ -7186,7 +8010,7 @@
     "yellow": 7,
     "red": 1,
     "mins_per_match": 78.0,
-    "titu_pct": 0,
+    "titu_pct": 90,
     "matchs_played": 9,
     "matchs_total": 10,
     "last_date": "2026-03-21",
@@ -7197,7 +8021,15 @@
     "aa_negative": -29.0,
     "final_third_passes_avg": 8.4,
     "aa_matches_analyzed": 5,
-    "archetype": "DEF Latéral"
+    "archetype": "DEF Latéral",
+    "reg10": 0.0,
+    "last_10": [
+      57.1,
+      15.9,
+      57.3,
+      45.0,
+      49.4
+    ]
   },
   {
     "name": "Rafa Mir",
@@ -7253,7 +8085,7 @@
     "yellow": 3,
     "red": 0,
     "mins_per_match": 67.0,
-    "titu_pct": 0,
+    "titu_pct": 60,
     "matchs_played": 6,
     "matchs_total": 10,
     "last_date": "2026-03-21",
@@ -7264,7 +8096,15 @@
     "aa_negative": -6.6,
     "final_third_passes_avg": 3.2,
     "aa_matches_analyzed": 5,
-    "archetype": "ATT Dribbleur"
+    "archetype": "ATT Dribbleur",
+    "reg10": 40.0,
+    "last_10": [
+      63.4,
+      34.0,
+      52.9,
+      60.8,
+      33.9
+    ]
   },
   {
     "name": "Álvaro Rodríguez",
@@ -7320,7 +8160,7 @@
     "yellow": 0,
     "red": 0,
     "mins_per_match": 65.0,
-    "titu_pct": 0,
+    "titu_pct": 90,
     "matchs_played": 9,
     "matchs_total": 10,
     "last_date": "2026-03-21",
@@ -7331,7 +8171,15 @@
     "aa_negative": -10.8,
     "final_third_passes_avg": 3.5,
     "aa_matches_analyzed": 4,
-    "archetype": "ATT Dribbleur"
+    "archetype": "ATT Dribbleur",
+    "reg10": 0.0,
+    "last_10": [
+      28.7,
+      35.8,
+      36.9,
+      40.7,
+      38.4
+    ]
   },
   {
     "name": "Josan Ferrández",
@@ -7387,7 +8235,7 @@
     "yellow": 2,
     "red": 0,
     "mins_per_match": 32.0,
-    "titu_pct": 0,
+    "titu_pct": 50,
     "matchs_played": 5,
     "matchs_total": 10,
     "last_date": "2026-03-14",
@@ -7398,7 +8246,15 @@
     "aa_negative": -0.6,
     "final_third_passes_avg": 5.0,
     "aa_matches_analyzed": 3,
-    "archetype": "MIL Rotation"
+    "archetype": "MIL Rotation",
+    "reg10": 0.0,
+    "last_10": [
+      42.5,
+      44.6,
+      48.0,
+      36.4,
+      42.9
+    ]
   },
   {
     "name": "David Affengruber",
@@ -7454,7 +8310,7 @@
     "yellow": 6,
     "red": 1,
     "mins_per_match": 81.0,
-    "titu_pct": 0,
+    "titu_pct": 90,
     "matchs_played": 9,
     "matchs_total": 10,
     "last_date": "2026-03-21",
@@ -7465,7 +8321,15 @@
     "aa_negative": -20.2,
     "final_third_passes_avg": 5.0,
     "aa_matches_analyzed": 5,
-    "archetype": "DEF Central"
+    "archetype": "DEF Central",
+    "reg10": 60.0,
+    "last_10": [
+      86.0,
+      66.9,
+      79.5,
+      53.6,
+      50.4
+    ]
   },
   {
     "name": "Roberto Fernández",
@@ -7521,7 +8385,7 @@
     "yellow": 3,
     "red": 0,
     "mins_per_match": 64.0,
-    "titu_pct": 0,
+    "titu_pct": 100,
     "matchs_played": 10,
     "matchs_total": 10,
     "last_date": "2026-03-21",
@@ -7532,7 +8396,15 @@
     "aa_negative": -5.9,
     "final_third_passes_avg": 0.4,
     "aa_matches_analyzed": 5,
-    "archetype": "ATT Finisseur"
+    "archetype": "ATT Finisseur",
+    "reg10": 20.0,
+    "last_10": [
+      63.7,
+      30.9,
+      36.6,
+      28.6,
+      32.2
+    ]
   },
   {
     "name": "Kike G.",
@@ -7588,7 +8460,7 @@
     "yellow": 3,
     "red": 0,
     "mins_per_match": 48.0,
-    "titu_pct": 0,
+    "titu_pct": 100,
     "matchs_played": 10,
     "matchs_total": 10,
     "last_date": "2026-03-21",
@@ -7599,7 +8471,15 @@
     "aa_negative": -9.8,
     "final_third_passes_avg": 3.6,
     "aa_matches_analyzed": 5,
-    "archetype": "ATT Dribbleur"
+    "archetype": "ATT Dribbleur",
+    "reg10": 40.0,
+    "last_10": [
+      41.5,
+      37.2,
+      81.3,
+      68.5,
+      15.0
+    ]
   },
   {
     "name": "Cyril Ngonge",
@@ -7655,7 +8535,7 @@
     "yellow": 4,
     "red": 0,
     "mins_per_match": 48.0,
-    "titu_pct": 0,
+    "titu_pct": 80,
     "matchs_played": 8,
     "matchs_total": 10,
     "last_date": "2026-03-21",
@@ -7666,7 +8546,15 @@
     "aa_negative": -10.2,
     "final_third_passes_avg": 6.0,
     "aa_matches_analyzed": 3,
-    "archetype": "ATT Complet"
+    "archetype": "ATT Complet",
+    "reg10": 40.0,
+    "last_10": [
+      36.6,
+      73.0,
+      33.9,
+      49.0,
+      72.9
+    ]
   },
   {
     "name": "Antoniu Roca",
@@ -7719,11 +8607,16 @@
     "yellow": 1,
     "red": 0,
     "mins_per_match": 14.0,
-    "titu_pct": 0,
+    "titu_pct": 20,
     "matchs_played": 2,
     "matchs_total": 10,
     "last_date": "2026-02-09",
-    "archetype": "ATT Rotation"
+    "archetype": "ATT Rotation",
+    "reg10": 0.0,
+    "last_10": [
+      30.8,
+      28.8
+    ]
   },
   {
     "name": "Tyrhys Dolan",
@@ -7779,7 +8672,7 @@
     "yellow": 5,
     "red": 1,
     "mins_per_match": 68.0,
-    "titu_pct": 0,
+    "titu_pct": 100,
     "matchs_played": 10,
     "matchs_total": 10,
     "last_date": "2026-03-21",
@@ -7790,7 +8683,15 @@
     "aa_negative": -7.8,
     "final_third_passes_avg": 6.0,
     "aa_matches_analyzed": 5,
-    "archetype": "ATT Complet"
+    "archetype": "ATT Complet",
+    "reg10": 20.0,
+    "last_10": [
+      45.3,
+      66.8,
+      42.5,
+      41.2,
+      52.8
+    ]
   },
   {
     "name": "José Salinas",
@@ -7843,7 +8744,7 @@
     "yellow": 2,
     "red": 0,
     "mins_per_match": 23.0,
-    "titu_pct": 0,
+    "titu_pct": 20,
     "matchs_played": 2,
     "matchs_total": 10,
     "last_date": "2026-03-15",
@@ -7854,7 +8755,12 @@
     "aa_negative": -4.8,
     "final_third_passes_avg": 0.0,
     "aa_matches_analyzed": 1,
-    "archetype": "DEF Central"
+    "archetype": "DEF Central",
+    "reg10": 0.0,
+    "last_10": [
+      30.2,
+      3.3
+    ]
   },
   {
     "name": "Rubén Sánchez",
@@ -7909,7 +8815,7 @@
     "yellow": 2,
     "red": 0,
     "mins_per_match": 35.0,
-    "titu_pct": 0,
+    "titu_pct": 40,
     "matchs_played": 4,
     "matchs_total": 10,
     "last_date": "2026-03-21",
@@ -7920,7 +8826,14 @@
     "aa_negative": -11.2,
     "final_third_passes_avg": 1.0,
     "aa_matches_analyzed": 1,
-    "archetype": "DEF Latéral"
+    "archetype": "DEF Latéral",
+    "reg10": 25.0,
+    "last_10": [
+      73.1,
+      34.8,
+      2.2,
+      4.8
+    ]
   },
   {
     "name": "Omar El Hilali",
@@ -7976,7 +8889,7 @@
     "yellow": 0,
     "red": 0,
     "mins_per_match": 0.0,
-    "titu_pct": 0,
+    "titu_pct": 80,
     "matchs_played": 8,
     "matchs_total": 10,
     "last_date": "2026-03-21",
@@ -7987,7 +8900,15 @@
     "aa_negative": -25.1,
     "final_third_passes_avg": 6.6,
     "aa_matches_analyzed": 5,
-    "archetype": "DEF Latéral"
+    "archetype": "DEF Latéral",
+    "reg10": 20.0,
+    "last_10": [
+      48.1,
+      31.7,
+      66.4,
+      60.0,
+      24.6
+    ]
   },
   {
     "name": "Pol Lozano",
@@ -8043,7 +8964,7 @@
     "yellow": 7,
     "red": 0,
     "mins_per_match": 69.0,
-    "titu_pct": 0,
+    "titu_pct": 80,
     "matchs_played": 8,
     "matchs_total": 10,
     "last_date": "2026-03-15",
@@ -8054,7 +8975,15 @@
     "aa_negative": -10.4,
     "final_third_passes_avg": 7.5,
     "aa_matches_analyzed": 4,
-    "archetype": "MIL Rotation"
+    "archetype": "MIL Rotation",
+    "reg10": 20.0,
+    "last_10": [
+      38.4,
+      48.4,
+      62.0,
+      37.3,
+      54.4
+    ]
   },
   {
     "name": "Marko Dmitrović",
@@ -8110,7 +9039,7 @@
     "yellow": 0,
     "red": 0,
     "mins_per_match": 90.0,
-    "titu_pct": 0,
+    "titu_pct": 100,
     "matchs_played": 10,
     "matchs_total": 10,
     "last_date": "2026-03-21",
@@ -8121,7 +9050,15 @@
     "aa_negative": -17.7,
     "final_third_passes_avg": 2.4,
     "aa_matches_analyzed": 5,
-    "archetype": "GK"
+    "archetype": "GK",
+    "reg10": 20.0,
+    "last_10": [
+      34.7,
+      66.4,
+      46.2,
+      52.0,
+      28.3
+    ]
   },
   {
     "name": "Fernando Calero",
@@ -8177,7 +9114,7 @@
     "yellow": 3,
     "red": 0,
     "mins_per_match": 76.0,
-    "titu_pct": 0,
+    "titu_pct": 60,
     "matchs_played": 6,
     "matchs_total": 10,
     "last_date": "2026-03-09",
@@ -8188,7 +9125,15 @@
     "aa_negative": -12.8,
     "final_third_passes_avg": 0.5,
     "aa_matches_analyzed": 2,
-    "archetype": "DEF Central"
+    "archetype": "DEF Central",
+    "reg10": 20.0,
+    "last_10": [
+      37.6,
+      69.3,
+      30.7,
+      56.9,
+      31.0
+    ]
   },
   {
     "name": "Charles Pickel",
@@ -8244,7 +9189,7 @@
     "yellow": 2,
     "red": 2,
     "mins_per_match": 32.0,
-    "titu_pct": 0,
+    "titu_pct": 60,
     "matchs_played": 6,
     "matchs_total": 10,
     "last_date": "2026-03-15",
@@ -8255,7 +9200,15 @@
     "aa_negative": -6.3,
     "final_third_passes_avg": 1.5,
     "aa_matches_analyzed": 2,
-    "archetype": "MIL Rotation"
+    "archetype": "MIL Rotation",
+    "reg10": 0.0,
+    "last_10": [
+      39.4,
+      13.1,
+      32.7,
+      35.5,
+      34.7
+    ]
   },
   {
     "name": "Clemens Riedel",
@@ -8311,7 +9264,7 @@
     "yellow": 4,
     "red": 0,
     "mins_per_match": 71.0,
-    "titu_pct": 0,
+    "titu_pct": 80,
     "matchs_played": 8,
     "matchs_total": 10,
     "last_date": "2026-03-21",
@@ -8322,7 +9275,15 @@
     "aa_negative": -24.8,
     "final_third_passes_avg": 2.2,
     "aa_matches_analyzed": 5,
-    "archetype": "DEF Central"
+    "archetype": "DEF Central",
+    "reg10": 0.0,
+    "last_10": [
+      32.1,
+      32.6,
+      32.5,
+      14.2,
+      33.2
+    ]
   },
   {
     "name": "Edu Expósito",
@@ -8378,7 +9339,7 @@
     "yellow": 6,
     "red": 0,
     "mins_per_match": 68.0,
-    "titu_pct": 0,
+    "titu_pct": 90,
     "matchs_played": 9,
     "matchs_total": 10,
     "last_date": "2026-03-21",
@@ -8389,7 +9350,15 @@
     "aa_negative": -16.2,
     "final_third_passes_avg": 6.0,
     "aa_matches_analyzed": 4,
-    "archetype": "MIL Créateur"
+    "archetype": "MIL Créateur",
+    "reg10": 60.0,
+    "last_10": [
+      82.7,
+      42.2,
+      64.0,
+      66.7,
+      37.3
+    ]
   },
   {
     "name": "Miguel Rubio",
@@ -8445,7 +9414,7 @@
     "yellow": 0,
     "red": 0,
     "mins_per_match": 18.0,
-    "titu_pct": 0,
+    "titu_pct": 50,
     "matchs_played": 5,
     "matchs_total": 10,
     "last_date": "2026-03-21",
@@ -8456,7 +9425,15 @@
     "aa_negative": -7.3,
     "final_third_passes_avg": 0.0,
     "aa_matches_analyzed": 3,
-    "archetype": "DEF Central"
+    "archetype": "DEF Central",
+    "reg10": 0.0,
+    "last_10": [
+      41.1,
+      33.6,
+      37.0,
+      35.8,
+      32.9
+    ]
   },
   {
     "name": "Urko González De Zarate",
@@ -8512,7 +9489,7 @@
     "yellow": 4,
     "red": 0,
     "mins_per_match": 68.0,
-    "titu_pct": 0,
+    "titu_pct": 100,
     "matchs_played": 10,
     "matchs_total": 10,
     "last_date": "2026-03-21",
@@ -8523,7 +9500,15 @@
     "aa_negative": -17.5,
     "final_third_passes_avg": 5.8,
     "aa_matches_analyzed": 5,
-    "archetype": "DEF Latéral"
+    "archetype": "DEF Latéral",
+    "reg10": 0.0,
+    "last_10": [
+      49.3,
+      39.6,
+      46.8,
+      22.9,
+      28.2
+    ]
   },
   {
     "name": "Pere Milla",
@@ -8579,7 +9564,7 @@
     "yellow": 5,
     "red": 1,
     "mins_per_match": 63.0,
-    "titu_pct": 0,
+    "titu_pct": 90,
     "matchs_played": 9,
     "matchs_total": 10,
     "last_date": "2026-03-21",
@@ -8590,7 +9575,15 @@
     "aa_negative": -5.7,
     "final_third_passes_avg": 2.8,
     "aa_matches_analyzed": 4,
-    "archetype": "MIL Rotation"
+    "archetype": "MIL Rotation",
+    "reg10": 0.0,
+    "last_10": [
+      33.9,
+      42.7,
+      37.0,
+      34.7,
+      44.1
+    ]
   },
   {
     "name": "Jofre Carreras",
@@ -8646,7 +9639,7 @@
     "yellow": 1,
     "red": 0,
     "mins_per_match": 37.0,
-    "titu_pct": 0,
+    "titu_pct": 90,
     "matchs_played": 9,
     "matchs_total": 10,
     "last_date": "2026-03-21",
@@ -8657,7 +9650,15 @@
     "aa_negative": -2.3,
     "final_third_passes_avg": 1.8,
     "aa_matches_analyzed": 5,
-    "archetype": "ATT Finisseur"
+    "archetype": "ATT Finisseur",
+    "reg10": 20.0,
+    "last_10": [
+      34.5,
+      41.7,
+      39.3,
+      34.3,
+      62.7
+    ]
   },
   {
     "name": "Carlos Romero",
@@ -8713,7 +9714,7 @@
     "yellow": 3,
     "red": 0,
     "mins_per_match": 89.0,
-    "titu_pct": 0,
+    "titu_pct": 80,
     "matchs_played": 8,
     "matchs_total": 10,
     "last_date": "2026-03-21",
@@ -8724,7 +9725,15 @@
     "aa_negative": -28.9,
     "final_third_passes_avg": 7.4,
     "aa_matches_analyzed": 5,
-    "archetype": "DEF Latéral"
+    "archetype": "DEF Latéral",
+    "reg10": 20.0,
+    "last_10": [
+      30.6,
+      17.5,
+      62.6,
+      36.1,
+      24.4
+    ]
   },
   {
     "name": "Leandro Cabrera",
@@ -8780,7 +9789,7 @@
     "yellow": 2,
     "red": 0,
     "mins_per_match": 90.0,
-    "titu_pct": 0,
+    "titu_pct": 100,
     "matchs_played": 10,
     "matchs_total": 10,
     "last_date": "2026-03-21",
@@ -8791,7 +9800,15 @@
     "aa_negative": -24.4,
     "final_third_passes_avg": 4.0,
     "aa_matches_analyzed": 5,
-    "archetype": "DEF Central"
+    "archetype": "DEF Central",
+    "reg10": 20.0,
+    "last_10": [
+      45.8,
+      25.4,
+      61.9,
+      46.9,
+      37.6
+    ]
   },
   {
     "name": "Ramon Terrats",
@@ -8847,7 +9864,7 @@
     "yellow": 0,
     "red": 0,
     "mins_per_match": 34.0,
-    "titu_pct": 0,
+    "titu_pct": 90,
     "matchs_played": 9,
     "matchs_total": 10,
     "last_date": "2026-03-21",
@@ -8858,7 +9875,15 @@
     "aa_negative": -13.2,
     "final_third_passes_avg": 6.6,
     "aa_matches_analyzed": 5,
-    "archetype": "MIL Rotation"
+    "archetype": "MIL Rotation",
+    "reg10": 0.0,
+    "last_10": [
+      33.9,
+      29.7,
+      40.2,
+      36.9,
+      37.5
+    ]
   },
   {
     "name": "Veljko Birmančević",
@@ -8914,7 +9939,7 @@
     "yellow": 0,
     "red": 0,
     "mins_per_match": 73.0,
-    "titu_pct": 0,
+    "titu_pct": 50,
     "matchs_played": 5,
     "matchs_total": 10,
     "last_date": "2026-03-14",
@@ -8925,7 +9950,15 @@
     "aa_negative": -6.5,
     "final_third_passes_avg": 3.5,
     "aa_matches_analyzed": 2,
-    "archetype": "MIL Rotation"
+    "archetype": "MIL Rotation",
+    "reg10": 20.0,
+    "last_10": [
+      42.1,
+      32.9,
+      36.3,
+      32.4,
+      70.1
+    ]
   },
   {
     "name": "Mauro Arambarri",
@@ -8981,7 +10014,7 @@
     "yellow": 4,
     "red": 0,
     "mins_per_match": 88.0,
-    "titu_pct": 0,
+    "titu_pct": 100,
     "matchs_played": 10,
     "matchs_total": 10,
     "last_date": "2026-03-21",
@@ -8992,7 +10025,15 @@
     "aa_negative": -17.4,
     "final_third_passes_avg": 2.8,
     "aa_matches_analyzed": 5,
-    "archetype": "MIL Rotation"
+    "archetype": "MIL Rotation",
+    "reg10": 40.0,
+    "last_10": [
+      61.7,
+      22.4,
+      38.5,
+      71.7,
+      38.5
+    ]
   },
   {
     "name": "Adrian Liso",
@@ -9048,7 +10089,7 @@
     "yellow": 4,
     "red": 1,
     "mins_per_match": 62.0,
-    "titu_pct": 0,
+    "titu_pct": 70,
     "matchs_played": 7,
     "matchs_total": 10,
     "last_date": "2026-03-14",
@@ -9059,7 +10100,15 @@
     "aa_negative": -7.0,
     "final_third_passes_avg": 1.3,
     "aa_matches_analyzed": 3,
-    "archetype": "ATT Finisseur"
+    "archetype": "ATT Finisseur",
+    "reg10": 20.0,
+    "last_10": [
+      35.2,
+      13.1,
+      37.6,
+      41.6,
+      63.0
+    ]
   },
   {
     "name": "Allan Nyom",
@@ -9114,7 +10163,7 @@
     "yellow": 5,
     "red": 1,
     "mins_per_match": 26.0,
-    "titu_pct": 0,
+    "titu_pct": 40,
     "matchs_played": 4,
     "matchs_total": 10,
     "last_date": "2026-03-08",
@@ -9125,7 +10174,14 @@
     "aa_negative": -10.6,
     "final_third_passes_avg": 1.0,
     "aa_matches_analyzed": 1,
-    "archetype": "DEF Central"
+    "archetype": "DEF Central",
+    "reg10": 0.0,
+    "last_10": [
+      30.5,
+      28.1,
+      35.6,
+      35.0
+    ]
   },
   {
     "name": "Sebastián Boselli",
@@ -9181,7 +10237,7 @@
     "yellow": 4,
     "red": 0,
     "mins_per_match": 61.0,
-    "titu_pct": 0,
+    "titu_pct": 60,
     "matchs_played": 6,
     "matchs_total": 10,
     "last_date": "2026-03-21",
@@ -9192,7 +10248,15 @@
     "aa_negative": -10.5,
     "final_third_passes_avg": 0.3,
     "aa_matches_analyzed": 3,
-    "archetype": "DEF Central"
+    "archetype": "DEF Central",
+    "reg10": 0.0,
+    "last_10": [
+      32.5,
+      47.1,
+      47.8,
+      35.4,
+      35.0
+    ]
   },
   {
     "name": "Juan Iglesias",
@@ -9248,7 +10312,7 @@
     "yellow": 3,
     "red": 0,
     "mins_per_match": 85.0,
-    "titu_pct": 0,
+    "titu_pct": 100,
     "matchs_played": 10,
     "matchs_total": 10,
     "last_date": "2026-03-21",
@@ -9259,7 +10323,15 @@
     "aa_negative": -25.4,
     "final_third_passes_avg": 3.8,
     "aa_matches_analyzed": 5,
-    "archetype": "DEF Central"
+    "archetype": "DEF Central",
+    "reg10": 40.0,
+    "last_10": [
+      72.0,
+      51.0,
+      63.4,
+      58.2,
+      34.1
+    ]
   },
   {
     "name": "Rico",
@@ -9315,7 +10387,7 @@
     "yellow": 4,
     "red": 0,
     "mins_per_match": 68.0,
-    "titu_pct": 0,
+    "titu_pct": 70,
     "matchs_played": 7,
     "matchs_total": 10,
     "last_date": "2026-03-21",
@@ -9326,7 +10398,15 @@
     "aa_negative": -11.6,
     "final_third_passes_avg": 1.2,
     "aa_matches_analyzed": 5,
-    "archetype": "DEF Central"
+    "archetype": "DEF Central",
+    "reg10": 0.0,
+    "last_10": [
+      29.5,
+      39.5,
+      26.3,
+      31.0,
+      39.6
+    ]
   },
   {
     "name": "David Soria",
@@ -9382,7 +10462,7 @@
     "yellow": 2,
     "red": 0,
     "mins_per_match": 90.0,
-    "titu_pct": 0,
+    "titu_pct": 100,
     "matchs_played": 10,
     "matchs_total": 10,
     "last_date": "2026-03-21",
@@ -9393,7 +10473,15 @@
     "aa_negative": -12.8,
     "final_third_passes_avg": 2.6,
     "aa_matches_analyzed": 5,
-    "archetype": "GK"
+    "archetype": "GK",
+    "reg10": 40.0,
+    "last_10": [
+      30.6,
+      51.8,
+      84.9,
+      91.0,
+      18.1
+    ]
   },
   {
     "name": "Djené Dakonam",
@@ -9449,7 +10537,7 @@
     "yellow": 7,
     "red": 1,
     "mins_per_match": 76.0,
-    "titu_pct": 0,
+    "titu_pct": 90,
     "matchs_played": 9,
     "matchs_total": 10,
     "last_date": "2026-03-21",
@@ -9460,7 +10548,15 @@
     "aa_negative": -17.8,
     "final_third_passes_avg": 2.8,
     "aa_matches_analyzed": 4,
-    "archetype": "DEF Central"
+    "archetype": "DEF Central",
+    "reg10": 0.0,
+    "last_10": [
+      32.6,
+      51.5,
+      46.9,
+      7.4,
+      41.9
+    ]
   },
   {
     "name": "Javi Muñoz",
@@ -9515,7 +10611,7 @@
     "yellow": 0,
     "red": 0,
     "mins_per_match": 34.0,
-    "titu_pct": 0,
+    "titu_pct": 40,
     "matchs_played": 4,
     "matchs_total": 10,
     "last_date": "2026-03-14",
@@ -9526,7 +10622,14 @@
     "aa_negative": 0.0,
     "final_third_passes_avg": 1.0,
     "aa_matches_analyzed": 1,
-    "archetype": "MIL Rotation"
+    "archetype": "MIL Rotation",
+    "reg10": 0.0,
+    "last_10": [
+      35.6,
+      32.3,
+      32.7,
+      40.3
+    ]
   },
   {
     "name": "Domingos Duarte",
@@ -9582,7 +10685,7 @@
     "yellow": 9,
     "red": 0,
     "mins_per_match": 86.0,
-    "titu_pct": 0,
+    "titu_pct": 100,
     "matchs_played": 10,
     "matchs_total": 10,
     "last_date": "2026-03-21",
@@ -9593,7 +10696,15 @@
     "aa_negative": -16.6,
     "final_third_passes_avg": 1.4,
     "aa_matches_analyzed": 5,
-    "archetype": "DEF Central"
+    "archetype": "DEF Central",
+    "reg10": 20.0,
+    "last_10": [
+      72.1,
+      60.0,
+      40.7,
+      56.5,
+      39.3
+    ]
   },
   {
     "name": "A. Abqar",
@@ -9649,7 +10760,7 @@
     "yellow": 7,
     "red": 1,
     "mins_per_match": 63.0,
-    "titu_pct": 0,
+    "titu_pct": 60,
     "matchs_played": 6,
     "matchs_total": 10,
     "last_date": "2026-03-14",
@@ -9660,7 +10771,15 @@
     "aa_negative": -14.6,
     "final_third_passes_avg": 0.5,
     "aa_matches_analyzed": 4,
-    "archetype": "DEF Central"
+    "archetype": "DEF Central",
+    "reg10": 0.0,
+    "last_10": [
+      13.1,
+      60.0,
+      35.1,
+      34.5,
+      54.9
+    ]
   },
   {
     "name": "Mario Martín",
@@ -9716,7 +10835,7 @@
     "yellow": 9,
     "red": 0,
     "mins_per_match": 60.0,
-    "titu_pct": 0,
+    "titu_pct": 90,
     "matchs_played": 9,
     "matchs_total": 10,
     "last_date": "2026-03-21",
@@ -9727,7 +10846,15 @@
     "aa_negative": -9.4,
     "final_third_passes_avg": 0.8,
     "aa_matches_analyzed": 5,
-    "archetype": "MIL Rotation"
+    "archetype": "MIL Rotation",
+    "reg10": 0.0,
+    "last_10": [
+      24.9,
+      35.5,
+      38.2,
+      34.8,
+      39.1
+    ]
   },
   {
     "name": "Luis Milla",
@@ -9783,7 +10910,7 @@
     "yellow": 3,
     "red": 1,
     "mins_per_match": 88.0,
-    "titu_pct": 0,
+    "titu_pct": 100,
     "matchs_played": 10,
     "matchs_total": 10,
     "last_date": "2026-03-21",
@@ -9794,7 +10921,15 @@
     "aa_negative": -17.9,
     "final_third_passes_avg": 6.4,
     "aa_matches_analyzed": 5,
-    "archetype": "MIL Créateur"
+    "archetype": "MIL Créateur",
+    "reg10": 20.0,
+    "last_10": [
+      77.1,
+      31.9,
+      54.9,
+      48.1,
+      25.5
+    ]
   },
   {
     "name": "Zaid Romero",
@@ -9850,7 +10985,7 @@
     "yellow": 0,
     "red": 0,
     "mins_per_match": 0.0,
-    "titu_pct": 0,
+    "titu_pct": 90,
     "matchs_played": 9,
     "matchs_total": 10,
     "last_date": "2026-03-21",
@@ -9861,7 +10996,15 @@
     "aa_negative": -22.3,
     "final_third_passes_avg": 3.0,
     "aa_matches_analyzed": 5,
-    "archetype": "DEF Central"
+    "archetype": "DEF Central",
+    "reg10": 20.0,
+    "last_10": [
+      36.8,
+      37.0,
+      53.2,
+      47.9,
+      93.9
+    ]
   },
   {
     "name": "Bryan Gil",
@@ -9917,7 +11060,7 @@
     "yellow": 4,
     "red": 0,
     "mins_per_match": 59.0,
-    "titu_pct": 0,
+    "titu_pct": 70,
     "matchs_played": 7,
     "matchs_total": 10,
     "last_date": "2026-03-01",
@@ -9928,7 +11071,15 @@
     "aa_negative": -6.7,
     "final_third_passes_avg": 14.0,
     "aa_matches_analyzed": 2,
-    "archetype": "ATT Créateur"
+    "archetype": "ATT Créateur",
+    "reg10": 0.0,
+    "last_10": [
+      38.9,
+      46.4,
+      50.8,
+      45.9,
+      50.4
+    ]
   },
   {
     "name": "Fran Beltrán",
@@ -9984,7 +11135,7 @@
     "yellow": 2,
     "red": 0,
     "mins_per_match": 59.0,
-    "titu_pct": 0,
+    "titu_pct": 90,
     "matchs_played": 9,
     "matchs_total": 10,
     "last_date": "2026-03-21",
@@ -9995,7 +11146,15 @@
     "aa_negative": -8.5,
     "final_third_passes_avg": 15.0,
     "aa_matches_analyzed": 5,
-    "archetype": "MIL Rotation"
+    "archetype": "MIL Rotation",
+    "reg10": 0.0,
+    "last_10": [
+      51.9,
+      48.8,
+      45.6,
+      51.1,
+      40.7
+    ]
   },
   {
     "name": "Daley Blind",
@@ -10051,7 +11210,7 @@
     "yellow": 1,
     "red": 0,
     "mins_per_match": 85.0,
-    "titu_pct": 0,
+    "titu_pct": 100,
     "matchs_played": 10,
     "matchs_total": 10,
     "last_date": "2026-03-21",
@@ -10062,7 +11221,15 @@
     "aa_negative": -19.2,
     "final_third_passes_avg": 16.2,
     "aa_matches_analyzed": 5,
-    "archetype": "DEF Latéral"
+    "archetype": "DEF Latéral",
+    "reg10": 60.0,
+    "last_10": [
+      47.2,
+      78.3,
+      61.8,
+      54.2,
+      73.2
+    ]
   },
   {
     "name": "Claudio Echeverri",
@@ -10118,7 +11285,7 @@
     "yellow": 3,
     "red": 0,
     "mins_per_match": 26.0,
-    "titu_pct": 0,
+    "titu_pct": 90,
     "matchs_played": 9,
     "matchs_total": 10,
     "last_date": "2026-03-21",
@@ -10129,7 +11296,15 @@
     "aa_negative": -8.1,
     "final_third_passes_avg": 6.8,
     "aa_matches_analyzed": 5,
-    "archetype": "MIL Rotation"
+    "archetype": "MIL Rotation",
+    "reg10": 20.0,
+    "last_10": [
+      37.6,
+      79.6,
+      39.0,
+      33.3,
+      43.9
+    ]
   },
   {
     "name": "Vladyslav Vanat",
@@ -10185,7 +11360,7 @@
     "yellow": 4,
     "red": 0,
     "mins_per_match": 74.0,
-    "titu_pct": 0,
+    "titu_pct": 100,
     "matchs_played": 10,
     "matchs_total": 10,
     "last_date": "2026-03-21",
@@ -10196,7 +11371,15 @@
     "aa_negative": -2.1,
     "final_third_passes_avg": 1.8,
     "aa_matches_analyzed": 5,
-    "archetype": "ATT Finisseur"
+    "archetype": "ATT Finisseur",
+    "reg10": 40.0,
+    "last_10": [
+      37.6,
+      39.7,
+      40.7,
+      68.9,
+      62.4
+    ]
   },
   {
     "name": "Álex Moreno",
@@ -10252,7 +11435,7 @@
     "yellow": 4,
     "red": 0,
     "mins_per_match": 81.0,
-    "titu_pct": 0,
+    "titu_pct": 50,
     "matchs_played": 5,
     "matchs_total": 10,
     "last_date": "2026-03-21",
@@ -10263,7 +11446,15 @@
     "aa_negative": -4.1,
     "final_third_passes_avg": 1.5,
     "aa_matches_analyzed": 2,
-    "archetype": "DEF Central"
+    "archetype": "DEF Central",
+    "reg10": 20.0,
+    "last_10": [
+      34.3,
+      35.1,
+      36.0,
+      67.5,
+      51.2
+    ]
   },
   {
     "name": "Axel Witsel",
@@ -10319,7 +11510,7 @@
     "yellow": 2,
     "red": 1,
     "mins_per_match": 79.0,
-    "titu_pct": 0,
+    "titu_pct": 80,
     "matchs_played": 8,
     "matchs_total": 10,
     "last_date": "2026-03-21",
@@ -10330,7 +11521,15 @@
     "aa_negative": -21.4,
     "final_third_passes_avg": 13.6,
     "aa_matches_analyzed": 5,
-    "archetype": "DEF Latéral"
+    "archetype": "DEF Latéral",
+    "reg10": 40.0,
+    "last_10": [
+      51.2,
+      56.1,
+      58.0,
+      80.4,
+      66.2
+    ]
   },
   {
     "name": "Joel Roca",
@@ -10386,7 +11585,7 @@
     "yellow": 3,
     "red": 1,
     "mins_per_match": 43.0,
-    "titu_pct": 0,
+    "titu_pct": 80,
     "matchs_played": 8,
     "matchs_total": 10,
     "last_date": "2026-03-21",
@@ -10397,7 +11596,15 @@
     "aa_negative": -5.7,
     "final_third_passes_avg": 7.5,
     "aa_matches_analyzed": 4,
-    "archetype": "MIL Rotation"
+    "archetype": "MIL Rotation",
+    "reg10": 20.0,
+    "last_10": [
+      41.1,
+      38.9,
+      72.3,
+      40.0,
+      40.7
+    ]
   },
   {
     "name": "Alejandro Francés",
@@ -10453,7 +11660,7 @@
     "yellow": 1,
     "red": 1,
     "mins_per_match": 41.0,
-    "titu_pct": 0,
+    "titu_pct": 70,
     "matchs_played": 7,
     "matchs_total": 10,
     "last_date": "2026-03-14",
@@ -10464,7 +11671,15 @@
     "aa_negative": -15.1,
     "final_third_passes_avg": 10.3,
     "aa_matches_analyzed": 3,
-    "archetype": "DEF Latéral"
+    "archetype": "DEF Latéral",
+    "reg10": 20.0,
+    "last_10": [
+      57.5,
+      79.5,
+      28.3,
+      34.3,
+      36.7
+    ]
   },
   {
     "name": "Iván Martín",
@@ -10520,7 +11735,7 @@
     "yellow": 4,
     "red": 1,
     "mins_per_match": 72.0,
-    "titu_pct": 0,
+    "titu_pct": 100,
     "matchs_played": 10,
     "matchs_total": 10,
     "last_date": "2026-03-21",
@@ -10531,7 +11746,15 @@
     "aa_negative": -6.2,
     "final_third_passes_avg": 6.6,
     "aa_matches_analyzed": 5,
-    "archetype": "MIL Rotation"
+    "archetype": "MIL Rotation",
+    "reg10": 0.0,
+    "last_10": [
+      41.0,
+      38.4,
+      42.6,
+      35.4,
+      43.7
+    ]
   },
   {
     "name": "Cristhian Stuani",
@@ -10585,7 +11808,7 @@
     "yellow": 2,
     "red": 0,
     "mins_per_match": 17.0,
-    "titu_pct": 0,
+    "titu_pct": 30,
     "matchs_played": 3,
     "matchs_total": 10,
     "last_date": "2026-02-23",
@@ -10596,7 +11819,13 @@
     "aa_negative": -3.9,
     "final_third_passes_avg": 0.0,
     "aa_matches_analyzed": 1,
-    "archetype": "ATT Finisseur"
+    "archetype": "ATT Finisseur",
+    "reg10": 0.0,
+    "last_10": [
+      33.2,
+      28.0,
+      36.1
+    ]
   },
   {
     "name": "ter Stegen",
@@ -10649,11 +11878,16 @@
     "yellow": 0,
     "red": 0,
     "mins_per_match": 90.0,
-    "titu_pct": 0,
+    "titu_pct": 20,
     "matchs_played": 2,
     "matchs_total": 10,
     "last_date": "2026-01-31",
-    "archetype": "GK"
+    "archetype": "GK",
+    "reg10": 0.0,
+    "last_10": [
+      46.1,
+      36.2
+    ]
   },
   {
     "name": "Viktor Tsygankov",
@@ -10709,11 +11943,19 @@
     "yellow": 2,
     "red": 0,
     "mins_per_match": 80.0,
-    "titu_pct": 0,
+    "titu_pct": 100,
     "matchs_played": 10,
     "matchs_total": 10,
     "last_date": "2026-03-21",
-    "archetype": "ATT Rotation"
+    "archetype": "ATT Rotation",
+    "reg10": 60.0,
+    "last_10": [
+      41.1,
+      77.6,
+      62.0,
+      49.8,
+      80.1
+    ]
   },
   {
     "name": "Azzedine Ounahi",
@@ -10769,7 +12011,7 @@
     "yellow": 6,
     "red": 0,
     "mins_per_match": 69.0,
-    "titu_pct": 0,
+    "titu_pct": 50,
     "matchs_played": 5,
     "matchs_total": 10,
     "last_date": "2026-03-21",
@@ -10780,7 +12022,15 @@
     "aa_negative": -11.7,
     "final_third_passes_avg": 15.0,
     "aa_matches_analyzed": 5,
-    "archetype": "MIL Relanceur"
+    "archetype": "MIL Relanceur",
+    "reg10": 40.0,
+    "last_10": [
+      43.5,
+      74.2,
+      46.6,
+      54.0,
+      76.7
+    ]
   },
   {
     "name": "Abel Ruiz",
@@ -10835,7 +12085,7 @@
     "yellow": 0,
     "red": 0,
     "mins_per_match": 11.0,
-    "titu_pct": 0,
+    "titu_pct": 40,
     "matchs_played": 4,
     "matchs_total": 10,
     "last_date": "2026-03-21",
@@ -10846,7 +12096,14 @@
     "aa_negative": -0.9,
     "final_third_passes_avg": 1.0,
     "aa_matches_analyzed": 4,
-    "archetype": "ATT Finisseur"
+    "archetype": "ATT Finisseur",
+    "reg10": 0.0,
+    "last_10": [
+      33.8,
+      35.1,
+      37.5,
+      35.7
+    ]
   },
   {
     "name": "Arnau Martínez",
@@ -10902,7 +12159,7 @@
     "yellow": 6,
     "red": 0,
     "mins_per_match": 75.0,
-    "titu_pct": 0,
+    "titu_pct": 90,
     "matchs_played": 9,
     "matchs_total": 10,
     "last_date": "2026-03-21",
@@ -10913,7 +12170,15 @@
     "aa_negative": -17.4,
     "final_third_passes_avg": 9.6,
     "aa_matches_analyzed": 5,
-    "archetype": "DEF Latéral"
+    "archetype": "DEF Latéral",
+    "reg10": 40.0,
+    "last_10": [
+      48.1,
+      86.4,
+      63.3,
+      36.5,
+      45.2
+    ]
   },
   {
     "name": "Paulo Gazzaniga",
@@ -10969,7 +12234,7 @@
     "yellow": 4,
     "red": 1,
     "mins_per_match": 88.0,
-    "titu_pct": 0,
+    "titu_pct": 80,
     "matchs_played": 8,
     "matchs_total": 10,
     "last_date": "2026-03-21",
@@ -10980,7 +12245,15 @@
     "aa_negative": -12.4,
     "final_third_passes_avg": 0.8,
     "aa_matches_analyzed": 5,
-    "archetype": "GK"
+    "archetype": "GK",
+    "reg10": 40.0,
+    "last_10": [
+      72.2,
+      92.1,
+      43.2,
+      39.2,
+      21.7
+    ]
   },
   {
     "name": "P. Martínez",
@@ -11036,7 +12309,7 @@
     "yellow": 2,
     "red": 0,
     "mins_per_match": 67.0,
-    "titu_pct": 0,
+    "titu_pct": 50,
     "matchs_played": 5,
     "matchs_total": 10,
     "last_date": "2026-03-21",
@@ -11047,7 +12320,15 @@
     "aa_negative": -7.3,
     "final_third_passes_avg": 2.0,
     "aa_matches_analyzed": 1,
-    "archetype": "MIL Rotation"
+    "archetype": "MIL Rotation",
+    "reg10": 20.0,
+    "last_10": [
+      29.9,
+      47.5,
+      32.6,
+      45.8,
+      95.7
+    ]
   },
   {
     "name": "Kareem Tunde",
@@ -11103,7 +12384,7 @@
     "yellow": 3,
     "red": 0,
     "mins_per_match": 53.0,
-    "titu_pct": 0,
+    "titu_pct": 90,
     "matchs_played": 9,
     "matchs_total": 10,
     "last_date": "2026-03-21",
@@ -11114,7 +12395,15 @@
     "aa_negative": -6.9,
     "final_third_passes_avg": 3.4,
     "aa_matches_analyzed": 5,
-    "archetype": "ATT Dribbleur"
+    "archetype": "ATT Dribbleur",
+    "reg10": 20.0,
+    "last_10": [
+      75.7,
+      34.7,
+      37.4,
+      51.1,
+      26.2
+    ]
   },
   {
     "name": "Kervin Arriaga",
@@ -11170,7 +12459,7 @@
     "yellow": 5,
     "red": 1,
     "mins_per_match": 58.0,
-    "titu_pct": 0,
+    "titu_pct": 50,
     "matchs_played": 5,
     "matchs_total": 10,
     "last_date": "2026-03-21",
@@ -11181,7 +12470,15 @@
     "aa_negative": -5.0,
     "final_third_passes_avg": 1.3,
     "aa_matches_analyzed": 3,
-    "archetype": "MIL Rotation"
+    "archetype": "MIL Rotation",
+    "reg10": 0.0,
+    "last_10": [
+      32.5,
+      35.3,
+      36.0,
+      21.7,
+      39.3
+    ]
   },
   {
     "name": "Unai Vencedor",
@@ -11235,7 +12532,7 @@
     "yellow": 3,
     "red": 1,
     "mins_per_match": 51.0,
-    "titu_pct": 0,
+    "titu_pct": 30,
     "matchs_played": 3,
     "matchs_total": 10,
     "last_date": "2026-03-07",
@@ -11246,7 +12543,13 @@
     "aa_negative": -2.8,
     "final_third_passes_avg": 0.0,
     "aa_matches_analyzed": 1,
-    "archetype": "MIL Rotation"
+    "archetype": "MIL Rotation",
+    "reg10": 0.0,
+    "last_10": [
+      32.9,
+      41.0,
+      40.9
+    ]
   },
   {
     "name": "Manu Sánchez",
@@ -11302,7 +12605,7 @@
     "yellow": 0,
     "red": 0,
     "mins_per_match": 0.0,
-    "titu_pct": 0,
+    "titu_pct": 90,
     "matchs_played": 9,
     "matchs_total": 10,
     "last_date": "2026-03-21",
@@ -11313,7 +12616,15 @@
     "aa_negative": -24.3,
     "final_third_passes_avg": 4.6,
     "aa_matches_analyzed": 5,
-    "archetype": "DEF Central"
+    "archetype": "DEF Central",
+    "reg10": 20.0,
+    "last_10": [
+      25.4,
+      58.8,
+      37.3,
+      60.9,
+      44.0
+    ]
   },
   {
     "name": "Matías Moreno",
@@ -11369,7 +12680,7 @@
     "yellow": 5,
     "red": 0,
     "mins_per_match": 78.0,
-    "titu_pct": 0,
+    "titu_pct": 60,
     "matchs_played": 6,
     "matchs_total": 10,
     "last_date": "2026-03-16",
@@ -11380,7 +12691,15 @@
     "aa_negative": -15.2,
     "final_third_passes_avg": 3.7,
     "aa_matches_analyzed": 3,
-    "archetype": "DEF Central"
+    "archetype": "DEF Central",
+    "reg10": 40.0,
+    "last_10": [
+      60.7,
+      50.2,
+      67.3,
+      51.1,
+      34.6
+    ]
   },
   {
     "name": "Ugo Raghouber",
@@ -11436,7 +12755,7 @@
     "yellow": 0,
     "red": 0,
     "mins_per_match": 52.0,
-    "titu_pct": 0,
+    "titu_pct": 70,
     "matchs_played": 7,
     "matchs_total": 10,
     "last_date": "2026-03-21",
@@ -11447,7 +12766,15 @@
     "aa_negative": -8.4,
     "final_third_passes_avg": 1.3,
     "aa_matches_analyzed": 3,
-    "archetype": "MIL Rotation"
+    "archetype": "MIL Rotation",
+    "reg10": 20.0,
+    "last_10": [
+      34.9,
+      30.2,
+      43.1,
+      42.3,
+      76.4
+    ]
   },
   {
     "name": "Morales",
@@ -11500,7 +12827,7 @@
     "yellow": 1,
     "red": 0,
     "mins_per_match": 17.0,
-    "titu_pct": 0,
+    "titu_pct": 20,
     "matchs_played": 2,
     "matchs_total": 10,
     "last_date": "2026-03-16",
@@ -11511,7 +12838,12 @@
     "aa_negative": -2.6,
     "final_third_passes_avg": 1.5,
     "aa_matches_analyzed": 2,
-    "archetype": "ATT Finisseur"
+    "archetype": "ATT Finisseur",
+    "reg10": 0.0,
+    "last_10": [
+      37.6,
+      36.2
+    ]
   },
   {
     "name": "Nacho Pérez",
@@ -11564,7 +12896,7 @@
     "yellow": 0,
     "red": 0,
     "mins_per_match": 40.0,
-    "titu_pct": 0,
+    "titu_pct": 20,
     "matchs_played": 2,
     "matchs_total": 10,
     "last_date": "2026-02-22",
@@ -11575,7 +12907,12 @@
     "aa_negative": 0.0,
     "final_third_passes_avg": 0.0,
     "aa_matches_analyzed": 1,
-    "archetype": "DEF Central"
+    "archetype": "DEF Central",
+    "reg10": 0.0,
+    "last_10": [
+      35.7,
+      42.3
+    ]
   },
   {
     "name": "C.Álvarez",
@@ -11631,7 +12968,7 @@
     "yellow": 3,
     "red": 0,
     "mins_per_match": 69.0,
-    "titu_pct": 0,
+    "titu_pct": 70,
     "matchs_played": 7,
     "matchs_total": 10,
     "last_date": "2026-02-27",
@@ -11642,7 +12979,15 @@
     "aa_negative": -12.2,
     "final_third_passes_avg": 9.5,
     "aa_matches_analyzed": 2,
-    "archetype": "ATT Dribbleur"
+    "archetype": "ATT Dribbleur",
+    "reg10": 0.0,
+    "last_10": [
+      41.6,
+      35.4,
+      41.2,
+      46.7,
+      36.6
+    ]
   },
   {
     "name": "Jeremy Toljan",
@@ -11698,7 +13043,7 @@
     "yellow": 7,
     "red": 0,
     "mins_per_match": 87.0,
-    "titu_pct": 0,
+    "titu_pct": 90,
     "matchs_played": 9,
     "matchs_total": 10,
     "last_date": "2026-03-21",
@@ -11709,7 +13054,15 @@
     "aa_negative": -21.3,
     "final_third_passes_avg": 4.6,
     "aa_matches_analyzed": 5,
-    "archetype": "DEF Central"
+    "archetype": "DEF Central",
+    "reg10": 20.0,
+    "last_10": [
+      42.7,
+      31.1,
+      42.4,
+      72.4,
+      41.9
+    ]
   },
   {
     "name": "Víctor García",
@@ -11765,7 +13118,7 @@
     "yellow": 0,
     "red": 0,
     "mins_per_match": 46.0,
-    "titu_pct": 0,
+    "titu_pct": 50,
     "matchs_played": 5,
     "matchs_total": 10,
     "last_date": "2026-03-21",
@@ -11776,7 +13129,15 @@
     "aa_negative": -19.1,
     "final_third_passes_avg": 3.0,
     "aa_matches_analyzed": 4,
-    "archetype": "DEF Latéral"
+    "archetype": "DEF Latéral",
+    "reg10": 20.0,
+    "last_10": [
+      38.1,
+      58.7,
+      63.8,
+      29.1,
+      24.7
+    ]
   },
   {
     "name": "Paco Cortés",
@@ -11832,7 +13193,7 @@
     "yellow": 3,
     "red": 0,
     "mins_per_match": 30.0,
-    "titu_pct": 0,
+    "titu_pct": 100,
     "matchs_played": 10,
     "matchs_total": 10,
     "last_date": "2026-03-21",
@@ -11843,7 +13204,15 @@
     "aa_negative": -5.4,
     "final_third_passes_avg": 2.6,
     "aa_matches_analyzed": 5,
-    "archetype": "ATT Dribbleur"
+    "archetype": "ATT Dribbleur",
+    "reg10": 0.0,
+    "last_10": [
+      44.2,
+      30.0,
+      44.3,
+      43.1,
+      36.3
+    ]
   },
   {
     "name": "Olasagasti",
@@ -11899,7 +13268,7 @@
     "yellow": 3,
     "red": 1,
     "mins_per_match": 40.0,
-    "titu_pct": 0,
+    "titu_pct": 90,
     "matchs_played": 9,
     "matchs_total": 10,
     "last_date": "2026-03-21",
@@ -11910,7 +13279,15 @@
     "aa_negative": -22.5,
     "final_third_passes_avg": 5.0,
     "aa_matches_analyzed": 4,
-    "archetype": "MIL Dribbleur"
+    "archetype": "MIL Dribbleur",
+    "reg10": 20.0,
+    "last_10": [
+      33.1,
+      23.0,
+      65.3,
+      48.5,
+      44.4
+    ]
   },
   {
     "name": "Iker Losada",
@@ -11966,7 +13343,7 @@
     "yellow": 1,
     "red": 0,
     "mins_per_match": 38.0,
-    "titu_pct": 0,
+    "titu_pct": 90,
     "matchs_played": 9,
     "matchs_total": 10,
     "last_date": "2026-03-21",
@@ -11977,7 +13354,15 @@
     "aa_negative": -1.4,
     "final_third_passes_avg": 3.8,
     "aa_matches_analyzed": 4,
-    "archetype": "ATT Finisseur"
+    "archetype": "ATT Finisseur",
+    "reg10": 40.0,
+    "last_10": [
+      71.2,
+      71.8,
+      38.9,
+      35.4,
+      32.3
+    ]
   },
   {
     "name": "I.Romero",
@@ -12033,7 +13418,7 @@
     "yellow": 3,
     "red": 0,
     "mins_per_match": 74.0,
-    "titu_pct": 0,
+    "titu_pct": 90,
     "matchs_played": 9,
     "matchs_total": 10,
     "last_date": "2026-03-21",
@@ -12044,7 +13429,15 @@
     "aa_negative": -6.3,
     "final_third_passes_avg": 4.8,
     "aa_matches_analyzed": 5,
-    "archetype": "ATT Complet"
+    "archetype": "ATT Complet",
+    "reg10": 20.0,
+    "last_10": [
+      66.2,
+      48.9,
+      43.7,
+      40.3,
+      55.9
+    ]
   },
   {
     "name": "Edouard Eyong",
@@ -12100,7 +13493,7 @@
     "yellow": 2,
     "red": 0,
     "mins_per_match": 61.0,
-    "titu_pct": 0,
+    "titu_pct": 90,
     "matchs_played": 9,
     "matchs_total": 10,
     "last_date": "2026-03-16",
@@ -12111,7 +13504,15 @@
     "aa_negative": -3.2,
     "final_third_passes_avg": 0.5,
     "aa_matches_analyzed": 4,
-    "archetype": "ATT Finisseur"
+    "archetype": "ATT Finisseur",
+    "reg10": 0.0,
+    "last_10": [
+      35.8,
+      33.3,
+      60.0,
+      34.0,
+      37.2
+    ]
   },
   {
     "name": "O.Rey",
@@ -12167,7 +13568,7 @@
     "yellow": 3,
     "red": 0,
     "mins_per_match": 66.0,
-    "titu_pct": 0,
+    "titu_pct": 50,
     "matchs_played": 5,
     "matchs_total": 10,
     "last_date": "2026-03-21",
@@ -12178,7 +13579,15 @@
     "aa_negative": -12.7,
     "final_third_passes_avg": 4.4,
     "aa_matches_analyzed": 5,
-    "archetype": "MIL Rotation"
+    "archetype": "MIL Rotation",
+    "reg10": 0.0,
+    "last_10": [
+      23.7,
+      44.6,
+      39.8,
+      36.8,
+      33.3
+    ]
   },
   {
     "name": "Carlos Espí",
@@ -12234,7 +13643,7 @@
     "yellow": 1,
     "red": 0,
     "mins_per_match": 35.0,
-    "titu_pct": 0,
+    "titu_pct": 80,
     "matchs_played": 8,
     "matchs_total": 10,
     "last_date": "2026-03-21",
@@ -12245,7 +13654,15 @@
     "aa_negative": -12.1,
     "final_third_passes_avg": 2.2,
     "aa_matches_analyzed": 4,
-    "archetype": "ATT Dribbleur"
+    "archetype": "ATT Dribbleur",
+    "reg10": 80.0,
+    "last_10": [
+      78.3,
+      67.8,
+      64.8,
+      70.0,
+      40.6
+    ]
   },
   {
     "name": "Mathew Ryan",
@@ -12301,7 +13718,7 @@
     "yellow": 2,
     "red": 0,
     "mins_per_match": 90.0,
-    "titu_pct": 0,
+    "titu_pct": 100,
     "matchs_played": 10,
     "matchs_total": 10,
     "last_date": "2026-03-21",
@@ -12312,7 +13729,15 @@
     "aa_negative": -12.2,
     "final_third_passes_avg": 3.4,
     "aa_matches_analyzed": 5,
-    "archetype": "GK"
+    "archetype": "GK",
+    "reg10": 20.0,
+    "last_10": [
+      30.5,
+      52.8,
+      51.3,
+      82.4,
+      50.1
+    ]
   },
   {
     "name": "Toni Lato",
@@ -12367,7 +13792,7 @@
     "yellow": 3,
     "red": 0,
     "mins_per_match": 52.0,
-    "titu_pct": 0,
+    "titu_pct": 40,
     "matchs_played": 4,
     "matchs_total": 10,
     "last_date": "2026-03-21",
@@ -12378,7 +13803,14 @@
     "aa_negative": -27.7,
     "final_third_passes_avg": 8.0,
     "aa_matches_analyzed": 2,
-    "archetype": "DEF Latéral"
+    "archetype": "DEF Latéral",
+    "reg10": 0.0,
+    "last_10": [
+      28.4,
+      41.2,
+      37.1,
+      37.1
+    ]
   },
   {
     "name": "Zito Luvumbo",
@@ -12433,7 +13865,7 @@
     "yellow": 1,
     "red": 0,
     "mins_per_match": 29.0,
-    "titu_pct": 0,
+    "titu_pct": 40,
     "matchs_played": 4,
     "matchs_total": 10,
     "last_date": "2026-03-21",
@@ -12444,7 +13876,14 @@
     "aa_negative": -3.7,
     "final_third_passes_avg": 3.3,
     "aa_matches_analyzed": 3,
-    "archetype": "ATT Complet"
+    "archetype": "ATT Complet",
+    "reg10": 25.0,
+    "last_10": [
+      73.4,
+      42.1,
+      38.4,
+      37.4
+    ]
   },
   {
     "name": "David López",
@@ -12499,7 +13938,7 @@
     "yellow": 1,
     "red": 0,
     "mins_per_match": 76.0,
-    "titu_pct": 0,
+    "titu_pct": 40,
     "matchs_played": 4,
     "matchs_total": 10,
     "last_date": "2026-03-07",
@@ -12510,7 +13949,14 @@
     "aa_negative": -22.0,
     "final_third_passes_avg": 0.0,
     "aa_matches_analyzed": 1,
-    "archetype": "DEF Central"
+    "archetype": "DEF Central",
+    "reg10": 25.0,
+    "last_10": [
+      19.7,
+      75.0,
+      43.1,
+      50.3
+    ]
   },
   {
     "name": "Pablo Maffeo",
@@ -12566,7 +14012,7 @@
     "yellow": 8,
     "red": 0,
     "mins_per_match": 85.0,
-    "titu_pct": 0,
+    "titu_pct": 80,
     "matchs_played": 8,
     "matchs_total": 10,
     "last_date": "2026-03-15",
@@ -12577,7 +14023,15 @@
     "aa_negative": -17.1,
     "final_third_passes_avg": 8.0,
     "aa_matches_analyzed": 4,
-    "archetype": "DEF Latéral"
+    "archetype": "DEF Latéral",
+    "reg10": 60.0,
+    "last_10": [
+      69.3,
+      100.0,
+      35.3,
+      64.5,
+      28.4
+    ]
   },
   {
     "name": "Manu Morlanes",
@@ -12633,7 +14087,7 @@
     "yellow": 3,
     "red": 1,
     "mins_per_match": 49.0,
-    "titu_pct": 0,
+    "titu_pct": 80,
     "matchs_played": 8,
     "matchs_total": 10,
     "last_date": "2026-03-21",
@@ -12644,7 +14098,15 @@
     "aa_negative": -4.4,
     "final_third_passes_avg": 5.0,
     "aa_matches_analyzed": 5,
-    "archetype": "MIL Rotation"
+    "archetype": "MIL Rotation",
+    "reg10": 0.0,
+    "last_10": [
+      43.0,
+      52.1,
+      42.3,
+      36.5,
+      31.2
+    ]
   },
   {
     "name": "Justin-Noël Kalumba",
@@ -12697,7 +14159,7 @@
     "yellow": 0,
     "red": 0,
     "mins_per_match": 64.0,
-    "titu_pct": 0,
+    "titu_pct": 20,
     "matchs_played": 2,
     "matchs_total": 10,
     "last_date": "2026-03-21",
@@ -12708,7 +14170,12 @@
     "aa_negative": -3.2,
     "final_third_passes_avg": 3.0,
     "aa_matches_analyzed": 2,
-    "archetype": "ATT Finisseur"
+    "archetype": "ATT Finisseur",
+    "reg10": 0.0,
+    "last_10": [
+      33.9,
+      33.7
+    ]
   },
   {
     "name": "Abdón Prats",
@@ -12761,7 +14228,7 @@
     "yellow": 0,
     "red": 0,
     "mins_per_match": 8.0,
-    "titu_pct": 0,
+    "titu_pct": 20,
     "matchs_played": 2,
     "matchs_total": 10,
     "last_date": "2026-02-28",
@@ -12772,7 +14239,12 @@
     "aa_negative": -0.1,
     "final_third_passes_avg": 0.0,
     "aa_matches_analyzed": 1,
-    "archetype": "ATT Finisseur"
+    "archetype": "ATT Finisseur",
+    "reg10": 0.0,
+    "last_10": [
+      36.0,
+      35.0
+    ]
   },
   {
     "name": "Mateo Joseph",
@@ -12828,7 +14300,7 @@
     "yellow": 2,
     "red": 0,
     "mins_per_match": 60.0,
-    "titu_pct": 0,
+    "titu_pct": 100,
     "matchs_played": 10,
     "matchs_total": 10,
     "last_date": "2026-03-21",
@@ -12839,7 +14311,15 @@
     "aa_negative": -9.5,
     "final_third_passes_avg": 4.8,
     "aa_matches_analyzed": 5,
-    "archetype": "ATT Dribbleur"
+    "archetype": "ATT Dribbleur",
+    "reg10": 0.0,
+    "last_10": [
+      38.3,
+      48.6,
+      40.9,
+      47.6,
+      37.6
+    ]
   },
   {
     "name": "Antonio Sánchez",
@@ -12895,7 +14375,7 @@
     "yellow": 3,
     "red": 1,
     "mins_per_match": 40.0,
-    "titu_pct": 0,
+    "titu_pct": 90,
     "matchs_played": 9,
     "matchs_total": 10,
     "last_date": "2026-03-21",
@@ -12906,7 +14386,15 @@
     "aa_negative": -10.8,
     "final_third_passes_avg": 3.5,
     "aa_matches_analyzed": 4,
-    "archetype": "MIL Rotation"
+    "archetype": "MIL Rotation",
+    "reg10": 0.0,
+    "last_10": [
+      39.6,
+      37.8,
+      27.9,
+      37.0,
+      46.2
+    ]
   },
   {
     "name": "Raíllo",
@@ -12962,7 +14450,7 @@
     "yellow": 4,
     "red": 0,
     "mins_per_match": 88.0,
-    "titu_pct": 0,
+    "titu_pct": 50,
     "matchs_played": 5,
     "matchs_total": 10,
     "last_date": "2026-03-21",
@@ -12973,7 +14461,15 @@
     "aa_negative": -18.3,
     "final_third_passes_avg": 5.6,
     "aa_matches_analyzed": 5,
-    "archetype": "DEF Central"
+    "archetype": "DEF Central",
+    "reg10": 20.0,
+    "last_10": [
+      47.5,
+      61.4,
+      46.9,
+      47.8,
+      24.2
+    ]
   },
   {
     "name": "J. Mojica",
@@ -13029,7 +14525,7 @@
     "yellow": 5,
     "red": 0,
     "mins_per_match": 76.0,
-    "titu_pct": 0,
+    "titu_pct": 90,
     "matchs_played": 9,
     "matchs_total": 10,
     "last_date": "2026-03-15",
@@ -13040,7 +14536,15 @@
     "aa_negative": -18.5,
     "final_third_passes_avg": 8.2,
     "aa_matches_analyzed": 4,
-    "archetype": "DEF Latéral"
+    "archetype": "DEF Latéral",
+    "reg10": 0.0,
+    "last_10": [
+      43.2,
+      43.1,
+      58.4,
+      18.1,
+      42.0
+    ]
   },
   {
     "name": "Jan Virgili",
@@ -13096,7 +14600,7 @@
     "yellow": 0,
     "red": 1,
     "mins_per_match": 66.0,
-    "titu_pct": 0,
+    "titu_pct": 80,
     "matchs_played": 8,
     "matchs_total": 10,
     "last_date": "2026-03-07",
@@ -13107,7 +14611,15 @@
     "aa_negative": -4.4,
     "final_third_passes_avg": 3.0,
     "aa_matches_analyzed": 3,
-    "archetype": "ATT Finisseur"
+    "archetype": "ATT Finisseur",
+    "reg10": 0.0,
+    "last_10": [
+      13.9,
+      45.4,
+      34.6,
+      40.5,
+      46.1
+    ]
   },
   {
     "name": "Javier Llabrés",
@@ -13163,7 +14675,7 @@
     "yellow": 0,
     "red": 0,
     "mins_per_match": 11.0,
-    "titu_pct": 0,
+    "titu_pct": 50,
     "matchs_played": 5,
     "matchs_total": 10,
     "last_date": "2026-02-28",
@@ -13174,7 +14686,15 @@
     "aa_negative": -1.3,
     "final_third_passes_avg": 0.0,
     "aa_matches_analyzed": 2,
-    "archetype": "ATT Finisseur"
+    "archetype": "ATT Finisseur",
+    "reg10": 0.0,
+    "last_10": [
+      36.3,
+      35.2,
+      35.1,
+      35.0,
+      34.0
+    ]
   },
   {
     "name": "Martin Valjent",
@@ -13230,7 +14750,7 @@
     "yellow": 4,
     "red": 0,
     "mins_per_match": 90.0,
-    "titu_pct": 0,
+    "titu_pct": 100,
     "matchs_played": 10,
     "matchs_total": 10,
     "last_date": "2026-03-21",
@@ -13241,7 +14761,15 @@
     "aa_negative": -21.2,
     "final_third_passes_avg": 4.8,
     "aa_matches_analyzed": 5,
-    "archetype": "DEF Central"
+    "archetype": "DEF Central",
+    "reg10": 20.0,
+    "last_10": [
+      73.7,
+      45.0,
+      18.4,
+      32.8,
+      34.1
+    ]
   },
   {
     "name": "Samú Costa",
@@ -13297,7 +14825,7 @@
     "yellow": 9,
     "red": 0,
     "mins_per_match": 79.0,
-    "titu_pct": 0,
+    "titu_pct": 100,
     "matchs_played": 10,
     "matchs_total": 10,
     "last_date": "2026-03-21",
@@ -13308,7 +14836,15 @@
     "aa_negative": -18.2,
     "final_third_passes_avg": 7.6,
     "aa_matches_analyzed": 5,
-    "archetype": "MIL Récup"
+    "archetype": "MIL Récup",
+    "reg10": 0.0,
+    "last_10": [
+      47.3,
+      60.0,
+      41.0,
+      37.5,
+      34.5
+    ]
   },
   {
     "name": "Mateu Morey Bauza",
@@ -13364,7 +14900,7 @@
     "yellow": 2,
     "red": 0,
     "mins_per_match": 39.0,
-    "titu_pct": 0,
+    "titu_pct": 50,
     "matchs_played": 5,
     "matchs_total": 10,
     "last_date": "2026-03-07",
@@ -13375,7 +14911,15 @@
     "aa_negative": -6.2,
     "final_third_passes_avg": 0.0,
     "aa_matches_analyzed": 2,
-    "archetype": "DEF Central"
+    "archetype": "DEF Central",
+    "reg10": 0.0,
+    "last_10": [
+      29.1,
+      38.0,
+      31.6,
+      26.2,
+      12.5
+    ]
   },
   {
     "name": "Omar Mascarell",
@@ -13431,7 +14975,7 @@
     "yellow": 4,
     "red": 0,
     "mins_per_match": 72.0,
-    "titu_pct": 0,
+    "titu_pct": 100,
     "matchs_played": 10,
     "matchs_total": 10,
     "last_date": "2026-03-21",
@@ -13442,7 +14986,15 @@
     "aa_negative": -11.3,
     "final_third_passes_avg": 7.4,
     "aa_matches_analyzed": 5,
-    "archetype": "MIL Récup"
+    "archetype": "MIL Récup",
+    "reg10": 20.0,
+    "last_10": [
+      23.4,
+      84.3,
+      47.2,
+      37.3,
+      39.3
+    ]
   },
   {
     "name": "Takuma Asano",
@@ -13495,11 +15047,16 @@
     "yellow": 2,
     "red": 0,
     "mins_per_match": 32.0,
-    "titu_pct": 0,
+    "titu_pct": 20,
     "matchs_played": 2,
     "matchs_total": 10,
     "last_date": "2026-02-02",
-    "archetype": "ATT Rotation"
+    "archetype": "ATT Rotation",
+    "reg10": 0.0,
+    "last_10": [
+      33.6,
+      29.6
+    ]
   },
   {
     "name": "Darder",
@@ -13555,7 +15112,7 @@
     "yellow": 3,
     "red": 0,
     "mins_per_match": 66.0,
-    "titu_pct": 0,
+    "titu_pct": 100,
     "matchs_played": 10,
     "matchs_total": 10,
     "last_date": "2026-03-21",
@@ -13566,7 +15123,15 @@
     "aa_negative": -8.9,
     "final_third_passes_avg": 4.4,
     "aa_matches_analyzed": 5,
-    "archetype": "MIL Rotation"
+    "archetype": "MIL Rotation",
+    "reg10": 0.0,
+    "last_10": [
+      36.0,
+      44.6,
+      60.0,
+      45.2,
+      33.4
+    ]
   },
   {
     "name": "S. HERRERA",
@@ -13622,7 +15187,7 @@
     "yellow": 3,
     "red": 0,
     "mins_per_match": 90.0,
-    "titu_pct": 0,
+    "titu_pct": 100,
     "matchs_played": 10,
     "matchs_total": 10,
     "last_date": "2026-03-21",
@@ -13633,7 +15198,15 @@
     "aa_negative": -10.8,
     "final_third_passes_avg": 0.2,
     "aa_matches_analyzed": 5,
-    "archetype": "GK"
+    "archetype": "GK",
+    "reg10": 20.0,
+    "last_10": [
+      64.4,
+      37.6,
+      14.6,
+      14.6,
+      45.4
+    ]
   },
   {
     "name": "Catena",
@@ -13689,7 +15262,7 @@
     "yellow": 8,
     "red": 1,
     "mins_per_match": 87.0,
-    "titu_pct": 0,
+    "titu_pct": 90,
     "matchs_played": 9,
     "matchs_total": 10,
     "last_date": "2026-03-21",
@@ -13700,7 +15273,15 @@
     "aa_negative": -20.0,
     "final_third_passes_avg": 4.8,
     "aa_matches_analyzed": 5,
-    "archetype": "DEF Central"
+    "archetype": "DEF Central",
+    "reg10": 0.0,
+    "last_10": [
+      56.4,
+      38.6,
+      45.3,
+      43.8,
+      37.1
+    ]
   },
   {
     "name": "Iker Muñoz",
@@ -13756,7 +15337,7 @@
     "yellow": 3,
     "red": 0,
     "mins_per_match": 51.0,
-    "titu_pct": 0,
+    "titu_pct": 70,
     "matchs_played": 7,
     "matchs_total": 10,
     "last_date": "2026-03-21",
@@ -13767,7 +15348,15 @@
     "aa_negative": -7.4,
     "final_third_passes_avg": 7.0,
     "aa_matches_analyzed": 3,
-    "archetype": "MIL Rotation"
+    "archetype": "MIL Rotation",
+    "reg10": 20.0,
+    "last_10": [
+      73.8,
+      42.5,
+      34.0,
+      34.7,
+      43.1
+    ]
   },
   {
     "name": "Aimar",
@@ -13823,7 +15412,7 @@
     "yellow": 5,
     "red": 0,
     "mins_per_match": 74.0,
-    "titu_pct": 0,
+    "titu_pct": 90,
     "matchs_played": 9,
     "matchs_total": 10,
     "last_date": "2026-03-21",
@@ -13834,7 +15423,15 @@
     "aa_negative": -16.1,
     "final_third_passes_avg": 14.2,
     "aa_matches_analyzed": 4,
-    "archetype": "MIL Relanceur"
+    "archetype": "MIL Relanceur",
+    "reg10": 20.0,
+    "last_10": [
+      43.1,
+      39.2,
+      50.9,
+      37.1,
+      63.6
+    ]
   },
   {
     "name": "Boyomo",
@@ -13890,7 +15487,7 @@
     "yellow": 4,
     "red": 0,
     "mins_per_match": 83.0,
-    "titu_pct": 0,
+    "titu_pct": 60,
     "matchs_played": 6,
     "matchs_total": 10,
     "last_date": "2026-03-21",
@@ -13901,7 +15498,15 @@
     "aa_negative": -18.0,
     "final_third_passes_avg": 4.5,
     "aa_matches_analyzed": 2,
-    "archetype": "DEF Central"
+    "archetype": "DEF Central",
+    "reg10": 20.0,
+    "last_10": [
+      98.8,
+      13.6,
+      45.6,
+      51.6,
+      44.4
+    ]
   },
   {
     "name": "Budimir",
@@ -13957,7 +15562,7 @@
     "yellow": 1,
     "red": 0,
     "mins_per_match": 79.0,
-    "titu_pct": 0,
+    "titu_pct": 100,
     "matchs_played": 10,
     "matchs_total": 10,
     "last_date": "2026-03-21",
@@ -13968,7 +15573,15 @@
     "aa_negative": -6.8,
     "final_third_passes_avg": 3.8,
     "aa_matches_analyzed": 5,
-    "archetype": "ATT Complet"
+    "archetype": "ATT Complet",
+    "reg10": 60.0,
+    "last_10": [
+      70.5,
+      45.0,
+      69.2,
+      38.8,
+      62.9
+    ]
   },
   {
     "name": "Javier Galán",
@@ -14024,7 +15637,7 @@
     "yellow": 2,
     "red": 0,
     "mins_per_match": 70.0,
-    "titu_pct": 0,
+    "titu_pct": 100,
     "matchs_played": 10,
     "matchs_total": 10,
     "last_date": "2026-03-21",
@@ -14035,7 +15648,15 @@
     "aa_negative": -32.5,
     "final_third_passes_avg": 14.0,
     "aa_matches_analyzed": 5,
-    "archetype": "DEF Latéral"
+    "archetype": "DEF Latéral",
+    "reg10": 0.0,
+    "last_10": [
+      39.5,
+      57.8,
+      42.9,
+      53.4,
+      48.0
+    ]
   },
   {
     "name": "Asier Osambela",
@@ -14091,7 +15712,7 @@
     "yellow": 3,
     "red": 0,
     "mins_per_match": 46.0,
-    "titu_pct": 0,
+    "titu_pct": 70,
     "matchs_played": 7,
     "matchs_total": 10,
     "last_date": "2026-03-21",
@@ -14102,7 +15723,15 @@
     "aa_negative": -2.4,
     "final_third_passes_avg": 0.3,
     "aa_matches_analyzed": 3,
-    "archetype": "MIL Rotation"
+    "archetype": "MIL Rotation",
+    "reg10": 0.0,
+    "last_10": [
+      39.7,
+      35.4,
+      34.9,
+      25.8,
+      38.2
+    ]
   },
   {
     "name": "Valentin Rosier",
@@ -14158,7 +15787,7 @@
     "yellow": 4,
     "red": 1,
     "mins_per_match": 80.0,
-    "titu_pct": 0,
+    "titu_pct": 100,
     "matchs_played": 10,
     "matchs_total": 10,
     "last_date": "2026-03-21",
@@ -14169,7 +15798,15 @@
     "aa_negative": -19.6,
     "final_third_passes_avg": 8.0,
     "aa_matches_analyzed": 5,
-    "archetype": "DEF Latéral"
+    "archetype": "DEF Latéral",
+    "reg10": 40.0,
+    "last_10": [
+      72.2,
+      39.7,
+      65.0,
+      43.9,
+      40.0
+    ]
   },
   {
     "name": "Rubén García",
@@ -14225,7 +15862,7 @@
     "yellow": 5,
     "red": 0,
     "mins_per_match": 63.0,
-    "titu_pct": 0,
+    "titu_pct": 90,
     "matchs_played": 9,
     "matchs_total": 10,
     "last_date": "2026-03-21",
@@ -14236,7 +15873,15 @@
     "aa_negative": -11.6,
     "final_third_passes_avg": 9.0,
     "aa_matches_analyzed": 4,
-    "archetype": "MIL Créateur"
+    "archetype": "MIL Créateur",
+    "reg10": 0.0,
+    "last_10": [
+      45.5,
+      39.4,
+      47.7,
+      45.8,
+      50.5
+    ]
   },
   {
     "name": "Juan Cruz",
@@ -14289,7 +15934,7 @@
     "yellow": 0,
     "red": 0,
     "mins_per_match": 43.0,
-    "titu_pct": 0,
+    "titu_pct": 20,
     "matchs_played": 2,
     "matchs_total": 10,
     "last_date": "2026-03-07",
@@ -14300,7 +15945,12 @@
     "aa_negative": -1.3,
     "final_third_passes_avg": 1.5,
     "aa_matches_analyzed": 2,
-    "archetype": "DEF Central"
+    "archetype": "DEF Central",
+    "reg10": 0.0,
+    "last_10": [
+      39.9,
+      36.3
+    ]
   },
   {
     "name": "Raúl Moro",
@@ -14356,7 +16006,7 @@
     "yellow": 1,
     "red": 0,
     "mins_per_match": 43.0,
-    "titu_pct": 0,
+    "titu_pct": 70,
     "matchs_played": 7,
     "matchs_total": 10,
     "last_date": "2026-03-15",
@@ -14367,7 +16017,15 @@
     "aa_negative": -1.9,
     "final_third_passes_avg": 5.2,
     "aa_matches_analyzed": 4,
-    "archetype": "ATT Finisseur"
+    "archetype": "ATT Finisseur",
+    "reg10": 20.0,
+    "last_10": [
+      40.2,
+      42.2,
+      41.8,
+      65.3,
+      39.2
+    ]
   },
   {
     "name": "Kike Barja",
@@ -14423,7 +16081,7 @@
     "yellow": 3,
     "red": 0,
     "mins_per_match": 13.0,
-    "titu_pct": 0,
+    "titu_pct": 50,
     "matchs_played": 5,
     "matchs_total": 10,
     "last_date": "2026-03-21",
@@ -14434,7 +16092,15 @@
     "aa_negative": -7.8,
     "final_third_passes_avg": 2.5,
     "aa_matches_analyzed": 4,
-    "archetype": "MIL Rotation"
+    "archetype": "MIL Rotation",
+    "reg10": 20.0,
+    "last_10": [
+      63.3,
+      60.0,
+      60.0,
+      36.4,
+      38.3
+    ]
   },
   {
     "name": "Raúl",
@@ -14490,7 +16156,7 @@
     "yellow": 1,
     "red": 1,
     "mins_per_match": 28.0,
-    "titu_pct": 0,
+    "titu_pct": 90,
     "matchs_played": 9,
     "matchs_total": 10,
     "last_date": "2026-03-21",
@@ -14501,7 +16167,15 @@
     "aa_negative": -4.0,
     "final_third_passes_avg": 1.5,
     "aa_matches_analyzed": 4,
-    "archetype": "ATT Finisseur"
+    "archetype": "ATT Finisseur",
+    "reg10": 20.0,
+    "last_10": [
+      34.2,
+      16.4,
+      36.2,
+      69.0,
+      30.8
+    ]
   },
   {
     "name": "Moncayola",
@@ -14557,7 +16231,7 @@
     "yellow": 7,
     "red": 0,
     "mins_per_match": 84.0,
-    "titu_pct": 0,
+    "titu_pct": 80,
     "matchs_played": 8,
     "matchs_total": 10,
     "last_date": "2026-03-21",
@@ -14568,7 +16242,15 @@
     "aa_negative": -13.3,
     "final_third_passes_avg": 6.6,
     "aa_matches_analyzed": 5,
-    "archetype": "MIL Rotation"
+    "archetype": "MIL Rotation",
+    "reg10": 0.0,
+    "last_10": [
+      36.6,
+      39.7,
+      32.4,
+      43.5,
+      34.7
+    ]
   },
   {
     "name": "HERRANDO",
@@ -14624,7 +16306,7 @@
     "yellow": 2,
     "red": 0,
     "mins_per_match": 58.0,
-    "titu_pct": 0,
+    "titu_pct": 90,
     "matchs_played": 9,
     "matchs_total": 10,
     "last_date": "2026-03-15",
@@ -14635,7 +16317,15 @@
     "aa_negative": -12.7,
     "final_third_passes_avg": 3.2,
     "aa_matches_analyzed": 4,
-    "archetype": "DEF Central"
+    "archetype": "DEF Central",
+    "reg10": 0.0,
+    "last_10": [
+      38.4,
+      44.2,
+      38.1,
+      41.8,
+      44.5
+    ]
   },
   {
     "name": "Moi Gómez",
@@ -14691,7 +16381,7 @@
     "yellow": 2,
     "red": 0,
     "mins_per_match": 49.0,
-    "titu_pct": 0,
+    "titu_pct": 50,
     "matchs_played": 5,
     "matchs_total": 10,
     "last_date": "2026-03-15",
@@ -14702,7 +16392,15 @@
     "aa_negative": -4.1,
     "final_third_passes_avg": 10.0,
     "aa_matches_analyzed": 3,
-    "archetype": "ATT Finisseur"
+    "archetype": "ATT Finisseur",
+    "reg10": 20.0,
+    "last_10": [
+      40.3,
+      66.8,
+      31.5,
+      38.4,
+      44.7
+    ]
   },
   {
     "name": "Víctor Muñoz",
@@ -14758,7 +16456,7 @@
     "yellow": 3,
     "red": 0,
     "mins_per_match": 79.0,
-    "titu_pct": 0,
+    "titu_pct": 100,
     "matchs_played": 10,
     "matchs_total": 10,
     "last_date": "2026-03-21",
@@ -14769,7 +16467,15 @@
     "aa_negative": -15.3,
     "final_third_passes_avg": 10.8,
     "aa_matches_analyzed": 5,
-    "archetype": "ATT Dribbleur"
+    "archetype": "ATT Dribbleur",
+    "reg10": 40.0,
+    "last_10": [
+      46.9,
+      76.7,
+      63.5,
+      32.3,
+      48.0
+    ]
   },
   {
     "name": "Luiz Felipe",
@@ -14824,7 +16530,7 @@
     "yellow": 1,
     "red": 0,
     "mins_per_match": 42.0,
-    "titu_pct": 0,
+    "titu_pct": 40,
     "matchs_played": 4,
     "matchs_total": 10,
     "last_date": "2026-03-19",
@@ -14835,7 +16541,14 @@
     "aa_negative": -21.0,
     "final_third_passes_avg": 1.0,
     "aa_matches_analyzed": 2,
-    "archetype": "DEF Central"
+    "archetype": "DEF Central",
+    "reg10": 25.0,
+    "last_10": [
+      47.3,
+      40.2,
+      68.0,
+      32.6
+    ]
   },
   {
     "name": "Randy Nteka",
@@ -14888,11 +16601,16 @@
     "yellow": 0,
     "red": 0,
     "mins_per_match": 11.0,
-    "titu_pct": 0,
+    "titu_pct": 20,
     "matchs_played": 2,
     "matchs_total": 10,
     "last_date": "2026-02-21",
-    "archetype": "MIL Créateur"
+    "archetype": "MIL Créateur",
+    "reg10": 0.0,
+    "last_10": [
+      35.0,
+      33.2
+    ]
   },
   {
     "name": "Álvaro García",
@@ -14948,7 +16666,7 @@
     "yellow": 3,
     "red": 0,
     "mins_per_match": 66.0,
-    "titu_pct": 0,
+    "titu_pct": 100,
     "matchs_played": 10,
     "matchs_total": 10,
     "last_date": "2026-03-22",
@@ -14959,7 +16677,15 @@
     "aa_negative": -4.9,
     "final_third_passes_avg": 5.6,
     "aa_matches_analyzed": 5,
-    "archetype": "MIL Rotation"
+    "archetype": "MIL Rotation",
+    "reg10": 40.0,
+    "last_10": [
+      40.8,
+      43.6,
+      79.0,
+      71.4,
+      34.2
+    ]
   },
   {
     "name": "Gumbau",
@@ -15015,7 +16741,7 @@
     "yellow": 4,
     "red": 0,
     "mins_per_match": 37.0,
-    "titu_pct": 0,
+    "titu_pct": 80,
     "matchs_played": 8,
     "matchs_total": 10,
     "last_date": "2026-03-22",
@@ -15026,7 +16752,15 @@
     "aa_negative": -7.6,
     "final_third_passes_avg": 1.2,
     "aa_matches_analyzed": 4,
-    "archetype": "MIL Rotation"
+    "archetype": "MIL Rotation",
+    "reg10": 0.0,
+    "last_10": [
+      41.3,
+      34.9,
+      34.7,
+      33.8,
+      39.4
+    ]
   },
   {
     "name": "Andrei Rațiu",
@@ -15082,7 +16816,7 @@
     "yellow": 7,
     "red": 0,
     "mins_per_match": 86.0,
-    "titu_pct": 0,
+    "titu_pct": 100,
     "matchs_played": 10,
     "matchs_total": 10,
     "last_date": "2026-03-22",
@@ -15093,7 +16827,15 @@
     "aa_negative": -28.0,
     "final_third_passes_avg": 8.0,
     "aa_matches_analyzed": 5,
-    "archetype": "DEF Latéral"
+    "archetype": "DEF Latéral",
+    "reg10": 20.0,
+    "last_10": [
+      64.6,
+      36.1,
+      46.6,
+      25.6,
+      25.4
+    ]
   },
   {
     "name": "Unai López",
@@ -15149,7 +16891,7 @@
     "yellow": 5,
     "red": 1,
     "mins_per_match": 58.0,
-    "titu_pct": 0,
+    "titu_pct": 70,
     "matchs_played": 7,
     "matchs_total": 10,
     "last_date": "2026-03-22",
@@ -15160,7 +16902,15 @@
     "aa_negative": -12.6,
     "final_third_passes_avg": 4.5,
     "aa_matches_analyzed": 4,
-    "archetype": "MIL Rotation"
+    "archetype": "MIL Rotation",
+    "reg10": 20.0,
+    "last_10": [
+      31.9,
+      57.9,
+      55.4,
+      31.2,
+      64.3
+    ]
   },
   {
     "name": "Pedro Diaz",
@@ -15216,7 +16966,7 @@
     "yellow": 2,
     "red": 0,
     "mins_per_match": 53.0,
-    "titu_pct": 0,
+    "titu_pct": 100,
     "matchs_played": 10,
     "matchs_total": 10,
     "last_date": "2026-03-22",
@@ -15227,7 +16977,15 @@
     "aa_negative": -6.3,
     "final_third_passes_avg": 4.4,
     "aa_matches_analyzed": 5,
-    "archetype": "MIL Rotation"
+    "archetype": "MIL Rotation",
+    "reg10": 0.0,
+    "last_10": [
+      37.7,
+      47.8,
+      33.8,
+      36.7,
+      35.9
+    ]
   },
   {
     "name": "Ilias Akhomach",
@@ -15283,7 +17041,7 @@
     "yellow": 3,
     "red": 0,
     "mins_per_match": 41.0,
-    "titu_pct": 0,
+    "titu_pct": 80,
     "matchs_played": 8,
     "matchs_total": 10,
     "last_date": "2026-03-16",
@@ -15294,7 +17052,15 @@
     "aa_negative": -9.7,
     "final_third_passes_avg": 4.7,
     "aa_matches_analyzed": 3,
-    "archetype": "ATT Dribbleur"
+    "archetype": "ATT Dribbleur",
+    "reg10": 0.0,
+    "last_10": [
+      42.9,
+      35.6,
+      29.1,
+      43.3,
+      38.1
+    ]
   },
   {
     "name": "Pep Chavarría",
@@ -15350,7 +17116,7 @@
     "yellow": 5,
     "red": 1,
     "mins_per_match": 84.0,
-    "titu_pct": 0,
+    "titu_pct": 60,
     "matchs_played": 6,
     "matchs_total": 10,
     "last_date": "2026-03-22",
@@ -15361,7 +17127,15 @@
     "aa_negative": -32.7,
     "final_third_passes_avg": 7.7,
     "aa_matches_analyzed": 3,
-    "archetype": "DEF Latéral"
+    "archetype": "DEF Latéral",
+    "reg10": 0.0,
+    "last_10": [
+      56.9,
+      31.7,
+      32.7,
+      54.0,
+      34.4
+    ]
   },
   {
     "name": "Isi Palazón",
@@ -15417,7 +17191,7 @@
     "yellow": 9,
     "red": 0,
     "mins_per_match": 73.0,
-    "titu_pct": 0,
+    "titu_pct": 100,
     "matchs_played": 10,
     "matchs_total": 10,
     "last_date": "2026-03-22",
@@ -15428,7 +17202,15 @@
     "aa_negative": -13.0,
     "final_third_passes_avg": 7.8,
     "aa_matches_analyzed": 5,
-    "archetype": "MIL Créateur"
+    "archetype": "MIL Créateur",
+    "reg10": 20.0,
+    "last_10": [
+      43.7,
+      45.6,
+      43.5,
+      75.4,
+      41.6
+    ]
   },
   {
     "name": "Fran Pérez",
@@ -15484,7 +17266,7 @@
     "yellow": 4,
     "red": 0,
     "mins_per_match": 44.0,
-    "titu_pct": 0,
+    "titu_pct": 70,
     "matchs_played": 7,
     "matchs_total": 10,
     "last_date": "2026-03-22",
@@ -15495,7 +17277,15 @@
     "aa_negative": -9.2,
     "final_third_passes_avg": 3.3,
     "aa_matches_analyzed": 3,
-    "archetype": "MIL Rotation"
+    "archetype": "MIL Rotation",
+    "reg10": 20.0,
+    "last_10": [
+      27.7,
+      37.9,
+      60.1,
+      37.1,
+      38.8
+    ]
   },
   {
     "name": "Florian Lejeune",
@@ -15551,7 +17341,7 @@
     "yellow": 4,
     "red": 0,
     "mins_per_match": 90.0,
-    "titu_pct": 0,
+    "titu_pct": 100,
     "matchs_played": 10,
     "matchs_total": 10,
     "last_date": "2026-03-22",
@@ -15562,7 +17352,15 @@
     "aa_negative": -20.8,
     "final_third_passes_avg": 4.0,
     "aa_matches_analyzed": 5,
-    "archetype": "DEF Central"
+    "archetype": "DEF Central",
+    "reg10": 40.0,
+    "last_10": [
+      51.1,
+      55.6,
+      93.9,
+      26.0,
+      75.7
+    ]
   },
   {
     "name": "Carlos Martín",
@@ -15616,7 +17414,7 @@
     "yellow": 1,
     "red": 0,
     "mins_per_match": 53.0,
-    "titu_pct": 0,
+    "titu_pct": 30,
     "matchs_played": 3,
     "matchs_total": 10,
     "last_date": "2026-03-22",
@@ -15627,7 +17425,13 @@
     "aa_negative": -10.2,
     "final_third_passes_avg": 2.5,
     "aa_matches_analyzed": 2,
-    "archetype": "ATT Finisseur"
+    "archetype": "ATT Finisseur",
+    "reg10": 0.0,
+    "last_10": [
+      34.5,
+      27.3,
+      30.9
+    ]
   },
   {
     "name": "Iván Balliu",
@@ -15681,7 +17485,7 @@
     "yellow": 2,
     "red": 0,
     "mins_per_match": 30.0,
-    "titu_pct": 0,
+    "titu_pct": 30,
     "matchs_played": 3,
     "matchs_total": 10,
     "last_date": "2026-03-19",
@@ -15692,7 +17496,13 @@
     "aa_negative": -12.2,
     "final_third_passes_avg": 1.5,
     "aa_matches_analyzed": 2,
-    "archetype": "DEF Central"
+    "archetype": "DEF Central",
+    "reg10": 0.0,
+    "last_10": [
+      27.0,
+      49.7,
+      35.6
+    ]
   },
   {
     "name": "Alfonso Espino",
@@ -15748,7 +17558,7 @@
     "yellow": 2,
     "red": 0,
     "mins_per_match": 48.0,
-    "titu_pct": 0,
+    "titu_pct": 80,
     "matchs_played": 8,
     "matchs_total": 10,
     "last_date": "2026-03-22",
@@ -15759,7 +17569,15 @@
     "aa_negative": -20.5,
     "final_third_passes_avg": 5.2,
     "aa_matches_analyzed": 4,
-    "archetype": "DEF Latéral"
+    "archetype": "DEF Latéral",
+    "reg10": 20.0,
+    "last_10": [
+      41.7,
+      45.3,
+      31.9,
+      74.8,
+      55.1
+    ]
   },
   {
     "name": "Augusto Batalla",
@@ -15815,7 +17633,7 @@
     "yellow": 4,
     "red": 0,
     "mins_per_match": 90.0,
-    "titu_pct": 0,
+    "titu_pct": 100,
     "matchs_played": 10,
     "matchs_total": 10,
     "last_date": "2026-03-22",
@@ -15826,7 +17644,15 @@
     "aa_negative": -13.4,
     "final_third_passes_avg": 1.2,
     "aa_matches_analyzed": 5,
-    "archetype": "GK"
+    "archetype": "GK",
+    "reg10": 0.0,
+    "last_10": [
+      41.0,
+      30.6,
+      50.2,
+      46.8,
+      33.2
+    ]
   },
   {
     "name": "De Frutos",
@@ -15882,7 +17708,7 @@
     "yellow": 3,
     "red": 0,
     "mins_per_match": 73.0,
-    "titu_pct": 0,
+    "titu_pct": 100,
     "matchs_played": 10,
     "matchs_total": 10,
     "last_date": "2026-03-22",
@@ -15893,7 +17719,15 @@
     "aa_negative": -5.6,
     "final_third_passes_avg": 2.4,
     "aa_matches_analyzed": 5,
-    "archetype": "MIL Rotation"
+    "archetype": "MIL Rotation",
+    "reg10": 0.0,
+    "last_10": [
+      38.1,
+      45.9,
+      33.7,
+      38.5,
+      38.5
+    ]
   },
   {
     "name": "Pathé Ciss",
@@ -15949,7 +17783,7 @@
     "yellow": 5,
     "red": 2,
     "mins_per_match": 69.0,
-    "titu_pct": 0,
+    "titu_pct": 80,
     "matchs_played": 8,
     "matchs_total": 10,
     "last_date": "2026-03-22",
@@ -15960,7 +17794,15 @@
     "aa_negative": -12.3,
     "final_third_passes_avg": 3.0,
     "aa_matches_analyzed": 4,
-    "archetype": "MIL Récup"
+    "archetype": "MIL Récup",
+    "reg10": 60.0,
+    "last_10": [
+      31.5,
+      55.9,
+      62.1,
+      60.6,
+      61.2
+    ]
   },
   {
     "name": "Nobel Mendy",
@@ -16016,7 +17858,7 @@
     "yellow": 5,
     "red": 2,
     "mins_per_match": 79.0,
-    "titu_pct": 0,
+    "titu_pct": 70,
     "matchs_played": 7,
     "matchs_total": 10,
     "last_date": "2026-03-19",
@@ -16027,7 +17869,15 @@
     "aa_negative": -13.2,
     "final_third_passes_avg": 0.7,
     "aa_matches_analyzed": 3,
-    "archetype": "DEF Central"
+    "archetype": "DEF Central",
+    "reg10": 0.0,
+    "last_10": [
+      37.0,
+      16.2,
+      40.3,
+      45.9,
+      40.6
+    ]
   },
   {
     "name": "Nelson Deossa",
@@ -16083,7 +17933,7 @@
     "yellow": 3,
     "red": 0,
     "mins_per_match": 37.0,
-    "titu_pct": 0,
+    "titu_pct": 60,
     "matchs_played": 6,
     "matchs_total": 10,
     "last_date": "2026-03-12",
@@ -16094,7 +17944,15 @@
     "aa_negative": -8.0,
     "final_third_passes_avg": 5.0,
     "aa_matches_analyzed": 2,
-    "archetype": "MIL Rotation"
+    "archetype": "MIL Rotation",
+    "reg10": 0.0,
+    "last_10": [
+      36.7,
+      38.3,
+      50.5,
+      35.0,
+      40.1
+    ]
   },
   {
     "name": "Pablo Fornals",
@@ -16150,7 +18008,7 @@
     "yellow": 2,
     "red": 0,
     "mins_per_match": 78.0,
-    "titu_pct": 0,
+    "titu_pct": 100,
     "matchs_played": 10,
     "matchs_total": 10,
     "last_date": "2026-03-22",
@@ -16161,7 +18019,15 @@
     "aa_negative": -12.5,
     "final_third_passes_avg": 16.8,
     "aa_matches_analyzed": 5,
-    "archetype": "MIL Relanceur"
+    "archetype": "MIL Relanceur",
+    "reg10": 20.0,
+    "last_10": [
+      81.6,
+      48.4,
+      58.4,
+      50.6,
+      48.3
+    ]
   },
   {
     "name": "Cucho Hernández",
@@ -16217,7 +18083,7 @@
     "yellow": 3,
     "red": 0,
     "mins_per_match": 83.0,
-    "titu_pct": 0,
+    "titu_pct": 70,
     "matchs_played": 7,
     "matchs_total": 10,
     "last_date": "2026-03-22",
@@ -16228,7 +18094,15 @@
     "aa_negative": -6.5,
     "final_third_passes_avg": 5.4,
     "aa_matches_analyzed": 5,
-    "archetype": "ATT Dribbleur"
+    "archetype": "ATT Dribbleur",
+    "reg10": 20.0,
+    "last_10": [
+      45.0,
+      65.3,
+      32.0,
+      48.9,
+      52.3
+    ]
   },
   {
     "name": "Pau López",
@@ -16282,7 +18156,7 @@
     "yellow": 1,
     "red": 0,
     "mins_per_match": 90.0,
-    "titu_pct": 0,
+    "titu_pct": 30,
     "matchs_played": 3,
     "matchs_total": 10,
     "last_date": "2026-03-22",
@@ -16293,7 +18167,13 @@
     "aa_negative": -8.7,
     "final_third_passes_avg": 0.0,
     "aa_matches_analyzed": 3,
-    "archetype": "GK"
+    "archetype": "GK",
+    "reg10": 67.0,
+    "last_10": [
+      72.5,
+      67.5,
+      29.9
+    ]
   },
   {
     "name": "Aitor Ruibal",
@@ -16349,7 +18229,7 @@
     "yellow": 3,
     "red": 0,
     "mins_per_match": 66.0,
-    "titu_pct": 0,
+    "titu_pct": 90,
     "matchs_played": 9,
     "matchs_total": 10,
     "last_date": "2026-03-22",
@@ -16360,7 +18240,15 @@
     "aa_negative": -5.9,
     "final_third_passes_avg": 9.8,
     "aa_matches_analyzed": 4,
-    "archetype": "ATT Dribbleur"
+    "archetype": "ATT Dribbleur",
+    "reg10": 40.0,
+    "last_10": [
+      39.3,
+      74.6,
+      74.5,
+      56.7,
+      48.2
+    ]
   },
   {
     "name": "Junior Firpo",
@@ -16414,7 +18302,7 @@
     "yellow": 2,
     "red": 0,
     "mins_per_match": 68.0,
-    "titu_pct": 0,
+    "titu_pct": 30,
     "matchs_played": 3,
     "matchs_total": 10,
     "last_date": "2026-03-15",
@@ -16425,7 +18313,13 @@
     "aa_negative": -20.7,
     "final_third_passes_avg": 6.3,
     "aa_matches_analyzed": 3,
-    "archetype": "DEF Latéral"
+    "archetype": "DEF Latéral",
+    "reg10": 0.0,
+    "last_10": [
+      26.6,
+      28.6,
+      29.5
+    ]
   },
   {
     "name": "Antony",
@@ -16481,7 +18375,7 @@
     "yellow": 4,
     "red": 1,
     "mins_per_match": 78.0,
-    "titu_pct": 0,
+    "titu_pct": 100,
     "matchs_played": 10,
     "matchs_total": 10,
     "last_date": "2026-03-22",
@@ -16492,7 +18386,15 @@
     "aa_negative": -5.2,
     "final_third_passes_avg": 10.6,
     "aa_matches_analyzed": 5,
-    "archetype": "ATT Dribbleur"
+    "archetype": "ATT Dribbleur",
+    "reg10": 20.0,
+    "last_10": [
+      38.4,
+      96.2,
+      40.5,
+      53.8,
+      37.3
+    ]
   },
   {
     "name": "Bellerín",
@@ -16546,7 +18448,7 @@
     "yellow": 1,
     "red": 0,
     "mins_per_match": 68.0,
-    "titu_pct": 0,
+    "titu_pct": 30,
     "matchs_played": 3,
     "matchs_total": 10,
     "last_date": "2026-03-22",
@@ -16557,7 +18459,13 @@
     "aa_negative": -11.8,
     "final_third_passes_avg": 10.7,
     "aa_matches_analyzed": 3,
-    "archetype": "DEF Latéral"
+    "archetype": "DEF Latéral",
+    "reg10": 67.0,
+    "last_10": [
+      43.5,
+      65.1,
+      75.1
+    ]
   },
   {
     "name": "Chimy Ávila",
@@ -16612,7 +18520,7 @@
     "yellow": 4,
     "red": 0,
     "mins_per_match": 27.0,
-    "titu_pct": 0,
+    "titu_pct": 40,
     "matchs_played": 4,
     "matchs_total": 10,
     "last_date": "2026-03-22",
@@ -16623,7 +18531,14 @@
     "aa_negative": -3.5,
     "final_third_passes_avg": 3.3,
     "aa_matches_analyzed": 3,
-    "archetype": "ATT Complet"
+    "archetype": "ATT Complet",
+    "reg10": 25.0,
+    "last_10": [
+      41.1,
+      37.2,
+      54.1,
+      67.4
+    ]
   },
   {
     "name": "Ángel Ortiz",
@@ -16679,7 +18594,7 @@
     "yellow": 1,
     "red": 0,
     "mins_per_match": 45.0,
-    "titu_pct": 0,
+    "titu_pct": 50,
     "matchs_played": 5,
     "matchs_total": 10,
     "last_date": "2026-03-22",
@@ -16690,7 +18605,15 @@
     "aa_negative": -23.0,
     "final_third_passes_avg": 4.0,
     "aa_matches_analyzed": 2,
-    "archetype": "DEF Central"
+    "archetype": "DEF Central",
+    "reg10": 0.0,
+    "last_10": [
+      47.5,
+      41.7,
+      43.0,
+      41.9,
+      40.9
+    ]
   },
   {
     "name": "Ricardo Rodríguez",
@@ -16746,7 +18669,7 @@
     "yellow": 0,
     "red": 0,
     "mins_per_match": 67.0,
-    "titu_pct": 0,
+    "titu_pct": 70,
     "matchs_played": 7,
     "matchs_total": 10,
     "last_date": "2026-03-19",
@@ -16757,7 +18680,15 @@
     "aa_negative": -9.9,
     "final_third_passes_avg": 2.5,
     "aa_matches_analyzed": 2,
-    "archetype": "DEF Central"
+    "archetype": "DEF Central",
+    "reg10": 0.0,
+    "last_10": [
+      58.8,
+      53.6,
+      24.1,
+      27.0,
+      33.6
+    ]
   },
   {
     "name": "Álvaro Fidalgo",
@@ -16813,7 +18744,7 @@
     "yellow": 1,
     "red": 0,
     "mins_per_match": 73.0,
-    "titu_pct": 0,
+    "titu_pct": 70,
     "matchs_played": 7,
     "matchs_total": 10,
     "last_date": "2026-03-19",
@@ -16824,7 +18755,15 @@
     "aa_negative": -7.9,
     "final_third_passes_avg": 12.3,
     "aa_matches_analyzed": 3,
-    "archetype": "MIL Rotation"
+    "archetype": "MIL Rotation",
+    "reg10": 20.0,
+    "last_10": [
+      41.5,
+      45.5,
+      53.2,
+      70.1,
+      43.1
+    ]
   },
   {
     "name": "Marc Bartra",
@@ -16880,7 +18819,7 @@
     "yellow": 3,
     "red": 0,
     "mins_per_match": 80.0,
-    "titu_pct": 0,
+    "titu_pct": 70,
     "matchs_played": 7,
     "matchs_total": 10,
     "last_date": "2026-03-19",
@@ -16891,7 +18830,15 @@
     "aa_negative": -12.4,
     "final_third_passes_avg": 6.0,
     "aa_matches_analyzed": 4,
-    "archetype": "DEF Latéral"
+    "archetype": "DEF Latéral",
+    "reg10": 20.0,
+    "last_10": [
+      84.8,
+      51.6,
+      38.6,
+      43.6,
+      33.5
+    ]
   },
   {
     "name": "Natan",
@@ -16947,7 +18894,7 @@
     "yellow": 7,
     "red": 0,
     "mins_per_match": 87.0,
-    "titu_pct": 0,
+    "titu_pct": 80,
     "matchs_played": 8,
     "matchs_total": 10,
     "last_date": "2026-03-22",
@@ -16958,7 +18905,15 @@
     "aa_negative": -18.3,
     "final_third_passes_avg": 1.0,
     "aa_matches_analyzed": 4,
-    "archetype": "DEF Central"
+    "archetype": "DEF Central",
+    "reg10": 20.0,
+    "last_10": [
+      43.8,
+      91.8,
+      42.2,
+      36.5,
+      38.4
+    ]
   },
   {
     "name": "Rodrigo Riquelme",
@@ -17014,7 +18969,7 @@
     "yellow": 1,
     "red": 0,
     "mins_per_match": 34.0,
-    "titu_pct": 0,
+    "titu_pct": 50,
     "matchs_played": 5,
     "matchs_total": 10,
     "last_date": "2026-03-19",
@@ -17025,7 +18980,15 @@
     "aa_negative": -5.7,
     "final_third_passes_avg": 4.3,
     "aa_matches_analyzed": 3,
-    "archetype": "MIL Rotation"
+    "archetype": "MIL Rotation",
+    "reg10": 0.0,
+    "last_10": [
+      38.5,
+      35.7,
+      33.9,
+      37.0,
+      36.8
+    ]
   },
   {
     "name": "Cédric Bakambu",
@@ -17081,7 +19044,7 @@
     "yellow": 0,
     "red": 0,
     "mins_per_match": 28.0,
-    "titu_pct": 0,
+    "titu_pct": 70,
     "matchs_played": 7,
     "matchs_total": 10,
     "last_date": "2026-03-22",
@@ -17092,7 +19055,15 @@
     "aa_negative": -5.0,
     "final_third_passes_avg": 0.7,
     "aa_matches_analyzed": 3,
-    "archetype": "ATT Finisseur"
+    "archetype": "ATT Finisseur",
+    "reg10": 20.0,
+    "last_10": [
+      30.2,
+      34.3,
+      33.3,
+      34.7,
+      69.8
+    ]
   },
   {
     "name": "Álvaro Valles",
@@ -17148,7 +19119,7 @@
     "yellow": 1,
     "red": 0,
     "mins_per_match": 90.0,
-    "titu_pct": 0,
+    "titu_pct": 70,
     "matchs_played": 7,
     "matchs_total": 10,
     "last_date": "2026-03-15",
@@ -17159,7 +19130,15 @@
     "aa_negative": -11.3,
     "final_third_passes_avg": 2.5,
     "aa_matches_analyzed": 2,
-    "archetype": "GK"
+    "archetype": "GK",
+    "reg10": 0.0,
+    "last_10": [
+      25.8,
+      37.1,
+      39.5,
+      38.1,
+      32.2
+    ]
   },
   {
     "name": "Federico Valverde",
@@ -17215,7 +19194,7 @@
     "yellow": 2,
     "red": 1,
     "mins_per_match": 82.0,
-    "titu_pct": 0,
+    "titu_pct": 100,
     "matchs_played": 10,
     "matchs_total": 10,
     "last_date": "2026-03-22",
@@ -17226,7 +19205,15 @@
     "aa_negative": -13.8,
     "final_third_passes_avg": 17.2,
     "aa_matches_analyzed": 5,
-    "archetype": "MIL Relanceur"
+    "archetype": "MIL Relanceur",
+    "reg10": 60.0,
+    "last_10": [
+      53.8,
+      44.5,
+      70.5,
+      100.0,
+      83.7
+    ]
   },
   {
     "name": "Franco Mastantuono",
@@ -17280,7 +19267,7 @@
     "yellow": 8,
     "red": 1,
     "mins_per_match": 61.0,
-    "titu_pct": 0,
+    "titu_pct": 30,
     "matchs_played": 3,
     "matchs_total": 10,
     "last_date": "2026-03-11",
@@ -17291,7 +19278,13 @@
     "aa_negative": -7.5,
     "final_third_passes_avg": 0.0,
     "aa_matches_analyzed": 1,
-    "archetype": "ATT Finisseur"
+    "archetype": "ATT Finisseur",
+    "reg10": 0.0,
+    "last_10": [
+      29.1,
+      22.0,
+      34.6
+    ]
   },
   {
     "name": "Dani Ceballos",
@@ -17344,11 +19337,16 @@
     "yellow": 1,
     "red": 0,
     "mins_per_match": 31.0,
-    "titu_pct": 0,
+    "titu_pct": 20,
     "matchs_played": 2,
     "matchs_total": 10,
     "last_date": "2026-02-21",
-    "archetype": "MIL Créateur"
+    "archetype": "MIL Créateur",
+    "reg10": 0.0,
+    "last_10": [
+      14.3,
+      39.9
+    ]
   },
   {
     "name": "Fran García",
@@ -17404,7 +19402,7 @@
     "yellow": 1,
     "red": 1,
     "mins_per_match": 66.0,
-    "titu_pct": 0,
+    "titu_pct": 50,
     "matchs_played": 5,
     "matchs_total": 10,
     "last_date": "2026-03-22",
@@ -17415,7 +19413,15 @@
     "aa_negative": -17.0,
     "final_third_passes_avg": 7.0,
     "aa_matches_analyzed": 4,
-    "archetype": "DEF Central"
+    "archetype": "DEF Central",
+    "reg10": 20.0,
+    "last_10": [
+      47.7,
+      30.4,
+      75.4,
+      46.2,
+      36.3
+    ]
   },
   {
     "name": "Andriy Lunin",
@@ -17468,7 +19474,7 @@
     "yellow": 0,
     "red": 1,
     "mins_per_match": 90.0,
-    "titu_pct": 0,
+    "titu_pct": 20,
     "matchs_played": 2,
     "matchs_total": 10,
     "last_date": "2026-03-22",
@@ -17479,7 +19485,12 @@
     "aa_negative": -6.9,
     "final_third_passes_avg": 0.5,
     "aa_matches_analyzed": 2,
-    "archetype": "GK"
+    "archetype": "GK",
+    "reg10": 0.0,
+    "last_10": [
+      49.5,
+      52.9
+    ]
   },
   {
     "name": "David Alaba",
@@ -17534,11 +19545,18 @@
     "yellow": 1,
     "red": 0,
     "mins_per_match": 30.0,
-    "titu_pct": 0,
+    "titu_pct": 40,
     "matchs_played": 4,
     "matchs_total": 10,
     "last_date": "2026-03-02",
-    "archetype": "DEF Central"
+    "archetype": "DEF Central",
+    "reg10": 0.0,
+    "last_10": [
+      46.8,
+      38.7,
+      44.0,
+      45.6
+    ]
   },
   {
     "name": "Eduardo Camavinga",
@@ -17594,7 +19612,7 @@
     "yellow": 1,
     "red": 0,
     "mins_per_match": 55.0,
-    "titu_pct": 0,
+    "titu_pct": 80,
     "matchs_played": 8,
     "matchs_total": 10,
     "last_date": "2026-03-22",
@@ -17605,7 +19623,15 @@
     "aa_negative": -5.8,
     "final_third_passes_avg": 5.2,
     "aa_matches_analyzed": 4,
-    "archetype": "MIL Rotation"
+    "archetype": "MIL Rotation",
+    "reg10": 0.0,
+    "last_10": [
+      34.4,
+      41.6,
+      31.9,
+      51.8,
+      50.8
+    ]
   },
   {
     "name": "Brahim",
@@ -17661,7 +19687,7 @@
     "yellow": 1,
     "red": 0,
     "mins_per_match": 32.0,
-    "titu_pct": 0,
+    "titu_pct": 90,
     "matchs_played": 9,
     "matchs_total": 10,
     "last_date": "2026-03-22",
@@ -17672,7 +19698,15 @@
     "aa_negative": -7.8,
     "final_third_passes_avg": 10.8,
     "aa_matches_analyzed": 5,
-    "archetype": "ATT Dribbleur"
+    "archetype": "ATT Dribbleur",
+    "reg10": 40.0,
+    "last_10": [
+      71.4,
+      44.0,
+      50.2,
+      67.5,
+      42.2
+    ]
   },
   {
     "name": "Trent Alexander-Arnold",
@@ -17728,7 +19762,7 @@
     "yellow": 1,
     "red": 0,
     "mins_per_match": 47.0,
-    "titu_pct": 0,
+    "titu_pct": 90,
     "matchs_played": 9,
     "matchs_total": 10,
     "last_date": "2026-03-22",
@@ -17739,7 +19773,15 @@
     "aa_negative": -16.1,
     "final_third_passes_avg": 8.8,
     "aa_matches_analyzed": 4,
-    "archetype": "DEF Latéral"
+    "archetype": "DEF Latéral",
+    "reg10": 20.0,
+    "last_10": [
+      63.8,
+      55.9,
+      57.1,
+      59.4,
+      34.7
+    ]
   },
   {
     "name": "Gonzalo García",
@@ -17795,7 +19837,7 @@
     "yellow": 1,
     "red": 0,
     "mins_per_match": 29.0,
-    "titu_pct": 0,
+    "titu_pct": 60,
     "matchs_played": 6,
     "matchs_total": 10,
     "last_date": "2026-03-14",
@@ -17806,7 +19848,15 @@
     "aa_negative": -2.4,
     "final_third_passes_avg": 2.5,
     "aa_matches_analyzed": 2,
-    "archetype": "ATT Finisseur"
+    "archetype": "ATT Finisseur",
+    "reg10": 0.0,
+    "last_10": [
+      38.4,
+      33.4,
+      52.5,
+      35.9,
+      41.2
+    ]
   },
   {
     "name": "Vinícius Júnior",
@@ -17862,7 +19912,7 @@
     "yellow": 7,
     "red": 0,
     "mins_per_match": 78.0,
-    "titu_pct": 0,
+    "titu_pct": 100,
     "matchs_played": 10,
     "matchs_total": 10,
     "last_date": "2026-03-22",
@@ -17873,7 +19923,15 @@
     "aa_negative": -11.3,
     "final_third_passes_avg": 10.4,
     "aa_matches_analyzed": 5,
-    "archetype": "ATT Complet"
+    "archetype": "ATT Complet",
+    "reg10": 40.0,
+    "last_10": [
+      81.6,
+      70.0,
+      40.0,
+      42.6,
+      52.8
+    ]
   },
   {
     "name": "Álvaro Carreras",
@@ -17929,7 +19987,7 @@
     "yellow": 5,
     "red": 1,
     "mins_per_match": 82.0,
-    "titu_pct": 0,
+    "titu_pct": 60,
     "matchs_played": 6,
     "matchs_total": 10,
     "last_date": "2026-03-22",
@@ -17940,7 +19998,15 @@
     "aa_negative": -2.6,
     "final_third_passes_avg": 0.0,
     "aa_matches_analyzed": 1,
-    "archetype": "DEF Latéral"
+    "archetype": "DEF Latéral",
+    "reg10": 60.0,
+    "last_10": [
+      32.4,
+      54.2,
+      60.3,
+      67.6,
+      72.8
+    ]
   },
   {
     "name": "Ferland Mendy",
@@ -17993,7 +20059,7 @@
     "yellow": 0,
     "red": 0,
     "mins_per_match": 46.0,
-    "titu_pct": 0,
+    "titu_pct": 20,
     "matchs_played": 2,
     "matchs_total": 10,
     "last_date": "2026-03-11",
@@ -18004,7 +20070,12 @@
     "aa_negative": -8.5,
     "final_third_passes_avg": 11.0,
     "aa_matches_analyzed": 2,
-    "archetype": "DEF Latéral"
+    "archetype": "DEF Latéral",
+    "reg10": 50.0,
+    "last_10": [
+      46.0,
+      77.7
+    ]
   },
   {
     "name": "Dean Huijsen",
@@ -18060,7 +20131,7 @@
     "yellow": 5,
     "red": 1,
     "mins_per_match": 76.0,
-    "titu_pct": 0,
+    "titu_pct": 70,
     "matchs_played": 7,
     "matchs_total": 10,
     "last_date": "2026-03-22",
@@ -18071,7 +20142,15 @@
     "aa_negative": -12.1,
     "final_third_passes_avg": 7.8,
     "aa_matches_analyzed": 4,
-    "archetype": "DEF Latéral"
+    "archetype": "DEF Latéral",
+    "reg10": 20.0,
+    "last_10": [
+      53.7,
+      46.6,
+      62.1,
+      54.5,
+      38.6
+    ]
   },
   {
     "name": "Arda Güler",
@@ -18127,7 +20206,7 @@
     "yellow": 1,
     "red": 0,
     "mins_per_match": 64.0,
-    "titu_pct": 0,
+    "titu_pct": 100,
     "matchs_played": 10,
     "matchs_total": 10,
     "last_date": "2026-03-22",
@@ -18138,7 +20217,15 @@
     "aa_negative": -10.8,
     "final_third_passes_avg": 12.4,
     "aa_matches_analyzed": 5,
-    "archetype": "MIL GOAT"
+    "archetype": "MIL GOAT",
+    "reg10": 40.0,
+    "last_10": [
+      55.7,
+      51.0,
+      89.6,
+      56.3,
+      75.9
+    ]
   },
   {
     "name": "Kylian Mbappé",
@@ -18193,7 +20280,7 @@
     "yellow": 3,
     "red": 0,
     "mins_per_match": 86.0,
-    "titu_pct": 0,
+    "titu_pct": 40,
     "matchs_played": 4,
     "matchs_total": 10,
     "last_date": "2026-03-22",
@@ -18204,7 +20291,14 @@
     "aa_negative": -3.8,
     "final_third_passes_avg": 2.5,
     "aa_matches_analyzed": 2,
-    "archetype": "ATT Finisseur"
+    "archetype": "ATT Finisseur",
+    "reg10": 0.0,
+    "last_10": [
+      38.4,
+      32.7,
+      41.4,
+      60.0
+    ]
   },
   {
     "name": "César Palacios",
@@ -18258,7 +20352,7 @@
     "yellow": 6,
     "red": 0,
     "mins_per_match": 77.0,
-    "titu_pct": 0,
+    "titu_pct": 30,
     "matchs_played": 3,
     "matchs_total": 10,
     "last_date": "2026-03-14",
@@ -18269,7 +20363,13 @@
     "aa_negative": -5.5,
     "final_third_passes_avg": 4.0,
     "aa_matches_analyzed": 2,
-    "archetype": "MIL Rotation"
+    "archetype": "MIL Rotation",
+    "reg10": 0.0,
+    "last_10": [
+      44.0,
+      42.7,
+      28.0
+    ]
   },
   {
     "name": "Nicolás Fonseca",
@@ -18325,7 +20425,7 @@
     "yellow": 8,
     "red": 0,
     "mins_per_match": 61.0,
-    "titu_pct": 0,
+    "titu_pct": 100,
     "matchs_played": 10,
     "matchs_total": 10,
     "last_date": "2026-03-21",
@@ -18336,7 +20436,15 @@
     "aa_negative": -11.5,
     "final_third_passes_avg": 4.0,
     "aa_matches_analyzed": 5,
-    "archetype": "MIL Récup"
+    "archetype": "MIL Récup",
+    "reg10": 20.0,
+    "last_10": [
+      32.5,
+      67.0,
+      37.5,
+      34.6,
+      60.0
+    ]
   },
   {
     "name": "Lucas Ahijado",
@@ -18392,7 +20500,7 @@
     "yellow": 2,
     "red": 0,
     "mins_per_match": 65.0,
-    "titu_pct": 0,
+    "titu_pct": 60,
     "matchs_played": 6,
     "matchs_total": 10,
     "last_date": "2026-03-04",
@@ -18403,7 +20511,15 @@
     "aa_negative": -20.4,
     "final_third_passes_avg": 3.0,
     "aa_matches_analyzed": 2,
-    "archetype": "DEF Central"
+    "archetype": "DEF Central",
+    "reg10": 0.0,
+    "last_10": [
+      36.2,
+      34.5,
+      40.4,
+      36.0,
+      51.9
+    ]
   },
   {
     "name": "Rahim Alhassane",
@@ -18456,7 +20572,7 @@
     "yellow": 1,
     "red": 0,
     "mins_per_match": 72.0,
-    "titu_pct": 0,
+    "titu_pct": 20,
     "matchs_played": 2,
     "matchs_total": 10,
     "last_date": "2026-03-21",
@@ -18467,7 +20583,12 @@
     "aa_negative": -12.6,
     "final_third_passes_avg": 4.0,
     "aa_matches_analyzed": 1,
-    "archetype": "DEF Central"
+    "archetype": "DEF Central",
+    "reg10": 0.0,
+    "last_10": [
+      47.5,
+      27.3
+    ]
   },
   {
     "name": "David Costas",
@@ -18523,7 +20644,7 @@
     "yellow": 2,
     "red": 0,
     "mins_per_match": 85.0,
-    "titu_pct": 0,
+    "titu_pct": 50,
     "matchs_played": 5,
     "matchs_total": 10,
     "last_date": "2026-03-21",
@@ -18534,7 +20655,15 @@
     "aa_negative": -18.8,
     "final_third_passes_avg": 2.5,
     "aa_matches_analyzed": 2,
-    "archetype": "DEF Central"
+    "archetype": "DEF Central",
+    "reg10": 40.0,
+    "last_10": [
+      18.4,
+      90.1,
+      87.1,
+      3.7,
+      26.1
+    ]
   },
   {
     "name": "Aarón Escandell",
@@ -18590,7 +20719,7 @@
     "yellow": 2,
     "red": 0,
     "mins_per_match": 90.0,
-    "titu_pct": 0,
+    "titu_pct": 100,
     "matchs_played": 10,
     "matchs_total": 10,
     "last_date": "2026-03-21",
@@ -18601,7 +20730,15 @@
     "aa_negative": -15.1,
     "final_third_passes_avg": 2.0,
     "aa_matches_analyzed": 5,
-    "archetype": "GK"
+    "archetype": "GK",
+    "reg10": 20.0,
+    "last_10": [
+      30.5,
+      86.6,
+      60.0,
+      35.5,
+      34.2
+    ]
   },
   {
     "name": "Álex Forés",
@@ -18655,7 +20792,7 @@
     "yellow": 0,
     "red": 0,
     "mins_per_match": 19.0,
-    "titu_pct": 0,
+    "titu_pct": 30,
     "matchs_played": 3,
     "matchs_total": 10,
     "last_date": "2026-03-21",
@@ -18666,7 +20803,13 @@
     "aa_negative": -1.5,
     "final_third_passes_avg": 1.0,
     "aa_matches_analyzed": 1,
-    "archetype": "ATT Finisseur"
+    "archetype": "ATT Finisseur",
+    "reg10": 0.0,
+    "last_10": [
+      33.8,
+      35.0,
+      34.9
+    ]
   },
   {
     "name": "Dani Calvo",
@@ -18721,7 +20864,7 @@
     "yellow": 3,
     "red": 0,
     "mins_per_match": 75.0,
-    "titu_pct": 0,
+    "titu_pct": 40,
     "matchs_played": 4,
     "matchs_total": 10,
     "last_date": "2026-03-14",
@@ -18732,7 +20875,14 @@
     "aa_negative": -15.1,
     "final_third_passes_avg": 0.8,
     "aa_matches_analyzed": 4,
-    "archetype": "DEF Central"
+    "archetype": "DEF Central",
+    "reg10": 0.0,
+    "last_10": [
+      44.0,
+      41.5,
+      39.4,
+      46.6
+    ]
   },
   {
     "name": "Javi López",
@@ -18788,7 +20938,7 @@
     "yellow": 2,
     "red": 0,
     "mins_per_match": 69.0,
-    "titu_pct": 0,
+    "titu_pct": 90,
     "matchs_played": 9,
     "matchs_total": 10,
     "last_date": "2026-03-21",
@@ -18799,7 +20949,15 @@
     "aa_negative": -28.9,
     "final_third_passes_avg": 4.8,
     "aa_matches_analyzed": 5,
-    "archetype": "DEF Central"
+    "archetype": "DEF Central",
+    "reg10": 40.0,
+    "last_10": [
+      62.4,
+      66.1,
+      26.0,
+      22.5,
+      46.6
+    ]
   },
   {
     "name": "Luka Ilić",
@@ -18822,11 +20980,11 @@
       41.6,
       35.0
     ],
-    "aa2": -0.6,
-    "aa3": -2.1,
-    "aa5": 0.0,
-    "aa10": 0.0,
-    "aa15": 0.0,
+    "aa2": 0.1,
+    "aa3": 0.1,
+    "aa5": 0.1,
+    "aa10": 0.1,
+    "aa15": 0.1,
     "ds2": 35.0,
     "ds5": 35.0,
     "ds15": 35.0,
@@ -18855,7 +21013,7 @@
     "yellow": 3,
     "red": 1,
     "mins_per_match": 40.0,
-    "titu_pct": 0,
+    "titu_pct": 50,
     "matchs_played": 5,
     "matchs_total": 10,
     "last_date": "2026-03-14",
@@ -18866,7 +21024,15 @@
     "aa_negative": -9.4,
     "final_third_passes_avg": 4.5,
     "aa_matches_analyzed": 4,
-    "archetype": "MIL Rotation"
+    "archetype": "MIL Rotation",
+    "reg10": 0.0,
+    "last_10": [
+      38.5,
+      30.2,
+      29.9,
+      41.6,
+      35.0
+    ]
   },
   {
     "name": "Santiago Colombatto",
@@ -18922,7 +21088,7 @@
     "yellow": 6,
     "red": 0,
     "mins_per_match": 68.0,
-    "titu_pct": 0,
+    "titu_pct": 90,
     "matchs_played": 9,
     "matchs_total": 10,
     "last_date": "2026-03-21",
@@ -18933,7 +21099,15 @@
     "aa_negative": -6.5,
     "final_third_passes_avg": 3.0,
     "aa_matches_analyzed": 5,
-    "archetype": "MIL Rotation"
+    "archetype": "MIL Rotation",
+    "reg10": 0.0,
+    "last_10": [
+      41.1,
+      47.3,
+      35.9,
+      34.6,
+      38.4
+    ]
   },
   {
     "name": "David Carmo",
@@ -18989,11 +21163,19 @@
     "yellow": 7,
     "red": 1,
     "mins_per_match": 82.0,
-    "titu_pct": 0,
+    "titu_pct": 70,
     "matchs_played": 7,
     "matchs_total": 10,
     "last_date": "2026-03-09",
-    "archetype": "DEF Central"
+    "archetype": "DEF Central",
+    "reg10": 0.0,
+    "last_10": [
+      39.3,
+      47.0,
+      51.8,
+      38.8,
+      37.2
+    ]
   },
   {
     "name": "Federico Viñas",
@@ -19049,7 +21231,7 @@
     "yellow": 3,
     "red": 3,
     "mins_per_match": 72.0,
-    "titu_pct": 0,
+    "titu_pct": 100,
     "matchs_played": 10,
     "matchs_total": 10,
     "last_date": "2026-03-21",
@@ -19060,7 +21242,15 @@
     "aa_negative": -13.9,
     "final_third_passes_avg": 3.4,
     "aa_matches_analyzed": 5,
-    "archetype": "ATT Dribbleur"
+    "archetype": "ATT Dribbleur",
+    "reg10": 20.0,
+    "last_10": [
+      84.7,
+      46.5,
+      47.0,
+      30.0,
+      49.7
+    ]
   },
   {
     "name": "Thiago Fernández",
@@ -19116,7 +21306,7 @@
     "yellow": 2,
     "red": 0,
     "mins_per_match": 41.0,
-    "titu_pct": 0,
+    "titu_pct": 80,
     "matchs_played": 8,
     "matchs_total": 10,
     "last_date": "2026-03-21",
@@ -19127,7 +21317,15 @@
     "aa_negative": -13.0,
     "final_third_passes_avg": 4.4,
     "aa_matches_analyzed": 5,
-    "archetype": "ATT Dribbleur"
+    "archetype": "ATT Dribbleur",
+    "reg10": 40.0,
+    "last_10": [
+      28.7,
+      60.5,
+      60.5,
+      19.1,
+      33.6
+    ]
   },
   {
     "name": "Nacho Vidal",
@@ -19183,7 +21381,7 @@
     "yellow": 4,
     "red": 0,
     "mins_per_match": 79.0,
-    "titu_pct": 0,
+    "titu_pct": 80,
     "matchs_played": 8,
     "matchs_total": 10,
     "last_date": "2026-03-21",
@@ -19194,7 +21392,15 @@
     "aa_negative": -20.9,
     "final_third_passes_avg": 4.8,
     "aa_matches_analyzed": 4,
-    "archetype": "DEF Central"
+    "archetype": "DEF Central",
+    "reg10": 0.0,
+    "last_10": [
+      36.1,
+      54.4,
+      47.7,
+      52.5,
+      46.1
+    ]
   },
   {
     "name": "Haissem Hassan",
@@ -19250,7 +21456,7 @@
     "yellow": 1,
     "red": 0,
     "mins_per_match": 57.0,
-    "titu_pct": 0,
+    "titu_pct": 100,
     "matchs_played": 10,
     "matchs_total": 10,
     "last_date": "2026-03-21",
@@ -19261,7 +21467,15 @@
     "aa_negative": -4.6,
     "final_third_passes_avg": 1.6,
     "aa_matches_analyzed": 5,
-    "archetype": "ATT Finisseur"
+    "archetype": "ATT Finisseur",
+    "reg10": 0.0,
+    "last_10": [
+      45.8,
+      31.0,
+      43.9,
+      38.1,
+      44.0
+    ]
   },
   {
     "name": "Ilyas Chaira",
@@ -19317,7 +21531,7 @@
     "yellow": 1,
     "red": 1,
     "mins_per_match": 65.0,
-    "titu_pct": 0,
+    "titu_pct": 100,
     "matchs_played": 10,
     "matchs_total": 10,
     "last_date": "2026-03-21",
@@ -19328,7 +21542,15 @@
     "aa_negative": -8.1,
     "final_third_passes_avg": 3.8,
     "aa_matches_analyzed": 5,
-    "archetype": "ATT Dribbleur"
+    "archetype": "ATT Dribbleur",
+    "reg10": 0.0,
+    "last_10": [
+      60.0,
+      39.7,
+      43.1,
+      35.7,
+      41.5
+    ]
   },
   {
     "name": "Sibo",
@@ -19384,7 +21606,7 @@
     "yellow": 3,
     "red": 0,
     "mins_per_match": 66.0,
-    "titu_pct": 0,
+    "titu_pct": 100,
     "matchs_played": 10,
     "matchs_total": 10,
     "last_date": "2026-03-21",
@@ -19395,7 +21617,15 @@
     "aa_negative": -9.3,
     "final_third_passes_avg": 4.0,
     "aa_matches_analyzed": 5,
-    "archetype": "MIL Rotation"
+    "archetype": "MIL Rotation",
+    "reg10": 0.0,
+    "last_10": [
+      45.8,
+      56.9,
+      41.8,
+      30.0,
+      44.4
+    ]
   },
   {
     "name": "Thiago Borbas",
@@ -19450,7 +21680,7 @@
     "yellow": 6,
     "red": 0,
     "mins_per_match": 23.0,
-    "titu_pct": 0,
+    "titu_pct": 40,
     "matchs_played": 4,
     "matchs_total": 10,
     "last_date": "2026-03-04",
@@ -19461,7 +21691,14 @@
     "aa_negative": -7.2,
     "final_third_passes_avg": 1.0,
     "aa_matches_analyzed": 1,
-    "archetype": "ATT Finisseur"
+    "archetype": "ATT Finisseur",
+    "reg10": 0.0,
+    "last_10": [
+      35.8,
+      39.3,
+      35.9,
+      35.4
+    ]
   },
   {
     "name": "Santi Cazorla",
@@ -19517,7 +21754,7 @@
     "yellow": 1,
     "red": 1,
     "mins_per_match": 30.0,
-    "titu_pct": 0,
+    "titu_pct": 90,
     "matchs_played": 9,
     "matchs_total": 10,
     "last_date": "2026-03-21",
@@ -19528,7 +21765,15 @@
     "aa_negative": -7.1,
     "final_third_passes_avg": 3.4,
     "aa_matches_analyzed": 5,
-    "archetype": "MIL Rotation"
+    "archetype": "MIL Rotation",
+    "reg10": 0.0,
+    "last_10": [
+      32.9,
+      36.1,
+      39.4,
+      37.6,
+      41.6
+    ]
   },
   {
     "name": "Luken Beitia",
@@ -19584,7 +21829,7 @@
     "yellow": 2,
     "red": 0,
     "mins_per_match": 87.0,
-    "titu_pct": 0,
+    "titu_pct": 50,
     "matchs_played": 5,
     "matchs_total": 10,
     "last_date": "2026-03-22",
@@ -19595,7 +21840,15 @@
     "aa_negative": -15.3,
     "final_third_passes_avg": 6.5,
     "aa_matches_analyzed": 2,
-    "archetype": "DEF Central"
+    "archetype": "DEF Central",
+    "reg10": 20.0,
+    "last_10": [
+      54.4,
+      50.8,
+      35.3,
+      39.3,
+      70.6
+    ]
   },
   {
     "name": "Álex Remiro",
@@ -19651,7 +21904,7 @@
     "yellow": 0,
     "red": 0,
     "mins_per_match": 90.0,
-    "titu_pct": 0,
+    "titu_pct": 100,
     "matchs_played": 10,
     "matchs_total": 10,
     "last_date": "2026-03-20",
@@ -19662,7 +21915,15 @@
     "aa_negative": -16.7,
     "final_third_passes_avg": 1.6,
     "aa_matches_analyzed": 5,
-    "archetype": "GK"
+    "archetype": "GK",
+    "reg10": 40.0,
+    "last_10": [
+      64.8,
+      50.6,
+      44.0,
+      66.1,
+      12.2
+    ]
   },
   {
     "name": "Odriozola",
@@ -19717,7 +21978,7 @@
     "yellow": 0,
     "red": 0,
     "mins_per_match": 40.0,
-    "titu_pct": 0,
+    "titu_pct": 40,
     "matchs_played": 4,
     "matchs_total": 10,
     "last_date": "2026-02-21",
@@ -19728,7 +21989,14 @@
     "aa_negative": 0.0,
     "final_third_passes_avg": 0.0,
     "aa_matches_analyzed": 1,
-    "archetype": "DEF Central"
+    "archetype": "DEF Central",
+    "reg10": 25.0,
+    "last_10": [
+      38.0,
+      36.6,
+      60.4,
+      33.9
+    ]
   },
   {
     "name": "Wesley",
@@ -19784,7 +22052,7 @@
     "yellow": 1,
     "red": 0,
     "mins_per_match": 37.0,
-    "titu_pct": 0,
+    "titu_pct": 50,
     "matchs_played": 5,
     "matchs_total": 10,
     "last_date": "2026-03-15",
@@ -19795,7 +22063,15 @@
     "aa_negative": -1.1,
     "final_third_passes_avg": 2.0,
     "aa_matches_analyzed": 1,
-    "archetype": "ATT Finisseur"
+    "archetype": "ATT Finisseur",
+    "reg10": 20.0,
+    "last_10": [
+      34.5,
+      35.5,
+      36.4,
+      61.8,
+      45.6
+    ]
   },
   {
     "name": "Turrientes",
@@ -19851,7 +22127,7 @@
     "yellow": 5,
     "red": 0,
     "mins_per_match": 45.0,
-    "titu_pct": 0,
+    "titu_pct": 90,
     "matchs_played": 9,
     "matchs_total": 10,
     "last_date": "2026-03-15",
@@ -19862,7 +22138,15 @@
     "aa_negative": -11.4,
     "final_third_passes_avg": 6.0,
     "aa_matches_analyzed": 4,
-    "archetype": "MIL Rotation"
+    "archetype": "MIL Rotation",
+    "reg10": 20.0,
+    "last_10": [
+      94.1,
+      31.9,
+      48.6,
+      36.4,
+      38.9
+    ]
   },
   {
     "name": "Alex Marchal",
@@ -19917,7 +22201,7 @@
     "yellow": 1,
     "red": 0,
     "mins_per_match": 35.0,
-    "titu_pct": 0,
+    "titu_pct": 40,
     "matchs_played": 4,
     "matchs_total": 10,
     "last_date": "2026-03-15",
@@ -19928,7 +22212,14 @@
     "aa_negative": -0.3,
     "final_third_passes_avg": 0.0,
     "aa_matches_analyzed": 1,
-    "archetype": "ATT Finisseur"
+    "archetype": "ATT Finisseur",
+    "reg10": 0.0,
+    "last_10": [
+      34.8,
+      29.9,
+      33.9,
+      35.2
+    ]
   },
   {
     "name": "Sergio Gómez",
@@ -19984,7 +22275,7 @@
     "yellow": 2,
     "red": 0,
     "mins_per_match": 76.0,
-    "titu_pct": 0,
+    "titu_pct": 80,
     "matchs_played": 8,
     "matchs_total": 10,
     "last_date": "2026-03-20",
@@ -19995,7 +22286,15 @@
     "aa_negative": -17.4,
     "final_third_passes_avg": 10.2,
     "aa_matches_analyzed": 5,
-    "archetype": "ATT Créateur"
+    "archetype": "ATT Créateur",
+    "reg10": 20.0,
+    "last_10": [
+      40.6,
+      42.1,
+      52.9,
+      51.3,
+      69.5
+    ]
   },
   {
     "name": "Jon Gorrotxategi",
@@ -20051,7 +22350,7 @@
     "yellow": 6,
     "red": 0,
     "mins_per_match": 77.0,
-    "titu_pct": 0,
+    "titu_pct": 80,
     "matchs_played": 8,
     "matchs_total": 10,
     "last_date": "2026-03-20",
@@ -20062,7 +22361,15 @@
     "aa_negative": -12.6,
     "final_third_passes_avg": 9.0,
     "aa_matches_analyzed": 3,
-    "archetype": "MIL Rotation"
+    "archetype": "MIL Rotation",
+    "reg10": 20.0,
+    "last_10": [
+      37.4,
+      42.2,
+      38.1,
+      48.6,
+      64.5
+    ]
   },
   {
     "name": "Oyarzabal",
@@ -20118,7 +22425,7 @@
     "yellow": 2,
     "red": 0,
     "mins_per_match": 84.0,
-    "titu_pct": 0,
+    "titu_pct": 100,
     "matchs_played": 10,
     "matchs_total": 10,
     "last_date": "2026-03-20",
@@ -20129,7 +22436,15 @@
     "aa_negative": -8.8,
     "final_third_passes_avg": 6.8,
     "aa_matches_analyzed": 5,
-    "archetype": "ATT Complet"
+    "archetype": "ATT Complet",
+    "reg10": 20.0,
+    "last_10": [
+      29.3,
+      60.0,
+      68.1,
+      40.9,
+      51.2
+    ]
   },
   {
     "name": "Kazunari Kita",
@@ -20185,7 +22500,7 @@
     "yellow": 3,
     "red": 1,
     "mins_per_match": 77.0,
-    "titu_pct": 0,
+    "titu_pct": 50,
     "matchs_played": 5,
     "matchs_total": 10,
     "last_date": "2026-03-22",
@@ -20196,7 +22511,15 @@
     "aa_negative": -26.5,
     "final_third_passes_avg": 2.5,
     "aa_matches_analyzed": 2,
-    "archetype": "DEF Central"
+    "archetype": "DEF Central",
+    "reg10": 20.0,
+    "last_10": [
+      62.0,
+      41.6,
+      23.0,
+      37.5,
+      50.4
+    ]
   },
   {
     "name": "Gorka Carrera",
@@ -20251,7 +22574,7 @@
     "yellow": 10,
     "red": 0,
     "mins_per_match": 74.0,
-    "titu_pct": 0,
+    "titu_pct": 40,
     "matchs_played": 4,
     "matchs_total": 10,
     "last_date": "2026-03-15",
@@ -20262,7 +22585,14 @@
     "aa_negative": -14.8,
     "final_third_passes_avg": 1.0,
     "aa_matches_analyzed": 1,
-    "archetype": "ATT Dribbleur"
+    "archetype": "ATT Dribbleur",
+    "reg10": 25.0,
+    "last_10": [
+      36.8,
+      60.3,
+      35.1,
+      33.9
+    ]
   },
   {
     "name": "Job Ochieng",
@@ -20318,7 +22648,7 @@
     "yellow": 7,
     "red": 0,
     "mins_per_match": 61.0,
-    "titu_pct": 0,
+    "titu_pct": 50,
     "matchs_played": 5,
     "matchs_total": 10,
     "last_date": "2026-03-22",
@@ -20329,7 +22659,15 @@
     "aa_negative": -13.9,
     "final_third_passes_avg": 5.5,
     "aa_matches_analyzed": 2,
-    "archetype": "ATT Complet"
+    "archetype": "ATT Complet",
+    "reg10": 80.0,
+    "last_10": [
+      46.0,
+      60.2,
+      90.8,
+      74.0,
+      66.7
+    ]
   },
   {
     "name": "Barrenetxea",
@@ -20385,7 +22723,7 @@
     "yellow": 2,
     "red": 0,
     "mins_per_match": 59.0,
-    "titu_pct": 0,
+    "titu_pct": 60,
     "matchs_played": 6,
     "matchs_total": 10,
     "last_date": "2026-03-20",
@@ -20396,7 +22734,15 @@
     "aa_negative": -7.8,
     "final_third_passes_avg": 12.0,
     "aa_matches_analyzed": 4,
-    "archetype": "ATT Créateur"
+    "archetype": "ATT Créateur",
+    "reg10": 0.0,
+    "last_10": [
+      54.7,
+      53.9,
+      40.5,
+      38.0,
+      37.4
+    ]
   },
   {
     "name": "Gonçalo Guedes",
@@ -20452,7 +22798,7 @@
     "yellow": 2,
     "red": 0,
     "mins_per_match": 58.0,
-    "titu_pct": 0,
+    "titu_pct": 100,
     "matchs_played": 10,
     "matchs_total": 10,
     "last_date": "2026-03-20",
@@ -20463,7 +22809,15 @@
     "aa_negative": -6.4,
     "final_third_passes_avg": 11.0,
     "aa_matches_analyzed": 5,
-    "archetype": "ATT Dribbleur"
+    "archetype": "ATT Dribbleur",
+    "reg10": 40.0,
+    "last_10": [
+      41.3,
+      80.3,
+      38.7,
+      41.0,
+      65.6
+    ]
   },
   {
     "name": "Jon Aramburu",
@@ -20519,7 +22873,7 @@
     "yellow": 9,
     "red": 0,
     "mins_per_match": 82.0,
-    "titu_pct": 0,
+    "titu_pct": 90,
     "matchs_played": 9,
     "matchs_total": 10,
     "last_date": "2026-03-20",
@@ -20530,7 +22884,15 @@
     "aa_negative": -27.3,
     "final_third_passes_avg": 7.8,
     "aa_matches_analyzed": 5,
-    "archetype": "DEF Latéral"
+    "archetype": "DEF Latéral",
+    "reg10": 0.0,
+    "last_10": [
+      43.4,
+      29.2,
+      38.6,
+      57.7,
+      42.6
+    ]
   },
   {
     "name": "Brais Méndez",
@@ -20586,7 +22948,7 @@
     "yellow": 5,
     "red": 1,
     "mins_per_match": 59.0,
-    "titu_pct": 0,
+    "titu_pct": 70,
     "matchs_played": 7,
     "matchs_total": 10,
     "last_date": "2026-03-20",
@@ -20597,7 +22959,15 @@
     "aa_negative": -18.0,
     "final_third_passes_avg": 11.8,
     "aa_matches_analyzed": 4,
-    "archetype": "MIL Rotation"
+    "archetype": "MIL Rotation",
+    "reg10": 20.0,
+    "last_10": [
+      41.6,
+      66.6,
+      37.8,
+      32.4,
+      20.7
+    ]
   },
   {
     "name": "Lander Astiazarán",
@@ -20653,7 +23023,7 @@
     "yellow": 4,
     "red": 0,
     "mins_per_match": 66.0,
-    "titu_pct": 0,
+    "titu_pct": 50,
     "matchs_played": 5,
     "matchs_total": 10,
     "last_date": "2026-03-22",
@@ -20664,7 +23034,15 @@
     "aa_negative": -8.3,
     "final_third_passes_avg": 3.5,
     "aa_matches_analyzed": 2,
-    "archetype": "MIL Rotation"
+    "archetype": "MIL Rotation",
+    "reg10": 40.0,
+    "last_10": [
+      40.7,
+      38.8,
+      40.8,
+      69.6,
+      72.9
+    ]
   },
   {
     "name": "Aihen",
@@ -20719,11 +23097,18 @@
     "yellow": 1,
     "red": 0,
     "mins_per_match": 43.0,
-    "titu_pct": 0,
+    "titu_pct": 40,
     "matchs_played": 4,
     "matchs_total": 10,
     "last_date": "2026-02-14",
-    "archetype": "DEF Central"
+    "archetype": "DEF Central",
+    "reg10": 0.0,
+    "last_10": [
+      27.9,
+      32.5,
+      44.1,
+      38.2
+    ]
   },
   {
     "name": "Luka Sučić",
@@ -20779,7 +23164,7 @@
     "yellow": 1,
     "red": 0,
     "mins_per_match": 41.0,
-    "titu_pct": 0,
+    "titu_pct": 70,
     "matchs_played": 7,
     "matchs_total": 10,
     "last_date": "2026-03-20",
@@ -20790,7 +23175,15 @@
     "aa_negative": -7.1,
     "final_third_passes_avg": 4.5,
     "aa_matches_analyzed": 4,
-    "archetype": "MIL Rotation"
+    "archetype": "MIL Rotation",
+    "reg10": 60.0,
+    "last_10": [
+      80.7,
+      33.9,
+      65.2,
+      32.7,
+      64.5
+    ]
   },
   {
     "name": "Zubeldia",
@@ -20846,7 +23239,7 @@
     "yellow": 8,
     "red": 0,
     "mins_per_match": 86.0,
-    "titu_pct": 0,
+    "titu_pct": 80,
     "matchs_played": 8,
     "matchs_total": 10,
     "last_date": "2026-03-20",
@@ -20857,7 +23250,15 @@
     "aa_negative": -22.9,
     "final_third_passes_avg": 1.3,
     "aa_matches_analyzed": 3,
-    "archetype": "DEF Central"
+    "archetype": "DEF Central",
+    "reg10": 0.0,
+    "last_10": [
+      35.8,
+      15.6,
+      48.7,
+      37.0,
+      35.1
+    ]
   },
   {
     "name": "Orri Óskarsson",
@@ -20913,7 +23314,7 @@
     "yellow": 2,
     "red": 0,
     "mins_per_match": 25.0,
-    "titu_pct": 0,
+    "titu_pct": 80,
     "matchs_played": 8,
     "matchs_total": 10,
     "last_date": "2026-03-20",
@@ -20924,7 +23325,15 @@
     "aa_negative": -5.8,
     "final_third_passes_avg": 2.8,
     "aa_matches_analyzed": 4,
-    "archetype": "ATT Finisseur"
+    "archetype": "ATT Finisseur",
+    "reg10": 20.0,
+    "last_10": [
+      33.7,
+      32.3,
+      27.3,
+      78.0,
+      34.0
+    ]
   },
   {
     "name": "Tomás Carbonell",
@@ -20980,7 +23389,7 @@
     "yellow": 8,
     "red": 0,
     "mins_per_match": 83.0,
-    "titu_pct": 0,
+    "titu_pct": 50,
     "matchs_played": 5,
     "matchs_total": 10,
     "last_date": "2026-03-22",
@@ -20991,7 +23400,15 @@
     "aa_negative": -16.1,
     "final_third_passes_avg": 8.0,
     "aa_matches_analyzed": 2,
-    "archetype": "MIL Récup"
+    "archetype": "MIL Récup",
+    "reg10": 20.0,
+    "last_10": [
+      59.1,
+      61.5,
+      40.4,
+      40.5,
+      52.5
+    ]
   },
   {
     "name": "Aitor Fraga",
@@ -21047,7 +23464,7 @@
     "yellow": 1,
     "red": 0,
     "mins_per_match": 90.0,
-    "titu_pct": 0,
+    "titu_pct": 50,
     "matchs_played": 5,
     "matchs_total": 10,
     "last_date": "2026-03-22",
@@ -21058,7 +23475,15 @@
     "aa_negative": -12.5,
     "final_third_passes_avg": 0.0,
     "aa_matches_analyzed": 2,
-    "archetype": "GK"
+    "archetype": "GK",
+    "reg10": 40.0,
+    "last_10": [
+      33.8,
+      80.0,
+      46.1,
+      11.5,
+      74.0
+    ]
   },
   {
     "name": "Carlos Soler",
@@ -21114,7 +23539,7 @@
     "yellow": 2,
     "red": 1,
     "mins_per_match": 67.0,
-    "titu_pct": 0,
+    "titu_pct": 80,
     "matchs_played": 8,
     "matchs_total": 10,
     "last_date": "2026-03-20",
@@ -21125,7 +23550,15 @@
     "aa_negative": -9.2,
     "final_third_passes_avg": 14.0,
     "aa_matches_analyzed": 4,
-    "archetype": "MIL Créateur"
+    "archetype": "MIL Créateur",
+    "reg10": 60.0,
+    "last_10": [
+      64.5,
+      50.9,
+      69.4,
+      69.2,
+      54.5
+    ]
   },
   {
     "name": "Duje Ćaleta-Car",
@@ -21181,7 +23614,7 @@
     "yellow": 4,
     "red": 1,
     "mins_per_match": 77.0,
-    "titu_pct": 0,
+    "titu_pct": 80,
     "matchs_played": 8,
     "matchs_total": 10,
     "last_date": "2026-03-20",
@@ -21192,7 +23625,15 @@
     "aa_negative": -18.5,
     "final_third_passes_avg": 2.0,
     "aa_matches_analyzed": 5,
-    "archetype": "DEF Central"
+    "archetype": "DEF Central",
+    "reg10": 20.0,
+    "last_10": [
+      48.2,
+      43.6,
+      47.9,
+      54.0,
+      78.5
+    ]
   },
   {
     "name": "Ibai Aguirre",
@@ -21248,7 +23689,7 @@
     "yellow": 6,
     "red": 1,
     "mins_per_match": 76.0,
-    "titu_pct": 0,
+    "titu_pct": 50,
     "matchs_played": 5,
     "matchs_total": 10,
     "last_date": "2026-03-22",
@@ -21259,7 +23700,15 @@
     "aa_negative": -10.8,
     "final_third_passes_avg": 3.5,
     "aa_matches_analyzed": 2,
-    "archetype": "MIL Rotation"
+    "archetype": "MIL Rotation",
+    "reg10": 0.0,
+    "last_10": [
+      42.0,
+      32.6,
+      44.4,
+      40.1,
+      41.8
+    ]
   },
   {
     "name": "Adnan Januzaj",
@@ -21312,7 +23761,7 @@
     "yellow": 1,
     "red": 0,
     "mins_per_match": 26.0,
-    "titu_pct": 0,
+    "titu_pct": 20,
     "matchs_played": 2,
     "matchs_total": 10,
     "last_date": "2026-03-01",
@@ -21323,7 +23772,12 @@
     "aa_negative": -7.0,
     "final_third_passes_avg": 2.5,
     "aa_matches_analyzed": 2,
-    "archetype": "MIL Rotation"
+    "archetype": "MIL Rotation",
+    "reg10": 0.0,
+    "last_10": [
+      38.2,
+      39.4
+    ]
   },
   {
     "name": "Djibril Sow",
@@ -21379,7 +23833,7 @@
     "yellow": 3,
     "red": 0,
     "mins_per_match": 70.0,
-    "titu_pct": 0,
+    "titu_pct": 100,
     "matchs_played": 10,
     "matchs_total": 10,
     "last_date": "2026-03-21",
@@ -21390,7 +23844,15 @@
     "aa_negative": -11.0,
     "final_third_passes_avg": 5.2,
     "aa_matches_analyzed": 5,
-    "archetype": "MIL Rotation"
+    "archetype": "MIL Rotation",
+    "reg10": 40.0,
+    "last_10": [
+      59.2,
+      31.0,
+      52.2,
+      69.3,
+      70.2
+    ]
   },
   {
     "name": "José Ángel Carmona",
@@ -21446,7 +23908,7 @@
     "yellow": 9,
     "red": 0,
     "mins_per_match": 74.0,
-    "titu_pct": 0,
+    "titu_pct": 90,
     "matchs_played": 9,
     "matchs_total": 10,
     "last_date": "2026-03-21",
@@ -21457,7 +23919,15 @@
     "aa_negative": -13.2,
     "final_third_passes_avg": 5.0,
     "aa_matches_analyzed": 4,
-    "archetype": "DEF Latéral"
+    "archetype": "DEF Latéral",
+    "reg10": 0.0,
+    "last_10": [
+      41.7,
+      54.2,
+      28.2,
+      40.8,
+      21.5
+    ]
   },
   {
     "name": "Manu Bueno",
@@ -21510,7 +23980,7 @@
     "yellow": 0,
     "red": 0,
     "mins_per_match": 18.0,
-    "titu_pct": 0,
+    "titu_pct": 20,
     "matchs_played": 2,
     "matchs_total": 10,
     "last_date": "2026-03-15",
@@ -21521,7 +23991,12 @@
     "aa_negative": -2.6,
     "final_third_passes_avg": 0.0,
     "aa_matches_analyzed": 1,
-    "archetype": "MIL Rotation"
+    "archetype": "MIL Rotation",
+    "reg10": 0.0,
+    "last_10": [
+      32.7,
+      40.0
+    ]
   },
   {
     "name": "Isaac Romero",
@@ -21577,7 +24052,7 @@
     "yellow": 4,
     "red": 1,
     "mins_per_match": 51.0,
-    "titu_pct": 0,
+    "titu_pct": 70,
     "matchs_played": 7,
     "matchs_total": 10,
     "last_date": "2026-03-21",
@@ -21588,7 +24063,15 @@
     "aa_negative": -5.0,
     "final_third_passes_avg": 1.3,
     "aa_matches_analyzed": 3,
-    "archetype": "ATT Finisseur"
+    "archetype": "ATT Finisseur",
+    "reg10": 20.0,
+    "last_10": [
+      45.0,
+      34.9,
+      62.3,
+      35.1,
+      34.7
+    ]
   },
   {
     "name": "Odysseas",
@@ -21644,7 +24127,7 @@
     "yellow": 2,
     "red": 0,
     "mins_per_match": 90.0,
-    "titu_pct": 0,
+    "titu_pct": 100,
     "matchs_played": 10,
     "matchs_total": 10,
     "last_date": "2026-03-21",
@@ -21655,7 +24138,15 @@
     "aa_negative": -14.7,
     "final_third_passes_avg": 0.8,
     "aa_matches_analyzed": 5,
-    "archetype": "GK"
+    "archetype": "GK",
+    "reg10": 20.0,
+    "last_10": [
+      37.9,
+      20.0,
+      35.0,
+      25.2,
+      72.4
+    ]
   },
   {
     "name": "Alexis Sánchez",
@@ -21711,7 +24202,7 @@
     "yellow": 1,
     "red": 0,
     "mins_per_match": 51.0,
-    "titu_pct": 0,
+    "titu_pct": 70,
     "matchs_played": 7,
     "matchs_total": 10,
     "last_date": "2026-03-21",
@@ -21722,7 +24213,15 @@
     "aa_negative": -6.5,
     "final_third_passes_avg": 6.0,
     "aa_matches_analyzed": 5,
-    "archetype": "ATT Finisseur"
+    "archetype": "ATT Finisseur",
+    "reg10": 20.0,
+    "last_10": [
+      37.5,
+      37.6,
+      36.4,
+      70.8,
+      28.9
+    ]
   },
   {
     "name": "Ruben Vargas",
@@ -21775,7 +24274,7 @@
     "yellow": 1,
     "red": 0,
     "mins_per_match": 66.0,
-    "titu_pct": 0,
+    "titu_pct": 20,
     "matchs_played": 2,
     "matchs_total": 10,
     "last_date": "2026-03-21",
@@ -21786,7 +24285,12 @@
     "aa_negative": -15.8,
     "final_third_passes_avg": 7.5,
     "aa_matches_analyzed": 2,
-    "archetype": "MIL Rotation"
+    "archetype": "MIL Rotation",
+    "reg10": 0.0,
+    "last_10": [
+      28.9,
+      38.1
+    ]
   },
   {
     "name": "Tanguy Nianzou",
@@ -21842,7 +24346,7 @@
     "yellow": 5,
     "red": 0,
     "mins_per_match": 56.0,
-    "titu_pct": 0,
+    "titu_pct": 50,
     "matchs_played": 5,
     "matchs_total": 10,
     "last_date": "2026-03-15",
@@ -21853,7 +24357,15 @@
     "aa_negative": -26.0,
     "final_third_passes_avg": 3.7,
     "aa_matches_analyzed": 3,
-    "archetype": "DEF Central"
+    "archetype": "DEF Central",
+    "reg10": 0.0,
+    "last_10": [
+      14.4,
+      45.9,
+      42.1,
+      48.8,
+      27.7
+    ]
   },
   {
     "name": "Juanlu Sánchez",
@@ -21909,7 +24421,7 @@
     "yellow": 0,
     "red": 0,
     "mins_per_match": 0.0,
-    "titu_pct": 0,
+    "titu_pct": 90,
     "matchs_played": 9,
     "matchs_total": 10,
     "last_date": "2026-03-21",
@@ -21920,7 +24432,15 @@
     "aa_negative": -23.9,
     "final_third_passes_avg": 8.5,
     "aa_matches_analyzed": 4,
-    "archetype": "MIL Récup"
+    "archetype": "MIL Récup",
+    "reg10": 0.0,
+    "last_10": [
+      27.0,
+      60.0,
+      45.5,
+      33.2,
+      5.3
+    ]
   },
   {
     "name": "Lucien Agoumé",
@@ -21976,7 +24496,7 @@
     "yellow": 10,
     "red": 0,
     "mins_per_match": 79.0,
-    "titu_pct": 0,
+    "titu_pct": 100,
     "matchs_played": 10,
     "matchs_total": 10,
     "last_date": "2026-03-21",
@@ -21987,7 +24507,15 @@
     "aa_negative": -17.6,
     "final_third_passes_avg": 9.2,
     "aa_matches_analyzed": 5,
-    "archetype": "MIL Récup"
+    "archetype": "MIL Récup",
+    "reg10": 0.0,
+    "last_10": [
+      34.5,
+      31.6,
+      39.7,
+      51.6,
+      43.8
+    ]
   },
   {
     "name": "Nemanja Gudelj",
@@ -22043,7 +24571,7 @@
     "yellow": 7,
     "red": 0,
     "mins_per_match": 74.0,
-    "titu_pct": 0,
+    "titu_pct": 90,
     "matchs_played": 9,
     "matchs_total": 10,
     "last_date": "2026-03-21",
@@ -22054,7 +24582,15 @@
     "aa_negative": -18.5,
     "final_third_passes_avg": 5.0,
     "aa_matches_analyzed": 5,
-    "archetype": "MIL Récup"
+    "archetype": "MIL Récup",
+    "reg10": 20.0,
+    "last_10": [
+      46.8,
+      60.0,
+      38.5,
+      47.7,
+      74.6
+    ]
   },
   {
     "name": "Oso",
@@ -22110,7 +24646,7 @@
     "yellow": 2,
     "red": 0,
     "mins_per_match": 73.0,
-    "titu_pct": 0,
+    "titu_pct": 70,
     "matchs_played": 7,
     "matchs_total": 10,
     "last_date": "2026-03-21",
@@ -22121,7 +24657,15 @@
     "aa_negative": -27.5,
     "final_third_passes_avg": 3.8,
     "aa_matches_analyzed": 4,
-    "archetype": "DEF Latéral"
+    "archetype": "DEF Latéral",
+    "reg10": 40.0,
+    "last_10": [
+      34.8,
+      70.0,
+      48.1,
+      68.2,
+      51.3
+    ]
   },
   {
     "name": "Andrés Castrín",
@@ -22175,7 +24719,7 @@
     "yellow": 3,
     "red": 0,
     "mins_per_match": 68.0,
-    "titu_pct": 0,
+    "titu_pct": 30,
     "matchs_played": 3,
     "matchs_total": 10,
     "last_date": "2026-03-21",
@@ -22186,7 +24730,13 @@
     "aa_negative": -2.7,
     "final_third_passes_avg": 1.0,
     "aa_matches_analyzed": 2,
-    "archetype": "DEF Central"
+    "archetype": "DEF Central",
+    "reg10": 0.0,
+    "last_10": [
+      36.9,
+      47.9,
+      46.0
+    ]
   },
   {
     "name": "César Azpilicueta",
@@ -22242,7 +24792,7 @@
     "yellow": 4,
     "red": 0,
     "mins_per_match": 69.0,
-    "titu_pct": 0,
+    "titu_pct": 60,
     "matchs_played": 6,
     "matchs_total": 10,
     "last_date": "2026-03-21",
@@ -22253,7 +24803,15 @@
     "aa_negative": -15.2,
     "final_third_passes_avg": 3.5,
     "aa_matches_analyzed": 4,
-    "archetype": "DEF Central"
+    "archetype": "DEF Central",
+    "reg10": 20.0,
+    "last_10": [
+      41.9,
+      60.0,
+      61.4,
+      54.0,
+      53.2
+    ]
   },
   {
     "name": "Neal Maupay",
@@ -22309,7 +24867,7 @@
     "yellow": 1,
     "red": 0,
     "mins_per_match": 65.0,
-    "titu_pct": 0,
+    "titu_pct": 60,
     "matchs_played": 6,
     "matchs_total": 10,
     "last_date": "2026-03-21",
@@ -22320,7 +24878,15 @@
     "aa_negative": -5.9,
     "final_third_passes_avg": 3.7,
     "aa_matches_analyzed": 3,
-    "archetype": "ATT Finisseur"
+    "archetype": "ATT Finisseur",
+    "reg10": 0.0,
+    "last_10": [
+      33.8,
+      31.7,
+      36.6,
+      40.9,
+      37.2
+    ]
   },
   {
     "name": "Chidera Ejuke",
@@ -22376,7 +24942,7 @@
     "yellow": 0,
     "red": 0,
     "mins_per_match": 32.0,
-    "titu_pct": 0,
+    "titu_pct": 90,
     "matchs_played": 9,
     "matchs_total": 10,
     "last_date": "2026-03-15",
@@ -22387,7 +24953,15 @@
     "aa_negative": -3.7,
     "final_third_passes_avg": 4.5,
     "aa_matches_analyzed": 4,
-    "archetype": "ATT Finisseur"
+    "archetype": "ATT Finisseur",
+    "reg10": 0.0,
+    "last_10": [
+      43.7,
+      41.8,
+      38.2,
+      37.5,
+      32.7
+    ]
   },
   {
     "name": "Kike Salas",
@@ -22443,7 +25017,7 @@
     "yellow": 0,
     "red": 0,
     "mins_per_match": 82.0,
-    "titu_pct": 0,
+    "titu_pct": 90,
     "matchs_played": 9,
     "matchs_total": 10,
     "last_date": "2026-03-21",
@@ -22454,7 +25028,15 @@
     "aa_negative": -29.9,
     "final_third_passes_avg": 7.0,
     "aa_matches_analyzed": 4,
-    "archetype": "DEF Latéral"
+    "archetype": "DEF Latéral",
+    "reg10": 20.0,
+    "last_10": [
+      46.8,
+      45.7,
+      59.8,
+      75.1,
+      33.3
+    ]
   },
   {
     "name": "Copete",
@@ -22510,7 +25092,7 @@
     "yellow": 5,
     "red": 0,
     "mins_per_match": 84.0,
-    "titu_pct": 0,
+    "titu_pct": 50,
     "matchs_played": 5,
     "matchs_total": 10,
     "last_date": "2026-02-22",
@@ -22521,7 +25103,15 @@
     "aa_negative": -29.2,
     "final_third_passes_avg": 9.0,
     "aa_matches_analyzed": 1,
-    "archetype": "DEF Latéral"
+    "archetype": "DEF Latéral",
+    "reg10": 20.0,
+    "last_10": [
+      32.6,
+      32.2,
+      23.0,
+      28.4,
+      62.9
+    ]
   },
   {
     "name": "Baptiste Santamaría",
@@ -22576,11 +25166,18 @@
     "yellow": 2,
     "red": 0,
     "mins_per_match": 39.0,
-    "titu_pct": 0,
+    "titu_pct": 40,
     "matchs_played": 4,
     "matchs_total": 10,
     "last_date": "2026-02-15",
-    "archetype": "MIL Créateur"
+    "archetype": "MIL Créateur",
+    "reg10": 0.0,
+    "last_10": [
+      41.7,
+      39.2,
+      36.4,
+      36.3
+    ]
   },
   {
     "name": "André Almeida",
@@ -22636,7 +25233,7 @@
     "yellow": 0,
     "red": 0,
     "mins_per_match": 52.0,
-    "titu_pct": 0,
+    "titu_pct": 50,
     "matchs_played": 5,
     "matchs_total": 10,
     "last_date": "2026-03-21",
@@ -22647,7 +25244,15 @@
     "aa_negative": -5.8,
     "final_third_passes_avg": 8.8,
     "aa_matches_analyzed": 4,
-    "archetype": "MIL Rotation"
+    "archetype": "MIL Rotation",
+    "reg10": 20.0,
+    "last_10": [
+      62.3,
+      55.8,
+      48.8,
+      38.2,
+      33.5
+    ]
   },
   {
     "name": "Largie Ramazani",
@@ -22703,7 +25308,7 @@
     "yellow": 4,
     "red": 0,
     "mins_per_match": 39.0,
-    "titu_pct": 0,
+    "titu_pct": 80,
     "matchs_played": 8,
     "matchs_total": 10,
     "last_date": "2026-03-21",
@@ -22714,7 +25319,15 @@
     "aa_negative": -10.3,
     "final_third_passes_avg": 9.0,
     "aa_matches_analyzed": 5,
-    "archetype": "ATT Dribbleur"
+    "archetype": "ATT Dribbleur",
+    "reg10": 40.0,
+    "last_10": [
+      72.7,
+      36.1,
+      58.1,
+      67.5,
+      44.9
+    ]
   },
   {
     "name": "Lucas Beltrán",
@@ -22770,7 +25383,7 @@
     "yellow": 1,
     "red": 0,
     "mins_per_match": 49.0,
-    "titu_pct": 0,
+    "titu_pct": 70,
     "matchs_played": 7,
     "matchs_total": 10,
     "last_date": "2026-03-21",
@@ -22781,7 +25394,15 @@
     "aa_negative": -6.1,
     "final_third_passes_avg": 1.5,
     "aa_matches_analyzed": 2,
-    "archetype": "ATT Finisseur"
+    "archetype": "ATT Finisseur",
+    "reg10": 20.0,
+    "last_10": [
+      32.6,
+      31.5,
+      30.8,
+      43.3,
+      69.9
+    ]
   },
   {
     "name": "Hugo Duro",
@@ -22837,7 +25458,7 @@
     "yellow": 5,
     "red": 0,
     "mins_per_match": 55.0,
-    "titu_pct": 0,
+    "titu_pct": 100,
     "matchs_played": 10,
     "matchs_total": 10,
     "last_date": "2026-03-21",
@@ -22848,7 +25469,15 @@
     "aa_negative": -4.9,
     "final_third_passes_avg": 1.6,
     "aa_matches_analyzed": 5,
-    "archetype": "ATT Finisseur"
+    "archetype": "ATT Finisseur",
+    "reg10": 20.0,
+    "last_10": [
+      60.0,
+      35.9,
+      70.3,
+      34.2,
+      33.9
+    ]
   },
   {
     "name": "Eray Cömert",
@@ -22904,7 +25533,7 @@
     "yellow": 2,
     "red": 0,
     "mins_per_match": 77.0,
-    "titu_pct": 0,
+    "titu_pct": 90,
     "matchs_played": 9,
     "matchs_total": 10,
     "last_date": "2026-03-21",
@@ -22915,7 +25544,15 @@
     "aa_negative": -16.0,
     "final_third_passes_avg": 4.4,
     "aa_matches_analyzed": 5,
-    "archetype": "DEF Central"
+    "archetype": "DEF Central",
+    "reg10": 80.0,
+    "last_10": [
+      64.3,
+      72.3,
+      68.8,
+      79.1,
+      43.9
+    ]
   },
   {
     "name": "Dimitri Foulquier",
@@ -22969,11 +25606,17 @@
     "yellow": 1,
     "red": 0,
     "mins_per_match": 77.0,
-    "titu_pct": 0,
+    "titu_pct": 30,
     "matchs_played": 3,
     "matchs_total": 10,
     "last_date": "2026-02-01",
-    "archetype": "DEF Central"
+    "archetype": "DEF Central",
+    "reg10": 0.0,
+    "last_10": [
+      16.1,
+      33.8,
+      29.8
+    ]
   },
   {
     "name": "Filip Ugrinic",
@@ -23029,7 +25672,7 @@
     "yellow": 4,
     "red": 0,
     "mins_per_match": 54.0,
-    "titu_pct": 0,
+    "titu_pct": 90,
     "matchs_played": 9,
     "matchs_total": 10,
     "last_date": "2026-03-14",
@@ -23040,7 +25683,15 @@
     "aa_negative": -10.9,
     "final_third_passes_avg": 8.2,
     "aa_matches_analyzed": 4,
-    "archetype": "MIL Rotation"
+    "archetype": "MIL Rotation",
+    "reg10": 0.0,
+    "last_10": [
+      50.9,
+      47.5,
+      43.0,
+      35.6,
+      32.6
+    ]
   },
   {
     "name": "Stole Dimitrievski",
@@ -23096,7 +25747,7 @@
     "yellow": 0,
     "red": 0,
     "mins_per_match": 90.0,
-    "titu_pct": 0,
+    "titu_pct": 100,
     "matchs_played": 10,
     "matchs_total": 10,
     "last_date": "2026-03-21",
@@ -23107,7 +25758,15 @@
     "aa_negative": -10.5,
     "final_third_passes_avg": 1.0,
     "aa_matches_analyzed": 5,
-    "archetype": "GK"
+    "archetype": "GK",
+    "reg10": 40.0,
+    "last_10": [
+      69.4,
+      50.8,
+      38.4,
+      61.7,
+      37.9
+    ]
   },
   {
     "name": "César Tárrega",
@@ -23163,7 +25822,7 @@
     "yellow": 6,
     "red": 0,
     "mins_per_match": 78.0,
-    "titu_pct": 0,
+    "titu_pct": 50,
     "matchs_played": 5,
     "matchs_total": 10,
     "last_date": "2026-03-21",
@@ -23174,7 +25833,15 @@
     "aa_negative": -5.0,
     "final_third_passes_avg": 0.5,
     "aa_matches_analyzed": 2,
-    "archetype": "DEF Central"
+    "archetype": "DEF Central",
+    "reg10": 20.0,
+    "last_10": [
+      60.9,
+      35.5,
+      39.0,
+      32.0,
+      35.7
+    ]
   },
   {
     "name": "Pepelu",
@@ -23230,7 +25897,7 @@
     "yellow": 3,
     "red": 0,
     "mins_per_match": 74.0,
-    "titu_pct": 0,
+    "titu_pct": 60,
     "matchs_played": 6,
     "matchs_total": 10,
     "last_date": "2026-03-21",
@@ -23241,7 +25908,15 @@
     "aa_negative": 0.0,
     "final_third_passes_avg": 0.0,
     "aa_matches_analyzed": 1,
-    "archetype": "MIL Rotation"
+    "archetype": "MIL Rotation",
+    "reg10": 0.0,
+    "last_10": [
+      36.4,
+      36.7,
+      49.4,
+      30.3,
+      45.7
+    ]
   },
   {
     "name": "Renzo Saravia",
@@ -23297,7 +25972,7 @@
     "yellow": 2,
     "red": 0,
     "mins_per_match": 52.0,
-    "titu_pct": 0,
+    "titu_pct": 60,
     "matchs_played": 6,
     "matchs_total": 10,
     "last_date": "2025-12-07",
@@ -23308,7 +25983,15 @@
     "aa_negative": -11.2,
     "final_third_passes_avg": 26.0,
     "aa_matches_analyzed": 1,
-    "archetype": "DEF Latéral"
+    "archetype": "DEF Latéral",
+    "reg10": 20.0,
+    "last_10": [
+      61.5,
+      32.6,
+      48.4,
+      36.8,
+      34.1
+    ]
   },
   {
     "name": "Javi Guerra",
@@ -23364,7 +26047,7 @@
     "yellow": 3,
     "red": 0,
     "mins_per_match": 53.0,
-    "titu_pct": 0,
+    "titu_pct": 90,
     "matchs_played": 9,
     "matchs_total": 10,
     "last_date": "2026-03-21",
@@ -23375,7 +26058,15 @@
     "aa_negative": -16.3,
     "final_third_passes_avg": 12.8,
     "aa_matches_analyzed": 5,
-    "archetype": "MIL Créateur"
+    "archetype": "MIL Créateur",
+    "reg10": 20.0,
+    "last_10": [
+      45.8,
+      50.8,
+      62.8,
+      51.8,
+      53.8
+    ]
   },
   {
     "name": "Gayà",
@@ -23431,7 +26122,7 @@
     "yellow": 6,
     "red": 1,
     "mins_per_match": 76.0,
-    "titu_pct": 0,
+    "titu_pct": 90,
     "matchs_played": 9,
     "matchs_total": 10,
     "last_date": "2026-03-21",
@@ -23442,7 +26133,15 @@
     "aa_negative": -19.1,
     "final_third_passes_avg": 7.4,
     "aa_matches_analyzed": 5,
-    "archetype": "DEF Latéral"
+    "archetype": "DEF Latéral",
+    "reg10": 0.0,
+    "last_10": [
+      25.8,
+      42.5,
+      56.8,
+      58.9,
+      49.9
+    ]
   },
   {
     "name": "L. Rioja",
@@ -23498,7 +26197,7 @@
     "yellow": 1,
     "red": 0,
     "mins_per_match": 70.0,
-    "titu_pct": 0,
+    "titu_pct": 100,
     "matchs_played": 10,
     "matchs_total": 10,
     "last_date": "2026-03-21",
@@ -23509,7 +26208,15 @@
     "aa_negative": -3.9,
     "final_third_passes_avg": 6.8,
     "aa_matches_analyzed": 5,
-    "archetype": "ATT Complet"
+    "archetype": "ATT Complet",
+    "reg10": 20.0,
+    "last_10": [
+      64.7,
+      43.2,
+      48.1,
+      39.1,
+      41.6
+    ]
   },
   {
     "name": "Thierry Correia",
@@ -23565,7 +26272,7 @@
     "yellow": 0,
     "red": 0,
     "mins_per_match": 0.0,
-    "titu_pct": 0,
+    "titu_pct": 50,
     "matchs_played": 5,
     "matchs_total": 10,
     "last_date": "2026-03-14",
@@ -23576,7 +26283,15 @@
     "aa_negative": -23.0,
     "final_third_passes_avg": 11.0,
     "aa_matches_analyzed": 4,
-    "archetype": "DEF Latéral"
+    "archetype": "DEF Latéral",
+    "reg10": 0.0,
+    "last_10": [
+      49.2,
+      48.9,
+      47.9,
+      34.1,
+      37.3
+    ]
   },
   {
     "name": "Santiago Mouriño",
@@ -23632,7 +26347,7 @@
     "yellow": 8,
     "red": 1,
     "mins_per_match": 85.0,
-    "titu_pct": 0,
+    "titu_pct": 90,
     "matchs_played": 9,
     "matchs_total": 10,
     "last_date": "2026-03-20",
@@ -23643,7 +26358,15 @@
     "aa_negative": -29.4,
     "final_third_passes_avg": 6.2,
     "aa_matches_analyzed": 5,
-    "archetype": "DEF Latéral"
+    "archetype": "DEF Latéral",
+    "reg10": 20.0,
+    "last_10": [
+      57.9,
+      48.1,
+      63.0,
+      60.0,
+      48.1
+    ]
   },
   {
     "name": "Alfon González",
@@ -23698,7 +26421,7 @@
     "yellow": 0,
     "red": 0,
     "mins_per_match": 26.0,
-    "titu_pct": 0,
+    "titu_pct": 40,
     "matchs_played": 4,
     "matchs_total": 10,
     "last_date": "2026-03-20",
@@ -23709,7 +26432,14 @@
     "aa_negative": -1.9,
     "final_third_passes_avg": 0.2,
     "aa_matches_analyzed": 4,
-    "archetype": "ATT Finisseur"
+    "archetype": "ATT Finisseur",
+    "reg10": 0.0,
+    "last_10": [
+      37.2,
+      34.9,
+      34.0,
+      30.3
+    ]
   },
   {
     "name": "Gerard Moreno",
@@ -23764,7 +26494,7 @@
     "yellow": 0,
     "red": 0,
     "mins_per_match": 57.0,
-    "titu_pct": 0,
+    "titu_pct": 40,
     "matchs_played": 4,
     "matchs_total": 10,
     "last_date": "2026-03-20",
@@ -23775,7 +26505,14 @@
     "aa_negative": -5.5,
     "final_third_passes_avg": 2.7,
     "aa_matches_analyzed": 3,
-    "archetype": "ATT Finisseur"
+    "archetype": "ATT Finisseur",
+    "reg10": 50.0,
+    "last_10": [
+      69.0,
+      33.2,
+      33.5,
+      80.1
+    ]
   },
   {
     "name": "Pape Gueye",
@@ -23831,7 +26568,7 @@
     "yellow": 7,
     "red": 0,
     "mins_per_match": 69.0,
-    "titu_pct": 0,
+    "titu_pct": 100,
     "matchs_played": 10,
     "matchs_total": 10,
     "last_date": "2026-03-20",
@@ -23842,7 +26579,15 @@
     "aa_negative": -16.0,
     "final_third_passes_avg": 7.2,
     "aa_matches_analyzed": 5,
-    "archetype": "MIL GOAT"
+    "archetype": "MIL GOAT",
+    "reg10": 60.0,
+    "last_10": [
+      63.5,
+      40.6,
+      85.6,
+      58.1,
+      86.1
+    ]
   },
   {
     "name": "Alex Freeman",
@@ -23898,7 +26643,7 @@
     "yellow": 4,
     "red": 0,
     "mins_per_match": 76.0,
-    "titu_pct": 0,
+    "titu_pct": 50,
     "matchs_played": 5,
     "matchs_total": 10,
     "last_date": "2026-03-13",
@@ -23909,7 +26654,15 @@
     "aa_negative": -4.8,
     "final_third_passes_avg": 3.0,
     "aa_matches_analyzed": 1,
-    "archetype": "DEF Latéral"
+    "archetype": "DEF Latéral",
+    "reg10": 20.0,
+    "last_10": [
+      37.1,
+      30.5,
+      32.7,
+      32.5,
+      86.3
+    ]
   },
   {
     "name": "Thomas Partey",
@@ -23965,7 +26718,7 @@
     "yellow": 0,
     "red": 0,
     "mins_per_match": 39.0,
-    "titu_pct": 0,
+    "titu_pct": 60,
     "matchs_played": 6,
     "matchs_total": 10,
     "last_date": "2026-03-20",
@@ -23976,7 +26729,15 @@
     "aa_negative": -2.8,
     "final_third_passes_avg": 2.5,
     "aa_matches_analyzed": 4,
-    "archetype": "MIL Rotation"
+    "archetype": "MIL Rotation",
+    "reg10": 0.0,
+    "last_10": [
+      36.2,
+      38.3,
+      34.5,
+      41.1,
+      38.3
+    ]
   },
   {
     "name": "Alberto Moleiro",
@@ -24032,7 +26793,7 @@
     "yellow": 3,
     "red": 0,
     "mins_per_match": 68.0,
-    "titu_pct": 0,
+    "titu_pct": 80,
     "matchs_played": 8,
     "matchs_total": 10,
     "last_date": "2026-03-20",
@@ -24043,7 +26804,15 @@
     "aa_negative": -15.3,
     "final_third_passes_avg": 7.8,
     "aa_matches_analyzed": 5,
-    "archetype": "MIL Rotation"
+    "archetype": "MIL Rotation",
+    "reg10": 0.0,
+    "last_10": [
+      34.2,
+      40.7,
+      40.0,
+      30.7,
+      42.1
+    ]
   },
   {
     "name": "Santi Comesaña",
@@ -24099,7 +26868,7 @@
     "yellow": 4,
     "red": 1,
     "mins_per_match": 70.0,
-    "titu_pct": 0,
+    "titu_pct": 100,
     "matchs_played": 10,
     "matchs_total": 10,
     "last_date": "2026-03-20",
@@ -24110,7 +26879,15 @@
     "aa_negative": -17.1,
     "final_third_passes_avg": 9.6,
     "aa_matches_analyzed": 5,
-    "archetype": "MIL Créateur"
+    "archetype": "MIL Créateur",
+    "reg10": 80.0,
+    "last_10": [
+      69.9,
+      71.4,
+      63.1,
+      60.0,
+      74.1
+    ]
   },
   {
     "name": "Rafa Marín",
@@ -24166,7 +26943,7 @@
     "yellow": 1,
     "red": 0,
     "mins_per_match": 88.0,
-    "titu_pct": 0,
+    "titu_pct": 50,
     "matchs_played": 5,
     "matchs_total": 10,
     "last_date": "2026-03-13",
@@ -24177,7 +26954,15 @@
     "aa_negative": -17.0,
     "final_third_passes_avg": 9.0,
     "aa_matches_analyzed": 2,
-    "archetype": "DEF Latéral"
+    "archetype": "DEF Latéral",
+    "reg10": 20.0,
+    "last_10": [
+      25.3,
+      50.7,
+      62.3,
+      31.8,
+      28.6
+    ]
   },
   {
     "name": "Georges Mikautadze",
@@ -24233,7 +27018,7 @@
     "yellow": 1,
     "red": 0,
     "mins_per_match": 69.0,
-    "titu_pct": 0,
+    "titu_pct": 100,
     "matchs_played": 10,
     "matchs_total": 10,
     "last_date": "2026-03-20",
@@ -24244,7 +27029,15 @@
     "aa_negative": -11.8,
     "final_third_passes_avg": 5.6,
     "aa_matches_analyzed": 5,
-    "archetype": "ATT Dribbleur"
+    "archetype": "ATT Dribbleur",
+    "reg10": 20.0,
+    "last_10": [
+      70.0,
+      48.0,
+      39.0,
+      50.7,
+      31.0
+    ]
   },
   {
     "name": "Alfonso Pedraza",
@@ -24300,7 +27093,7 @@
     "yellow": 6,
     "red": 0,
     "mins_per_match": 59.0,
-    "titu_pct": 0,
+    "titu_pct": 70,
     "matchs_played": 7,
     "matchs_total": 10,
     "last_date": "2026-03-20",
@@ -24311,7 +27104,15 @@
     "aa_negative": -15.1,
     "final_third_passes_avg": 2.5,
     "aa_matches_analyzed": 4,
-    "archetype": "DEF Central"
+    "archetype": "DEF Central",
+    "reg10": 0.0,
+    "last_10": [
+      53.9,
+      44.6,
+      19.3,
+      40.6,
+      36.4
+    ]
   },
   {
     "name": "Hugo López",
@@ -24365,11 +27166,17 @@
     "yellow": 3,
     "red": 0,
     "mins_per_match": 42.0,
-    "titu_pct": 0,
+    "titu_pct": 30,
     "matchs_played": 3,
     "matchs_total": 10,
     "last_date": "2026-02-14",
-    "archetype": "ATT Rotation"
+    "archetype": "ATT Rotation",
+    "reg10": 0.0,
+    "last_10": [
+      34.9,
+      33.9,
+      39.6
+    ]
   },
   {
     "name": "Pau Navarro",
@@ -24425,7 +27232,7 @@
     "yellow": 3,
     "red": 0,
     "mins_per_match": 85.0,
-    "titu_pct": 0,
+    "titu_pct": 90,
     "matchs_played": 9,
     "matchs_total": 10,
     "last_date": "2026-03-20",
@@ -24436,7 +27243,15 @@
     "aa_negative": -12.9,
     "final_third_passes_avg": 1.2,
     "aa_matches_analyzed": 5,
-    "archetype": "DEF Central"
+    "archetype": "DEF Central",
+    "reg10": 60.0,
+    "last_10": [
+      62.2,
+      82.2,
+      80.9,
+      40.3,
+      51.2
+    ]
   },
   {
     "name": "Sergi Cardona",
@@ -24492,7 +27307,7 @@
     "yellow": 4,
     "red": 0,
     "mins_per_match": 67.0,
-    "titu_pct": 0,
+    "titu_pct": 80,
     "matchs_played": 8,
     "matchs_total": 10,
     "last_date": "2026-03-13",
@@ -24503,7 +27318,15 @@
     "aa_negative": -23.7,
     "final_third_passes_avg": 4.0,
     "aa_matches_analyzed": 4,
-    "archetype": "DEF Central"
+    "archetype": "DEF Central",
+    "reg10": 20.0,
+    "last_10": [
+      39.6,
+      36.6,
+      31.7,
+      39.7,
+      74.6
+    ]
   },
   {
     "name": "Renato Veiga",
@@ -24559,7 +27382,7 @@
     "yellow": 3,
     "red": 1,
     "mins_per_match": 74.0,
-    "titu_pct": 0,
+    "titu_pct": 90,
     "matchs_played": 9,
     "matchs_total": 10,
     "last_date": "2026-03-20",
@@ -24570,7 +27393,15 @@
     "aa_negative": -7.0,
     "final_third_passes_avg": 1.8,
     "aa_matches_analyzed": 4,
-    "archetype": "MIL Rotation"
+    "archetype": "MIL Rotation",
+    "reg10": 0.0,
+    "last_10": [
+      45.2,
+      38.3,
+      28.6,
+      40.0,
+      38.8
+    ]
   },
   {
     "name": "Nicolas Pépé",
@@ -24626,7 +27457,7 @@
     "yellow": 3,
     "red": 0,
     "mins_per_match": 67.0,
-    "titu_pct": 0,
+    "titu_pct": 100,
     "matchs_played": 10,
     "matchs_total": 10,
     "last_date": "2026-03-20",
@@ -24637,7 +27468,15 @@
     "aa_negative": -7.5,
     "final_third_passes_avg": 9.4,
     "aa_matches_analyzed": 5,
-    "archetype": "ATT Dribbleur"
+    "archetype": "ATT Dribbleur",
+    "reg10": 40.0,
+    "last_10": [
+      78.1,
+      80.7,
+      51.6,
+      47.9,
+      39.3
+    ]
   },
   {
     "name": "Luíz Júnior",
@@ -24693,7 +27532,7 @@
     "yellow": 3,
     "red": 0,
     "mins_per_match": 90.0,
-    "titu_pct": 0,
+    "titu_pct": 90,
     "matchs_played": 9,
     "matchs_total": 10,
     "last_date": "2026-03-20",
@@ -24704,7 +27543,15 @@
     "aa_negative": -12.3,
     "final_third_passes_avg": 0.4,
     "aa_matches_analyzed": 5,
-    "archetype": "GK"
+    "archetype": "GK",
+    "reg10": 0.0,
+    "last_10": [
+      17.9,
+      33.9,
+      55.5,
+      30.9,
+      18.5
+    ]
   },
   {
     "name": "Dani Parejo",
@@ -24760,7 +27607,7 @@
     "yellow": 2,
     "red": 0,
     "mins_per_match": 44.0,
-    "titu_pct": 0,
+    "titu_pct": 80,
     "matchs_played": 8,
     "matchs_total": 10,
     "last_date": "2026-03-20",
@@ -24771,7 +27618,15 @@
     "aa_negative": -3.1,
     "final_third_passes_avg": 0.5,
     "aa_matches_analyzed": 4,
-    "archetype": "MIL Rotation"
+    "archetype": "MIL Rotation",
+    "reg10": 0.0,
+    "last_10": [
+      34.0,
+      35.0,
+      32.3,
+      40.0,
+      40.1
+    ]
   },
   {
     "name": "Tajon Buchanan",
@@ -24827,7 +27682,7 @@
     "yellow": 7,
     "red": 0,
     "mins_per_match": 56.0,
-    "titu_pct": 0,
+    "titu_pct": 90,
     "matchs_played": 9,
     "matchs_total": 10,
     "last_date": "2026-03-20",
@@ -24838,6 +27693,14 @@
     "aa_negative": -7.0,
     "final_third_passes_avg": 1.6,
     "aa_matches_analyzed": 5,
-    "archetype": "MIL Rotation"
+    "archetype": "MIL Rotation",
+    "reg10": 20.0,
+    "last_10": [
+      31.5,
+      31.8,
+      72.3,
+      30.5,
+      35.4
+    ]
   }
 ]

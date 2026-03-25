@@ -62,12 +62,13 @@ function MiniHistogram({ scores }) {
 }
 
 function Stars({ n }) {
+  const isFive = n >= 5;
   return (
-    <div style={{ display: "flex", gap: "2px", justifyContent: "center" }}>
+    <div style={{ display: "flex", gap: "2px", justifyContent: "center", animation: isFive ? "starPulse 2s ease-in-out infinite" : "none", filter: isFive ? "drop-shadow(0 0 4px #FBBF24)" : "none" }}>
       {Array.from({ length: 5 }, (_, i) => (
         <svg key={i} width="11" height="11" viewBox="0 0 24 24">
           <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"
-            fill={i < n ? "#FBBF24" : "rgba(255,255,255,0.08)"} stroke={i < n ? "#F59E0B" : "none"} strokeWidth="0.5" />
+            fill={i < n ? (isFive ? "#FFD700" : "#FBBF24") : "rgba(255,255,255,0.08)"} stroke={i < n ? (isFive ? "#FFA500" : "#F59E0B") : "none"} strokeWidth="0.5" />
         </svg>
       ))}
     </div>
@@ -76,7 +77,7 @@ function Stars({ n }) {
 
 function PlayerCard({ player, isSelected, onClick }) {
   const pc = PC[player.position];
-  const conf = player.regularite >= 90 ? 5 : player.regularite >= 70 ? 4 : player.regularite >= 50 ? 3 : 2;
+  const conf = player.ds >= 75 ? 5 : player.ds >= 60 ? 4 : player.ds >= 50 ? 3 : player.ds >= 40 ? 2 : player.ds >= 30 ? 1 : 0;
   return (
     <div onClick={onClick} style={{ textAlign: "center", cursor: "pointer", width: "96px" }}>
       <div style={{
@@ -260,6 +261,10 @@ export default function RecoTab({ players, teams }) {
 
   return (
     <div style={{ padding: "0 10px 40px", maxWidth: 480, margin: "0 auto" }}>
+      <style>{`
+        @keyframes starPulse { 0%,100%{opacity:1;filter:drop-shadow(0 0 4px #FBBF24)} 50%{opacity:0.7;filter:drop-shadow(0 0 8px #FFD700)} }
+        @keyframes silverShine { 0%{background-position:200% center} 100%{background-position:-200% center} }
+      `}</style>
       {/* League tabs */}
       <div style={{ display: "flex", gap: "4px", marginBottom: "14px" }}>
         {Object.entries(LG_META).map(([k, v]) => (

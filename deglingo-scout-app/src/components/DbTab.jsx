@@ -3,12 +3,23 @@ import { dsColor, dsBg, POSITION_COLORS, LEAGUE_COLORS, LEAGUE_FLAGS, getArchety
 import { dScoreMatch } from "../utils/dscore";
 import PlayerCard from "./PlayerCard";
 
+// ISO 2/3 letter country code → flag emoji
+const ISO3_TO_2 = {arg:"ar",bra:"br",bel:"be",can:"ca",che:"ch",cmr:"cm",civ:"ci",col:"co",cri:"cr",cze:"cz",deu:"de",dnk:"dk",esp:"es",fra:"fr",gbr:"gb",gha:"gh",gin:"gn",gre:"gr",hrv:"hr",hun:"hu",isl:"is",isr:"il",ita:"it",jpn:"jp",kor:"kr",mar:"ma",mex:"mx",nga:"ng",nld:"nl",nor:"no",per:"pe",pol:"pl",prt:"pt",rou:"ro",sen:"sn",srb:"rs",sui:"ch",svk:"sk",svn:"si",swe:"se",tun:"tn",tur:"tr",ukr:"ua",uru:"uy",usa:"us",ven:"ve",zaf:"za",ago:"ao",bfa:"bf",bdi:"bi",ben:"bj",caf:"cf",cod:"cd",cpv:"cv",ecu:"ec",geo:"ge",gnb:"gw",guy:"gy",jam:"jm",kos:"xk",mli:"ml",mne:"me",moz:"mz",mrt:"mr",mda:"md",mkd:"mk",pan:"pa",par:"py",prk:"kp",rwa:"rw",tgo:"tg",uzb:"uz",zmb:"zm",zwe:"zw"};
+function countryFlag(code) {
+  if (!code) return "";
+  const c = code.toLowerCase();
+  const iso2 = c.length === 3 ? (ISO3_TO_2[c] || c.slice(0, 2)) : c;
+  if (iso2.length !== 2) return "";
+  return String.fromCodePoint(...[...iso2.toUpperCase()].map(c => c.charCodeAt(0) + 127397));
+}
+
 export default function DbTab({ players, teams, fixtures }) {
   const [search, setSearch] = useState("");
   const [league, setLeague] = useState("ALL");
   const [pos, setPos] = useState("ALL");
   const [arch, setArch] = useState("ALL");
-  const [sortKey, setSortKey] = useState("l5");
+  const [minL10, setMinL10] = useState(-1);
+  const [sortKey, setSortKey] = useState(fixtures?.player_fixtures ? "dsMatch" : "l2");
   const [sortDir, setSortDir] = useState(-1);
   const [selectedPlayer, setSelectedPlayer] = useState(null);
 
@@ -17,7 +28,6 @@ export default function DbTab({ players, teams, fixtures }) {
     return [...set].sort();
   }, [players]);
 
-  // Enrich players with fixture D-Score
   const enriched = useMemo(() => {
     const pf = fixtures?.player_fixtures || {};
     return players.map(p => {
@@ -34,6 +44,8 @@ export default function DbTab({ players, teams, fixtures }) {
     if (league !== "ALL") list = list.filter(p => p.league === league);
     if (pos !== "ALL") list = list.filter(p => p.position === pos);
     if (arch !== "ALL") list = list.filter(p => p.archetype === arch);
+    if (minL10 === 0) list = list.filter(p => !p.l10 || p.l10 === 0);
+    else if (minL10 > 0) list = list.filter(p => (p.l10 || 0) < minL10);
     if (search) {
       const q = search.toLowerCase();
       list = list.filter(p => p.name.toLowerCase().includes(q) || p.club.toLowerCase().includes(q));
@@ -43,7 +55,7 @@ export default function DbTab({ players, teams, fixtures }) {
       return (va - vb) * sortDir;
     });
     return list;
-  }, [enriched, league, pos, arch, search, sortKey, sortDir]);
+  }, [enriched, league, pos, arch, minL10, search, sortKey, sortDir]);
 
   const toggleSort = (key) => {
     if (sortKey === key) setSortDir(d => -d);
@@ -60,15 +72,27 @@ export default function DbTab({ players, teams, fixtures }) {
   });
 
   const thStyle = (key) => ({
-    padding: "8px 4px", fontSize: 9, color: sortKey === key ? "#A5B4FC" : "rgba(255,255,255,0.4)",
+    padding: "8px 3px", fontSize: 9, color: sortKey === key ? "#A5B4FC" : "rgba(255,255,255,0.4)",
     cursor: "pointer", textAlign: "center", fontWeight: 600, whiteSpace: "nowrap",
     userSelect: "none", borderBottom: "1px solid rgba(255,255,255,0.06)",
   });
 
-  const arrow = (key) => sortKey === key ? (sortDir === -1 ? " ↓" : " ↑") : "";
+  const arrow = (key) => sortKey === key ? (sortDir === -1 ? "↓" : "↑") : "";
+
+  const R = v => v != null ? Math.round(v) : "—";
+
+  // L2 color: same as dsColor (1-100 scale), except explosion = handled by glow badge
+  const l2Color = (p) => {
+    if (!p.l2) return "rgba(255,255,255,0.5)";
+    return dsColor(p.l2);
+  };
 
   return (
     <div style={{ padding: "0 16px 20px" }}>
+      <style>{`
+        @keyframes explosionPulse { 0%,100%{box-shadow:0 0 8px #4ADE80,0 0 20px #4ADE8088,0 0 40px #22C55E44} 50%{box-shadow:0 0 12px #4ADE80,0 0 28px #4ADE80AA,0 0 50px #22C55E66} }
+        @keyframes legendShimmer { 0%{background-position:-200% center} 100%{background-position:200% center} }
+      `}</style>
       {/* Filters */}
       <div style={{ display: "flex", flexWrap: "wrap", gap: 8, marginBottom: 12, alignItems: "center" }}>
         <input
@@ -92,20 +116,46 @@ export default function DbTab({ players, teams, fixtures }) {
           <option value="ALL">Tous archétypes</option>
           {archetypes.map(a => <option key={a} value={a}>{a}</option>)}
         </select>
+        <select value={minL10} onChange={e => setMinL10(Number(e.target.value))} style={sel({})}>
+          <option value={-1}>L10 tous</option>
+          <option value={0}>L10 = 0 (CAP 260)</option>
+          {[30, 40, 50, 55, 60, 65, 70].map(v => (
+            <option key={v} value={v}>L10 &lt; {v}</option>
+          ))}
+        </select>
       </div>
 
-      {/* Info bar */}
-      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 8 }}>
-        <div style={{ fontSize: 11, color: "rgba(255,255,255,0.3)" }}>
-          {filtered.length} joueur{filtered.length > 1 ? "s" : ""}
-        </div>
-        {hasFixtures && (
-          <div style={{ fontSize: 9, color: "rgba(99,102,241,0.6)", display: "flex", gap: 8 }}>
-            {Object.entries(matchdays).map(([lg, md]) => (
-              <span key={lg}>{LEAGUE_FLAGS[lg]} J{md}</span>
-            ))}
+      {/* D-Score legend */}
+      <div style={{ marginBottom: 10, padding: "10px 14px", background: "linear-gradient(135deg, rgba(99,102,241,0.06), rgba(192,132,252,0.04))", border: "1px solid rgba(99,102,241,0.1)", borderRadius: 10 }}>
+        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 6 }}>
+          <div style={{ fontSize: 10, fontWeight: 700, letterSpacing: "0.05em", background: "linear-gradient(90deg, #A5B4FC 0%, #C084FC 25%, #E879F9 50%, #C084FC 75%, #A5B4FC 100%)", backgroundSize: "200% auto", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent", animation: "legendShimmer 4s linear infinite" }}>
+            ⚡ D-SCORE — L'algo magique qui t'aide à choisir tes meilleurs joueurs pour ta prochaine Streak & GW Sorare ✨
           </div>
-        )}
+          {hasFixtures && (
+            <div style={{ fontSize: 9, color: "rgba(99,102,241,0.6)", display: "flex", gap: 8 }}>
+              {Object.entries(matchdays).map(([lg, md]) => (
+                <span key={lg}>{LEAGUE_FLAGS[lg]} J{md}</span>
+              ))}
+            </div>
+          )}
+        </div>
+        <div style={{ fontSize: 9, color: "rgba(255,255,255,0.4)", lineHeight: 1.5 }}>
+          Socle (forme L5 + AA + floor + régularité) <span style={{ color: "rgba(255,255,255,0.15)" }}>×</span> Contexte (adversaire, PPDA, xGA, style de jeu) <span style={{ color: "rgba(255,255,255,0.15)" }}>×</span> Momentum (tendance L2, séries) <span style={{ color: "rgba(255,255,255,0.15)" }}>×</span> Dom/Ext
+        </div>
+        <div style={{ display: "flex", gap: 14, marginTop: 6, alignItems: "center", fontSize: 9, color: "rgba(255,255,255,0.35)" }}>
+          <span>{filtered.length} joueurs</span>
+          <span style={{ display: "inline-flex", alignItems: "center", gap: 3 }}>
+            <span style={{ display: "inline-block", width: 10, height: 10, borderRadius: 3, background: "linear-gradient(135deg,#4ADE80,#22C55E)", boxShadow: "0 0 6px #4ADE80" }} />
+            L2 en explosion (+15 vs L5)
+          </span>
+          <span>🏠 Dom · ✈️ Ext</span>
+          <span style={{ display: "inline-flex", gap: 4, alignItems: "center" }}>
+            <span style={{ color: "#EF4444" }}>●</span><span>0-39</span>
+            <span style={{ color: "#FBBF24" }}>●</span><span>40-59</span>
+            <span style={{ color: "#A3E635" }}>●</span><span>60-74</span>
+            <span style={{ color: "#4ADE80" }}>●</span><span>75+</span>
+          </span>
+        </div>
       </div>
 
       {/* Table */}
@@ -116,93 +166,113 @@ export default function DbTab({ players, teams, fixtures }) {
               <th style={{ ...thStyle("name"), textAlign: "left", paddingLeft: 12, cursor: "default" }}>Joueur</th>
               <th style={{ ...thStyle("position"), cursor: "default" }}>Pos</th>
               <th style={{ ...thStyle("league"), cursor: "default" }}>Ligue</th>
-              <th style={thStyle("l5")} onClick={() => toggleSort("l5")}>L5{arrow("l5")}</th>
+              <th style={{ ...thStyle("l2"), background: sortKey === "l2" ? "rgba(74,222,128,0.06)" : "transparent" }} onClick={() => toggleSort("l2")}>L2{arrow("l2")}</th>
+              <th style={thStyle("aa2")} onClick={() => toggleSort("aa2")}>AA2{arrow("aa2")}</th>
+              <th style={{ ...thStyle("l5"), borderLeft: "1px solid rgba(255,255,255,0.06)" }} onClick={() => toggleSort("l5")}>L5{arrow("l5")}</th>
               <th style={thStyle("aa5")} onClick={() => toggleSort("aa5")}>AA5{arrow("aa5")}</th>
-              <th style={thStyle("floor")} onClick={() => toggleSort("floor")}>Floor{arrow("floor")}</th>
-              <th style={thStyle("ceiling")} onClick={() => toggleSort("ceiling")}>Ceil{arrow("ceiling")}</th>
-              <th style={thStyle("regularite")} onClick={() => toggleSort("regularite")}>Rég%{arrow("regularite")}</th>
+              <th style={{ ...thStyle("l10"), borderLeft: "1px solid rgba(255,255,255,0.06)" }} onClick={() => toggleSort("l10")}>L10{arrow("l10")}</th>
+              <th style={thStyle("aa10")} onClick={() => toggleSort("aa10")}>AA10{arrow("aa10")}</th>
+              <th style={{ ...thStyle("min_15"), borderLeft: "1px solid rgba(255,255,255,0.06)" }} onClick={() => toggleSort("min_15")}>Min{arrow("min_15")}</th>
+              <th style={thStyle("max_15")} onClick={() => toggleSort("max_15")}>Max{arrow("max_15")}</th>
+              <th style={{ ...thStyle("regularite"), borderLeft: "1px solid rgba(255,255,255,0.06)" }} onClick={() => toggleSort("regularite")}>Rég%{arrow("regularite")}</th>
               <th style={thStyle("ds_rate")} onClick={() => toggleSort("ds_rate")}>DS%{arrow("ds_rate")}</th>
-              <th style={thStyle("ga_per_match")} onClick={() => toggleSort("ga_per_match")}>G+A{arrow("ga_per_match")}</th>
               {hasFixtures && <>
                 <th style={thStyle("dsMatch")} onClick={() => toggleSort("dsMatch")}>
                   <span style={{ color: sortKey === "dsMatch" ? "#C084FC" : "#C084FC80" }}>D-Score{arrow("dsMatch")}</span>
                 </th>
-                <th style={{ ...thStyle("oppName"), cursor: "default" }}>Adversaire</th>
+                <th style={{ ...thStyle("oppName"), cursor: "default" }}>Adv.</th>
               </>}
               <th style={{ ...thStyle("archetype"), cursor: "default" }}>Archétype</th>
             </tr>
           </thead>
           <tbody>
-            {filtered.slice(0, 100).map((p, i) => (
-              <tr
-                key={`${p.name}-${p.club}-${i}`}
-                onClick={() => setSelectedPlayer(p)}
-                style={{
-                  cursor: "pointer", borderBottom: "1px solid rgba(255,255,255,0.03)",
-                  background: i % 2 === 0 ? "transparent" : "rgba(255,255,255,0.01)",
-                  transition: "background 0.15s",
-                }}
-                onMouseEnter={e => e.currentTarget.style.background = "rgba(99,102,241,0.08)"}
-                onMouseLeave={e => e.currentTarget.style.background = i % 2 === 0 ? "transparent" : "rgba(255,255,255,0.01)"}
-              >
-                <td style={{ padding: "8px 4px 8px 12px" }}>
-                  <div style={{ fontWeight: 600, color: "#fff", fontSize: 12 }}>{p.name}</div>
-                  <div style={{ fontSize: 9, color: "rgba(255,255,255,0.3)", marginTop: 1 }}>{p.club}</div>
-                </td>
-                <td style={{ textAlign: "center" }}>
-                  <span style={{
-                    padding: "2px 6px", borderRadius: 12, fontSize: 9, fontWeight: 600,
-                    background: `${POSITION_COLORS[p.position]}18`, color: POSITION_COLORS[p.position],
-                  }}>{p.position}</span>
-                </td>
-                <td style={{ textAlign: "center" }}>
-                  <span style={{
-                    padding: "2px 6px", borderRadius: 12, fontSize: 9,
-                    background: `${LEAGUE_COLORS[p.league]}18`, color: LEAGUE_COLORS[p.league],
-                  }}>{LEAGUE_FLAGS[p.league]} {p.league}</span>
-                </td>
-                <td style={{ textAlign: "center", fontFamily: "DM Mono", fontWeight: 700, fontSize: 12, color: dsColor(p.l5) }}>{p.l5}</td>
-                <td style={{ textAlign: "center", fontFamily: "DM Mono", fontSize: 11, color: p.aa5 >= 20 ? "#A5B4FC" : "rgba(255,255,255,0.5)" }}>{p.aa5}</td>
-                <td style={{ textAlign: "center", fontFamily: "DM Mono", fontSize: 11, color: dsColor(p.floor) }}>{p.floor}</td>
-                <td style={{ textAlign: "center", fontFamily: "DM Mono", fontSize: 11, color: dsColor(p.ceiling) }}>{p.ceiling}</td>
-                <td style={{ textAlign: "center", fontFamily: "DM Mono", fontSize: 11, color: p.regularite >= 80 ? "#4ADE80" : p.regularite >= 50 ? "#FBBF24" : "#EF4444" }}>{p.regularite}%</td>
-                <td style={{ textAlign: "center", fontFamily: "DM Mono", fontSize: 11, color: p.ds_rate >= 50 ? "#4ADE80" : p.ds_rate >= 30 ? "#FBBF24" : "rgba(255,255,255,0.4)" }}>{p.ds_rate}%</td>
-                <td style={{ textAlign: "center", fontFamily: "DM Mono", fontSize: 11, color: p.ga_per_match >= 0.5 ? "#4ADE80" : p.ga_per_match >= 0.2 ? "#FBBF24" : "rgba(255,255,255,0.4)" }}>{(p.ga_per_match || 0).toFixed(2)}</td>
-                {hasFixtures && <>
+            {filtered.slice(0, 100).map((p, i) => {
+              const l2Diff = (p.l2 || 0) - (p.l5 || 0);
+              const isExplosion = l2Diff >= 15;
+              return (
+                <tr
+                  key={`${p.name}-${p.club}-${i}`}
+                  onClick={() => setSelectedPlayer(p)}
+                  style={{
+                    cursor: "pointer", borderBottom: "1px solid rgba(255,255,255,0.03)",
+                    background: isExplosion ? "rgba(74,222,128,0.03)" : i % 2 === 0 ? "transparent" : "rgba(255,255,255,0.01)",
+                    transition: "background 0.15s",
+                  }}
+                  onMouseEnter={e => e.currentTarget.style.background = "rgba(99,102,241,0.08)"}
+                  onMouseLeave={e => e.currentTarget.style.background = isExplosion ? "rgba(74,222,128,0.03)" : i % 2 === 0 ? "transparent" : "rgba(255,255,255,0.01)"}
+                >
+                  <td style={{ padding: "8px 4px 8px 12px" }}>
+                    <div style={{ fontWeight: 600, color: "#fff", fontSize: 12 }}>{countryFlag(p.country)} {p.name}</div>
+                    <div style={{ fontSize: 9, color: "rgba(255,255,255,0.3)", marginTop: 1 }}>{p.club}</div>
+                  </td>
                   <td style={{ textAlign: "center" }}>
-                    {p.dsMatch !== null ? (
-                      <span style={{
-                        display: "inline-block", padding: "3px 8px", borderRadius: 8,
-                        fontFamily: "DM Mono", fontSize: 12, fontWeight: 700,
-                        color: "#fff", background: dsBg(p.dsMatch),
-                        boxShadow: `0 0 8px ${dsColor(p.dsMatch)}30`,
-                      }}>{p.dsMatch}</span>
-                    ) : (
-                      <span style={{ fontSize: 9, color: "rgba(255,255,255,0.15)" }}>—</span>
-                    )}
+                    <span style={{
+                      padding: "2px 6px", borderRadius: 12, fontSize: 9, fontWeight: 600,
+                      background: `${POSITION_COLORS[p.position]}18`, color: POSITION_COLORS[p.position],
+                    }}>{p.position}</span>
                   </td>
-                  <td style={{ textAlign: "center", fontSize: 9 }}>
-                    {p.oppName ? (
-                      <div>
-                        <span style={{ color: p.isHome ? "#4ADE80" : "#F87171", fontWeight: 600 }}>
-                          {p.isHome ? "🏠" : "✈️"}
-                        </span>
-                        <span style={{ color: "rgba(255,255,255,0.5)", marginLeft: 3 }}>{p.oppName}</span>
-                      </div>
-                    ) : (
-                      <span style={{ color: "rgba(255,255,255,0.15)" }}>—</span>
-                    )}
+                  <td style={{ textAlign: "center" }}>
+                    <span style={{
+                      padding: "2px 6px", borderRadius: 12, fontSize: 9,
+                      background: `${LEAGUE_COLORS[p.league]}18`, color: LEAGUE_COLORS[p.league],
+                    }}>{LEAGUE_FLAGS[p.league]}</span>
                   </td>
-                </>}
-                <td style={{ textAlign: "center" }}>
-                  <span style={{
-                    padding: "2px 6px", borderRadius: 12, fontSize: 9,
-                    background: `${getArchetypeColor(p.archetype)}18`,
-                    color: getArchetypeColor(p.archetype),
-                  }}>{p.archetype}</span>
-                </td>
-              </tr>
-            ))}
+                  <td style={{ textAlign: "center" }}>
+                    <span style={{
+                      fontFamily: "DM Mono", fontWeight: 700, fontSize: 14, color: isExplosion ? "#fff" : l2Color(p),
+                      ...(isExplosion ? {
+                        display: "inline-block", padding: "2px 6px", borderRadius: 6,
+                        background: "linear-gradient(135deg, #4ADE80, #22C55E)",
+                        boxShadow: "0 0 8px #4ADE80, 0 0 20px #4ADE8088, 0 0 40px #22C55E44",
+                        animation: "explosionPulse 2s ease-in-out infinite",
+                      } : {}),
+                    }}>{R(p.l2)}</span>
+                  </td>
+                  <td style={{ textAlign: "center", fontFamily: "DM Mono", fontSize: 10, color: "rgba(255,255,255,0.3)" }}>{R(p.aa2)}</td>
+                  <td style={{ textAlign: "center", fontFamily: "DM Mono", fontSize: 10, color: "rgba(255,255,255,0.35)", borderLeft: "1px solid rgba(255,255,255,0.04)" }}>{R(p.l5)}</td>
+                  <td style={{ textAlign: "center", fontFamily: "DM Mono", fontSize: 10, color: "rgba(255,255,255,0.3)" }}>{R(p.aa5)}</td>
+                  <td style={{ textAlign: "center", fontFamily: "DM Mono", fontWeight: 700, fontSize: 14, color: dsColor(p.l10), borderLeft: "1px solid rgba(255,255,255,0.04)" }}>{R(p.l10)}</td>
+                  <td style={{ textAlign: "center", fontFamily: "DM Mono", fontSize: 10, color: "rgba(255,255,255,0.3)" }}>{R(p.aa10)}</td>
+                  <td style={{ textAlign: "center", fontFamily: "DM Mono", fontSize: 11, color: dsColor(p.min_15), borderLeft: "1px solid rgba(255,255,255,0.04)" }}>{R(p.min_15)}</td>
+                  <td style={{ textAlign: "center", fontFamily: "DM Mono", fontSize: 11, color: dsColor(p.max_15) }}>{R(p.max_15)}</td>
+                  <td style={{ textAlign: "center", fontFamily: "DM Mono", fontSize: 11, color: p.regularite >= 80 ? "#4ADE80" : p.regularite >= 50 ? "#FBBF24" : "#EF4444", borderLeft: "1px solid rgba(255,255,255,0.04)" }}>{R(p.regularite)}%</td>
+                  <td style={{ textAlign: "center", fontFamily: "DM Mono", fontSize: 11, color: p.ds_rate >= 50 ? "#4ADE80" : p.ds_rate >= 30 ? "#FBBF24" : "rgba(255,255,255,0.4)" }}>{R(p.ds_rate)}%</td>
+                  {hasFixtures && <>
+                    <td style={{ textAlign: "center" }}>
+                      {p.dsMatch !== null ? (
+                        <span style={{
+                          display: "inline-block", padding: "3px 8px", borderRadius: 8,
+                          fontFamily: "DM Mono", fontSize: 12, fontWeight: 700,
+                          color: "#fff", background: dsBg(p.dsMatch),
+                          boxShadow: `0 0 8px ${dsColor(p.dsMatch)}30`,
+                        }}>{p.dsMatch}</span>
+                      ) : (
+                        <span style={{ fontSize: 9, color: "rgba(255,255,255,0.15)" }}>—</span>
+                      )}
+                    </td>
+                    <td style={{ textAlign: "left", fontSize: 9, paddingLeft: 4 }}>
+                      {p.oppName ? (
+                        <div style={{ display: "flex", alignItems: "center", gap: 3 }}>
+                          <span style={{ width: 14, textAlign: "center", flexShrink: 0 }}>
+                            {p.isHome ? "🏠" : "✈️"}
+                          </span>
+                          <span style={{ color: "rgba(255,255,255,0.5)" }}>{p.oppName}</span>
+                        </div>
+                      ) : (
+                        <span style={{ color: "rgba(255,255,255,0.15)", paddingLeft: 17 }}>—</span>
+                      )}
+                    </td>
+                  </>}
+                  <td style={{ textAlign: "center" }}>
+                    <span style={{
+                      padding: "2px 6px", borderRadius: 12, fontSize: 9,
+                      background: `${getArchetypeColor(p.archetype)}18`,
+                      color: getArchetypeColor(p.archetype),
+                    }}>{p.archetype}</span>
+                  </td>
+                </tr>
+              );
+            })}
           </tbody>
         </table>
       </div>

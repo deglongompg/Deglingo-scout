@@ -45,32 +45,30 @@ export default function PlayerCard({ player, onClose, logos = {} }) {
           }}>✕</button>
         </div>
 
-        {/* Key Stats */}
+        {/* Key Stats — single row */}
         <div style={{
-          display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: 8, marginBottom: 20,
+          display: "grid", gridTemplateColumns: "repeat(5, 1fr)", gap: 4, marginBottom: 8,
         }}>
           {[
             { label: "L5", value: p.l5, color: dsColor(p.l5) },
             { label: "AA5", value: p.aa5, color: "#A5B4FC" },
             { label: "Floor", value: p.floor, color: dsColor(p.floor) },
-            { label: "Ceiling", value: p.ceiling, color: dsColor(p.ceiling) },
+            { label: "Ceil", value: p.ceiling, color: dsColor(p.ceiling) },
+            { label: "Rég%", value: `${p.regularite}%`, color: "#fff" },
           ].map(s => (
             <div key={s.label} style={{
-              background: "rgba(255,255,255,0.03)", borderRadius: 10, padding: "10px 6px",
+              background: "rgba(255,255,255,0.03)", borderRadius: 8, padding: "6px 2px",
               textAlign: "center", border: "1px solid rgba(255,255,255,0.04)",
             }}>
-              <div style={{ fontSize: 18, fontWeight: 700, color: s.color, fontFamily: "DM Mono" }}>{s.value}</div>
-              <div style={{ fontSize: 10, color: "rgba(255,255,255,0.4)", marginTop: 2 }}>{s.label}</div>
+              <div style={{ fontSize: 13, fontWeight: 700, color: s.color, fontFamily: "DM Mono" }}>{s.value}</div>
+              <div style={{ fontSize: 8, color: "rgba(255,255,255,0.4)", marginTop: 1 }}>{s.label}</div>
             </div>
           ))}
         </div>
-
-        {/* Secondary stats */}
         <div style={{
-          display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 8, marginBottom: 20,
+          display: "grid", gridTemplateColumns: "repeat(5, 1fr)", gap: 4, marginBottom: 12,
         }}>
           {[
-            { label: "Rég%", value: `${p.regularite}%` },
             { label: "DS%", value: `${p.ds_rate}%` },
             { label: "G+A/m", value: p.ga_per_match },
             { label: "DOM", value: p.avg_dom },
@@ -78,24 +76,24 @@ export default function PlayerCard({ player, onClose, logos = {} }) {
             { label: "Apps", value: p.appearances },
           ].map(s => (
             <div key={s.label} style={{
-              background: "rgba(255,255,255,0.02)", borderRadius: 8, padding: "8px 4px",
+              background: "rgba(255,255,255,0.02)", borderRadius: 8, padding: "6px 2px",
               textAlign: "center", border: "1px solid rgba(255,255,255,0.03)",
             }}>
-              <div style={{ fontSize: 14, fontWeight: 600, color: "#fff", fontFamily: "DM Mono" }}>{s.value}</div>
-              <div style={{ fontSize: 9, color: "rgba(255,255,255,0.35)", marginTop: 1 }}>{s.label}</div>
+              <div style={{ fontSize: 12, fontWeight: 600, color: "#fff", fontFamily: "DM Mono" }}>{s.value}</div>
+              <div style={{ fontSize: 8, color: "rgba(255,255,255,0.35)", marginTop: 1 }}>{s.label}</div>
             </div>
           ))}
         </div>
 
         {/* Radar + L5 Graph */}
-        <div style={{ display: "flex", gap: 12, justifyContent: "center", alignItems: "center", flexWrap: "wrap" }}>
-          <div style={{ textAlign: "center" }}>
-            <div style={{ fontSize: 10, color: "rgba(255,255,255,0.4)", marginBottom: 4 }}>Radar AA</div>
-            <RadarChart player={p} size={180} />
+        <div style={{ display: "flex", gap: 8, justifyContent: "center", alignItems: "center" }}>
+          <div style={{ textAlign: "center", flex: "0 0 auto" }}>
+            <div style={{ fontSize: 9, color: "rgba(255,255,255,0.4)", marginBottom: 2 }}>Radar AA</div>
+            <RadarChart player={p} size={130} />
           </div>
-          <div style={{ textAlign: "center" }}>
-            <div style={{ fontSize: 10, color: "rgba(255,255,255,0.4)", marginBottom: 4 }}>5 derniers matchs</div>
-            <MiniGraph scores={p.last_5} width={160} height={60} />
+          <div style={{ textAlign: "center", flex: "1 1 auto", minWidth: 0 }}>
+            <div style={{ fontSize: 9, color: "rgba(255,255,255,0.4)", marginBottom: 2 }}>5 derniers matchs</div>
+            <MiniGraph scores={p.last_5} width={180} height={65} />
           </div>
         </div>
       </div>

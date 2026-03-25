@@ -326,29 +326,25 @@ export default function RecoTab({ players, teams, fixtures, logos = {} }) {
 
     const scored = lgPlayers.map(p => {
       const fx = pf[p.name];
-      let opp, isHome;
-      if (fx) {
-        // Real fixture data
-        opp = lgTeams.find(t => t.name === fx.opp);
-        isHome = fx.isHome;
-      }
-      if (!opp) {
-        // Fallback: pick a different team from same league
-        opp = lgTeams.find(t => !p.club.includes(t.name) && !t.name.includes(p.club.split(" ")[0])) || lgTeams[0];
-        isHome = true;
-      }
+      if (!fx) return null; // No fixture = not available for this matchday
+      const opp = lgTeams.find(t => t.name === fx.opp);
+      if (!opp) return null;
+      const isHome = fx.isHome;
       const ds = dScoreMatch(p, opp, isHome);
       const pTeam = findTeam(lgTeams, p.club);
       return { ...p, ds, oppName: opp.name, oppTeam: opp, playerTeam: pTeam, isHome };
-    }).sort((a, b) => b.ds - a.ds);
+    }).filter(Boolean).sort((a, b) => b.ds - a.ds);
 
     const picks = [];
     const quota = { GK: 1, DEF: 2, MIL: 2, ATT: 2 };
     const counts = { GK: 0, DEF: 0, MIL: 0, ATT: 0 };
+    const clubCounts = {};
     for (const p of scored) {
-      if (counts[p.position] < quota[p.position]) {
+      const cc = clubCounts[p.club] || 0;
+      if (counts[p.position] < quota[p.position] && cc < 2) {
         picks.push(p);
         counts[p.position]++;
+        clubCounts[p.club] = cc + 1;
       }
       if (picks.length >= 7) break;
     }
@@ -396,6 +392,12 @@ export default function RecoTab({ players, teams, fixtures, logos = {} }) {
           {lg.flag} {lg.name}{matchdays[league] ? ` · Journée ${matchdays[league]}` : ""}
         </div>
         {!hasFixtures && <div style={{ fontSize: "9px", color: "rgba(255,150,50,0.5)", marginTop: "4px" }}>⚠ Pas de calendrier — adversaires simulés</div>}
+        <div style={{ fontSize: "10px", color: "rgba(255,255,255,0.55)", marginTop: "6px" }}>
+          Top 7 D-Score · 1 GK · 2 DEF · 2 MIL · 2 ATT · Max 2 joueurs/club (+2% bonus Sorare)
+        </div>
+        <div style={{ fontSize: "9px", color: "#A5B4FC", marginTop: "3px" }}>
+          👇 Clique sur une carte pour voir l'analyse détaillée du joueur
+        </div>
       </div>
 
       {/* PITCH */}

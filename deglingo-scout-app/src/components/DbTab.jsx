@@ -89,6 +89,33 @@ export default function DbTab({ players, teams, fixtures, logos = {} }) {
 
   const R = v => v != null ? Math.round(v) : "—";
 
+  const SHORT_NAMES = {
+    // Fixtures names
+    "Wolverhampton Wanderers": "Wolves", "Manchester United": "Man Utd", "Manchester City": "Man City",
+    "Newcastle United": "Newcastle", "Nottingham Forest": "Nott. Forest", "Crystal Palace": "C. Palace",
+    "Paris Saint Germain": "PSG", "Marseille": "OM", "Lyon": "OL",
+    "Borussia Dortmund": "Dortmund", "Borussia M.Gladbach": "M'gladbach", "Bayern Munich": "Bayern",
+    "Bayer Leverkusen": "Leverkusen", "RasenBallsport Leipzig": "Leipzig", "Eintracht Frankfurt": "Frankfurt",
+    "VfB Stuttgart": "Stuttgart", "Wolfsburg": "Wolfsburg", "FC Heidenheim": "Heidenheim",
+    "Union Berlin": "Union Berlin", "Werder Bremen": "Bremen", "Mainz 05": "Mainz",
+    "FC Cologne": "Cologne", "Rayo Vallecano": "Rayo", "Atletico Madrid": "Atletico",
+    "Real Sociedad": "R. Sociedad", "Athletic Club": "Bilbao",
+    // Club names (player data)
+    "Paris Saint-Germain": "PSG", "Olympique de Marseille": "OM", "Olympique Lyonnais": "OL",
+    "RC Strasbourg Alsace": "Strasbourg", "Stade Brestois 29": "Brest", "Stade Rennais F.C.": "Rennes",
+    "Manchester United FC": "Man Utd", "Manchester City FC": "Man City",
+    "Crystal Palace FC": "C. Palace", "Tottenham Hotspur FC": "Tottenham",
+    "West Ham United FC": "West Ham", "Brighton & Hove Albion FC": "Brighton",
+    "AFC Bournemouth": "Bournemouth", "Leicester City FC": "Leicester",
+    "Borussia Mönchengladbach": "M'gladbach", "Bayern München": "Bayern",
+    "Bayer 04 Leverkusen": "Leverkusen", "RB Leipzig": "Leipzig",
+    "TSG 1899 Hoffenheim": "Hoffenheim", "1. FC Union Berlin": "Union Berlin",
+    "1. FC Heidenheim 1846": "Heidenheim", "SC Freiburg": "Freiburg",
+    "FC Augsburg": "Augsburg", "SV Werder Bremen": "Bremen", "1. FSV Mainz 05": "Mainz",
+    "FC St. Pauli": "St. Pauli", "Atlético de Madrid": "Atletico", "Deportivo Alavés": "Alavés",
+  };
+  const shortName = (name) => SHORT_NAMES[name] || name;
+
   // L2 color: same as dsColor (1-100 scale), except explosion = handled by glow badge
   const l2Color = (p) => {
     if (!p.l2) return "rgba(255,255,255,0.5)";
@@ -213,7 +240,7 @@ export default function DbTab({ players, teams, fixtures, logos = {} }) {
                     <div style={{ fontWeight: 600, color: "#fff", fontSize: 11, whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>{countryFlag(p.country)} {p.name}</div>
                     <div style={{ fontSize: 8, color: "rgba(255,255,255,0.3)", marginTop: 1, display: "flex", alignItems: "center", gap: 2, whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>
                       {logos[p.club] && <img src={`/data/logos/${logos[p.club]}`} alt="" style={{ width: 10, height: 10, objectFit: "contain" }} />}
-                      {p.club}
+                      {shortName(p.club)}
                     </div>
                   </td>
                   <td style={{ textAlign: "center" }}>
@@ -282,14 +309,14 @@ export default function DbTab({ players, teams, fixtures, logos = {} }) {
                         <span style={{ fontSize: 9, color: "rgba(255,255,255,0.15)" }}>—</span>
                       )}
                     </td>
-                    <td style={{ textAlign: "left", fontSize: 9, paddingLeft: 4 }}>
+                    <td style={{ textAlign: "left", fontSize: 9, paddingLeft: 4, maxWidth: 100, overflow: "hidden" }}>
                       {p.oppName ? (
                         <div style={{ display: "flex", alignItems: "center", gap: 3 }}>
                           <span style={{ width: 14, textAlign: "center", flexShrink: 0 }}>
                             {p.isHome ? "🏠" : "✈️"}
                           </span>
                           {logos[p.oppName] && <img src={`/data/logos/${logos[p.oppName]}`} alt="" style={{ width: 11, height: 11, objectFit: "contain", flexShrink: 0 }} />}
-                          <span style={{ color: "rgba(255,255,255,0.5)" }}>{p.oppName}</span>
+                          <span style={{ color: "rgba(255,255,255,0.5)", whiteSpace: "nowrap" }}>{shortName(p.oppName)}</span>
                         </div>
                       ) : (
                         <span style={{ color: "rgba(255,255,255,0.15)", paddingLeft: 17 }}>—</span>

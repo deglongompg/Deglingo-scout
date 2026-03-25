@@ -80,7 +80,7 @@ export default function DbTab({ players, teams, fixtures, logos = {} }) {
   });
 
   const thStyle = (key) => ({
-    padding: "8px 3px", fontSize: 9, color: sortKey === key ? "#A5B4FC" : "rgba(255,255,255,0.4)",
+    padding: "6px 2px", fontSize: 8, color: sortKey === key ? "#A5B4FC" : "rgba(255,255,255,0.4)",
     cursor: "pointer", textAlign: "center", fontWeight: 600, whiteSpace: "nowrap",
     userSelect: "none", borderBottom: "1px solid rgba(255,255,255,0.06)",
   });
@@ -164,7 +164,7 @@ export default function DbTab({ players, teams, fixtures, logos = {} }) {
 
       {/* Table */}
       <div style={{ overflowX: "auto", borderRadius: 12, border: "1px solid rgba(255,255,255,0.06)" }}>
-        <table style={{ width: "100%", borderCollapse: "collapse", fontSize: 11, fontFamily: "Outfit" }}>
+        <table style={{ width: "100%", borderCollapse: "collapse", fontSize: 10, fontFamily: "Outfit" }}>
           <thead>
             <tr style={{ background: "rgba(255,255,255,0.02)" }}>
               <th style={{ ...thStyle("name"), textAlign: "left", paddingLeft: 12, cursor: "default" }}>Joueur</th>
@@ -209,10 +209,10 @@ export default function DbTab({ players, teams, fixtures, logos = {} }) {
                   onMouseEnter={e => e.currentTarget.style.background = "rgba(99,102,241,0.08)"}
                   onMouseLeave={e => e.currentTarget.style.background = isExplosion ? "rgba(74,222,128,0.03)" : i % 2 === 0 ? "transparent" : "rgba(255,255,255,0.01)"}
                 >
-                  <td style={{ padding: "8px 4px 8px 12px" }}>
-                    <div style={{ fontWeight: 600, color: "#fff", fontSize: 12 }}>{countryFlag(p.country)} {p.name}</div>
-                    <div style={{ fontSize: 9, color: "rgba(255,255,255,0.3)", marginTop: 1, display: "flex", alignItems: "center", gap: 3 }}>
-                      {logos[p.club] && <img src={`/data/logos/${logos[p.club]}`} alt="" style={{ width: 12, height: 12, objectFit: "contain" }} />}
+                  <td style={{ padding: "6px 2px 6px 8px", maxWidth: 150, overflow: "hidden" }}>
+                    <div style={{ fontWeight: 600, color: "#fff", fontSize: 11, whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>{countryFlag(p.country)} {p.name}</div>
+                    <div style={{ fontSize: 8, color: "rgba(255,255,255,0.3)", marginTop: 1, display: "flex", alignItems: "center", gap: 2, whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>
+                      {logos[p.club] && <img src={`/data/logos/${logos[p.club]}`} alt="" style={{ width: 10, height: 10, objectFit: "contain" }} />}
                       {p.club}
                     </div>
                   </td>
@@ -230,7 +230,7 @@ export default function DbTab({ players, teams, fixtures, logos = {} }) {
                   </td>
                   <td style={{ textAlign: "center" }}>
                     <span style={{
-                      fontFamily: "DM Mono", fontWeight: 700, fontSize: 14, color: isExplosion ? "#fff" : l2Color(p),
+                      fontFamily: "DM Mono", fontWeight: 700, fontSize: 12, color: isExplosion ? "#fff" : l2Color(p),
                       ...(isExplosion ? {
                         display: "inline-block", padding: "2px 6px", borderRadius: 6,
                         background: "linear-gradient(135deg, #4ADE80, #22C55E)",

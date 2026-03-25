@@ -64,7 +64,9 @@
     "aa_negative": -26.3,
     "final_third_passes_avg": 23.3,
     "aa_matches_analyzed": 3,
-    "archetype": "DEF Latéral"
+    "archetype": "DEF Latéral",
+    "price_limited": 36.0,
+    "price_rare": 164.0
   },
   {
     "name": "Maghnes Akliouche",
@@ -133,7 +135,9 @@
     "aa_negative": -17.1,
     "final_third_passes_avg": 12.2,
     "aa_matches_analyzed": 4,
-    "archetype": "MIL B2B"
+    "archetype": "MIL B2B",
+    "price_limited": 12.7,
+    "price_rare": null
   },
   {
     "name": "Benjamin André",
@@ -200,7 +204,9 @@
     "aa_negative": -13.1,
     "final_third_passes_avg": 15.5,
     "aa_matches_analyzed": 2,
-    "archetype": "MIL GOAT"
+    "archetype": "MIL GOAT",
+    "price_limited": 3.5,
+    "price_rare": 22.3
   },
   {
     "name": "Vitinha",
@@ -267,7 +273,9 @@
     "aa_negative": -11.1,
     "final_third_passes_avg": 21.8,
     "aa_matches_analyzed": 4,
-    "archetype": "MIL GOAT"
+    "archetype": "MIL GOAT",
+    "price_limited": 50.0,
+    "price_rare": 220.0
   },
   {
     "name": "Jordan Teze",
@@ -336,7 +344,9 @@
     "aa_negative": -17.4,
     "final_third_passes_avg": 7.6,
     "aa_matches_analyzed": 5,
-    "archetype": "DEF Central"
+    "archetype": "DEF Central",
+    "price_limited": 3.19,
+    "price_rare": null
   },
   {
     "name": "Bryan Okoh",
@@ -405,7 +415,9 @@
     "aa_negative": -16.9,
     "final_third_passes_avg": 2.4,
     "aa_matches_analyzed": 5,
-    "archetype": "DEF Central"
+    "archetype": "DEF Central",
+    "price_limited": 6.28,
+    "price_rare": null
   },
   {
     "name": "Lamine Camara",
@@ -474,7 +486,9 @@
     "aa_negative": -17.7,
     "final_third_passes_avg": 8.8,
     "aa_matches_analyzed": 5,
-    "archetype": "MIL GOAT"
+    "archetype": "MIL GOAT",
+    "price_limited": 7.98,
+    "price_rare": 42.5
   },
   {
     "name": "Pape Diop",
@@ -541,7 +555,9 @@
     "aa_negative": -18.4,
     "final_third_passes_avg": 13.4,
     "aa_matches_analyzed": 5,
-    "archetype": "MIL GOAT"
+    "archetype": "MIL GOAT",
+    "price_limited": 12.5,
+    "price_rare": null
   },
   {
     "name": "Brice Samba",
@@ -608,7 +624,9 @@
     "aa_negative": -7.7,
     "final_third_passes_avg": 0.4,
     "aa_matches_analyzed": 5,
-    "archetype": "GK"
+    "archetype": "GK",
+    "price_limited": 19.9,
+    "price_rare": 120.0
   },
   {
     "name": "Pablo Pagis",
@@ -677,7 +695,9 @@
     "aa_negative": -8.3,
     "final_third_passes_avg": 6.5,
     "aa_matches_analyzed": 2,
-    "archetype": "ATT GOAT"
+    "archetype": "ATT GOAT",
+    "price_limited": 3.6,
+    "price_rare": 18.0
   },
   {
     "name": "Ludovic Ajorque",
@@ -746,7 +766,9 @@
     "aa_negative": -17.1,
     "final_third_passes_avg": 4.2,
     "aa_matches_analyzed": 4,
-    "archetype": "ATT Dribbleur"
+    "archetype": "ATT Dribbleur",
+    "price_limited": 5.89,
+    "price_rare": null
   },
   {
     "name": "Marvin Senaya",
@@ -815,7 +837,9 @@
     "aa_negative": -15.2,
     "final_third_passes_avg": 2.0,
     "aa_matches_analyzed": 4,
-    "archetype": "DEF Central"
+    "archetype": "DEF Central",
+    "price_limited": 0.95,
+    "price_rare": null
   },
   {
     "name": "Quentin Merlin",
@@ -882,7 +906,9 @@
     "aa_negative": -26.9,
     "final_third_passes_avg": 12.4,
     "aa_matches_analyzed": 5,
-    "archetype": "MIL GOAT"
+    "archetype": "MIL GOAT",
+    "price_limited": 5.46,
+    "price_rare": null
   },
   {
     "name": "Nabil Bentaleb",
@@ -949,7 +975,9 @@
     "aa_negative": -12.0,
     "final_third_passes_avg": 12.2,
     "aa_matches_analyzed": 5,
-    "archetype": "MIL GOAT"
+    "archetype": "MIL GOAT",
+    "price_limited": null,
+    "price_rare": null
   },
   {
     "name": "Moustapha Mbow",
@@ -1016,7 +1044,9 @@
     "aa_negative": -10.3,
     "final_third_passes_avg": 0.8,
     "aa_matches_analyzed": 5,
-    "archetype": "DEF Central"
+    "archetype": "DEF Central",
+    "price_limited": 7.0,
+    "price_rare": null
   },
   {
     "name": "Igor Paixão",
@@ -1083,7 +1113,9 @@
     "aa_negative": -9.5,
     "final_third_passes_avg": 10.8,
     "aa_matches_analyzed": 5,
-    "archetype": "ATT Complet"
+    "archetype": "ATT Complet",
+    "price_limited": 29.58,
+    "price_rare": null
   },
   {
     "name": "Nuno Mendes",
@@ -1150,7 +1182,9 @@
     "aa_negative": -22.0,
     "final_third_passes_avg": 12.8,
     "aa_matches_analyzed": 4,
-    "archetype": "DEF Latéral"
+    "archetype": "DEF Latéral",
+    "price_limited": 38.7,
+    "price_rare": null
   },
   {
     "name": "Kenny Lala",
@@ -1219,7 +1253,9 @@
     "aa_negative": -18.1,
     "final_third_passes_avg": 10.2,
     "aa_matches_analyzed": 5,
-    "archetype": "DEF Latéral"
+    "archetype": "DEF Latéral",
+    "price_limited": 2.55,
+    "price_rare": null
   },
   {
     "name": "Moussa Niakhaté",
@@ -1286,7 +1322,9 @@
     "aa_negative": -14.0,
     "final_third_passes_avg": 10.4,
     "aa_matches_analyzed": 5,
-    "archetype": "DEF Latéral"
+    "archetype": "DEF Latéral",
+    "price_limited": 14.9,
+    "price_rare": 50.0
   },
   {
     "name": "Mike Penders",
@@ -1353,7 +1391,9 @@
     "aa_negative": -6.3,
     "final_third_passes_avg": 0.6,
     "aa_matches_analyzed": 5,
-    "archetype": "GK"
+    "archetype": "GK",
+    "price_limited": 20.5,
+    "price_rare": null
   },
   {
     "name": "Bradley Barcola",
@@ -1420,7 +1460,9 @@
     "aa_negative": -10.2,
     "final_third_passes_avg": 9.0,
     "aa_matches_analyzed": 3,
-    "archetype": "ATT Dribbleur"
+    "archetype": "ATT Dribbleur",
+    "price_limited": 18.0,
+    "price_rare": 92.0
   },
   {
     "name": "Chancel Mbemba",
@@ -1487,7 +1529,9 @@
     "aa_negative": -14.2,
     "final_third_passes_avg": 2.3,
     "aa_matches_analyzed": 3,
-    "archetype": "DEF Central"
+    "archetype": "DEF Central",
+    "price_limited": 1.13,
+    "price_rare": 9.77
   },
   {
     "name": "Ruben Kluivert",
@@ -1544,7 +1588,9 @@
     "matchs_played": 2,
     "matchs_total": 10,
     "last_date": "2026-02-22",
-    "archetype": "DEF Central"
+    "archetype": "DEF Central",
+    "price_limited": 1.26,
+    "price_rare": 4.0
   },
   {
     "name": "Fabien Centonze",
@@ -1613,7 +1659,9 @@
     "aa_negative": -22.8,
     "final_third_passes_avg": 4.3,
     "aa_matches_analyzed": 3,
-    "archetype": "DEF Central"
+    "archetype": "DEF Central",
+    "price_limited": 1.2,
+    "price_rare": null
   },
   {
     "name": "Hamari Traoré",
@@ -1670,7 +1718,9 @@
     "matchs_played": 2,
     "matchs_total": 10,
     "last_date": "2026-01-25",
-    "archetype": "DEF Central"
+    "archetype": "DEF Central",
+    "price_limited": 0.99,
+    "price_rare": null
   },
   {
     "name": "Lilian Brassier",
@@ -1737,7 +1787,9 @@
     "aa_negative": -18.0,
     "final_third_passes_avg": 7.2,
     "aa_matches_analyzed": 5,
-    "archetype": "DEF Central"
+    "archetype": "DEF Central",
+    "price_limited": 8.3,
+    "price_rare": null
   },
   {
     "name": "Grégoire Coudert",
@@ -1806,7 +1858,9 @@
     "aa_negative": -11.0,
     "final_third_passes_avg": 1.6,
     "aa_matches_analyzed": 5,
-    "archetype": "GK"
+    "archetype": "GK",
+    "price_limited": 9.0,
+    "price_rare": null
   },
   {
     "name": "Aboubakar Nagida",
@@ -1873,7 +1927,9 @@
     "aa_negative": -21.6,
     "final_third_passes_avg": 9.6,
     "aa_matches_analyzed": 5,
-    "archetype": "DEF Central"
+    "archetype": "DEF Central",
+    "price_limited": 2.69,
+    "price_rare": null
   },
   {
     "name": "Hugo Magnetti",
@@ -1942,7 +1998,9 @@
     "aa_negative": -10.7,
     "final_third_passes_avg": 6.4,
     "aa_matches_analyzed": 5,
-    "archetype": "MIL GOAT"
+    "archetype": "MIL GOAT",
+    "price_limited": 3.5,
+    "price_rare": 18.0
   },
   {
     "name": "Matvey Safonov",
@@ -2009,7 +2067,9 @@
     "aa_negative": -11.9,
     "final_third_passes_avg": 0.2,
     "aa_matches_analyzed": 4,
-    "archetype": "GK"
+    "archetype": "GK",
+    "price_limited": 27.0,
+    "price_rare": 199.0
   },
   {
     "name": "Illia Zabarnyi",

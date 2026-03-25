@@ -156,8 +156,10 @@ export default function DbTab({ players, teams, fixtures, logos = {} }) {
             <span style={{ display: "inline-block", width: 10, height: 10, borderRadius: 3, background: "linear-gradient(135deg,#4ADE80,#22C55E)", boxShadow: "0 0 6px #4ADE80" }} />
             L2 en explosion (+15 vs L5)
           </span>
-          <span>Rég10 = % matchs &gt;60 sur L10</span>
-          <span>Titu = % titularisations sur L10</span>
+          <span>Reg10 = % matchs &gt;60 sur L10</span>
+          <span>Titu10 = % titularisations sur L10</span>
+          <span style={{ color: "#A5B4FC" }}>L€</span><span> = Limited</span>
+          <span style={{ color: "#FBBF24" }}>R€</span><span> = Rare (in-season)</span>
           <span>🏠 Dom · ✈️ Ext</span>
           <span style={{ display: "inline-flex", gap: 4, alignItems: "center" }}>
             <span style={{ color: "#EF4444" }}>●</span><span>0-39</span>
@@ -185,8 +187,10 @@ export default function DbTab({ players, teams, fixtures, logos = {} }) {
               <th style={thStyle("aa10")} onClick={() => toggleSort("aa10")}>AA10{arrow("aa10")}</th>
               <th style={{ ...thStyle("min_15"), borderLeft: "1px solid rgba(255,255,255,0.06)" }} onClick={() => toggleSort("min_15")}>Min{arrow("min_15")}</th>
               <th style={thStyle("max_15")} onClick={() => toggleSort("max_15")}>Max{arrow("max_15")}</th>
-              <th style={{ ...thStyle("reg10"), borderLeft: "1px solid rgba(255,255,255,0.06)" }} onClick={() => toggleSort("reg10")}>Rég10%{arrow("reg10")}</th>
-              <th style={thStyle("titu_pct")} onClick={() => toggleSort("titu_pct")}>Titu%{arrow("titu_pct")}</th>
+              <th style={{ ...thStyle("reg10"), borderLeft: "1px solid rgba(255,255,255,0.06)" }} onClick={() => toggleSort("reg10")}>Reg10{arrow("reg10")}</th>
+              <th style={thStyle("titu_pct")} onClick={() => toggleSort("titu_pct")}>Titu10{arrow("titu_pct")}</th>
+              <th style={thStyle("price_limited")} onClick={() => toggleSort("price_limited")}>L€{arrow("price_limited")}</th>
+              <th style={thStyle("price_rare")} onClick={() => toggleSort("price_rare")}>R€{arrow("price_rare")}</th>
               {hasFixtures && <>
                 <th style={thStyle("dsMatch")} onClick={() => toggleSort("dsMatch")}>
                   <span style={{ color: sortKey === "dsMatch" ? "#C084FC" : "#C084FC80" }}>D-Score{arrow("dsMatch")}</span>
@@ -266,6 +270,16 @@ export default function DbTab({ players, teams, fixtures, logos = {} }) {
                   <td style={{ textAlign: "center", fontFamily: "DM Mono", fontSize: 11, color: dsColor(p.max_15) }}>{R(p.max_15)}</td>
                   <td style={{ textAlign: "center", fontFamily: "DM Mono", fontSize: 11, color: (p.reg10 ?? p.regularite) >= 80 ? "#4ADE80" : (p.reg10 ?? p.regularite) >= 50 ? "#FBBF24" : "#EF4444", borderLeft: "1px solid rgba(255,255,255,0.04)" }}>{R(p.reg10 ?? p.regularite)}%</td>
                   <td style={{ textAlign: "center", fontFamily: "DM Mono", fontSize: 11, color: p.titu_pct >= 80 ? "#4ADE80" : p.titu_pct >= 50 ? "#FBBF24" : "#EF4444" }}>{R(p.titu_pct)}%</td>
+                  <td style={{ textAlign: "center", fontFamily: "DM Mono", fontSize: 10, borderLeft: "1px solid rgba(255,255,255,0.04)" }}>
+                    {p.price_limited != null ? (
+                      <span style={{ color: "#A5B4FC" }}>{p.price_limited < 1 ? p.price_limited.toFixed(2) : Math.round(p.price_limited)}€</span>
+                    ) : <span style={{ color: "rgba(255,255,255,0.12)" }}>—</span>}
+                  </td>
+                  <td style={{ textAlign: "center", fontFamily: "DM Mono", fontSize: 10 }}>
+                    {p.price_rare != null ? (
+                      <span style={{ color: "#FBBF24" }}>{p.price_rare < 1 ? p.price_rare.toFixed(2) : Math.round(p.price_rare)}€</span>
+                    ) : <span style={{ color: "rgba(255,255,255,0.12)" }}>—</span>}
+                  </td>
                   {hasFixtures && <>
                     <td style={{ textAlign: "center" }}>
                       {p.dsMatch !== null ? (

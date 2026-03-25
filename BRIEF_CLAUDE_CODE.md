@@ -1,5 +1,5 @@
 # BIBLE DEGLINGO SCOUT V4
-## Dernière mise à jour : 25 mars 2026
+## Dernière mise à jour : 26 mars 2026
 
 ---
 
@@ -16,13 +16,13 @@ un algorithme propriétaire qui croise forme du joueur × contexte adversaire ×
 ## 📊 Base de données
 
 ### Joueurs
-- **1419 joueurs** répartis sur 4 ligues, 76 clubs
-- Source : API Sorare GraphQL (`detailedScores`) + Understat (PPDA, xGA)
+- **1450 joueurs** répartis sur 4 ligues, 76 clubs
+- Source : API Sorare GraphQL (`detailedScores` pour AA, `so5Scores` pour L5/L10) + Understat (PPDA, xGA)
 - Fichier : `public/data/players.json`
 
 | Ligue | Flag | Joueurs | Code |
 |-------|------|---------|------|
-| Ligue 1 | 🇫🇷 | 348 | `L1` |
+| Ligue 1 | 🇫🇷 | 379 | `L1` |
 | Premier League | 🏴󠁧󠁢󠁥󠁮󠁧󠁿 | 351 | `PL` |
 | La Liga | 🇪🇸 | 375 | `Liga` |
 | Bundesliga | 🇩🇪 | 345 | `Bundes` |
@@ -135,7 +135,7 @@ React 18 + Vite (JavaScript pur, pas TypeScript)
 deglingo-scout-app/
 ├── public/
 │   └── data/
-│       ├── players.json      (1419 joueurs, 60+ champs chacun)
+│       ├── players.json      (1450 joueurs, 60+ champs chacun)
 │       ├── teams.json        (76 clubs avec PPDA/xGA/xG dom+ext)
 │       ├── fixtures.json     (matchs prochaine journée, 4 ligues)
 │       ├── club_logos.json   (142 mappings nom→logo)
@@ -143,7 +143,7 @@ deglingo-scout-app/
 ├── src/
 │   ├── App.jsx               (shell : fetch data + 3 tabs + logos)
 │   ├── components/
-│   │   ├── DbTab.jsx         (📊 Database — table triée/filtrée 1419 joueurs)
+│   │   ├── DbTab.jsx         (📊 Database — table triée/filtrée 1450 joueurs)
 │   │   ├── FightTab.jsx      (🥊 Fight — duel D-Score 1v1)
 │   │   ├── RecoTab.jsx       (⚽ Reco SO7 — picks auto par ligue)
 │   │   ├── PlayerCard.jsx    (Modal fiche joueur détaillée)
@@ -178,12 +178,17 @@ App.jsx → Promise.all([
 ## 📊 Onglet 1 : Database (DbTab.jsx)
 
 ### Fonctionnalités
-- Table complète 1419 joueurs triable par toutes les colonnes
+- **Database = source de vérité** de tout (Fight et Reco sont des présentations différentes)
+- Table complète 1450 joueurs triable par toutes les colonnes
 - Filtres : recherche nom/club, ligue, position, archétype, cap L10
-- Colonnes : Joueur (flag + nom + club + logo), Pos, Ligue, L2, AA2, Last5 (barres), L5, AA5, L10, AA10, Min, Max, Rég10%, Titu%, D-Score, Adversaire (logo), Archétype
+- Colonnes : Joueur (flag + nom + club + logo), Pos, Ligue, L2, AA2, Last5 (barres), L5, AA5, L10, AA10, Min, Max, Reg10, Titu10, D-Score, CS%, Adv. (logo), L€, R€, Archétype
+- **Reg10** = % matchs >60 sur L10 | **Titu10** = % titularisations sur L10
+- **CS%** = probabilité Clean Sheet (Poisson clamped : `e^(-lambda)` avec lambda = xGA_team × xG_opp / league_avg, clamp [0.5, 2.0])
+- **L€ / R€** = prix Limited (jaune) et Rare (rouge) in-season sur le marketplace Sorare
+- `shortName()` mapping pour 40+ clubs (PSG, OM, Wolves, Man Utd, etc.)
 - Indicateur L2 explosion (glow vert si L2 > L5 + 15)
-- Logos 12px clubs dans la colonne joueur et adversaire
-- Clic joueur → PlayerCard (modal détaillée avec radar + graphe L5)
+- Logos 10px clubs dans la colonne joueur et adversaire
+- Clic joueur → PlayerCard (modal détaillée avec radar + graphe L5, layout compact 2×5 stats)
 
 ### Légende couleurs barres Last5
 - 75+ → `#06D6A0` (vert)
@@ -235,8 +240,15 @@ Basé sur xG adverse : <1.0 = très peu dangereux, <1.3 = peu offensif, <1.6 = m
 
 ## ⚽ Onglet 3 : Reco SO7 (RecoTab.jsx)
 
+### Logique de sélection
+1. Filtrer joueurs de la ligue avec `l5 >= 35`
+2. Matcher avec fixture réelle (joueurs sans fixture = exclus)
+3. Calculer D-Score contextuel (adversaire + dom/ext)
+4. Trier par D-Score décroissant
+5. Picker top 7 : **1 GK, 2 DEF, 2 MIL, 2 ATT, max 2 joueurs/club** (+2% bonus Sorare)
+
 ### Fonctionnalités
-- Sélection ligue → auto-pick des meilleurs joueurs par poste : 1 GK + 2 DEF + 2 MIL + 2 ATT
+- Sélection ligue → auto-pick des meilleurs joueurs par poste : 1 GK + 2 DEF + 2 MIL + 2 ATT (max 2/club)
 - Cartes joueur 110×156px avec :
   - Position badge coloré en haut
   - D-Score rond 38px (dsColor/dsBg)
@@ -438,11 +450,17 @@ Script : `reclassify_v3.py` (512 changements V1→V3 documentés dans `reclassif
 
 ## 🔮 Roadmap / Idées futures
 
-- [ ] Intégrer CS% dans l'algorithme D-Score GK (approximation Poisson : `CS% ≈ e^(-xG)`)
+- [x] Intégrer CS% dans Database + verdicts GK/DEF (Poisson clamped, range 13%-61%)
+- [x] Ajouter prix cartes Limited/Rare (L€/R€) depuis Sorare marketplace
+- [x] Renommer Rég10%→Reg10, Titu%→Titu10
+- [x] Max 2 joueurs/club dans Reco SO7 (+2% bonus Sorare)
+- [x] shortName mapping 40+ clubs (PSG, OM, Wolves, etc.)
+- [ ] Fetcher prix L€/R€ pour les 1450 joueurs (script fetch_prices.py prêt, ~25min/ligue)
+- [ ] Re-fetch PL/Liga/Bundes avec fix AA scores (L1 done)
 - [ ] Pipeline Make.com → Claude API → Cloudflare R2 (automatisation complète)
-- [ ] Scraper les CS% officiels de la prochaine journée
 - [ ] Déployer sur Cloudflare Pages avec auto-deploy GitHub
 - [ ] Ajouter filtres avancés dans Database (DOM only, EXT only, forme récente)
+- [ ] Accès API Sorare étendu (demande en cours)
 
 ---
 

@@ -1,380 +1,456 @@
-# DEGLINGO SCOUT — Brief de démarrage Claude Code
+# BIBLE DEGLINGO SCOUT V4
+## Dernière mise à jour : 25 mars 2026
 
 ---
 
-## 🖥️ LANCEMENT TERMINAL
+## 🎯 Résumé du projet
 
-```bash
-cd /Users/damiengheza/Desktop/Deglingo\ Scout
-claude
-```
+**Deglingo Scout** est un outil de recommandation hebdomadaire pour **Sorare SO7** (fantasy football).
+Il tourne sous la marque **Deglingo Foot** sur **deglingosorare.com/scout**.
 
-Puis colle le message ci-dessous.
-
----
-
-## 🚀 PREMIER MESSAGE À COLLER DANS CLAUDE CODE
-
-```
-Lis ce fichier BRIEF_CLAUDE_CODE.md en entier avant de faire quoi que ce soit.
-
-Ensuite lance le projet dans cet ordre sans t'arrêter :
-
-STEP 1 — Lis les fichiers de référence dans le dossier courant :
-- deglingo-scout-preview.jsx (UI référence — plateforme 3 onglets)
-- deglingo-fight-v5.jsx (module Fight — duel D-Score)
-- deglingo-so7-unified.jsx (module SO7 — picks sur terrain)
-- Inspecte deglingo_ligue1_final.json pour connaître tous les champs disponibles
-
-STEP 2 — Crée et exécute merge_data.py qui :
-- Lit les 4 fichiers deglingo_*_final.json
-- Normalise position : Goalkeeper→GK, Defender→DEF, Midfielder→MIL, Forward→ATT
-- Normalise league : Ligue 1→L1, Premier League→PL, La Liga→Liga, Bundesliga→Bundes
-- Ajoute le champ "league" à chaque joueur
-- Calcule ga_per_match = (goals + assists) / max(appearances, 1)
-- Exporte public/data/players.json (1419 joueurs) + copie teams_data.json → public/data/teams.json
-- Confirme les 1419 joueurs en output
-
-STEP 3 — Init projet Vite React :
-  npm create vite@latest deglingo-scout-app -- --template react
-  cd deglingo-scout-app && npm install
-  Copie le dossier public/data/ dedans
-
-STEP 4 — Construis src/App.jsx complet avec :
-- fetch('/data/players.json') + fetch('/data/teams.json') au démarrage avec loading state
-- 3 onglets : 📊 Database / 🥊 Fight / ⚽ Reco SO7
-- Database : table filtrée/triée (ligue, poste, archétype, recherche nom/club)
-  → clic joueur = fiche détaillée avec radar AA (5 axes : DEF/PASS/POSS/ATT/FTP) + graphe L5
-- Fight : sélection Ligue→Club→Joueur×2 + adversaire + dom/ext → D-Score Match comparé côte à côte
-- Reco SO7 : sélection ligue → picks auto (1GK+2DEF+2MIL+2ATT) disposés sur terrain de foot
-  → carte joueur cliquable avec D-Score Match calculé vs adversaire du GW
-- Design dark gaming : background #04040F, font Outfit (Google Fonts), palette D-Score du brief
-- Réutilise tout ce qui marche dans deglingo-scout-preview.jsx
-
-STEP 5 — Lance npm run dev, confirme que les 3 onglets s'affichent avec les vraies données
-
-On fait tout en une seule session. Go.
-```
+**Objectif :** Aider les managers Sorare à choisir leurs meilleurs joueurs chaque semaine grâce au **D-Score**,
+un algorithme propriétaire qui croise forme du joueur × contexte adversaire × momentum × dom/ext.
 
 ---
 
-## Contexte projet
+## 📊 Base de données
 
-Tu travailles sur **Deglingo Scout**, un outil de recommandation hebdomadaire pour Sorare SO7
-(fantasy football). Le projet tourne sous la marque **Deglingo Foot** sur **deglingosorare.com**.
-
-**Objectif final :** Une plateforme web à 3 onglets (Database / Fight / Reco SO7) alimentée
-par un pipeline automatique (Make.com → Claude API → Cloudflare R2), avec picks hebdo publiés
-avant le deadline Sorare du vendredi 16h.
-
----
-
-## État actuel du projet
-
-### ✅ Base de données joueurs (FAIT)
+### Joueurs
 - **1419 joueurs** répartis sur 4 ligues, 76 clubs
-- 4 fichiers JSON sources avec 40+ KPIs chacun
-- Classification archétypes V3 déjà appliquée via `reclassify_v3.py`
+- Source : API Sorare GraphQL (`detailedScores`) + Understat (PPDA, xGA)
+- Fichier : `public/data/players.json`
 
-| Ligue | Fichier | Joueurs |
-|-------|---------|---------|
-| Ligue 1 | `deglingo_ligue1_final.json` | 348 |
-| Premier League | `deglingo_premier_league_final.json` | 351 |
-| La Liga | `deglingo_la_liga_final.json` | 375 |
-| Bundesliga | `deglingo_bundesliga_final.json` | 345 |
+| Ligue | Flag | Joueurs | Code |
+|-------|------|---------|------|
+| Ligue 1 | 🇫🇷 | 348 | `L1` |
+| Premier League | 🏴󠁧󠁢󠁥󠁮󠁧󠁿 | 351 | `PL` |
+| La Liga | 🇪🇸 | 375 | `Liga` |
+| Bundesliga | 🇩🇪 | 345 | `Bundes` |
 
-### ✅ Données équipes (FAIT)
-- `teams_data.json` : 76 clubs, PPDA dom/ext + xGA dom/ext (source Understat)
+### Équipes
+- **76 clubs** avec stats Understat (PPDA dom/ext, xGA dom/ext, xG dom/ext)
+- Fichier : `public/data/teams.json`
 
-### ✅ Composants React existants (FAIT, à intégrer)
-- `deglingo-fight-v5.jsx` : module duel head-to-head D-Score
-- `deglingo-so7-unified.jsx` : picks SO7 sur terrain de foot
-- `deglingo-scout-preview.jsx` : prototype plateforme unifiée 87 joueurs (référence UI)
+### Fixtures
+- Matchs de la prochaine journée par ligue
+- Fichier : `public/data/fixtures.json`
+- Structure : `{ generated, matchdays: {L1: 28, PL: 32, Liga: 30, Bundes: 28}, fixtures: [...], player_fixtures: {...} }`
+- Chaque fixture : `{ home, away, date, matchday, league, home_api, away_api }`
 
-### ✅ Documentation (FAIT)
-- `Bible_Deglingo_Scout_V3.docx` : référence complète formules + archétypes
-- `reclassify_v3.py` : script de reclassification archétypes
-- `reclassification_v3_report.txt` : rapport des 512 changements V1→V3
-
-### ❌ Ce qui reste à faire (OBJECTIF DE CETTE SESSION)
-1. **Merger les 4 JSON** en un seul `players.json` normalisé
-2. **Construire la plateforme React unifiée** (Vite) avec fetch des données
-3. **Tester en local** (`npm run dev`)
-4. **Déployer sur Cloudflare Pages** (GitHub → Cloudflare auto-deploy)
-5. **Pipeline Make.com → Cloudflare R2** (automatisation hebdo — phase suivante)
+### Logos
+- **76 logos PNG** officiels scrappés via football-data.org API
+- **142 mappings** nom→logo (couvre toutes les variantes de noms entre players.json, teams.json et l'API)
+- Fichier : `public/data/club_logos.json`
+- Dossier : `public/data/logos/`
+- Clé API football-data.org : `d265aec39d9c401aa27a85b32349bd86`
 
 ---
 
-## Architecture cible
+## 🧮 Formule D-Score V2
+
+Le D-Score est un score de 0 à 95 qui prédit le potentiel d'un joueur pour son prochain match.
 
 ```
-deglingosorare.com/scout
-        │
-        ├── React App (Cloudflare Pages)
-        │     ├── Tab 1 : 📊 Database (filtre/tri 1419 joueurs, fiche joueur)
-        │     ├── Tab 2 : 🥊 Fight (duel D-Score entre 2 joueurs)
-        │     └── Tab 3 : ⚽ Reco SO7 (picks sur terrain par ligue)
-        │
-        └── Data Layer (Cloudflare R2 — phase 2)
-              ├── players.json (1419 joueurs + KPIs)
-              ├── teams.json (76 clubs PPDA/xGA)
-              ├── fixtures.json (matchs GW en cours)
-              └── meta.json (date update, GW numéro)
+D-Score = SOCLE (40%) + CONTEXTE (45%) + MOMENTUM (15%) + BONUS DOM/EXT
 ```
 
-**Pour l'instant :** JSON servis depuis `/public/data/` (Vite les sert statiquement).
-**Phase 2 :** Remplacer les URLs fetch par les URLs R2 publiques.
-
----
-
-## Champs JSON joueur (structure par joueur dans les fichiers)
-
-Champs clés utilisés par le frontend :
-
-```json
-{
-  "name": "Vitinha",
-  "club": "Paris Saint-Germain",
-  "position": "Midfielder",          // Goalkeeper / Defender / Midfielder / Forward
-  "archetype": "MIL GOAT",          // archétype V3
-  "l5": 67.3,                        // moyenne 5 derniers matchs
-  "l10": 66.3,
-  "aa5": 27.3,                       // AA score moyen 5 matchs
-  "floor": 66,                       // min sur L5
-  "ceiling": 69,                     // max sur L5
-  "ds_rate": 11,                     // % matchs avec Decisive Score
-  "regularite": 100,                 // % matchs > 60 pts
-  "last_5": [74, 54, 69, 80, 60],   // scores 5 derniers matchs (du + récent au + vieux)
-  "avg_dom": 67.5,                   // moyenne à domicile
-  "avg_ext": 65.3,                   // moyenne à l'extérieur
-  "aa_defending": 3.0,
-  "aa_passing": 22.6,
-  "aa_possession": 8.0,
-  "aa_attacking": 2.4,
-  "aa_negative": -11.1,
-  "final_third_passes_avg": 21.8,
-  "goals": 3,
-  "assists": 5,
-  "appearances": 22
-}
-```
-
-**Mapping positions pour le frontend :**
-- `Goalkeeper` → `GK`
-- `Defender` → `DEF`
-- `Midfielder` → `MIL`
-- `Forward` → `ATT`
-
-**Mapping ligues pour le frontend :**
-- `Ligue 1` → `L1`
-- `Premier League` → `PL`
-- `La Liga` → `Liga`
-- `Bundesliga` → `Bundes`
-
----
-
-## Structure teams_data.json (par équipe)
-
-```json
-{
-  "team": "Paris Saint Germain",
-  "league": "Ligue 1",
-  "ppda": 7.5,
-  "ppda_dom": 8.1,
-  "ppda_ext": 6.9,
-  "xga_per_match": 0.92,
-  "xga_dom": 0.98,
-  "xga_ext": 0.85
-}
-```
-
-**Mapping club joueur → nom équipe Understat :**
-Le nom du club dans players.json (ex: "Paris Saint-Germain") doit matcher avec le nom dans teams_data.json
-(ex: "Paris Saint Germain"). Faire un matching fuzzy ou une table de correspondance si nécessaire.
-
----
-
-## Formule D-Score V2
+### Détail complet (`src/utils/dscore.js`)
 
 ```javascript
-// norm(v, lo, hi, inv=false) = clamp((v-lo)/(hi-lo), 0, 1), inversé si inv=true
-function norm(v, lo, hi, inv = false) {
-  if (hi === lo) return 0.5;
-  let n = Math.max(0, Math.min(1, (v - lo) / (hi - lo)));
-  return inv ? 1 - n : n;
-}
+norm(v, lo, hi, inv=false) // Normalise entre 0 et 1, clamp, inversé si inv
 
-function dscore(player, opponent, isHome) {
-  const p = player;
-  const o = opponent;
+// ═══ SOCLE (40%) ═══
+f   = norm(l5, 25, 80)              × 13   // Forme L5
+lb  = l10 > l5 ? norm(l10, 30, 80)  × 5    // Bonus L10 si supérieur
+aa  = norm(aa5, -5, 35)             × 12   // All-Around score
+fl  = norm(min_15 ?? floor, 15, 70) × 7    // Floor (sécurité)
+rg  = norm(regularite, 0, 100)      × 7    // Régularité (% matchs > 60)
+gb  = norm(ga_per_match, 0, 0.8)    × 6    // G+A par match
+socle = f + lb + aa + fl + rg + gb         // ~40 pts max
 
-  // SOCLE (40%)
-  const f   = norm(p.l5, 25, 80);
-  const lb  = p.l10 > p.l5 ? norm(p.l10, 30, 80) * 5 : 0;
-  const aa  = norm(p.aa5, -5, 35);
-  const fl  = norm(p.floor, 15, 70);
-  const rg  = norm(p.regularite, 0, 100);
-  const gb  = norm(p.ga_per_match || 0, 0, 0.8) * 6;
-  const socle = f*13 + lb + aa*12 + fl*7 + rg*7 + gb;
+// ═══ CONTEXTE (45%) — Varie selon la position ═══
+// ppda = adversaire ppda_ext (si dom) ou ppda_dom (si ext)
+// xga  = adversaire xga_ext (si dom) ou xga_dom (si ext)
 
-  // CONTEXTE (45%) — ppda et xga de l'adversaire selon dom/ext
-  const ppda = isHome ? o.ppda_ext : o.ppda_dom;   // PPDA adverse dans son contexte
-  const xga  = isHome ? o.xga_ext  : o.xga_dom;    // xGA adverse dans son contexte
-  let contexte = 0;
-  if (p.position === "GK")
-    contexte = norm(xga, 0.7, 2.5, true)*22 + norm(ppda, 7, 20)*16 + norm(p.l5, 20, 70)*12;
-  else if (p.position === "DEF")
-    contexte = norm(xga, 0.7, 2.5, true)*20 + (p.aa5 > 18 ? norm(ppda, 7, 20, true) : norm(ppda, 7, 20))*16 + norm(p.l5, 20, 75)*14;
-  else if (p.position === "MIL")
-    contexte = p.aa5 >= 10
-      ? norm(ppda, 7, 20)*26 + norm(xga, 0.8, 2)*8  + norm(p.l5, 25, 75)*16
-      : norm(xga,  0.8, 2)*22 + norm(ppda, 7, 20, true)*14 + norm(p.l5, 20, 80)*14;
-  else // ATT
-    contexte = p.aa5 >= 8
-      ? norm(xga, 0.8, 2)*26 + norm(ppda, 7, 20, true)*9  + norm(p.l5, 20, 80)*15
-      : norm(xga, 0.8, 2)*25 + norm(ppda, 7, 20, true)*14 + norm(p.l5, 20, 80)*11;
+GK:  norm(xga, inv) × 22 + norm(ppda) × 16 + norm(l5) × 12
+DEF: norm(xga, inv) × 20 + norm(ppda, inv si aa5>18) × 16 + norm(l5) × 14
+MIL (aa5≥10): norm(ppda) × 26 + norm(xga) × 8 + norm(l5) × 16
+MIL (aa5<10): norm(xga) × 22 + norm(ppda, inv) × 14 + norm(l5) × 14
+ATT (aa5≥8):  norm(xga) × 26 + norm(ppda, inv) × 9 + norm(l5) × 15
+ATT (aa5<8):  norm(xga) × 25 + norm(ppda, inv) × 14 + norm(l5) × 11
 
-  // MOMENTUM (15%)
-  const sc   = p.last_5 || [];
-  const l2   = sc.length >= 2 ? (sc[0] + sc[1]) / 2 : (sc[0] || p.l5);
-  const tr   = p.l5 > 0 ? (l2 - p.l5) / p.l5 * 100 : 0;
-  const ts   = norm(tr, -30, 40) * 10;
-  const hs   = sc.length >= 2 && sc[0] >= 65 && sc[1] >= 65 ? 3 : 0;
-  const cs   = sc.length >= 2 && sc[0] < 40  && sc[1] < 40  ? -3 : 0;
-  const momentum = ts + hs + cs + 2;
+// ═══ MOMENTUM (15%) ═══
+l2    = moyenne 2 derniers matchs
+trend = (l2 - l5) / l5 × 100
+ts    = norm(trend, -30, 40) × 10
+hs    = +3 si 2 derniers ≥ 65 (hot streak)
+cs    = -3 si 2 derniers < 40 (cold streak)
+momentum = ts + hs + cs + 2
 
-  // DOM/EXT BONUS
-  const domBonus = isHome ? 5 : -3;
+// ═══ DOM/EXT ═══
+domBonus = +5 (domicile) ou -3 (extérieur)
 
-  // FINAL
-  const raw = socle + contexte + momentum + domBonus;
-  return Math.round(Math.max(p.floor / 100 * 55, Math.min(95, raw)));
-}
+// ═══ FINAL ═══
+raw = socle + contexte + momentum + domBonus
+D-Score = clamp(raw, floor/100 × 55, 95)
 ```
+
+### Logique par position
+
+| Position | Contexte favorable | Ce qui boost le D-Score |
+|----------|-------------------|------------------------|
+| **GK** | xGA adverse faible (peu de buts) + PPDA élevé (bloc bas) | CS probability + L5 |
+| **DEF** | xGA faible + PPDA élevé (sauf DEF offensifs AA5>18 = PPDA inversé) | CS + AA si latéral offensif |
+| **MIL AA≥10** | PPDA élevé (possession, passes) | Bloc bas = AA monster |
+| **MIL AA<10** | xGA élevé (adversaire perméable) | Occasions offensives |
+| **ATT** | xGA élevé (passoire défensive) | Buts + occasions |
+
+### D-Score Color Scale
+
+| Score | Couleur | Hex | Gradient |
+|-------|---------|-----|----------|
+| 75+ | Vert vif | `#06D6A0` | `#06D6A0 → #049A73` |
+| 65-74 | Teal | `#2EC4B6` | `#2EC4B6 → #1A8A7F` |
+| 55-64 | Gold | `#E9C46A` | `#E9C46A → #C9A227` |
+| 45-54 | Orange | `#F4A261` | `#F4A261 → #D4782E` |
+| < 45 | Rouge | `#E76F51` | `#E76F51 → #C44B33` |
 
 ---
 
-## Archétypes V3 — Palette couleurs
+## 🏗️ Architecture de l'app
 
-```javascript
-const ARCHETYPE_COLORS = {
-  "GOAT":      "#A855F7",
-  "Récup":     "#3B82F6",
-  "Relanceur": "#06B6D4",
-  "B2B":       "#10B981",
-  "Créateur":  "#F59E0B",
-  "Dribbleur": "#EF4444",
-  "Finisseur": "#F97316",
-  "Complet":   "#22C55E",
-  "Rotation":  "#6B7280",
-  "Central":   "#3B82F6",
-  "Latéral":   "#06B6D4",
-  "GK":        "#06B6D4",
-};
-
-const POSITION_COLORS = { GK: "#06B6D4", DEF: "#3B82F6", MIL: "#8B5CF6", ATT: "#EF4444" };
-const LEAGUE_COLORS   = { L1: "#4FC3F7", PL: "#B388FF", Liga: "#FF8A80", Bundes: "#FFD180" };
-const LEAGUE_FLAGS    = { L1: "🇫🇷", PL: "🏴󠁧󠁢󠁥󠁮󠁧󠁿", Liga: "🇪🇸", Bundes: "🇩🇪" };
-const LEAGUE_NAMES    = { L1: "Ligue 1", PL: "Premier League", Liga: "La Liga", Bundes: "Bundesliga" };
-
-// D-Score color scale
-function dsColor(d) {
-  return d >= 75 ? "#06D6A0" : d >= 65 ? "#2EC4B6" : d >= 55 ? "#E9C46A" : d >= 45 ? "#F4A261" : "#E76F51";
-}
-function dsBg(d) {
-  return d >= 75 ? "linear-gradient(135deg,#06D6A0,#049A73)"
-       : d >= 65 ? "linear-gradient(135deg,#2EC4B6,#1A8A7F)"
-       : d >= 55 ? "linear-gradient(135deg,#E9C46A,#C9A227)"
-       : d >= 45 ? "linear-gradient(135deg,#F4A261,#D4782E)"
-       :           "linear-gradient(135deg,#E76F51,#C44B33)";
-}
-```
-
----
-
-## Design system (dark gaming)
-
-```css
-/* Background principal */
-background: linear-gradient(170deg, #04040F, #080820 25%, #0C0C2D 50%, #0A0A22 75%, #060612);
-color: #ffffff;
-font-family: 'Outfit', sans-serif; /* Google Fonts */
-
-/* Cards */
-background: rgba(255,255,255,0.02);
-border: 1px solid rgba(255,255,255,0.06);
-border-radius: 12px;
-
-/* Header sticky */
-background: rgba(4,4,15,0.9);
-backdrop-filter: blur(20px);
-border-bottom: 1px solid rgba(255,255,255,0.04);
-
-/* Tabs actifs */
-background: rgba(99,102,241,0.12);
-outline: 1px solid rgba(99,102,241,0.3);
-```
-
----
-
-## Stack technique cible
+### Stack technique
 
 ```
-React 18 + Vite (JS pur, pas TypeScript)
+React 18 + Vite (JavaScript pur, pas TypeScript)
 ├── Styles : inline styles uniquement (pas de Tailwind, pas de CSS modules)
 ├── fetch() natif pour charger les JSON depuis /public/data/
 ├── Pas de react-router (tabs gérés en useState)
 └── SVG inline pour radar chart et mini graphe L5
+```
 
-Structure projet :
+### Structure des fichiers
+
+```
 deglingo-scout-app/
 ├── public/
 │   └── data/
-│       ├── players.json   (1419 joueurs mergés + normalisés)
-│       └── teams.json     (76 clubs PPDA/xGA)
+│       ├── players.json      (1419 joueurs, 60+ champs chacun)
+│       ├── teams.json        (76 clubs avec PPDA/xGA/xG dom+ext)
+│       ├── fixtures.json     (matchs prochaine journée, 4 ligues)
+│       ├── club_logos.json   (142 mappings nom→logo)
+│       └── logos/            (76 fichiers PNG)
 ├── src/
-│   ├── App.jsx            (shell : fetch + tabs)
+│   ├── App.jsx               (shell : fetch data + 3 tabs + logos)
 │   ├── components/
-│   │   ├── DbTab.jsx      (Database)
-│   │   ├── FightTab.jsx   (Duel D-Score)
-│   │   ├── RecoTab.jsx    (SO7 sur terrain)
-│   │   ├── PlayerCard.jsx (fiche joueur)
-│   │   ├── RadarChart.jsx (5 axes AA)
-│   │   └── MiniGraph.jsx  (L5 scores)
+│   │   ├── DbTab.jsx         (📊 Database — table triée/filtrée 1419 joueurs)
+│   │   ├── FightTab.jsx      (🥊 Fight — duel D-Score 1v1)
+│   │   ├── RecoTab.jsx       (⚽ Reco SO7 — picks auto par ligue)
+│   │   ├── PlayerCard.jsx    (Modal fiche joueur détaillée)
+│   │   ├── RadarChart.jsx    (5 axes AA : DEF/PASS/POSS/ATT/FTP)
+│   │   └── MiniGraph.jsx     (Graphe L5 scores)
 │   └── utils/
-│       ├── dscore.js      (formule D-Score V2)
-│       └── colors.js      (palettes)
-└── merge_data.py          (script de préparation des données)
+│       ├── dscore.js         (formule D-Score V2)
+│       └── colors.js         (palettes couleurs positions/archétypes/D-Score)
+├── fetch_logos.py             (scraper logos football-data.org)
+├── fetch_fixtures.py          (scraper fixtures prochaine journée)
+├── fetch_all_players.py       (pipeline complet joueurs)
+├── merge_data.py              (merge 4 ligues → players.json)
+├── patch_final.py             (patches corrections joueurs)
+├── reclassify_v3.py           (classification archétypes V3)
+└── find_slugs.py              (résolution slugs Sorare)
+```
 
-Déploiement :
-├── GitHub repo : github.com/[damiengheza]/deglingo-scout
-├── Cloudflare Pages : build command = "npm run build", output = "dist"
-└── Phase 2 : remplacer fetch('/data/...') par fetch('https://r2.deglingosorare.com/...')
+### Data flow dans App.jsx
+
+```
+App.jsx → Promise.all([
+  fetch("/data/players.json"),   → setPlayers (1419)
+  fetch("/data/teams.json"),     → setTeams (76)
+  fetch("/data/fixtures.json"),  → setFixtures
+  fetch("/data/club_logos.json") → setLogos (142 mappings)
+])
+→ Passe { players, teams, fixtures, logos } à chaque tab
 ```
 
 ---
 
-## Fichiers dans le dossier de travail
+## 📊 Onglet 1 : Database (DbTab.jsx)
+
+### Fonctionnalités
+- Table complète 1419 joueurs triable par toutes les colonnes
+- Filtres : recherche nom/club, ligue, position, archétype, cap L10
+- Colonnes : Joueur (flag + nom + club + logo), Pos, Ligue, L2, AA2, Last5 (barres), L5, AA5, L10, AA10, Min, Max, Rég10%, Titu%, D-Score, Adversaire (logo), Archétype
+- Indicateur L2 explosion (glow vert si L2 > L5 + 15)
+- Logos 12px clubs dans la colonne joueur et adversaire
+- Clic joueur → PlayerCard (modal détaillée avec radar + graphe L5)
+
+### Légende couleurs barres Last5
+- 75+ → `#06D6A0` (vert)
+- 60-74 → `#2EC4B6` (teal)
+- 45-59 → `#E9C46A` (gold)
+- 30-44 → `#F4A261` (orange)
+- < 30 → `#E76F51` (rouge)
+- = 100 → gradient argent animé (silver 🏆)
+
+---
+
+## 🥊 Onglet 2 : Fight (FightTab.jsx)
+
+### Fonctionnalités
+- Sélection Ligue → Club → Joueur → Adversaire → DOM/EXT pour chaque combattant
+- Animation combat avec logos clubs, poings, et clash 💥
+- Cartes récap joueur avec : position badge, D-Score rond (dsColor/dsBg), nom, club + logo, étoiles confiance, mini-histogramme L5
+- Context cards adversaire : PPDA + xGA avec labels (Bloc bas / Équilibré / Pressing, Passoire / Moyen / Solide)
+- Winner déterminé par D-Score le plus élevé
+
+### Verdicts (alignés avec Reco SO7)
+
+**Analyse individuelle** — même format pour Fight et Reco :
+```
+D-Score {d}. L5={l5}, AA5={aa5}, Min={min}. {dom/ext} face à {adversaire}. Rég {reg}%.
+{adversaire} {en ext/à dom}: xGA={xga}, PPDA={ppda} = {style}.
+{verdict style selon AA5 et contexte}
+D-Score {d} — {Top pick! / Bon pick. / Pick correct. / Pick risqué.}
+```
+
+**GK-specific** :
+```
+Probabilité de Clean Sheet : {élevée >50% / correcte ~35-45% / moyenne ~25-35% / faible <25%}
+Basé sur xG adverse : <1.0 = très peu dangereux, <1.3 = peu offensif, <1.6 = modéré, >1.6 = très offensif
+```
+
+**Conclusion comparative risk/reward** (uniquement dans Fight) :
+- 📈 Atouts du winner (domicile, floor, régularité, adversaire perméable)
+- ⚠️ Risques du loser (déplacement, floor bas, irrégulier, pressing adverse)
+- 💡 Pourquoi le loser pourrait quand même être un bon pick (AA5 supérieur, en forme, ceiling)
+- 🎯 Verdict final adapté à l'écart (pick évident / avantage clair / très serré)
+
+### Certitude du résultat
+- Δ > 12 → FORTE (vert `#22C55E`)
+- Δ 7-12 → MOYENNE (gold `#FBBF24`)
+- Δ ≤ 6 → SERRÉE (rouge `#F87171`)
+
+---
+
+## ⚽ Onglet 3 : Reco SO7 (RecoTab.jsx)
+
+### Fonctionnalités
+- Sélection ligue → auto-pick des meilleurs joueurs par poste : 1 GK + 2 DEF + 2 MIL + 2 ATT
+- Cartes joueur 110×156px avec :
+  - Position badge coloré en haut
+  - D-Score rond 38px (dsColor/dsBg)
+  - Nom (last name), club texte, logo 26px
+  - Étoiles confiance (1-5, animation pulse pour 5★)
+  - Mini-histogramme L5
+- Gradients de carte par position (GK=bleu profond, DEF=indigo, MIL=violet, ATT=rouge)
+- Clic → DetailPanel avec 4 sections verdict : Situation, Adversaire, Style, Conclusion
+- DetailPanel adapté GK : labels "🧤 Clean Sheet & Arrêts" + context cards CS probability / xG adverse / Potentiel d'arrêts / Tendance récente
+
+---
+
+## 🎨 Design System
+
+### Background & Typography
+```css
+background: linear-gradient(170deg, #04040F, #080820 25%, #0C0C2D 50%, #0A0A22 75%, #060612);
+color: #ffffff;
+font-family: 'Outfit', sans-serif;  /* Google Fonts */
+font-mono: 'DM Mono', monospace;    /* Pour les chiffres */
+```
+
+### Cards
+```css
+background: rgba(255,255,255,0.02);
+border: 1px solid rgba(255,255,255,0.06);
+border-radius: 12px;
+```
+
+### Header sticky
+```css
+background: rgba(4,4,15,0.9);
+backdrop-filter: blur(20px);
+border-bottom: 1px solid rgba(255,255,255,0.04);
+```
+
+### Palettes
+
+**Positions :**
+| Position | Couleur | Hex |
+|----------|---------|-----|
+| GK | Cyan | `#06B6D4` |
+| DEF | Bleu | `#3B82F6` |
+| MIL | Violet | `#8B5CF6` |
+| ATT | Rouge | `#EF4444` |
+
+**Archétypes :**
+| Archétype | Couleur |
+|-----------|---------|
+| GOAT | `#A855F7` (violet vif) |
+| Récup | `#3B82F6` |
+| Relanceur | `#06B6D4` |
+| B2B | `#10B981` |
+| Créateur | `#F59E0B` |
+| Dribbleur | `#EF4444` |
+| Finisseur | `#F97316` |
+| Complet | `#22C55E` |
+| Rotation | `#6B7280` |
+| Central | `#3B82F6` |
+| Latéral | `#06B6D4` |
+
+**Ligues :**
+| Ligue | Couleur | Flag |
+|-------|---------|------|
+| L1 | `#4FC3F7` | 🇫🇷 |
+| PL | `#B388FF` | 🏴󠁧󠁢󠁥󠁮󠁧󠁿 |
+| Liga | `#FF8A80` | 🇪🇸 |
+| Bundes | `#FFD180` | 🇩🇪 |
+
+---
+
+## 📋 Champs joueur (60+ champs)
+
+### Champs principaux utilisés par le frontend
 
 ```
-Deglingo Scout/
-├── deglingo_ligue1_final.json          ← données L1 (348 joueurs)
-├── deglingo_premier_league_final.json  ← données PL (351 joueurs)
-├── deglingo_la_liga_final.json         ← données Liga (375 joueurs)
-├── deglingo_bundesliga_final.json      ← données Bundesliga (345 joueurs)
-├── teams_data.json                     ← 76 clubs PPDA/xGA
-├── deglingo-scout-preview.jsx          ← UI référence (87 joueurs hardcodés)
-├── deglingo-fight-v5.jsx               ← module Fight référence
-├── deglingo-so7-unified.jsx            ← module SO7 référence
-├── reclassify_v3.py                    ← classification archétypes V3
-├── reclassification_v3_report.txt      ← rapport 512 changements
-└── Bible_Deglingo_Scout_V3.docx        ← documentation complète
+name, club, position (GK/DEF/MIL/ATT), league (L1/PL/Liga/Bundes)
+archetype, country (code ISO), slug (Sorare slug)
+```
+
+### Scores
+```
+l2, l3, l5, l10, l15          — Moyennes sur N derniers matchs
+aa2, aa3, aa5, aa10, aa15     — All-Around scores moyens
+last_5: [91.6, 77.5, ...]     — 5 derniers scores (récent→ancien)
+floor, ceiling                 — Min/Max sur L5
+min_5, max_5, min_15, max_15  — Min/Max sur L5 et L15
+```
+
+### Stats avancées
+```
+regularite    — % matchs > 60 pts sur L10
+titu_pct      — % titularisations sur L10
+ds_rate       — % matchs avec Decisive Score
+ga_per_match  — (goals + assists) / appearances
+avg_dom, avg_ext, delta_dom_ext
+pct_above_60, pct_below_35
+```
+
+### AA breakdown (radar)
+```
+aa_defending, aa_passing, aa_possession, aa_attacking, aa_negative
+final_third_passes_avg
+```
+
+### Méta
+```
+age, appearances, goals, assists, red, yellow
+matchs_played, matchs_total, matchs_dom, matchs_ext
+mins_per_match, last_date, status (REGULAR/etc)
+early_signal, aa_trend
+```
+
+### Champs équipe (teams.json)
+```
+name, league, matches
+ppda, ppda_dom, ppda_ext     — PPDA (Passes Per Defensive Action)
+xga, xga_dom, xga_ext       — Expected Goals Against per match
+xg, xg_dom, xg_ext          — Expected Goals per match
+npxg, npxga                  — Non-Penalty xG / xGA
+goals, ga                    — Buts marqués / encaissés
 ```
 
 ---
 
-## Liens utiles
+## 🔄 Pipeline hebdomadaire
+
+### Routine avant chaque Game Week (vendredi 16h deadline Sorare)
+
+```
+1. fetch_all_players.py   → Scrape 4 ligues via API Sorare (detailedScores)
+2. reclassify_v3.py       → Reclassification archétypes
+3. merge_data.py           → Merge 4 JSON → players.json normalisé
+4. patch_final.py          → Corrections manuelles si nécessaire
+5. fetch_fixtures.py       → Scrape prochaine journée (football-data.org)
+6. Build & deploy          → npx vite build + push GitHub → Cloudflare Pages
+```
+
+### Commandes build
+
+```bash
+# Charger Node.js
+export NVM_DIR="$HOME/.nvm" && [ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh"
+
+# Build
+cd deglingo-scout-app && npx vite build
+
+# Le dist/ est servi soit par :
+# - Cloudflare Pages (auto-deploy depuis GitHub)
+# - Serveur local (.claude/scout-server.mjs dans Moonwalk, port 5173)
+```
+
+### Preview local (depuis le repo Moonwalk)
+
+Le serveur de preview est configuré dans `/Users/damiengheza/Desktop/Moonwalk/.claude/launch.json` :
+- Nom : `deglingo-scout`
+- Sert depuis : `/Users/damiengheza/Desktop/Moonwalk/.claude/scout-dist/`
+- Port : 5173
+- **Important** : après un build, copier le dist vers `Moonwalk/.claude/scout-dist/`
+
+---
+
+## 🔗 GitHub & Déploiement
+
+- **Repo GitHub** : `github.com/deglongompg/Deglingo-scout`
+- **Branche** : `main`
+- **Déploiement** : Cloudflare Pages (build command: `npm run build`, output: `dist`)
+- **Site** : `deglingosorare.com/scout`
+- **Phase 2 (future)** : Remplacer fetch locaux par Cloudflare R2 URLs
+
+---
+
+## 📐 Archétypes V3
+
+Classification automatique basée sur les stats AA :
+
+| Position | Archétypes possibles |
+|----------|---------------------|
+| GK | `GK` (unique) |
+| DEF | `DEF Central`, `DEF Latéral` |
+| MIL | `MIL GOAT`, `MIL Récup`, `MIL Relanceur`, `MIL B2B`, `MIL Créateur`, `MIL Dribbleur`, `MIL Rotation` |
+| ATT | `ATT GOAT`, `ATT Complet`, `ATT Finisseur`, `ATT Créateur`, `ATT Dribbleur`, `ATT Rotation` |
+
+Script : `reclassify_v3.py` (512 changements V1→V3 documentés dans `reclassification_v3_report.txt`)
+
+---
+
+## ⚠️ Points d'attention / Décisions techniques
+
+1. **NE PAS toucher le layout/fonctionnalité du Fight** sauf changements additifs (logos, verdicts)
+2. **min_15 ?? floor** : le D-Score utilise `min_15` comme floor quand disponible (plus fiable car L15)
+3. **Logos** : le mapping `club_logos.json` couvre 3 systèmes de noms différents (football-data.org, teams.json, players.json)
+4. **GK verdicts** : toujours parler de Clean Sheet probability (basé sur xG adverse), pas de "style de jeu"
+5. **D-Score 60 = gold/jaune**, pas orange (seuil à 55, pas 60)
+6. **Badge D-Score** = rond avec gradient (dsBg), jamais hexagonal
+7. **Fight verdicts** = identiques à Reco SO7 + conclusion comparative risk/reward en plus
+
+---
+
+## 🔮 Roadmap / Idées futures
+
+- [ ] Intégrer CS% dans l'algorithme D-Score GK (approximation Poisson : `CS% ≈ e^(-xG)`)
+- [ ] Pipeline Make.com → Claude API → Cloudflare R2 (automatisation complète)
+- [ ] Scraper les CS% officiels de la prochaine journée
+- [ ] Déployer sur Cloudflare Pages avec auto-deploy GitHub
+- [ ] Ajouter filtres avancés dans Database (DOM only, EXT only, forme récente)
+
+---
+
+## 📞 Liens utiles
+
 - Site : https://deglingosorare.com
 - Sorare API : https://api.sorare.com/federation/graphql
 - Affiliate link : http://sorare.pxf.io/Deglingo
+- Football-data.org : https://api.football-data.org/v4/ (clé: `d265aec39d9c401aa27a85b32349bd86`)
 - Cloudflare Dashboard : https://dash.cloudflare.com
+- GitHub : https://github.com/deglongompg/Deglingo-scout

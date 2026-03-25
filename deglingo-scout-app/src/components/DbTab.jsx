@@ -156,6 +156,8 @@ export default function DbTab({ players, teams, fixtures, logos = {} }) {
             <span style={{ display: "inline-block", width: 10, height: 10, borderRadius: 3, background: "linear-gradient(135deg,#4ADE80,#22C55E)", boxShadow: "0 0 6px #4ADE80" }} />
             L2 explosion
           </span>
+          <span>Reg10 = % matchs &gt;60 sur L10</span>
+          <span>Titu10 = % titularisations sur L10</span>
           <span><span style={{ color: "#FBBF24" }}>L€</span> Limited · <span style={{ color: "#EF4444" }}>R€</span> Rare</span>
         </div>
       </div>

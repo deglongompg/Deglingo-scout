@@ -179,8 +179,6 @@ export default function DbTab({ players, teams, fixtures, logos = {} }) {
               <th style={thStyle("max_15")} onClick={() => toggleSort("max_15")}>Max{arrow("max_15")}</th>
               <th style={{ ...thStyle("reg10"), borderLeft: "1px solid rgba(255,255,255,0.06)" }} onClick={() => toggleSort("reg10")}>Reg10{arrow("reg10")}</th>
               <th style={thStyle("titu_pct")} onClick={() => toggleSort("titu_pct")}>Titu10{arrow("titu_pct")}</th>
-              <th style={thStyle("price_limited")} onClick={() => toggleSort("price_limited")}>L€{arrow("price_limited")}</th>
-              <th style={thStyle("price_rare")} onClick={() => toggleSort("price_rare")}>R€{arrow("price_rare")}</th>
               {hasFixtures && <>
                 <th style={thStyle("dsMatch")} onClick={() => toggleSort("dsMatch")}>
                   <span style={{ color: sortKey === "dsMatch" ? "#C084FC" : "#C084FC80" }}>D-Score{arrow("dsMatch")}</span>
@@ -188,6 +186,8 @@ export default function DbTab({ players, teams, fixtures, logos = {} }) {
                 <th style={thStyle("csPercent")} onClick={() => toggleSort("csPercent")}>CS%{arrow("csPercent")}</th>
                 <th style={{ ...thStyle("oppName"), cursor: "default" }}>Adv.</th>
               </>}
+              <th style={thStyle("price_limited")} onClick={() => toggleSort("price_limited")}>L€{arrow("price_limited")}</th>
+              <th style={thStyle("price_rare")} onClick={() => toggleSort("price_rare")}>R€{arrow("price_rare")}</th>
               <th style={{ ...thStyle("archetype"), cursor: "default" }}>Archétype</th>
             </tr>
           </thead>
@@ -260,16 +260,6 @@ export default function DbTab({ players, teams, fixtures, logos = {} }) {
                   <td style={{ textAlign: "center", fontFamily: "DM Mono", fontSize: 11, color: dsColor(p.max_15) }}>{R(p.max_15)}</td>
                   <td style={{ textAlign: "center", fontFamily: "DM Mono", fontSize: 11, color: (p.reg10 ?? p.regularite) >= 80 ? "#4ADE80" : (p.reg10 ?? p.regularite) >= 50 ? "#FBBF24" : "#EF4444", borderLeft: "1px solid rgba(255,255,255,0.04)" }}>{R(p.reg10 ?? p.regularite)}%</td>
                   <td style={{ textAlign: "center", fontFamily: "DM Mono", fontSize: 11, color: p.titu_pct >= 80 ? "#4ADE80" : p.titu_pct >= 50 ? "#FBBF24" : "#EF4444" }}>{R(p.titu_pct)}%</td>
-                  <td style={{ textAlign: "center", fontFamily: "DM Mono", fontSize: 10, borderLeft: "1px solid rgba(255,255,255,0.04)" }}>
-                    {p.price_limited != null ? (
-                      <span style={{ color: "#FBBF24" }}>{p.price_limited < 1 ? p.price_limited.toFixed(2) : Math.round(p.price_limited)}€</span>
-                    ) : <span style={{ color: "rgba(255,255,255,0.12)" }}>—</span>}
-                  </td>
-                  <td style={{ textAlign: "center", fontFamily: "DM Mono", fontSize: 10 }}>
-                    {p.price_rare != null ? (
-                      <span style={{ color: "#EF4444" }}>{p.price_rare < 1 ? p.price_rare.toFixed(2) : Math.round(p.price_rare)}€</span>
-                    ) : <span style={{ color: "rgba(255,255,255,0.12)" }}>—</span>}
-                  </td>
                   {hasFixtures && <>
                     <td style={{ textAlign: "center" }}>
                       {p.dsMatch !== null ? (
@@ -304,6 +294,16 @@ export default function DbTab({ players, teams, fixtures, logos = {} }) {
                       )}
                     </td>
                   </>}
+                  <td style={{ textAlign: "center", fontFamily: "DM Mono", fontSize: 10, borderLeft: "1px solid rgba(255,255,255,0.04)" }}>
+                    {p.price_limited != null ? (
+                      <span style={{ color: "#FBBF24" }}>{p.price_limited < 1 ? p.price_limited.toFixed(2) : Math.round(p.price_limited)}€</span>
+                    ) : <span style={{ color: "rgba(255,255,255,0.12)" }}>—</span>}
+                  </td>
+                  <td style={{ textAlign: "center", fontFamily: "DM Mono", fontSize: 10 }}>
+                    {p.price_rare != null ? (
+                      <span style={{ color: "#EF4444" }}>{p.price_rare < 1 ? p.price_rare.toFixed(2) : Math.round(p.price_rare)}€</span>
+                    ) : <span style={{ color: "rgba(255,255,255,0.12)" }}>—</span>}
+                  </td>
                   <td style={{ textAlign: "center" }}>
                     <span style={{
                       padding: "2px 6px", borderRadius: 12, fontSize: 9,

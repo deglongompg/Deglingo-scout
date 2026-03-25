@@ -24,6 +24,10 @@ for filename, league_short in LEAGUES.items():
         p["league"] = league_short
         apps = max(p.get("appearances", 1), 1)
         p["ga_per_match"] = round((p.get("goals", 0) + p.get("assists", 0)) / apps, 3)
+        mp = p.get("matchs_played", 0) or 0
+        mt = p.get("matchs_total", 0) or 0
+        if mt > 0 and (not p.get("titu_pct") or p["titu_pct"] == 0):
+            p["titu_pct"] = round(mp / mt * 100)
         all_players.append(p)
 
 for outdir in ["public/data", "deglingo-scout-app/public/data"]:

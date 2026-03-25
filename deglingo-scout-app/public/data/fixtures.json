@@ -1,0 +1,7069 @@
+{
+  "generated": "2026-03-25T16:07:54.020028",
+  "matchdays": {
+    "L1": 26,
+    "PL": 32,
+    "Liga": 30,
+    "Bundes": 28
+  },
+  "fixtures": [
+    {
+      "home": "Paris Saint Germain",
+      "away": "Nantes",
+      "date": "2026-04-22",
+      "matchday": 26,
+      "league": "L1",
+      "home_api": "Paris Saint-Germain FC",
+      "away_api": "FC Nantes"
+    },
+    {
+      "home": "West Ham",
+      "away": "Wolverhampton Wanderers",
+      "date": "2026-04-10",
+      "matchday": 32,
+      "league": "PL",
+      "home_api": "West Ham United FC",
+      "away_api": "Wolverhampton Wanderers FC"
+    },
+    {
+      "home": "Arsenal",
+      "away": "Bournemouth",
+      "date": "2026-04-11",
+      "matchday": 32,
+      "league": "PL",
+      "home_api": "Arsenal FC",
+      "away_api": "AFC Bournemouth"
+    },
+    {
+      "home": "Brentford",
+      "away": "Everton",
+      "date": "2026-04-11",
+      "matchday": 32,
+      "league": "PL",
+      "home_api": "Brentford FC",
+      "away_api": "Everton FC"
+    },
+    {
+      "home": "Burnley",
+      "away": "Brighton",
+      "date": "2026-04-11",
+      "matchday": 32,
+      "league": "PL",
+      "home_api": "Burnley FC",
+      "away_api": "Brighton & Hove Albion FC"
+    },
+    {
+      "home": "Liverpool",
+      "away": "Fulham",
+      "date": "2026-04-11",
+      "matchday": 32,
+      "league": "PL",
+      "home_api": "Liverpool FC",
+      "away_api": "Fulham FC"
+    },
+    {
+      "home": "Sunderland",
+      "away": "Tottenham",
+      "date": "2026-04-12",
+      "matchday": 32,
+      "league": "PL",
+      "home_api": "Sunderland AFC",
+      "away_api": "Tottenham Hotspur FC"
+    },
+    {
+      "home": "Crystal Palace",
+      "away": "Newcastle United",
+      "date": "2026-04-12",
+      "matchday": 32,
+      "league": "PL",
+      "home_api": "Crystal Palace FC",
+      "away_api": "Newcastle United FC"
+    },
+    {
+      "home": "Nottingham Forest",
+      "away": "Aston Villa",
+      "date": "2026-04-12",
+      "matchday": 32,
+      "league": "PL",
+      "home_api": "Nottingham Forest FC",
+      "away_api": "Aston Villa FC"
+    },
+    {
+      "home": "Chelsea",
+      "away": "Manchester City",
+      "date": "2026-04-12",
+      "matchday": 32,
+      "league": "PL",
+      "home_api": "Chelsea FC",
+      "away_api": "Manchester City FC"
+    },
+    {
+      "home": "Manchester United",
+      "away": "Leeds",
+      "date": "2026-04-13",
+      "matchday": 32,
+      "league": "PL",
+      "home_api": "Manchester United FC",
+      "away_api": "Leeds United FC"
+    },
+    {
+      "home": "Rayo Vallecano",
+      "away": "Elche",
+      "date": "2026-04-03",
+      "matchday": 30,
+      "league": "Liga",
+      "home_api": "Rayo Vallecano de Madrid",
+      "away_api": "Elche CF"
+    },
+    {
+      "home": "Real Sociedad",
+      "away": "Levante",
+      "date": "2026-04-04",
+      "matchday": 30,
+      "league": "Liga",
+      "home_api": "Real Sociedad de Fútbol",
+      "away_api": "Levante UD"
+    },
+    {
+      "home": "Mallorca",
+      "away": "Real Madrid",
+      "date": "2026-04-04",
+      "matchday": 30,
+      "league": "Liga",
+      "home_api": "RCD Mallorca",
+      "away_api": "Real Madrid CF"
+    },
+    {
+      "home": "Real Betis",
+      "away": "Espanyol",
+      "date": "2026-04-04",
+      "matchday": 30,
+      "league": "Liga",
+      "home_api": "Real Betis Balompié",
+      "away_api": "RCD Espanyol de Barcelona"
+    },
+    {
+      "home": "Atletico Madrid",
+      "away": "Barcelona",
+      "date": "2026-04-04",
+      "matchday": 30,
+      "league": "Liga",
+      "home_api": "Club Atlético de Madrid",
+      "away_api": "FC Barcelona"
+    },
+    {
+      "home": "Getafe",
+      "away": "Athletic Club",
+      "date": "2026-04-05",
+      "matchday": 30,
+      "league": "Liga",
+      "home_api": "Getafe CF",
+      "away_api": "Athletic Club"
+    },
+    {
+      "home": "Valencia",
+      "away": "Celta Vigo",
+      "date": "2026-04-05",
+      "matchday": 30,
+      "league": "Liga",
+      "home_api": "Valencia CF",
+      "away_api": "RC Celta de Vigo"
+    },
+    {
+      "home": "Real Oviedo",
+      "away": "Sevilla",
+      "date": "2026-04-05",
+      "matchday": 30,
+      "league": "Liga",
+      "home_api": "Real Oviedo",
+      "away_api": "Sevilla FC"
+    },
+    {
+      "home": "Alaves",
+      "away": "Osasuna",
+      "date": "2026-04-05",
+      "matchday": 30,
+      "league": "Liga",
+      "home_api": "Deportivo Alavés",
+      "away_api": "CA Osasuna"
+    },
+    {
+      "home": "Girona",
+      "away": "Villarreal",
+      "date": "2026-04-06",
+      "matchday": 30,
+      "league": "Liga",
+      "home_api": "Girona FC",
+      "away_api": "Villarreal CF"
+    },
+    {
+      "home": "Freiburg",
+      "away": "Bayern Munich",
+      "date": "2026-04-04",
+      "matchday": 28,
+      "league": "Bundes",
+      "home_api": "SC Freiburg",
+      "away_api": "FC Bayern München"
+    },
+    {
+      "home": "Hoffenheim",
+      "away": "Mainz 05",
+      "date": "2026-04-04",
+      "matchday": 28,
+      "league": "Bundes",
+      "home_api": "TSG 1899 Hoffenheim",
+      "away_api": "1. FSV Mainz 05"
+    },
+    {
+      "home": "Werder Bremen",
+      "away": "RasenBallsport Leipzig",
+      "date": "2026-04-04",
+      "matchday": 28,
+      "league": "Bundes",
+      "home_api": "SV Werder Bremen",
+      "away_api": "RB Leipzig"
+    },
+    {
+      "home": "Bayer Leverkusen",
+      "away": "Wolfsburg",
+      "date": "2026-04-04",
+      "matchday": 28,
+      "league": "Bundes",
+      "home_api": "Bayer 04 Leverkusen",
+      "away_api": "VfL Wolfsburg"
+    },
+    {
+      "home": "Hamburger SV",
+      "away": "Augsburg",
+      "date": "2026-04-04",
+      "matchday": 28,
+      "league": "Bundes",
+      "home_api": "Hamburger SV",
+      "away_api": "FC Augsburg"
+    },
+    {
+      "home": "Borussia M.Gladbach",
+      "away": "FC Heidenheim",
+      "date": "2026-04-04",
+      "matchday": 28,
+      "league": "Bundes",
+      "home_api": "Borussia Mönchengladbach",
+      "away_api": "1. FC Heidenheim 1846"
+    },
+    {
+      "home": "VfB Stuttgart",
+      "away": "Borussia Dortmund",
+      "date": "2026-04-04",
+      "matchday": 28,
+      "league": "Bundes",
+      "home_api": "VfB Stuttgart",
+      "away_api": "Borussia Dortmund"
+    },
+    {
+      "home": "Union Berlin",
+      "away": "St. Pauli",
+      "date": "2026-04-05",
+      "matchday": 28,
+      "league": "Bundes",
+      "home_api": "1. FC Union Berlin",
+      "away_api": "FC St. Pauli 1910"
+    },
+    {
+      "home": "Eintracht Frankfurt",
+      "away": "FC Cologne",
+      "date": "2026-04-05",
+      "matchday": 28,
+      "league": "Bundes",
+      "home_api": "Eintracht Frankfurt",
+      "away_api": "1. FC Köln"
+    }
+  ],
+  "player_fixtures": {
+    "Achraf Hakimi": {
+      "opp": "Nantes",
+      "isHome": true,
+      "date": "2026-04-22",
+      "matchday": 26
+    },
+    "Vitinha": {
+      "opp": "Nantes",
+      "isHome": true,
+      "date": "2026-04-22",
+      "matchday": 26
+    },
+    "Moustapha Mbow": {
+      "opp": "Nantes",
+      "isHome": true,
+      "date": "2026-04-22",
+      "matchday": 26
+    },
+    "Nuno Mendes": {
+      "opp": "Nantes",
+      "isHome": true,
+      "date": "2026-04-22",
+      "matchday": 26
+    },
+    "Bradley Barcola": {
+      "opp": "Nantes",
+      "isHome": true,
+      "date": "2026-04-22",
+      "matchday": 26
+    },
+    "Fabien Centonze": {
+      "opp": "Paris Saint Germain",
+      "isHome": false,
+      "date": "2026-04-22",
+      "matchday": 26
+    },
+    "Hamari Traoré": {
+      "opp": "Nantes",
+      "isHome": true,
+      "date": "2026-04-22",
+      "matchday": 26
+    },
+    "Matvey Safonov": {
+      "opp": "Nantes",
+      "isHome": true,
+      "date": "2026-04-22",
+      "matchday": 26
+    },
+    "Illia Zabarnyi": {
+      "opp": "Nantes",
+      "isHome": true,
+      "date": "2026-04-22",
+      "matchday": 26
+    },
+    "Ali Youssef": {
+      "opp": "Paris Saint Germain",
+      "isHome": false,
+      "date": "2026-04-22",
+      "matchday": 26
+    },
+    "João Neves": {
+      "opp": "Nantes",
+      "isHome": true,
+      "date": "2026-04-22",
+      "matchday": 26
+    },
+    "Kevin Trapp": {
+      "opp": "Nantes",
+      "isHome": true,
+      "date": "2026-04-22",
+      "matchday": 26
+    },
+    "Khvicha Kvaratskhelia": {
+      "opp": "Nantes",
+      "isHome": true,
+      "date": "2026-04-22",
+      "matchday": 26
+    },
+    "Pierre Lees-Melou": {
+      "opp": "Nantes",
+      "isHome": true,
+      "date": "2026-04-22",
+      "matchday": 26
+    },
+    "Marquinhos": {
+      "opp": "Nantes",
+      "isHome": true,
+      "date": "2026-04-22",
+      "matchday": 26
+    },
+    "Diego Coppola": {
+      "opp": "Nantes",
+      "isHome": true,
+      "date": "2026-04-22",
+      "matchday": 26
+    },
+    "Warren Zaïre-Emery": {
+      "opp": "Nantes",
+      "isHome": true,
+      "date": "2026-04-22",
+      "matchday": 26
+    },
+    "Ousmane Dembélé": {
+      "opp": "Nantes",
+      "isHome": true,
+      "date": "2026-04-22",
+      "matchday": 26
+    },
+    "Lucas Hernández": {
+      "opp": "Nantes",
+      "isHome": true,
+      "date": "2026-04-22",
+      "matchday": 26
+    },
+    "Senny Mayulu": {
+      "opp": "Nantes",
+      "isHome": true,
+      "date": "2026-04-22",
+      "matchday": 26
+    },
+    "Mohamed Kaba": {
+      "opp": "Paris Saint Germain",
+      "isHome": false,
+      "date": "2026-04-22",
+      "matchday": 26
+    },
+    "Chidozie Awaziem": {
+      "opp": "Paris Saint Germain",
+      "isHome": false,
+      "date": "2026-04-22",
+      "matchday": 26
+    },
+    "Ilan Kebbal": {
+      "opp": "Nantes",
+      "isHome": true,
+      "date": "2026-04-22",
+      "matchday": 26
+    },
+    "Désiré Doué": {
+      "opp": "Nantes",
+      "isHome": true,
+      "date": "2026-04-22",
+      "matchday": 26
+    },
+    "Matthis Abline": {
+      "opp": "Paris Saint Germain",
+      "isHome": false,
+      "date": "2026-04-22",
+      "matchday": 26
+    },
+    "Adama Camara": {
+      "opp": "Nantes",
+      "isHome": true,
+      "date": "2026-04-22",
+      "matchday": 26
+    },
+    "Nhoa Sangui": {
+      "opp": "Nantes",
+      "isHome": true,
+      "date": "2026-04-22",
+      "matchday": 26
+    },
+    "Moses Simon": {
+      "opp": "Nantes",
+      "isHome": true,
+      "date": "2026-04-22",
+      "matchday": 26
+    },
+    "Beraldo": {
+      "opp": "Nantes",
+      "isHome": true,
+      "date": "2026-04-22",
+      "matchday": 26
+    },
+    "Gonçalo Ramos": {
+      "opp": "Nantes",
+      "isHome": true,
+      "date": "2026-04-22",
+      "matchday": 26
+    },
+    "Alimami Gory": {
+      "opp": "Nantes",
+      "isHome": true,
+      "date": "2026-04-22",
+      "matchday": 26
+    },
+    "Mostafa Mohamed": {
+      "opp": "Paris Saint Germain",
+      "isHome": false,
+      "date": "2026-04-22",
+      "matchday": 26
+    },
+    "Anthony Lopes": {
+      "opp": "Paris Saint Germain",
+      "isHome": false,
+      "date": "2026-04-22",
+      "matchday": 26
+    },
+    "Nicolas Cozza": {
+      "opp": "Paris Saint Germain",
+      "isHome": false,
+      "date": "2026-04-22",
+      "matchday": 26
+    },
+    "Dehmaine Assoumani": {
+      "opp": "Paris Saint Germain",
+      "isHome": false,
+      "date": "2026-04-22",
+      "matchday": 26
+    },
+    "Johann Lepenant": {
+      "opp": "Paris Saint Germain",
+      "isHome": false,
+      "date": "2026-04-22",
+      "matchday": 26
+    },
+    "Ignatius Ganago": {
+      "opp": "Paris Saint Germain",
+      "isHome": false,
+      "date": "2026-04-22",
+      "matchday": 26
+    },
+    "Timothée Kolodziejczak": {
+      "opp": "Nantes",
+      "isHome": true,
+      "date": "2026-04-22",
+      "matchday": 26
+    },
+    "Kang-In Lee": {
+      "opp": "Nantes",
+      "isHome": true,
+      "date": "2026-04-22",
+      "matchday": 26
+    },
+    "Thibault De Smet": {
+      "opp": "Nantes",
+      "isHome": true,
+      "date": "2026-04-22",
+      "matchday": 26
+    },
+    "Youssef El-Arabi": {
+      "opp": "Paris Saint Germain",
+      "isHome": false,
+      "date": "2026-04-22",
+      "matchday": 26
+    },
+    "Ciro Immobile": {
+      "opp": "Nantes",
+      "isHome": true,
+      "date": "2026-04-22",
+      "matchday": 26
+    },
+    "Rémy Cabella": {
+      "opp": "Paris Saint Germain",
+      "isHome": false,
+      "date": "2026-04-22",
+      "matchday": 26
+    },
+    "Louis Leroux": {
+      "opp": "Paris Saint Germain",
+      "isHome": false,
+      "date": "2026-04-22",
+      "matchday": 26
+    },
+    "Maxime Lopez": {
+      "opp": "Nantes",
+      "isHome": true,
+      "date": "2026-04-22",
+      "matchday": 26
+    },
+    "Jonathan Ikoné": {
+      "opp": "Nantes",
+      "isHome": true,
+      "date": "2026-04-22",
+      "matchday": 26
+    },
+    "Jean-Philippe Krasso": {
+      "opp": "Nantes",
+      "isHome": true,
+      "date": "2026-04-22",
+      "matchday": 26
+    },
+    "Ibrahim Mbaye": {
+      "opp": "Nantes",
+      "isHome": true,
+      "date": "2026-04-22",
+      "matchday": 26
+    },
+    "Vincent Marchetti": {
+      "opp": "Nantes",
+      "isHome": true,
+      "date": "2026-04-22",
+      "matchday": 26
+    },
+    "Francis Coquelin": {
+      "opp": "Paris Saint Germain",
+      "isHome": false,
+      "date": "2026-04-22",
+      "matchday": 26
+    },
+    "Tylel Tati": {
+      "opp": "Paris Saint Germain",
+      "isHome": false,
+      "date": "2026-04-22",
+      "matchday": 26
+    },
+    "H. Guirassy": {
+      "opp": "Paris Saint Germain",
+      "isHome": false,
+      "date": "2026-04-22",
+      "matchday": 26
+    },
+    "Luca Koleosho": {
+      "opp": "Nantes",
+      "isHome": true,
+      "date": "2026-04-22",
+      "matchday": 26
+    },
+    "Otávio": {
+      "opp": "Nantes",
+      "isHome": true,
+      "date": "2026-04-22",
+      "matchday": 26
+    },
+    "Tuomas Ollila": {
+      "opp": "Nantes",
+      "isHome": true,
+      "date": "2026-04-22",
+      "matchday": 26
+    },
+    "Ibrahima Sissoko": {
+      "opp": "Paris Saint Germain",
+      "isHome": false,
+      "date": "2026-04-22",
+      "matchday": 26
+    },
+    "Willem Geubbels": {
+      "opp": "Nantes",
+      "isHome": true,
+      "date": "2026-04-22",
+      "matchday": 26
+    },
+    "Deiver Machado": {
+      "opp": "Paris Saint Germain",
+      "isHome": false,
+      "date": "2026-04-22",
+      "matchday": 26
+    },
+    "Rudy Matondo": {
+      "opp": "Nantes",
+      "isHome": true,
+      "date": "2026-04-22",
+      "matchday": 26
+    },
+    "Willian Pacho": {
+      "opp": "Nantes",
+      "isHome": true,
+      "date": "2026-04-22",
+      "matchday": 26
+    },
+    "Evanilson": {
+      "opp": "Arsenal",
+      "isHome": false,
+      "date": "2026-04-11",
+      "matchday": 32
+    },
+    "Rayan": {
+      "opp": "Arsenal",
+      "isHome": false,
+      "date": "2026-04-11",
+      "matchday": 32
+    },
+    "David Brooks": {
+      "opp": "Arsenal",
+      "isHome": false,
+      "date": "2026-04-11",
+      "matchday": 32
+    },
+    "Lewis Cook": {
+      "opp": "Arsenal",
+      "isHome": false,
+      "date": "2026-04-11",
+      "matchday": 32
+    },
+    "Marcos Senesi": {
+      "opp": "Arsenal",
+      "isHome": false,
+      "date": "2026-04-11",
+      "matchday": 32
+    },
+    "Adam Smith": {
+      "opp": "Arsenal",
+      "isHome": false,
+      "date": "2026-04-11",
+      "matchday": 32
+    },
+    "Alex Scott": {
+      "opp": "Arsenal",
+      "isHome": false,
+      "date": "2026-04-11",
+      "matchday": 32
+    },
+    "Tyler Adams": {
+      "opp": "Arsenal",
+      "isHome": false,
+      "date": "2026-04-11",
+      "matchday": 32
+    },
+    "James Hill": {
+      "opp": "Arsenal",
+      "isHome": false,
+      "date": "2026-04-11",
+      "matchday": 32
+    },
+    "Enes Ünal": {
+      "opp": "Arsenal",
+      "isHome": false,
+      "date": "2026-04-11",
+      "matchday": 32
+    },
+    "Amine Adli": {
+      "opp": "Arsenal",
+      "isHome": false,
+      "date": "2026-04-11",
+      "matchday": 32
+    },
+    "Ryan Christie": {
+      "opp": "Arsenal",
+      "isHome": false,
+      "date": "2026-04-11",
+      "matchday": 32
+    },
+    "Alex Tóth": {
+      "opp": "Arsenal",
+      "isHome": false,
+      "date": "2026-04-11",
+      "matchday": 32
+    },
+    "Álex Jiménez": {
+      "opp": "Arsenal",
+      "isHome": false,
+      "date": "2026-04-11",
+      "matchday": 32
+    },
+    "Adrien Truffert": {
+      "opp": "Arsenal",
+      "isHome": false,
+      "date": "2026-04-11",
+      "matchday": 32
+    },
+    "Eli Junior Kroupi": {
+      "opp": "Arsenal",
+      "isHome": false,
+      "date": "2026-04-11",
+      "matchday": 32
+    },
+    "Đorđe Petrović": {
+      "opp": "Arsenal",
+      "isHome": false,
+      "date": "2026-04-11",
+      "matchday": 32
+    },
+    "Bafodé Diakité": {
+      "opp": "Arsenal",
+      "isHome": false,
+      "date": "2026-04-11",
+      "matchday": 32
+    },
+    "Leandro Trossard": {
+      "opp": "Bournemouth",
+      "isHome": true,
+      "date": "2026-04-11",
+      "matchday": 32
+    },
+    "Piero Hincapié": {
+      "opp": "Bournemouth",
+      "isHome": true,
+      "date": "2026-04-11",
+      "matchday": 32
+    },
+    "Gabriel Martinelli": {
+      "opp": "Bournemouth",
+      "isHome": true,
+      "date": "2026-04-11",
+      "matchday": 32
+    },
+    "Zubimendi": {
+      "opp": "Bournemouth",
+      "isHome": true,
+      "date": "2026-04-11",
+      "matchday": 32
+    },
+    "Martin Ødegaard": {
+      "opp": "Bournemouth",
+      "isHome": true,
+      "date": "2026-04-11",
+      "matchday": 32
+    },
+    "Bukayo Saka": {
+      "opp": "Bournemouth",
+      "isHome": true,
+      "date": "2026-04-11",
+      "matchday": 32
+    },
+    "Declan Rice": {
+      "opp": "Bournemouth",
+      "isHome": true,
+      "date": "2026-04-11",
+      "matchday": 32
+    },
+    "Kai Havertz": {
+      "opp": "Bournemouth",
+      "isHome": true,
+      "date": "2026-04-11",
+      "matchday": 32
+    },
+    "Gabriel Magalhães": {
+      "opp": "Bournemouth",
+      "isHome": true,
+      "date": "2026-04-11",
+      "matchday": 32
+    },
+    "Viktor Gyökeres": {
+      "opp": "Bournemouth",
+      "isHome": true,
+      "date": "2026-04-11",
+      "matchday": 32
+    },
+    "Riccardo Calafiori": {
+      "opp": "Bournemouth",
+      "isHome": true,
+      "date": "2026-04-11",
+      "matchday": 32
+    },
+    "Eberechi Eze": {
+      "opp": "Bournemouth",
+      "isHome": true,
+      "date": "2026-04-11",
+      "matchday": 32
+    },
+    "Noni Madueke": {
+      "opp": "Bournemouth",
+      "isHome": true,
+      "date": "2026-04-11",
+      "matchday": 32
+    },
+    "Cristhian Mosquera": {
+      "opp": "Bournemouth",
+      "isHome": true,
+      "date": "2026-04-11",
+      "matchday": 32
+    },
+    "Emiliano Martínez": {
+      "opp": "Nottingham Forest",
+      "isHome": false,
+      "date": "2026-04-12",
+      "matchday": 32
+    },
+    "Amadou Onana": {
+      "opp": "Nottingham Forest",
+      "isHome": false,
+      "date": "2026-04-12",
+      "matchday": 32
+    },
+    "Morgan Rogers": {
+      "opp": "Nottingham Forest",
+      "isHome": false,
+      "date": "2026-04-12",
+      "matchday": 32
+    },
+    "Leon Bailey": {
+      "opp": "Nottingham Forest",
+      "isHome": false,
+      "date": "2026-04-12",
+      "matchday": 32
+    },
+    "Matty Cash": {
+      "opp": "Nottingham Forest",
+      "isHome": false,
+      "date": "2026-04-12",
+      "matchday": 32
+    },
+    "Victor Lindelöf": {
+      "opp": "Nottingham Forest",
+      "isHome": false,
+      "date": "2026-04-12",
+      "matchday": 32
+    },
+    "Jadon Sancho": {
+      "opp": "Nottingham Forest",
+      "isHome": false,
+      "date": "2026-04-12",
+      "matchday": 32
+    },
+    "Douglas Luiz": {
+      "opp": "Nottingham Forest",
+      "isHome": false,
+      "date": "2026-04-12",
+      "matchday": 32
+    },
+    "Tammy Abraham": {
+      "opp": "Nottingham Forest",
+      "isHome": false,
+      "date": "2026-04-12",
+      "matchday": 32
+    },
+    "Lamare Bogarde": {
+      "opp": "Nottingham Forest",
+      "isHome": false,
+      "date": "2026-04-12",
+      "matchday": 32
+    },
+    "Ross Barkley": {
+      "opp": "Nottingham Forest",
+      "isHome": false,
+      "date": "2026-04-12",
+      "matchday": 32
+    },
+    "Emiliano Buendía": {
+      "opp": "Nottingham Forest",
+      "isHome": false,
+      "date": "2026-04-12",
+      "matchday": 32
+    },
+    "Harvey Elliott": {
+      "opp": "Nottingham Forest",
+      "isHome": false,
+      "date": "2026-04-12",
+      "matchday": 32
+    },
+    "Alysson": {
+      "opp": "Nottingham Forest",
+      "isHome": false,
+      "date": "2026-04-12",
+      "matchday": 32
+    },
+    "Pau Torres": {
+      "opp": "Nottingham Forest",
+      "isHome": false,
+      "date": "2026-04-12",
+      "matchday": 32
+    },
+    "John McGinn": {
+      "opp": "Nottingham Forest",
+      "isHome": false,
+      "date": "2026-04-12",
+      "matchday": 32
+    },
+    "Ian Maatsen": {
+      "opp": "Nottingham Forest",
+      "isHome": false,
+      "date": "2026-04-12",
+      "matchday": 32
+    },
+    "Keane Lewis-Potter": {
+      "opp": "Everton",
+      "isHome": true,
+      "date": "2026-04-11",
+      "matchday": 32
+    },
+    "Yehor Yarmolyuk": {
+      "opp": "Everton",
+      "isHome": true,
+      "date": "2026-04-11",
+      "matchday": 32
+    },
+    "Caoimhin Kelleher": {
+      "opp": "Everton",
+      "isHome": true,
+      "date": "2026-04-11",
+      "matchday": 32
+    },
+    "Aaron Hickey": {
+      "opp": "Everton",
+      "isHome": true,
+      "date": "2026-04-11",
+      "matchday": 32
+    },
+    "Kevin Schade": {
+      "opp": "Everton",
+      "isHome": true,
+      "date": "2026-04-11",
+      "matchday": 32
+    },
+    "Vitaly Janelt": {
+      "opp": "Everton",
+      "isHome": true,
+      "date": "2026-04-11",
+      "matchday": 32
+    },
+    "Nathan Collins": {
+      "opp": "Everton",
+      "isHome": true,
+      "date": "2026-04-11",
+      "matchday": 32
+    },
+    "Dango Ouattara": {
+      "opp": "Everton",
+      "isHome": true,
+      "date": "2026-04-11",
+      "matchday": 32
+    },
+    "Mathias Jensen": {
+      "opp": "Everton",
+      "isHome": true,
+      "date": "2026-04-11",
+      "matchday": 32
+    },
+    "Sepp van den Berg": {
+      "opp": "Everton",
+      "isHome": true,
+      "date": "2026-04-11",
+      "matchday": 32
+    },
+    "Rico Henry": {
+      "opp": "Everton",
+      "isHome": true,
+      "date": "2026-04-11",
+      "matchday": 32
+    },
+    "Kristoffer Ajer": {
+      "opp": "Everton",
+      "isHome": true,
+      "date": "2026-04-11",
+      "matchday": 32
+    },
+    "Romelle Donovan": {
+      "opp": "Everton",
+      "isHome": true,
+      "date": "2026-04-11",
+      "matchday": 32
+    },
+    "Thiago": {
+      "opp": "Everton",
+      "isHome": true,
+      "date": "2026-04-11",
+      "matchday": 32
+    },
+    "Michael Kayode": {
+      "opp": "Everton",
+      "isHome": true,
+      "date": "2026-04-11",
+      "matchday": 32
+    },
+    "Mikkel Damsgaard": {
+      "opp": "Everton",
+      "isHome": true,
+      "date": "2026-04-11",
+      "matchday": 32
+    },
+    "Jack Hinshelwood": {
+      "opp": "Burnley",
+      "isHome": false,
+      "date": "2026-04-11",
+      "matchday": 32
+    },
+    "Georginio Rutter": {
+      "opp": "Burnley",
+      "isHome": false,
+      "date": "2026-04-11",
+      "matchday": 32
+    },
+    "Yasin Ayari": {
+      "opp": "Burnley",
+      "isHome": false,
+      "date": "2026-04-11",
+      "matchday": 32
+    },
+    "Joël Veltman": {
+      "opp": "Burnley",
+      "isHome": false,
+      "date": "2026-04-11",
+      "matchday": 32
+    },
+    "Carlos Baleba": {
+      "opp": "Burnley",
+      "isHome": false,
+      "date": "2026-04-11",
+      "matchday": 32
+    },
+    "Lewis Dunk": {
+      "opp": "Burnley",
+      "isHome": false,
+      "date": "2026-04-11",
+      "matchday": 32
+    },
+    "Ferdi Kadıoğlu": {
+      "opp": "Burnley",
+      "isHome": false,
+      "date": "2026-04-11",
+      "matchday": 32
+    },
+    "Kaoru Mitoma": {
+      "opp": "Burnley",
+      "isHome": false,
+      "date": "2026-04-11",
+      "matchday": 32
+    },
+    "Mats Wieffer": {
+      "opp": "Burnley",
+      "isHome": false,
+      "date": "2026-04-11",
+      "matchday": 32
+    },
+    "Bart Verbruggen": {
+      "opp": "Burnley",
+      "isHome": false,
+      "date": "2026-04-11",
+      "matchday": 32
+    },
+    "Diego Gómez": {
+      "opp": "Burnley",
+      "isHome": false,
+      "date": "2026-04-11",
+      "matchday": 32
+    },
+    "Danny Welbeck": {
+      "opp": "Burnley",
+      "isHome": false,
+      "date": "2026-04-11",
+      "matchday": 32
+    },
+    "Maxim De Cuyper": {
+      "opp": "Burnley",
+      "isHome": false,
+      "date": "2026-04-11",
+      "matchday": 32
+    },
+    "Charalampos Kostoulas": {
+      "opp": "Burnley",
+      "isHome": false,
+      "date": "2026-04-11",
+      "matchday": 32
+    },
+    "Pascal Gross": {
+      "opp": "Burnley",
+      "isHome": false,
+      "date": "2026-04-11",
+      "matchday": 32
+    },
+    "Matt O’Riley": {
+      "opp": "Burnley",
+      "isHome": false,
+      "date": "2026-04-11",
+      "matchday": 32
+    },
+    "Yankuba Minteh": {
+      "opp": "Burnley",
+      "isHome": false,
+      "date": "2026-04-11",
+      "matchday": 32
+    },
+    "Jan Paul Van Hecke": {
+      "opp": "Burnley",
+      "isHome": false,
+      "date": "2026-04-11",
+      "matchday": 32
+    },
+    "Harry Howell": {
+      "opp": "Burnley",
+      "isHome": false,
+      "date": "2026-04-11",
+      "matchday": 32
+    },
+    "Maxime Esteve": {
+      "opp": "Brighton",
+      "isHome": true,
+      "date": "2026-04-11",
+      "matchday": 32
+    },
+    "Loum Tchaouna": {
+      "opp": "Brighton",
+      "isHome": true,
+      "date": "2026-04-11",
+      "matchday": 32
+    },
+    "Jaidon Anthony": {
+      "opp": "Brighton",
+      "isHome": true,
+      "date": "2026-04-11",
+      "matchday": 32
+    },
+    "Lyle Foster": {
+      "opp": "Brighton",
+      "isHome": true,
+      "date": "2026-04-11",
+      "matchday": 32
+    },
+    "Florentino Luís": {
+      "opp": "Brighton",
+      "isHome": true,
+      "date": "2026-04-11",
+      "matchday": 32
+    },
+    "Jacob Bruun Larsen": {
+      "opp": "Brighton",
+      "isHome": true,
+      "date": "2026-04-11",
+      "matchday": 32
+    },
+    "Marcus Edwards": {
+      "opp": "Brighton",
+      "isHome": true,
+      "date": "2026-04-11",
+      "matchday": 32
+    },
+    "Joseph Worrall": {
+      "opp": "Brighton",
+      "isHome": true,
+      "date": "2026-04-11",
+      "matchday": 32
+    },
+    "Quilindschy Hartman": {
+      "opp": "Brighton",
+      "isHome": true,
+      "date": "2026-04-11",
+      "matchday": 32
+    },
+    "Lucas Pires": {
+      "opp": "Brighton",
+      "isHome": true,
+      "date": "2026-04-11",
+      "matchday": 32
+    },
+    "Hannibal Mejbri": {
+      "opp": "Brighton",
+      "isHome": true,
+      "date": "2026-04-11",
+      "matchday": 32
+    },
+    "Martin Dúbravka": {
+      "opp": "Brighton",
+      "isHome": true,
+      "date": "2026-04-11",
+      "matchday": 32
+    },
+    "Zian Flemming": {
+      "opp": "Brighton",
+      "isHome": true,
+      "date": "2026-04-11",
+      "matchday": 32
+    },
+    "Armando Broja": {
+      "opp": "Brighton",
+      "isHome": true,
+      "date": "2026-04-11",
+      "matchday": 32
+    },
+    "Bashir Humphreys": {
+      "opp": "Brighton",
+      "isHome": true,
+      "date": "2026-04-11",
+      "matchday": 32
+    },
+    "James Ward-Prowse": {
+      "opp": "Brighton",
+      "isHome": true,
+      "date": "2026-04-11",
+      "matchday": 32
+    },
+    "Axel Tuanzebe": {
+      "opp": "Brighton",
+      "isHome": true,
+      "date": "2026-04-11",
+      "matchday": 32
+    },
+    "Kyle Walker": {
+      "opp": "Brighton",
+      "isHome": true,
+      "date": "2026-04-11",
+      "matchday": 32
+    },
+    "Andrey Santos": {
+      "opp": "Manchester City",
+      "isHome": true,
+      "date": "2026-04-12",
+      "matchday": 32
+    },
+    "Filip Jörgensen": {
+      "opp": "Manchester City",
+      "isHome": true,
+      "date": "2026-04-12",
+      "matchday": 32
+    },
+    "Marc Cucurella": {
+      "opp": "Manchester City",
+      "isHome": true,
+      "date": "2026-04-12",
+      "matchday": 32
+    },
+    "Roméo Lavia": {
+      "opp": "Manchester City",
+      "isHome": true,
+      "date": "2026-04-12",
+      "matchday": 32
+    },
+    "Liam Delap": {
+      "opp": "Manchester City",
+      "isHome": true,
+      "date": "2026-04-12",
+      "matchday": 32
+    },
+    "Tosin Adarabioyo": {
+      "opp": "Manchester City",
+      "isHome": true,
+      "date": "2026-04-12",
+      "matchday": 32
+    },
+    "Mamadou Sarr": {
+      "opp": "Manchester City",
+      "isHome": true,
+      "date": "2026-04-12",
+      "matchday": 32
+    },
+    "Cole Palmer": {
+      "opp": "Manchester City",
+      "isHome": true,
+      "date": "2026-04-12",
+      "matchday": 32
+    },
+    "Jorrel Hato": {
+      "opp": "Manchester City",
+      "isHome": true,
+      "date": "2026-04-12",
+      "matchday": 32
+    },
+    "Reece James": {
+      "opp": "Manchester City",
+      "isHome": true,
+      "date": "2026-04-12",
+      "matchday": 32
+    },
+    "Joshua Acheampong": {
+      "opp": "Manchester City",
+      "isHome": true,
+      "date": "2026-04-12",
+      "matchday": 32
+    },
+    "Alejandro Garnacho": {
+      "opp": "Manchester City",
+      "isHome": true,
+      "date": "2026-04-12",
+      "matchday": 32
+    },
+    "Enzo Fernández": {
+      "opp": "Manchester City",
+      "isHome": true,
+      "date": "2026-04-12",
+      "matchday": 32
+    },
+    "Wesley Fofana": {
+      "opp": "Manchester City",
+      "isHome": true,
+      "date": "2026-04-12",
+      "matchday": 32
+    },
+    "João Pedro": {
+      "opp": "Manchester City",
+      "isHome": true,
+      "date": "2026-04-12",
+      "matchday": 32
+    },
+    "Brennan Johnson": {
+      "opp": "Newcastle United",
+      "isHome": true,
+      "date": "2026-04-12",
+      "matchday": 32
+    },
+    "Jean-Philippe Mateta": {
+      "opp": "Newcastle United",
+      "isHome": true,
+      "date": "2026-04-12",
+      "matchday": 32
+    },
+    "Walter Benítez": {
+      "opp": "Newcastle United",
+      "isHome": true,
+      "date": "2026-04-12",
+      "matchday": 32
+    },
+    "Maxence Lacroix": {
+      "opp": "Newcastle United",
+      "isHome": true,
+      "date": "2026-04-12",
+      "matchday": 32
+    },
+    "Will Hughes": {
+      "opp": "Newcastle United",
+      "isHome": true,
+      "date": "2026-04-12",
+      "matchday": 32
+    },
+    "Jaydee Canvot": {
+      "opp": "Newcastle United",
+      "isHome": true,
+      "date": "2026-04-12",
+      "matchday": 32
+    },
+    "Daniel Muñoz": {
+      "opp": "Newcastle United",
+      "isHome": true,
+      "date": "2026-04-12",
+      "matchday": 32
+    },
+    "Chadi Riad": {
+      "opp": "Newcastle United",
+      "isHome": true,
+      "date": "2026-04-12",
+      "matchday": 32
+    },
+    "Evann Guessand": {
+      "opp": "Newcastle United",
+      "isHome": true,
+      "date": "2026-04-12",
+      "matchday": 32
+    },
+    "Ismaïla Sarr": {
+      "opp": "Newcastle United",
+      "isHome": true,
+      "date": "2026-04-12",
+      "matchday": 32
+    },
+    "Christantus Uche": {
+      "opp": "Newcastle United",
+      "isHome": true,
+      "date": "2026-04-12",
+      "matchday": 32
+    },
+    "Adam Wharton": {
+      "opp": "Newcastle United",
+      "isHome": true,
+      "date": "2026-04-12",
+      "matchday": 32
+    },
+    "Jørgen Larsen": {
+      "opp": "Newcastle United",
+      "isHome": true,
+      "date": "2026-04-12",
+      "matchday": 32
+    },
+    "Chris Richards": {
+      "opp": "Newcastle United",
+      "isHome": true,
+      "date": "2026-04-12",
+      "matchday": 32
+    },
+    "Jefferson Lerma": {
+      "opp": "Newcastle United",
+      "isHome": true,
+      "date": "2026-04-12",
+      "matchday": 32
+    },
+    "Yeremy Pino": {
+      "opp": "Newcastle United",
+      "isHome": true,
+      "date": "2026-04-12",
+      "matchday": 32
+    },
+    "Dean Henderson": {
+      "opp": "Newcastle United",
+      "isHome": true,
+      "date": "2026-04-12",
+      "matchday": 32
+    },
+    "Daichi Kamada": {
+      "opp": "Newcastle United",
+      "isHome": true,
+      "date": "2026-04-12",
+      "matchday": 32
+    },
+    "Nathan Patterson": {
+      "opp": "Brentford",
+      "isHome": false,
+      "date": "2026-04-11",
+      "matchday": 32
+    },
+    "Tyler-Jay Dibling": {
+      "opp": "Brentford",
+      "isHome": false,
+      "date": "2026-04-11",
+      "matchday": 32
+    },
+    "Merlin Röhl": {
+      "opp": "Brentford",
+      "isHome": false,
+      "date": "2026-04-11",
+      "matchday": 32
+    },
+    "Dwight McNeil": {
+      "opp": "Brentford",
+      "isHome": false,
+      "date": "2026-04-11",
+      "matchday": 32
+    },
+    "Beto": {
+      "opp": "Brentford",
+      "isHome": false,
+      "date": "2026-04-11",
+      "matchday": 32
+    },
+    "Jarrad Branthwaite": {
+      "opp": "Brentford",
+      "isHome": false,
+      "date": "2026-04-11",
+      "matchday": 32
+    },
+    "Kiernan Dewsbury-Hall": {
+      "opp": "Brentford",
+      "isHome": false,
+      "date": "2026-04-11",
+      "matchday": 32
+    },
+    "Harrison Armstrong": {
+      "opp": "Brentford",
+      "isHome": false,
+      "date": "2026-04-11",
+      "matchday": 32
+    },
+    "Jordan Pickford": {
+      "opp": "Brentford",
+      "isHome": false,
+      "date": "2026-04-11",
+      "matchday": 32
+    },
+    "Idrissa Gana Gueye": {
+      "opp": "Brentford",
+      "isHome": false,
+      "date": "2026-04-11",
+      "matchday": 32
+    },
+    "Vitalii Mykolenko": {
+      "opp": "Brentford",
+      "isHome": false,
+      "date": "2026-04-11",
+      "matchday": 32
+    },
+    "James Garner": {
+      "opp": "Brentford",
+      "isHome": false,
+      "date": "2026-04-11",
+      "matchday": 32
+    },
+    "Thierno Barry": {
+      "opp": "Brentford",
+      "isHome": false,
+      "date": "2026-04-11",
+      "matchday": 32
+    },
+    "Jake O'Brien": {
+      "opp": "Brentford",
+      "isHome": false,
+      "date": "2026-04-11",
+      "matchday": 32
+    },
+    "Timothy Iroegbunam": {
+      "opp": "Brentford",
+      "isHome": false,
+      "date": "2026-04-11",
+      "matchday": 32
+    },
+    "Tyrique George": {
+      "opp": "Brentford",
+      "isHome": false,
+      "date": "2026-04-11",
+      "matchday": 32
+    },
+    "Michael Keane": {
+      "opp": "Brentford",
+      "isHome": false,
+      "date": "2026-04-11",
+      "matchday": 32
+    },
+    "James Tarkowski": {
+      "opp": "Brentford",
+      "isHome": false,
+      "date": "2026-04-11",
+      "matchday": 32
+    },
+    "Timothy Castagne": {
+      "opp": "Liverpool",
+      "isHome": false,
+      "date": "2026-04-11",
+      "matchday": 32
+    },
+    "Oscar Bobb": {
+      "opp": "Liverpool",
+      "isHome": false,
+      "date": "2026-04-11",
+      "matchday": 32
+    },
+    "Joshua King": {
+      "opp": "Liverpool",
+      "isHome": false,
+      "date": "2026-04-11",
+      "matchday": 32
+    },
+    "Issa Diop": {
+      "opp": "Liverpool",
+      "isHome": false,
+      "date": "2026-04-11",
+      "matchday": 32
+    },
+    "Harry Wilson": {
+      "opp": "Liverpool",
+      "isHome": false,
+      "date": "2026-04-11",
+      "matchday": 32
+    },
+    "Raúl Jiménez": {
+      "opp": "Liverpool",
+      "isHome": false,
+      "date": "2026-04-11",
+      "matchday": 32
+    },
+    "Rodrigo Muniz": {
+      "opp": "Liverpool",
+      "isHome": false,
+      "date": "2026-04-11",
+      "matchday": 32
+    },
+    "Calvin Bassey": {
+      "opp": "Liverpool",
+      "isHome": false,
+      "date": "2026-04-11",
+      "matchday": 32
+    },
+    "Saša Lukić": {
+      "opp": "Liverpool",
+      "isHome": false,
+      "date": "2026-04-11",
+      "matchday": 32
+    },
+    "Tom Cairney": {
+      "opp": "Liverpool",
+      "isHome": false,
+      "date": "2026-04-11",
+      "matchday": 32
+    },
+    "Bernd Leno": {
+      "opp": "Liverpool",
+      "isHome": false,
+      "date": "2026-04-11",
+      "matchday": 32
+    },
+    "Emile Smith Rowe": {
+      "opp": "Liverpool",
+      "isHome": false,
+      "date": "2026-04-11",
+      "matchday": 32
+    },
+    "Samuel Chukwueze": {
+      "opp": "Liverpool",
+      "isHome": false,
+      "date": "2026-04-11",
+      "matchday": 32
+    },
+    "Jorge Cuenca": {
+      "opp": "Liverpool",
+      "isHome": false,
+      "date": "2026-04-11",
+      "matchday": 32
+    },
+    "Ryan Sessegnon": {
+      "opp": "Liverpool",
+      "isHome": false,
+      "date": "2026-04-11",
+      "matchday": 32
+    },
+    "Alex Iwobi": {
+      "opp": "Liverpool",
+      "isHome": false,
+      "date": "2026-04-11",
+      "matchday": 32
+    },
+    "Antonee Robinson": {
+      "opp": "Liverpool",
+      "isHome": false,
+      "date": "2026-04-11",
+      "matchday": 32
+    },
+    "Joachim Andersen": {
+      "opp": "Liverpool",
+      "isHome": false,
+      "date": "2026-04-11",
+      "matchday": 32
+    },
+    "Sander Berge": {
+      "opp": "Liverpool",
+      "isHome": false,
+      "date": "2026-04-11",
+      "matchday": 32
+    },
+    "Kevin": {
+      "opp": "Liverpool",
+      "isHome": false,
+      "date": "2026-04-11",
+      "matchday": 32
+    },
+    "Harrison Reed": {
+      "opp": "Liverpool",
+      "isHome": false,
+      "date": "2026-04-11",
+      "matchday": 32
+    },
+    "Ao Tanaka": {
+      "opp": "Manchester United",
+      "isHome": false,
+      "date": "2026-04-13",
+      "matchday": 32
+    },
+    "Wilfried Gnonto": {
+      "opp": "Manchester United",
+      "isHome": false,
+      "date": "2026-04-13",
+      "matchday": 32
+    },
+    "Jayden Bogle": {
+      "opp": "Manchester United",
+      "isHome": false,
+      "date": "2026-04-13",
+      "matchday": 32
+    },
+    "Anton Stach": {
+      "opp": "Manchester United",
+      "isHome": false,
+      "date": "2026-04-13",
+      "matchday": 32
+    },
+    "Lukas Nmecha": {
+      "opp": "Manchester United",
+      "isHome": false,
+      "date": "2026-04-13",
+      "matchday": 32
+    },
+    "Sebastiaan Bornauw": {
+      "opp": "Manchester United",
+      "isHome": false,
+      "date": "2026-04-13",
+      "matchday": 32
+    },
+    "Brenden Aaronson": {
+      "opp": "Manchester United",
+      "isHome": false,
+      "date": "2026-04-13",
+      "matchday": 32
+    },
+    "Pascal Struijk": {
+      "opp": "Manchester United",
+      "isHome": false,
+      "date": "2026-04-13",
+      "matchday": 32
+    },
+    "Ethan Ampadu": {
+      "opp": "Manchester United",
+      "isHome": false,
+      "date": "2026-04-13",
+      "matchday": 32
+    },
+    "Karl Darlow": {
+      "opp": "Manchester United",
+      "isHome": false,
+      "date": "2026-04-13",
+      "matchday": 32
+    },
+    "Jaka Bijol": {
+      "opp": "Manchester United",
+      "isHome": false,
+      "date": "2026-04-13",
+      "matchday": 32
+    },
+    "James Justin": {
+      "opp": "Manchester United",
+      "isHome": false,
+      "date": "2026-04-13",
+      "matchday": 32
+    },
+    "Ilia Gruev": {
+      "opp": "Manchester United",
+      "isHome": false,
+      "date": "2026-04-13",
+      "matchday": 32
+    },
+    "Joël Piroe": {
+      "opp": "Manchester United",
+      "isHome": false,
+      "date": "2026-04-13",
+      "matchday": 32
+    },
+    "Dominic Calvert-Lewin": {
+      "opp": "Manchester United",
+      "isHome": false,
+      "date": "2026-04-13",
+      "matchday": 32
+    },
+    "Facundo Buonanotte": {
+      "opp": "Manchester United",
+      "isHome": false,
+      "date": "2026-04-13",
+      "matchday": 32
+    },
+    "Noah Okafor": {
+      "opp": "Manchester United",
+      "isHome": false,
+      "date": "2026-04-13",
+      "matchday": 32
+    },
+    "Joseph Rodon": {
+      "opp": "Manchester United",
+      "isHome": false,
+      "date": "2026-04-13",
+      "matchday": 32
+    },
+    "Gabriel Gudmundsson": {
+      "opp": "Manchester United",
+      "isHome": false,
+      "date": "2026-04-13",
+      "matchday": 32
+    },
+    "Sean Longstaff": {
+      "opp": "Manchester United",
+      "isHome": false,
+      "date": "2026-04-13",
+      "matchday": 32
+    },
+    "Dan James": {
+      "opp": "Manchester United",
+      "isHome": false,
+      "date": "2026-04-13",
+      "matchday": 32
+    },
+    "Rio Ngumoha": {
+      "opp": "Fulham",
+      "isHome": true,
+      "date": "2026-04-11",
+      "matchday": 32
+    },
+    "Virgil van Dijk": {
+      "opp": "Fulham",
+      "isHome": true,
+      "date": "2026-04-11",
+      "matchday": 32
+    },
+    "Ibrahima Konaté": {
+      "opp": "Fulham",
+      "isHome": true,
+      "date": "2026-04-11",
+      "matchday": 32
+    },
+    "Joe Gomez": {
+      "opp": "Fulham",
+      "isHome": true,
+      "date": "2026-04-11",
+      "matchday": 32
+    },
+    "Treymaurice Nyoni": {
+      "opp": "Fulham",
+      "isHome": true,
+      "date": "2026-04-11",
+      "matchday": 32
+    },
+    "Cody Gakpo": {
+      "opp": "Fulham",
+      "isHome": true,
+      "date": "2026-04-11",
+      "matchday": 32
+    },
+    "Wataru Endō": {
+      "opp": "Fulham",
+      "isHome": true,
+      "date": "2026-04-11",
+      "matchday": 32
+    },
+    "Mohamed Salah": {
+      "opp": "Fulham",
+      "isHome": true,
+      "date": "2026-04-11",
+      "matchday": 32
+    },
+    "Curtis Jones": {
+      "opp": "Fulham",
+      "isHome": true,
+      "date": "2026-04-11",
+      "matchday": 32
+    },
+    "Hugo Ekitike": {
+      "opp": "Fulham",
+      "isHome": true,
+      "date": "2026-04-11",
+      "matchday": 32
+    },
+    "Jeremie Frimpong": {
+      "opp": "Fulham",
+      "isHome": true,
+      "date": "2026-04-11",
+      "matchday": 32
+    },
+    "Andy Robertson": {
+      "opp": "Fulham",
+      "isHome": true,
+      "date": "2026-04-11",
+      "matchday": 32
+    },
+    "Alisson Becker": {
+      "opp": "Fulham",
+      "isHome": true,
+      "date": "2026-04-11",
+      "matchday": 32
+    },
+    "Federico Chiesa": {
+      "opp": "Fulham",
+      "isHome": true,
+      "date": "2026-04-11",
+      "matchday": 32
+    },
+    "Milos Kerkez": {
+      "opp": "Fulham",
+      "isHome": true,
+      "date": "2026-04-11",
+      "matchday": 32
+    },
+    "Florian Wirtz": {
+      "opp": "Fulham",
+      "isHome": true,
+      "date": "2026-04-11",
+      "matchday": 32
+    },
+    "Marc Guéhi": {
+      "opp": "Chelsea",
+      "isHome": false,
+      "date": "2026-04-12",
+      "matchday": 32
+    },
+    "Rodrigo": {
+      "opp": "Chelsea",
+      "isHome": false,
+      "date": "2026-04-12",
+      "matchday": 32
+    },
+    "Rayan Cherki": {
+      "opp": "Chelsea",
+      "isHome": false,
+      "date": "2026-04-12",
+      "matchday": 32
+    },
+    "Nico O'Reilly": {
+      "opp": "Chelsea",
+      "isHome": false,
+      "date": "2026-04-12",
+      "matchday": 32
+    },
+    "Antoine Semenyo": {
+      "opp": "Chelsea",
+      "isHome": false,
+      "date": "2026-04-12",
+      "matchday": 32
+    },
+    "Nico González": {
+      "opp": "Chelsea",
+      "isHome": false,
+      "date": "2026-04-12",
+      "matchday": 32
+    },
+    "Erling Haaland": {
+      "opp": "Chelsea",
+      "isHome": false,
+      "date": "2026-04-12",
+      "matchday": 32
+    },
+    "Gianluigi Donnarumma": {
+      "opp": "Chelsea",
+      "isHome": false,
+      "date": "2026-04-12",
+      "matchday": 32
+    },
+    "Bernardo Silva": {
+      "opp": "Chelsea",
+      "isHome": false,
+      "date": "2026-04-12",
+      "matchday": 32
+    },
+    "Abdukodir Khusanov": {
+      "opp": "Chelsea",
+      "isHome": false,
+      "date": "2026-04-12",
+      "matchday": 32
+    },
+    "Phil Foden": {
+      "opp": "Chelsea",
+      "isHome": false,
+      "date": "2026-04-12",
+      "matchday": 32
+    },
+    "Matheus Nunes": {
+      "opp": "Chelsea",
+      "isHome": false,
+      "date": "2026-04-12",
+      "matchday": 32
+    },
+    "Rayan Aït Nouri": {
+      "opp": "Chelsea",
+      "isHome": false,
+      "date": "2026-04-12",
+      "matchday": 32
+    },
+    "Rúben Dias": {
+      "opp": "Chelsea",
+      "isHome": false,
+      "date": "2026-04-12",
+      "matchday": 32
+    },
+    "Tijjani Reijnders": {
+      "opp": "Chelsea",
+      "isHome": false,
+      "date": "2026-04-12",
+      "matchday": 32
+    },
+    "Jeremy Doku": {
+      "opp": "Chelsea",
+      "isHome": false,
+      "date": "2026-04-12",
+      "matchday": 32
+    },
+    "Noussair Mazraoui": {
+      "opp": "Leeds",
+      "isHome": true,
+      "date": "2026-04-13",
+      "matchday": 32
+    },
+    "Bruno Fernandes": {
+      "opp": "Leeds",
+      "isHome": true,
+      "date": "2026-04-13",
+      "matchday": 32
+    },
+    "Lisandro Martínez": {
+      "opp": "Leeds",
+      "isHome": true,
+      "date": "2026-04-13",
+      "matchday": 32
+    },
+    "Ayden Heaven": {
+      "opp": "Leeds",
+      "isHome": true,
+      "date": "2026-04-13",
+      "matchday": 32
+    },
+    "Amad Diallo": {
+      "opp": "Leeds",
+      "isHome": true,
+      "date": "2026-04-13",
+      "matchday": 32
+    },
+    "Benjamin Šeško": {
+      "opp": "Leeds",
+      "isHome": true,
+      "date": "2026-04-13",
+      "matchday": 32
+    },
+    "Kobbie Mainoo": {
+      "opp": "Leeds",
+      "isHome": true,
+      "date": "2026-04-13",
+      "matchday": 32
+    },
+    "Luke Shaw": {
+      "opp": "Leeds",
+      "isHome": true,
+      "date": "2026-04-13",
+      "matchday": 32
+    },
+    "Joshua Zirkzee": {
+      "opp": "Leeds",
+      "isHome": true,
+      "date": "2026-04-13",
+      "matchday": 32
+    },
+    "Leny Yoro": {
+      "opp": "Leeds",
+      "isHome": true,
+      "date": "2026-04-13",
+      "matchday": 32
+    },
+    "Casemiro": {
+      "opp": "Leeds",
+      "isHome": true,
+      "date": "2026-04-13",
+      "matchday": 32
+    },
+    "Diogo Dalot": {
+      "opp": "Leeds",
+      "isHome": true,
+      "date": "2026-04-13",
+      "matchday": 32
+    },
+    "Manuel Ugarte": {
+      "opp": "Leeds",
+      "isHome": true,
+      "date": "2026-04-13",
+      "matchday": 32
+    },
+    "Bryan Mbeumo": {
+      "opp": "Leeds",
+      "isHome": true,
+      "date": "2026-04-13",
+      "matchday": 32
+    },
+    "Mason Mount": {
+      "opp": "Leeds",
+      "isHome": true,
+      "date": "2026-04-13",
+      "matchday": 32
+    },
+    "Patrick Dorgu": {
+      "opp": "Leeds",
+      "isHome": true,
+      "date": "2026-04-13",
+      "matchday": 32
+    },
+    "Matheus Cunha": {
+      "opp": "Leeds",
+      "isHome": true,
+      "date": "2026-04-13",
+      "matchday": 32
+    },
+    "Harry Maguire": {
+      "opp": "Leeds",
+      "isHome": true,
+      "date": "2026-04-13",
+      "matchday": 32
+    },
+    "Nick Pope": {
+      "opp": "Crystal Palace",
+      "isHome": false,
+      "date": "2026-04-12",
+      "matchday": 32
+    },
+    "Sandro Tonali": {
+      "opp": "Crystal Palace",
+      "isHome": false,
+      "date": "2026-04-12",
+      "matchday": 32
+    },
+    "William Osula": {
+      "opp": "Crystal Palace",
+      "isHome": false,
+      "date": "2026-04-12",
+      "matchday": 32
+    },
+    "Anthony Elanga": {
+      "opp": "Crystal Palace",
+      "isHome": false,
+      "date": "2026-04-12",
+      "matchday": 32
+    },
+    "Kieran Trippier": {
+      "opp": "Crystal Palace",
+      "isHome": false,
+      "date": "2026-04-12",
+      "matchday": 32
+    },
+    "Lewis Hall": {
+      "opp": "Crystal Palace",
+      "isHome": false,
+      "date": "2026-04-12",
+      "matchday": 32
+    },
+    "Joelinton": {
+      "opp": "Crystal Palace",
+      "isHome": false,
+      "date": "2026-04-12",
+      "matchday": 32
+    },
+    "Anthony Gordon": {
+      "opp": "Crystal Palace",
+      "isHome": false,
+      "date": "2026-04-12",
+      "matchday": 32
+    },
+    "Aaron Ramsdale": {
+      "opp": "Crystal Palace",
+      "isHome": false,
+      "date": "2026-04-12",
+      "matchday": 32
+    },
+    "Nick Woltemade": {
+      "opp": "Crystal Palace",
+      "isHome": false,
+      "date": "2026-04-12",
+      "matchday": 32
+    },
+    "Harvey Barnes": {
+      "opp": "Crystal Palace",
+      "isHome": false,
+      "date": "2026-04-12",
+      "matchday": 32
+    },
+    "Jacob Murphy": {
+      "opp": "Crystal Palace",
+      "isHome": false,
+      "date": "2026-04-12",
+      "matchday": 32
+    },
+    "Joe Willock": {
+      "opp": "Crystal Palace",
+      "isHome": false,
+      "date": "2026-04-12",
+      "matchday": 32
+    },
+    "Jacob Ramsey": {
+      "opp": "Crystal Palace",
+      "isHome": false,
+      "date": "2026-04-12",
+      "matchday": 32
+    },
+    "Sven Botman": {
+      "opp": "Crystal Palace",
+      "isHome": false,
+      "date": "2026-04-12",
+      "matchday": 32
+    },
+    "Tino Livramento": {
+      "opp": "Crystal Palace",
+      "isHome": false,
+      "date": "2026-04-12",
+      "matchday": 32
+    },
+    "Malick Thiaw": {
+      "opp": "Crystal Palace",
+      "isHome": false,
+      "date": "2026-04-12",
+      "matchday": 32
+    },
+    "Morato": {
+      "opp": "Aston Villa",
+      "isHome": true,
+      "date": "2026-04-12",
+      "matchday": 32
+    },
+    "Matz Sels": {
+      "opp": "Aston Villa",
+      "isHome": true,
+      "date": "2026-04-12",
+      "matchday": 32
+    },
+    "Nicolás Domínguez": {
+      "opp": "Aston Villa",
+      "isHome": true,
+      "date": "2026-04-12",
+      "matchday": 32
+    },
+    "Dilane Bakwa": {
+      "opp": "Aston Villa",
+      "isHome": true,
+      "date": "2026-04-12",
+      "matchday": 32
+    },
+    "Callum Hudson-Odoi": {
+      "opp": "Aston Villa",
+      "isHome": true,
+      "date": "2026-04-12",
+      "matchday": 32
+    },
+    "Jair": {
+      "opp": "Aston Villa",
+      "isHome": true,
+      "date": "2026-04-12",
+      "matchday": 32
+    },
+    "Ola Aina": {
+      "opp": "Aston Villa",
+      "isHome": true,
+      "date": "2026-04-12",
+      "matchday": 32
+    },
+    "Ryan Yates": {
+      "opp": "Aston Villa",
+      "isHome": true,
+      "date": "2026-04-12",
+      "matchday": 32
+    },
+    "Stefan Ortega Moreno": {
+      "opp": "Aston Villa",
+      "isHome": true,
+      "date": "2026-04-12",
+      "matchday": 32
+    },
+    "Igor Jesus": {
+      "opp": "Aston Villa",
+      "isHome": true,
+      "date": "2026-04-12",
+      "matchday": 32
+    },
+    "Omari Hutchinson": {
+      "opp": "Aston Villa",
+      "isHome": true,
+      "date": "2026-04-12",
+      "matchday": 32
+    },
+    "Nikola Milenković": {
+      "opp": "Aston Villa",
+      "isHome": true,
+      "date": "2026-04-12",
+      "matchday": 32
+    },
+    "James McAtee": {
+      "opp": "Aston Villa",
+      "isHome": true,
+      "date": "2026-04-12",
+      "matchday": 32
+    },
+    "Dan Ndoye": {
+      "opp": "Aston Villa",
+      "isHome": true,
+      "date": "2026-04-12",
+      "matchday": 32
+    },
+    "Neco Williams": {
+      "opp": "Aston Villa",
+      "isHome": true,
+      "date": "2026-04-12",
+      "matchday": 32
+    },
+    "Ibrahim Sangaré": {
+      "opp": "Aston Villa",
+      "isHome": true,
+      "date": "2026-04-12",
+      "matchday": 32
+    },
+    "Morgan Gibbs-White": {
+      "opp": "Aston Villa",
+      "isHome": true,
+      "date": "2026-04-12",
+      "matchday": 32
+    },
+    "Murillo": {
+      "opp": "Aston Villa",
+      "isHome": true,
+      "date": "2026-04-12",
+      "matchday": 32
+    },
+    "Chemsdine Talbi": {
+      "opp": "Tottenham",
+      "isHome": true,
+      "date": "2026-04-12",
+      "matchday": 32
+    },
+    "Daniel Ballard": {
+      "opp": "Tottenham",
+      "isHome": true,
+      "date": "2026-04-12",
+      "matchday": 32
+    },
+    "Trai Hume": {
+      "opp": "Tottenham",
+      "isHome": true,
+      "date": "2026-04-12",
+      "matchday": 32
+    },
+    "Robin Roefs": {
+      "opp": "Tottenham",
+      "isHome": true,
+      "date": "2026-04-12",
+      "matchday": 32
+    },
+    "Luke O'Nien": {
+      "opp": "Tottenham",
+      "isHome": true,
+      "date": "2026-04-12",
+      "matchday": 32
+    },
+    "Nordi Mukiele": {
+      "opp": "Tottenham",
+      "isHome": true,
+      "date": "2026-04-12",
+      "matchday": 32
+    },
+    "Granit Xhaka": {
+      "opp": "Tottenham",
+      "isHome": true,
+      "date": "2026-04-12",
+      "matchday": 32
+    },
+    "Bertrand Traoré": {
+      "opp": "Tottenham",
+      "isHome": true,
+      "date": "2026-04-12",
+      "matchday": 32
+    },
+    "Wilson Isidor": {
+      "opp": "Tottenham",
+      "isHome": true,
+      "date": "2026-04-12",
+      "matchday": 32
+    },
+    "Christopher Rigg": {
+      "opp": "Tottenham",
+      "isHome": true,
+      "date": "2026-04-12",
+      "matchday": 32
+    },
+    "Eliezer Mayenda": {
+      "opp": "Tottenham",
+      "isHome": true,
+      "date": "2026-04-12",
+      "matchday": 32
+    },
+    "Romaine Mundle": {
+      "opp": "Tottenham",
+      "isHome": true,
+      "date": "2026-04-12",
+      "matchday": 32
+    },
+    "Habib Diarra": {
+      "opp": "Tottenham",
+      "isHome": true,
+      "date": "2026-04-12",
+      "matchday": 32
+    },
+    "Melker Ellborg": {
+      "opp": "Tottenham",
+      "isHome": true,
+      "date": "2026-04-12",
+      "matchday": 32
+    },
+    "Enzo Le Fée": {
+      "opp": "Tottenham",
+      "isHome": true,
+      "date": "2026-04-12",
+      "matchday": 32
+    },
+    "Brian Brobbey": {
+      "opp": "Tottenham",
+      "isHome": true,
+      "date": "2026-04-12",
+      "matchday": 32
+    },
+    "Nilson Angulo": {
+      "opp": "Tottenham",
+      "isHome": true,
+      "date": "2026-04-12",
+      "matchday": 32
+    },
+    "Omar Alderete": {
+      "opp": "Tottenham",
+      "isHome": true,
+      "date": "2026-04-12",
+      "matchday": 32
+    },
+    "Reinildo": {
+      "opp": "Tottenham",
+      "isHome": true,
+      "date": "2026-04-12",
+      "matchday": 32
+    },
+    "Dennis Cirkin": {
+      "opp": "Tottenham",
+      "isHome": true,
+      "date": "2026-04-12",
+      "matchday": 32
+    },
+    "Micky van de Ven": {
+      "opp": "Sunderland",
+      "isHome": false,
+      "date": "2026-04-12",
+      "matchday": 32
+    },
+    "Cristian Romero": {
+      "opp": "Sunderland",
+      "isHome": false,
+      "date": "2026-04-12",
+      "matchday": 32
+    },
+    "Xavi Simons": {
+      "opp": "Sunderland",
+      "isHome": false,
+      "date": "2026-04-12",
+      "matchday": 32
+    },
+    "João Palhinha": {
+      "opp": "Sunderland",
+      "isHome": false,
+      "date": "2026-04-12",
+      "matchday": 32
+    },
+    "Kevin Danso": {
+      "opp": "Sunderland",
+      "isHome": false,
+      "date": "2026-04-12",
+      "matchday": 32
+    },
+    "Pedro Porro": {
+      "opp": "Sunderland",
+      "isHome": false,
+      "date": "2026-04-12",
+      "matchday": 32
+    },
+    "Mathys Tel": {
+      "opp": "Sunderland",
+      "isHome": false,
+      "date": "2026-04-12",
+      "matchday": 32
+    },
+    "Radu Drăgușin": {
+      "opp": "Sunderland",
+      "isHome": false,
+      "date": "2026-04-12",
+      "matchday": 32
+    },
+    "Pape Matar Sarr": {
+      "opp": "Sunderland",
+      "isHome": false,
+      "date": "2026-04-12",
+      "matchday": 32
+    },
+    "Dominic Solanke": {
+      "opp": "Sunderland",
+      "isHome": false,
+      "date": "2026-04-12",
+      "matchday": 32
+    },
+    "Yves Bissouma": {
+      "opp": "Sunderland",
+      "isHome": false,
+      "date": "2026-04-12",
+      "matchday": 32
+    },
+    "Souza": {
+      "opp": "Sunderland",
+      "isHome": false,
+      "date": "2026-04-12",
+      "matchday": 32
+    },
+    "Wilson Odobert": {
+      "opp": "Sunderland",
+      "isHome": false,
+      "date": "2026-04-12",
+      "matchday": 32
+    },
+    "Guglielmo Vicario": {
+      "opp": "Sunderland",
+      "isHome": false,
+      "date": "2026-04-12",
+      "matchday": 32
+    },
+    "Konstantinos Mavropanos": {
+      "opp": "Wolverhampton Wanderers",
+      "isHome": true,
+      "date": "2026-04-10",
+      "matchday": 32
+    },
+    "Axel Disasi": {
+      "opp": "Wolverhampton Wanderers",
+      "isHome": true,
+      "date": "2026-04-10",
+      "matchday": 32
+    },
+    "Jarrod Bowen": {
+      "opp": "Wolverhampton Wanderers",
+      "isHome": true,
+      "date": "2026-04-10",
+      "matchday": 32
+    },
+    "Mads Hermansen": {
+      "opp": "Wolverhampton Wanderers",
+      "isHome": true,
+      "date": "2026-04-10",
+      "matchday": 32
+    },
+    "Freddie Potts": {
+      "opp": "Wolverhampton Wanderers",
+      "isHome": true,
+      "date": "2026-04-10",
+      "matchday": 32
+    },
+    "Adama Traoré": {
+      "opp": "Wolverhampton Wanderers",
+      "isHome": true,
+      "date": "2026-04-10",
+      "matchday": 32
+    },
+    "Soungoutou Magassa": {
+      "opp": "Wolverhampton Wanderers",
+      "isHome": true,
+      "date": "2026-04-10",
+      "matchday": 32
+    },
+    "Pablo": {
+      "opp": "Wolverhampton Wanderers",
+      "isHome": true,
+      "date": "2026-04-10",
+      "matchday": 32
+    },
+    "Aaron Wan-Bissaka": {
+      "opp": "Wolverhampton Wanderers",
+      "isHome": true,
+      "date": "2026-04-10",
+      "matchday": 32
+    },
+    "Callum Wilson": {
+      "opp": "Wolverhampton Wanderers",
+      "isHome": true,
+      "date": "2026-04-10",
+      "matchday": 32
+    },
+    "Alphonse Aréola": {
+      "opp": "Wolverhampton Wanderers",
+      "isHome": true,
+      "date": "2026-04-10",
+      "matchday": 32
+    },
+    "Jean-Clair Todibo": {
+      "opp": "Wolverhampton Wanderers",
+      "isHome": true,
+      "date": "2026-04-10",
+      "matchday": 32
+    },
+    "Crysencio Summerville": {
+      "opp": "Wolverhampton Wanderers",
+      "isHome": true,
+      "date": "2026-04-10",
+      "matchday": 32
+    },
+    "Tomáš Souček": {
+      "opp": "Wolverhampton Wanderers",
+      "isHome": true,
+      "date": "2026-04-10",
+      "matchday": 32
+    },
+    "Mateus Fernandes": {
+      "opp": "Wolverhampton Wanderers",
+      "isHome": true,
+      "date": "2026-04-10",
+      "matchday": 32
+    },
+    "Oliver Scarles": {
+      "opp": "Wolverhampton Wanderers",
+      "isHome": true,
+      "date": "2026-04-10",
+      "matchday": 32
+    },
+    "El Diouf": {
+      "opp": "Wolverhampton Wanderers",
+      "isHome": true,
+      "date": "2026-04-10",
+      "matchday": 32
+    },
+    "Maximilian Kilman": {
+      "opp": "Wolverhampton Wanderers",
+      "isHome": true,
+      "date": "2026-04-10",
+      "matchday": 32
+    },
+    "Mohamadou Kanté": {
+      "opp": "Wolverhampton Wanderers",
+      "isHome": true,
+      "date": "2026-04-10",
+      "matchday": 32
+    },
+    "Kyle Walker-Peters": {
+      "opp": "Wolverhampton Wanderers",
+      "isHome": true,
+      "date": "2026-04-10",
+      "matchday": 32
+    },
+    "José Sá": {
+      "opp": "West Ham",
+      "isHome": false,
+      "date": "2026-04-10",
+      "matchday": 32
+    },
+    "Hugo Bueno": {
+      "opp": "West Ham",
+      "isHome": false,
+      "date": "2026-04-10",
+      "matchday": 32
+    },
+    "André": {
+      "opp": "West Ham",
+      "isHome": false,
+      "date": "2026-04-10",
+      "matchday": 32
+    },
+    "Jeanricner Bellegarde": {
+      "opp": "West Ham",
+      "isHome": false,
+      "date": "2026-04-10",
+      "matchday": 32
+    },
+    "David Møller Wolfe": {
+      "opp": "West Ham",
+      "isHome": false,
+      "date": "2026-04-10",
+      "matchday": 32
+    },
+    "Mateus Mané": {
+      "opp": "West Ham",
+      "isHome": false,
+      "date": "2026-04-10",
+      "matchday": 32
+    },
+    "Rodrigo Gomes": {
+      "opp": "West Ham",
+      "isHome": false,
+      "date": "2026-04-10",
+      "matchday": 32
+    },
+    "Yerson Mosquera": {
+      "opp": "West Ham",
+      "isHome": false,
+      "date": "2026-04-10",
+      "matchday": 32
+    },
+    "Hwang Hee-Chan": {
+      "opp": "West Ham",
+      "isHome": false,
+      "date": "2026-04-10",
+      "matchday": 32
+    },
+    "Tolu Arokodare ": {
+      "opp": "West Ham",
+      "isHome": false,
+      "date": "2026-04-10",
+      "matchday": 32
+    },
+    "João Gomes": {
+      "opp": "West Ham",
+      "isHome": false,
+      "date": "2026-04-10",
+      "matchday": 32
+    },
+    "Adam Armstrong": {
+      "opp": "West Ham",
+      "isHome": false,
+      "date": "2026-04-10",
+      "matchday": 32
+    },
+    "Angel Gomes": {
+      "opp": "West Ham",
+      "isHome": false,
+      "date": "2026-04-10",
+      "matchday": 32
+    },
+    "Ladislav Krejčí": {
+      "opp": "West Ham",
+      "isHome": false,
+      "date": "2026-04-10",
+      "matchday": 32
+    },
+    "SANTIAGO": {
+      "opp": "West Ham",
+      "isHome": false,
+      "date": "2026-04-10",
+      "matchday": 32
+    },
+    "Matt Doherty": {
+      "opp": "West Ham",
+      "isHome": false,
+      "date": "2026-04-10",
+      "matchday": 32
+    },
+    "Pedro Lima": {
+      "opp": "West Ham",
+      "isHome": false,
+      "date": "2026-04-10",
+      "matchday": 32
+    },
+    "Unai Gómez": {
+      "opp": "Getafe",
+      "isHome": false,
+      "date": "2026-04-05",
+      "matchday": 30
+    },
+    "Oihan Sancet": {
+      "opp": "Getafe",
+      "isHome": false,
+      "date": "2026-04-05",
+      "matchday": 30
+    },
+    "Nico Williams": {
+      "opp": "Getafe",
+      "isHome": false,
+      "date": "2026-04-05",
+      "matchday": 30
+    },
+    "Aitor Paredes": {
+      "opp": "Getafe",
+      "isHome": false,
+      "date": "2026-04-05",
+      "matchday": 30
+    },
+    "Yuri": {
+      "opp": "Getafe",
+      "isHome": false,
+      "date": "2026-04-05",
+      "matchday": 30
+    },
+    "Adama Boiro": {
+      "opp": "Getafe",
+      "isHome": false,
+      "date": "2026-04-05",
+      "matchday": 30
+    },
+    "Eder García": {
+      "opp": "Getafe",
+      "isHome": false,
+      "date": "2026-04-05",
+      "matchday": 30
+    },
+    "Aymeric Laporte": {
+      "opp": "Getafe",
+      "isHome": false,
+      "date": "2026-04-05",
+      "matchday": 30
+    },
+    "Gorosabel": {
+      "opp": "Getafe",
+      "isHome": false,
+      "date": "2026-04-05",
+      "matchday": 30
+    },
+    "Mikel Vesga": {
+      "opp": "Getafe",
+      "isHome": false,
+      "date": "2026-04-05",
+      "matchday": 30
+    },
+    "Gorka Guruzeta": {
+      "opp": "Getafe",
+      "isHome": false,
+      "date": "2026-04-05",
+      "matchday": 30
+    },
+    "Lekue": {
+      "opp": "Getafe",
+      "isHome": false,
+      "date": "2026-04-05",
+      "matchday": 30
+    },
+    "Dani Vivian": {
+      "opp": "Getafe",
+      "isHome": false,
+      "date": "2026-04-05",
+      "matchday": 30
+    },
+    "Williams": {
+      "opp": "Getafe",
+      "isHome": false,
+      "date": "2026-04-05",
+      "matchday": 30
+    },
+    "Álex Berenguer": {
+      "opp": "Getafe",
+      "isHome": false,
+      "date": "2026-04-05",
+      "matchday": 30
+    },
+    "Alejandro Rego": {
+      "opp": "Getafe",
+      "isHome": false,
+      "date": "2026-04-05",
+      "matchday": 30
+    },
+    "Urko Izeta": {
+      "opp": "Getafe",
+      "isHome": false,
+      "date": "2026-04-05",
+      "matchday": 30
+    },
+    "Nico Serrano": {
+      "opp": "Getafe",
+      "isHome": false,
+      "date": "2026-04-05",
+      "matchday": 30
+    },
+    "Unai Simón": {
+      "opp": "Getafe",
+      "isHome": false,
+      "date": "2026-04-05",
+      "matchday": 30
+    },
+    "Ademola Lookman": {
+      "opp": "Barcelona",
+      "isHome": true,
+      "date": "2026-04-04",
+      "matchday": 30
+    },
+    "Álex Baena": {
+      "opp": "Barcelona",
+      "isHome": true,
+      "date": "2026-04-04",
+      "matchday": 30
+    },
+    "Matteo Ruggeri": {
+      "opp": "Barcelona",
+      "isHome": true,
+      "date": "2026-04-04",
+      "matchday": 30
+    },
+    "Marc Pubill": {
+      "opp": "Barcelona",
+      "isHome": true,
+      "date": "2026-04-04",
+      "matchday": 30
+    },
+    "Dávid Hancko": {
+      "opp": "Barcelona",
+      "isHome": true,
+      "date": "2026-04-04",
+      "matchday": 30
+    },
+    "Robin Le Normand": {
+      "opp": "Barcelona",
+      "isHome": true,
+      "date": "2026-04-04",
+      "matchday": 30
+    },
+    "Rodrigo Mendoza": {
+      "opp": "Barcelona",
+      "isHome": true,
+      "date": "2026-04-04",
+      "matchday": 30
+    },
+    "Jan Oblak": {
+      "opp": "Barcelona",
+      "isHome": true,
+      "date": "2026-04-04",
+      "matchday": 30
+    },
+    "João Cardoso": {
+      "opp": "Barcelona",
+      "isHome": true,
+      "date": "2026-04-04",
+      "matchday": 30
+    },
+    "Juan Musso": {
+      "opp": "Barcelona",
+      "isHome": true,
+      "date": "2026-04-04",
+      "matchday": 30
+    },
+    "Antoine Griezmann": {
+      "opp": "Barcelona",
+      "isHome": true,
+      "date": "2026-04-04",
+      "matchday": 30
+    },
+    "Nahuel Molina": {
+      "opp": "Barcelona",
+      "isHome": true,
+      "date": "2026-04-04",
+      "matchday": 30
+    },
+    "Obed Vargas": {
+      "opp": "Barcelona",
+      "isHome": true,
+      "date": "2026-04-04",
+      "matchday": 30
+    },
+    "Nicolás González": {
+      "opp": "Barcelona",
+      "isHome": true,
+      "date": "2026-04-04",
+      "matchday": 30
+    },
+    "Koke": {
+      "opp": "Barcelona",
+      "isHome": true,
+      "date": "2026-04-04",
+      "matchday": 30
+    },
+    "Sorloth": {
+      "opp": "Barcelona",
+      "isHome": true,
+      "date": "2026-04-04",
+      "matchday": 30
+    },
+    "José María Giménez": {
+      "opp": "Barcelona",
+      "isHome": true,
+      "date": "2026-04-04",
+      "matchday": 30
+    },
+    "Marcus Rashford": {
+      "opp": "Atletico Madrid",
+      "isHome": false,
+      "date": "2026-04-04",
+      "matchday": 30
+    },
+    "Ronald Araújo": {
+      "opp": "Atletico Madrid",
+      "isHome": false,
+      "date": "2026-04-04",
+      "matchday": 30
+    },
+    "Gerard Martín": {
+      "opp": "Atletico Madrid",
+      "isHome": false,
+      "date": "2026-04-04",
+      "matchday": 30
+    },
+    "Robert Lewandowski": {
+      "opp": "Atletico Madrid",
+      "isHome": false,
+      "date": "2026-04-04",
+      "matchday": 30
+    },
+    "Xavi Espart": {
+      "opp": "Atletico Madrid",
+      "isHome": false,
+      "date": "2026-04-04",
+      "matchday": 30
+    },
+    "Jules Koundé": {
+      "opp": "Atletico Madrid",
+      "isHome": false,
+      "date": "2026-04-04",
+      "matchday": 30
+    },
+    "Ferran Torres": {
+      "opp": "Atletico Madrid",
+      "isHome": false,
+      "date": "2026-04-04",
+      "matchday": 30
+    },
+    "Dani Olmo": {
+      "opp": "Atletico Madrid",
+      "isHome": false,
+      "date": "2026-04-04",
+      "matchday": 30
+    },
+    "Pedri": {
+      "opp": "Atletico Madrid",
+      "isHome": false,
+      "date": "2026-04-04",
+      "matchday": 30
+    },
+    "Fermín": {
+      "opp": "Atletico Madrid",
+      "isHome": false,
+      "date": "2026-04-04",
+      "matchday": 30
+    },
+    "Pau Cubarsí": {
+      "opp": "Atletico Madrid",
+      "isHome": false,
+      "date": "2026-04-04",
+      "matchday": 30
+    },
+    "João Cancelo": {
+      "opp": "Atletico Madrid",
+      "isHome": false,
+      "date": "2026-04-04",
+      "matchday": 30
+    },
+    "Frenkie de Jong": {
+      "opp": "Atletico Madrid",
+      "isHome": false,
+      "date": "2026-04-04",
+      "matchday": 30
+    },
+    "Marc Bernal": {
+      "opp": "Atletico Madrid",
+      "isHome": false,
+      "date": "2026-04-04",
+      "matchday": 30
+    },
+    "Roony Bardghji": {
+      "opp": "Atletico Madrid",
+      "isHome": false,
+      "date": "2026-04-04",
+      "matchday": 30
+    },
+    "Eric García": {
+      "opp": "Atletico Madrid",
+      "isHome": false,
+      "date": "2026-04-04",
+      "matchday": 30
+    },
+    "Joan García": {
+      "opp": "Atletico Madrid",
+      "isHome": false,
+      "date": "2026-04-04",
+      "matchday": 30
+    },
+    "Alejandro Balde": {
+      "opp": "Atletico Madrid",
+      "isHome": false,
+      "date": "2026-04-04",
+      "matchday": 30
+    },
+    "Marc Casadó": {
+      "opp": "Atletico Madrid",
+      "isHome": false,
+      "date": "2026-04-04",
+      "matchday": 30
+    },
+    "Iago Aspas": {
+      "opp": "Valencia",
+      "isHome": false,
+      "date": "2026-04-05",
+      "matchday": 30
+    },
+    "A.Nuñez": {
+      "opp": "Valencia",
+      "isHome": false,
+      "date": "2026-04-05",
+      "matchday": 30
+    },
+    "Jones El Abdellaoui": {
+      "opp": "Valencia",
+      "isHome": false,
+      "date": "2026-04-05",
+      "matchday": 30
+    },
+    "Joseph Aidoo": {
+      "opp": "Valencia",
+      "isHome": false,
+      "date": "2026-04-05",
+      "matchday": 30
+    },
+    "Óscar Mingueza": {
+      "opp": "Valencia",
+      "isHome": false,
+      "date": "2026-04-05",
+      "matchday": 30
+    },
+    "Fer López": {
+      "opp": "Valencia",
+      "isHome": false,
+      "date": "2026-04-05",
+      "matchday": 30
+    },
+    "Javi Rueda": {
+      "opp": "Valencia",
+      "isHome": false,
+      "date": "2026-04-05",
+      "matchday": 30
+    },
+    "Marcos Alonso": {
+      "opp": "Valencia",
+      "isHome": false,
+      "date": "2026-04-05",
+      "matchday": 30
+    },
+    "Williot Swedberg": {
+      "opp": "Valencia",
+      "isHome": false,
+      "date": "2026-04-05",
+      "matchday": 30
+    },
+    "Ferran Jutglà": {
+      "opp": "Valencia",
+      "isHome": false,
+      "date": "2026-04-05",
+      "matchday": 30
+    },
+    "Matías Vecino": {
+      "opp": "Valencia",
+      "isHome": false,
+      "date": "2026-04-05",
+      "matchday": 30
+    },
+    "Carlos Domínguez": {
+      "opp": "Valencia",
+      "isHome": false,
+      "date": "2026-04-05",
+      "matchday": 30
+    },
+    "Javi Rodríguez": {
+      "opp": "Valencia",
+      "isHome": false,
+      "date": "2026-04-05",
+      "matchday": 30
+    },
+    "Borja Iglesias": {
+      "opp": "Valencia",
+      "isHome": false,
+      "date": "2026-04-05",
+      "matchday": 30
+    },
+    "Carl Starfelt": {
+      "opp": "Valencia",
+      "isHome": false,
+      "date": "2026-04-05",
+      "matchday": 30
+    },
+    "Ilaix Moriba": {
+      "opp": "Valencia",
+      "isHome": false,
+      "date": "2026-04-05",
+      "matchday": 30
+    },
+    "Ionuț Radu": {
+      "opp": "Valencia",
+      "isHome": false,
+      "date": "2026-04-05",
+      "matchday": 30
+    },
+    "Pablo Durán": {
+      "opp": "Valencia",
+      "isHome": false,
+      "date": "2026-04-05",
+      "matchday": 30
+    },
+    "Sergio Carreira": {
+      "opp": "Valencia",
+      "isHome": false,
+      "date": "2026-04-05",
+      "matchday": 30
+    },
+    "Guridi": {
+      "opp": "Osasuna",
+      "isHome": true,
+      "date": "2026-04-05",
+      "matchday": 30
+    },
+    "Jonny": {
+      "opp": "Osasuna",
+      "isHome": true,
+      "date": "2026-04-05",
+      "matchday": 30
+    },
+    "Guevara": {
+      "opp": "Osasuna",
+      "isHome": true,
+      "date": "2026-04-05",
+      "matchday": 30
+    },
+    "Jon Pacheco": {
+      "opp": "Osasuna",
+      "isHome": true,
+      "date": "2026-04-05",
+      "matchday": 30
+    },
+    "A. Rebbach": {
+      "opp": "Osasuna",
+      "isHome": true,
+      "date": "2026-04-05",
+      "matchday": 30
+    },
+    "C. Benavìdez": {
+      "opp": "Osasuna",
+      "isHome": true,
+      "date": "2026-04-05",
+      "matchday": 30
+    },
+    "Denis Suárez": {
+      "opp": "Osasuna",
+      "isHome": true,
+      "date": "2026-04-05",
+      "matchday": 30
+    },
+    "Ibáñez": {
+      "opp": "Osasuna",
+      "isHome": true,
+      "date": "2026-04-05",
+      "matchday": 30
+    },
+    "Toni Martínez": {
+      "opp": "Osasuna",
+      "isHome": true,
+      "date": "2026-04-05",
+      "matchday": 30
+    },
+    "Ville Koski": {
+      "opp": "Osasuna",
+      "isHome": true,
+      "date": "2026-04-05",
+      "matchday": 30
+    },
+    "Calebe": {
+      "opp": "Osasuna",
+      "isHome": true,
+      "date": "2026-04-05",
+      "matchday": 30
+    },
+    "Víctor Parada": {
+      "opp": "Osasuna",
+      "isHome": true,
+      "date": "2026-04-05",
+      "matchday": 30
+    },
+    "Carles Aleñà": {
+      "opp": "Osasuna",
+      "isHome": true,
+      "date": "2026-04-05",
+      "matchday": 30
+    },
+    "Sivera": {
+      "opp": "Osasuna",
+      "isHome": true,
+      "date": "2026-04-05",
+      "matchday": 30
+    },
+    "Antonio Blanco": {
+      "opp": "Osasuna",
+      "isHome": true,
+      "date": "2026-04-05",
+      "matchday": 30
+    },
+    "Facundo Garcés": {
+      "opp": "Osasuna",
+      "isHome": true,
+      "date": "2026-04-05",
+      "matchday": 30
+    },
+    "Ángel Pérez": {
+      "opp": "Osasuna",
+      "isHome": true,
+      "date": "2026-04-05",
+      "matchday": 30
+    },
+    "Youssef Lekhedim": {
+      "opp": "Osasuna",
+      "isHome": true,
+      "date": "2026-04-05",
+      "matchday": 30
+    },
+    "Adam El Mokhtari": {
+      "opp": "Rayo Vallecano",
+      "isHome": false,
+      "date": "2026-04-03",
+      "matchday": 30
+    },
+    "Yago Santiago": {
+      "opp": "Rayo Vallecano",
+      "isHome": false,
+      "date": "2026-04-03",
+      "matchday": 30
+    },
+    "John C.": {
+      "opp": "Rayo Vallecano",
+      "isHome": false,
+      "date": "2026-04-03",
+      "matchday": 30
+    },
+    "Léo Pétrot": {
+      "opp": "Rayo Vallecano",
+      "isHome": false,
+      "date": "2026-04-03",
+      "matchday": 30
+    },
+    "Marc Aguado": {
+      "opp": "Rayo Vallecano",
+      "isHome": false,
+      "date": "2026-04-03",
+      "matchday": 30
+    },
+    "Grady Diangana": {
+      "opp": "Rayo Vallecano",
+      "isHome": false,
+      "date": "2026-04-03",
+      "matchday": 30
+    },
+    "Buba Sangaré": {
+      "opp": "Rayo Vallecano",
+      "isHome": false,
+      "date": "2026-04-03",
+      "matchday": 30
+    },
+    "Febas": {
+      "opp": "Rayo Vallecano",
+      "isHome": false,
+      "date": "2026-04-03",
+      "matchday": 30
+    },
+    "Iñaki Peña": {
+      "opp": "Rayo Vallecano",
+      "isHome": false,
+      "date": "2026-04-03",
+      "matchday": 30
+    },
+    "André Silva": {
+      "opp": "Rayo Vallecano",
+      "isHome": false,
+      "date": "2026-04-03",
+      "matchday": 30
+    },
+    "Martim Neto": {
+      "opp": "Rayo Vallecano",
+      "isHome": false,
+      "date": "2026-04-03",
+      "matchday": 30
+    },
+    "Germán Valera": {
+      "opp": "Rayo Vallecano",
+      "isHome": false,
+      "date": "2026-04-03",
+      "matchday": 30
+    },
+    "Tete Morente": {
+      "opp": "Rayo Vallecano",
+      "isHome": false,
+      "date": "2026-04-03",
+      "matchday": 30
+    },
+    "Lucas Cepeda": {
+      "opp": "Rayo Vallecano",
+      "isHome": false,
+      "date": "2026-04-03",
+      "matchday": 30
+    },
+    "Federico Redondo": {
+      "opp": "Rayo Vallecano",
+      "isHome": false,
+      "date": "2026-04-03",
+      "matchday": 30
+    },
+    "Adrià Pedrosa": {
+      "opp": "Rayo Vallecano",
+      "isHome": false,
+      "date": "2026-04-03",
+      "matchday": 30
+    },
+    "Víctor Chust": {
+      "opp": "Rayo Vallecano",
+      "isHome": false,
+      "date": "2026-04-03",
+      "matchday": 30
+    },
+    "Rafa Mir": {
+      "opp": "Rayo Vallecano",
+      "isHome": false,
+      "date": "2026-04-03",
+      "matchday": 30
+    },
+    "Álvaro Rodríguez": {
+      "opp": "Rayo Vallecano",
+      "isHome": false,
+      "date": "2026-04-03",
+      "matchday": 30
+    },
+    "Josan Ferrández": {
+      "opp": "Rayo Vallecano",
+      "isHome": false,
+      "date": "2026-04-03",
+      "matchday": 30
+    },
+    "David Affengruber": {
+      "opp": "Rayo Vallecano",
+      "isHome": false,
+      "date": "2026-04-03",
+      "matchday": 30
+    },
+    "Roberto Fernández": {
+      "opp": "Real Betis",
+      "isHome": false,
+      "date": "2026-04-04",
+      "matchday": 30
+    },
+    "Kike G.": {
+      "opp": "Real Betis",
+      "isHome": false,
+      "date": "2026-04-04",
+      "matchday": 30
+    },
+    "Cyril Ngonge": {
+      "opp": "Real Betis",
+      "isHome": false,
+      "date": "2026-04-04",
+      "matchday": 30
+    },
+    "Antoniu Roca": {
+      "opp": "Real Betis",
+      "isHome": false,
+      "date": "2026-04-04",
+      "matchday": 30
+    },
+    "Tyrhys Dolan": {
+      "opp": "Real Betis",
+      "isHome": false,
+      "date": "2026-04-04",
+      "matchday": 30
+    },
+    "José Salinas": {
+      "opp": "Real Betis",
+      "isHome": false,
+      "date": "2026-04-04",
+      "matchday": 30
+    },
+    "Rubén Sánchez": {
+      "opp": "Real Betis",
+      "isHome": false,
+      "date": "2026-04-04",
+      "matchday": 30
+    },
+    "Omar El Hilali": {
+      "opp": "Real Betis",
+      "isHome": false,
+      "date": "2026-04-04",
+      "matchday": 30
+    },
+    "Pol Lozano": {
+      "opp": "Real Betis",
+      "isHome": false,
+      "date": "2026-04-04",
+      "matchday": 30
+    },
+    "Marko Dmitrović": {
+      "opp": "Real Betis",
+      "isHome": false,
+      "date": "2026-04-04",
+      "matchday": 30
+    },
+    "Fernando Calero": {
+      "opp": "Real Betis",
+      "isHome": false,
+      "date": "2026-04-04",
+      "matchday": 30
+    },
+    "Charles Pickel": {
+      "opp": "Real Betis",
+      "isHome": false,
+      "date": "2026-04-04",
+      "matchday": 30
+    },
+    "Clemens Riedel": {
+      "opp": "Real Betis",
+      "isHome": false,
+      "date": "2026-04-04",
+      "matchday": 30
+    },
+    "Edu Expósito": {
+      "opp": "Real Betis",
+      "isHome": false,
+      "date": "2026-04-04",
+      "matchday": 30
+    },
+    "Miguel Rubio": {
+      "opp": "Real Betis",
+      "isHome": false,
+      "date": "2026-04-04",
+      "matchday": 30
+    },
+    "Urko González De Zarate": {
+      "opp": "Real Betis",
+      "isHome": false,
+      "date": "2026-04-04",
+      "matchday": 30
+    },
+    "Pere Milla": {
+      "opp": "Real Betis",
+      "isHome": false,
+      "date": "2026-04-04",
+      "matchday": 30
+    },
+    "Jofre Carreras": {
+      "opp": "Real Betis",
+      "isHome": false,
+      "date": "2026-04-04",
+      "matchday": 30
+    },
+    "Carlos Romero": {
+      "opp": "Real Betis",
+      "isHome": false,
+      "date": "2026-04-04",
+      "matchday": 30
+    },
+    "Leandro Cabrera": {
+      "opp": "Real Betis",
+      "isHome": false,
+      "date": "2026-04-04",
+      "matchday": 30
+    },
+    "Ramon Terrats": {
+      "opp": "Real Betis",
+      "isHome": false,
+      "date": "2026-04-04",
+      "matchday": 30
+    },
+    "Veljko Birmančević": {
+      "opp": "Athletic Club",
+      "isHome": true,
+      "date": "2026-04-05",
+      "matchday": 30
+    },
+    "Mauro Arambarri": {
+      "opp": "Athletic Club",
+      "isHome": true,
+      "date": "2026-04-05",
+      "matchday": 30
+    },
+    "Adrian Liso": {
+      "opp": "Athletic Club",
+      "isHome": true,
+      "date": "2026-04-05",
+      "matchday": 30
+    },
+    "Allan Nyom": {
+      "opp": "Athletic Club",
+      "isHome": true,
+      "date": "2026-04-05",
+      "matchday": 30
+    },
+    "Sebastián Boselli": {
+      "opp": "Athletic Club",
+      "isHome": true,
+      "date": "2026-04-05",
+      "matchday": 30
+    },
+    "Juan Iglesias": {
+      "opp": "Athletic Club",
+      "isHome": true,
+      "date": "2026-04-05",
+      "matchday": 30
+    },
+    "Rico": {
+      "opp": "Athletic Club",
+      "isHome": true,
+      "date": "2026-04-05",
+      "matchday": 30
+    },
+    "David Soria": {
+      "opp": "Athletic Club",
+      "isHome": true,
+      "date": "2026-04-05",
+      "matchday": 30
+    },
+    "Djené Dakonam": {
+      "opp": "Athletic Club",
+      "isHome": true,
+      "date": "2026-04-05",
+      "matchday": 30
+    },
+    "Javi Muñoz": {
+      "opp": "Athletic Club",
+      "isHome": true,
+      "date": "2026-04-05",
+      "matchday": 30
+    },
+    "Domingos Duarte": {
+      "opp": "Athletic Club",
+      "isHome": true,
+      "date": "2026-04-05",
+      "matchday": 30
+    },
+    "A. Abqar": {
+      "opp": "Athletic Club",
+      "isHome": true,
+      "date": "2026-04-05",
+      "matchday": 30
+    },
+    "Mario Martín": {
+      "opp": "Athletic Club",
+      "isHome": true,
+      "date": "2026-04-05",
+      "matchday": 30
+    },
+    "Luis Milla": {
+      "opp": "Athletic Club",
+      "isHome": true,
+      "date": "2026-04-05",
+      "matchday": 30
+    },
+    "Zaid Romero": {
+      "opp": "Athletic Club",
+      "isHome": true,
+      "date": "2026-04-05",
+      "matchday": 30
+    },
+    "Bryan Gil": {
+      "opp": "Villarreal",
+      "isHome": true,
+      "date": "2026-04-06",
+      "matchday": 30
+    },
+    "Fran Beltrán": {
+      "opp": "Villarreal",
+      "isHome": true,
+      "date": "2026-04-06",
+      "matchday": 30
+    },
+    "Daley Blind": {
+      "opp": "Villarreal",
+      "isHome": true,
+      "date": "2026-04-06",
+      "matchday": 30
+    },
+    "Claudio Echeverri": {
+      "opp": "Villarreal",
+      "isHome": true,
+      "date": "2026-04-06",
+      "matchday": 30
+    },
+    "Vladyslav Vanat": {
+      "opp": "Villarreal",
+      "isHome": true,
+      "date": "2026-04-06",
+      "matchday": 30
+    },
+    "Álex Moreno": {
+      "opp": "Villarreal",
+      "isHome": true,
+      "date": "2026-04-06",
+      "matchday": 30
+    },
+    "Axel Witsel": {
+      "opp": "Villarreal",
+      "isHome": true,
+      "date": "2026-04-06",
+      "matchday": 30
+    },
+    "Joel Roca": {
+      "opp": "Villarreal",
+      "isHome": true,
+      "date": "2026-04-06",
+      "matchday": 30
+    },
+    "Alejandro Francés": {
+      "opp": "Villarreal",
+      "isHome": true,
+      "date": "2026-04-06",
+      "matchday": 30
+    },
+    "Iván Martín": {
+      "opp": "Villarreal",
+      "isHome": true,
+      "date": "2026-04-06",
+      "matchday": 30
+    },
+    "Cristhian Stuani": {
+      "opp": "Villarreal",
+      "isHome": true,
+      "date": "2026-04-06",
+      "matchday": 30
+    },
+    "ter Stegen": {
+      "opp": "Villarreal",
+      "isHome": true,
+      "date": "2026-04-06",
+      "matchday": 30
+    },
+    "Viktor Tsygankov": {
+      "opp": "Villarreal",
+      "isHome": true,
+      "date": "2026-04-06",
+      "matchday": 30
+    },
+    "Azzedine Ounahi": {
+      "opp": "Villarreal",
+      "isHome": true,
+      "date": "2026-04-06",
+      "matchday": 30
+    },
+    "Abel Ruiz": {
+      "opp": "Villarreal",
+      "isHome": true,
+      "date": "2026-04-06",
+      "matchday": 30
+    },
+    "Arnau Martínez": {
+      "opp": "Villarreal",
+      "isHome": true,
+      "date": "2026-04-06",
+      "matchday": 30
+    },
+    "Paulo Gazzaniga": {
+      "opp": "Villarreal",
+      "isHome": true,
+      "date": "2026-04-06",
+      "matchday": 30
+    },
+    "P. Martínez": {
+      "opp": "Real Sociedad",
+      "isHome": false,
+      "date": "2026-04-04",
+      "matchday": 30
+    },
+    "Kareem Tunde": {
+      "opp": "Real Sociedad",
+      "isHome": false,
+      "date": "2026-04-04",
+      "matchday": 30
+    },
+    "Kervin Arriaga": {
+      "opp": "Real Sociedad",
+      "isHome": false,
+      "date": "2026-04-04",
+      "matchday": 30
+    },
+    "Unai Vencedor": {
+      "opp": "Real Sociedad",
+      "isHome": false,
+      "date": "2026-04-04",
+      "matchday": 30
+    },
+    "Manu Sánchez": {
+      "opp": "Real Sociedad",
+      "isHome": false,
+      "date": "2026-04-04",
+      "matchday": 30
+    },
+    "Matías Moreno": {
+      "opp": "Real Sociedad",
+      "isHome": false,
+      "date": "2026-04-04",
+      "matchday": 30
+    },
+    "Ugo Raghouber": {
+      "opp": "Real Sociedad",
+      "isHome": false,
+      "date": "2026-04-04",
+      "matchday": 30
+    },
+    "Morales": {
+      "opp": "Real Sociedad",
+      "isHome": false,
+      "date": "2026-04-04",
+      "matchday": 30
+    },
+    "Nacho Pérez": {
+      "opp": "Real Sociedad",
+      "isHome": false,
+      "date": "2026-04-04",
+      "matchday": 30
+    },
+    "C.Álvarez": {
+      "opp": "Real Sociedad",
+      "isHome": false,
+      "date": "2026-04-04",
+      "matchday": 30
+    },
+    "Jeremy Toljan": {
+      "opp": "Real Sociedad",
+      "isHome": false,
+      "date": "2026-04-04",
+      "matchday": 30
+    },
+    "Víctor García": {
+      "opp": "Real Sociedad",
+      "isHome": false,
+      "date": "2026-04-04",
+      "matchday": 30
+    },
+    "Paco Cortés": {
+      "opp": "Real Sociedad",
+      "isHome": false,
+      "date": "2026-04-04",
+      "matchday": 30
+    },
+    "Olasagasti": {
+      "opp": "Real Sociedad",
+      "isHome": false,
+      "date": "2026-04-04",
+      "matchday": 30
+    },
+    "Iker Losada": {
+      "opp": "Real Sociedad",
+      "isHome": false,
+      "date": "2026-04-04",
+      "matchday": 30
+    },
+    "I.Romero": {
+      "opp": "Real Sociedad",
+      "isHome": false,
+      "date": "2026-04-04",
+      "matchday": 30
+    },
+    "Edouard Eyong": {
+      "opp": "Real Sociedad",
+      "isHome": false,
+      "date": "2026-04-04",
+      "matchday": 30
+    },
+    "O.Rey": {
+      "opp": "Real Sociedad",
+      "isHome": false,
+      "date": "2026-04-04",
+      "matchday": 30
+    },
+    "Carlos Espí": {
+      "opp": "Real Sociedad",
+      "isHome": false,
+      "date": "2026-04-04",
+      "matchday": 30
+    },
+    "Mathew Ryan": {
+      "opp": "Real Sociedad",
+      "isHome": false,
+      "date": "2026-04-04",
+      "matchday": 30
+    },
+    "Toni Lato": {
+      "opp": "Real Madrid",
+      "isHome": true,
+      "date": "2026-04-04",
+      "matchday": 30
+    },
+    "Zito Luvumbo": {
+      "opp": "Real Madrid",
+      "isHome": true,
+      "date": "2026-04-04",
+      "matchday": 30
+    },
+    "David López": {
+      "opp": "Real Madrid",
+      "isHome": true,
+      "date": "2026-04-04",
+      "matchday": 30
+    },
+    "Pablo Maffeo": {
+      "opp": "Real Madrid",
+      "isHome": true,
+      "date": "2026-04-04",
+      "matchday": 30
+    },
+    "Manu Morlanes": {
+      "opp": "Real Madrid",
+      "isHome": true,
+      "date": "2026-04-04",
+      "matchday": 30
+    },
+    "Justin-Noël Kalumba": {
+      "opp": "Real Madrid",
+      "isHome": true,
+      "date": "2026-04-04",
+      "matchday": 30
+    },
+    "Abdón Prats": {
+      "opp": "Real Madrid",
+      "isHome": true,
+      "date": "2026-04-04",
+      "matchday": 30
+    },
+    "Mateo Joseph": {
+      "opp": "Real Madrid",
+      "isHome": true,
+      "date": "2026-04-04",
+      "matchday": 30
+    },
+    "Antonio Sánchez": {
+      "opp": "Real Madrid",
+      "isHome": true,
+      "date": "2026-04-04",
+      "matchday": 30
+    },
+    "Raíllo": {
+      "opp": "Real Madrid",
+      "isHome": true,
+      "date": "2026-04-04",
+      "matchday": 30
+    },
+    "J. Mojica": {
+      "opp": "Real Madrid",
+      "isHome": true,
+      "date": "2026-04-04",
+      "matchday": 30
+    },
+    "Jan Virgili": {
+      "opp": "Real Madrid",
+      "isHome": true,
+      "date": "2026-04-04",
+      "matchday": 30
+    },
+    "Javier Llabrés": {
+      "opp": "Real Madrid",
+      "isHome": true,
+      "date": "2026-04-04",
+      "matchday": 30
+    },
+    "Martin Valjent": {
+      "opp": "Real Madrid",
+      "isHome": true,
+      "date": "2026-04-04",
+      "matchday": 30
+    },
+    "Samú Costa": {
+      "opp": "Real Madrid",
+      "isHome": true,
+      "date": "2026-04-04",
+      "matchday": 30
+    },
+    "Mateu Morey Bauza": {
+      "opp": "Real Madrid",
+      "isHome": true,
+      "date": "2026-04-04",
+      "matchday": 30
+    },
+    "Omar Mascarell": {
+      "opp": "Real Madrid",
+      "isHome": true,
+      "date": "2026-04-04",
+      "matchday": 30
+    },
+    "Takuma Asano": {
+      "opp": "Real Madrid",
+      "isHome": true,
+      "date": "2026-04-04",
+      "matchday": 30
+    },
+    "Darder": {
+      "opp": "Real Madrid",
+      "isHome": true,
+      "date": "2026-04-04",
+      "matchday": 30
+    },
+    "S. HERRERA": {
+      "opp": "Alaves",
+      "isHome": false,
+      "date": "2026-04-05",
+      "matchday": 30
+    },
+    "Catena": {
+      "opp": "Alaves",
+      "isHome": false,
+      "date": "2026-04-05",
+      "matchday": 30
+    },
+    "Iker Muñoz": {
+      "opp": "Alaves",
+      "isHome": false,
+      "date": "2026-04-05",
+      "matchday": 30
+    },
+    "Aimar": {
+      "opp": "Alaves",
+      "isHome": false,
+      "date": "2026-04-05",
+      "matchday": 30
+    },
+    "Boyomo": {
+      "opp": "Alaves",
+      "isHome": false,
+      "date": "2026-04-05",
+      "matchday": 30
+    },
+    "Budimir": {
+      "opp": "Alaves",
+      "isHome": false,
+      "date": "2026-04-05",
+      "matchday": 30
+    },
+    "Javier Galán": {
+      "opp": "Alaves",
+      "isHome": false,
+      "date": "2026-04-05",
+      "matchday": 30
+    },
+    "Asier Osambela": {
+      "opp": "Alaves",
+      "isHome": false,
+      "date": "2026-04-05",
+      "matchday": 30
+    },
+    "Valentin Rosier": {
+      "opp": "Alaves",
+      "isHome": false,
+      "date": "2026-04-05",
+      "matchday": 30
+    },
+    "Rubén García": {
+      "opp": "Alaves",
+      "isHome": false,
+      "date": "2026-04-05",
+      "matchday": 30
+    },
+    "Juan Cruz": {
+      "opp": "Alaves",
+      "isHome": false,
+      "date": "2026-04-05",
+      "matchday": 30
+    },
+    "Raúl Moro": {
+      "opp": "Alaves",
+      "isHome": false,
+      "date": "2026-04-05",
+      "matchday": 30
+    },
+    "Kike Barja": {
+      "opp": "Alaves",
+      "isHome": false,
+      "date": "2026-04-05",
+      "matchday": 30
+    },
+    "Raúl": {
+      "opp": "Alaves",
+      "isHome": false,
+      "date": "2026-04-05",
+      "matchday": 30
+    },
+    "Moncayola": {
+      "opp": "Alaves",
+      "isHome": false,
+      "date": "2026-04-05",
+      "matchday": 30
+    },
+    "HERRANDO": {
+      "opp": "Alaves",
+      "isHome": false,
+      "date": "2026-04-05",
+      "matchday": 30
+    },
+    "Moi Gómez": {
+      "opp": "Alaves",
+      "isHome": false,
+      "date": "2026-04-05",
+      "matchday": 30
+    },
+    "Víctor Muñoz": {
+      "opp": "Alaves",
+      "isHome": false,
+      "date": "2026-04-05",
+      "matchday": 30
+    },
+    "Luiz Felipe": {
+      "opp": "Elche",
+      "isHome": true,
+      "date": "2026-04-03",
+      "matchday": 30
+    },
+    "Randy Nteka": {
+      "opp": "Elche",
+      "isHome": true,
+      "date": "2026-04-03",
+      "matchday": 30
+    },
+    "Álvaro García": {
+      "opp": "Elche",
+      "isHome": true,
+      "date": "2026-04-03",
+      "matchday": 30
+    },
+    "Gumbau": {
+      "opp": "Elche",
+      "isHome": true,
+      "date": "2026-04-03",
+      "matchday": 30
+    },
+    "Andrei Rațiu": {
+      "opp": "Elche",
+      "isHome": true,
+      "date": "2026-04-03",
+      "matchday": 30
+    },
+    "Unai López": {
+      "opp": "Elche",
+      "isHome": true,
+      "date": "2026-04-03",
+      "matchday": 30
+    },
+    "Pedro Diaz": {
+      "opp": "Elche",
+      "isHome": true,
+      "date": "2026-04-03",
+      "matchday": 30
+    },
+    "Ilias Akhomach": {
+      "opp": "Elche",
+      "isHome": true,
+      "date": "2026-04-03",
+      "matchday": 30
+    },
+    "Pep Chavarría": {
+      "opp": "Elche",
+      "isHome": true,
+      "date": "2026-04-03",
+      "matchday": 30
+    },
+    "Isi Palazón": {
+      "opp": "Elche",
+      "isHome": true,
+      "date": "2026-04-03",
+      "matchday": 30
+    },
+    "Fran Pérez": {
+      "opp": "Elche",
+      "isHome": true,
+      "date": "2026-04-03",
+      "matchday": 30
+    },
+    "Florian Lejeune": {
+      "opp": "Elche",
+      "isHome": true,
+      "date": "2026-04-03",
+      "matchday": 30
+    },
+    "Carlos Martín": {
+      "opp": "Elche",
+      "isHome": true,
+      "date": "2026-04-03",
+      "matchday": 30
+    },
+    "Iván Balliu": {
+      "opp": "Elche",
+      "isHome": true,
+      "date": "2026-04-03",
+      "matchday": 30
+    },
+    "Alfonso Espino": {
+      "opp": "Elche",
+      "isHome": true,
+      "date": "2026-04-03",
+      "matchday": 30
+    },
+    "Augusto Batalla": {
+      "opp": "Elche",
+      "isHome": true,
+      "date": "2026-04-03",
+      "matchday": 30
+    },
+    "De Frutos": {
+      "opp": "Elche",
+      "isHome": true,
+      "date": "2026-04-03",
+      "matchday": 30
+    },
+    "Pathé Ciss": {
+      "opp": "Elche",
+      "isHome": true,
+      "date": "2026-04-03",
+      "matchday": 30
+    },
+    "Nobel Mendy": {
+      "opp": "Elche",
+      "isHome": true,
+      "date": "2026-04-03",
+      "matchday": 30
+    },
+    "Nelson Deossa": {
+      "opp": "Espanyol",
+      "isHome": true,
+      "date": "2026-04-04",
+      "matchday": 30
+    },
+    "Pablo Fornals": {
+      "opp": "Espanyol",
+      "isHome": true,
+      "date": "2026-04-04",
+      "matchday": 30
+    },
+    "Cucho Hernández": {
+      "opp": "Espanyol",
+      "isHome": true,
+      "date": "2026-04-04",
+      "matchday": 30
+    },
+    "Pau López": {
+      "opp": "Espanyol",
+      "isHome": true,
+      "date": "2026-04-04",
+      "matchday": 30
+    },
+    "Aitor Ruibal": {
+      "opp": "Espanyol",
+      "isHome": true,
+      "date": "2026-04-04",
+      "matchday": 30
+    },
+    "Junior Firpo": {
+      "opp": "Espanyol",
+      "isHome": true,
+      "date": "2026-04-04",
+      "matchday": 30
+    },
+    "Antony": {
+      "opp": "Espanyol",
+      "isHome": true,
+      "date": "2026-04-04",
+      "matchday": 30
+    },
+    "Bellerín": {
+      "opp": "Espanyol",
+      "isHome": true,
+      "date": "2026-04-04",
+      "matchday": 30
+    },
+    "Chimy Ávila": {
+      "opp": "Espanyol",
+      "isHome": true,
+      "date": "2026-04-04",
+      "matchday": 30
+    },
+    "Ángel Ortiz": {
+      "opp": "Espanyol",
+      "isHome": true,
+      "date": "2026-04-04",
+      "matchday": 30
+    },
+    "Ricardo Rodríguez": {
+      "opp": "Espanyol",
+      "isHome": true,
+      "date": "2026-04-04",
+      "matchday": 30
+    },
+    "Álvaro Fidalgo": {
+      "opp": "Espanyol",
+      "isHome": true,
+      "date": "2026-04-04",
+      "matchday": 30
+    },
+    "Marc Bartra": {
+      "opp": "Espanyol",
+      "isHome": true,
+      "date": "2026-04-04",
+      "matchday": 30
+    },
+    "Natan": {
+      "opp": "Espanyol",
+      "isHome": true,
+      "date": "2026-04-04",
+      "matchday": 30
+    },
+    "Rodrigo Riquelme": {
+      "opp": "Espanyol",
+      "isHome": true,
+      "date": "2026-04-04",
+      "matchday": 30
+    },
+    "Cédric Bakambu": {
+      "opp": "Espanyol",
+      "isHome": true,
+      "date": "2026-04-04",
+      "matchday": 30
+    },
+    "Álvaro Valles": {
+      "opp": "Espanyol",
+      "isHome": true,
+      "date": "2026-04-04",
+      "matchday": 30
+    },
+    "Federico Valverde": {
+      "opp": "Mallorca",
+      "isHome": false,
+      "date": "2026-04-04",
+      "matchday": 30
+    },
+    "Franco Mastantuono": {
+      "opp": "Mallorca",
+      "isHome": false,
+      "date": "2026-04-04",
+      "matchday": 30
+    },
+    "Dani Ceballos": {
+      "opp": "Mallorca",
+      "isHome": false,
+      "date": "2026-04-04",
+      "matchday": 30
+    },
+    "Fran García": {
+      "opp": "Mallorca",
+      "isHome": false,
+      "date": "2026-04-04",
+      "matchday": 30
+    },
+    "Andriy Lunin": {
+      "opp": "Mallorca",
+      "isHome": false,
+      "date": "2026-04-04",
+      "matchday": 30
+    },
+    "David Alaba": {
+      "opp": "Mallorca",
+      "isHome": false,
+      "date": "2026-04-04",
+      "matchday": 30
+    },
+    "Eduardo Camavinga": {
+      "opp": "Mallorca",
+      "isHome": false,
+      "date": "2026-04-04",
+      "matchday": 30
+    },
+    "Brahim": {
+      "opp": "Mallorca",
+      "isHome": false,
+      "date": "2026-04-04",
+      "matchday": 30
+    },
+    "Trent Alexander-Arnold": {
+      "opp": "Mallorca",
+      "isHome": false,
+      "date": "2026-04-04",
+      "matchday": 30
+    },
+    "Gonzalo García": {
+      "opp": "Mallorca",
+      "isHome": false,
+      "date": "2026-04-04",
+      "matchday": 30
+    },
+    "Vinícius Júnior": {
+      "opp": "Mallorca",
+      "isHome": false,
+      "date": "2026-04-04",
+      "matchday": 30
+    },
+    "Álvaro Carreras": {
+      "opp": "Mallorca",
+      "isHome": false,
+      "date": "2026-04-04",
+      "matchday": 30
+    },
+    "Ferland Mendy": {
+      "opp": "Mallorca",
+      "isHome": false,
+      "date": "2026-04-04",
+      "matchday": 30
+    },
+    "Dean Huijsen": {
+      "opp": "Mallorca",
+      "isHome": false,
+      "date": "2026-04-04",
+      "matchday": 30
+    },
+    "Arda Güler": {
+      "opp": "Mallorca",
+      "isHome": false,
+      "date": "2026-04-04",
+      "matchday": 30
+    },
+    "Kylian Mbappé": {
+      "opp": "Mallorca",
+      "isHome": false,
+      "date": "2026-04-04",
+      "matchday": 30
+    },
+    "César Palacios": {
+      "opp": "Mallorca",
+      "isHome": false,
+      "date": "2026-04-04",
+      "matchday": 30
+    },
+    "Nicolás Fonseca": {
+      "opp": "Sevilla",
+      "isHome": true,
+      "date": "2026-04-05",
+      "matchday": 30
+    },
+    "Lucas Ahijado": {
+      "opp": "Sevilla",
+      "isHome": true,
+      "date": "2026-04-05",
+      "matchday": 30
+    },
+    "Rahim Alhassane": {
+      "opp": "Sevilla",
+      "isHome": true,
+      "date": "2026-04-05",
+      "matchday": 30
+    },
+    "David Costas": {
+      "opp": "Sevilla",
+      "isHome": true,
+      "date": "2026-04-05",
+      "matchday": 30
+    },
+    "Aarón Escandell": {
+      "opp": "Sevilla",
+      "isHome": true,
+      "date": "2026-04-05",
+      "matchday": 30
+    },
+    "Álex Forés": {
+      "opp": "Sevilla",
+      "isHome": true,
+      "date": "2026-04-05",
+      "matchday": 30
+    },
+    "Dani Calvo": {
+      "opp": "Sevilla",
+      "isHome": true,
+      "date": "2026-04-05",
+      "matchday": 30
+    },
+    "Javi López": {
+      "opp": "Sevilla",
+      "isHome": true,
+      "date": "2026-04-05",
+      "matchday": 30
+    },
+    "Luka Ilić": {
+      "opp": "Sevilla",
+      "isHome": true,
+      "date": "2026-04-05",
+      "matchday": 30
+    },
+    "Santiago Colombatto": {
+      "opp": "Sevilla",
+      "isHome": true,
+      "date": "2026-04-05",
+      "matchday": 30
+    },
+    "David Carmo": {
+      "opp": "Sevilla",
+      "isHome": true,
+      "date": "2026-04-05",
+      "matchday": 30
+    },
+    "Federico Viñas": {
+      "opp": "Sevilla",
+      "isHome": true,
+      "date": "2026-04-05",
+      "matchday": 30
+    },
+    "Thiago Fernández": {
+      "opp": "Sevilla",
+      "isHome": true,
+      "date": "2026-04-05",
+      "matchday": 30
+    },
+    "Nacho Vidal": {
+      "opp": "Sevilla",
+      "isHome": true,
+      "date": "2026-04-05",
+      "matchday": 30
+    },
+    "Haissem Hassan": {
+      "opp": "Sevilla",
+      "isHome": true,
+      "date": "2026-04-05",
+      "matchday": 30
+    },
+    "Ilyas Chaira": {
+      "opp": "Sevilla",
+      "isHome": true,
+      "date": "2026-04-05",
+      "matchday": 30
+    },
+    "Sibo": {
+      "opp": "Sevilla",
+      "isHome": true,
+      "date": "2026-04-05",
+      "matchday": 30
+    },
+    "Thiago Borbas": {
+      "opp": "Sevilla",
+      "isHome": true,
+      "date": "2026-04-05",
+      "matchday": 30
+    },
+    "Santi Cazorla": {
+      "opp": "Sevilla",
+      "isHome": true,
+      "date": "2026-04-05",
+      "matchday": 30
+    },
+    "Luken Beitia": {
+      "opp": "Levante",
+      "isHome": true,
+      "date": "2026-04-04",
+      "matchday": 30
+    },
+    "Álex Remiro": {
+      "opp": "Levante",
+      "isHome": true,
+      "date": "2026-04-04",
+      "matchday": 30
+    },
+    "Odriozola": {
+      "opp": "Levante",
+      "isHome": true,
+      "date": "2026-04-04",
+      "matchday": 30
+    },
+    "Wesley": {
+      "opp": "Levante",
+      "isHome": true,
+      "date": "2026-04-04",
+      "matchday": 30
+    },
+    "Turrientes": {
+      "opp": "Levante",
+      "isHome": true,
+      "date": "2026-04-04",
+      "matchday": 30
+    },
+    "Alex Marchal": {
+      "opp": "Levante",
+      "isHome": true,
+      "date": "2026-04-04",
+      "matchday": 30
+    },
+    "Sergio Gómez": {
+      "opp": "Levante",
+      "isHome": true,
+      "date": "2026-04-04",
+      "matchday": 30
+    },
+    "Jon Gorrotxategi": {
+      "opp": "Levante",
+      "isHome": true,
+      "date": "2026-04-04",
+      "matchday": 30
+    },
+    "Oyarzabal": {
+      "opp": "Levante",
+      "isHome": true,
+      "date": "2026-04-04",
+      "matchday": 30
+    },
+    "Kazunari Kita": {
+      "opp": "Levante",
+      "isHome": true,
+      "date": "2026-04-04",
+      "matchday": 30
+    },
+    "Gorka Carrera": {
+      "opp": "Levante",
+      "isHome": true,
+      "date": "2026-04-04",
+      "matchday": 30
+    },
+    "Job Ochieng": {
+      "opp": "Levante",
+      "isHome": true,
+      "date": "2026-04-04",
+      "matchday": 30
+    },
+    "Barrenetxea": {
+      "opp": "Levante",
+      "isHome": true,
+      "date": "2026-04-04",
+      "matchday": 30
+    },
+    "Gonçalo Guedes": {
+      "opp": "Levante",
+      "isHome": true,
+      "date": "2026-04-04",
+      "matchday": 30
+    },
+    "Jon Aramburu": {
+      "opp": "Levante",
+      "isHome": true,
+      "date": "2026-04-04",
+      "matchday": 30
+    },
+    "Brais Méndez": {
+      "opp": "Levante",
+      "isHome": true,
+      "date": "2026-04-04",
+      "matchday": 30
+    },
+    "Lander Astiazarán": {
+      "opp": "Levante",
+      "isHome": true,
+      "date": "2026-04-04",
+      "matchday": 30
+    },
+    "Aihen": {
+      "opp": "Levante",
+      "isHome": true,
+      "date": "2026-04-04",
+      "matchday": 30
+    },
+    "Luka Sučić": {
+      "opp": "Levante",
+      "isHome": true,
+      "date": "2026-04-04",
+      "matchday": 30
+    },
+    "Zubeldia": {
+      "opp": "Levante",
+      "isHome": true,
+      "date": "2026-04-04",
+      "matchday": 30
+    },
+    "Orri Óskarsson": {
+      "opp": "Levante",
+      "isHome": true,
+      "date": "2026-04-04",
+      "matchday": 30
+    },
+    "Tomás Carbonell": {
+      "opp": "Levante",
+      "isHome": true,
+      "date": "2026-04-04",
+      "matchday": 30
+    },
+    "Aitor Fraga": {
+      "opp": "Levante",
+      "isHome": true,
+      "date": "2026-04-04",
+      "matchday": 30
+    },
+    "Carlos Soler": {
+      "opp": "Levante",
+      "isHome": true,
+      "date": "2026-04-04",
+      "matchday": 30
+    },
+    "Duje Ćaleta-Car": {
+      "opp": "Levante",
+      "isHome": true,
+      "date": "2026-04-04",
+      "matchday": 30
+    },
+    "Ibai Aguirre": {
+      "opp": "Levante",
+      "isHome": true,
+      "date": "2026-04-04",
+      "matchday": 30
+    },
+    "Adnan Januzaj": {
+      "opp": "Real Oviedo",
+      "isHome": false,
+      "date": "2026-04-05",
+      "matchday": 30
+    },
+    "Djibril Sow": {
+      "opp": "Real Oviedo",
+      "isHome": false,
+      "date": "2026-04-05",
+      "matchday": 30
+    },
+    "José Ángel Carmona": {
+      "opp": "Real Oviedo",
+      "isHome": false,
+      "date": "2026-04-05",
+      "matchday": 30
+    },
+    "Manu Bueno": {
+      "opp": "Real Oviedo",
+      "isHome": false,
+      "date": "2026-04-05",
+      "matchday": 30
+    },
+    "Isaac Romero": {
+      "opp": "Real Oviedo",
+      "isHome": false,
+      "date": "2026-04-05",
+      "matchday": 30
+    },
+    "Odysseas": {
+      "opp": "Real Oviedo",
+      "isHome": false,
+      "date": "2026-04-05",
+      "matchday": 30
+    },
+    "Alexis Sánchez": {
+      "opp": "Real Oviedo",
+      "isHome": false,
+      "date": "2026-04-05",
+      "matchday": 30
+    },
+    "Ruben Vargas": {
+      "opp": "Real Oviedo",
+      "isHome": false,
+      "date": "2026-04-05",
+      "matchday": 30
+    },
+    "Tanguy Nianzou": {
+      "opp": "Real Oviedo",
+      "isHome": false,
+      "date": "2026-04-05",
+      "matchday": 30
+    },
+    "Juanlu Sánchez": {
+      "opp": "Real Oviedo",
+      "isHome": false,
+      "date": "2026-04-05",
+      "matchday": 30
+    },
+    "Lucien Agoumé": {
+      "opp": "Real Oviedo",
+      "isHome": false,
+      "date": "2026-04-05",
+      "matchday": 30
+    },
+    "Nemanja Gudelj": {
+      "opp": "Real Oviedo",
+      "isHome": false,
+      "date": "2026-04-05",
+      "matchday": 30
+    },
+    "Oso": {
+      "opp": "Real Oviedo",
+      "isHome": false,
+      "date": "2026-04-05",
+      "matchday": 30
+    },
+    "Andrés Castrín": {
+      "opp": "Real Oviedo",
+      "isHome": false,
+      "date": "2026-04-05",
+      "matchday": 30
+    },
+    "César Azpilicueta": {
+      "opp": "Real Oviedo",
+      "isHome": false,
+      "date": "2026-04-05",
+      "matchday": 30
+    },
+    "Neal Maupay": {
+      "opp": "Real Oviedo",
+      "isHome": false,
+      "date": "2026-04-05",
+      "matchday": 30
+    },
+    "Chidera Ejuke": {
+      "opp": "Real Oviedo",
+      "isHome": false,
+      "date": "2026-04-05",
+      "matchday": 30
+    },
+    "Kike Salas": {
+      "opp": "Real Oviedo",
+      "isHome": false,
+      "date": "2026-04-05",
+      "matchday": 30
+    },
+    "Copete": {
+      "opp": "Celta Vigo",
+      "isHome": true,
+      "date": "2026-04-05",
+      "matchday": 30
+    },
+    "Baptiste Santamaría": {
+      "opp": "Celta Vigo",
+      "isHome": true,
+      "date": "2026-04-05",
+      "matchday": 30
+    },
+    "André Almeida": {
+      "opp": "Celta Vigo",
+      "isHome": true,
+      "date": "2026-04-05",
+      "matchday": 30
+    },
+    "Largie Ramazani": {
+      "opp": "Celta Vigo",
+      "isHome": true,
+      "date": "2026-04-05",
+      "matchday": 30
+    },
+    "Lucas Beltrán": {
+      "opp": "Celta Vigo",
+      "isHome": true,
+      "date": "2026-04-05",
+      "matchday": 30
+    },
+    "Hugo Duro": {
+      "opp": "Celta Vigo",
+      "isHome": true,
+      "date": "2026-04-05",
+      "matchday": 30
+    },
+    "Eray Cömert": {
+      "opp": "Celta Vigo",
+      "isHome": true,
+      "date": "2026-04-05",
+      "matchday": 30
+    },
+    "Dimitri Foulquier": {
+      "opp": "Celta Vigo",
+      "isHome": true,
+      "date": "2026-04-05",
+      "matchday": 30
+    },
+    "Filip Ugrinic": {
+      "opp": "Celta Vigo",
+      "isHome": true,
+      "date": "2026-04-05",
+      "matchday": 30
+    },
+    "Stole Dimitrievski": {
+      "opp": "Celta Vigo",
+      "isHome": true,
+      "date": "2026-04-05",
+      "matchday": 30
+    },
+    "César Tárrega": {
+      "opp": "Celta Vigo",
+      "isHome": true,
+      "date": "2026-04-05",
+      "matchday": 30
+    },
+    "Pepelu": {
+      "opp": "Celta Vigo",
+      "isHome": true,
+      "date": "2026-04-05",
+      "matchday": 30
+    },
+    "Renzo Saravia": {
+      "opp": "Celta Vigo",
+      "isHome": true,
+      "date": "2026-04-05",
+      "matchday": 30
+    },
+    "Javi Guerra": {
+      "opp": "Celta Vigo",
+      "isHome": true,
+      "date": "2026-04-05",
+      "matchday": 30
+    },
+    "Gayà": {
+      "opp": "Celta Vigo",
+      "isHome": true,
+      "date": "2026-04-05",
+      "matchday": 30
+    },
+    "L. Rioja": {
+      "opp": "Celta Vigo",
+      "isHome": true,
+      "date": "2026-04-05",
+      "matchday": 30
+    },
+    "Thierry Correia": {
+      "opp": "Celta Vigo",
+      "isHome": true,
+      "date": "2026-04-05",
+      "matchday": 30
+    },
+    "Santiago Mouriño": {
+      "opp": "Girona",
+      "isHome": false,
+      "date": "2026-04-06",
+      "matchday": 30
+    },
+    "Alfon González": {
+      "opp": "Girona",
+      "isHome": false,
+      "date": "2026-04-06",
+      "matchday": 30
+    },
+    "Gerard Moreno": {
+      "opp": "Girona",
+      "isHome": false,
+      "date": "2026-04-06",
+      "matchday": 30
+    },
+    "Pape Gueye": {
+      "opp": "Girona",
+      "isHome": false,
+      "date": "2026-04-06",
+      "matchday": 30
+    },
+    "Alex Freeman": {
+      "opp": "Girona",
+      "isHome": false,
+      "date": "2026-04-06",
+      "matchday": 30
+    },
+    "Thomas Partey": {
+      "opp": "Girona",
+      "isHome": false,
+      "date": "2026-04-06",
+      "matchday": 30
+    },
+    "Alberto Moleiro": {
+      "opp": "Girona",
+      "isHome": false,
+      "date": "2026-04-06",
+      "matchday": 30
+    },
+    "Santi Comesaña": {
+      "opp": "Girona",
+      "isHome": false,
+      "date": "2026-04-06",
+      "matchday": 30
+    },
+    "Rafa Marín": {
+      "opp": "Girona",
+      "isHome": false,
+      "date": "2026-04-06",
+      "matchday": 30
+    },
+    "Georges Mikautadze": {
+      "opp": "Girona",
+      "isHome": false,
+      "date": "2026-04-06",
+      "matchday": 30
+    },
+    "Alfonso Pedraza": {
+      "opp": "Girona",
+      "isHome": false,
+      "date": "2026-04-06",
+      "matchday": 30
+    },
+    "Hugo López": {
+      "opp": "Girona",
+      "isHome": false,
+      "date": "2026-04-06",
+      "matchday": 30
+    },
+    "Pau Navarro": {
+      "opp": "Girona",
+      "isHome": false,
+      "date": "2026-04-06",
+      "matchday": 30
+    },
+    "Sergi Cardona": {
+      "opp": "Girona",
+      "isHome": false,
+      "date": "2026-04-06",
+      "matchday": 30
+    },
+    "Renato Veiga": {
+      "opp": "Girona",
+      "isHome": false,
+      "date": "2026-04-06",
+      "matchday": 30
+    },
+    "Nicolas Pépé": {
+      "opp": "Girona",
+      "isHome": false,
+      "date": "2026-04-06",
+      "matchday": 30
+    },
+    "Luíz Júnior": {
+      "opp": "Girona",
+      "isHome": false,
+      "date": "2026-04-06",
+      "matchday": 30
+    },
+    "Dani Parejo": {
+      "opp": "Girona",
+      "isHome": false,
+      "date": "2026-04-06",
+      "matchday": 30
+    },
+    "Tajon Buchanan": {
+      "opp": "Girona",
+      "isHome": false,
+      "date": "2026-04-06",
+      "matchday": 30
+    },
+    "Mads Pedersen": {
+      "opp": "Hamburger SV",
+      "isHome": false,
+      "date": "2026-04-04",
+      "matchday": 28
+    },
+    "Finn Dahmen": {
+      "opp": "Hamburger SV",
+      "isHome": false,
+      "date": "2026-04-04",
+      "matchday": 28
+    },
+    "Mert Kömür": {
+      "opp": "Hamburger SV",
+      "isHome": false,
+      "date": "2026-04-04",
+      "matchday": 28
+    },
+    "Fabian Rieder": {
+      "opp": "Hamburger SV",
+      "isHome": false,
+      "date": "2026-04-04",
+      "matchday": 28
+    },
+    "Alexis Claude-Maurice": {
+      "opp": "Hamburger SV",
+      "isHome": false,
+      "date": "2026-04-04",
+      "matchday": 28
+    },
+    "Anton Kade": {
+      "opp": "Hamburger SV",
+      "isHome": false,
+      "date": "2026-04-04",
+      "matchday": 28
+    },
+    "Dimitris Giannoulis": {
+      "opp": "Hamburger SV",
+      "isHome": false,
+      "date": "2026-04-04",
+      "matchday": 28
+    },
+    "Uchenna Ogundu": {
+      "opp": "Hamburger SV",
+      "isHome": false,
+      "date": "2026-04-04",
+      "matchday": 28
+    },
+    "Cédric Zesiger": {
+      "opp": "Hamburger SV",
+      "isHome": false,
+      "date": "2026-04-04",
+      "matchday": 28
+    },
+    "Keven Schlotterbeck": {
+      "opp": "Hamburger SV",
+      "isHome": false,
+      "date": "2026-04-04",
+      "matchday": 28
+    },
+    "Robin Fellhauer": {
+      "opp": "Hamburger SV",
+      "isHome": false,
+      "date": "2026-04-04",
+      "matchday": 28
+    },
+    "Noahkai Banks": {
+      "opp": "Hamburger SV",
+      "isHome": false,
+      "date": "2026-04-04",
+      "matchday": 28
+    },
+    "Arthur Chaves": {
+      "opp": "Hamburger SV",
+      "isHome": false,
+      "date": "2026-04-04",
+      "matchday": 28
+    },
+    "Rodrigo Ribeiro": {
+      "opp": "Hamburger SV",
+      "isHome": false,
+      "date": "2026-04-04",
+      "matchday": 28
+    },
+    "Kristijan Jakić": {
+      "opp": "Hamburger SV",
+      "isHome": false,
+      "date": "2026-04-04",
+      "matchday": 28
+    },
+    "Han-Noah Massengo": {
+      "opp": "Hamburger SV",
+      "isHome": false,
+      "date": "2026-04-04",
+      "matchday": 28
+    },
+    "Yannik Keitel": {
+      "opp": "Hamburger SV",
+      "isHome": false,
+      "date": "2026-04-04",
+      "matchday": 28
+    },
+    "Michael Gregoritsch": {
+      "opp": "Hamburger SV",
+      "isHome": false,
+      "date": "2026-04-04",
+      "matchday": 28
+    },
+    "Elvis Rexhbecaj": {
+      "opp": "Hamburger SV",
+      "isHome": false,
+      "date": "2026-04-04",
+      "matchday": 28
+    },
+    "Christian Kofane": {
+      "opp": "Wolfsburg",
+      "isHome": true,
+      "date": "2026-04-04",
+      "matchday": 28
+    },
+    "Ibrahim Maza": {
+      "opp": "Wolfsburg",
+      "isHome": true,
+      "date": "2026-04-04",
+      "matchday": 28
+    },
+    "Lucas Vázquez": {
+      "opp": "Wolfsburg",
+      "isHome": true,
+      "date": "2026-04-04",
+      "matchday": 28
+    },
+    "Ignacio Fernández": {
+      "opp": "Wolfsburg",
+      "isHome": true,
+      "date": "2026-04-04",
+      "matchday": 28
+    },
+    "Jarell Quansah": {
+      "opp": "Wolfsburg",
+      "isHome": true,
+      "date": "2026-04-04",
+      "matchday": 28
+    },
+    "Alejandro Grimaldo": {
+      "opp": "Wolfsburg",
+      "isHome": true,
+      "date": "2026-04-04",
+      "matchday": 28
+    },
+    "Jonas Hofmann": {
+      "opp": "Wolfsburg",
+      "isHome": true,
+      "date": "2026-04-04",
+      "matchday": 28
+    },
+    "Janis Blaswich": {
+      "opp": "Wolfsburg",
+      "isHome": true,
+      "date": "2026-04-04",
+      "matchday": 28
+    },
+    "Arthur": {
+      "opp": "Wolfsburg",
+      "isHome": true,
+      "date": "2026-04-04",
+      "matchday": 28
+    },
+    "Martin Terrier": {
+      "opp": "Wolfsburg",
+      "isHome": true,
+      "date": "2026-04-04",
+      "matchday": 28
+    },
+    "Edmond Tapsoba": {
+      "opp": "Wolfsburg",
+      "isHome": true,
+      "date": "2026-04-04",
+      "matchday": 28
+    },
+    "Ernest Poku": {
+      "opp": "Wolfsburg",
+      "isHome": true,
+      "date": "2026-04-04",
+      "matchday": 28
+    },
+    "Robert Andrich": {
+      "opp": "Wolfsburg",
+      "isHome": true,
+      "date": "2026-04-04",
+      "matchday": 28
+    },
+    "Nathan Tella": {
+      "opp": "Wolfsburg",
+      "isHome": true,
+      "date": "2026-04-04",
+      "matchday": 28
+    },
+    "Aleix García": {
+      "opp": "Wolfsburg",
+      "isHome": true,
+      "date": "2026-04-04",
+      "matchday": 28
+    },
+    "Exequiel Palacios": {
+      "opp": "Wolfsburg",
+      "isHome": true,
+      "date": "2026-04-04",
+      "matchday": 28
+    },
+    "Leon Goretzka": {
+      "opp": "Freiburg",
+      "isHome": false,
+      "date": "2026-04-04",
+      "matchday": 28
+    },
+    "Tom Bischof": {
+      "opp": "Freiburg",
+      "isHome": false,
+      "date": "2026-04-04",
+      "matchday": 28
+    },
+    "Minjae Kim ": {
+      "opp": "Freiburg",
+      "isHome": false,
+      "date": "2026-04-04",
+      "matchday": 28
+    },
+    "Maycon Douglas Cardozo": {
+      "opp": "Freiburg",
+      "isHome": false,
+      "date": "2026-04-04",
+      "matchday": 28
+    },
+    "Harry Kane": {
+      "opp": "Freiburg",
+      "isHome": false,
+      "date": "2026-04-04",
+      "matchday": 28
+    },
+    "Jonas Urbig": {
+      "opp": "Freiburg",
+      "isHome": false,
+      "date": "2026-04-04",
+      "matchday": 28
+    },
+    "Aleksandar Pavlović": {
+      "opp": "Freiburg",
+      "isHome": false,
+      "date": "2026-04-04",
+      "matchday": 28
+    },
+    "Serge Gnabry": {
+      "opp": "Freiburg",
+      "isHome": false,
+      "date": "2026-04-04",
+      "matchday": 28
+    },
+    "Alphonso Davies": {
+      "opp": "Freiburg",
+      "isHome": false,
+      "date": "2026-04-04",
+      "matchday": 28
+    },
+    "Konrad Laimer": {
+      "opp": "Freiburg",
+      "isHome": false,
+      "date": "2026-04-04",
+      "matchday": 28
+    },
+    "Lennart Karl": {
+      "opp": "Freiburg",
+      "isHome": false,
+      "date": "2026-04-04",
+      "matchday": 28
+    },
+    "Dayot Upamecano": {
+      "opp": "Freiburg",
+      "isHome": false,
+      "date": "2026-04-04",
+      "matchday": 28
+    },
+    "Jamal Musiala": {
+      "opp": "Freiburg",
+      "isHome": false,
+      "date": "2026-04-04",
+      "matchday": 28
+    },
+    "Luis Díaz": {
+      "opp": "Freiburg",
+      "isHome": false,
+      "date": "2026-04-04",
+      "matchday": 28
+    },
+    "Hiroki Ito": {
+      "opp": "Freiburg",
+      "isHome": false,
+      "date": "2026-04-04",
+      "matchday": 28
+    },
+    "Nicolas Jackson": {
+      "opp": "Freiburg",
+      "isHome": false,
+      "date": "2026-04-04",
+      "matchday": 28
+    },
+    "Joshua Kimmich": {
+      "opp": "Freiburg",
+      "isHome": false,
+      "date": "2026-04-04",
+      "matchday": 28
+    },
+    "Raphaël Guerreiro": {
+      "opp": "Freiburg",
+      "isHome": false,
+      "date": "2026-04-04",
+      "matchday": 28
+    },
+    "Carney Chukwuemeka": {
+      "opp": "VfB Stuttgart",
+      "isHome": false,
+      "date": "2026-04-04",
+      "matchday": 28
+    },
+    "Salih Özcan": {
+      "opp": "VfB Stuttgart",
+      "isHome": false,
+      "date": "2026-04-04",
+      "matchday": 28
+    },
+    "Niklas Süle": {
+      "opp": "VfB Stuttgart",
+      "isHome": false,
+      "date": "2026-04-04",
+      "matchday": 28
+    },
+    "Serhou Guirassy": {
+      "opp": "VfB Stuttgart",
+      "isHome": false,
+      "date": "2026-04-04",
+      "matchday": 28
+    },
+    "Felix Nmecha": {
+      "opp": "VfB Stuttgart",
+      "isHome": false,
+      "date": "2026-04-04",
+      "matchday": 28
+    },
+    "Julian Brandt": {
+      "opp": "VfB Stuttgart",
+      "isHome": false,
+      "date": "2026-04-04",
+      "matchday": 28
+    },
+    "Yan Couto": {
+      "opp": "VfB Stuttgart",
+      "isHome": false,
+      "date": "2026-04-04",
+      "matchday": 28
+    },
+    "Emre Can": {
+      "opp": "VfB Stuttgart",
+      "isHome": false,
+      "date": "2026-04-04",
+      "matchday": 28
+    },
+    "Fábio Silva": {
+      "opp": "VfB Stuttgart",
+      "isHome": false,
+      "date": "2026-04-04",
+      "matchday": 28
+    },
+    "Luca Reggiani": {
+      "opp": "VfB Stuttgart",
+      "isHome": false,
+      "date": "2026-04-04",
+      "matchday": 28
+    },
+    "Daniel Svensson": {
+      "opp": "VfB Stuttgart",
+      "isHome": false,
+      "date": "2026-04-04",
+      "matchday": 28
+    },
+    "Karim Adeyemi": {
+      "opp": "VfB Stuttgart",
+      "isHome": false,
+      "date": "2026-04-04",
+      "matchday": 28
+    },
+    "Marcel Sabitzer": {
+      "opp": "VfB Stuttgart",
+      "isHome": false,
+      "date": "2026-04-04",
+      "matchday": 28
+    },
+    "Nico Schlotterbeck": {
+      "opp": "VfB Stuttgart",
+      "isHome": false,
+      "date": "2026-04-04",
+      "matchday": 28
+    },
+    "Maximilian Beier": {
+      "opp": "VfB Stuttgart",
+      "isHome": false,
+      "date": "2026-04-04",
+      "matchday": 28
+    },
+    "Ramy Bensebaini": {
+      "opp": "VfB Stuttgart",
+      "isHome": false,
+      "date": "2026-04-04",
+      "matchday": 28
+    },
+    "Julian Ryerson": {
+      "opp": "VfB Stuttgart",
+      "isHome": false,
+      "date": "2026-04-04",
+      "matchday": 28
+    },
+    "Jobe Bellingham": {
+      "opp": "VfB Stuttgart",
+      "isHome": false,
+      "date": "2026-04-04",
+      "matchday": 28
+    },
+    "Gregor Kobel": {
+      "opp": "VfB Stuttgart",
+      "isHome": false,
+      "date": "2026-04-04",
+      "matchday": 28
+    },
+    "Joe Scally": {
+      "opp": "FC Heidenheim",
+      "isHome": true,
+      "date": "2026-04-04",
+      "matchday": 28
+    },
+    "Kota Takai": {
+      "opp": "FC Heidenheim",
+      "isHome": true,
+      "date": "2026-04-04",
+      "matchday": 28
+    },
+    "Jens Castrop": {
+      "opp": "FC Heidenheim",
+      "isHome": true,
+      "date": "2026-04-04",
+      "matchday": 28
+    },
+    "Hugo Bolin": {
+      "opp": "FC Heidenheim",
+      "isHome": true,
+      "date": "2026-04-04",
+      "matchday": 28
+    },
+    "Marvin Friedrich": {
+      "opp": "FC Heidenheim",
+      "isHome": true,
+      "date": "2026-04-04",
+      "matchday": 28
+    },
+    "Kevin Diks": {
+      "opp": "FC Heidenheim",
+      "isHome": true,
+      "date": "2026-04-04",
+      "matchday": 28
+    },
+    "Haris Tabaković": {
+      "opp": "FC Heidenheim",
+      "isHome": true,
+      "date": "2026-04-04",
+      "matchday": 28
+    },
+    "Moritz Nicolas": {
+      "opp": "FC Heidenheim",
+      "isHome": true,
+      "date": "2026-04-04",
+      "matchday": 28
+    },
+    "Kevin Stöger": {
+      "opp": "FC Heidenheim",
+      "isHome": true,
+      "date": "2026-04-04",
+      "matchday": 28
+    },
+    "Rocco Reitz": {
+      "opp": "FC Heidenheim",
+      "isHome": true,
+      "date": "2026-04-04",
+      "matchday": 28
+    },
+    "Yannik Engelhardt": {
+      "opp": "FC Heidenheim",
+      "isHome": true,
+      "date": "2026-04-04",
+      "matchday": 28
+    },
+    "Philipp Sander": {
+      "opp": "FC Heidenheim",
+      "isHome": true,
+      "date": "2026-04-04",
+      "matchday": 28
+    },
+    "Nico Elvedi": {
+      "opp": "FC Heidenheim",
+      "isHome": true,
+      "date": "2026-04-04",
+      "matchday": 28
+    },
+    "Florian Neuhaus": {
+      "opp": "FC Heidenheim",
+      "isHome": true,
+      "date": "2026-04-04",
+      "matchday": 28
+    },
+    "Wael Mohya": {
+      "opp": "FC Heidenheim",
+      "isHome": true,
+      "date": "2026-04-04",
+      "matchday": 28
+    },
+    "Franck Honorat": {
+      "opp": "FC Heidenheim",
+      "isHome": true,
+      "date": "2026-04-04",
+      "matchday": 28
+    },
+    "Alejo Sarco": {
+      "opp": "FC Heidenheim",
+      "isHome": true,
+      "date": "2026-04-04",
+      "matchday": 28
+    },
+    "Lukas Ullrich": {
+      "opp": "FC Heidenheim",
+      "isHome": true,
+      "date": "2026-04-04",
+      "matchday": 28
+    },
+    "Michael Zetterer": {
+      "opp": "FC Cologne",
+      "isHome": true,
+      "date": "2026-04-05",
+      "matchday": 28
+    },
+    "Oscar Højlund": {
+      "opp": "FC Cologne",
+      "isHome": true,
+      "date": "2026-04-05",
+      "matchday": 28
+    },
+    "Ayoube Amaimouni-Echghouyab": {
+      "opp": "FC Cologne",
+      "isHome": true,
+      "date": "2026-04-05",
+      "matchday": 28
+    },
+    "Ansgar Knauff": {
+      "opp": "FC Cologne",
+      "isHome": true,
+      "date": "2026-04-05",
+      "matchday": 28
+    },
+    "Nnamdi Collins": {
+      "opp": "FC Cologne",
+      "isHome": true,
+      "date": "2026-04-05",
+      "matchday": 28
+    },
+    "Kauã Santos": {
+      "opp": "FC Cologne",
+      "isHome": true,
+      "date": "2026-04-05",
+      "matchday": 28
+    },
+    "Mahmoud Dahoud": {
+      "opp": "FC Cologne",
+      "isHome": true,
+      "date": "2026-04-05",
+      "matchday": 28
+    },
+    "Fares Chaïbi": {
+      "opp": "FC Cologne",
+      "isHome": true,
+      "date": "2026-04-05",
+      "matchday": 28
+    },
+    "Arthur Theate": {
+      "opp": "FC Cologne",
+      "isHome": true,
+      "date": "2026-04-05",
+      "matchday": 28
+    },
+    "Jean-Mattéo Bahoya": {
+      "opp": "FC Cologne",
+      "isHome": true,
+      "date": "2026-04-05",
+      "matchday": 28
+    },
+    "Rasmus Kristensen": {
+      "opp": "FC Cologne",
+      "isHome": true,
+      "date": "2026-04-05",
+      "matchday": 28
+    },
+    "Elias Baum": {
+      "opp": "FC Cologne",
+      "isHome": true,
+      "date": "2026-04-05",
+      "matchday": 28
+    },
+    "Mario Götze": {
+      "opp": "FC Cologne",
+      "isHome": true,
+      "date": "2026-04-05",
+      "matchday": 28
+    },
+    "Aurèle Amenda": {
+      "opp": "FC Cologne",
+      "isHome": true,
+      "date": "2026-04-05",
+      "matchday": 28
+    },
+    "Hugo Larsson": {
+      "opp": "FC Cologne",
+      "isHome": true,
+      "date": "2026-04-05",
+      "matchday": 28
+    },
+    "Ellyes Skhiri": {
+      "opp": "FC Cologne",
+      "isHome": true,
+      "date": "2026-04-05",
+      "matchday": 28
+    },
+    "L. Arrhov": {
+      "opp": "FC Cologne",
+      "isHome": true,
+      "date": "2026-04-05",
+      "matchday": 28
+    },
+    "Ritsu Dōan": {
+      "opp": "FC Cologne",
+      "isHome": true,
+      "date": "2026-04-05",
+      "matchday": 28
+    },
+    "Jonathan Burkardt": {
+      "opp": "FC Cologne",
+      "isHome": true,
+      "date": "2026-04-05",
+      "matchday": 28
+    },
+    "Cyriaque Irié": {
+      "opp": "Bayern Munich",
+      "isHome": true,
+      "date": "2026-04-04",
+      "matchday": 28
+    },
+    "Lucas Höler": {
+      "opp": "Bayern Munich",
+      "isHome": true,
+      "date": "2026-04-04",
+      "matchday": 28
+    },
+    "Patrick Osterhage": {
+      "opp": "Bayern Munich",
+      "isHome": true,
+      "date": "2026-04-04",
+      "matchday": 28
+    },
+    "Vincenzo Grifo": {
+      "opp": "Bayern Munich",
+      "isHome": true,
+      "date": "2026-04-04",
+      "matchday": 28
+    },
+    "Philipp Lienhart": {
+      "opp": "Bayern Munich",
+      "isHome": true,
+      "date": "2026-04-04",
+      "matchday": 28
+    },
+    "Noah Atubolu": {
+      "opp": "Bayern Munich",
+      "isHome": true,
+      "date": "2026-04-04",
+      "matchday": 28
+    },
+    "Igor Matanović": {
+      "opp": "Bayern Munich",
+      "isHome": true,
+      "date": "2026-04-04",
+      "matchday": 28
+    },
+    "Max Rosenfelder": {
+      "opp": "Bayern Munich",
+      "isHome": true,
+      "date": "2026-04-04",
+      "matchday": 28
+    },
+    "Anthony Jung": {
+      "opp": "Bayern Munich",
+      "isHome": true,
+      "date": "2026-04-04",
+      "matchday": 28
+    },
+    "Yuito Suzuki": {
+      "opp": "Bayern Munich",
+      "isHome": true,
+      "date": "2026-04-04",
+      "matchday": 28
+    },
+    "Bruno Ogbus": {
+      "opp": "Bayern Munich",
+      "isHome": true,
+      "date": "2026-04-04",
+      "matchday": 28
+    },
+    "Johan Manzambi": {
+      "opp": "Bayern Munich",
+      "isHome": true,
+      "date": "2026-04-04",
+      "matchday": 28
+    },
+    "Matthias Ginter": {
+      "opp": "Bayern Munich",
+      "isHome": true,
+      "date": "2026-04-04",
+      "matchday": 28
+    },
+    "Christian Günter": {
+      "opp": "Bayern Munich",
+      "isHome": true,
+      "date": "2026-04-04",
+      "matchday": 28
+    },
+    "Derry Scherhant": {
+      "opp": "Bayern Munich",
+      "isHome": true,
+      "date": "2026-04-04",
+      "matchday": 28
+    },
+    "Jan-Niklas Beste": {
+      "opp": "Bayern Munich",
+      "isHome": true,
+      "date": "2026-04-04",
+      "matchday": 28
+    },
+    "Maximilian Eggestein": {
+      "opp": "Bayern Munich",
+      "isHome": true,
+      "date": "2026-04-04",
+      "matchday": 28
+    },
+    "Jordy Makengo": {
+      "opp": "Bayern Munich",
+      "isHome": true,
+      "date": "2026-04-04",
+      "matchday": 28
+    },
+    "Philipp Treu": {
+      "opp": "Bayern Munich",
+      "isHome": true,
+      "date": "2026-04-04",
+      "matchday": 28
+    },
+    "Otto Stange": {
+      "opp": "Augsburg",
+      "isHome": true,
+      "date": "2026-04-04",
+      "matchday": 28
+    },
+    "Miro Muheim": {
+      "opp": "Augsburg",
+      "isHome": true,
+      "date": "2026-04-04",
+      "matchday": 28
+    },
+    "Albert Sambi Lokonga": {
+      "opp": "Augsburg",
+      "isHome": true,
+      "date": "2026-04-04",
+      "matchday": 28
+    },
+    "Damion Downs": {
+      "opp": "Augsburg",
+      "isHome": true,
+      "date": "2026-04-04",
+      "matchday": 28
+    },
+    "Daniel Elfadli": {
+      "opp": "Augsburg",
+      "isHome": true,
+      "date": "2026-04-04",
+      "matchday": 28
+    },
+    "Fábio Vieira": {
+      "opp": "Augsburg",
+      "isHome": true,
+      "date": "2026-04-04",
+      "matchday": 28
+    },
+    "Nicolai Remberg": {
+      "opp": "Augsburg",
+      "isHome": true,
+      "date": "2026-04-04",
+      "matchday": 28
+    },
+    "Nicolás Capaldo": {
+      "opp": "Augsburg",
+      "isHome": true,
+      "date": "2026-04-04",
+      "matchday": 28
+    },
+    "Jean-Luc Dompé": {
+      "opp": "Augsburg",
+      "isHome": true,
+      "date": "2026-04-04",
+      "matchday": 28
+    },
+    "Rayan Philippe": {
+      "opp": "Augsburg",
+      "isHome": true,
+      "date": "2026-04-04",
+      "matchday": 28
+    },
+    "Fábio Baldé": {
+      "opp": "Augsburg",
+      "isHome": true,
+      "date": "2026-04-04",
+      "matchday": 28
+    },
+    "Luka Vušković": {
+      "opp": "Augsburg",
+      "isHome": true,
+      "date": "2026-04-04",
+      "matchday": 28
+    },
+    "Philip Otele": {
+      "opp": "Augsburg",
+      "isHome": true,
+      "date": "2026-04-04",
+      "matchday": 28
+    },
+    "Warmed Omari": {
+      "opp": "Augsburg",
+      "isHome": true,
+      "date": "2026-04-04",
+      "matchday": 28
+    },
+    "Daniel Heuer Fernandes": {
+      "opp": "Augsburg",
+      "isHome": true,
+      "date": "2026-04-04",
+      "matchday": 28
+    },
+    "Jordan Torunarigha": {
+      "opp": "Augsburg",
+      "isHome": true,
+      "date": "2026-04-04",
+      "matchday": 28
+    },
+    "Yussuf Poulsen": {
+      "opp": "Augsburg",
+      "isHome": true,
+      "date": "2026-04-04",
+      "matchday": 28
+    },
+    "Robert Glatzel": {
+      "opp": "Augsburg",
+      "isHome": true,
+      "date": "2026-04-04",
+      "matchday": 28
+    },
+    "William Mikelbrencis": {
+      "opp": "Augsburg",
+      "isHome": true,
+      "date": "2026-04-04",
+      "matchday": 28
+    },
+    "Giorgi Gocholeishvili": {
+      "opp": "Augsburg",
+      "isHome": true,
+      "date": "2026-04-04",
+      "matchday": 28
+    },
+    "Ransford-Yeboah Königsdörffer": {
+      "opp": "Augsburg",
+      "isHome": true,
+      "date": "2026-04-04",
+      "matchday": 28
+    },
+    "Sirlord Conteh": {
+      "opp": "Borussia M.Gladbach",
+      "isHome": false,
+      "date": "2026-04-04",
+      "matchday": 28
+    },
+    "Eren Dinkçi": {
+      "opp": "Borussia M.Gladbach",
+      "isHome": false,
+      "date": "2026-04-04",
+      "matchday": 28
+    },
+    "Arijon Ibrahimović": {
+      "opp": "Borussia M.Gladbach",
+      "isHome": false,
+      "date": "2026-04-04",
+      "matchday": 28
+    },
+    "Leonidas Stergiou": {
+      "opp": "Borussia M.Gladbach",
+      "isHome": false,
+      "date": "2026-04-04",
+      "matchday": 28
+    },
+    "Hennes Behrens": {
+      "opp": "Borussia M.Gladbach",
+      "isHome": false,
+      "date": "2026-04-04",
+      "matchday": 28
+    },
+    "Diant Ramaj": {
+      "opp": "Borussia M.Gladbach",
+      "isHome": false,
+      "date": "2026-04-04",
+      "matchday": 28
+    },
+    "Patrick Mainka": {
+      "opp": "Borussia M.Gladbach",
+      "isHome": false,
+      "date": "2026-04-04",
+      "matchday": 28
+    },
+    "Mathias Honsak": {
+      "opp": "Borussia M.Gladbach",
+      "isHome": false,
+      "date": "2026-04-04",
+      "matchday": 28
+    },
+    "Budu Zivzivadze": {
+      "opp": "Borussia M.Gladbach",
+      "isHome": false,
+      "date": "2026-04-04",
+      "matchday": 28
+    },
+    "Benedikt Gimber": {
+      "opp": "Borussia M.Gladbach",
+      "isHome": false,
+      "date": "2026-04-04",
+      "matchday": 28
+    },
+    "Tim Siersleben": {
+      "opp": "Borussia M.Gladbach",
+      "isHome": false,
+      "date": "2026-04-04",
+      "matchday": 28
+    },
+    "Mikkel Kaufmann": {
+      "opp": "Borussia M.Gladbach",
+      "isHome": false,
+      "date": "2026-04-04",
+      "matchday": 28
+    },
+    "Jan Schöppner": {
+      "opp": "Borussia M.Gladbach",
+      "isHome": false,
+      "date": "2026-04-04",
+      "matchday": 28
+    },
+    "Adrian Beck": {
+      "opp": "Borussia M.Gladbach",
+      "isHome": false,
+      "date": "2026-04-04",
+      "matchday": 28
+    },
+    "Julian Niehues": {
+      "opp": "Borussia M.Gladbach",
+      "isHome": false,
+      "date": "2026-04-04",
+      "matchday": 28
+    },
+    "Christian Conteh": {
+      "opp": "Borussia M.Gladbach",
+      "isHome": false,
+      "date": "2026-04-04",
+      "matchday": 28
+    },
+    "Stefan Schimmer": {
+      "opp": "Borussia M.Gladbach",
+      "isHome": false,
+      "date": "2026-04-04",
+      "matchday": 28
+    },
+    "Omar Traoré": {
+      "opp": "Borussia M.Gladbach",
+      "isHome": false,
+      "date": "2026-04-04",
+      "matchday": 28
+    },
+    "Jonas Föhrenbach": {
+      "opp": "Borussia M.Gladbach",
+      "isHome": false,
+      "date": "2026-04-04",
+      "matchday": 28
+    },
+    "Marnon Busch": {
+      "opp": "Borussia M.Gladbach",
+      "isHome": false,
+      "date": "2026-04-04",
+      "matchday": 28
+    },
+    "Niklas Dorsch": {
+      "opp": "Borussia M.Gladbach",
+      "isHome": false,
+      "date": "2026-04-04",
+      "matchday": 28
+    },
+    "Marvin Pieringer": {
+      "opp": "Borussia M.Gladbach",
+      "isHome": false,
+      "date": "2026-04-04",
+      "matchday": 28
+    },
+    "Oliver Baumann": {
+      "opp": "Mainz 05",
+      "isHome": true,
+      "date": "2026-04-04",
+      "matchday": 28
+    },
+    "Tim Lemperle": {
+      "opp": "Mainz 05",
+      "isHome": true,
+      "date": "2026-04-04",
+      "matchday": 28
+    },
+    "Ihlas Bebou": {
+      "opp": "Mainz 05",
+      "isHome": true,
+      "date": "2026-04-04",
+      "matchday": 28
+    },
+    "Grischa Prömel": {
+      "opp": "Mainz 05",
+      "isHome": true,
+      "date": "2026-04-04",
+      "matchday": 28
+    },
+    "Cole Campbell": {
+      "opp": "Mainz 05",
+      "isHome": true,
+      "date": "2026-04-04",
+      "matchday": 28
+    },
+    "Andrej Kramarić": {
+      "opp": "Mainz 05",
+      "isHome": true,
+      "date": "2026-04-04",
+      "matchday": 28
+    },
+    "Vladimír Coufal": {
+      "opp": "Mainz 05",
+      "isHome": true,
+      "date": "2026-04-04",
+      "matchday": 28
+    },
+    "Robin Hranáč": {
+      "opp": "Mainz 05",
+      "isHome": true,
+      "date": "2026-04-04",
+      "matchday": 28
+    },
+    "Fisnik Asllani": {
+      "opp": "Mainz 05",
+      "isHome": true,
+      "date": "2026-04-04",
+      "matchday": 28
+    },
+    "Bazoumana Touré": {
+      "opp": "Mainz 05",
+      "isHome": true,
+      "date": "2026-04-04",
+      "matchday": 28
+    },
+    "Bernardo": {
+      "opp": "Mainz 05",
+      "isHome": true,
+      "date": "2026-04-04",
+      "matchday": 28
+    },
+    "Alexander Prass": {
+      "opp": "Mainz 05",
+      "isHome": true,
+      "date": "2026-04-04",
+      "matchday": 28
+    },
+    "Leon Avdullahu": {
+      "opp": "Mainz 05",
+      "isHome": true,
+      "date": "2026-04-04",
+      "matchday": 28
+    },
+    "Muhammed Damar": {
+      "opp": "Mainz 05",
+      "isHome": true,
+      "date": "2026-04-04",
+      "matchday": 28
+    },
+    "Valentin Gendrey": {
+      "opp": "Mainz 05",
+      "isHome": true,
+      "date": "2026-04-04",
+      "matchday": 28
+    },
+    "Kevin Akpoguma": {
+      "opp": "Mainz 05",
+      "isHome": true,
+      "date": "2026-04-04",
+      "matchday": 28
+    },
+    "Albian Hajdari": {
+      "opp": "Mainz 05",
+      "isHome": true,
+      "date": "2026-04-04",
+      "matchday": 28
+    },
+    "Luis Engelns": {
+      "opp": "Mainz 05",
+      "isHome": true,
+      "date": "2026-04-04",
+      "matchday": 28
+    },
+    "Ozan Kabak": {
+      "opp": "Mainz 05",
+      "isHome": true,
+      "date": "2026-04-04",
+      "matchday": 28
+    },
+    "Max Moerstedt": {
+      "opp": "Mainz 05",
+      "isHome": true,
+      "date": "2026-04-04",
+      "matchday": 28
+    },
+    "Fynn Schenten": {
+      "opp": "Eintracht Frankfurt",
+      "isHome": false,
+      "date": "2026-04-05",
+      "matchday": 28
+    },
+    "Tom Krauß": {
+      "opp": "Eintracht Frankfurt",
+      "isHome": false,
+      "date": "2026-04-05",
+      "matchday": 28
+    },
+    "Kristoffer Lund": {
+      "opp": "Eintracht Frankfurt",
+      "isHome": false,
+      "date": "2026-04-05",
+      "matchday": 28
+    },
+    "Florian Kainz": {
+      "opp": "Eintracht Frankfurt",
+      "isHome": false,
+      "date": "2026-04-05",
+      "matchday": 28
+    },
+    "Alessio Castro-Montes": {
+      "opp": "Eintracht Frankfurt",
+      "isHome": false,
+      "date": "2026-04-05",
+      "matchday": 28
+    },
+    "Linton Maina": {
+      "opp": "Eintracht Frankfurt",
+      "isHome": false,
+      "date": "2026-04-05",
+      "matchday": 28
+    },
+    "Felipe Chávez": {
+      "opp": "Eintracht Frankfurt",
+      "isHome": false,
+      "date": "2026-04-05",
+      "matchday": 28
+    },
+    "Marius Bülter": {
+      "opp": "Eintracht Frankfurt",
+      "isHome": false,
+      "date": "2026-04-05",
+      "matchday": 28
+    },
+    "Luca Waldschmidt": {
+      "opp": "Eintracht Frankfurt",
+      "isHome": false,
+      "date": "2026-04-05",
+      "matchday": 28
+    },
+    "Joël Schmied": {
+      "opp": "Eintracht Frankfurt",
+      "isHome": false,
+      "date": "2026-04-05",
+      "matchday": 28
+    },
+    "Cenny Neumann": {
+      "opp": "Eintracht Frankfurt",
+      "isHome": false,
+      "date": "2026-04-05",
+      "matchday": 28
+    },
+    "Ísak Bergmann Jóhannesson": {
+      "opp": "Eintracht Frankfurt",
+      "isHome": false,
+      "date": "2026-04-05",
+      "matchday": 28
+    },
+    "Marvin Schwäbe": {
+      "opp": "Eintracht Frankfurt",
+      "isHome": false,
+      "date": "2026-04-05",
+      "matchday": 28
+    },
+    "Ragnar Ache": {
+      "opp": "Eintracht Frankfurt",
+      "isHome": false,
+      "date": "2026-04-05",
+      "matchday": 28
+    },
+    "Said El Mala": {
+      "opp": "Eintracht Frankfurt",
+      "isHome": false,
+      "date": "2026-04-05",
+      "matchday": 28
+    },
+    "Jan Thielmann": {
+      "opp": "Eintracht Frankfurt",
+      "isHome": false,
+      "date": "2026-04-05",
+      "matchday": 28
+    },
+    "Jakub Kamiński": {
+      "opp": "Eintracht Frankfurt",
+      "isHome": false,
+      "date": "2026-04-05",
+      "matchday": 28
+    },
+    "Cenk Özkaçar": {
+      "opp": "Eintracht Frankfurt",
+      "isHome": false,
+      "date": "2026-04-05",
+      "matchday": 28
+    },
+    "Jahmai Simpson-Pusey": {
+      "opp": "Eintracht Frankfurt",
+      "isHome": false,
+      "date": "2026-04-05",
+      "matchday": 28
+    },
+    "Youssoupha Niang": {
+      "opp": "Eintracht Frankfurt",
+      "isHome": false,
+      "date": "2026-04-05",
+      "matchday": 28
+    },
+    "Eric Martel": {
+      "opp": "Eintracht Frankfurt",
+      "isHome": false,
+      "date": "2026-04-05",
+      "matchday": 28
+    },
+    "Rav van den Berg": {
+      "opp": "Eintracht Frankfurt",
+      "isHome": false,
+      "date": "2026-04-05",
+      "matchday": 28
+    },
+    "Sota Kawasaki": {
+      "opp": "Hoffenheim",
+      "isHome": false,
+      "date": "2026-04-04",
+      "matchday": 28
+    },
+    "Silas Katompa Mvumpa": {
+      "opp": "Hoffenheim",
+      "isHome": false,
+      "date": "2026-04-04",
+      "matchday": 28
+    },
+    "Nelson Weiper": {
+      "opp": "Hoffenheim",
+      "isHome": false,
+      "date": "2026-04-04",
+      "matchday": 28
+    },
+    "Jae-Sung Lee": {
+      "opp": "Hoffenheim",
+      "isHome": false,
+      "date": "2026-04-04",
+      "matchday": 28
+    },
+    "Danny da Costa": {
+      "opp": "Hoffenheim",
+      "isHome": false,
+      "date": "2026-04-04",
+      "matchday": 28
+    },
+    "William Bøving": {
+      "opp": "Hoffenheim",
+      "isHome": false,
+      "date": "2026-04-04",
+      "matchday": 28
+    },
+    "Kaishu Sano": {
+      "opp": "Hoffenheim",
+      "isHome": false,
+      "date": "2026-04-04",
+      "matchday": 28
+    },
+    "Stefan Bell": {
+      "opp": "Hoffenheim",
+      "isHome": false,
+      "date": "2026-04-04",
+      "matchday": 28
+    },
+    "Kacper Potulski": {
+      "opp": "Hoffenheim",
+      "isHome": false,
+      "date": "2026-04-04",
+      "matchday": 28
+    },
+    "Phillip Tietz": {
+      "opp": "Hoffenheim",
+      "isHome": false,
+      "date": "2026-04-04",
+      "matchday": 28
+    },
+    "Daniel Batz": {
+      "opp": "Hoffenheim",
+      "isHome": false,
+      "date": "2026-04-04",
+      "matchday": 28
+    },
+    "Silvan Widmer": {
+      "opp": "Hoffenheim",
+      "isHome": false,
+      "date": "2026-04-04",
+      "matchday": 28
+    },
+    "Phillipp Mwene": {
+      "opp": "Hoffenheim",
+      "isHome": false,
+      "date": "2026-04-04",
+      "matchday": 28
+    },
+    "Nikolas Veratschnig": {
+      "opp": "Hoffenheim",
+      "isHome": false,
+      "date": "2026-04-04",
+      "matchday": 28
+    },
+    "Nadiem Amiri": {
+      "opp": "Hoffenheim",
+      "isHome": false,
+      "date": "2026-04-04",
+      "matchday": 28
+    },
+    "Armindo Sieb": {
+      "opp": "Hoffenheim",
+      "isHome": false,
+      "date": "2026-04-04",
+      "matchday": 28
+    },
+    "Stefan Posch": {
+      "opp": "Hoffenheim",
+      "isHome": false,
+      "date": "2026-04-04",
+      "matchday": 28
+    },
+    "Lennard Maloney": {
+      "opp": "Hoffenheim",
+      "isHome": false,
+      "date": "2026-04-04",
+      "matchday": 28
+    },
+    "Dominik Kohr": {
+      "opp": "Hoffenheim",
+      "isHome": false,
+      "date": "2026-04-04",
+      "matchday": 28
+    },
+    "Conrad Harder": {
+      "opp": "Werder Bremen",
+      "isHome": false,
+      "date": "2026-04-04",
+      "matchday": 28
+    },
+    "David Raum": {
+      "opp": "Werder Bremen",
+      "isHome": false,
+      "date": "2026-04-04",
+      "matchday": 28
+    },
+    "Maarten Vandevoordt": {
+      "opp": "Werder Bremen",
+      "isHome": false,
+      "date": "2026-04-04",
+      "matchday": 28
+    },
+    "Péter Gulácsi": {
+      "opp": "Werder Bremen",
+      "isHome": false,
+      "date": "2026-04-04",
+      "matchday": 28
+    },
+    "Benjamin Henrichs": {
+      "opp": "Werder Bremen",
+      "isHome": false,
+      "date": "2026-04-04",
+      "matchday": 28
+    },
+    "Johan Bakayoko": {
+      "opp": "Werder Bremen",
+      "isHome": false,
+      "date": "2026-04-04",
+      "matchday": 28
+    },
+    "Nicolas Seiwald": {
+      "opp": "Werder Bremen",
+      "isHome": false,
+      "date": "2026-04-04",
+      "matchday": 28
+    },
+    "Ridle Baku": {
+      "opp": "Werder Bremen",
+      "isHome": false,
+      "date": "2026-04-04",
+      "matchday": 28
+    },
+    "Antonio Nusa": {
+      "opp": "Werder Bremen",
+      "isHome": false,
+      "date": "2026-04-04",
+      "matchday": 28
+    },
+    "Willi Orbán": {
+      "opp": "Werder Bremen",
+      "isHome": false,
+      "date": "2026-04-04",
+      "matchday": 28
+    },
+    "Tidiam Gomis": {
+      "opp": "Werder Bremen",
+      "isHome": false,
+      "date": "2026-04-04",
+      "matchday": 28
+    },
+    "Brajan Gruda": {
+      "opp": "Werder Bremen",
+      "isHome": false,
+      "date": "2026-04-04",
+      "matchday": 28
+    },
+    "Max Finkgräfe": {
+      "opp": "Werder Bremen",
+      "isHome": false,
+      "date": "2026-04-04",
+      "matchday": 28
+    },
+    "Ezechiel Banzuzi": {
+      "opp": "Werder Bremen",
+      "isHome": false,
+      "date": "2026-04-04",
+      "matchday": 28
+    },
+    "Christoph Baumgartner": {
+      "opp": "Werder Bremen",
+      "isHome": false,
+      "date": "2026-04-04",
+      "matchday": 28
+    },
+    "Rômulo": {
+      "opp": "Werder Bremen",
+      "isHome": false,
+      "date": "2026-04-04",
+      "matchday": 28
+    },
+    "Castello Lukeba": {
+      "opp": "Werder Bremen",
+      "isHome": false,
+      "date": "2026-04-04",
+      "matchday": 28
+    },
+    "El Chadaille Bitshiabu": {
+      "opp": "Werder Bremen",
+      "isHome": false,
+      "date": "2026-04-04",
+      "matchday": 28
+    },
+    "Tomoya Ando": {
+      "opp": "Union Berlin",
+      "isHome": false,
+      "date": "2026-04-05",
+      "matchday": 28
+    },
+    "Manolis Saliakas": {
+      "opp": "Union Berlin",
+      "isHome": false,
+      "date": "2026-04-05",
+      "matchday": 28
+    },
+    "Mathias Pereira Lage": {
+      "opp": "Union Berlin",
+      "isHome": false,
+      "date": "2026-04-05",
+      "matchday": 28
+    },
+    "Martijn Kaars": {
+      "opp": "Union Berlin",
+      "isHome": false,
+      "date": "2026-04-05",
+      "matchday": 28
+    },
+    "Arkadiusz Pyrka": {
+      "opp": "Union Berlin",
+      "isHome": false,
+      "date": "2026-04-05",
+      "matchday": 28
+    },
+    "Ricky-Jade Jones": {
+      "opp": "Union Berlin",
+      "isHome": false,
+      "date": "2026-04-05",
+      "matchday": 28
+    },
+    "Jackson Irvine": {
+      "opp": "Union Berlin",
+      "isHome": false,
+      "date": "2026-04-05",
+      "matchday": 28
+    },
+    "Karol Mets": {
+      "opp": "Union Berlin",
+      "isHome": false,
+      "date": "2026-04-05",
+      "matchday": 28
+    },
+    "Mathias Rasmussen": {
+      "opp": "Union Berlin",
+      "isHome": false,
+      "date": "2026-04-05",
+      "matchday": 28
+    },
+    "Hauke Wahl": {
+      "opp": "Union Berlin",
+      "isHome": false,
+      "date": "2026-04-05",
+      "matchday": 28
+    },
+    "Nikola Vasilj": {
+      "opp": "Union Berlin",
+      "isHome": false,
+      "date": "2026-04-05",
+      "matchday": 28
+    },
+    "Lars Ritzka": {
+      "opp": "Union Berlin",
+      "isHome": false,
+      "date": "2026-04-05",
+      "matchday": 28
+    },
+    "Connor Metcalfe": {
+      "opp": "Union Berlin",
+      "isHome": false,
+      "date": "2026-04-05",
+      "matchday": 28
+    },
+    "Andréas Hountondji": {
+      "opp": "Union Berlin",
+      "isHome": false,
+      "date": "2026-04-05",
+      "matchday": 28
+    },
+    "Abdoulie Ceesay": {
+      "opp": "Union Berlin",
+      "isHome": false,
+      "date": "2026-04-05",
+      "matchday": 28
+    },
+    "Eric Smith": {
+      "opp": "Union Berlin",
+      "isHome": false,
+      "date": "2026-04-05",
+      "matchday": 28
+    },
+    "Adam Dźwigała": {
+      "opp": "Union Berlin",
+      "isHome": false,
+      "date": "2026-04-05",
+      "matchday": 28
+    },
+    "Louis Oppie": {
+      "opp": "Union Berlin",
+      "isHome": false,
+      "date": "2026-04-05",
+      "matchday": 28
+    },
+    "Joel Chima Fujita": {
+      "opp": "Union Berlin",
+      "isHome": false,
+      "date": "2026-04-05",
+      "matchday": 28
+    },
+    "Danel Sinani": {
+      "opp": "Union Berlin",
+      "isHome": false,
+      "date": "2026-04-05",
+      "matchday": 28
+    },
+    "Bilal El Khannous": {
+      "opp": "Borussia Dortmund",
+      "isHome": true,
+      "date": "2026-04-04",
+      "matchday": 28
+    },
+    "Ramon Hendriks": {
+      "opp": "Borussia Dortmund",
+      "isHome": true,
+      "date": "2026-04-04",
+      "matchday": 28
+    },
+    "Luca Jaquez": {
+      "opp": "Borussia Dortmund",
+      "isHome": true,
+      "date": "2026-04-04",
+      "matchday": 28
+    },
+    "Chema Andrés": {
+      "opp": "Borussia Dortmund",
+      "isHome": true,
+      "date": "2026-04-04",
+      "matchday": 28
+    },
+    "Angelo Stiller": {
+      "opp": "Borussia Dortmund",
+      "isHome": true,
+      "date": "2026-04-04",
+      "matchday": 28
+    },
+    "Jeff Chabot": {
+      "opp": "Borussia Dortmund",
+      "isHome": true,
+      "date": "2026-04-04",
+      "matchday": 28
+    },
+    "Josha Vagnoman": {
+      "opp": "Borussia Dortmund",
+      "isHome": true,
+      "date": "2026-04-04",
+      "matchday": 28
+    },
+    "Alexander Nübel": {
+      "opp": "Borussia Dortmund",
+      "isHome": true,
+      "date": "2026-04-04",
+      "matchday": 28
+    },
+    "Badredine Bouanani": {
+      "opp": "Borussia Dortmund",
+      "isHome": true,
+      "date": "2026-04-04",
+      "matchday": 28
+    },
+    "Deniz Undav": {
+      "opp": "Borussia Dortmund",
+      "isHome": true,
+      "date": "2026-04-04",
+      "matchday": 28
+    },
+    "Lorenz Assignon": {
+      "opp": "Borussia Dortmund",
+      "isHome": true,
+      "date": "2026-04-04",
+      "matchday": 28
+    },
+    "Chris Führich": {
+      "opp": "Borussia Dortmund",
+      "isHome": true,
+      "date": "2026-04-04",
+      "matchday": 28
+    },
+    "Nikolas Nartey": {
+      "opp": "Borussia Dortmund",
+      "isHome": true,
+      "date": "2026-04-04",
+      "matchday": 28
+    },
+    "Jeremy Arévalo": {
+      "opp": "Borussia Dortmund",
+      "isHome": true,
+      "date": "2026-04-04",
+      "matchday": 28
+    },
+    "Tiago Tomás": {
+      "opp": "Borussia Dortmund",
+      "isHome": true,
+      "date": "2026-04-04",
+      "matchday": 28
+    },
+    "Jamie Leweling": {
+      "opp": "Borussia Dortmund",
+      "isHome": true,
+      "date": "2026-04-04",
+      "matchday": 28
+    },
+    "Ermedin Demirović": {
+      "opp": "Borussia Dortmund",
+      "isHome": true,
+      "date": "2026-04-04",
+      "matchday": 28
+    },
+    "Atakan Karazor": {
+      "opp": "Borussia Dortmund",
+      "isHome": true,
+      "date": "2026-04-04",
+      "matchday": 28
+    },
+    "Aljoscha Kemlein": {
+      "opp": "St. Pauli",
+      "isHome": true,
+      "date": "2026-04-05",
+      "matchday": 28
+    },
+    "Alex Král": {
+      "opp": "St. Pauli",
+      "isHome": true,
+      "date": "2026-04-05",
+      "matchday": 28
+    },
+    "András Schäfer": {
+      "opp": "St. Pauli",
+      "isHome": true,
+      "date": "2026-04-05",
+      "matchday": 28
+    },
+    "Derrick Köhn": {
+      "opp": "St. Pauli",
+      "isHome": true,
+      "date": "2026-04-05",
+      "matchday": 28
+    },
+    "Livan Burcu": {
+      "opp": "St. Pauli",
+      "isHome": true,
+      "date": "2026-04-05",
+      "matchday": 28
+    },
+    "Tom Rothe": {
+      "opp": "St. Pauli",
+      "isHome": true,
+      "date": "2026-04-05",
+      "matchday": 28
+    },
+    "Oliver Burke": {
+      "opp": "St. Pauli",
+      "isHome": true,
+      "date": "2026-04-05",
+      "matchday": 28
+    },
+    "Josip Juranovic": {
+      "opp": "St. Pauli",
+      "isHome": true,
+      "date": "2026-04-05",
+      "matchday": 28
+    },
+    "Tim Skarke": {
+      "opp": "St. Pauli",
+      "isHome": true,
+      "date": "2026-04-05",
+      "matchday": 28
+    },
+    "Andrej Ilić": {
+      "opp": "St. Pauli",
+      "isHome": true,
+      "date": "2026-04-05",
+      "matchday": 28
+    },
+    "Christopher Trimmel": {
+      "opp": "St. Pauli",
+      "isHome": true,
+      "date": "2026-04-05",
+      "matchday": 28
+    },
+    "Danilho Doekhi": {
+      "opp": "St. Pauli",
+      "isHome": true,
+      "date": "2026-04-05",
+      "matchday": 28
+    },
+    "Stanley Nsoki": {
+      "opp": "St. Pauli",
+      "isHome": true,
+      "date": "2026-04-05",
+      "matchday": 28
+    },
+    "Diogo Leite": {
+      "opp": "St. Pauli",
+      "isHome": true,
+      "date": "2026-04-05",
+      "matchday": 28
+    },
+    "Janik Haberer": {
+      "opp": "St. Pauli",
+      "isHome": true,
+      "date": "2026-04-05",
+      "matchday": 28
+    },
+    "Frederik Rønnow": {
+      "opp": "St. Pauli",
+      "isHome": true,
+      "date": "2026-04-05",
+      "matchday": 28
+    },
+    "Rani Khedira": {
+      "opp": "St. Pauli",
+      "isHome": true,
+      "date": "2026-04-05",
+      "matchday": 28
+    },
+    "Ilyas Ansah": {
+      "opp": "St. Pauli",
+      "isHome": true,
+      "date": "2026-04-05",
+      "matchday": 28
+    },
+    "Wooyeong Jeong": {
+      "opp": "St. Pauli",
+      "isHome": true,
+      "date": "2026-04-05",
+      "matchday": 28
+    },
+    "Leopold Querfeld": {
+      "opp": "St. Pauli",
+      "isHome": true,
+      "date": "2026-04-05",
+      "matchday": 28
+    },
+    "Samuel-Germain Mbangula": {
+      "opp": "RasenBallsport Leipzig",
+      "isHome": true,
+      "date": "2026-04-04",
+      "matchday": 28
+    },
+    "K. Coulibaly": {
+      "opp": "RasenBallsport Leipzig",
+      "isHome": true,
+      "date": "2026-04-04",
+      "matchday": 28
+    },
+    "Marco Grüll": {
+      "opp": "RasenBallsport Leipzig",
+      "isHome": true,
+      "date": "2026-04-04",
+      "matchday": 28
+    },
+    "Keke Topp": {
+      "opp": "RasenBallsport Leipzig",
+      "isHome": true,
+      "date": "2026-04-04",
+      "matchday": 28
+    },
+    "Olivier Deman": {
+      "opp": "RasenBallsport Leipzig",
+      "isHome": true,
+      "date": "2026-04-04",
+      "matchday": 28
+    },
+    "Felix Agu": {
+      "opp": "RasenBallsport Leipzig",
+      "isHome": true,
+      "date": "2026-04-04",
+      "matchday": 28
+    },
+    "Salim Musah": {
+      "opp": "RasenBallsport Leipzig",
+      "isHome": true,
+      "date": "2026-04-04",
+      "matchday": 28
+    },
+    "Justin Njinmah": {
+      "opp": "RasenBallsport Leipzig",
+      "isHome": true,
+      "date": "2026-04-04",
+      "matchday": 28
+    },
+    "Senne Lynen": {
+      "opp": "RasenBallsport Leipzig",
+      "isHome": true,
+      "date": "2026-04-04",
+      "matchday": 28
+    },
+    "Isaac Schmidt": {
+      "opp": "RasenBallsport Leipzig",
+      "isHome": true,
+      "date": "2026-04-04",
+      "matchday": 28
+    },
+    "Marco Friedl": {
+      "opp": "RasenBallsport Leipzig",
+      "isHome": true,
+      "date": "2026-04-04",
+      "matchday": 28
+    },
+    "Julián Malatini": {
+      "opp": "RasenBallsport Leipzig",
+      "isHome": true,
+      "date": "2026-04-04",
+      "matchday": 28
+    },
+    "Patrice Čović": {
+      "opp": "RasenBallsport Leipzig",
+      "isHome": true,
+      "date": "2026-04-04",
+      "matchday": 28
+    },
+    "Jens Stage": {
+      "opp": "RasenBallsport Leipzig",
+      "isHome": true,
+      "date": "2026-04-04",
+      "matchday": 28
+    },
+    "Yukinari Sugawara": {
+      "opp": "RasenBallsport Leipzig",
+      "isHome": true,
+      "date": "2026-04-04",
+      "matchday": 28
+    },
+    "Leonardo Bittencourt": {
+      "opp": "RasenBallsport Leipzig",
+      "isHome": true,
+      "date": "2026-04-04",
+      "matchday": 28
+    },
+    "Cameron Puertas": {
+      "opp": "RasenBallsport Leipzig",
+      "isHome": true,
+      "date": "2026-04-04",
+      "matchday": 28
+    },
+    "Jovan Milošević": {
+      "opp": "RasenBallsport Leipzig",
+      "isHome": true,
+      "date": "2026-04-04",
+      "matchday": 28
+    },
+    "Romano Schmid": {
+      "opp": "RasenBallsport Leipzig",
+      "isHome": true,
+      "date": "2026-04-04",
+      "matchday": 28
+    },
+    "Kamil Grabara": {
+      "opp": "Bayer Leverkusen",
+      "isHome": false,
+      "date": "2026-04-04",
+      "matchday": 28
+    },
+    "Kilian Fischer": {
+      "opp": "Bayer Leverkusen",
+      "isHome": false,
+      "date": "2026-04-04",
+      "matchday": 28
+    },
+    "Denis Vavro": {
+      "opp": "Bayer Leverkusen",
+      "isHome": false,
+      "date": "2026-04-04",
+      "matchday": 28
+    },
+    "Jesper Lindstrøm": {
+      "opp": "Bayer Leverkusen",
+      "isHome": false,
+      "date": "2026-04-04",
+      "matchday": 28
+    },
+    "Jan Bürger": {
+      "opp": "Bayer Leverkusen",
+      "isHome": false,
+      "date": "2026-04-04",
+      "matchday": 28
+    },
+    "Moritz Jenz": {
+      "opp": "Bayer Leverkusen",
+      "isHome": false,
+      "date": "2026-04-04",
+      "matchday": 28
+    },
+    "Jonas Wind": {
+      "opp": "Bayer Leverkusen",
+      "isHome": false,
+      "date": "2026-04-04",
+      "matchday": 28
+    },
+    "Kento Shiogai": {
+      "opp": "Bayer Leverkusen",
+      "isHome": false,
+      "date": "2026-04-04",
+      "matchday": 28
+    },
+    "Mattias Svanberg": {
+      "opp": "Bayer Leverkusen",
+      "isHome": false,
+      "date": "2026-04-04",
+      "matchday": 28
+    },
+    "Adam Daghim": {
+      "opp": "Bayer Leverkusen",
+      "isHome": false,
+      "date": "2026-04-04",
+      "matchday": 28
+    },
+    "Aaron Zehnter": {
+      "opp": "Bayer Leverkusen",
+      "isHome": false,
+      "date": "2026-04-04",
+      "matchday": 28
+    },
+    "Jonas Adjetey": {
+      "opp": "Bayer Leverkusen",
+      "isHome": false,
+      "date": "2026-04-04",
+      "matchday": 28
+    },
+    "Joakim Mæhle": {
+      "opp": "Bayer Leverkusen",
+      "isHome": false,
+      "date": "2026-04-04",
+      "matchday": 28
+    },
+    "Vinicius Souza": {
+      "opp": "Bayer Leverkusen",
+      "isHome": false,
+      "date": "2026-04-04",
+      "matchday": 28
+    },
+    "Maximilian Arnold": {
+      "opp": "Bayer Leverkusen",
+      "isHome": false,
+      "date": "2026-04-04",
+      "matchday": 28
+    },
+    "Jeanuël Belocian": {
+      "opp": "Bayer Leverkusen",
+      "isHome": false,
+      "date": "2026-04-04",
+      "matchday": 28
+    },
+    "Saël Kumbedi": {
+      "opp": "Bayer Leverkusen",
+      "isHome": false,
+      "date": "2026-04-04",
+      "matchday": 28
+    },
+    "Kevin Paredes": {
+      "opp": "Bayer Leverkusen",
+      "isHome": false,
+      "date": "2026-04-04",
+      "matchday": 28
+    }
+  }
+}

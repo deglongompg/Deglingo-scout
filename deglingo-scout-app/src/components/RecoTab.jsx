@@ -182,19 +182,20 @@ function DetailPanel({ player }) {
         </div>
       </div>
 
-      {/* 1v1 Matchup */}
+      {/* Analyse du match */}
       <div style={{ marginBottom: "14px", padding: "12px", background: `linear-gradient(135deg,${pc}08,rgba(255,255,255,0.02))`, border: `1px solid ${pc}15`, borderRadius: "8px" }}>
-        <div style={{ fontSize: "10px", color: `${pc}90`, fontWeight: 800, letterSpacing: "0.12em", marginBottom: "10px" }}>⚔ 1v1 — {player.name.split(" ").pop().toUpperCase()} vs {player.oppName.toUpperCase()}</div>
-        <div style={{ display: "grid", gridTemplateColumns: "repeat(4,1fr)", gap: "6px" }}>
+        <div style={{ fontSize: "10px", color: `${pc}90`, fontWeight: 800, letterSpacing: "0.12em", marginBottom: "10px" }}>📊 CONTEXTE DU MATCH — {player.name.split(" ").pop().toUpperCase()} vs {player.oppName.toUpperCase()}</div>
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(2,1fr)", gap: "8px" }}>
           {[
-            { l: "xGA Adv.", v: oppXga.toFixed(2), c: player.position === "GK" || player.position === "DEF" ? (oppXga < 1.2 ? "#4ADE80" : oppXga < 1.5 ? "#FCD34D" : "#F87171") : (oppXga > 1.6 ? "#4ADE80" : oppXga > 1.2 ? "#FCD34D" : "#F87171") },
-            { l: "PPDA", v: oppPpda.toFixed(1), c: "#fff" },
-            { l: "Style", v: style, c: style === "Bloc bas" ? "#4ADE80" : "#FB923C", sm: true },
-            { l: "Early Sig.", v: `${es > 0 ? "+" : ""}${es}%`, c: es > 15 ? "#4ADE80" : es > 0 ? "#FCD34D" : "#F87171" },
+            { l: "Buts encaissés (xGA)", desc: player.position === "GK" || player.position === "DEF" ? "Moins l'adversaire encaisse, plus c'est dur" : "Plus l'adversaire encaisse, plus il y a d'occasions", v: oppXga.toFixed(2), c: player.position === "GK" || player.position === "DEF" ? (oppXga < 1.2 ? "#4ADE80" : oppXga < 1.5 ? "#FCD34D" : "#F87171") : (oppXga > 1.6 ? "#4ADE80" : oppXga > 1.2 ? "#FCD34D" : "#F87171") },
+            { l: "Pressing adverse (PPDA)", desc: oppPpda >= 15 ? "PPDA fort = peu de pressing → possession facilitée" : oppPpda >= 12 ? "PPDA moyen = pressing modéré → match équilibré" : "PPDA faible = pressing intense → duels et récupérations", v: oppPpda.toFixed(1), c: "#fff" },
+            { l: "Style de jeu adverse", desc: style === "Bloc bas" ? "Équipe qui défend bas → possession dominante" : style === "Pressing" ? "Équipe agressive → match ouvert et duels" : "Équipe équilibrée → match classique", v: style, c: style === "Bloc bas" ? "#4ADE80" : style === "Pressing" ? "#FB923C" : "#FCD34D", sm: true },
+            { l: "Tendance récente", desc: es > 10 ? "En forte hausse → confiance !" : es > 0 ? "Légère progression" : es === 0 ? "Forme stable" : "En baisse de régime", v: `${es > 0 ? "+" : ""}${es}%`, c: es > 15 ? "#4ADE80" : es > 0 ? "#FCD34D" : "#F87171" },
           ].map(item => (
-            <div key={item.l} style={{ textAlign: "center" }}>
-              <div style={{ fontSize: "9px", color: "rgba(255,255,255,0.4)", fontWeight: 700 }}>{item.l}</div>
-              <div style={{ fontFamily: item.sm ? "inherit" : "'DM Mono',monospace", fontSize: item.sm ? "13px" : "20px", fontWeight: 700, color: item.c, marginTop: "3px" }}>{item.v}</div>
+            <div key={item.l} style={{ textAlign: "center", background: "rgba(255,255,255,0.02)", borderRadius: "6px", padding: "8px 6px" }}>
+              <div style={{ fontSize: "9px", color: "rgba(255,255,255,0.5)", fontWeight: 700, marginBottom: "2px" }}>{item.l}</div>
+              <div style={{ fontFamily: item.sm ? "inherit" : "'DM Mono',monospace", fontSize: item.sm ? "14px" : "22px", fontWeight: 700, color: item.c, margin: "4px 0" }}>{item.v}</div>
+              <div style={{ fontSize: "8px", color: "rgba(255,255,255,0.35)", lineHeight: 1.3, fontStyle: "italic" }}>{item.desc}</div>
             </div>
           ))}
         </div>
@@ -218,19 +219,35 @@ function DetailPanel({ player }) {
   );
 }
 
-export default function RecoTab({ players, teams }) {
+export default function RecoTab({ players, teams, fixtures }) {
   const [league, setLeague] = useState("L1");
   const [sel, setSel] = useState(null);
+
+  const hasFixtures = !!fixtures?.player_fixtures;
+  const matchdays = fixtures?.matchdays || {};
 
   const so7 = useMemo(() => {
     const lgPlayers = players.filter(p => p.league === league && p.l5 >= 35);
     const lgTeams = teams.filter(t => t.league === league);
     if (!lgTeams.length) return [];
 
+    const pf = fixtures?.player_fixtures || {};
+
     const scored = lgPlayers.map(p => {
-      const opp = lgTeams.find(t => !p.club.includes(t.name) && !t.name.includes(p.club.split(" ")[0])) || lgTeams[0];
-      const ds = dScoreMatch(p, opp, true);
-      return { ...p, ds, oppName: opp.name, oppTeam: opp, isHome: true };
+      const fx = pf[p.name];
+      let opp, isHome;
+      if (fx) {
+        // Real fixture data
+        opp = lgTeams.find(t => t.name === fx.opp);
+        isHome = fx.isHome;
+      }
+      if (!opp) {
+        // Fallback: pick a different team from same league
+        opp = lgTeams.find(t => !p.club.includes(t.name) && !t.name.includes(p.club.split(" ")[0])) || lgTeams[0];
+        isHome = true;
+      }
+      const ds = dScoreMatch(p, opp, isHome);
+      return { ...p, ds, oppName: opp.name, oppTeam: opp, isHome };
     }).sort((a, b) => b.ds - a.ds);
 
     const picks = [];
@@ -244,7 +261,7 @@ export default function RecoTab({ players, teams }) {
       if (picks.length >= 7) break;
     }
     return picks;
-  }, [players, teams, league]);
+  }, [players, teams, league, fixtures]);
 
   const lg = LG_META[league];
   const gk = so7.filter(p => p.position === "GK");
@@ -283,7 +300,10 @@ export default function RecoTab({ players, teams }) {
       {/* Title */}
       <div style={{ textAlign: "center", marginBottom: "8px" }}>
         <div style={{ fontSize: "28px", fontWeight: 900, letterSpacing: "-0.03em", background: "linear-gradient(135deg,#fff 0%,#A5B4FC 40%,#C084FC 80%,#E879F9 100%)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent" }}>SO7 DEGLINGO</div>
-        <div style={{ fontSize: "13px", fontWeight: 600, color: "rgba(255,255,255,0.45)", marginTop: "2px" }}>{lg.flag} {lg.name}</div>
+        <div style={{ fontSize: "13px", fontWeight: 600, color: "rgba(255,255,255,0.45)", marginTop: "2px" }}>
+          {lg.flag} {lg.name}{matchdays[league] ? ` · Journée ${matchdays[league]}` : ""}
+        </div>
+        {!hasFixtures && <div style={{ fontSize: "9px", color: "rgba(255,150,50,0.5)", marginTop: "4px" }}>⚠ Pas de calendrier — adversaires simulés</div>}
       </div>
 
       {/* PITCH */}

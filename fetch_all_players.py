@@ -118,7 +118,7 @@ def fetch_player_stats(slug, club_name, league):
     """Fetch full stats for a single player."""
     raw = q("""query P($slug: String!) { football { player(slug: $slug) {
         displayName position age country { code } activeClub { name }
-        so5Scores(last: 15) { score allAroundStats { totalScore } game { date homeTeam { name } awayTeam { name } homeGoals awayGoals } }
+        so5Scores(last: 15) { score allAroundStats { category totalScore } game { date homeTeam { name } awayTeam { name } homeGoals awayGoals } }
     }}}""", {"slug": slug})
     time.sleep(SLEEP)
 
@@ -165,12 +165,13 @@ def fetch_player_stats(slug, club_name, league):
     PAS={"accurate_pass","successful_final_third_passes","accurate_long_balls","long_pass_own_to_opp_success","adjusted_total_att_assist","big_chance_created"}
     POS_s={"interception_won","poss_won","duel_won","ball_recovery","won_contest"}
     ATT_s={"ontarget_scoring_att","pen_area_entries","successful_dribble","was_fouled","penalty_won"}
-    # AA scores from allAroundStats (real Sorare AA = sum of allAroundStats.totalScore per match)
+    # AA scores from allAroundStats (real Sorare AA = DEFENDING + ATTACKING + PASSING + POSSESSION only)
+    AA_CATS = {"DEFENDING", "ATTACKING", "PASSING", "POSSESSION"}
     aa_scores = []
     for m in played:
         aa_stats = m.get("allAroundStats", [])
         if aa_stats:
-            aa_scores.append(sum(a.get("totalScore", 0) for a in aa_stats))
+            aa_scores.append(sum(a.get("totalScore", 0) for a in aa_stats if a.get("category") in AA_CATS))
         else:
             aa_scores.append(0)
 

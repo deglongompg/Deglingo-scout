@@ -17,11 +17,18 @@ export default function DbTab({ players, teams, fixtures, logos = {} }) {
   const [search, setSearch] = useState("");
   const [league, setLeague] = useState("ALL");
   const [pos, setPos] = useState("ALL");
+  const [club, setClub] = useState("ALL");
   const [arch, setArch] = useState("ALL");
   const [minL10, setMinL10] = useState(-1);
   const [sortKey, setSortKey] = useState(fixtures?.player_fixtures ? "dsMatch" : "l2");
   const [sortDir, setSortDir] = useState(-1);
   const [selectedPlayer, setSelectedPlayer] = useState(null);
+
+  const clubs = useMemo(() => {
+    const list = league === "ALL" ? players : players.filter(p => p.league === league);
+    const set = new Set(list.map(p => p.club).filter(Boolean));
+    return [...set].sort();
+  }, [players, league]);
 
   const archetypes = useMemo(() => {
     const set = new Set(players.map(p => p.archetype).filter(Boolean));
@@ -50,6 +57,7 @@ export default function DbTab({ players, teams, fixtures, logos = {} }) {
   const filtered = useMemo(() => {
     let list = enriched;
     if (league !== "ALL") list = list.filter(p => p.league === league);
+    if (club !== "ALL") list = list.filter(p => p.club === club);
     if (pos !== "ALL") list = list.filter(p => p.position === pos);
     if (arch !== "ALL") list = list.filter(p => p.archetype === arch);
     if (minL10 === 0) list = list.filter(p => !p.l10 || p.l10 === 0);
@@ -63,7 +71,7 @@ export default function DbTab({ players, teams, fixtures, logos = {} }) {
       return (va - vb) * sortDir;
     });
     return list;
-  }, [enriched, league, pos, arch, minL10, search, sortKey, sortDir]);
+  }, [enriched, league, club, pos, arch, minL10, search, sortKey, sortDir]);
 
   const toggleSort = (key) => {
     if (sortKey === key) setSortDir(d => -d);
@@ -136,24 +144,28 @@ export default function DbTab({ players, teams, fixtures, logos = {} }) {
           value={search} onChange={e => setSearch(e.target.value)}
           style={{ ...sel({ flex: "1 1 180px", minWidth: 140 }) }}
         />
-        <select value={league} onChange={e => setLeague(e.target.value)} style={sel({})}>
-          <option value="ALL">Toutes ligues</option>
+        <select value={league} onChange={e => { setLeague(e.target.value); setClub("ALL"); }} style={sel({ flex: "1 1 0", minWidth: 0 })}>
+          <option value="ALL">Ligue</option>
           {["L1", "PL", "Liga", "Bundes"].map(l => (
             <option key={l} value={l}>{LEAGUE_FLAGS[l]} {l}</option>
           ))}
         </select>
-        <select value={pos} onChange={e => setPos(e.target.value)} style={sel({})}>
-          <option value="ALL">Tous postes</option>
+        <select value={club} onChange={e => setClub(e.target.value)} style={sel({ flex: "1 1 0", minWidth: 0 })}>
+          <option value="ALL">Club</option>
+          {clubs.map(c => <option key={c} value={c}>{shortName(c)}</option>)}
+        </select>
+        <select value={pos} onChange={e => setPos(e.target.value)} style={sel({ flex: "1 1 0", minWidth: 0 })}>
+          <option value="ALL">Poste</option>
           {["GK", "DEF", "MIL", "ATT"].map(p => (
             <option key={p} value={p}>{p}</option>
           ))}
         </select>
-        <select value={arch} onChange={e => setArch(e.target.value)} style={sel({})}>
-          <option value="ALL">Tous archétypes</option>
+        <select value={arch} onChange={e => setArch(e.target.value)} style={sel({ flex: "1 1 0", minWidth: 0 })}>
+          <option value="ALL">Profil</option>
           {archetypes.map(a => <option key={a} value={a}>{a}</option>)}
         </select>
-        <select value={minL10} onChange={e => setMinL10(Number(e.target.value))} style={sel({})}>
-          <option value={-1}>L10 tous</option>
+        <select value={minL10} onChange={e => setMinL10(Number(e.target.value))} style={sel({ flex: "1 1 0", minWidth: 0 })}>
+          <option value={-1}>L10 CAP</option>
           <option value={0}>L10 = 0 (CAP 260)</option>
           {[30, 40, 50, 55, 60, 65, 70].map(v => (
             <option key={v} value={v}>L10 &lt; {v}</option>

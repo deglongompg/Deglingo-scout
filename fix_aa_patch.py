@@ -4,7 +4,7 @@ import requests, json, time, sys
 
 URL = "https://api.sorare.com/federation/graphql"
 H = {"Content-Type": "application/json"}
-AA_CATS = {"DEFENDING", "ATTACKING", "PASSING", "POSSESSION"}
+AA_CATS = {"GENERAL", "DEFENDING", "ATTACKING", "PASSING", "POSSESSION"}
 
 def q(query, variables={}):
     r = requests.post(URL, json={"query": query, "variables": variables}, headers=H)

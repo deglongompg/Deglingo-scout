@@ -1,7 +1,10 @@
 import { useState, useMemo } from "react";
-import { dsColor, dsBg, isSilver, POSITION_COLORS, LEAGUE_COLORS, LEAGUE_FLAGS, getArchetypeColor } from "../utils/colors";
+import { dsColor, dsBg, isSilver, POSITION_COLORS, LEAGUE_COLORS, LEAGUE_FLAGS, getArchetypeColor, getAAProfile } from "../utils/colors";
 import { dScoreMatch, csProb, findTeam } from "../utils/dscore";
 import PlayerCard from "./PlayerCard";
+
+// Strip position prefix from archetype (e.g. "ATT Complet" → "Complet")
+const shortArch = (a) => (a || "").replace(/^(ATT|DEF|MIL|GK)\s*/, "") || a;
 
 // ISO 2/3 letter country code → flag emoji
 const ISO3_TO_2 = {arg:"ar",bra:"br",bel:"be",can:"ca",che:"ch",cmr:"cm",civ:"ci",col:"co",cri:"cr",cze:"cz",deu:"de",dnk:"dk",esp:"es",fra:"fr",gbr:"gb",gha:"gh",gin:"gn",gre:"gr",hrv:"hr",hun:"hu",isl:"is",isr:"il",ita:"it",jpn:"jp",kor:"kr",mar:"ma",mex:"mx",nga:"ng",nld:"nl",nor:"no",per:"pe",pol:"pl",prt:"pt",rou:"ro",sen:"sn",srb:"rs",sui:"ch",svk:"sk",svn:"si",swe:"se",tun:"tn",tur:"tr",ukr:"ua",uru:"uy",usa:"us",ven:"ve",zaf:"za",ago:"ao",bfa:"bf",bdi:"bi",ben:"bj",caf:"cf",cod:"cd",cpv:"cv",ecu:"ec",geo:"ge",gnb:"gw",guy:"gy",jam:"jm",kos:"xk",mli:"ml",mne:"me",moz:"mz",mrt:"mr",mda:"md",mkd:"mk",pan:"pa",par:"py",prk:"kp",rwa:"rw",tgo:"tg",uzb:"uz",zmb:"zm",zwe:"zw"};
@@ -35,6 +38,16 @@ export default function DbTab({ players, teams, fixtures, logos = {} }) {
     return [...set].sort();
   }, [players]);
 
+  const radarMax = useMemo(() => {
+    const keys = ["aa_defending", "aa_passing", "aa_possession", "aa_attacking", "final_third_passes_avg"];
+    const mx = {};
+    for (const k of keys) {
+      mx[k] = Math.max(...players.map(p => p[k] || 0), 1);
+    }
+    mx._maxAA5 = Math.max(...players.map(p => p.aa5 || 0), 1);
+    return mx;
+  }, [players]);
+
   const enriched = useMemo(() => {
     const pf = fixtures?.player_fixtures || {};
     return players.map(p => {
@@ -42,11 +55,11 @@ export default function DbTab({ players, teams, fixtures, logos = {} }) {
       const base = { ...p, reg10: p.reg10 ?? p.regularite, ds10: p.ds10 ?? p.ds_rate };
       if (!fx) return { ...base, dsMatch: null, oppName: null, isHome: null, matchday: null, csPercent: null };
       const oppTeam = teams?.find(t => t.name === fx.opp);
-      const ds = oppTeam ? dScoreMatch(p, oppTeam, fx.isHome) : null;
+      const playerTeam = findTeam(teams, p.club);
+      const ds = oppTeam ? dScoreMatch(p, oppTeam, fx.isHome, playerTeam) : null;
       let csPercent = null;
       if (oppTeam) {
         const oppXg = fx.isHome ? (oppTeam.xg_ext || 1.3) : (oppTeam.xg_dom || 1.3);
-        const playerTeam = findTeam(teams, p.club);
         const defXga = playerTeam ? (fx.isHome ? (playerTeam.xga_dom || 1.3) : (playerTeam.xga_ext || 1.5)) : 1.3;
         csPercent = csProb(defXga, oppXg, p.league);
       }
@@ -88,7 +101,7 @@ export default function DbTab({ players, teams, fixtures, logos = {} }) {
   });
 
   const thStyle = (key) => ({
-    padding: "6px 2px", fontSize: 8, color: sortKey === key ? "#A5B4FC" : "rgba(255,255,255,0.4)",
+    padding: "6px 2px", fontSize: 9, color: sortKey === key ? "#A5B4FC" : "rgba(255,255,255,0.55)",
     cursor: "pointer", textAlign: "center", fontWeight: 600, whiteSpace: "nowrap",
     userSelect: "none", borderBottom: "1px solid rgba(255,255,255,0.06)",
   });
@@ -176,7 +189,7 @@ export default function DbTab({ players, teams, fixtures, logos = {} }) {
       {/* D-Score legend */}
       <div style={{ marginBottom: 10, padding: "10px 14px", background: "linear-gradient(135deg, rgba(99,102,241,0.06), rgba(192,132,252,0.04))", border: "1px solid rgba(99,102,241,0.1)", borderRadius: 10 }}>
         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 6 }}>
-          <div style={{ fontSize: 10, fontWeight: 700, letterSpacing: "0.05em", background: "linear-gradient(90deg, #A5B4FC 0%, #C084FC 25%, #E879F9 50%, #C084FC 75%, #A5B4FC 100%)", backgroundSize: "200% auto", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent", animation: "legendShimmer 4s linear infinite" }}>
+          <div style={{ fontSize: 12, fontWeight: 700, letterSpacing: "0.05em", background: "linear-gradient(90deg, #A5B4FC 0%, #C084FC 25%, #E879F9 50%, #C084FC 75%, #A5B4FC 100%)", backgroundSize: "200% auto", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent", animation: "legendShimmer 4s linear infinite" }}>
             ⚡ D-SCORE — L'algo magique qui t'aide à choisir tes meilleurs joueurs pour ta prochaine Streak & GW Sorare ✨
           </div>
           {hasFixtures && (
@@ -187,10 +200,10 @@ export default function DbTab({ players, teams, fixtures, logos = {} }) {
             </div>
           )}
         </div>
-        <div style={{ fontSize: 9, color: "rgba(255,255,255,0.4)", lineHeight: 1.5 }}>
-          Socle (forme L5 + AA + floor + régularité) <span style={{ color: "rgba(255,255,255,0.15)" }}>×</span> Contexte (adversaire, PPDA, xGA, style de jeu) <span style={{ color: "rgba(255,255,255,0.15)" }}>×</span> Momentum (tendance L2, séries) <span style={{ color: "rgba(255,255,255,0.15)" }}>×</span> Dom/Ext
+        <div style={{ fontSize: 10, color: "rgba(255,255,255,0.5)", lineHeight: 1.5 }}>
+          Socle (forme L5 + AA + floor + régularité) <span style={{ color: "rgba(255,255,255,0.2)" }}>×</span> Contexte (adversaire, PPDA, xGA, style de jeu) <span style={{ color: "rgba(255,255,255,0.2)" }}>×</span> Momentum (tendance L2, séries) <span style={{ color: "rgba(255,255,255,0.2)" }}>×</span> Dom/Ext
         </div>
-        <div style={{ display: "flex", gap: 14, marginTop: 6, alignItems: "center", fontSize: 9, color: "rgba(255,255,255,0.35)", flexWrap: "wrap" }}>
+        <div style={{ display: "flex", gap: 14, marginTop: 6, alignItems: "center", fontSize: 10, color: "rgba(255,255,255,0.45)", flexWrap: "wrap" }}>
           <span>{filtered.length} joueurs</span>
           <span style={{ display: "inline-flex", alignItems: "center", gap: 3 }}>
             <span style={{ display: "inline-block", width: 10, height: 10, borderRadius: 3, background: "linear-gradient(135deg,#4ADE80,#22C55E)", boxShadow: "0 0 6px #4ADE80" }} />
@@ -231,6 +244,7 @@ export default function DbTab({ players, teams, fixtures, logos = {} }) {
               <th style={thStyle("price_limited")} onClick={() => toggleSort("price_limited")}>L€{arrow("price_limited")}</th>
               <th style={thStyle("price_rare")} onClick={() => toggleSort("price_rare")}>R€{arrow("price_rare")}</th>
               <th style={{ ...thStyle("archetype"), cursor: "default" }}>Archétype</th>
+              <th style={{ ...thStyle("aaProfile"), cursor: "default" }}>Profil AA</th>
             </tr>
           </thead>
           <tbody>
@@ -251,7 +265,7 @@ export default function DbTab({ players, teams, fixtures, logos = {} }) {
                 >
                   <td style={{ padding: "6px 2px 6px 8px", maxWidth: 150, overflow: "hidden" }}>
                     <div style={{ fontWeight: 600, color: "#fff", fontSize: 11, whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>{countryFlag(p.country)} {p.name}</div>
-                    <div style={{ fontSize: 8, color: "rgba(255,255,255,0.3)", marginTop: 1, display: "flex", alignItems: "center", gap: 2, whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>
+                    <div style={{ fontSize: 9, color: "rgba(255,255,255,0.4)", marginTop: 1, display: "flex", alignItems: "center", gap: 2, whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>
                       {logos[p.club] && <img src={`/data/logos/${logos[p.club]}`} alt="" style={{ width: 10, height: 10, objectFit: "contain" }} />}
                       {shortName(p.club)}
                     </div>
@@ -264,7 +278,7 @@ export default function DbTab({ players, teams, fixtures, logos = {} }) {
                   </td>
                   <td style={{ textAlign: "center" }}>
                     <span style={{
-                      padding: "2px 6px", borderRadius: 12, fontSize: 9,
+                      padding: "2px 6px", borderRadius: 12, fontSize: 11,
                       background: `${LEAGUE_COLORS[p.league]}18`, color: LEAGUE_COLORS[p.league],
                     }}>{LEAGUE_FLAGS[p.league]}</span>
                   </td>
@@ -355,7 +369,17 @@ export default function DbTab({ players, teams, fixtures, logos = {} }) {
                       padding: "2px 6px", borderRadius: 12, fontSize: 9,
                       background: `${getArchetypeColor(p.archetype)}18`,
                       color: getArchetypeColor(p.archetype),
-                    }}>{p.archetype}</span>
+                    }}>{shortArch(p.archetype)}</span>
+                  </td>
+                  <td style={{ textAlign: "center" }}>
+                    {(() => {
+                      const pr = getAAProfile(p);
+                      return <span title={pr.desc} style={{
+                        padding: "2px 6px", borderRadius: 12, fontSize: 9,
+                        background: `${pr.color}18`, color: pr.color,
+                        cursor: "help",
+                      }}>{pr.emoji} {pr.label}</span>;
+                    })()}
                   </td>
                 </tr>
               );
@@ -370,7 +394,7 @@ export default function DbTab({ players, teams, fixtures, logos = {} }) {
         </div>
       )}
 
-      {selectedPlayer && <PlayerCard player={selectedPlayer} onClose={() => setSelectedPlayer(null)} logos={logos} />}
+      {selectedPlayer && <PlayerCard player={selectedPlayer} onClose={() => setSelectedPlayer(null)} logos={logos} radarMax={radarMax} />}
     </div>
   );
 }

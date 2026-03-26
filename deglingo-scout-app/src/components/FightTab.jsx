@@ -451,8 +451,8 @@ export default function FightTab({ players, teams, fixtures, logos = {} }) {
 
   const pTeam1 = sel1 ? findTeam(teams, sel1.club) : null;
   const pTeam2 = sel2 ? findTeam(teams, sel2.club) : null;
-  const d1 = sel1 && opp1 ? dScoreMatch(sel1, opp1, h1) : 0;
-  const d2 = sel2 && opp2 ? dScoreMatch(sel2, opp2, h2) : 0;
+  const d1 = sel1 && opp1 ? dScoreMatch(sel1, opp1, h1, pTeam1) : 0;
+  const d2 = sel2 && opp2 ? dScoreMatch(sel2, opp2, h2, pTeam2) : 0;
 
   const ready = sel1 && sel2 && opp1 && opp2;
   const delta = ready ? Math.abs(d1 - d2) : 0;

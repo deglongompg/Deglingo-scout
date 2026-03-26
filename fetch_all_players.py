@@ -166,7 +166,7 @@ def fetch_player_stats(slug, club_name, league):
     POS_s={"interception_won","poss_won","duel_won","ball_recovery","won_contest"}
     ATT_s={"ontarget_scoring_att","pen_area_entries","successful_dribble","was_fouled","penalty_won"}
     # AA scores from allAroundStats (real Sorare AA = DEFENDING + ATTACKING + PASSING + POSSESSION only)
-    AA_CATS = {"DEFENDING", "ATTACKING", "PASSING", "POSSESSION"}
+    AA_CATS = {"GENERAL", "DEFENDING", "ATTACKING", "PASSING", "POSSESSION"}
     aa_scores = []
     for m in played:
         aa_stats = m.get("allAroundStats", [])

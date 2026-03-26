@@ -4,11 +4,16 @@ import requests, json, time, sys
 
 URL = "https://api.sorare.com/federation/graphql"
 H = {"Content-Type": "application/json"}
-AA_CATS = {"DEFENDING", "ATTACKING", "PASSING", "POSSESSION"}
+AA_CATS = {"GENERAL", "DEFENDING", "ATTACKING", "PASSING", "POSSESSION"}
 
 def q(query, variables={}):
-    r = requests.post(URL, json={"query": query, "variables": variables}, headers=H)
-    return r.json()
+    for attempt in range(3):
+        try:
+            r = requests.post(URL, json={"query": query, "variables": variables}, headers=H, timeout=15)
+            return r.json()
+        except:
+            time.sleep(3 * (attempt + 1))
+    return {}
 
 avg = lambda x: sum(x)/len(x) if x else 0
 

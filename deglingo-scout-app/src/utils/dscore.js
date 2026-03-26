@@ -42,7 +42,7 @@ export function norm(v, lo, hi, inv = false) {
   return inv ? 1 - n : n;
 }
 
-export function dScoreMatch(player, opp, isHome) {
+export function dScoreMatch(player, opp, isHome, playerTeam = null) {
   const p = player;
   const o = opp;
 
@@ -64,14 +64,45 @@ export function dScoreMatch(player, opp, isHome) {
     contexte = norm(xga, 0.7, 2.5, true)*22 + norm(ppda, 7, 20)*16 + norm(p.l5, 20, 70)*12;
   else if (pos === "DEF")
     contexte = norm(xga, 0.7, 2.5, true)*20 + (p.aa5 > 18 ? norm(ppda, 7, 20, true) : norm(ppda, 7, 20))*16 + norm(p.l5, 20, 75)*14;
-  else if (pos === "MIL")
+  else if (pos === "MIL") {
+    // MIL AA élevé: PPDA impact dépend du profil (créateur = bloc bas positif, offensif = bloc bas neutre)
+    const _mP = Math.max(0, p.aa_passing || 0), _mO = Math.max(0, p.aa_possession || 0);
+    const _mA = Math.max(0, p.aa_attacking || 0), _mD = Math.max(0, p.aa_defending || 0);
+    const _mT = _mP + _mO + _mA + _mD || 1;
+    const mCreaPct = (_mP + _mO) / _mT;
+    const mPpdaCrea = norm(ppda, 7, 20);       // bloc bas = positif pour créateur
+    const mPpdaFin  = norm(ppda, 7, 20, true); // bloc bas = négatif pour finisseur
+    const mPpdaBlend = mPpdaCrea * mCreaPct + mPpdaFin * (1 - mCreaPct);
     contexte = p.aa5 >= 10
-      ? norm(ppda, 7, 20)*26 + norm(xga, 0.8, 2)*8  + norm(p.l5, 25, 75)*16
+      ? mPpdaBlend*26 + norm(xga, 0.8, 2)*8  + norm(p.l5, 25, 75)*16
       : norm(xga,  0.8, 2)*22 + norm(ppda, 7, 20, true)*14 + norm(p.l5, 20, 80)*14;
-  else // ATT
+  }
+  else { // ATT — PPDA impact dépend du profil AA du joueur
+    const _aP = Math.max(0, p.aa_passing || 0), _aO = Math.max(0, p.aa_possession || 0);
+    const _aA = Math.max(0, p.aa_attacking || 0), _aD = Math.max(0, p.aa_defending || 0);
+    const _aT = _aP + _aO + _aA + _aD || 1;
+    const creaPct = (_aP + _aO) / _aT; // 0-1, % créateur (passes+poss)
+    const finPct = _aA / _aT;           // 0-1, % finisseur (tirs/dribbles)
+    // Profile detection
+    const ftp = p.final_third_passes_avg || 0;
+    const gpm = (p.goals || 0) / (p.appearances || 1);
+    const possPct = _aO / _aT;
+    const isPivot = possPct >= 0.40 && ftp < 6 && finPct >= 0.2;
+    const isDribbleur = !isPivot && ftp >= 9 && gpm < 0.55 && finPct >= 0.2;
+    // Créateur: bloc bas = POSITIF, Finisseur: bloc bas = NÉGATIF
+    const ppdaCrea = norm(ppda, 7, 20);       // bloc bas = haut score = positif
+    const ppdaFin  = norm(ppda, 7, 20, true); // bloc bas = bas score = négatif
+    // Dribbleur: pressing = jackpot (espaces), bloc bas = neutre
+    const ppdaDrib = (ppdaCrea + ppdaFin) / 2 + (ppda < 12 ? 0.15 : 0);
+    // Pivot: bloc bas = neutre (plus de centres MAIS surface compacte → s'annule)
+    const ppdaPivot = (ppdaCrea + ppdaFin) / 2; // strict neutre
+    const ppdaBlend = isPivot ? ppdaPivot
+      : isDribbleur ? ppdaDrib
+      : ppdaCrea * creaPct + ppdaFin * finPct + (ppdaCrea + ppdaFin) / 2 * (1 - creaPct - finPct);
     contexte = p.aa5 >= 8
-      ? norm(xga, 0.8, 2)*26 + norm(ppda, 7, 20, true)*9  + norm(p.l5, 20, 80)*15
-      : norm(xga, 0.8, 2)*25 + norm(ppda, 7, 20, true)*14 + norm(p.l5, 20, 80)*11;
+      ? norm(xga, 0.8, 2)*24 + ppdaBlend*12 + norm(p.l5, 20, 80)*14
+      : norm(xga, 0.8, 2)*25 + ppdaFin*14   + norm(p.l5, 20, 80)*11;
+  }
 
   // MOMENTUM (15%)
   const sc   = p.last_5 || [];
@@ -85,7 +116,36 @@ export function dScoreMatch(player, opp, isHome) {
   // DOM/EXT
   const domBonus = isHome ? 5 : -3;
 
-  const raw = socle + contexte + momentum + domBonus;
+  // PIVOT ANTI-META MALUS — AA5 structurellement bas (~3), dépend du décisif pour >60pts
+  let pivotMalus = 0;
+  if (p.position === "ATT") {
+    const _pO2 = Math.max(0, p.aa_possession || 0);
+    const _pA2 = Math.max(0, p.aa_attacking || 0);
+    const _pT2 = (Math.max(0, p.aa_passing || 0) + _pO2 + _pA2 + Math.max(0, p.aa_defending || 0)) || 1;
+    const _possPct2 = _pO2 / _pT2;
+    const _ftp2 = p.final_third_passes_avg || 0;
+    const _finPct2 = _pA2 / _pT2;
+    if (_possPct2 >= 0.40 && _ftp2 < 6 && _finPct2 >= 0.2) pivotMalus = -4;
+  }
+
+  // DOMINATION BONUS — équipe forte à domicile = MIL/ATT vont monopoliser le ballon
+  // Plus l'écart xG est grand + plus le AA5 est élevé → plus le joueur profite de la domination
+  let dominationBonus = 0;
+  if (isHome && playerTeam && pos === "MIL") {
+    const teamXg = playerTeam.xg_dom || 1.3;
+    const oppXg  = o.xg_ext || 1.3;
+    const gap = teamXg - oppXg; // PSG 2.30 - Toulouse 1.26 = 1.04
+    // Seuil: gap > 0.5 xG minimum pour considérer une domination
+    // Monaco 2.04 vs Marseille 1.79 = 0.25 → pas de bonus (choc)
+    // PSG 2.30 vs Toulouse 1.26 = 1.04 → grosse domination
+    if (gap > 0.5) {
+      const effectiveGap = gap - 0.5; // ne compter que l'excédent
+      const aaScale = Math.min(1.3, p.aa5 / 20); // AA5=30 → 1.3x, AA5=10 → 0.5x
+      dominationBonus = Math.min(10, effectiveGap * 14 * aaScale);
+    }
+  }
+
+  const raw = socle + contexte + momentum + domBonus + pivotMalus + dominationBonus;
   const minScore = p.min_15 ?? p.floor;
   return Math.round(Math.max(minScore / 100 * 55, Math.min(95, raw)));
 }

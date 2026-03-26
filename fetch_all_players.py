@@ -118,7 +118,7 @@ def fetch_player_stats(slug, club_name, league):
     """Fetch full stats for a single player."""
     raw = q("""query P($slug: String!) { football { player(slug: $slug) {
         displayName position age country { code } activeClub { name }
-        so5Scores(last: 15) { score game { date homeTeam { name } awayTeam { name } homeGoals awayGoals } }
+        so5Scores(last: 15) { score allAroundStats { totalScore } game { date homeTeam { name } awayTeam { name } homeGoals awayGoals } }
     }}}""", {"slug": slug})
     time.sleep(SLEEP)
 
@@ -165,19 +165,26 @@ def fetch_player_stats(slug, club_name, league):
     PAS={"accurate_pass","successful_final_third_passes","accurate_long_balls","long_pass_own_to_opp_success","adjusted_total_att_assist","big_chance_created"}
     POS_s={"interception_won","poss_won","duel_won","ball_recovery","won_contest"}
     ATT_s={"ontarget_scoring_att","pen_area_entries","successful_dribble","was_fouled","penalty_won"}
+    # AA scores from allAroundStats (real Sorare AA = sum of allAroundStats.totalScore per match)
+    aa_scores = []
+    for m in played:
+        aa_stats = m.get("allAroundStats", [])
+        if aa_stats:
+            aa_scores.append(sum(a.get("totalScore", 0) for a in aa_stats))
+        else:
+            aa_scores.append(0)
+
+    # AA profile from detailedScore (category breakdown for archetype classification)
     aa_profile = {}
-    aa_scores = []  # computed from detailedScore sum per match
     try:
         det_scores = [s for s in det_data["data"]["football"]["player"]["so5Scores"] if s.get("score",0)>0]
         if det_scores:
-            t={"d":[],"p":[],"po":[],"a":[],"n":[],"ftp":[],"total":[]}
+            t={"d":[],"p":[],"po":[],"a":[],"n":[],"ftp":[]}
             for m in det_scores:
                 det=m.get("detailedScore",[])
                 if not det:
-                    t["total"].append(0)
                     continue
                 md=mp=mpo=ma=mn=mf=0
-                match_aa_total=0
                 for d in det:
                     sn,pt,v=d.get("stat",""),d.get("totalScore",0),d.get("statValue",0)
                     if sn in DEF:md+=pt
@@ -186,15 +193,12 @@ def fetch_player_stats(slug, club_name, league):
                     elif sn in ATT_s:ma+=pt
                     if pt<0:mn+=pt
                     if sn=="successful_final_third_passes":mf=v
-                    match_aa_total+=pt  # sum ALL detailed score points = AA total
-                t["d"].append(md);t["p"].append(mp);t["po"].append(mpo);t["a"].append(ma);t["n"].append(mn);t["ftp"].append(mf);t["total"].append(match_aa_total)
-            aa_scores = t["total"]
+                t["d"].append(md);t["p"].append(mp);t["po"].append(mpo);t["a"].append(ma);t["n"].append(mn);t["ftp"].append(mf)
             aa_profile={"aa_defending":round(avg(t["d"]),1),"aa_passing":round(avg(t["p"]),1),"aa_possession":round(avg(t["po"]),1),"aa_attacking":round(avg(t["a"]),1),"aa_negative":round(avg(t["n"]),1),"final_third_passes_avg":round(avg(t["ftp"]),1),"aa_matches_analyzed":len(t["d"])}
     except:
         pass
 
-    # Compute aa5 from detailedScore-based aa_scores
-    while len(aa_scores) < len(scores): aa_scores.append(0)
+    # Compute aa5 from allAroundStats-based aa_scores
     aa5 = avg(aa_scores[:5]) if len(aa_scores)>=5 else avg(aa_scores) if aa_scores else 0
 
     # Archetype classification

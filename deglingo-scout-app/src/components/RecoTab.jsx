@@ -1,8 +1,31 @@
 import { useState, useMemo } from "react";
-import { dsColor, dsBg, LEAGUE_FLAGS, LEAGUE_NAMES, POSITION_COLORS } from "../utils/colors";
+import { dsColor, dsBg, isSilver, LEAGUE_FLAGS, LEAGUE_NAMES, POSITION_COLORS } from "../utils/colors";
 import { dScoreMatch, csProb, findTeam } from "../utils/dscore";
 
 const PC = POSITION_COLORS;
+
+const SHORT_NAMES = {
+  "Wolverhampton Wanderers": "Wolves", "Manchester United": "Man Utd", "Manchester City": "Man City",
+  "Newcastle United": "Newcastle", "Nottingham Forest": "Nott. Forest", "Crystal Palace": "C. Palace",
+  "Paris Saint Germain": "PSG", "Marseille": "OM", "Lyon": "OL",
+  "Borussia Dortmund": "Dortmund", "Borussia M.Gladbach": "M'gladbach", "Bayern Munich": "Bayern",
+  "Bayer Leverkusen": "Leverkusen", "RasenBallsport Leipzig": "Leipzig", "Eintracht Frankfurt": "Frankfurt",
+  "VfB Stuttgart": "Stuttgart", "Rayo Vallecano": "Rayo", "Atletico Madrid": "Atletico",
+  "Real Sociedad": "R. Sociedad", "Athletic Club": "Bilbao",
+  "Paris Saint-Germain": "PSG", "Olympique de Marseille": "OM", "Olympique Lyonnais": "OL",
+  "RC Strasbourg Alsace": "Strasbourg", "Stade Brestois 29": "Brest", "Stade Rennais F.C.": "Rennes",
+  "Manchester United FC": "Man Utd", "Manchester City FC": "Man City",
+  "Crystal Palace FC": "C. Palace", "Tottenham Hotspur FC": "Tottenham",
+  "West Ham United FC": "West Ham", "Brighton & Hove Albion FC": "Brighton",
+  "AFC Bournemouth": "Bournemouth", "Leicester City FC": "Leicester",
+  "Borussia Mönchengladbach": "M'gladbach", "Bayern München": "Bayern",
+  "Bayer 04 Leverkusen": "Leverkusen", "RB Leipzig": "Leipzig",
+  "TSG 1899 Hoffenheim": "Hoffenheim", "1. FC Union Berlin": "Union Berlin",
+  "1. FC Heidenheim 1846": "Heidenheim", "SC Freiburg": "Freiburg",
+  "FC Augsburg": "Augsburg", "SV Werder Bremen": "Bremen", "1. FSV Mainz 05": "Mainz",
+  "FC St. Pauli": "St. Pauli", "Atlético de Madrid": "Atletico", "Deportivo Alavés": "Alavés",
+};
+const sn = (name) => SHORT_NAMES[name] || name;
 
 const LG_META = {
   L1:     { name: "Ligue 1",        flag: "🇫🇷",  accent: "#4FC3F7" },
@@ -130,7 +153,8 @@ function Stars({ n }) {
   );
 }
 
-function PlayerCard({ player, isSelected, onClick, logos = {} }) {
+function PlayerCard({ player, isSelected, onClick, logos = {}, badge }) {
+  const displayPos = badge || player.position;
   const pc = PC[player.position];
   const conf = player.ds >= 75 ? 5 : player.ds >= 60 ? 4 : player.ds >= 50 ? 3 : player.ds >= 40 ? 2 : player.ds >= 30 ? 1 : 0;
 
@@ -172,20 +196,23 @@ function PlayerCard({ player, isSelected, onClick, logos = {} }) {
           <div style={{ position: "absolute", top: 0, left: 0, right: 0, height: 2, background: `linear-gradient(90deg, transparent 10%, ${pc}70 50%, transparent 90%)`, pointerEvents: "none" }} />
 
           {/* Position badge */}
-          <div style={{ background: `linear-gradient(135deg,${pc},${pc}CC)`, borderRadius: "3px", padding: "1px 6px", marginTop: "2px", fontSize: "7px", fontWeight: 800, color: "#fff", letterSpacing: "0.06em", position: "relative", zIndex: 1, boxShadow: `0 1px 4px ${pc}40` }}>{player.position}</div>
+          <div style={{ background: `linear-gradient(135deg,${pc},${pc}CC)`, borderRadius: "3px", padding: "1px 6px", marginTop: "2px", fontSize: "7px", fontWeight: 800, color: "#fff", letterSpacing: "0.06em", position: "relative", zIndex: 1, boxShadow: `0 1px 4px ${pc}40` }}>{displayPos}</div>
           {/* Score circle */}
           <div style={{ marginTop: "5px", display: "flex", alignItems: "center", justifyContent: "center", position: "relative", zIndex: 1 }}>
             <div style={{
-              width: 38, height: 38, borderRadius: "50%", background: dsBg(player.ds),
-              boxShadow: `0 2px 8px rgba(0,0,0,0.5), 0 0 12px ${dsColor(player.ds)}30`,
+              width: 38, height: 38, borderRadius: "50%",
+              background: isSilver(player.ds) ? "linear-gradient(135deg,#C0C0C0,#A8E8D0,#B0C4E8,#D4B0E8,#E0D0E8,#C0C0C0)" : dsBg(player.ds),
+              boxShadow: isSilver(player.ds) ? "0 0 12px rgba(180,200,232,0.5), 0 0 24px rgba(212,176,232,0.3)" : `0 2px 8px rgba(0,0,0,0.5), 0 0 12px ${dsColor(player.ds)}30`,
               display: "flex", alignItems: "center", justifyContent: "center",
-              fontFamily: "'DM Mono',monospace", fontSize: 16, fontWeight: 700, color: "#fff", border: "2px solid rgba(255,255,255,0.25)",
+              fontFamily: "'DM Mono',monospace", fontSize: 16, fontWeight: 700,
+              color: isSilver(player.ds) ? "#1a1a2e" : "#fff",
+              border: isSilver(player.ds) ? "2px solid rgba(255,255,255,0.6)" : "2px solid rgba(255,255,255,0.25)",
             }}>{player.ds}</div>
           </div>
           {/* Name */}
           <div style={{ fontSize: "12px", fontWeight: 700, color: "#fff", marginTop: "4px", letterSpacing: "-0.01em", lineHeight: 1.1, position: "relative", zIndex: 1, textShadow: "0 1px 4px rgba(0,0,0,0.5)" }}>{player.name.split(" ").pop()}</div>
           {/* Club name */}
-          <div style={{ fontSize: "8px", color: "rgba(255,255,255,0.4)", fontWeight: 500, marginTop: "2px", position: "relative", zIndex: 1, lineHeight: 1.15, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap", maxWidth: "100%", padding: "0 4px" }}>{player.club}</div>
+          <div style={{ fontSize: "8px", color: "rgba(255,255,255,0.4)", fontWeight: 500, marginTop: "2px", position: "relative", zIndex: 1, lineHeight: 1.15, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap", maxWidth: "100%", padding: "0 4px" }}>{sn(player.club)}</div>
           {/* Club logo */}
           {logos[player.club] && <img src={`/data/logos/${logos[player.club]}`} alt="" style={{ width: 26, height: 26, objectFit: "contain", marginTop: "3px", position: "relative", zIndex: 1, filter: "drop-shadow(0 1px 3px rgba(0,0,0,0.4))" }} />}
           {/* Mini histogram at bottom */}
@@ -200,7 +227,7 @@ function PlayerCard({ player, isSelected, onClick, logos = {} }) {
       <div style={{ marginTop: "4px", fontSize: "8px", color: "rgba(255,255,255,0.5)", display: "inline-flex", alignItems: "center", gap: "3px", background: "rgba(0,0,0,0.5)", padding: "2px 6px", borderRadius: "4px", backdropFilter: "blur(4px)" }}>
         <span style={{ fontSize: "10px", lineHeight: 1 }}>{player.isHome ? "🏠" : "✈️"}</span>
         {logos[player.oppName] && <img src={`/data/logos/${logos[player.oppName]}`} alt="" style={{ width: 10, height: 10, objectFit: "contain" }} />}
-        <span style={{ fontWeight: 600 }}>{player.oppName}</span>
+        <span style={{ fontWeight: 600 }}>{sn(player.oppName)}</span>
       </div>
     </div>
   );
@@ -310,59 +337,141 @@ function DetailPanel({ player, logos = {} }) {
   );
 }
 
+const MODES = [
+  { id: "so5", label: "SO5", desc: "Top 5 · 1 GK · 1 DEF · 1 MIL · 1 ATT · 1 Flex · Max 2/club" },
+  { id: "so7", label: "SO7", desc: "Top 7 · 1 GK · 2 DEF · 2 MIL · 2 ATT · Max 2/club (+2% bonus)" },
+  { id: "stack", label: "Stack", desc: "Meilleure équipe de 5 joueurs du même club" },
+];
+
 export default function RecoTab({ players, teams, fixtures, logos = {} }) {
   const [league, setLeague] = useState("L1");
+  const [mode, setMode] = useState("so7");
   const [sel, setSel] = useState(null);
+  const [stackIdx, setStackIdx] = useState(0);
 
   const hasFixtures = !!fixtures?.player_fixtures;
   const matchdays = fixtures?.matchdays || {};
 
-  const so7 = useMemo(() => {
+  // All scored players for this league (shared by all modes)
+  const allScored = useMemo(() => {
     const lgPlayers = players.filter(p => p.league === league && p.l5 >= 35);
     const lgTeams = teams.filter(t => t.league === league);
     if (!lgTeams.length) return [];
-
     const pf = fixtures?.player_fixtures || {};
-
-    const scored = lgPlayers.map(p => {
+    return lgPlayers.map(p => {
       const fx = pf[p.name];
-      if (!fx) return null; // No fixture = not available for this matchday
+      if (!fx) return null;
       const opp = lgTeams.find(t => t.name === fx.opp);
       if (!opp) return null;
-      const isHome = fx.isHome;
-      const ds = dScoreMatch(p, opp, isHome);
+      const ds = dScoreMatch(p, opp, fx.isHome);
       const pTeam = findTeam(lgTeams, p.club);
-      return { ...p, ds, oppName: opp.name, oppTeam: opp, playerTeam: pTeam, isHome };
+      return { ...p, ds, oppName: opp.name, oppTeam: opp, playerTeam: pTeam, isHome: fx.isHome };
     }).filter(Boolean).sort((a, b) => b.ds - a.ds);
-
-    const picks = [];
-    const quota = { GK: 1, DEF: 2, MIL: 2, ATT: 2 };
-    const counts = { GK: 0, DEF: 0, MIL: 0, ATT: 0 };
-    const clubCounts = {};
-    for (const p of scored) {
-      const cc = clubCounts[p.club] || 0;
-      if (counts[p.position] < quota[p.position] && cc < 2) {
-        picks.push(p);
-        counts[p.position]++;
-        clubCounts[p.club] = cc + 1;
-      }
-      if (picks.length >= 7) break;
-    }
-    return picks;
   }, [players, teams, league, fixtures]);
 
+  // Top 3 stacks for Stack mode
+  const top3Stacks = useMemo(() => {
+    const byClub = {};
+    for (const p of allScored) {
+      if (!byClub[p.club]) byClub[p.club] = [];
+      byClub[p.club].push(p);
+    }
+    const stacks = [];
+    for (const [club, pls] of Object.entries(byClub)) {
+      const result = [];
+      const counts = { GK: 0, DEF: 0, MIL: 0, ATT: 0 };
+      for (const p of pls) {
+        if (counts[p.position] < 1) {
+          result.push({ ...p, isFlex: false });
+          counts[p.position]++;
+        }
+        if (result.length >= 4) break;
+      }
+      if (result.length < 4) continue;
+      for (const p of pls) {
+        if (result.find(r => r.name === p.name)) continue;
+        if (p.position === "GK") continue;
+        result.push({ ...p, isFlex: true });
+        break;
+      }
+      if (result.length < 5) continue;
+      const avg = Math.round(result.reduce((s, p) => s + p.ds, 0) / 5 * 10) / 10;
+      stacks.push({ club, avg, players: result });
+    }
+    stacks.sort((a, b) => b.avg - a.avg);
+    return stacks.slice(0, 3);
+  }, [allScored]);
+
+  // Pick logic per mode
+  const picks = useMemo(() => {
+    if (mode === "so7") {
+      const result = [];
+      const quota = { GK: 1, DEF: 2, MIL: 2, ATT: 2 };
+      const counts = { GK: 0, DEF: 0, MIL: 0, ATT: 0 };
+      const clubCounts = {};
+      for (const p of allScored) {
+        const cc = clubCounts[p.club] || 0;
+        if (counts[p.position] < quota[p.position] && cc < 2) {
+          result.push(p);
+          counts[p.position]++;
+          clubCounts[p.club] = cc + 1;
+        }
+        if (result.length >= 7) break;
+      }
+      return result;
+    }
+    if (mode === "so5") {
+      const result = [];
+      const quota = { GK: 1, DEF: 1, MIL: 1, ATT: 1 };
+      const counts = { GK: 0, DEF: 0, MIL: 0, ATT: 0 };
+      const clubCounts = {};
+      // First pass: fill mandatory slots
+      for (const p of allScored) {
+        const cc = clubCounts[p.club] || 0;
+        if (counts[p.position] < quota[p.position] && cc < 2) {
+          result.push({ ...p, isFlex: false });
+          counts[p.position]++;
+          clubCounts[p.club] = cc + 1;
+        }
+        if (result.length >= 4) break;
+      }
+      // Second pass: flex = best remaining D-Score
+      for (const p of allScored) {
+        if (result.find(r => r.name === p.name)) continue;
+        const cc = clubCounts[p.club] || 0;
+        if (cc < 2) {
+          result.push({ ...p, isFlex: true });
+          break;
+        }
+      }
+      return result;
+    }
+    if (mode === "stack") {
+      return top3Stacks[stackIdx]?.players || [];
+    }
+    return [];
+  }, [allScored, mode, top3Stacks, stackIdx]);
+
   const lg = LG_META[league];
-  const gk = so7.filter(p => p.position === "GK");
-  const def = so7.filter(p => p.position === "DEF");
-  const mil = so7.filter(p => p.position === "MIL");
-  const att = so7.filter(p => p.position === "ATT");
+  const flex = (mode === "so5" || mode === "stack") ? picks.filter(p => p.isFlex) : [];
+  const gk = picks.filter(p => p.position === "GK" && !p.isFlex);
+  const def = picks.filter(p => p.position === "DEF" && !p.isFlex);
+  const mil = picks.filter(p => p.position === "MIL" && !p.isFlex);
+  const att = picks.filter(p => p.position === "ATT" && !p.isFlex);
 
   const selPlayer = sel ? (() => {
+    if (sel.startsWith("STACK")) {
+      const idx = parseInt(sel.replace("STACK", ""));
+      return picks[idx] || null;
+    }
     const pos = sel.replace(/\d/g, "");
     const idx = parseInt(sel.replace(/\D/g, ""));
-    const arr = pos === "GK" ? gk : pos === "DEF" ? def : pos === "MIL" ? mil : att;
+    const arr = pos === "FLEX" ? flex : pos === "GK" ? gk : pos === "DEF" ? def : pos === "MIL" ? mil : att;
     return arr[idx] || null;
   })() : null;
+
+  const modeInfo = MODES.find(m => m.id === mode);
+  const stackClub = mode === "stack" && picks.length > 0 ? picks[0].club : null;
 
   return (
     <div style={{ padding: "0 10px 40px", maxWidth: 480, margin: "0 auto" }}>
@@ -373,7 +482,7 @@ export default function RecoTab({ players, teams, fixtures, logos = {} }) {
       {/* League tabs */}
       <div style={{ display: "flex", gap: "4px", marginBottom: "14px" }}>
         {Object.entries(LG_META).map(([k, v]) => (
-          <button key={k} onClick={() => { setLeague(k); setSel(null); }} style={{
+          <button key={k} onClick={() => { setLeague(k); setSel(null); setStackIdx(0); }} style={{
             flex: 1, padding: "7px 2px", borderRadius: "8px", border: "none", cursor: "pointer",
             background: league === k ? "rgba(255,255,255,0.07)" : "rgba(255,255,255,0.015)",
             color: league === k ? "#fff" : "rgba(255,255,255,0.22)", fontSize: "11px",
@@ -385,15 +494,33 @@ export default function RecoTab({ players, teams, fixtures, logos = {} }) {
         ))}
       </div>
 
+      {/* Mode toggle */}
+      <div style={{ display: "flex", gap: "3px", marginBottom: "10px", background: "rgba(255,255,255,0.03)", borderRadius: "10px", padding: "3px", border: "1px solid rgba(255,255,255,0.06)" }}>
+        {MODES.map(m => (
+          <button key={m.id} onClick={() => { setMode(m.id); setSel(null); }} style={{
+            flex: 1, padding: "8px 4px", borderRadius: "8px", border: "none", cursor: "pointer",
+            background: mode === m.id ? "linear-gradient(135deg,rgba(99,102,241,0.2),rgba(168,85,247,0.2))" : "transparent",
+            color: mode === m.id ? "#fff" : "rgba(255,255,255,0.35)", fontSize: "12px",
+            fontWeight: mode === m.id ? 700 : 500, fontFamily: "Outfit",
+            outline: mode === m.id ? "1px solid rgba(99,102,241,0.4)" : "none", transition: "all 0.2s",
+          }}>
+            {m.id === "stack" ? "🏟️" : "⚡"} {m.label}
+          </button>
+        ))}
+      </div>
+
       {/* Title */}
       <div style={{ textAlign: "center", marginBottom: "8px" }}>
-        <div style={{ fontSize: "28px", fontWeight: 900, letterSpacing: "-0.03em", background: "linear-gradient(135deg,#fff 0%,#A5B4FC 40%,#C084FC 80%,#E879F9 100%)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent" }}>SO7 DEGLINGO</div>
+        <div style={{ fontSize: "26px", fontWeight: 900, letterSpacing: "-0.03em", background: "linear-gradient(135deg,#fff 0%,#A5B4FC 40%,#C084FC 80%,#E879F9 100%)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent" }}>
+          {mode === "stack" ? "STACK OF THE WEEK" : `BEST PICK ${mode.toUpperCase()}`}
+        </div>
         <div style={{ fontSize: "13px", fontWeight: 600, color: "rgba(255,255,255,0.45)", marginTop: "2px" }}>
           {lg.flag} {lg.name}{matchdays[league] ? ` · Journée ${matchdays[league]}` : ""}
+          {stackClub ? ` · ${stackClub}` : ""}
         </div>
         {!hasFixtures && <div style={{ fontSize: "9px", color: "rgba(255,150,50,0.5)", marginTop: "4px" }}>⚠ Pas de calendrier — adversaires simulés</div>}
-        <div style={{ fontSize: "10px", color: "rgba(255,255,255,0.55)", marginTop: "6px" }}>
-          Top 7 D-Score · 1 GK · 2 DEF · 2 MIL · 2 ATT · Max 2 joueurs/club (+2% bonus Sorare)
+        <div style={{ fontSize: "9px", color: "rgba(255,255,255,0.45)", marginTop: "5px" }}>
+          {modeInfo.desc}
         </div>
         <div style={{ fontSize: "9px", color: "#A5B4FC", marginTop: "3px" }}>
           👇 Clique sur une carte pour voir l'analyse détaillée du joueur
@@ -403,7 +530,7 @@ export default function RecoTab({ players, teams, fixtures, logos = {} }) {
       {/* PITCH */}
       <div style={{
         background: "radial-gradient(ellipse at 50% 0%,rgba(20,90,45,0.5) 0%,transparent 55%),radial-gradient(ellipse at 50% 100%,rgba(20,90,45,0.5) 0%,transparent 55%),linear-gradient(180deg,#0E3F20 0%,#0B3018 25%,#0D3B1E 50%,#0B3018 75%,#0E3F20 100%)",
-        borderRadius: "18px", padding: "20px 6px 24px", position: "relative", overflow: "hidden",
+        borderRadius: "18px", padding: mode === "so7" ? "20px 6px 24px" : "14px 6px 18px", position: "relative", overflow: "hidden",
         border: "1px solid rgba(255,255,255,0.07)", boxShadow: "0 12px 48px rgba(0,0,0,0.6)",
       }}>
         {/* Grid pattern */}
@@ -411,40 +538,112 @@ export default function RecoTab({ players, teams, fixtures, logos = {} }) {
         {/* Field border */}
         <div style={{ position: "absolute", left: "10px", right: "10px", bottom: "10px", top: "10px", borderBottom: "1px solid rgba(255,255,255,0.06)", borderLeft: "1px solid rgba(255,255,255,0.06)", borderRight: "1px solid rgba(255,255,255,0.06)", borderRadius: "0 0 12px 12px", pointerEvents: "none" }} />
         {/* Midline */}
-        <div style={{ position: "absolute", top: "38%", left: "14px", right: "14px", height: "1px", background: "rgba(255,255,255,0.05)", pointerEvents: "none" }} />
+        <div style={{ position: "absolute", top: "50%", left: "14px", right: "14px", height: "1px", background: "rgba(255,255,255,0.05)", pointerEvents: "none" }} />
         {/* Center circle */}
-        <div style={{ position: "absolute", top: "38%", left: "50%", transform: "translate(-50%,-50%)", width: 130, height: 130, borderRadius: "50%", border: "1px solid rgba(255,255,255,0.05)", pointerEvents: "none" }} />
+        <div style={{ position: "absolute", top: "50%", left: "50%", transform: "translate(-50%,-50%)", width: 130, height: 130, borderRadius: "50%", border: "1px solid rgba(255,255,255,0.05)", pointerEvents: "none" }} />
         {/* Watermark */}
-        <div style={{ position: "absolute", top: "38%", left: "50%", transform: "translate(-50%,-50%)", textAlign: "center", pointerEvents: "none", zIndex: 0 }}>
+        <div style={{ position: "absolute", top: "50%", left: "50%", transform: "translate(-50%,-50%)", textAlign: "center", pointerEvents: "none", zIndex: 0 }}>
           <div style={{ fontWeight: 900, fontSize: "32px", letterSpacing: "0.1em", lineHeight: 1, color: "rgba(255,255,255,0.05)", textTransform: "uppercase" }}>{lg.name}</div>
-          <div style={{ fontWeight: 900, fontSize: "18px", letterSpacing: "0.08em", lineHeight: 1.15, color: "rgba(255,255,255,0.06)", textTransform: "uppercase" }}>DEGLINGO<br />PICK<br />SORARE</div>
+          <div style={{ fontWeight: 900, fontSize: "18px", letterSpacing: "0.08em", lineHeight: 1.15, color: "rgba(255,255,255,0.06)", textTransform: "uppercase" }}>
+            {mode === "stack" ? "STACK\nOF THE\nWEEK".split("\n").map((l,i) => <span key={i}>{l}<br/></span>) : <>DEGLINGO<br/>BEST PICK<br/>{mode.toUpperCase()}</>}
+          </div>
         </div>
         {/* Penalty box bottom */}
         <div style={{ position: "absolute", bottom: "3%", left: "22%", right: "22%", height: "16%", borderTop: "1px solid rgba(255,255,255,0.05)", borderLeft: "1px solid rgba(255,255,255,0.05)", borderRight: "1px solid rgba(255,255,255,0.05)", borderRadius: "4px 4px 0 0", pointerEvents: "none" }} />
 
         {/* Formation */}
-        <div style={{ position: "relative", zIndex: 2, display: "flex", flexDirection: "column", gap: "18px", alignItems: "center" }}>
-          <div style={{ display: "flex", justifyContent: "center", gap: "80px" }}>
-            {att.map((p, i) => <PlayerCard key={i} player={p} isSelected={sel === `ATT${i}`} onClick={() => setSel(sel === `ATT${i}` ? null : `ATT${i}`)} logos={logos} />)}
+        {mode === "so7" ? (
+          /* SO7: classic 1-2-2-2 formation */
+          <div style={{ position: "relative", zIndex: 2, display: "flex", flexDirection: "column", gap: "18px", alignItems: "center" }}>
+            <div style={{ display: "flex", justifyContent: "center", gap: "80px" }}>
+              {att.map((p, i) => <PlayerCard key={i} player={p} isSelected={sel === `ATT${i}`} onClick={() => setSel(sel === `ATT${i}` ? null : `ATT${i}`)} logos={logos} />)}
+            </div>
+            <div style={{ width: "100%", display: "flex", justifyContent: "space-between", padding: "0 25px" }}>
+              {mil.map((p, i) => <PlayerCard key={i} player={p} isSelected={sel === `MIL${i}`} onClick={() => setSel(sel === `MIL${i}` ? null : `MIL${i}`)} logos={logos} />)}
+            </div>
+            <div style={{ width: "100%", display: "flex", justifyContent: "space-between", padding: "0 10px" }}>
+              {def.map((p, i) => <PlayerCard key={i} player={p} isSelected={sel === `DEF${i}`} onClick={() => setSel(sel === `DEF${i}` ? null : `DEF${i}`)} logos={logos} />)}
+            </div>
+            <div style={{ display: "flex", justifyContent: "center", marginTop: "-150px" }}>
+              {gk.map((p, i) => <PlayerCard key={i} player={p} isSelected={sel === `GK${i}`} onClick={() => setSel(sel === `GK${i}` ? null : `GK${i}`)} logos={logos} />)}
+            </div>
           </div>
-          <div style={{ width: "100%", display: "flex", justifyContent: "space-between", padding: "0 25px" }}>
-            {mil.map((p, i) => <PlayerCard key={i} player={p} isSelected={sel === `MIL${i}`} onClick={() => setSel(sel === `MIL${i}` ? null : `MIL${i}`)} logos={logos} />)}
+        ) : mode === "so5" ? (
+          /* SO5: Sorare layout — top: ATT + EX, bottom: DEF + GK + MIL */
+          <div style={{ position: "relative", zIndex: 2, display: "flex", flexDirection: "column", gap: "24px", alignItems: "center", padding: "10px 0" }}>
+            <div style={{ display: "flex", justifyContent: "center", gap: "40px" }}>
+              {att.map((p, i) => <PlayerCard key={i} player={p} isSelected={sel === `ATT${i}`} onClick={() => setSel(sel === `ATT${i}` ? null : `ATT${i}`)} logos={logos} />)}
+              {flex.map((p, i) => <PlayerCard key={i} player={p} isSelected={sel === `FLEX${i}`} onClick={() => setSel(sel === `FLEX${i}` ? null : `FLEX${i}`)} logos={logos} badge="EX" />)}
+            </div>
+            <div style={{ display: "flex", justifyContent: "center", gap: "20px", alignItems: "flex-start" }}>
+              {def.map((p, i) => <PlayerCard key={i} player={p} isSelected={sel === `DEF${i}`} onClick={() => setSel(sel === `DEF${i}` ? null : `DEF${i}`)} logos={logos} />)}
+              <div style={{ marginTop: "50px" }}>
+                {gk.map((p, i) => <PlayerCard key={i} player={p} isSelected={sel === `GK${i}`} onClick={() => setSel(sel === `GK${i}` ? null : `GK${i}`)} logos={logos} />)}
+              </div>
+              {mil.slice(0, 1).map((p, i) => <PlayerCard key={i} player={p} isSelected={sel === `MIL${i}`} onClick={() => setSel(sel === `MIL${i}` ? null : `MIL${i}`)} logos={logos} />)}
+            </div>
           </div>
-          <div style={{ display: "flex", justifyContent: "center", gap: "60px" }}>
-            {def.map((p, i) => <PlayerCard key={i} player={p} isSelected={sel === `DEF${i}`} onClick={() => setSel(sel === `DEF${i}` ? null : `DEF${i}`)} logos={logos} />)}
+        ) : (
+          /* Stack: same layout as SO5 — ATT + EX top, DEF + GK↓ + MIL bottom */
+          <div style={{ position: "relative", zIndex: 2, display: "flex", flexDirection: "column", gap: "24px", alignItems: "center", padding: "10px 0" }}>
+            <div style={{ display: "flex", justifyContent: "center", gap: "40px" }}>
+              {att.map((p, i) => <PlayerCard key={i} player={p} isSelected={sel === `ATT${i}`} onClick={() => setSel(sel === `ATT${i}` ? null : `ATT${i}`)} logos={logos} />)}
+              {flex.map((p, i) => <PlayerCard key={i} player={p} isSelected={sel === `FLEX${i}`} onClick={() => setSel(sel === `FLEX${i}` ? null : `FLEX${i}`)} logos={logos} badge="EX" />)}
+            </div>
+            <div style={{ display: "flex", justifyContent: "center", gap: "20px", alignItems: "flex-start" }}>
+              {def.map((p, i) => <PlayerCard key={i} player={p} isSelected={sel === `DEF${i}`} onClick={() => setSel(sel === `DEF${i}` ? null : `DEF${i}`)} logos={logos} />)}
+              <div style={{ marginTop: "50px" }}>
+                {gk.map((p, i) => <PlayerCard key={i} player={p} isSelected={sel === `GK${i}`} onClick={() => setSel(sel === `GK${i}` ? null : `GK${i}`)} logos={logos} />)}
+              </div>
+              {mil.slice(0, 1).map((p, i) => <PlayerCard key={i} player={p} isSelected={sel === `MIL${i}`} onClick={() => setSel(sel === `MIL${i}` ? null : `MIL${i}`)} logos={logos} />)}
+            </div>
           </div>
-          <div style={{ display: "flex", justifyContent: "center" }}>
-            {gk.map((p, i) => <PlayerCard key={i} player={p} isSelected={sel === `GK${i}`} onClick={() => setSel(sel === `GK${i}` ? null : `GK${i}`)} logos={logos} />)}
-          </div>
-        </div>
+        )}
       </div>
+
+      {/* Stack Podium — Top 3 */}
+      {mode === "stack" && top3Stacks.length > 0 && (
+        <div style={{ marginTop: "14px", background: "rgba(255,255,255,0.02)", borderRadius: "12px", border: "1px solid rgba(255,255,255,0.06)", overflow: "hidden" }}>
+          <div style={{ padding: "10px 14px 6px", fontSize: "9px", fontWeight: 800, color: "rgba(255,255,255,0.3)", letterSpacing: "0.12em", textTransform: "uppercase" }}>🏆 Top 3 Stack · {lg.flag} {lg.name}</div>
+          {top3Stacks.map((s, i) => {
+            const medal = ["🥇", "🥈", "🥉"][i];
+            const isActive = i === stackIdx;
+            return (
+              <div key={s.club} onClick={() => { setStackIdx(i); setSel(null); }}
+                style={{
+                  display: "flex", alignItems: "center", gap: "10px",
+                  padding: "10px 14px", cursor: "pointer", transition: "all 0.2s",
+                  background: isActive ? "rgba(99,102,241,0.1)" : "transparent",
+                  borderLeft: isActive ? "3px solid #6366F1" : "3px solid transparent",
+                  borderBottom: i < 2 ? "1px solid rgba(255,255,255,0.04)" : "none",
+                }}>
+                <span style={{ fontSize: "18px" }}>{medal}</span>
+                <div style={{ display: "flex", alignItems: "center", gap: "6px", minWidth: 0, flex: "0 0 auto" }}>
+                  {logos[s.club] && <img src={`/data/logos/${logos[s.club]}`} alt="" style={{ width: 20, height: 20, objectFit: "contain" }} />}
+                  <span style={{ fontSize: "13px", fontWeight: 700, color: isActive ? "#fff" : "rgba(255,255,255,0.7)" }}>{sn(s.club)}</span>
+                </div>
+                <div style={{ fontFamily: "'DM Mono',monospace", fontSize: "14px", fontWeight: 700, color: dsColor(s.avg), marginLeft: "auto", flexShrink: 0 }}>{s.avg}</div>
+                <div style={{ display: "flex", gap: "3px", flexShrink: 0 }}>
+                  {s.players.map((p, j) => (
+                    <div key={j} style={{
+                      fontSize: "8px", fontWeight: 700, padding: "2px 4px", borderRadius: "3px",
+                      background: `${PC[p.position]}20`, color: PC[p.position],
+                      border: `1px solid ${PC[p.position]}30`,
+                    }}>{p.ds}</div>
+                  ))}
+                </div>
+              </div>
+            );
+          })}
+        </div>
+      )}
 
       {/* Detail panel */}
       <DetailPanel player={selPlayer} logos={logos} />
 
       {/* CTA */}
       <div style={{ marginTop: "12px", padding: "18px", textAlign: "center", background: "linear-gradient(135deg,rgba(34,197,94,0.05),rgba(99,102,241,0.05))", border: "1px solid rgba(34,197,94,0.12)", borderRadius: "12px" }}>
-        <div style={{ fontSize: "14px", fontWeight: 700, marginBottom: "8px" }}>🎯 Joue ce SO7 sur Sorare</div>
+        <div style={{ fontSize: "14px", fontWeight: 700, marginBottom: "8px" }}>🎯 Joue ce {mode === "stack" ? "Stack" : mode.toUpperCase()} sur Sorare</div>
         <a href="http://sorare.pxf.io/Deglingo" target="_blank" rel="noopener noreferrer" style={{ display: "inline-block", padding: "10px 28px", borderRadius: "10px", background: "linear-gradient(135deg,#22C55E,#16A34A)", color: "#fff", fontSize: "13px", fontWeight: 700, textDecoration: "none", boxShadow: "0 4px 16px rgba(34,197,94,0.25)" }}>Créer mon compte →</a>
       </div>
     </div>

@@ -1,5 +1,5 @@
 import { useState, useMemo } from "react";
-import { dsColor, dsBg, POSITION_COLORS, LEAGUE_COLORS, LEAGUE_FLAGS, getArchetypeColor } from "../utils/colors";
+import { dsColor, dsBg, isSilver, POSITION_COLORS, LEAGUE_COLORS, LEAGUE_FLAGS, getArchetypeColor } from "../utils/colors";
 import { dScoreMatch, csProb, findTeam } from "../utils/dscore";
 import PlayerCard from "./PlayerCard";
 
@@ -125,8 +125,9 @@ export default function DbTab({ players, teams, fixtures, logos = {} }) {
   return (
     <div style={{ padding: "0 16px 20px" }}>
       <style>{`
-        @keyframes explosionPulse { 0%,100%{box-shadow:0 0 8px #4ADE80,0 0 20px #4ADE8088,0 0 40px #22C55E44} 50%{box-shadow:0 0 12px #4ADE80,0 0 28px #4ADE80AA,0 0 50px #22C55E66} }
+        @keyframes explosionPulse { 0%,100%{box-shadow:0 0 4px #4ADE8066,0 0 10px #4ADE8033} 50%{box-shadow:0 0 6px #4ADE8088,0 0 14px #4ADE8044} }
         @keyframes legendShimmer { 0%{background-position:-200% center} 100%{background-position:200% center} }
+        @keyframes silverShine { 0%{background-position:200% center} 100%{background-position:-200% center} }
       `}</style>
       {/* Filters */}
       <div style={{ display: "flex", flexWrap: "wrap", gap: 8, marginBottom: 12, alignItems: "center" }}>
@@ -190,10 +191,10 @@ export default function DbTab({ players, teams, fixtures, logos = {} }) {
       </div>
 
       {/* Table */}
-      <div style={{ overflowX: "auto", borderRadius: 12, border: "1px solid rgba(255,255,255,0.06)" }}>
+      <div style={{ overflowX: "auto", maxHeight: "75vh", overflowY: "auto", borderRadius: 12, border: "1px solid rgba(255,255,255,0.06)" }}>
         <table style={{ width: "100%", borderCollapse: "collapse", fontSize: 10, fontFamily: "Outfit" }}>
-          <thead>
-            <tr style={{ background: "rgba(255,255,255,0.02)" }}>
+          <thead style={{ position: "sticky", top: 0, zIndex: 10 }}>
+            <tr style={{ background: "#0C0C2D" }}>
               <th style={{ ...thStyle("name"), textAlign: "left", paddingLeft: 12, cursor: "default" }}>Joueur</th>
               <th style={{ ...thStyle("position"), cursor: "default" }}>Pos</th>
               <th style={{ ...thStyle("league"), cursor: "default" }}>Ligue</th>
@@ -260,8 +261,8 @@ export default function DbTab({ players, teams, fixtures, logos = {} }) {
                       fontFamily: "DM Mono", fontWeight: 700, fontSize: 12, color: isExplosion ? "#fff" : l2Color(p),
                       ...(isExplosion ? {
                         display: "inline-block", padding: "2px 6px", borderRadius: 6,
-                        background: "linear-gradient(135deg, #4ADE80, #22C55E)",
-                        boxShadow: "0 0 8px #4ADE80, 0 0 20px #4ADE8088, 0 0 40px #22C55E44",
+                        background: "linear-gradient(135deg, #4ADE8099, #22C55E88)",
+                        boxShadow: "0 0 4px #4ADE8044, 0 0 10px #4ADE8022",
                         animation: "explosionPulse 2s ease-in-out infinite",
                       } : {}),
                     }}>{R(p.l2)}</span>
@@ -285,8 +286,8 @@ export default function DbTab({ players, teams, fixtures, logos = {} }) {
                   <td style={{ textAlign: "center", fontFamily: "DM Mono", fontSize: 10, color: "rgba(255,255,255,0.3)" }}>{R(p.aa5)}</td>
                   <td style={{ textAlign: "center", fontFamily: "DM Mono", fontWeight: 700, fontSize: 14, color: dsColor(p.l10), borderLeft: "1px solid rgba(255,255,255,0.04)" }}>{R(p.l10)}</td>
                   <td style={{ textAlign: "center", fontFamily: "DM Mono", fontSize: 10, color: "rgba(255,255,255,0.3)" }}>{R(p.aa10)}</td>
-                  <td style={{ textAlign: "center", fontFamily: "DM Mono", fontSize: 11, color: dsColor(p.min_15), borderLeft: "1px solid rgba(255,255,255,0.04)" }}>{R(p.min_15)}</td>
-                  <td style={{ textAlign: "center", fontFamily: "DM Mono", fontSize: 11, color: dsColor(p.max_15) }}>{R(p.max_15)}</td>
+                  <td style={{ textAlign: "center", fontFamily: "DM Mono", fontSize: 10, color: "rgba(255,255,255,0.3)", borderLeft: "1px solid rgba(255,255,255,0.04)" }}>{R(p.min_15)}</td>
+                  <td style={{ textAlign: "center", fontFamily: "DM Mono", fontSize: 10, color: "rgba(255,255,255,0.3)" }}>{R(p.max_15)}</td>
                   <td style={{ textAlign: "center", fontFamily: "DM Mono", fontSize: 11, color: (p.reg10 ?? p.regularite) >= 80 ? "#4ADE80" : (p.reg10 ?? p.regularite) >= 50 ? "#FBBF24" : "#EF4444", borderLeft: "1px solid rgba(255,255,255,0.04)" }}>{R(p.reg10 ?? p.regularite)}%</td>
                   <td style={{ textAlign: "center", fontFamily: "DM Mono", fontSize: 11, color: p.titu_pct >= 80 ? "#4ADE80" : p.titu_pct >= 50 ? "#FBBF24" : "#EF4444" }}>{R(p.titu_pct)}%</td>
                   {hasFixtures && <>
@@ -295,8 +296,12 @@ export default function DbTab({ players, teams, fixtures, logos = {} }) {
                         <span style={{
                           display: "inline-block", padding: "3px 8px", borderRadius: 8,
                           fontFamily: "DM Mono", fontSize: 12, fontWeight: 700,
-                          color: "#fff", background: dsBg(p.dsMatch),
-                          boxShadow: `0 0 8px ${dsColor(p.dsMatch)}30`,
+                          color: isSilver(p.dsMatch) ? "#1a1a2e" : "#fff",
+                          background: isSilver(p.dsMatch) ? "linear-gradient(90deg,#C0C0C0,#A8E8D0,#B0C4E8,#D4B0E8,#E0D0E8,#fff,#D4B0E8,#B0C4E8,#A8E8D0,#C0C0C0)" : dsBg(p.dsMatch),
+                          backgroundSize: isSilver(p.dsMatch) ? "200% 100%" : "auto",
+                          animation: isSilver(p.dsMatch) ? "silverShine 3s linear infinite" : "none",
+                          boxShadow: isSilver(p.dsMatch) ? "0 0 10px rgba(255,255,255,0.4), 0 0 20px rgba(200,200,200,0.2)" : `0 0 8px ${dsColor(p.dsMatch)}30`,
+                          border: isSilver(p.dsMatch) ? "1px solid rgba(255,255,255,0.5)" : "none",
                         }}>{p.dsMatch}</span>
                       ) : (
                         <span style={{ fontSize: 9, color: "rgba(255,255,255,0.15)" }}>—</span>

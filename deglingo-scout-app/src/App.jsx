@@ -6,7 +6,7 @@ import RecoTab from "./components/RecoTab";
 const TABS = [
   { id: "db", label: "Database", icon: "📊" },
   { id: "fight", label: "Fight", icon: "🥊" },
-  { id: "reco", label: "Reco SO7", icon: "⚽" },
+  { id: "reco", label: "Best Pick", icon: "⚽" },
 ];
 
 export default function App() {
@@ -50,12 +50,22 @@ export default function App() {
     }}>Erreur: {error}</div>
   );
 
+  const silverShinyStyle = {
+    background: "linear-gradient(90deg,#C0C0C0,#A8E8D0,#B0C4E8,#D4B0E8,#E0D0E8,#fff,#D4B0E8,#B0C4E8,#A8E8D0,#C0C0C0)",
+    backgroundSize: "200% 100%",
+    WebkitBackgroundClip: "text",
+    WebkitTextFillColor: "transparent",
+    backgroundClip: "text",
+    animation: "silverShine 3s linear infinite",
+  };
+
   return (
     <div style={{
       minHeight: "100vh",
       background: "linear-gradient(170deg, #04040F, #080820 25%, #0C0C2D 50%, #0A0A22 75%, #060612)",
       color: "#ffffff", fontFamily: "'Outfit', sans-serif",
     }}>
+      <style>{`@keyframes silverShine { 0%{background-position:200% center} 100%{background-position:-200% center} }`}</style>
       {/* Header */}
       <header style={{
         position: "sticky", top: 0, zIndex: 100,
@@ -66,12 +76,12 @@ export default function App() {
           display: "flex", alignItems: "center", justifyContent: "space-between",
           maxWidth: 1000, margin: "0 auto",
         }}>
-          <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
-            <span style={{ fontSize: 22 }}>⚽</span>
+          <div style={{ display: "flex", alignItems: "center", gap: 4 }}>
+            <img src="/logo.png" alt="Deglingo Scout" style={{ width: 32, height: 32, objectFit: "contain" }} />
             <div>
-              <div style={{ fontSize: 16, fontWeight: 800, letterSpacing: "-0.5px" }}>DEGLINGO SCOUT</div>
+              <div style={{ fontSize: 16, fontWeight: 800, letterSpacing: "-0.5px", ...silverShinyStyle }}>DEGLINGO SCOUT</div>
               <div style={{ fontSize: 9, color: "rgba(255,255,255,0.3)", letterSpacing: "2px", textTransform: "uppercase" }}>
-                Sorare SO7 Analytics
+                Sorare Analytics
               </div>
             </div>
           </div>
@@ -86,9 +96,14 @@ export default function App() {
                   padding: "6px 14px", borderRadius: 10, fontSize: 12, fontWeight: 600,
                   border: "none", cursor: "pointer", fontFamily: "Outfit",
                   background: tab === t.id ? "rgba(99,102,241,0.12)" : "transparent",
-                  color: tab === t.id ? "#A5B4FC" : "rgba(255,255,255,0.4)",
                   outline: tab === t.id ? "1px solid rgba(99,102,241,0.3)" : "none",
                   transition: "all 0.2s",
+                  ...(tab === t.id && t.id === "reco" ? {
+                    ...silverShinyStyle,
+                    WebkitTextFillColor: "transparent",
+                  } : {
+                    color: tab === t.id ? "#A5B4FC" : "rgba(255,255,255,0.4)",
+                  }),
                 }}
               >
                 {t.icon} {t.label}

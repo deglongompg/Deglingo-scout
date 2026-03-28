@@ -26,6 +26,36 @@ export default function DbTab({ players, teams, fixtures, logos = {} }) {
   const [sortKey, setSortKey] = useState(fixtures?.player_fixtures ? "dsMatch" : "l2");
   const [sortDir, setSortDir] = useState(-1);
   const [selectedPlayer, setSelectedPlayer] = useState(null);
+  const [visibleCount, setVisibleCount] = useState(30);
+  const [statCols, setStatCols] = useState([]);
+
+  // Toggleable individual stat columns — 5 sections like Sorare AA
+  const STAT_DEFS = [
+    // DÉFENSE
+    { key: "aa_defending", label: "AA Défense (pts)", short: "AA Def", cat: "DEF", isCat: true },
+    { key: "avg_won_tackle", label: "Tacles/match", short: "Tac", cat: "DEF" },
+    { key: "avg_effective_clearance", label: "Dégagements/match", short: "Clr", cat: "DEF" },
+    { key: "avg_blocked_scoring_attempt", label: "Tirs bloqués/match", short: "Blk", cat: "DEF" },
+    // POSSESSION
+    { key: "aa_possession", label: "AA Possession (pts)", short: "AA Pos", cat: "POSS", isCat: true },
+    { key: "avg_interception_won", label: "Interceptions/match", short: "Int", cat: "POSS" },
+    { key: "avg_duel_won", label: "Duels gagnés/match", short: "Duel", cat: "POSS" },
+    { key: "avg_ball_recovery", label: "Récupérations/match", short: "Rec", cat: "POSS" },
+    { key: "avg_won_contest", label: "Contests gagnés/match", short: "Con", cat: "POSS" },
+    // PASSES
+    { key: "aa_passing", label: "AA Passes (pts)", short: "AA Pas", cat: "PASS", isCat: true },
+    { key: "avg_accurate_pass", label: "Passes précises/match", short: "Pass", cat: "PASS" },
+    { key: "avg_successful_final_third_passes", label: "Passes 1/3 final/match", short: "FTP", cat: "PASS" },
+    { key: "avg_big_chance_created", label: "Grosses occas./match", short: "BCC", cat: "PASS" },
+    { key: "avg_accurate_long_balls", label: "Longs ballons/match", short: "Long", cat: "PASS" },
+    // ATTAQUE
+    { key: "aa_attacking", label: "AA Attaque (pts)", short: "AA Att", cat: "ATT", isCat: true },
+    { key: "avg_ontarget_scoring_att", label: "Tirs cadrés/match", short: "TiC", cat: "ATT" },
+    { key: "avg_successful_dribble", label: "Dribbles réussis/match", short: "Dri", cat: "ATT" },
+    { key: "avg_pen_area_entries", label: "Entrées surface/match", short: "Surf", cat: "ATT" },
+    { key: "avg_was_fouled", label: "Fautes subies/match", short: "Foul", cat: "ATT" },
+  ];
+  const toggleStat = (key) => setStatCols(prev => prev.includes(key) ? prev.filter(k => k !== key) : [...prev, key]);
 
   const clubs = useMemo(() => {
     const list = league === "ALL" ? players : players.filter(p => p.league === league);
@@ -51,10 +81,10 @@ export default function DbTab({ players, teams, fixtures, logos = {} }) {
   const enriched = useMemo(() => {
     const pf = fixtures?.player_fixtures || {};
     return players.map(p => {
-      const fx = pf[p.name];
-      const base = { ...p, reg10: p.reg10 ?? p.regularite, ds10: p.ds10 ?? p.ds_rate };
+      const fx = pf[p.slug] || pf[p.name];
+      const base = { ...p, reg10: p.reg10 ?? p.regularite, ds10: p.ds10 ?? p.ds_rate, ga_season: (p.goals || 0) + (p.assists || 0) };
       if (!fx) return { ...base, dsMatch: null, oppName: null, isHome: null, matchday: null, csPercent: null };
-      const oppTeam = teams?.find(t => t.name === fx.opp);
+      const oppTeam = findTeam(teams, fx.opp);
       const playerTeam = findTeam(teams, p.club);
       const ds = oppTeam ? dScoreMatch(p, oppTeam, fx.isHome, playerTeam) : null;
       let csPercent = null;
@@ -154,30 +184,30 @@ export default function DbTab({ players, teams, fixtures, logos = {} }) {
       <div style={{ display: "flex", flexWrap: "wrap", gap: 8, marginBottom: 12, alignItems: "center" }}>
         <input
           placeholder="🔍 Joueur ou club..."
-          value={search} onChange={e => setSearch(e.target.value)}
+          value={search} onChange={e => { setSearch(e.target.value); setVisibleCount(30); }}
           style={{ ...sel({ flex: "1 1 180px", minWidth: 140 }) }}
         />
-        <select value={league} onChange={e => { setLeague(e.target.value); setClub("ALL"); }} style={sel({ flex: "1 1 0", minWidth: 0 })}>
+        <select value={league} onChange={e => { setLeague(e.target.value); setClub("ALL"); setVisibleCount(30); }} style={sel({ flex: "1 1 0", minWidth: 0 })}>
           <option value="ALL">Ligue</option>
           {["L1", "PL", "Liga", "Bundes"].map(l => (
             <option key={l} value={l}>{LEAGUE_FLAGS[l]} {l}</option>
           ))}
         </select>
-        <select value={club} onChange={e => setClub(e.target.value)} style={sel({ flex: "1 1 0", minWidth: 0 })}>
+        <select value={club} onChange={e => { setClub(e.target.value); setVisibleCount(30); }} style={sel({ flex: "1 1 0", minWidth: 0 })}>
           <option value="ALL">Club</option>
           {clubs.map(c => <option key={c} value={c}>{shortName(c)}</option>)}
         </select>
-        <select value={pos} onChange={e => setPos(e.target.value)} style={sel({ flex: "1 1 0", minWidth: 0 })}>
+        <select value={pos} onChange={e => { setPos(e.target.value); setVisibleCount(30); }} style={sel({ flex: "1 1 0", minWidth: 0 })}>
           <option value="ALL">Poste</option>
           {["GK", "DEF", "MIL", "ATT"].map(p => (
             <option key={p} value={p}>{p}</option>
           ))}
         </select>
-        <select value={arch} onChange={e => setArch(e.target.value)} style={sel({ flex: "1 1 0", minWidth: 0 })}>
+        <select value={arch} onChange={e => { setArch(e.target.value); setVisibleCount(30); }} style={sel({ flex: "1 1 0", minWidth: 0 })}>
           <option value="ALL">Profil</option>
           {archetypes.map(a => <option key={a} value={a}>{a}</option>)}
         </select>
-        <select value={minL10} onChange={e => setMinL10(Number(e.target.value))} style={sel({ flex: "1 1 0", minWidth: 0 })}>
+        <select value={minL10} onChange={e => { setMinL10(Number(e.target.value)); setVisibleCount(30); }} style={sel({ flex: "1 1 0", minWidth: 0 })}>
           <option value={-1}>L10 CAP</option>
           <option value={0}>L10 = 0 (CAP 260)</option>
           {[30, 40, 50, 55, 60, 65, 70].map(v => (
@@ -215,13 +245,50 @@ export default function DbTab({ players, teams, fixtures, logos = {} }) {
         </div>
       </div>
 
+      {/* Stat columns toggle — Sorare daily missions */}
+      <div style={{ marginBottom: 8, display: "flex", flexWrap: "wrap", gap: 4, alignItems: "center" }}>
+        {(() => {
+          const CAT_ORDER = ["DEF", "POSS", "PASS", "ATT"];
+          const CAT_LABELS = { DEF: "🛡️ DEF", POSS: "🔄 POSS", PASS: "🎯 PASS", ATT: "⚔️ ATT" };
+          const CAT_COLORS = { DEF: "#60A5FA", POSS: "#FBBF24", PASS: "#4ADE80", ATT: "#F87171" };
+          return CAT_ORDER.map(cat => {
+            const stats = STAT_DEFS.filter(s => s.cat === cat);
+            const catColor = CAT_COLORS[cat];
+            return (
+              <div key={cat} style={{ display: "flex", alignItems: "center", gap: 3, marginRight: 6, padding: "3px 6px", borderRadius: 8, border: "1px solid rgba(255,255,255,0.08)", background: "rgba(255,255,255,0.02)" }}>
+                <span style={{ fontSize: 9, color: catColor, fontWeight: 700, marginRight: 2, opacity: 0.7 }}>{CAT_LABELS[cat]}</span>
+                {stats.map(s => {
+                  const active = statCols.includes(s.key);
+                  return (
+                    <button key={s.key} onClick={() => toggleStat(s.key)} title={s.label}
+                      style={{
+                        padding: "2px 7px", borderRadius: 6, fontSize: 10, fontWeight: 600, cursor: "pointer",
+                        border: active ? `1px solid ${catColor}` : "1px solid rgba(255,255,255,0.08)",
+                        background: active ? `${catColor}22` : "rgba(255,255,255,0.03)",
+                        color: active ? catColor : "rgba(255,255,255,0.3)",
+                        transition: "all 0.15s",
+                      }}>
+                      {s.short}
+                    </button>
+                  );
+                })}
+              </div>
+            );
+          });
+        })()}
+        {statCols.length > 0 && (
+          <button onClick={() => setStatCols([])} style={{ padding: "2px 8px", borderRadius: 6, fontSize: 9, cursor: "pointer", border: "1px solid rgba(239,68,68,0.3)", background: "rgba(239,68,68,0.1)", color: "#EF4444" }}>✕ Reset</button>
+        )}
+      </div>
+
       {/* Table */}
       <div style={{ overflowX: "auto", maxHeight: "75vh", overflowY: "auto", borderRadius: 12, border: "1px solid rgba(255,255,255,0.06)" }}>
-        <table style={{ width: "100%", borderCollapse: "collapse", fontSize: 10, fontFamily: "Outfit" }}>
+        <table style={{ width: "100%", borderCollapse: "collapse", fontSize: 12, fontFamily: "Outfit" }}>
           <thead style={{ position: "sticky", top: 0, zIndex: 10 }}>
             <tr style={{ background: "#0C0C2D" }}>
               <th style={{ ...thStyle("name"), textAlign: "left", paddingLeft: 12, cursor: "default" }}>Joueur</th>
               <th style={{ ...thStyle("position"), cursor: "default" }}>Pos</th>
+              <th style={thStyle("ga_season")} onClick={() => toggleSort("ga_season")}>G+A{arrow("ga_season")}</th>
               <th style={{ ...thStyle("league"), cursor: "default" }}>Ligue</th>
               <th style={{ ...thStyle("l2"), background: sortKey === "l2" ? "rgba(74,222,128,0.06)" : "transparent" }} onClick={() => toggleSort("l2")}>L2{arrow("l2")}</th>
               <th style={thStyle("aa2")} onClick={() => toggleSort("aa2")}>AA2{arrow("aa2")}</th>
@@ -245,10 +312,20 @@ export default function DbTab({ players, teams, fixtures, logos = {} }) {
               <th style={thStyle("price_rare")} onClick={() => toggleSort("price_rare")}>R€{arrow("price_rare")}</th>
               <th style={{ ...thStyle("archetype"), cursor: "default" }}>Archétype</th>
               <th style={{ ...thStyle("aaProfile"), cursor: "default" }}>Profil AA</th>
+              {(() => {
+                const CAT_COLORS = { GEN: "#A78BFA", DEF: "#60A5FA", POSS: "#FBBF24", PASS: "#4ADE80", ATT: "#F87171" };
+                const ordered = STAT_DEFS.filter(s => statCols.includes(s.key));
+                let lastCat = null;
+                return ordered.map(def => {
+                  const isNewSection = def.cat !== lastCat;
+                  lastCat = def.cat;
+                  return <th key={def.key} style={{ ...thStyle(def.key), borderLeft: isNewSection ? "2px solid " + CAT_COLORS[def.cat] + "55" : "1px solid rgba(255,255,255,0.04)", color: CAT_COLORS[def.cat] }} onClick={() => toggleSort(def.key)}>{def.short}{arrow(def.key)}</th>;
+                });
+              })()}
             </tr>
           </thead>
           <tbody>
-            {filtered.slice(0, 100).map((p, i) => {
+            {filtered.slice(0, visibleCount).map((p, i) => {
               const l2Diff = (p.l2 || 0) - (p.l5 || 0);
               const isExplosion = l2Diff >= 15;
               return (
@@ -263,10 +340,10 @@ export default function DbTab({ players, teams, fixtures, logos = {} }) {
                   onMouseEnter={e => e.currentTarget.style.background = "rgba(99,102,241,0.08)"}
                   onMouseLeave={e => e.currentTarget.style.background = isExplosion ? "rgba(74,222,128,0.03)" : i % 2 === 0 ? "transparent" : "rgba(255,255,255,0.01)"}
                 >
-                  <td style={{ padding: "6px 2px 6px 8px", maxWidth: 150, overflow: "hidden" }}>
-                    <div style={{ fontWeight: 600, color: "#fff", fontSize: 11, whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>{countryFlag(p.country)} {p.name}</div>
-                    <div style={{ fontSize: 9, color: "rgba(255,255,255,0.4)", marginTop: 1, display: "flex", alignItems: "center", gap: 2, whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>
-                      {logos[p.club] && <img src={`/data/logos/${logos[p.club]}`} alt="" style={{ width: 10, height: 10, objectFit: "contain" }} />}
+                  <td style={{ padding: "7px 2px 7px 8px", maxWidth: 170, overflow: "hidden" }}>
+                    <div style={{ fontWeight: 600, color: "#fff", fontSize: 13, whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>{countryFlag(p.country)} {p.name}</div>
+                    <div style={{ fontSize: 10, color: "rgba(255,255,255,0.4)", marginTop: 1, display: "flex", alignItems: "center", gap: 2, whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>
+                      {logos[p.club] && <img src={`/data/logos/${logos[p.club]}`} alt="" style={{ width: 12, height: 12, objectFit: "contain" }} />}
                       {shortName(p.club)}
                     </div>
                   </td>
@@ -275,6 +352,17 @@ export default function DbTab({ players, teams, fixtures, logos = {} }) {
                       padding: "2px 6px", borderRadius: 12, fontSize: 9, fontWeight: 600,
                       background: `${POSITION_COLORS[p.position]}18`, color: POSITION_COLORS[p.position],
                     }}>{p.position}</span>
+                  </td>
+                  <td style={{ textAlign: "center", fontFamily: "DM Mono", fontSize: 11 }}>
+                    {p.goals > 0 || p.assists > 0 ? (
+                      <span>
+                        {p.goals > 0 && <span style={{ color: "#4ADE80", fontWeight: 700 }}>{p.goals}G</span>}
+                        {p.goals > 0 && p.assists > 0 && <span style={{ color: "rgba(255,255,255,0.2)" }}> </span>}
+                        {p.assists > 0 && <span style={{ color: "#FBBF24", fontWeight: 600 }}>{p.assists}A</span>}
+                      </span>
+                    ) : (
+                      <span style={{ color: "rgba(255,255,255,0.12)" }}>—</span>
+                    )}
                   </td>
                   <td style={{ textAlign: "center" }}>
                     <span style={{
@@ -295,18 +383,23 @@ export default function DbTab({ players, teams, fixtures, logos = {} }) {
                   </td>
                   <td style={{ textAlign: "center", fontFamily: "DM Mono", fontSize: 10, color: "rgba(255,255,255,0.3)" }}>{R(p.aa2)}</td>
                   <td style={{ borderLeft: "1px solid rgba(255,255,255,0.04)", padding: "4px 2px", verticalAlign: "middle" }}>
-                    {p.last_5 && p.last_5.length > 0 ? (
-                      <div style={{ display: "flex", alignItems: "flex-end", gap: 1, height: 22, justifyContent: "center" }}>
-                        {p.last_5.slice().reverse().map((v, j) => (
-                          <div key={j} style={{
-                            width: 4, borderRadius: 1,
-                            height: Math.max(2, (v / 100) * 22),
-                            background: dsColor(v),
-                            opacity: 0.85,
-                          }} />
-                        ))}
-                      </div>
-                    ) : <span style={{ fontSize: 9, color: "rgba(255,255,255,0.15)" }}>—</span>}
+                    {p.last_5 && p.last_5.length > 0 ? (() => {
+                      const arr = p.last_5.slice(-5).reverse();
+                      const pad = 5 - arr.length;
+                      const slots = Array.from({ length: 5 }, (_, j) => j < pad ? null : arr[j - pad]);
+                      return (
+                        <div style={{ display: "flex", alignItems: "flex-end", gap: 1, height: 22 }}>
+                          {slots.map((v, j) => (
+                            <div key={j} style={{
+                              width: 4, borderRadius: 1,
+                              height: v != null && v > 0 ? Math.max(2, (v / 100) * 22) : v === 0 ? 2 : 0,
+                              background: v != null && v > 0 ? dsColor(v) : v === 0 ? "rgba(239,68,68,0.5)" : "transparent",
+                              opacity: v != null && v > 0 ? 0.85 : 0.7,
+                            }} />
+                          ))}
+                        </div>
+                      );
+                    })() : <span style={{ fontSize: 9, color: "rgba(255,255,255,0.15)" }}>—</span>}
                   </td>
                   <td style={{ textAlign: "center", fontFamily: "DM Mono", fontSize: 10, color: "rgba(255,255,255,0.35)" }}>{R(p.l5)}</td>
                   <td style={{ textAlign: "center", fontFamily: "DM Mono", fontSize: 10, color: "rgba(255,255,255,0.3)" }}>{R(p.aa5)}</td>
@@ -321,7 +414,7 @@ export default function DbTab({ players, teams, fixtures, logos = {} }) {
                       {p.dsMatch !== null ? (
                         <span style={{
                           display: "inline-block", padding: "3px 8px", borderRadius: 8,
-                          fontFamily: "DM Mono", fontSize: 12, fontWeight: 700,
+                          fontFamily: "DM Mono", fontSize: 14, fontWeight: 700,
                           color: isSilver(p.dsMatch) ? "#1a1a2e" : "#fff",
                           background: isSilver(p.dsMatch) ? "linear-gradient(90deg,#C0C0C0,#A8E8D0,#B0C4E8,#D4B0E8,#E0D0E8,#fff,#D4B0E8,#B0C4E8,#A8E8D0,#C0C0C0)" : dsBg(p.dsMatch),
                           backgroundSize: isSilver(p.dsMatch) ? "200% 100%" : "auto",
@@ -381,6 +474,21 @@ export default function DbTab({ players, teams, fixtures, logos = {} }) {
                       }}>{pr.emoji} {pr.label}</span>;
                     })()}
                   </td>
+                  {(() => {
+                    const CAT_COLORS = { GEN: "#A78BFA", DEF: "#60A5FA", POSS: "#FBBF24", PASS: "#4ADE80", ATT: "#F87171" };
+                    const ordered = STAT_DEFS.filter(s => statCols.includes(s.key));
+                    let lastCat = null;
+                    return ordered.map(def => {
+                      const val = p[def.key];
+                      const isNewSection = def.cat !== lastCat;
+                      lastCat = def.cat;
+                      const catColor = CAT_COLORS[def.cat];
+                      const hasVal = val != null && val !== undefined;
+                      const isGen = def.cat === "GEN";
+                      const displayColor = !hasVal ? "rgba(255,255,255,0.15)" : isGen ? (val < -5 ? "#EF4444" : val < 0 ? "#FBBF24" : "#4ADE80") : val > 0 ? catColor : "rgba(255,255,255,0.2)";
+                      return <td key={def.key} style={{ textAlign: "center", fontFamily: "DM Mono", fontSize: 11, fontWeight: 600, color: displayColor, borderLeft: isNewSection ? `2px solid ${catColor}55` : "1px solid rgba(255,255,255,0.04)" }}>{hasVal ? val.toFixed(1) : "—"}</td>;
+                    });
+                  })()}
                 </tr>
               );
             })}
@@ -388,9 +496,22 @@ export default function DbTab({ players, teams, fixtures, logos = {} }) {
         </table>
       </div>
 
-      {filtered.length > 100 && (
-        <div style={{ textAlign: "center", padding: 12, fontSize: 11, color: "rgba(255,255,255,0.3)" }}>
-          Affichage limité à 100 joueurs — affine tes filtres
+      {filtered.length > 0 && (
+        <div style={{ textAlign: "center", padding: 12 }}>
+          <span style={{ fontSize: 11, color: "rgba(255,255,255,0.3)" }}>
+            {Math.min(visibleCount, filtered.length)} / {filtered.length} joueurs
+          </span>
+          {visibleCount < filtered.length && (
+            <button
+              onClick={() => setVisibleCount(v => v + 30)}
+              style={{
+                marginLeft: 12, padding: "6px 18px", borderRadius: 8, border: "1px solid rgba(99,102,241,0.3)",
+                background: "rgba(99,102,241,0.1)", color: "#818CF8", fontSize: 11, fontWeight: 600, cursor: "pointer",
+              }}
+            >
+              Voir +30
+            </button>
+          )}
         </div>
       )}
 

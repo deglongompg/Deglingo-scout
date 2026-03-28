@@ -164,6 +164,10 @@ PLAYER_CLUB_MAP = {
     "FC Metz": "Metz",
     "RC Lens": "Lens",
     "Paris FC": "Paris FC",
+    "Stade Rennais F.C.": "Rennes",
+    "AS Saint-Étienne": "Saint-Etienne",
+    "Montpellier HSC": "Montpellier",
+    "Stade de Reims": "Reims",
     # Premier League
     "Arsenal FC": "Arsenal",
     "Manchester City FC": "Manchester City",
@@ -197,7 +201,9 @@ PLAYER_CLUB_MAP = {
     "Getafe CF": "Getafe",
     "CA Osasuna": "Osasuna",
     "D. Alavés": "Alaves",
+    "Atlético de Madrid": "Atletico Madrid",
     "RCD Mallorca": "Mallorca",
+    "RC Celta": "Celta Vigo",
     "Sevilla FC": "Sevilla",
     "RC Celta": "Celta Vigo",
     "Rayo Vallecano": "Rayo Vallecano",
@@ -225,6 +231,10 @@ PLAYER_CLUB_MAP = {
     "Borussia Mönchengladbach": "Borussia M.Gladbach",
     "FC St. Pauli": "St. Pauli",
     "Hamburger SV": "Hamburger SV",
+    "1. FC Heidenheim 1846": "FC Heidenheim",
+    "1. FC Köln": "FC Cologne",
+    "1. FC Union Berlin": "Union Berlin",
+    "1. FSV Mainz 05": "Mainz 05",
 }
 
 def fetch(endpoint):
@@ -329,24 +339,41 @@ def build_player_fixtures(fixtures, teams, players):
         if mapped in club_fixture:
             club_key = mapped
         else:
-            # Fuzzy: try partial matching
+            # Fuzzy: try partial matching — pick the BEST match (longest overlap)
+            best_fk = None
+            best_score = 0
             for fk in club_fixture:
-                if fk.lower() in player_club.lower() or player_club.lower() in fk.lower():
-                    club_key = fk
-                    break
-                # Try first word match
-                if fk.split()[0].lower() == player_club.split()[0].lower() and len(fk.split()[0]) > 3:
-                    club_key = fk
-                    break
+                fk_l = fk.lower()
+                pc_l = player_club.lower()
+                mapped_l = mapped.lower()
+                # Exact substring match (both directions)
+                if fk_l in pc_l or pc_l in fk_l or fk_l in mapped_l or mapped_l in fk_l:
+                    score = max(len(fk_l), len(pc_l))  # longer match = better
+                    if score > best_score:
+                        best_score = score
+                        best_fk = fk
+                # Two-word prefix match (avoids "Manchester" matching both clubs)
+                fk_words = fk_l.split()
+                pc_words = pc_l.split()
+                if len(fk_words) >= 2 and len(pc_words) >= 2:
+                    if fk_words[0] == pc_words[0] and fk_words[1] == pc_words[1]:
+                        score = len(fk_l) + 10  # strong match
+                        if score > best_score:
+                            best_score = score
+                            best_fk = fk
+            club_key = best_fk
 
         if club_key:
             fx = club_fixture[club_key]
-            result[p["name"]] = {
+            entry = {
                 "opp": fx["opp"],
                 "isHome": fx["isHome"],
                 "date": fx["date"],
                 "matchday": fx["matchday"],
             }
+            # Use BOTH slug (unique) and name (for backward compat) as keys
+            result[p["slug"]] = entry
+            result[p["name"]] = entry  # may overwrite on duplicate names — slug is authoritative
             matched += 1
         else:
             unmatched_clubs.add(player_club)

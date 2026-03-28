@@ -32,7 +32,7 @@ export default function App() {
   if (loading) return (
     <div style={{
       minHeight: "100vh", display: "flex", alignItems: "center", justifyContent: "center",
-      background: "linear-gradient(170deg, #04040F, #080820 25%, #0C0C2D 50%, #0A0A22 75%, #060612)",
+      background: "linear-gradient(170deg, #0A0A1E, #0E0E2A 25%, #121236 50%, #10102E 75%, #0C0C22)",
       color: "#A5B4FC", fontFamily: "Outfit", fontSize: 16,
     }}>
       <div style={{ textAlign: "center" }}>
@@ -62,7 +62,7 @@ export default function App() {
   return (
     <div style={{
       minHeight: "100vh",
-      background: "linear-gradient(170deg, #04040F, #080820 25%, #0C0C2D 50%, #0A0A22 75%, #060612)",
+      background: "linear-gradient(170deg, #0A0A1E, #0E0E2A 25%, #121236 50%, #10102E 75%, #0C0C22)",
       color: "#ffffff", fontFamily: "'Outfit', sans-serif",
     }}>
       <style>{`@keyframes silverShine { 0%{background-position:200% center} 100%{background-position:-200% center} }`}</style>
@@ -74,7 +74,7 @@ export default function App() {
       }}>
         <div style={{
           display: "flex", alignItems: "center", justifyContent: "space-between",
-          maxWidth: 1000, margin: "0 auto",
+          maxWidth: 1400, margin: "0 auto",
         }}>
           <div style={{ display: "flex", alignItems: "center", gap: 4 }}>
             <img src="/logo.png" alt="Deglingo Scout" style={{ width: 32, height: 32, objectFit: "contain" }} />
@@ -114,7 +114,7 @@ export default function App() {
       </header>
 
       {/* Content */}
-      <main style={{ maxWidth: 1000, margin: "0 auto", paddingTop: 20 }}>
+      <main style={{ maxWidth: 1400, margin: "0 auto", paddingTop: 20 }}>
         {tab === "db" && <DbTab players={players} teams={teams} fixtures={fixtures} logos={logos} />}
         {tab === "fight" && <FightTab players={players} teams={teams} fixtures={fixtures} logos={logos} />}
         {tab === "reco" && <RecoTab players={players} teams={teams} fixtures={fixtures} logos={logos} />}

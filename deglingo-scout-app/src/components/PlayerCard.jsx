@@ -103,7 +103,6 @@ export default function PlayerCard({ player, onClose, logos = {}, radarMax }) {
                 { key: "aa_passing", label: "🎯 Passes", desc: "Passes réussies, longues, clés", color: "#8B5CF6" },
                 { key: "aa_possession", label: "⚡ Possession", desc: "Interceptions, duels, récups", color: "#06B6D4" },
                 { key: "aa_attacking", label: "🔥 Attaque", desc: "Tirs, dribbles, entrées surface", color: "#EF4444" },
-                { key: "aa_negative", label: "⚠️ Général", desc: "Fautes, cartons, fautes subies", color: "#F59E0B", allowNeg: true },
               ];
               const rawTotal = cats.reduce((s, c) => s + (c.allowNeg ? (p[c.key] || 0) : Math.max(0, p[c.key] || 0)), 0);
               const aa5 = p.aa5 || 0;

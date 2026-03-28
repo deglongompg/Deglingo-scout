@@ -133,15 +133,18 @@ function genVerdict(p) {
           ? `${p.oppName} joue en bloc bas (PPDA ${oppPpda.toFixed(1)}) : défense compacte et regroupée. Problème : ${lastName} fait ${pctFinisher}% de son AA en tirs et dribbles — exactement le type d'actions que le bloc bas étouffe. Peu d'espaces pour ses courses et ses frappes.`
           : `${p.oppName} joue en bloc bas (PPDA ${oppPpda.toFixed(1)}) : défense compacte. ${lastName} a un profil mixte (${pctCreator}% créa / ${pctFinisher}% finition) — il pourra gratter des points AA sur la possession mais aura moins d'espaces pour ses actions offensives directes.`;
       } else if (oppPpda < 12) {
+        const solidDef = oppXga < 1.3;
         oppStyleTxt = isPivot
-          ? `${p.oppName} pratique un pressing haut (PPDA ${oppPpda.toFixed(1)}) : match ouvert. Pour un pivot comme ${lastName}, c'est plutôt neutre — plus d'espaces dans la surface mais moins de centres car son équipe sera sous pression. Son AA viendra des transitions et des duels en jeu direct.`
+          ? `${p.oppName} pratique un pressing haut (PPDA ${oppPpda.toFixed(1)}) : match ouvert. ${solidDef ? `Mais attention, leur défense reste solide (${oppXga.toFixed(2)} xGA) — les espaces seront vite refermés.` : `Plus d'espaces dans la surface pour un pivot comme ${lastName}.`} Son AA viendra des transitions et des duels en jeu direct.`
           : isDribbleur
-          ? `${p.oppName} pratique un pressing haut (PPDA ${oppPpda.toFixed(1)}) : JACKPOT pour un dribbleur comme ${lastName} ! Ils montent agressivement et laissent des boulevards dans le dos. Avec ${Math.round(ftp)} passes/match dans le dernier tiers, ses percées et ses centres vont faire exploser son AA.`
+          ? (solidDef
+            ? `${p.oppName} pratique un pressing haut (PPDA ${oppPpda.toFixed(1)}) mais leur défense reste solide (${oppXga.toFixed(2)} xGA). Le pressing peut ouvrir quelques espaces pour un dribbleur comme ${lastName} (${Math.round(ftp)} FTP/match), mais ${p.oppName} sait se replacer — match compliqué malgré le profil adapté.`
+            : `${p.oppName} pratique un pressing haut (PPDA ${oppPpda.toFixed(1)}) : JACKPOT pour un dribbleur comme ${lastName} ! Ils montent agressivement et laissent des boulevards dans le dos. Avec ${Math.round(ftp)} passes/match dans le dernier tiers, ses percées et ses centres vont faire exploser son AA.`)
           : isFinisher
-          ? `${p.oppName} pratique un pressing haut (PPDA ${oppPpda.toFixed(1)}) : ils montent agressivement. Parfait pour ${lastName} qui fait ${pctFinisher}% de son AA en tirs et dribbles — les espaces dans le dos seront exploitables en profondeur.`
+          ? `${p.oppName} pratique un pressing haut (PPDA ${oppPpda.toFixed(1)}) : ils montent agressivement. ${solidDef ? `Mais leur défense reste solide (${oppXga.toFixed(2)} xGA) — les occasions seront rares malgré le pressing.` : `Parfait pour ${lastName} qui fait ${pctFinisher}% de son AA en tirs et dribbles — les espaces dans le dos seront exploitables en profondeur.`}`
           : isCreator
-          ? `${p.oppName} pratique un pressing haut (PPDA ${oppPpda.toFixed(1)}) : match intense. ${lastName} fait ${pctCreator}% de son AA en passes/possession — il aura moins le ballon mais pourra déclencher des passes décisives dans les transitions.`
-          : `${p.oppName} pratique un pressing haut (PPDA ${oppPpda.toFixed(1)}) : espaces dans le dos et transitions rapides. Match ouvert, idéal pour le profil mixte de ${lastName}.`;
+          ? `${p.oppName} pratique un pressing haut (PPDA ${oppPpda.toFixed(1)}) : match intense. ${solidDef ? `Leur défense solide (${oppXga.toFixed(2)} xGA) limite les occasions malgré le pressing.` : `${lastName} pourra déclencher des passes décisives dans les transitions.`}`
+          : `${p.oppName} pratique un pressing haut (PPDA ${oppPpda.toFixed(1)}) ${solidDef ? `mais reste solide défensivement (${oppXga.toFixed(2)} xGA). Match compliqué.` : `: espaces dans le dos et transitions rapides. Match ouvert.`}`;
       } else {
         oppStyleTxt = `${p.oppName} joue de façon équilibrée (PPDA ${oppPpda.toFixed(1)}) : match classique avec des occasions dans les deux sens.`;
       }
@@ -206,7 +209,7 @@ function genVerdict(p) {
         : `${p.oppName} encaisse régulièrement — des occasions seront à saisir pour ${lastName} (profil ${profilTxt}).`;
     } else {
       styleTxt = oppPpda >= 15 ? `${p.oppName} est solide ET joue en bloc bas. ${sIsCreator ? `Seul espoir : ${lastName} en tant que ${profilTxt} peut gratter des points AA sur la possession. Mais peu de décisif.` : `Double peine pour un ${profilTxt} comme ${lastName}. Peu d'espaces, peu d'occasions.`}`
-        : oppPpda < 12 ? `${p.oppName} est solide mais leur pressing haut peut laisser des espaces. ${sIsFinisher ? `${lastName} devra miser sur les contres et la profondeur.` : `Contexte compliqué même pour un ${profilTxt}.`}`
+        : oppPpda < 12 ? `${p.oppName} est solide mais leur pressing haut peut ouvrir quelques brèches en transition. ${sIsFinisher ? `${lastName} devra miser sur les contres et la profondeur.` : sIsDribbleur ? `Le profil ${profilTxt} de ${lastName} peut exploiter ces rares espaces, mais ça reste un match difficile.` : `Match difficile pour ${lastName} (${profilTxt}), les occasions seront rares.`}`
         : `${p.oppName} a une défense solide — match compliqué pour ${lastName} (${profilTxt}). Il faudra un éclair de génie.`;
     }
   }
@@ -527,7 +530,7 @@ export default function RecoTab({ players, teams, fixtures, logos = {} }) {
     if (!lgTeams.length) return [];
     const pf = fixtures?.player_fixtures || {};
     return lgPlayers.map(p => {
-      const fx = pf[p.name];
+      const fx = pf[p.slug] || pf[p.name];
       if (!fx) return null;
       const opp = lgTeams.find(t => t.name === fx.opp);
       if (!opp) return null;

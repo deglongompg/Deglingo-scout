@@ -64,6 +64,7 @@ export default function App() {
       minHeight: "100vh",
       background: "linear-gradient(170deg, #0A0A1E, #0E0E2A 25%, #121236 50%, #10102E 75%, #0C0C22)",
       color: "#ffffff", fontFamily: "'Outfit', sans-serif",
+      zoom: 1.15,
     }}>
       <style>{`@keyframes silverShine { 0%{background-position:200% center} 100%{background-position:-200% center} }`}</style>
       {/* Header */}

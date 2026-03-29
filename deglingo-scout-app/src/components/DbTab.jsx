@@ -32,28 +32,28 @@ export default function DbTab({ players, teams, fixtures, logos = {} }) {
   // Toggleable individual stat columns — 5 sections like Sorare AA
   const STAT_DEFS = [
     // DÉFENSE
-    { key: "aa_defending", label: "AA Défense (pts)", short: "AA Def", cat: "DEF", isCat: true },
-    { key: "avg_won_tackle", label: "Tacles/match", short: "Tac", cat: "DEF" },
-    { key: "avg_effective_clearance", label: "Dégagements/match", short: "Clr", cat: "DEF" },
-    { key: "avg_blocked_scoring_attempt", label: "Tirs bloqués/match", short: "Blk", cat: "DEF" },
+    { key: "aa_defending", label: "AA Défense (pts)", short: "AA Def", cat: "DEF", isCat: true, tip: "Points Sorare Défense (pondérés par poste) — moyenne par match" },
+    { key: "avg_won_tackle", label: "Tacles/match", short: "Tac", cat: "DEF", tip: "Tacles réussis par match (nombre brut)" },
+    { key: "avg_effective_clearance", label: "Dégagements/match", short: "Clr", cat: "DEF", tip: "Dégagements par match (nombre brut)" },
+    { key: "avg_blocked_scoring_attempt", label: "Tirs bloqués/match", short: "Blk", cat: "DEF", tip: "Tirs bloqués par match (nombre brut)" },
     // POSSESSION
-    { key: "aa_possession", label: "AA Possession (pts)", short: "AA Pos", cat: "POSS", isCat: true },
-    { key: "avg_interception_won", label: "Interceptions/match", short: "Int", cat: "POSS" },
-    { key: "avg_duel_won", label: "Duels gagnés/match", short: "Duel", cat: "POSS" },
-    { key: "avg_ball_recovery", label: "Récupérations/match", short: "Rec", cat: "POSS" },
-    { key: "avg_won_contest", label: "Contests gagnés/match", short: "Con", cat: "POSS" },
+    { key: "aa_possession", label: "AA Possession (pts)", short: "AA Pos", cat: "POSS", isCat: true, tip: "Points Sorare Possession (pondérés par poste) — moyenne par match" },
+    { key: "avg_interception_won", label: "Interceptions/match", short: "Int", cat: "POSS", tip: "Interceptions par match (nombre brut)" },
+    { key: "avg_duel_won", label: "Duels gagnés/match", short: "Duel", cat: "POSS", tip: "Duels gagnés par match (nombre brut)" },
+    { key: "avg_ball_recovery", label: "Récupérations/match", short: "Rec", cat: "POSS", tip: "Récupérations de balle par match (nombre brut)" },
+    { key: "avg_won_contest", label: "Contests gagnés/match", short: "Con", cat: "POSS", tip: "Contests gagnés par match (nombre brut)" },
     // PASSES
-    { key: "aa_passing", label: "AA Passes (pts)", short: "AA Pas", cat: "PASS", isCat: true },
-    { key: "avg_accurate_pass", label: "Passes précises/match", short: "Pass", cat: "PASS" },
-    { key: "avg_successful_final_third_passes", label: "Passes 1/3 final/match", short: "FTP", cat: "PASS" },
-    { key: "avg_big_chance_created", label: "Grosses occas./match", short: "BCC", cat: "PASS" },
-    { key: "avg_accurate_long_balls", label: "Longs ballons/match", short: "Long", cat: "PASS" },
+    { key: "aa_passing", label: "AA Passes (pts)", short: "AA Pas", cat: "PASS", isCat: true, tip: "Points Sorare Passes (pondérés par poste) — moyenne par match. Ex: 1 FTP = 0.3 pts (MIL) vs 0.1 pts (ATT)" },
+    { key: "avg_accurate_pass", label: "Passes précises/match", short: "Pass", cat: "PASS", tip: "Passes précises par match (nombre brut, ~0.1 pt/passe)" },
+    { key: "avg_successful_final_third_passes", label: "Passes 1/3 final/match", short: "FTP", cat: "PASS", tip: "Passes dernier tiers par match (nombre brut, pts varient selon poste)" },
+    { key: "avg_big_chance_created", label: "Grosses occas./match", short: "BCC", cat: "PASS", tip: "Grosses occasions créées par match (nombre brut)" },
+    { key: "avg_accurate_long_balls", label: "Longs ballons/match", short: "Long", cat: "PASS", tip: "Longs ballons précis par match (nombre brut, ~0.5 pt/long ball)" },
     // ATTAQUE
-    { key: "aa_attacking", label: "AA Attaque (pts)", short: "AA Att", cat: "ATT", isCat: true },
-    { key: "avg_ontarget_scoring_att", label: "Tirs cadrés/match", short: "TiC", cat: "ATT" },
-    { key: "avg_successful_dribble", label: "Dribbles réussis/match", short: "Dri", cat: "ATT" },
-    { key: "avg_pen_area_entries", label: "Entrées surface/match", short: "Surf", cat: "ATT" },
-    { key: "avg_was_fouled", label: "Fautes subies/match", short: "Foul", cat: "ATT" },
+    { key: "aa_attacking", label: "AA Attaque (pts)", short: "AA Att", cat: "ATT", isCat: true, tip: "Points Sorare Attaque (pondérés par poste) — moyenne par match" },
+    { key: "avg_ontarget_scoring_att", label: "Tirs cadrés/match", short: "TiC", cat: "ATT", tip: "Tirs cadrés par match (nombre brut)" },
+    { key: "avg_successful_dribble", label: "Dribbles réussis/match", short: "Dri", cat: "ATT", tip: "Dribbles réussis par match (nombre brut)" },
+    { key: "avg_pen_area_entries", label: "Entrées surface/match", short: "Surf", cat: "ATT", tip: "Entrées dans la surface par match (nombre brut)" },
+    { key: "avg_was_fouled", label: "Fautes subies/match", short: "Foul", cat: "ATT", tip: "Fautes subies par match (nombre brut)" },
   ];
   const toggleStat = (key) => setStatCols(prev => prev.includes(key) ? prev.filter(k => k !== key) : [...prev, key]);
 
@@ -142,8 +142,9 @@ export default function DbTab({ players, teams, fixtures, logos = {} }) {
 
   const SHORT_NAMES = {
     // Fixtures names
-    "Wolverhampton Wanderers": "Wolves", "Manchester United": "Man Utd", "Manchester City": "Man City",
-    "Newcastle United": "Newcastle", "Nottingham Forest": "Nott. Forest", "Crystal Palace": "C. Palace",
+    "Wolverhampton Wanderers": "Wolves", "Manchester United": "Man U", "Manchester City": "Man C",
+    "Newcastle United": "Newc.", "Nottingham Forest": "Forest", "Crystal Palace": "Palace",
+    "Bournemouth": "B'mth", "Brentford": "Brent.", "Barcelona": "Barça",
     "Paris Saint Germain": "PSG", "Marseille": "OM", "Lyon": "OL",
     "Borussia Dortmund": "Dortmund", "Borussia M.Gladbach": "M'gladbach", "Bayern Munich": "Bayern",
     "Bayer Leverkusen": "Leverkusen", "RasenBallsport Leipzig": "Leipzig", "Eintracht Frankfurt": "Frankfurt",
@@ -157,7 +158,7 @@ export default function DbTab({ players, teams, fixtures, logos = {} }) {
     "Manchester United FC": "Man Utd", "Manchester City FC": "Man City",
     "Crystal Palace FC": "C. Palace", "Tottenham Hotspur FC": "Tottenham",
     "West Ham United FC": "West Ham", "Brighton & Hove Albion FC": "Brighton",
-    "AFC Bournemouth": "Bournemouth", "Leicester City FC": "Leicester",
+    "AFC Bournemouth": "B'mth", "Leicester City FC": "Leicester",
     "Borussia Mönchengladbach": "M'gladbach", "Bayern München": "Bayern",
     "Bayer 04 Leverkusen": "Leverkusen", "RB Leipzig": "Leipzig",
     "TSG 1899 Hoffenheim": "Hoffenheim", "1. FC Union Berlin": "Union Berlin",
@@ -247,58 +248,73 @@ export default function DbTab({ players, teams, fixtures, logos = {} }) {
 
       {/* Stat columns toggle — Sorare daily missions */}
       <div style={{ marginBottom: 8, display: "flex", flexWrap: "wrap", gap: 4, alignItems: "center" }}>
-        {(() => {
-          const CAT_ORDER = ["DEF", "POSS", "PASS", "ATT"];
+        {["DEF", "POSS", "PASS", "ATT"].map(cat => {
           const CAT_LABELS = { DEF: "🛡️ DEF", POSS: "🔄 POSS", PASS: "🎯 PASS", ATT: "⚔️ ATT" };
           const CAT_COLORS = { DEF: "#60A5FA", POSS: "#FBBF24", PASS: "#4ADE80", ATT: "#F87171" };
-          return CAT_ORDER.map(cat => {
-            const stats = STAT_DEFS.filter(s => s.cat === cat);
-            const catColor = CAT_COLORS[cat];
-            return (
-              <div key={cat} style={{ display: "flex", alignItems: "center", gap: 3, marginRight: 6, padding: "3px 6px", borderRadius: 8, border: "1px solid rgba(255,255,255,0.08)", background: "rgba(255,255,255,0.02)" }}>
-                <span style={{ fontSize: 9, color: catColor, fontWeight: 700, marginRight: 2, opacity: 0.7 }}>{CAT_LABELS[cat]}</span>
-                {stats.map(s => {
-                  const active = statCols.includes(s.key);
-                  return (
-                    <button key={s.key} onClick={() => toggleStat(s.key)} title={s.label}
-                      style={{
-                        padding: "2px 7px", borderRadius: 6, fontSize: 10, fontWeight: 600, cursor: "pointer",
-                        border: active ? `1px solid ${catColor}` : "1px solid rgba(255,255,255,0.08)",
-                        background: active ? `${catColor}22` : "rgba(255,255,255,0.03)",
-                        color: active ? catColor : "rgba(255,255,255,0.3)",
-                        transition: "all 0.15s",
-                      }}>
-                      {s.short}
-                    </button>
-                  );
-                })}
-              </div>
-            );
-          });
+          const stats = STAT_DEFS.filter(s => s.cat === cat);
+          const catColor = CAT_COLORS[cat];
+          return (
+            <div key={cat} style={{ display: "flex", alignItems: "center", gap: 3, marginRight: 6, padding: "3px 6px", borderRadius: 8, border: "1px solid rgba(255,255,255,0.08)", background: "rgba(255,255,255,0.02)" }}>
+              <span style={{ fontSize: 9, color: catColor, fontWeight: 700, marginRight: 2, opacity: 0.7 }}>{CAT_LABELS[cat]}</span>
+              {stats.map(s => {
+                const active = statCols.includes(s.key);
+                return (
+                  <button key={s.key} onClick={() => toggleStat(s.key)} title={s.label}
+                    style={{
+                      padding: "2px 7px", borderRadius: 6, fontSize: 10, fontWeight: 600, cursor: "pointer",
+                      border: active ? `1px solid ${catColor}` : "1px solid rgba(255,255,255,0.08)",
+                      background: active ? `${catColor}22` : "rgba(255,255,255,0.03)",
+                      color: active ? catColor : "rgba(255,255,255,0.3)",
+                      transition: "all 0.15s",
+                    }}>
+                    {s.short}
+                  </button>
+                );
+              })}
+            </div>
+          );
+        })}
+        {(() => {
+          const allKeys = STAT_DEFS.map(s => s.key);
+          const allActive = allKeys.every(k => statCols.includes(k));
+          return (
+            <button onClick={() => setStatCols(allActive ? [] : allKeys)} style={{
+              padding: "3px 10px", borderRadius: 6, fontSize: 10, fontWeight: 700, cursor: "pointer",
+              border: allActive ? "1px solid #A78BFA" : "1px solid rgba(167,139,250,0.4)",
+              background: allActive ? "rgba(167,139,250,0.2)" : "rgba(167,139,250,0.08)",
+              color: allActive ? "#A78BFA" : "rgba(167,139,250,0.7)",
+              transition: "all 0.15s",
+            }}>{allActive ? "✕ Fermer" : "☰ Tout"}</button>
+          );
         })()}
-        {statCols.length > 0 && (
-          <button onClick={() => setStatCols([])} style={{ padding: "2px 8px", borderRadius: 6, fontSize: 9, cursor: "pointer", border: "1px solid rgba(239,68,68,0.3)", background: "rgba(239,68,68,0.1)", color: "#EF4444" }}>✕ Reset</button>
+        {statCols.length > 0 && !STAT_DEFS.map(s => s.key).every(k => statCols.includes(k)) && (
+          <button onClick={() => setStatCols([])} style={{ padding: "3px 8px", borderRadius: 6, fontSize: 9, cursor: "pointer", border: "1px solid rgba(239,68,68,0.3)", background: "rgba(239,68,68,0.1)", color: "#EF4444" }}>✕ Reset</button>
         )}
       </div>
+      {statCols.length > 0 && (
+        <div style={{ fontSize: 11, color: "rgba(255,255,255,0.4)", marginBottom: 6, padding: "4px 8px", lineHeight: 1.5, background: "rgba(255,255,255,0.02)", borderRadius: 6, border: "1px solid rgba(255,255,255,0.06)" }}>
+          <span style={{ color: "#A78BFA", fontWeight: 600 }}>AA</span> = Points Sorare (pondérés par poste) · <span style={{ color: "rgba(255,255,255,0.55)", fontWeight: 600 }}>Sous-stats</span> = nombre brut /match · <span style={{ color: "rgba(255,255,255,0.3)", fontStyle: "italic" }}>Hover colonnes pour détails</span>
+        </div>
+      )}
 
       {/* Table */}
       <div style={{ overflowX: "auto", maxHeight: "75vh", overflowY: "auto", borderRadius: 12, border: "1px solid rgba(255,255,255,0.06)" }}>
         <table style={{ width: "100%", borderCollapse: "collapse", fontSize: 12, fontFamily: "Outfit" }}>
           <thead style={{ position: "sticky", top: 0, zIndex: 10 }}>
             <tr style={{ background: "#0C0C2D" }}>
-              <th style={{ ...thStyle("name"), textAlign: "left", paddingLeft: 12, cursor: "default" }}>Joueur</th>
+              <th style={{ ...thStyle("name"), textAlign: "left", paddingLeft: 12, cursor: "default", position: "sticky", left: 0, zIndex: 2, background: "#0C0C2D" }}>Joueur</th>
               <th style={{ ...thStyle("position"), cursor: "default" }}>Pos</th>
               <th style={thStyle("ga_season")} onClick={() => toggleSort("ga_season")}>G+A{arrow("ga_season")}</th>
-              <th style={{ ...thStyle("league"), cursor: "default" }}>Ligue</th>
+              {statCols.length === 0 && <th style={{ ...thStyle("league"), cursor: "default" }}>Ligue</th>}
               <th style={{ ...thStyle("l2"), background: sortKey === "l2" ? "rgba(74,222,128,0.06)" : "transparent" }} onClick={() => toggleSort("l2")}>L2{arrow("l2")}</th>
-              <th style={thStyle("aa2")} onClick={() => toggleSort("aa2")}>AA2{arrow("aa2")}</th>
-              <th style={{ ...thStyle("last5"), borderLeft: "1px solid rgba(255,255,255,0.06)", cursor: "default", fontSize: 8, color: "rgba(255,255,255,0.25)" }}>Last 5</th>
+              {statCols.length === 0 && <th style={thStyle("aa2")} onClick={() => toggleSort("aa2")}>AA2{arrow("aa2")}</th>}
+              {statCols.length === 0 && <th style={{ ...thStyle("last5"), borderLeft: "1px solid rgba(255,255,255,0.06)", cursor: "default", fontSize: 8, color: "rgba(255,255,255,0.25)" }}>Last 5</th>}
               <th style={thStyle("l5")} onClick={() => toggleSort("l5")}>L5{arrow("l5")}</th>
-              <th style={thStyle("aa5")} onClick={() => toggleSort("aa5")}>AA5{arrow("aa5")}</th>
+              {statCols.length === 0 && <th style={thStyle("aa5")} onClick={() => toggleSort("aa5")}>AA5{arrow("aa5")}</th>}
               <th style={{ ...thStyle("l10"), borderLeft: "1px solid rgba(255,255,255,0.06)" }} onClick={() => toggleSort("l10")}>L10{arrow("l10")}</th>
-              <th style={thStyle("aa10")} onClick={() => toggleSort("aa10")}>AA10{arrow("aa10")}</th>
-              <th style={{ ...thStyle("min_15"), borderLeft: "1px solid rgba(255,255,255,0.06)" }} onClick={() => toggleSort("min_15")}>Min{arrow("min_15")}</th>
-              <th style={thStyle("max_15")} onClick={() => toggleSort("max_15")}>Max{arrow("max_15")}</th>
+              {statCols.length === 0 && <th style={thStyle("aa10")} onClick={() => toggleSort("aa10")}>AA10{arrow("aa10")}</th>}
+              {statCols.length === 0 && <th style={{ ...thStyle("min_15"), borderLeft: "1px solid rgba(255,255,255,0.06)" }} onClick={() => toggleSort("min_15")}>Min{arrow("min_15")}</th>}
+              {statCols.length === 0 && <th style={thStyle("max_15")} onClick={() => toggleSort("max_15")}>Max{arrow("max_15")}</th>}
               <th style={{ ...thStyle("reg10"), borderLeft: "1px solid rgba(255,255,255,0.06)" }} onClick={() => toggleSort("reg10")}>Reg10{arrow("reg10")}</th>
               <th style={thStyle("titu_pct")} onClick={() => toggleSort("titu_pct")}>Titu10{arrow("titu_pct")}</th>
               {hasFixtures && <>
@@ -308,10 +324,10 @@ export default function DbTab({ players, teams, fixtures, logos = {} }) {
                 <th style={thStyle("csPercent")} onClick={() => toggleSort("csPercent")}>CS%{arrow("csPercent")}</th>
                 <th style={{ ...thStyle("oppName"), cursor: "default" }}>Adv.</th>
               </>}
-              <th style={thStyle("price_limited")} onClick={() => toggleSort("price_limited")}>L€{arrow("price_limited")}</th>
-              <th style={thStyle("price_rare")} onClick={() => toggleSort("price_rare")}>R€{arrow("price_rare")}</th>
-              <th style={{ ...thStyle("archetype"), cursor: "default" }}>Archétype</th>
-              <th style={{ ...thStyle("aaProfile"), cursor: "default" }}>Profil AA</th>
+              {statCols.length === 0 && <th style={thStyle("price_limited")} onClick={() => toggleSort("price_limited")}>L€{arrow("price_limited")}</th>}
+              {statCols.length === 0 && <th style={thStyle("price_rare")} onClick={() => toggleSort("price_rare")}>R€{arrow("price_rare")}</th>}
+              {statCols.length === 0 && <th style={{ ...thStyle("archetype"), cursor: "default" }}>Archétype</th>}
+              {statCols.length === 0 && <th style={{ ...thStyle("aaProfile"), cursor: "default" }}>Profil AA</th>}
               {(() => {
                 const CAT_COLORS = { GEN: "#A78BFA", DEF: "#60A5FA", POSS: "#FBBF24", PASS: "#4ADE80", ATT: "#F87171" };
                 const ordered = STAT_DEFS.filter(s => statCols.includes(s.key));
@@ -319,7 +335,16 @@ export default function DbTab({ players, teams, fixtures, logos = {} }) {
                 return ordered.map(def => {
                   const isNewSection = def.cat !== lastCat;
                   lastCat = def.cat;
-                  return <th key={def.key} style={{ ...thStyle(def.key), borderLeft: isNewSection ? "2px solid " + CAT_COLORS[def.cat] + "55" : "1px solid rgba(255,255,255,0.04)", color: CAT_COLORS[def.cat] }} onClick={() => toggleSort(def.key)}>{def.short}{arrow(def.key)}</th>;
+                  const catColor = CAT_COLORS[def.cat];
+                  const isCatCol = def.isCat;
+                  return <th key={def.key} style={{
+                    ...thStyle(def.key),
+                    minWidth: 0, width: isCatCol ? 30 : 22, padding: "4px 1px",
+                    borderLeft: isNewSection ? `2px solid ${catColor}88` : "none",
+                    color: catColor,
+                    background: isCatCol ? catColor + "12" : "transparent",
+                    fontSize: 7, letterSpacing: "-0.3px",
+                  }} onClick={() => toggleSort(def.key)} title={def.tip}>{def.short}{arrow(def.key)}</th>;
                 });
               })()}
             </tr>
@@ -340,7 +365,7 @@ export default function DbTab({ players, teams, fixtures, logos = {} }) {
                   onMouseEnter={e => e.currentTarget.style.background = "rgba(99,102,241,0.08)"}
                   onMouseLeave={e => e.currentTarget.style.background = isExplosion ? "rgba(74,222,128,0.03)" : i % 2 === 0 ? "transparent" : "rgba(255,255,255,0.01)"}
                 >
-                  <td style={{ padding: "7px 2px 7px 8px", maxWidth: 170, overflow: "hidden" }}>
+                  <td style={{ padding: "7px 2px 7px 8px", maxWidth: 136, overflow: "hidden", position: "sticky", left: 0, zIndex: 1, background: isExplosion ? "#0e0e30" : i % 2 === 0 ? "#0C0C2D" : "#0d0d2f" }}>
                     <div style={{ fontWeight: 600, color: "#fff", fontSize: 13, whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>{countryFlag(p.country)} {p.name}</div>
                     <div style={{ fontSize: 10, color: "rgba(255,255,255,0.4)", marginTop: 1, display: "flex", alignItems: "center", gap: 2, whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>
                       {logos[p.club] && <img src={`/data/logos/${logos[p.club]}`} alt="" style={{ width: 12, height: 12, objectFit: "contain" }} />}
@@ -364,12 +389,12 @@ export default function DbTab({ players, teams, fixtures, logos = {} }) {
                       <span style={{ color: "rgba(255,255,255,0.12)" }}>—</span>
                     )}
                   </td>
-                  <td style={{ textAlign: "center" }}>
+                  {statCols.length === 0 && <td style={{ textAlign: "center" }}>
                     <span style={{
                       padding: "2px 6px", borderRadius: 12, fontSize: 11,
                       background: `${LEAGUE_COLORS[p.league]}18`, color: LEAGUE_COLORS[p.league],
                     }}>{LEAGUE_FLAGS[p.league]}</span>
-                  </td>
+                  </td>}
                   <td style={{ textAlign: "center" }}>
                     <span style={{
                       fontFamily: "DM Mono", fontWeight: 700, fontSize: 12, color: isExplosion ? "#fff" : l2Color(p),
@@ -381,8 +406,8 @@ export default function DbTab({ players, teams, fixtures, logos = {} }) {
                       } : {}),
                     }}>{R(p.l2)}</span>
                   </td>
-                  <td style={{ textAlign: "center", fontFamily: "DM Mono", fontSize: 10, color: "rgba(255,255,255,0.3)" }}>{R(p.aa2)}</td>
-                  <td style={{ borderLeft: "1px solid rgba(255,255,255,0.04)", padding: "4px 2px", verticalAlign: "middle" }}>
+                  {statCols.length === 0 && <td style={{ textAlign: "center", fontFamily: "DM Mono", fontSize: 10, color: "rgba(255,255,255,0.3)" }}>{R(p.aa2)}</td>}
+                  {statCols.length === 0 && <td style={{ borderLeft: "1px solid rgba(255,255,255,0.04)", padding: "4px 2px", verticalAlign: "middle" }}>
                     {p.last_5 && p.last_5.length > 0 ? (() => {
                       const arr = p.last_5.slice(-5).reverse();
                       const pad = 5 - arr.length;
@@ -400,13 +425,13 @@ export default function DbTab({ players, teams, fixtures, logos = {} }) {
                         </div>
                       );
                     })() : <span style={{ fontSize: 9, color: "rgba(255,255,255,0.15)" }}>—</span>}
-                  </td>
+                  </td>}
                   <td style={{ textAlign: "center", fontFamily: "DM Mono", fontSize: 10, color: "rgba(255,255,255,0.35)" }}>{R(p.l5)}</td>
-                  <td style={{ textAlign: "center", fontFamily: "DM Mono", fontSize: 10, color: "rgba(255,255,255,0.3)" }}>{R(p.aa5)}</td>
+                  {statCols.length === 0 && <td style={{ textAlign: "center", fontFamily: "DM Mono", fontSize: 10, color: "rgba(255,255,255,0.3)" }}>{R(p.aa5)}</td>}
                   <td style={{ textAlign: "center", fontFamily: "DM Mono", fontWeight: 700, fontSize: 14, color: dsColor(p.l10), borderLeft: "1px solid rgba(255,255,255,0.04)" }}>{R(p.l10)}</td>
-                  <td style={{ textAlign: "center", fontFamily: "DM Mono", fontSize: 10, color: "rgba(255,255,255,0.3)" }}>{R(p.aa10)}</td>
-                  <td style={{ textAlign: "center", fontFamily: "DM Mono", fontSize: 10, color: "rgba(255,255,255,0.3)", borderLeft: "1px solid rgba(255,255,255,0.04)" }}>{R(p.min_15)}</td>
-                  <td style={{ textAlign: "center", fontFamily: "DM Mono", fontSize: 10, color: "rgba(255,255,255,0.3)" }}>{R(p.max_15)}</td>
+                  {statCols.length === 0 && <td style={{ textAlign: "center", fontFamily: "DM Mono", fontSize: 10, color: "rgba(255,255,255,0.3)" }}>{R(p.aa10)}</td>}
+                  {statCols.length === 0 && <td style={{ textAlign: "center", fontFamily: "DM Mono", fontSize: 10, color: "rgba(255,255,255,0.3)", borderLeft: "1px solid rgba(255,255,255,0.04)" }}>{R(p.min_15)}</td>}
+                  {statCols.length === 0 && <td style={{ textAlign: "center", fontFamily: "DM Mono", fontSize: 10, color: "rgba(255,255,255,0.3)" }}>{R(p.max_15)}</td>}
                   <td style={{ textAlign: "center", fontFamily: "DM Mono", fontSize: 11, color: (p.reg10 ?? p.regularite) >= 80 ? "#4ADE80" : (p.reg10 ?? p.regularite) >= 50 ? "#FBBF24" : "#EF4444", borderLeft: "1px solid rgba(255,255,255,0.04)" }}>{R(p.reg10 ?? p.regularite)}%</td>
                   <td style={{ textAlign: "center", fontFamily: "DM Mono", fontSize: 11, color: p.titu_pct >= 80 ? "#4ADE80" : p.titu_pct >= 50 ? "#FBBF24" : "#EF4444" }}>{R(p.titu_pct)}%</td>
                   {hasFixtures && <>
@@ -433,47 +458,47 @@ export default function DbTab({ players, teams, fixtures, logos = {} }) {
                         <span style={{ fontSize: 9, color: "rgba(255,255,255,0.15)" }}>—</span>
                       )}
                     </td>
-                    <td style={{ textAlign: "left", fontSize: 9, paddingLeft: 4, maxWidth: 100, overflow: "hidden" }}>
+                    <td style={{ textAlign: "left", fontSize: 8, paddingLeft: 2, maxWidth: 52, overflow: "hidden" }}>
                       {p.oppName ? (
-                        <div style={{ display: "flex", alignItems: "center", gap: 3 }}>
-                          <span style={{ width: 14, textAlign: "center", flexShrink: 0 }}>
+                        <div style={{ display: "flex", alignItems: "center", gap: 2 }}>
+                          <span style={{ fontSize: 7, flexShrink: 0 }}>
                             {p.isHome ? "🏠" : "✈️"}
                           </span>
-                          {logos[p.oppName] && <img src={`/data/logos/${logos[p.oppName]}`} alt="" style={{ width: 11, height: 11, objectFit: "contain", flexShrink: 0 }} />}
-                          <span style={{ color: "rgba(255,255,255,0.5)", whiteSpace: "nowrap" }}>{shortName(p.oppName)}</span>
+                          {logos[p.oppName] && <img src={`/data/logos/${logos[p.oppName]}`} alt="" style={{ width: 10, height: 10, objectFit: "contain", flexShrink: 0 }} />}
+                          <span style={{ color: "rgba(255,255,255,0.5)", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis", ...(shortName(p.oppName).length >= 12 ? { maxWidth: 30 } : {}) }}>{shortName(p.oppName)}</span>
                         </div>
                       ) : (
-                        <span style={{ color: "rgba(255,255,255,0.15)", paddingLeft: 17 }}>—</span>
+                        <span style={{ color: "rgba(255,255,255,0.15)", paddingLeft: 10 }}>—</span>
                       )}
                     </td>
                   </>}
-                  <td style={{ textAlign: "center", fontFamily: "DM Mono", fontSize: 10, borderLeft: "1px solid rgba(255,255,255,0.04)" }}>
+                  {statCols.length === 0 && <td style={{ textAlign: "center", fontFamily: "DM Mono", fontSize: 10, borderLeft: "1px solid rgba(255,255,255,0.04)" }}>
                     {p.price_limited != null ? (
                       <span style={{ color: "#FBBF24" }}>{p.price_limited < 1 ? p.price_limited.toFixed(2) : Math.round(p.price_limited)}€</span>
                     ) : <span style={{ color: "rgba(255,255,255,0.12)" }}>—</span>}
-                  </td>
-                  <td style={{ textAlign: "center", fontFamily: "DM Mono", fontSize: 10 }}>
+                  </td>}
+                  {statCols.length === 0 && <td style={{ textAlign: "center", fontFamily: "DM Mono", fontSize: 10 }}>
                     {p.price_rare != null ? (
                       <span style={{ color: "#EF4444" }}>{p.price_rare < 1 ? p.price_rare.toFixed(2) : Math.round(p.price_rare)}€</span>
                     ) : <span style={{ color: "rgba(255,255,255,0.12)" }}>—</span>}
-                  </td>
-                  <td style={{ textAlign: "center" }}>
+                  </td>}
+                  {statCols.length === 0 && <td style={{ textAlign: "center", maxWidth: 56, overflow: "hidden" }}>
                     <span style={{
-                      padding: "2px 6px", borderRadius: 12, fontSize: 9,
+                      padding: "2px 4px", borderRadius: 12, fontSize: 8,
                       background: `${getArchetypeColor(p.archetype)}18`,
                       color: getArchetypeColor(p.archetype),
                     }}>{shortArch(p.archetype)}</span>
-                  </td>
-                  <td style={{ textAlign: "center" }}>
+                  </td>}
+                  {statCols.length === 0 && <td style={{ textAlign: "center", maxWidth: 56, overflow: "hidden" }}>
                     {(() => {
                       const pr = getAAProfile(p);
                       return <span title={pr.desc} style={{
-                        padding: "2px 6px", borderRadius: 12, fontSize: 9,
+                        padding: "2px 4px", borderRadius: 12, fontSize: 8,
                         background: `${pr.color}18`, color: pr.color,
                         cursor: "help",
                       }}>{pr.emoji} {pr.label}</span>;
                     })()}
-                  </td>
+                  </td>}
                   {(() => {
                     const CAT_COLORS = { GEN: "#A78BFA", DEF: "#60A5FA", POSS: "#FBBF24", PASS: "#4ADE80", ATT: "#F87171" };
                     const ordered = STAT_DEFS.filter(s => statCols.includes(s.key));
@@ -486,7 +511,13 @@ export default function DbTab({ players, teams, fixtures, logos = {} }) {
                       const hasVal = val != null && val !== undefined;
                       const isGen = def.cat === "GEN";
                       const displayColor = !hasVal ? "rgba(255,255,255,0.15)" : isGen ? (val < -5 ? "#EF4444" : val < 0 ? "#FBBF24" : "#4ADE80") : val > 0 ? catColor : "rgba(255,255,255,0.2)";
-                      return <td key={def.key} style={{ textAlign: "center", fontFamily: "DM Mono", fontSize: 11, fontWeight: 600, color: displayColor, borderLeft: isNewSection ? `2px solid ${catColor}55` : "1px solid rgba(255,255,255,0.04)" }}>{hasVal ? val.toFixed(1) : "—"}</td>;
+                      const isCatCol = def.isCat;
+                      return <td key={def.key} style={{
+                        textAlign: "center", fontFamily: "DM Mono", fontSize: isCatCol ? 11 : 8, fontWeight: 600,
+                        color: displayColor, padding: "0 1px",
+                        borderLeft: isNewSection ? `2px solid ${catColor}88` : "none",
+                        background: isCatCol ? catColor + "0C" : "transparent",
+                      }}>{hasVal ? (isCatCol ? val.toFixed(1) : Math.round(val)) : "—"}</td>;
                     });
                   })()}
                 </tr>

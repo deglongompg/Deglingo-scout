@@ -12,10 +12,20 @@ Usage:
 """
 
 import requests, json, time, sys, os
+from dotenv import load_dotenv
+
+load_dotenv()
 
 URL = "https://api.sorare.com/federation/graphql"
+API_KEY = os.getenv("SORARE_API_KEY", "")
 H = {"Content-Type": "application/json", "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36"}
-SLEEP = 4.0
+if API_KEY:
+    H["APIKEY"] = API_KEY
+    SLEEP = 0.5  # Prix = plus sensible, on reste safe (~120 req/min)
+    print(f"🔑 API Key détectée — mode rapide (prix)")
+else:
+    SLEEP = 6.0  # Safe: no rate limit, no VPN needed
+    print(f"⚠️  Pas de clé API — mode lent (prix)")
 CURRENT_SEASON = 2025  # 2025-26 season
 
 LEAGUE_FILES = {

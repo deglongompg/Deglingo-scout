@@ -1,3 +1,5 @@
+const AA_MAX = { aa_defending: 20, aa_passing: 30, aa_possession: 20, aa_attacking: 15 };
+
 export default function RadarChart({ player, size = 200, maxValues }) {
   const axes = [
     { label: "DEF", key: "aa_defending", color: "#3B82F6" },
@@ -6,22 +8,13 @@ export default function RadarChart({ player, size = 200, maxValues }) {
     { label: "ATT", key: "aa_attacking", color: "#EF4444" },
   ];
 
-  // Scale raw values proportionally so they sum to AA5
-  const rawTotal = axes.reduce((s, a) => s + Math.max(0, player[a.key] || 0), 0);
-  const aa5 = player.aa5 || 0;
-  const scale = rawTotal > 0 ? aa5 / rawTotal : 0;
-
-  // Max for radar = max AA5 in database (via maxValues) scaled similarly
-  const maxAA5 = (maxValues && maxValues._maxAA5) || 40;
-
   const cx = size / 2, cy = size / 2, r = size * 0.32;
   const angleStep = (2 * Math.PI) / axes.length;
   const startAngle = -Math.PI / 2;
 
   const points = axes.map((a, i) => {
-    const raw = Math.max(0, player[a.key] || 0);
-    const scaled = Math.round(raw * scale * 10) / 10;
-    const ratio = Math.min(scaled / (maxAA5 / axes.length), 1);
+    const val = Math.max(0, player[a.key] || 0);
+    const ratio = Math.min(val / AA_MAX[a.key], 1);
     const angle = startAngle + i * angleStep;
     return {
       x: cx + r * ratio * Math.cos(angle),
@@ -29,7 +22,7 @@ export default function RadarChart({ player, size = 200, maxValues }) {
       lx: cx + (r + 16) * Math.cos(angle),
       ly: cy + (r + 16) * Math.sin(angle),
       label: a.label,
-      val: scaled.toFixed(1),
+      val: val.toFixed(1),
       color: a.color,
     };
   });

@@ -14,16 +14,27 @@ Usage:
 
 import requests, json, time, math, sys, os
 from datetime import datetime
+from dotenv import load_dotenv
+
+load_dotenv()
 
 # ─── CONFIG ──────────────────────────────────────────────────
 URL = "https://api.sorare.com/federation/graphql"
+API_KEY = os.getenv("SORARE_API_KEY", "")
 HEADERS = {
     "Content-Type": "application/json",
     "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36",
     "Accept": "application/json",
 }
-SLEEP = 2.5          # Between each query (safe for ~24 req/min)
-CLUB_SLEEP = 5       # Between clubs (extra breathing room)
+if API_KEY:
+    HEADERS["APIKEY"] = API_KEY
+    print(f"🔑 API Key détectée — mode rapide activé")
+    SLEEP = 0.15         # ~400 req/min (safe sous 600 limit)
+    CLUB_SLEEP = 1       # Minimal pause between clubs
+else:
+    print(f"⚠️  Pas de clé API — mode lent (24 req/min)")
+    SLEEP = 2.5          # Between each query (safe for ~24 req/min)
+    CLUB_SLEEP = 5       # Between clubs (extra breathing room)
 BAN_PAUSE = 120      # Pause if 403 detected (IP ban)
 SAVE_EVERY = 5       # Save every N players
 

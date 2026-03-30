@@ -280,21 +280,22 @@ export function dScoreMatch(player, opp, isHome, playerTeam = null) {
     if (_possPct2 >= 0.40 && _ftp2 < 6 && _finPct2 >= 0.2) pivotMalus = -4;
   }
 
-  // DOMINATION BONUS — équipe forte à domicile = MIL + DEF latéraux offensifs profitent
-  // Plus l'écart xG est grand + plus le AA5 est élevé → plus le joueur profite de la domination
+  // DOMINATION BONUS — équipe forte qui domine = MIL AA élevé + DEF latéraux profitent
+  // À domicile: cap 10 (MIL) / cap 6 (DEF lat)
+  // À l'extérieur: uniquement MIL avec aaEff >= 15 (Real, Barca, PSG...), cap 6
+  // Real Madrid away AA20+ vs Mallorca = domination réelle même en déplacement
   let dominationBonus = 0;
-  // DEF latéral offensif (Hakimi, Nuno, Robertson...) = même logique que MIL créateur
-  // Utilise l'archetype "DEF Latéral" pour distinguer des DEF centraux
   const isAttackingDEF = (p.archetype || "").includes("Latéral") && aaEff > 15;
-  if (isHome && playerTeam && (pos === "MIL" || isAttackingDEF)) {
-    const teamXg = playerTeam.xg_dom || 1.3;
-    const oppXg  = o.xg_ext || 1.3;
-    const gap = teamXg - oppXg; // PSG 2.30 - Toulouse 1.26 = 1.04
-    // Seuil: gap > 0.5 xG minimum pour considérer une domination
+  if (playerTeam && (pos === "MIL" || isAttackingDEF)) {
+    const teamXg = isHome ? (playerTeam.xg_dom || 1.3) : (playerTeam.xg_ext || 1.3);
+    const oppXgCtx = isHome ? (o.xg_ext || 1.3) : (o.xg_dom || 1.3);
+    const gap = teamXg - oppXgCtx;
     if (gap > 0.5) {
-      const effectiveGap = gap - 0.5; // ne compter que l'excédent
-      const aaScale = Math.min(1.3, p.aa5 / 20); // AA5=30 → 1.3x, AA5=10 → 0.5x
-      const capBonus = isAttackingDEF ? 6 : 10; // DEF: cap 6 (moins que MIL cap 10)
+      const effectiveGap = gap - 0.5;
+      const aaScale = Math.min(1.4, p.aa5 / 20); // AA5=28 → 1.4x, AA5=20 → 1.0x, AA5=10 → 0.5x
+      const capBonus = isHome
+        ? (isAttackingDEF ? 6 : 10)   // domicile: cap normal
+        : (aaEff >= 15 ? 6 : 0);       // extérieur: seulement les MIL élites (AA élevé)
       dominationBonus = Math.min(capBonus, effectiveGap * 14 * aaScale);
     }
   }

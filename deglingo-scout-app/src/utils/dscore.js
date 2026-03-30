@@ -216,9 +216,13 @@ export function dScoreMatch(player, opp, isHome, playerTeam = null) {
     const mPpdaBlend = mPpdaCrea * mCreaPct + mPpdaFin * (1 - mCreaPct);
     // Malus défensif: adversaire qui marque beaucoup = -2/but en Sorare
     const concedeMalusMIL = norm(oppXg, 0.8, 2.5, true) * 8; // pénalité si oppXg élevé
-    contexte = aaEff >= 10
+    // Quality scale: un joueur médiocre n'exploite pas autant un bon contexte qu'un top MIL
+    // lEff < 50 → 65% du contexte / lEff 65+ → 100%
+    const milQualityScale = Math.min(1.0, Math.max(0.65, lEff / 65));
+    const milContextRaw = aaEff >= 10
       ? mPpdaBlend*22 + norm(xga, 0.8, 2)*8 + concedeMalusMIL + norm(lEff, 25, 75)*12
-      : norm(xga, 0.8, 2)*18 + norm(ppda, 7, 20, true)*12 + concedeMalusMIL + norm(lEff, 20, 80)*12;
+      : norm(xga, 0.8, 2)*16 + norm(ppda, 7, 20, true)*10 + concedeMalusMIL + norm(lEff, 20, 80)*16;
+    contexte = milContextRaw * milQualityScale;
   }
   else { // ATT — PPDA impact dépend du profil AA du joueur
     const _aP = Math.max(0, p.aa_passing || 0), _aO = Math.max(0, p.aa_possession || 0);

@@ -304,11 +304,18 @@ export function dScoreMatch(player, opp, isHome, playerTeam = null) {
     // GK: goatSeasonBonus = 0
   }
 
-  // Extra GOAT bonus — L40 >= 65 : +8 pts flat, sauf si score brut déjà > 85
+  // Extra GOAT bonus — +8 pts flat, sauf si score brut déjà > 85
   const rawBase = socle + contexte + momentum + domBonus + pivotMalus + dominationBonus + goatSeasonBonus + samplePenalty + inactivityPenalty;
   const extraGoatBonus = isExtraGoat(p) && rawBase <= 85 ? 8 : 0;
   const raw = rawBase + extraGoatBonus;
   // Floor clamp désactivé si sample < 5 (floor gonflé artificiellement sur 1-2 matchs)
-  const minScore = mp >= 5 ? _floor / 100 * 55 : 0;
+  const qualityFloor = mp >= 5 ? _floor / 100 * 55 : 0;
+  // Extra GOAT floor: protection retour de blessure uniquement (mp 1, 2 ou 3)
+  // Pour les EG qui jouent normalement (mp >= 4), pas de floor — seulement le +8 bonus
+  const isInjuryReturn = mp >= 1 && mp < 4;
+  const extraGoatFloor = isExtraGoat(p) && isInjuryReturn
+    ? 67 + Math.max(0, momentum) + Math.max(0, domBonus) + dominationBonus + Math.round(contexte * 0.35)
+    : 0;
+  const minScore = Math.max(qualityFloor, extraGoatFloor);
   return Math.round(Math.max(minScore, Math.min(100, raw)));
 }

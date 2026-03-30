@@ -216,9 +216,9 @@ export function dScoreMatch(player, opp, isHome, playerTeam = null) {
     const mPpdaBlend = mPpdaCrea * mCreaPct + mPpdaFin * (1 - mCreaPct);
     // Malus défensif: adversaire qui marque beaucoup = -2/but en Sorare
     const concedeMalusMIL = norm(oppXg, 0.8, 2.5, true) * 8; // pénalité si oppXg élevé
-    // Quality scale: un joueur médiocre n'exploite pas autant un bon contexte qu'un top MIL
-    // lEff < 50 → 65% du contexte / lEff 65+ → 100%
-    const milQualityScale = Math.min(1.0, Math.max(0.65, lEff / 65));
+    // Quality scale: 60% forme + 40% AA — un MIL avec AA5=9 ne profite pas autant qu'un AA5=22
+    // García (lEff=56, aa5=9)  → scale ~0.66 | Güler (lEff=67, aa5=22) → scale ~1.0
+    const milQualityScale = Math.min(1.0, Math.max(0.6, lEff * 0.6 / 70 + aaEff * 0.4 / 20));
     const milContextRaw = aaEff >= 10
       ? mPpdaBlend*22 + norm(xga, 0.8, 2)*8 + concedeMalusMIL + norm(lEff, 25, 75)*12
       : norm(xga, 0.8, 2)*16 + norm(ppda, 7, 20, true)*10 + concedeMalusMIL + norm(lEff, 20, 80)*16;

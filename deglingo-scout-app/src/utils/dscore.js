@@ -292,10 +292,10 @@ export function dScoreMatch(player, opp, isHome, playerTeam = null) {
     const gap = teamXg - oppXgCtx;
     if (gap > 0.5) {
       const effectiveGap = gap - 0.5;
-      const aaScale = Math.min(1.4, p.aa5 / 20); // AA5=28 → 1.4x, AA5=20 → 1.0x, AA5=10 → 0.5x
+      const aaScale = Math.min(1.5, p.aa5 / 20); // AA5=30 → 1.5x, AA5=20 → 1.0x, AA5=10 → 0.5x
       const capBonus = isHome
         ? (isAttackingDEF ? 6 : 10)   // domicile: cap normal
-        : (aaEff >= 15 ? 6 : 0);       // extérieur: seulement les MIL élites (AA élevé)
+        : (aaEff >= 15 ? 8 : 0);       // extérieur: MIL élites cap 8 (Valverde, Kimmich, Vitinha...)
       dominationBonus = Math.min(capBonus, effectiveGap * 14 * aaScale);
     }
   }

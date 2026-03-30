@@ -1,6 +1,6 @@
 import { useState, useMemo } from "react";
 import { dsColor, dsBg, isSilver, LEAGUE_FLAGS, LEAGUE_NAMES, POSITION_COLORS, getAAProfile } from "../utils/colors";
-import { dScoreMatch, csProb, findTeam } from "../utils/dscore";
+import { dScoreMatch, csProb, findTeam, isExtraGoat } from "../utils/dscore";
 
 const PC = POSITION_COLORS;
 
@@ -66,6 +66,10 @@ function genVerdict(p, alternatives = []) {
     : `${lastName} est régulier : L2 = ${pL2}, L5 = ${pL5}. Performances stables.`;
   const tituTxt = p.titu_pct >= 90 ? "Titulaire indiscutable" : p.titu_pct >= 70 ? "Titulaire régulier" : p.titu_pct >= 50 ? "Temps de jeu partagé" : "Remplaçant fréquent — risque de ne pas jouer";
   const floorTxt = fl >= 55 ? `Son floor de ${Math.round(fl)} pts garantit une base solide même en soirée difficile.` : fl >= 40 ? `Son floor de ${Math.round(fl)} pts offre un filet de sécurité correct.` : `Attention : son floor est bas (${Math.round(fl)} pts), gros risque si soirée sans.`;
+  const mp = p.matchs_played || 0;
+  const egFloorTxt = isExtraGoat(p) && mp >= 1 && mp < 4
+    ? `★ Extra GOAT protégé par l'algo — plancher activé pour ce retour.`
+    : "";
 
   const defXga = p.playerTeam ? (p.isHome ? (p.playerTeam.xga_dom || 1.3) : (p.playerTeam.xga_ext || 1.5)) : 1.3;
   const cs = csProb(defXga, oppXg, p.league);
@@ -79,7 +83,7 @@ function genVerdict(p, alternatives = []) {
   if (p.position === "GK") {
     const csLabel = cs >= 45 ? "très élevée" : cs >= 30 ? "correcte" : cs >= 20 ? "moyenne" : "faible";
     return {
-      situation: `${formeTxt} ${tituTxt} (${p.titu_pct}%). Il joue ${haLabel} face à ${p.oppName}.`,
+      situation: `${formeTxt} ${tituTxt} (${p.titu_pct}%). Il joue ${haLabel} face à ${p.oppName}.${egFloorTxt ? " " + egFloorTxt : ""}`,
       adversaire: `${p.oppName} ${p.isHome ? "se déplace" : "reçoit"} et marque en moyenne ${oppXg.toFixed(2)} buts attendus par match (xG). ${cs >= 45 ? "C'est une attaque très faible — peu de danger pour le gardien." : cs >= 30 ? "Attaque modeste — le gardien devrait être tranquille." : cs >= 20 ? "Attaque correcte — match ouvert, Clean Sheet pas garanti." : "Attaque dangereuse — il faudra beaucoup d'arrêts pour s'en sortir."}`,
       style: `La probabilité de Clean Sheet est ${csLabel} (${cs}%). ${cs >= 30 ? "Contre une équipe aussi peu offensive, le bonus CS (+10 pts) est très jouable, et les arrêts bonus viendront en complément." : cs >= 20 ? "Le CS reste possible si la défense tient. L'avantage : face à une attaque moyenne, il y aura des tirs à arrêter = bon potentiel All-Around." : "Le CS sera difficile à obtenir, mais la bonne nouvelle : beaucoup de tirs adverses = beaucoup d'arrêts = All-Around élevé qui compense."}`,
       conclusion: `Avec un D-Score de ${p.ds}, ${lastName} est ${p.ds >= 70 ? "un top pick gardien cette semaine. Fonce !" : p.ds >= 60 ? "un bon choix en gardien. Contexte favorable." : p.ds >= 50 ? `un pick correct mais pas exceptionnel.${alternatives.length > 0 ? ` Alternatives : ${alternatives.map(a => `${a.name.split(" ").pop()} (${a.ds})`).join(", ")}.` : ""}` : `un pick risqué.${alternatives.length > 0 ? ` Préfère : ${alternatives.map(a => `${a.name.split(" ").pop()} (${a.ds})`).join(", ")}.` : " Il y a sûrement mieux cette semaine."}`}`,
@@ -215,7 +219,7 @@ function genVerdict(p, alternatives = []) {
   }
 
   return {
-    situation: `${formeTxt} ${tituTxt} (${p.titu_pct}%). Il joue ${haLabel} face à ${p.oppName}. ${floorTxt}`,
+    situation: `${formeTxt} ${tituTxt} (${p.titu_pct}%). Il joue ${haLabel} face à ${p.oppName}. ${floorTxt}${egFloorTxt ? " " + egFloorTxt : ""}`,
     adversaire: oppAnalyse,
     style: styleTxt,
     conclusion: (() => {

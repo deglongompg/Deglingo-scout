@@ -147,7 +147,7 @@ function genVerdict(p, alternatives = []) {
           : isFinisher
           ? `${p.oppName} pratique un pressing haut (PPDA ${oppPpda.toFixed(1)}) : leur ligne défensive est haute — des espaces dans le dos à exploiter en profondeur. ${solidDef ? `Leur défense reste organisée (${oppXga.toFixed(2)} xGA) mais les courses de ${lastName} peuvent surprendre sur les transitions.` : `Contexte idéal pour ${lastName} : appels dans le dos, vitesse, et finitions — c'est exactement son registre.`}`
           : isCreator
-          ? `${p.oppName} pratique un pressing haut (PPDA ${oppPpda.toFixed(1)}) : match intense avec beaucoup de transitions. ${solidDef ? `Leur défense solide (${oppXga.toFixed(2)} xGA) referme vite, mais les passes décisives entre les lignes seront possibles.` : `${lastName} pourra déclencher des passes décisives dans les transitions rapides.`}`
+          ? `${p.oppName} pratique un pressing haut (PPDA ${oppPpda.toFixed(1)}) : leur ligne monte — des espaces dans le dos. ${solidDef ? `Défense organisée (${oppXga.toFixed(2)} xGA) mais ${lastName} peut se créer des situations très dangereuses en profondeur pour marquer ou servir.` : `Contexte idéal pour ${lastName} : il va se retrouver seul face au but ou créer des situations de but en exploitant ces espaces.`}`
           : `${p.oppName} pratique un pressing haut (PPDA ${oppPpda.toFixed(1)}) ${solidDef ? `mais reste solide défensivement (${oppXga.toFixed(2)} xGA). Match compliqué.` : `: espaces dans le dos et transitions rapides. Match ouvert.`}`;
       } else {
         oppStyleTxt = `${p.oppName} joue de façon équilibrée (PPDA ${oppPpda.toFixed(1)}) : match classique avec des occasions dans les deux sens.`;

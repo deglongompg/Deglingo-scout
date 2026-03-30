@@ -304,8 +304,18 @@ export function dScoreMatch(player, opp, isHome, playerTeam = null) {
     // GK: goatSeasonBonus = 0
   }
 
+  // Recency penalty — joueur absent des derniers matchdays
+  // > 14 jours = 2 GW manqués → -6 pts / > 21 jours = 3 GW → -10 pts
+  const daysSinceLast = p.last_date
+    ? Math.floor((Date.now() - new Date(p.last_date)) / 86400000)
+    : 0;
+  const recencyPenalty = mp === 0 ? 0  // ghost player — déjà géré par ghost filter
+    : daysSinceLast > 21 ? -10
+    : daysSinceLast > 14 ? -6
+    : 0;
+
   // Extra GOAT bonus — +8 pts flat, sauf si score brut déjà > 85
-  const rawBase = socle + contexte + momentum + domBonus + pivotMalus + dominationBonus + goatSeasonBonus + samplePenalty + inactivityPenalty;
+  const rawBase = socle + contexte + momentum + domBonus + pivotMalus + dominationBonus + goatSeasonBonus + samplePenalty + inactivityPenalty + recencyPenalty;
   const extraGoatBonus = isExtraGoat(p) && rawBase <= 85 ? 8 : 0;
   const raw = rawBase + extraGoatBonus;
   // Floor clamp désactivé si sample < 5 (floor gonflé artificiellement sur 1-2 matchs)

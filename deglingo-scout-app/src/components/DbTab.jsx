@@ -258,7 +258,7 @@ export default function DbTab({ players, teams, fixtures, logos = {} }) {
           </span>
           <span>Reg10 = % matchs &gt;60 sur L10</span>
           <span>Titu10 = % titularisations sur L10</span>
-          <span><span style={{ color: "#FBBF24" }}>&#9733;</span> Extra GOAT — +8 pts bonus · plancher protégé si retour de blessure (mp ≤ 3)</span>
+          <span><span style={{ color: "#FBBF24" }}>&#9733;</span> Extra GOAT — élite protégée par l'algo quand ça compte</span>
           <span><span style={{ color: "#FBBF24" }}>L€</span> Limited · <span style={{ color: "#EF4444" }}>R€</span> Rare</span>
           <span style={{ flex: 1 }} />
           <span style={{ fontSize: 9, color: "#F87171", fontWeight: 700, background: "rgba(239,68,68,0.12)", padding: "2px 8px", borderRadius: 20 }}>🚀 BETA GRATUITE</span>

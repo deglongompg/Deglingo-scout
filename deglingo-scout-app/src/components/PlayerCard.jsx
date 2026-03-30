@@ -57,7 +57,7 @@ export default function PlayerCard({ player, onClose, logos = {}, radarMax }) {
             { label: "L5", value: p.l5, color: dsColor(p.l5) },
             { label: "AA5", value: p.aa5, color: "#A5B4FC" },
             { label: "Floor", value: p.floor, color: dsColor(p.floor) },
-            { label: "Ceil", value: p.ceiling, color: dsColor(p.ceiling) },
+            { label: "MAX", value: p.ceiling, color: dsColor(p.ceiling) },
             { label: "Rég%", value: `${p.regularite}%`, color: "#fff" },
           ].map(s => (
             <div key={s.label} style={{
@@ -73,7 +73,7 @@ export default function PlayerCard({ player, onClose, logos = {}, radarMax }) {
           display: "grid", gridTemplateColumns: "repeat(5, 1fr)", gap: 4, marginBottom: 12,
         }}>
           {[
-            { label: "DS%", value: `${p.ds_rate}%` },
+            { label: ">60%", value: `${p.ds_rate}%` },
             { label: "G+A/m", value: p.ga_per_match },
             { label: "DOM", value: p.avg_dom },
             { label: "EXT", value: p.avg_ext },

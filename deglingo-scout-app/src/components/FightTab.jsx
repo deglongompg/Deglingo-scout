@@ -1,19 +1,25 @@
 import { useState, useMemo } from "react";
-import { dsColor, dsBg, LEAGUE_FLAGS, POSITION_COLORS } from "../utils/colors";
+import { dsColor, dsBg, LEAGUE_FLAGS, LEAGUE_FLAG_CODES, POSITION_COLORS } from "../utils/colors";
 import { dScoreMatch, csProb, findTeam } from "../utils/dscore";
 
 const FIGHT_COUNT_KEY = "deglingo_fight_count";
 
-const COUNTRY_FLAGS = {
-  fra:"🇫🇷",mar:"🇲🇦",bra:"🇧🇷",arg:"🇦🇷",esp:"🇪🇸",por:"🇵🇹",ger:"🇩🇪",deu:"🇩🇪",
-  ita:"🇮🇹",eng:"🏴󠁧󠁢󠁥󠁮󠁧󠁿",ned:"🇳🇱",bel:"🇧🇪",uru:"🇺🇾",col:"🇨🇴",sen:"🇸🇳",cmr:"🇨🇲",
-  civ:"🇨🇮",alg:"🇩🇿",nga:"🇳🇬",jpn:"🇯🇵",kor:"🇰🇷",usa:"🇺🇸",mex:"🇲🇽",cro:"🇭🇷",
-  srb:"🇷🇸",sui:"🇨🇭",aut:"🇦🇹",pol:"🇵🇱",cze:"🇨🇿",tur:"🇹🇷",den:"🇩🇰",swe:"🇸🇪",
-  nor:"🇳🇴",fin:"🇫🇮",gha:"🇬🇭",chi:"🇨🇱",par:"🇵🇾",ecu:"🇪🇨",ven:"🇻🇪",per:"🇵🇪",
-  sco:"🏴󠁧󠁢󠁳󠁣󠁴󠁿",wal:"🏴󠁧󠁢󠁷󠁬󠁳󠁿",irl:"🇮🇪",ukr:"🇺🇦",hun:"🇭🇺",rou:"🇷🇴",
-  gre:"🇬🇷",geo:"🇬🇪",con:"🇨🇬",cod:"🇨🇩",mli:"🇲🇱",gui:"🇬🇳",gab:"🇬🇦",tun:"🇹🇳",
-  egy:"🇪🇬",jam:"🇯🇲",aus:"🇦🇺",isr:"🇮🇱",svk:"🇸🇰",svn:"🇸🇮",
+// ISO3 country codes used in Sorare → ISO2 for flag images
+const COUNTRY_ISO3_TO_2 = {
+  fra:"fr",mar:"ma",bra:"br",arg:"ar",esp:"es",por:"pt",ger:"de",deu:"de",
+  ita:"it",eng:"gb-eng",ned:"nl",bel:"be",uru:"uy",col:"co",sen:"sn",cmr:"cm",
+  civ:"ci",alg:"dz",nga:"ng",jpn:"jp",kor:"kr",usa:"us",mex:"mx",cro:"hr",
+  srb:"rs",sui:"ch",aut:"at",pol:"pl",cze:"cz",tur:"tr",den:"dk",swe:"se",
+  nor:"no",fin:"fi",gha:"gh",chi:"cl",par:"py",ecu:"ec",ven:"ve",per:"pe",
+  sco:"gb-sct",wal:"gb-wls",irl:"ie",ukr:"ua",hun:"hu",rou:"ro",
+  gre:"gr",geo:"ge",con:"cg",cod:"cd",mli:"ml",gui:"gn",gab:"ga",tun:"tn",
+  egy:"eg",jam:"jm",aus:"au",isr:"il",svk:"sk",svn:"si",
 };
+function FightCountryFlag({ code, size = 14 }) {
+  if (!code) return null;
+  const iso2 = COUNTRY_ISO3_TO_2[code.toLowerCase()] || code.toLowerCase().slice(0, 2);
+  return <img src={`https://flagcdn.com/w40/${iso2}.png`} alt={iso2} width={size} height={Math.round(size * 0.75)} style={{ verticalAlign: "middle", borderRadius: 2, objectFit: "cover" }} />;
+}
 
 const STAT_DESC = {
   "D-Score": "Prediction pour CE match (forme + adversaire)",
@@ -145,7 +151,7 @@ function DStars({ score }) {
 function PlayerCard({ player, score, opp, isHome, oppName, league, isWinner, logos = {} }) {
   if (!player) return null;
   const posCol = POSITION_COLORS[player.position] || "#8B5CF6";
-  const flag = COUNTRY_FLAGS[player.country] || "🏳️";
+  const flagEl = <FightCountryFlag code={player.country} size={12} />;
   const sc = player.last_5 || [];
 
   // Dynamic card gradient based on position
@@ -206,7 +212,7 @@ function PlayerCard({ player, score, opp, isHome, oppName, league, isWinner, log
         {/* Row: flag + position badge + league */}
         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 6 }}>
           <div style={{ display: "flex", alignItems: "center", gap: 4 }}>
-            <span style={{ fontSize: 12 }}>{flag}</span>
+            {flagEl}
             <span style={{
               fontSize: 8, fontWeight: 800, color: posCol,
               background: `${posCol}18`, padding: "1px 5px", borderRadius: 3,
@@ -214,7 +220,7 @@ function PlayerCard({ player, score, opp, isHome, oppName, league, isWinner, log
             }}>{player.position}</span>
           </div>
           <span style={{ fontSize: 7, color: "rgba(255,255,255,0.25)", fontWeight: 700, letterSpacing: "0.1em" }}>
-            {LEAGUE_FLAGS[league]} {league}
+            <img src={`https://flagcdn.com/w40/${LEAGUE_FLAG_CODES[league]}.png`} alt={league} width={10} height={7} style={{ borderRadius: 1, objectFit: "cover", verticalAlign: "middle", marginRight: 2 }} />{league}
           </span>
         </div>
 
@@ -514,7 +520,6 @@ export default function FightTab({ players, teams, fixtures, logos = {} }) {
             <div style={{ fontSize: 10, color: "rgba(255,255,255,0.35)", marginTop: 2 }}>PPDA dom/ext, xGA, style de jeu, DOM/EXT</div>
           </div>
         </div>
-        <div style={{ marginTop: 6, textAlign: "center" }}><span style={{ fontSize: 9, color: "#F87171", fontWeight: 700, background: "rgba(239,68,68,0.12)", padding: "3px 10px", borderRadius: 20 }}>🚀 BETA GRATUITE</span></div>
       </div>
 
       {/* Player selection */}
@@ -529,7 +534,8 @@ export default function FightTab({ players, teams, fixtures, logos = {} }) {
                   flex: 1, padding: "7px 3px", borderRadius: 6, border: "none", cursor: "pointer",
                   background: lg === l ? bgCol : "rgba(255,255,255,0.03)",
                   color: lg === l ? col : "rgba(255,255,255,0.25)", fontSize: 10, fontWeight: 700, fontFamily: "Outfit",
-                }}>{LEAGUE_FLAGS[l]} {l}</button>
+                  display: "flex", alignItems: "center", justifyContent: "center", gap: 4,
+                }}><img src={`https://flagcdn.com/w40/${LEAGUE_FLAG_CODES[l]}.png`} alt={l} width={14} height={10} style={{ borderRadius: 2, objectFit: "cover" }} />{l}</button>
               ))}
             </div>
             <Sel value={c} onChange={v => { sC(v); sPn(""); resetFight(); }} options={clubs} placeholder="Club..." />

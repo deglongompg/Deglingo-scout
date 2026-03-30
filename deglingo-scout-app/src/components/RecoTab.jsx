@@ -28,10 +28,10 @@ const SHORT_NAMES = {
 const sn = (name) => SHORT_NAMES[name] || name;
 
 const LG_META = {
-  L1:     { name: "Ligue 1",        flag: "🇫🇷",  accent: "#4FC3F7" },
-  PL:     { name: "Premier League",  flag: "🏴󠁧󠁢󠁥󠁮󠁧󠁿", accent: "#B388FF" },
-  Liga:   { name: "La Liga",         flag: "🇪🇸",  accent: "#FF8A80" },
-  Bundes: { name: "Bundesliga",      flag: "🇩🇪",  accent: "#FFD180" },
+  L1:     { name: "Ligue 1",        flagCode: "fr",     accent: "#4FC3F7" },
+  PL:     { name: "Premier League",  flagCode: "gb-eng", accent: "#B388FF" },
+  Liga:   { name: "La Liga",         flagCode: "es",     accent: "#FF8A80" },
+  Bundes: { name: "Bundesliga",      flagCode: "de",     accent: "#FFD180" },
 };
 
 function getTags(p) {
@@ -46,7 +46,7 @@ function getTags(p) {
   return tags;
 }
 
-function genVerdict(p) {
+function genVerdict(p, alternatives = []) {
   const sc = p.last_5 || [];
   const l2 = sc.length >= 2 ? (sc[0] + sc[1]) / 2 : sc[0] || p.l5;
   const es = p.l5 > 0 ? Math.round((l2 - p.l5) / p.l5 * 100) : 0;
@@ -82,7 +82,7 @@ function genVerdict(p) {
       situation: `${formeTxt} ${tituTxt} (${p.titu_pct}%). Il joue ${haLabel} face à ${p.oppName}.`,
       adversaire: `${p.oppName} ${p.isHome ? "se déplace" : "reçoit"} et marque en moyenne ${oppXg.toFixed(2)} buts attendus par match (xG). ${cs >= 45 ? "C'est une attaque très faible — peu de danger pour le gardien." : cs >= 30 ? "Attaque modeste — le gardien devrait être tranquille." : cs >= 20 ? "Attaque correcte — match ouvert, Clean Sheet pas garanti." : "Attaque dangereuse — il faudra beaucoup d'arrêts pour s'en sortir."}`,
       style: `La probabilité de Clean Sheet est ${csLabel} (${cs}%). ${cs >= 30 ? "Contre une équipe aussi peu offensive, le bonus CS (+10 pts) est très jouable, et les arrêts bonus viendront en complément." : cs >= 20 ? "Le CS reste possible si la défense tient. L'avantage : face à une attaque moyenne, il y aura des tirs à arrêter = bon potentiel All-Around." : "Le CS sera difficile à obtenir, mais la bonne nouvelle : beaucoup de tirs adverses = beaucoup d'arrêts = All-Around élevé qui compense."}`,
-      conclusion: `Avec un D-Score de ${p.ds}, ${lastName} est ${p.ds >= 70 ? "un top pick gardien cette semaine. Fonce !" : p.ds >= 60 ? "un bon choix en gardien. Contexte favorable." : p.ds >= 50 ? "un pick correct mais pas exceptionnel. Regarde les alternatives." : "un pick risqué. Il y a sûrement mieux cette semaine."}`,
+      conclusion: `Avec un D-Score de ${p.ds}, ${lastName} est ${p.ds >= 70 ? "un top pick gardien cette semaine. Fonce !" : p.ds >= 60 ? "un bon choix en gardien. Contexte favorable." : p.ds >= 50 ? `un pick correct mais pas exceptionnel.${alternatives.length > 0 ? ` Alternatives : ${alternatives.map(a => `${a.name.split(" ").pop()} (${a.ds})`).join(", ")}.` : ""}` : `un pick risqué.${alternatives.length > 0 ? ` Préfère : ${alternatives.map(a => `${a.name.split(" ").pop()} (${a.ds})`).join(", ")}.` : " Il y a sûrement mieux cette semaine."}`}`,
     };
   }
 
@@ -240,9 +240,11 @@ function genVerdict(p) {
           ? `D-Score de ${p.ds} — ${lastName} reste un bon choix mais attention, ${isExt ? "déplacement" : "match"} face à ${p.oppName} qui est solide. Ne pas s'attendre à un carton.`
           : `D-Score de ${p.ds} — ${lastName} est un bon choix. ${p.isHome ? "À domicile, contexte favorable." : "Contexte correct pour performer."}`) + pivotWarn;
       } else if (p.ds >= 50) {
-        return `D-Score de ${p.ds} — ${lastName} est un pick correct mais pas exceptionnel${hardContext ? `, surtout avec ce déplacement chez ${p.oppName}` : ""}. Compare avec les alternatives.` + pivotWarn;
+        const altTxt = alternatives.length > 0 ? ` Alternatives : ${alternatives.map(a => `${a.name.split(" ").pop()} (${a.ds})`).join(", ")}.` : "";
+        return `D-Score de ${p.ds} — ${lastName} est un pick correct mais pas exceptionnel${hardContext ? `, surtout avec ce déplacement chez ${p.oppName}` : ""}.${altTxt}` + pivotWarn;
       } else {
-        return `D-Score de ${p.ds} — ${lastName} est un pick risqué${hardContext ? ` dans un contexte difficile (${isExt ? "extérieur" : ""} vs ${p.oppName})` : ""}. Il y a sûrement mieux cette semaine.` + pivotWarn;
+        const altTxt = alternatives.length > 0 ? ` Préfère : ${alternatives.map(a => `${a.name.split(" ").pop()} (${a.ds})`).join(", ")}.` : " Il y a sûrement mieux cette semaine.";
+        return `D-Score de ${p.ds} — ${lastName} est un pick risqué${hardContext ? ` dans un contexte difficile (${isExt ? "extérieur" : ""} vs ${p.oppName})` : ""}.${altTxt}` + pivotWarn;
       }
     })(),
   };
@@ -362,7 +364,7 @@ function PlayerCard({ player, isSelected, onClick, logos = {}, badge }) {
   );
 }
 
-function DetailPanel({ player, logos = {} }) {
+function DetailPanel({ player, logos = {}, allPicks = [] }) {
   if (!player) return (
     <div style={{ textAlign: "center", padding: "30px 16px", color: "rgba(255,255,255,0.15)" }}>
       <div style={{ fontSize: 36, marginBottom: 6 }}>⚽</div>
@@ -373,7 +375,12 @@ function DetailPanel({ player, logos = {} }) {
   const pc = PC[player.position];
   const dsc = dsColor(player.ds);
   const tags = getTags(player);
-  const v = genVerdict(player);
+  // Find top 3 alternatives: same position, higher D-Score, different player
+  const alternatives = allPicks
+    .filter(a => a.position === player.position && a.name !== player.name && a.ds > player.ds)
+    .sort((a, b) => b.ds - a.ds)
+    .slice(0, 3);
+  const v = genVerdict(player, alternatives);
   const sc = player.last_5 || [];
   const l2 = sc.length >= 2 ? (sc[0] + sc[1]) / 2 : player.l5;
   const es = player.l5 > 0 ? Math.round((l2 - player.l5) / player.l5 * 100) : 0;
@@ -665,7 +672,7 @@ export default function RecoTab({ players, teams, fixtures, logos = {} }) {
             fontWeight: league === k ? 700 : 500, fontFamily: "Outfit",
             outline: league === k ? `1px solid ${v.accent}40` : "none", transition: "all 0.2s",
           }}>
-            {v.flag}<br /><span style={{ fontSize: "8px" }}>{v.name.length > 10 ? v.name.split(" ")[0] : v.name}</span>
+            <img src={`https://flagcdn.com/w40/${v.flagCode}.png`} alt={v.flagCode} width={16} height={12} style={{ borderRadius: 2, objectFit: "cover" }} /><br /><span style={{ fontSize: "8px" }}>{v.name.length > 10 ? v.name.split(" ")[0] : v.name}</span>
           </button>
         ))}
       </div>
@@ -691,7 +698,7 @@ export default function RecoTab({ players, teams, fixtures, logos = {} }) {
           {mode === "stack" ? "STACK OF THE WEEK" : `BEST PICK ${mode.toUpperCase()}`}
         </div>
         <div style={{ fontSize: "13px", fontWeight: 600, color: "rgba(255,255,255,0.45)", marginTop: "2px" }}>
-          {lg.flag} {lg.name}{matchdays[league] ? ` · Journée ${matchdays[league]}` : ""}
+          <img src={`https://flagcdn.com/w40/${lg.flagCode}.png`} alt={lg.flagCode} width={14} height={10} style={{ verticalAlign: "middle", borderRadius: 2, objectFit: "cover", marginRight: 4 }} />{lg.name}{matchdays[league] ? ` · Journée ${matchdays[league]}` : ""}
           {stackClub ? ` · ${stackClub}` : ""}
         </div>
         {!hasFixtures && <div style={{ fontSize: "9px", color: "rgba(255,150,50,0.5)", marginTop: "4px" }}>⚠ Pas de calendrier — adversaires simulés</div>}
@@ -780,7 +787,7 @@ export default function RecoTab({ players, teams, fixtures, logos = {} }) {
       {/* Stack Podium — Top 3 */}
       {mode === "stack" && top3Stacks.length > 0 && (
         <div style={{ marginTop: "14px", background: "rgba(255,255,255,0.02)", borderRadius: "12px", border: "1px solid rgba(255,255,255,0.06)", overflow: "hidden" }}>
-          <div style={{ padding: "10px 14px 6px", fontSize: "9px", fontWeight: 800, color: "rgba(255,255,255,0.3)", letterSpacing: "0.12em", textTransform: "uppercase" }}>🏆 Top 3 Stack · {lg.flag} {lg.name}</div>
+          <div style={{ padding: "10px 14px 6px", fontSize: "9px", fontWeight: 800, color: "rgba(255,255,255,0.3)", letterSpacing: "0.12em", textTransform: "uppercase" }}>🏆 Top 3 Stack · <img src={`https://flagcdn.com/w40/${lg.flagCode}.png`} alt={lg.flagCode} width={12} height={9} style={{ verticalAlign: "middle", borderRadius: 1, objectFit: "cover", margin: "0 3px" }} />{lg.name}</div>
           {top3Stacks.map((s, i) => {
             const medal = ["🥇", "🥈", "🥉"][i];
             const isActive = i === stackIdx;
@@ -815,7 +822,7 @@ export default function RecoTab({ players, teams, fixtures, logos = {} }) {
       )}
 
       {/* Detail panel */}
-      <DetailPanel player={selPlayer} logos={logos} />
+      <DetailPanel player={selPlayer} logos={logos} allPicks={allScored} />
 
       {/* CTA */}
       <div style={{ marginTop: "12px", padding: "18px", textAlign: "center", background: "linear-gradient(135deg,rgba(34,197,94,0.05),rgba(99,102,241,0.05))", border: "1px solid rgba(34,197,94,0.12)", borderRadius: "12px" }}>

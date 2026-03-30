@@ -16,6 +16,7 @@ export const ARCHETYPE_COLORS = {
 export const POSITION_COLORS = { GK: "#06B6D4", DEF: "#3B82F6", MIL: "#8B5CF6", ATT: "#EF4444" };
 export const LEAGUE_COLORS   = { L1: "#4FC3F7", PL: "#B388FF", Liga: "#FF8A80", Bundes: "#FFD180" };
 export const LEAGUE_FLAGS    = { L1: "🇫🇷", PL: "🏴󠁧󠁢󠁥󠁮󠁧󠁿", Liga: "🇪🇸", Bundes: "🇩🇪" };
+export const LEAGUE_FLAG_CODES = { L1: "fr", PL: "gb-eng", Liga: "es", Bundes: "de" };
 export const LEAGUE_NAMES    = { L1: "Ligue 1", PL: "Premier League", Liga: "La Liga", Bundes: "Bundesliga" };
 
 export function dsColor(d) {

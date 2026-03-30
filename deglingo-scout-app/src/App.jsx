@@ -110,6 +110,23 @@ export default function App() {
                 {t.icon} {t.label}
               </button>
             ))}
+            <a
+              href="http://sorare.pxf.io/Deglingo"
+              target="_blank"
+              rel="noopener noreferrer"
+              style={{
+                padding: "6px 12px", borderRadius: 10, fontSize: 11, fontWeight: 700,
+                fontFamily: "Outfit", textDecoration: "none", marginLeft: 8,
+                background: "linear-gradient(135deg, #22C55E, #16A34A)",
+                color: "#fff", display: "flex", alignItems: "center", gap: 4,
+                boxShadow: "0 0 12px rgba(34,197,94,0.3)",
+                transition: "all 0.2s",
+              }}
+              onMouseEnter={e => e.currentTarget.style.boxShadow = "0 0 20px rgba(34,197,94,0.5)"}
+              onMouseLeave={e => e.currentTarget.style.boxShadow = "0 0 12px rgba(34,197,94,0.3)"}
+            >
+              Deviens Manager Sorare — 🎁 100€ offerts
+            </a>
           </div>
         </div>
       </header>

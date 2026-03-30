@@ -3,6 +3,28 @@ function normName(s) {
   return s.normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/[-.']/g, " ").replace(/\s+/g, " ").trim().toLowerCase();
 }
 
+// ─── EXTRA GOAT — tier manuel au-dessus de GOAT ─────────────────────────────
+// 8 joueurs définis manuellement selon Sorare : top prix du marché,
+// capables de tout casser peu importe le calendrier → +8 pts flat.
+// Règle : pas de bonus si le D-Score brut est déjà > 85.
+const EXTRA_GOAT_SET = new Set([
+  // Tier prix top marché (L40 Sorare >= 65) — màj mensuelle
+  "lamine yamal", "michael olise", "kylian mbappe",
+  "harry kane", "pedri", "joshua kimmich",
+  "vitinha", "bruno fernandes",
+  // Ajout mars 2026
+  "nico schlotterbeck", "gabriel magalhaes",
+  "alejandro grimaldo", "dominik szoboszlai",
+  "luis diaz", "achraf hakimi",
+  "maximilian mittelstadt", "nuno mendes",
+]);
+export function isExtraGoat(p) {
+  if (!p?.name) return false;
+  const n = p.name.normalize("NFD").replace(/[\u0300-\u036f]/g,"").replace(/[-.']/g," ").replace(/\s+/g," ").trim().toLowerCase();
+  return EXTRA_GOAT_SET.has(n);
+}
+// ─────────────────────────────────────────────────────────────────────────────
+
 // Find a team in the teams array by player club name (handles PSG/Bayern/etc mismatches)
 export function findTeam(teams, club) {
   if (!teams || !club) return null;
@@ -52,9 +74,25 @@ export function dScoreMatch(player, opp, isHome, playerTeam = null) {
   const _reg = p.regularite || 0;
   const _floor = p.min_15 ?? p.floor ?? 0;
 
+  // ─── GHOST PLAYER FILTER: joueur sans données récentes = D-Score minimal ───
+  // Si L5=0 ET L10=0 ET Titu=0% → le joueur n'a pas joué, on ne prédit rien
+  const hasRecentData = _l5 > 0 || (p.l10 || 0) > 0;
+  const tituPct = p.titu_pct || 0;
+  if (!hasRecentData && tituPct === 0) {
+    // Score minimal basé uniquement sur le contexte adversaire (pour ne pas afficher 0)
+    // mais plafonné à 15 max — ce joueur ne devrait jamais être recommandé
+    return Math.min(15, Math.round((p.ga_per_match || 0) * 20));
+  }
+
+  // ─── INACTIVITY PENALTY: joueur qui ne joue presque plus ───
+  // Titu < 20% sur L10 = rotation/blessé → forte pénalité
+  const inactivityPenalty = tituPct >= 50 ? 0 : tituPct >= 30 ? -8 : tituPct >= 10 ? -18 : tituPct > 0 ? -28 : -35;
+
   // ─── SAMPLE SIZE PENALTY: évite les Pinnock (1 match = 92 → faux GOAT) ───
-  const mp = p.matchs_played || p.last_5?.length || 5;
-  const samplePenalty = mp >= 5 ? 0 : mp >= 3 ? -5 : mp >= 2 ? -12 : -20;
+  const mp = p.matchs_played || p.last_5?.filter(s => s > 0)?.length || 0;
+  // Réduit si titu élevé (joueur régulier pénalisé par limite API, pas par vraie incertitude)
+  const sampleBase = mp >= 5 ? 0 : mp >= 3 ? -5 : mp >= 2 ? -12 : -20;
+  const samplePenalty = tituPct >= 70 && mp >= 3 ? Math.round(sampleBase / 2) : sampleBase;
 
   // ─── SEASON BLEND: protège les GOATs contre un mauvais match récent ───
   // L25/AA25 = saison longue (l10 en approx, l25 quand dispo)
@@ -65,6 +103,74 @@ export function dScoreMatch(player, opp, isHome, playerTeam = null) {
   const lEff  = _l5 * (1 - blendW) + l25 * blendW;
   const aaEff = _aa5 * (1 - blendW) + aa25 * blendW;
 
+  // ─── GK-SPECIFIC ALGORITHM ───
+  if (p.position === "GK") {
+    const oppXgGK = isHome ? o.xg_ext : o.xg_dom;
+    const ppdaGK = isHome ? o.ppda_ext : o.ppda_dom;
+    const defXgaGK = playerTeam ? (isHome ? (playerTeam.xga_dom || 1.3) : (playerTeam.xga_ext || 1.5)) : 1.3;
+    const avgXg = LG_AVG_XG[p.league] || 1.50;
+    const rawLambda = (defXgaGK * oppXgGK) / avgXg;
+    const lambda = Math.max(0.5, Math.min(2.0, rawLambda));
+    const csProbGK = Math.exp(-lambda) * 100;
+
+    // SOCLE GK (40 pts max) — forme + AA (range GK: -20 à +15) + floor + régularité
+    const fGK = norm(lEff, 20, 70) * 14;
+    const aaGK = norm(aaEff, -20, 15) * 10;  // GK AA range: négatif = buts encaissés, positif = arrêts
+    const flGK = norm(_floor, 10, 60) * 8;
+    const rgGK = norm(_reg, 0, 100) * 5;
+    const l25GK = l25 > lEff ? norm(l25, 25, 70) * 3 : 0;
+    const socleGK = fGK + aaGK + flGK + rgGK + l25GK;
+
+    // CONTEXTE GK (50 pts max) — basé sur le scoring Sorare réel
+    // Sur Sorare: CS 60 = +10 pts, but encaissé = -5 pts/but
+    // Espérance CS bonus: csProbGK% × 10 pts → normalisé
+    // Ex: CS 50% → espérance +5 pts Sorare, CS 40% → +4 pts
+    const csExpectedValue = (csProbGK / 100) * 10; // espérance en pts Sorare (0 à 6 pts)
+    const csBonus = norm(csExpectedValue, 0, 6) * 22;
+
+    // Pénalité buts encaissés: oppXg dom/ext × -5 pts/but sur Sorare
+    // oppXg 0.7 = -3.5 pts → super, oppXg 2.0 = -10 pts → catastrophe
+    // Plus l'adversaire a un xG faible, mieux c'est
+    const xgPenaltyScore = norm(oppXgGK, 0.5, 2.2, true) * 16;
+
+    // Combo: xGA de l'équipe du GK (sa propre défense)
+    // defXgaGK bas = bonne défense = moins de buts = protège le GK
+    const ownDefense = norm(defXgaGK, 0.8, 2.0, true) * 6;
+
+    // PPDA : pressing adverse = plus de tirs cadrés = plus d'arrêts = AA GK
+    const savesBonus = norm(ppdaGK, 7, 20, true) * 6;
+    const contexteGK = csBonus + xgPenaltyScore + ownDefense + savesBonus;
+
+    // MOMENTUM GK (15 pts max)
+    // Filtrer les 0s (DNP = non-titulaire) pour ne pas pénaliser un match non joué
+    const scGK = (p.last_5 || []).filter(s => s > 0);
+    const l2GK = scGK.length >= 2 ? (scGK[0] + scGK[1]) / 2 : (scGK[0] || lEff);
+    const trGK = lEff > 0 ? (l2GK - lEff) / lEff * 100 : 0;
+    const tsGK = norm(trGK, -30, 40) * 10;
+    const hsGK = scGK.length >= 2 && scGK[0] >= 60 && scGK[1] >= 60 ? 3 : 0;
+    const csGK = scGK.length >= 2 && scGK[0] < 35 && scGK[1] < 35 ? -3 : 0;
+    const momentumGK = tsGK + hsGK + csGK + 2;
+
+    // DOM/EXT
+    const domBonusGK = isHome ? 5 : -2;
+
+    // GOAT GK BONUS — GK régulier avec bon CS% sur la saison
+    // Calibré pour que Safonov (l25=57, floor=34, reg=60%) atteigne max ~78
+    let goatGK = 0;
+    if (mp >= 5 && l25 >= 45) {
+      goatGK += Math.min(5, Math.max(0, (l25 - 40) / 2.5));   // Saison solide (cap 5 vs 8 avant)
+      goatGK += Math.min(2, Math.max(0, (_floor - 20) / 10));  // Floor GK (cap 2 vs 5 avant)
+      goatGK += _reg >= 80 ? 2 : _reg >= 50 ? 1 : 0;          // Régularité (2:1:0 vs 4:2:0 avant)
+    }
+
+    const rawGK = socleGK + contexteGK + momentumGK + domBonusGK + goatGK + samplePenalty + inactivityPenalty;
+    const minScoreGK = mp >= 5 ? _floor / 100 * 50 : 0;
+    // Un GK ne peut pas dépasser son ceiling historique (meilleur match récent)
+    const ceilGK = p.ceiling || 100;
+    return Math.round(Math.max(minScoreGK, Math.min(ceilGK, rawGK)));
+  }
+
+  // ─── OUTFIELD PLAYERS ───
   // SOCLE (40%) — utilise lEff et aaEff au lieu de l5/aa5 bruts
   const f   = norm(lEff, 25, 80);
   const lb  = l25 > lEff ? norm(l25, 30, 80) * 5 : 0;
@@ -129,7 +235,8 @@ export function dScoreMatch(player, opp, isHome, playerTeam = null) {
   }
 
   // MOMENTUM (15%) — amorti pour les GOATs saison
-  const sc   = p.last_5 || [];
+  // Filtrer les 0s (DNP = non-titulaire) pour ne pas pénaliser un match non joué
+  const sc   = (p.last_5 || []).filter(s => s > 0);
   const l2   = sc.length >= 2 ? (sc[0] + sc[1]) / 2 : (sc[0] || lEff);
   const tr   = lEff > 0 ? (l2 - lEff) / lEff * 100 : 0;
   const ts   = norm(tr, -30, 40) * 10;
@@ -156,20 +263,22 @@ export function dScoreMatch(player, opp, isHome, playerTeam = null) {
     if (_possPct2 >= 0.40 && _ftp2 < 6 && _finPct2 >= 0.2) pivotMalus = -4;
   }
 
-  // DOMINATION BONUS — équipe forte à domicile = MIL/ATT vont monopoliser le ballon
+  // DOMINATION BONUS — équipe forte à domicile = MIL + DEF latéraux offensifs profitent
   // Plus l'écart xG est grand + plus le AA5 est élevé → plus le joueur profite de la domination
   let dominationBonus = 0;
-  if (isHome && playerTeam && pos === "MIL") {
+  // DEF latéral offensif (Hakimi, Nuno, Robertson...) = même logique que MIL créateur
+  // Utilise l'archetype "DEF Latéral" pour distinguer des DEF centraux
+  const isAttackingDEF = (p.archetype || "").includes("Latéral") && aaEff > 15;
+  if (isHome && playerTeam && (pos === "MIL" || isAttackingDEF)) {
     const teamXg = playerTeam.xg_dom || 1.3;
     const oppXg  = o.xg_ext || 1.3;
     const gap = teamXg - oppXg; // PSG 2.30 - Toulouse 1.26 = 1.04
     // Seuil: gap > 0.5 xG minimum pour considérer une domination
-    // Monaco 2.04 vs Marseille 1.79 = 0.25 → pas de bonus (choc)
-    // PSG 2.30 vs Toulouse 1.26 = 1.04 → grosse domination
     if (gap > 0.5) {
       const effectiveGap = gap - 0.5; // ne compter que l'excédent
       const aaScale = Math.min(1.3, p.aa5 / 20); // AA5=30 → 1.3x, AA5=10 → 0.5x
-      dominationBonus = Math.min(10, effectiveGap * 14 * aaScale);
+      const capBonus = isAttackingDEF ? 6 : 10; // DEF: cap 6 (moins que MIL cap 10)
+      dominationBonus = Math.min(capBonus, effectiveGap * 14 * aaScale);
     }
   }
 
@@ -178,9 +287,9 @@ export function dScoreMatch(player, opp, isHome, playerTeam = null) {
   // MIL: bonus moyen cap 18
   // DEF: bonus faible (déjà boosté par CS%) cap 8
   // GK: pas de bonus
-  // GOAT bonus: sample >= 5 matchs ET L25 >= 66 (vrais GOATs uniquement)
+  // GOAT bonus: sample >= 5 matchs ET L25 >= 64 (vrais GOATs uniquement)
   let goatSeasonBonus = 0;
-  if (mp >= 5 && l25 >= 66) {
+  if (mp >= 5 && l25 >= 64) {
     const gs1_raw = Math.max(0, (l25 - 55) / 2);
     const gs2_raw = Math.max(0, ((p.ceiling || 0) - 70) / 8);
     const gs3_raw = (p.ga_per_match || 0) / 0.25;
@@ -195,7 +304,10 @@ export function dScoreMatch(player, opp, isHome, playerTeam = null) {
     // GK: goatSeasonBonus = 0
   }
 
-  const raw = socle + contexte + momentum + domBonus + pivotMalus + dominationBonus + goatSeasonBonus + samplePenalty;
+  // Extra GOAT bonus — L40 >= 65 : +8 pts flat, sauf si score brut déjà > 85
+  const rawBase = socle + contexte + momentum + domBonus + pivotMalus + dominationBonus + goatSeasonBonus + samplePenalty + inactivityPenalty;
+  const extraGoatBonus = isExtraGoat(p) && rawBase <= 85 ? 8 : 0;
+  const raw = rawBase + extraGoatBonus;
   // Floor clamp désactivé si sample < 5 (floor gonflé artificiellement sur 1-2 matchs)
   const minScore = mp >= 5 ? _floor / 100 * 55 : 0;
   return Math.round(Math.max(minScore, Math.min(100, raw)));

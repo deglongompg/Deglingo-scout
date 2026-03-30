@@ -29,7 +29,7 @@ HEADERS = {
 if API_KEY:
     HEADERS["APIKEY"] = API_KEY
     print(f"🔑 API Key détectée — mode rapide activé")
-    SLEEP = 0.15         # ~400 req/min (safe sous 600 limit)
+    SLEEP = 0.109        # ~550 req/min (safe sous 600 limit)
     CLUB_SLEEP = 1       # Minimal pause between clubs
 else:
     print(f"⚠️  Pas de clé API — mode lent (24 req/min)")
@@ -57,7 +57,7 @@ PASS_STATS = {"accurate_pass","successful_final_third_passes","accurate_long_bal
               "long_pass_own_to_opp_success","adjusted_total_att_assist","big_chance_created"}
 POSS_STATS = {"interception_won","poss_won","duel_won","ball_recovery","won_contest"}
 ATT_STATS  = {"ontarget_scoring_att","pen_area_entries","successful_dribble","was_fouled","penalty_won"}
-AA_CATS    = {"GENERAL", "DEFENDING", "ATTACKING", "PASSING", "POSSESSION"}
+# AA_CATS removed — sum ALL 6 categories (GENERAL=0, DEFENDING, PASSING, POSSESSION, ATTACKING, GOALKEEPING)
 
 
 # ─── GRAPHQL CALLER WITH ANTI-BAN ───────────────────────────
@@ -176,7 +176,7 @@ Q_MAIN = """query P($slug: String!) { football { player(slug: $slug) {
     stats(seasonStartYear: 2025) {
         appearances minutesPlayed goals assists yellowCards redCards
     }
-    so5Scores(last: 25) {
+    so5Scores(last: 40) {
         score
         allAroundStats { category totalScore }
         game { date competition { slug } homeTeam { name } awayTeam { name } homeGoals awayGoals }
@@ -184,7 +184,7 @@ Q_MAIN = """query P($slug: String!) { football { player(slug: $slug) {
 }}}"""
 
 Q_DETAIL = """query P($slug: String!) { football { player(slug: $slug) {
-    so5Scores(last: 25) {
+    so5Scores(last: 40) {
         score
         detailedScore { category stat statValue totalScore }
         game { competition { slug } }
@@ -227,7 +227,7 @@ def fetch_player(slug, club_name, league):
         if s.get("score", 0) <= 0:
             continue
         played.append(s)
-    played = played[:15]  # On garde max 15 matchs club
+    played = played[:25]  # On garde max 25 matchs club (élargi pour clubs en coupe d'Europe)
 
     # Query 2: DetailedScore — SKIP si 0 matchs (économise 1 query = moins de ban)
     det_data = None
@@ -281,12 +281,13 @@ def fetch_player(slug, club_name, league):
     ga = (goals + assists) / apps if apps > 0 else 0
 
     # ─── AA SCORES from allAroundStats (real Sorare AA) ──────
+    # Sum ALL 6 categories: GENERAL(=0), DEFENDING, PASSING, POSSESSION, ATTACKING, GOALKEEPING
+    # No filter needed — GENERAL is always 0, GOALKEEPING is 0 for outfield players
     aa_scores = []
     for m in played:
         aa_stats = m.get("allAroundStats") or []
         if aa_stats:
-            aa_scores.append(sum(a.get("totalScore", 0)
-                               for a in aa_stats if a.get("category") in AA_CATS))
+            aa_scores.append(sum(a.get("totalScore", 0) for a in aa_stats))
         else:
             aa_scores.append(0)
 
@@ -405,7 +406,11 @@ def fetch_player(slug, club_name, league):
         arch = "?"
 
     mp = len(played)
-    mt = len(player.get("so5Scores", []))
+    # mt = matchs de la LIGUE uniquement (incluant DNP = score 0)
+    league_matches = [s for s in all_scores
+                      if (s.get("game") or {}).get("competition", {}).get("slug", "") in VALID_COMPS]
+    mt = len(league_matches)
+    mt = max(mt, mp)  # safety: au moins autant que played
     titu = round(mp / mt * 100) if mt else 0
 
     # ─── BUILD KPI DICT ─────────────────────────────────────
@@ -426,6 +431,8 @@ def fetch_player(slug, club_name, league):
         "l10": round(avg(scores[:10]), 1) if len(scores) >= 10 else round(avg(scores), 1),
         "l15": round(avg(scores[:15]), 1) if len(scores) >= 15 else round(avg(scores), 1),
         "l25": round(avg(scores[:25]), 1) if len(scores) >= 25 else round(avg(scores), 1),
+        "l40": round(avg([s["score"] for s in all_scores if s.get("score", 0) > 0][:40]), 1) if any(s.get("score", 0) > 0 for s in all_scores) else 0,
+        "aa40": round(avg([sum(a.get("totalScore", 0) for a in (s.get("allAroundStats") or [])) for s in all_scores if s.get("score", 0) > 0][:40]), 1) if any(s.get("score", 0) > 0 for s in all_scores) else 0,
         "last_5": [round(s, 1) for s in timeline_5],
         "last_10": [round(s, 1) for s in scores[:10]],
         "last_25": [round(s, 1) for s in scores[:25]],
@@ -445,7 +452,7 @@ def fetch_player(slug, club_name, league):
         "early_signal": round((avg(scores[:2]) - l5) / l5 * 100, 1) if l5 > 0 and len(scores) >= 2 else 0,
         # Volatilité
         "floor": round(min(s5), 0) if s5 else 0,
-        "ceiling": round(max(s5), 0) if s5 else 0,
+        "ceiling": round(max(scores), 0) if scores else 0,  # max sur tous les matchs dispos (pas juste s5)
         "ecart_5": round(std(s5), 1),
         "ecart_15": round(std(s15), 1),
         "min_5": round(min(s5), 1) if s5 else 0,
@@ -499,7 +506,10 @@ def scrape_league(league_code, fresh=False):
     existing = []
     existing_slugs = set()
     if fresh and os.path.exists(outfile):
-        os.rename(outfile, outfile.replace(".json", "_backup.json"))
+        backup = outfile.replace(".json", "_backup.json")
+        if os.path.exists(backup):
+            os.remove(backup)
+        os.rename(outfile, backup)
         print(f"  🗑️  FRESH mode — backup créé, on repart de zéro")
     elif os.path.exists(outfile):
         with open(outfile, "r", encoding="utf-8") as f:
@@ -606,7 +616,7 @@ if __name__ == "__main__":
         sys.exit(1)
 
     if target == "ALL":
-        for lg in ["PL", "Liga", "Bundes"]:
+        for lg in ["L1", "PL", "Liga", "Bundes"]:
             scrape_league(lg, fresh=fresh)
             print(f"\n⏸️  Pause 30s avant la prochaine ligue...")
             time.sleep(30)

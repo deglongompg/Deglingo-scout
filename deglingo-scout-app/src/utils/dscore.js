@@ -122,9 +122,9 @@ export function dScoreMatch(player, opp, isHome, playerTeam = null) {
     const socleGK = fGK + aaGK + flGK + rgGK + l25GK;
 
     // CONTEXTE GK (50 pts max) — basé sur le scoring Sorare réel
-    // Sur Sorare: CS 60 = +10 pts, but encaissé = -5 pts/but
-    // Espérance CS bonus: csProbGK% × 10 pts → normalisé
-    // Ex: CS 50% → espérance +5 pts Sorare, CS 40% → +4 pts
+    // Sur Sorare: CS = score passe de ~35 à ~60 (Decisive Score, pas AA)
+    // But encaissé = -5 pts/but (Decisive Score)
+    // Espérance CS: csProbGK × impact ~25 pts → normalisé sur plage réaliste
     const csExpectedValue = (csProbGK / 100) * 10; // espérance en pts Sorare (0 à 6 pts)
     const csBonus = norm(csExpectedValue, 0, 6) * 22;
 
@@ -190,22 +190,35 @@ export function dScoreMatch(player, opp, isHome, playerTeam = null) {
     // GK: oppXg élevé = buts encaissés (-10/but) = catastrophe
     // PPDA bas = pressing = plus de tirs cadrés = plus d'arrêts (neutre/positif pour AA GK)
     contexte = norm(oppXg, 0.8, 2.5, true)*22 + norm(ppda, 7, 20)*16 + norm(lEff, 20, 70)*12;
-  else if (pos === "DEF")
-    // DEF: oppXg élevé = buts encaissés (-4/but) + erreurs (-5) + cartons (-3) dans gros matchs
-    // PPDA bas + oppXg élevé = pressing intense = plus d'erreurs/cartons
-    contexte = norm(oppXg, 0.8, 2.5, true)*20 + (aaEff > 18 ? norm(ppda, 7, 20, true) : norm(ppda, 7, 20))*16 + norm(lEff, 20, 75)*14;
+  else if (pos === "DEF") {
+    // DEF: CS = +10 pts (decisive score), but encaissé = -4 pts/but
+    // Espérance CS: prob × 10 pts → composante la plus importante du contexte DEF
+    const defXgaDEF = playerTeam ? (isHome ? (playerTeam.xga_dom || 1.3) : (playerTeam.xga_ext || 1.5)) : 1.3;
+    const defLambda = Math.max(0.5, Math.min(2.0, (defXgaDEF * oppXg) / (LG_AVG_XG[p.league] || 1.5)));
+    const defCsProb = Math.exp(-defLambda); // 0-1
+    const csExpDEF = defCsProb * 10; // espérance du +10 CS (ex: 50% CS = +5 pts attendus)
+    const csScore = norm(csExpDEF, 0, 8) * 26; // CS = composante dominante pour DEF
+    // PPDA: pressing = erreurs/cartons supplémentaires pour DEF offensif
+    const ppdaScore = (aaEff > 18 ? norm(ppda, 7, 20, true) : norm(ppda, 7, 20)) * 14;
+    const formScore = norm(lEff, 20, 75) * 10;
+    contexte = csScore + ppdaScore + formScore;
+  }
   else if (pos === "MIL") {
-    // MIL AA élevé: PPDA impact dépend du profil (créateur = bloc bas positif, offensif = bloc bas neutre)
+    // MIL: pas de CS bonus, but encaissé = -2 pts/but
+    // oppXg élevé = risque de malus -2/but = composante défensive
+    // xga (ce que l'adversaire encaisse) = opportunités offensives AA
     const _mP = Math.max(0, p.aa_passing || 0), _mO = Math.max(0, p.aa_possession || 0);
     const _mA = Math.max(0, p.aa_attacking || 0), _mD = Math.max(0, p.aa_defending || 0);
     const _mT = _mP + _mO + _mA + _mD || 1;
     const mCreaPct = (_mP + _mO) / _mT;
     const mPpdaCrea = norm(ppda, 7, 20);       // bloc bas = positif pour créateur
-    const mPpdaFin  = norm(ppda, 7, 20, true); // bloc bas = négatif pour finisseur
+    const mPpdaFin  = norm(ppda, 7, 20, true); // pressing = positif pour finisseur
     const mPpdaBlend = mPpdaCrea * mCreaPct + mPpdaFin * (1 - mCreaPct);
+    // Malus défensif: adversaire qui marque beaucoup = -2/but en Sorare
+    const concedeMalusMIL = norm(oppXg, 0.8, 2.5, true) * 8; // pénalité si oppXg élevé
     contexte = aaEff >= 10
-      ? mPpdaBlend*26 + norm(xga, 0.8, 2)*8  + norm(lEff, 25, 75)*16
-      : norm(xga,  0.8, 2)*22 + norm(ppda, 7, 20, true)*14 + norm(lEff, 20, 80)*14;
+      ? mPpdaBlend*22 + norm(xga, 0.8, 2)*8 + concedeMalusMIL + norm(lEff, 25, 75)*12
+      : norm(xga, 0.8, 2)*18 + norm(ppda, 7, 20, true)*12 + concedeMalusMIL + norm(lEff, 20, 80)*12;
   }
   else { // ATT — PPDA impact dépend du profil AA du joueur
     const _aP = Math.max(0, p.aa_passing || 0), _aO = Math.max(0, p.aa_possession || 0);

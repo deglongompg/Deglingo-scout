@@ -145,9 +145,9 @@ function genVerdict(p, alternatives = []) {
             ? `${p.oppName} pratique un pressing haut (PPDA ${oppPpda.toFixed(1)}) mais leur défense reste solide (${oppXga.toFixed(2)} xGA). Le pressing peut ouvrir quelques espaces pour un dribbleur comme ${lastName} (${Math.round(ftp)} FTP/match), mais ${p.oppName} sait se replacer — match compliqué malgré le profil adapté.`
             : `${p.oppName} pratique un pressing haut (PPDA ${oppPpda.toFixed(1)}) : JACKPOT pour un dribbleur comme ${lastName} ! Ils montent agressivement et laissent des boulevards dans le dos. Avec ${Math.round(ftp)} passes/match dans le dernier tiers, ses percées et ses centres vont faire exploser son AA.`)
           : isFinisher
-          ? `${p.oppName} pratique un pressing haut (PPDA ${oppPpda.toFixed(1)}) : ils montent agressivement. ${solidDef ? `Mais leur défense reste solide (${oppXga.toFixed(2)} xGA) — les occasions seront rares malgré le pressing.` : `Parfait pour ${lastName} qui fait ${pctFinisher}% de son AA en tirs et dribbles — les espaces dans le dos seront exploitables en profondeur.`}`
+          ? `${p.oppName} pratique un pressing haut (PPDA ${oppPpda.toFixed(1)}) : leur ligne défensive est haute — des espaces dans le dos à exploiter en profondeur. ${solidDef ? `Leur défense reste organisée (${oppXga.toFixed(2)} xGA) mais les courses de ${lastName} peuvent surprendre sur les transitions.` : `Contexte idéal pour ${lastName} : appels dans le dos, vitesse, et finitions — c'est exactement son registre.`}`
           : isCreator
-          ? `${p.oppName} pratique un pressing haut (PPDA ${oppPpda.toFixed(1)}) : match intense. ${solidDef ? `Leur défense solide (${oppXga.toFixed(2)} xGA) limite les occasions malgré le pressing.` : `${lastName} pourra déclencher des passes décisives dans les transitions.`}`
+          ? `${p.oppName} pratique un pressing haut (PPDA ${oppPpda.toFixed(1)}) : match intense avec beaucoup de transitions. ${solidDef ? `Leur défense solide (${oppXga.toFixed(2)} xGA) referme vite, mais les passes décisives entre les lignes seront possibles.` : `${lastName} pourra déclencher des passes décisives dans les transitions rapides.`}`
           : `${p.oppName} pratique un pressing haut (PPDA ${oppPpda.toFixed(1)}) ${solidDef ? `mais reste solide défensivement (${oppXga.toFixed(2)} xGA). Match compliqué.` : `: espaces dans le dos et transitions rapides. Match ouvert.`}`;
       } else {
         oppStyleTxt = `${p.oppName} joue de façon équilibrée (PPDA ${oppPpda.toFixed(1)}) : match classique avec des occasions dans les deux sens.`;
@@ -213,7 +213,7 @@ function genVerdict(p, alternatives = []) {
         : `${p.oppName} encaisse régulièrement — des occasions seront à saisir pour ${lastName} (profil ${profilTxt}).`;
     } else {
       styleTxt = oppPpda >= 15 ? `${p.oppName} est solide ET joue en bloc bas. ${sIsCreator ? `Seul espoir : ${lastName} en tant que ${profilTxt} peut gratter des points AA sur la possession. Mais peu de décisif.` : `Double peine pour un ${profilTxt} comme ${lastName}. Peu d'espaces, peu d'occasions.`}`
-        : oppPpda < 12 ? `${p.oppName} est solide mais leur pressing haut peut ouvrir quelques brèches en transition. ${sIsFinisher ? `${lastName} devra miser sur les contres et la profondeur.` : sIsDribbleur ? `Le profil ${profilTxt} de ${lastName} peut exploiter ces rares espaces, mais ça reste un match difficile.` : `Match difficile pour ${lastName} (${profilTxt}), les occasions seront rares.`}`
+        : oppPpda < 12 ? `${p.oppName} est solide mais leur pressing haut monte la ligne défensive — ${sIsFinisher ? `des espaces dans le dos à exploiter en profondeur. C'est LE contexte pour un finisseur rapide comme ${lastName} : une passe en profondeur et c'est le but.` : sIsDribbleur ? `quelques espaces pour un dribbleur comme ${lastName} (${profilTxt}), mais ${p.oppName} sait se replacer vite.` : `les espaces en transition restent limités pour ${lastName} (${profilTxt}).`}`
         : `${p.oppName} a une défense solide — match compliqué pour ${lastName} (${profilTxt}). Il faudra un éclair de génie.`;
     }
   }

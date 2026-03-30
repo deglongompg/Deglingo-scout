@@ -36,6 +36,7 @@ const LG_META = {
 
 function getTags(p) {
   const tags = [];
+  if (isExtraGoat(p)) tags.push("★ Extra GOAT");
   if (p.aa5 >= 20) tags.push("AA Monster");
   if ((p.min_15 ?? p.floor) >= 55) tags.push("Floor King");
   if (p.regularite >= 90) tags.push("Régulier");
@@ -64,7 +65,9 @@ function genVerdict(p, alternatives = []) {
     : es > 5 ? `${lastName} progresse : L2 = ${pL2} vs L5 = ${pL5} (+${es}%).`
     : es < -10 ? `Attention, ${lastName} est en baisse : L2 = ${pL2} vs L5 = ${pL5} (${es}%). Forme descendante.`
     : `${lastName} est régulier : L2 = ${pL2}, L5 = ${pL5}. Performances stables.`;
-  const tituTxt = p.titu_pct >= 90 ? "Titulaire indiscutable" : p.titu_pct >= 70 ? "Titulaire régulier" : p.titu_pct >= 50 ? "Temps de jeu partagé" : "Remplaçant fréquent — risque de ne pas jouer";
+  const tituTxt = isExtraGoat(p) && p.titu_pct < 50
+    ? "Joueur exceptionnel — même en retour de blessure il peut taper un 100"
+    : p.titu_pct >= 90 ? "Titulaire indiscutable" : p.titu_pct >= 70 ? "Titulaire régulier" : p.titu_pct >= 50 ? "Temps de jeu partagé" : "Remplaçant fréquent — risque de ne pas jouer";
   const floorTxt = fl >= 55 ? `Son floor de ${Math.round(fl)} pts garantit une base solide même en soirée difficile.` : fl >= 40 ? `Son floor de ${Math.round(fl)} pts offre un filet de sécurité correct.` : `Attention : son floor est bas (${Math.round(fl)} pts), gros risque si soirée sans.`;
   const mp = p.matchs_played || 0;
   const egFloorTxt = isExtraGoat(p) && mp >= 1 && mp < 4

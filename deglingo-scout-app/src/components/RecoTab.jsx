@@ -41,15 +41,13 @@ function getTags(p) {
   if ((p.min_15 ?? p.floor) >= 55) tags.push("Floor King");
   if (p.regularite >= 90) tags.push("Régulier");
   if (p.ga_per_match >= 0.5) tags.push("DS Bomb");
-  const sc = p.last_5 || [];
-  const l2 = sc.length >= 2 ? (sc[0] + sc[1]) / 2 : p.l5;
+  const l2 = p.l2 || p.l5;  // pipeline value — matchs joués uniquement
   if (p.l5 > 0 && (l2 - p.l5) / p.l5 > 0.15) tags.push("Early Signal");
   return tags;
 }
 
 function genVerdict(p, alternatives = []) {
-  const sc = p.last_5 || [];
-  const l2 = sc.length >= 2 ? (sc[0] + sc[1]) / 2 : sc[0] || p.l5;
+  const l2 = p.l2 || p.l5;  // pipeline value — matchs joués uniquement, pas de DNP=0
   const es = p.l5 > 0 ? Math.round((l2 - p.l5) / p.l5 * 100) : 0;
   const oppPpda = p.isHome ? (p.oppTeam.ppda_ext || 12) : (p.oppTeam.ppda_dom || 12);
   const oppXga = p.isHome ? (p.oppTeam.xga_ext || 1.5) : (p.oppTeam.xga_dom || 1.5);
@@ -388,8 +386,7 @@ function DetailPanel({ player, logos = {}, allPicks = [] }) {
     .sort((a, b) => b.ds - a.ds)
     .slice(0, 3);
   const v = genVerdict(player, alternatives);
-  const sc = player.last_5 || [];
-  const l2 = sc.length >= 2 ? (sc[0] + sc[1]) / 2 : player.l5;
+  const l2 = player.l2 || player.l5;  // pipeline value — matchs joués uniquement, pas de DNP=0
   const es = player.l5 > 0 ? Math.round((l2 - player.l5) / player.l5 * 100) : 0;
   const oppPpda = player.isHome ? (player.oppTeam.ppda_ext || 12) : (player.oppTeam.ppda_dom || 12);
   const oppXga = player.isHome ? (player.oppTeam.xga_ext || 1.5) : (player.oppTeam.xga_dom || 1.5);
@@ -461,17 +458,19 @@ function DetailPanel({ player, logos = {}, allPicks = [] }) {
             const _isCrea = !_isPivot && !_isDrib && _pCrea >= 60;
             const _isFin = !_isPivot && !_isDrib && _pFin >= 40;
             const _profil = _isPivot ? `🗼 Pivot` : _isDrib ? `🏃 Dribbleur` : _isCrea ? `Créateur ${_pCrea}%` : _isFin ? `Finisseur ${_pFin}%` : `Mixte`;
-            // Bloc bas impact par profil
+            // Style de jeu adverse
+            const _styleLabel = oppPpda >= 15 ? "Bloc bas" : oppPpda < 12 ? "Pressing haut" : "Équilibré";
+            // Impact du style par profil ATT
             const _blocImpact = oppPpda >= 15
-              ? (_isPivot ? "Neutre" : _isDrib ? "Neutre" : _isCrea ? "Positif" : _isFin ? "Négatif" : "Neutre")
+              ? (_isCrea ? "Positif" : _isFin ? "Négatif" : "Neutre")
               : oppPpda < 12
-              ? (_isDrib ? "Positif" : _isFin ? "Positif" : _isPivot ? "Neutre" : "Neutre")
+              ? (_isDrib ? "Positif" : _isFin ? "Positif" : _isCrea ? "Positif" : "Neutre")
               : "Neutre";
             const _blocColor = _blocImpact === "Positif" ? "#4ADE80" : _blocImpact === "Négatif" ? "#F87171" : "#FCD34D";
             const cards = [
-              { l: `Défense de ${player.oppName}`, desc: oppXga > 1.5 ? `${player.oppName} encaisse beaucoup → plein d'occasions` : `${player.oppName} est solide → peu d'espaces`, v: oppXga.toFixed(2) + " xGA", c: oppXga > 1.6 ? "#4ADE80" : oppXga > 1.2 ? "#FCD34D" : "#F87171" },
+              { l: `Défense de ${player.oppName}`, desc: oppXga > 1.5 ? `${player.oppName} encaisse beaucoup → plein d'occasions` : oppXga > 1.25 ? `${player.oppName} a une défense moyenne → des occasions à saisir` : `${player.oppName} est solide → peu d'espaces`, v: oppXga.toFixed(2) + " xGA", c: oppXga > 1.5 ? "#4ADE80" : oppXga > 1.25 ? "#FCD34D" : "#F87171" },
               { l: `Profil AA de ${player.name.split(" ").pop()}`, desc: _isPivot ? `Pivot : ${_pPoss}% duels/poss, FTP ${_ftp.toFixed(0)} — vit dans la surface` : _isDrib ? `Dribbleur : ${Math.round(_ftp)} FTP/match, percute et crée` : _isCrea ? `Fait son AA en passes/possession (${_pCrea}%)` : _isFin ? `Fait son AA en tirs/dribbles (${_pFin}%)` : `Profil mixte : ${_pCrea}% créa / ${_pFin}% finition`, v: _profil, c: _isPivot ? "#F472B6" : _isDrib ? "#F59E0B" : "#A5B4FC", sm: true },
-              { l: `Bloc bas vs son profil`, desc: oppPpda >= 15 ? (_isPivot ? `Plus de centres mais surface bondée → neutre` : _isDrib ? `Espaces réduits pour percuter, mais plus de ballon` : _isCrea ? `Possession dominante → ses passes/récups vont monter` : _isFin ? `Défense compacte → peu d'espaces pour tirs/dribbles` : `Impact mixte — possession ↑ mais espaces ↓`) : oppPpda < 12 ? (_isDrib ? `JACKPOT : boulevards dans le dos, espaces pour percuter` : _isFin ? `Pressing haut → espaces en profondeur, idéal` : _isPivot ? `Plus d'espaces mais moins de centres → neutre` : `Match ouvert → transitions et duels`) : `Match équilibré`, v: _blocImpact, c: _blocColor, sm: true },
+              { l: `${_styleLabel} vs son profil`, desc: oppPpda >= 15 ? (_isCrea ? `Possession dominante → passes décisives et récups AA qui montent` : _isFin ? `Défense compacte → peu d'espaces pour tirs/dribbles` : `Impact mixte — possession ↑ mais espaces ↓`) : oppPpda < 12 ? (_isDrib ? `JACKPOT : boulevards dans le dos, espaces pour percuter` : _isFin ? `Ligne haute → espaces dans le dos, situations dangereuses` : _isCrea ? `Ligne haute → il va se créer des situations de but en profondeur` : `Match ouvert → transitions et duels`) : `Match équilibré`, v: _blocImpact, c: _blocColor, sm: true },
               { l: `Forme de ${player.name.split(" ").pop()}`, desc: es > 10 ? "En pleine confiance, hausse nette" : es > 0 ? "Légère progression, bon signe" : es === 0 ? "Performances stables" : "En baisse — surveiller", v: `${es > 0 ? "+" : ""}${es}%`, c: es > 15 ? "#4ADE80" : es > 0 ? "#FCD34D" : "#F87171" },
             ];
             if (_isPivot) cards.push({ l: "⚠️ Alerte Meta", desc: `AA5 ~${Math.round(player.aa5)} — doit marquer ou passe D pour >60pts. Pick très risqué.`, v: "Anti-Meta", c: "#F59E0B", sm: true });

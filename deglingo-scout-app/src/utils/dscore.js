@@ -220,8 +220,8 @@ export function dScoreMatch(player, opp, isHome, playerTeam = null) {
     // García (lEff=56, aa5=9)  → scale ~0.66 | Güler (lEff=67, aa5=22) → scale ~1.0
     const milQualityScale = Math.min(1.0, Math.max(0.6, lEff * 0.6 / 70 + aaEff * 0.4 / 20));
     const milContextRaw = aaEff >= 10
-      ? mPpdaBlend*22 + norm(xga, 0.8, 2)*8 + concedeMalusMIL + norm(lEff, 25, 75)*12
-      : norm(xga, 0.8, 2)*16 + norm(ppda, 7, 20, true)*10 + concedeMalusMIL + norm(lEff, 20, 80)*16;
+      ? mPpdaBlend*22 + norm(xga, 0.8, 2)*10 + concedeMalusMIL + norm(lEff, 25, 75)*14
+      : norm(xga, 0.8, 2)*10 + norm(ppda, 7, 20, true)*8 + concedeMalusMIL + norm(lEff, 20, 80)*22;
     contexte = milContextRaw * milQualityScale;
   }
   else { // ATT — PPDA impact dépend du profil AA du joueur

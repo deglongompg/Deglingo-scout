@@ -1,8 +1,10 @@
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 import { dsColor, dsBg, LEAGUE_FLAGS, LEAGUE_FLAG_CODES, POSITION_COLORS } from "../utils/colors";
 import { dScoreMatch, csProb, findTeam } from "../utils/dscore";
+import { t } from "../utils/i18n";
 
-const FIGHT_COUNT_KEY = "deglingo_fight_count";
+const FIGHT_COUNT_KEY = "deglingo_fight_count_v2";
+const COUNTER_URL = "https://deglingo-fight-counter.damien-gheza.workers.dev";
 
 // ISO3 country codes used in Sorare → ISO2 for flag images
 const COUNTRY_ISO3_TO_2 = {
@@ -21,16 +23,16 @@ function FightCountryFlag({ code, size = 14 }) {
   return <img src={`https://flagcdn.com/w40/${iso2}.png`} alt={iso2} width={size} height={Math.round(size * 0.75)} style={{ verticalAlign: "middle", borderRadius: 2, objectFit: "cover" }} />;
 }
 
-const STAT_DESC = {
-  "D-Score": "Prediction pour CE match (forme + adversaire)",
-  "L5": "Moyenne des 5 derniers matchs",
-  "AA5": "All-Around Score moyen (hors buts)",
-  "Min": "Score minimum garanti (L15)",
-  "Max": "Score max possible (L15)",
-  "Reg10%": "% matchs au-dessus de 60 pts (L10)",
-  "Titu%": "% titularisations sur les 10 derniers matchs",
-  "G+A/m": "Buts + assists par match (saison)",
-};
+const getStatDesc = (lang) => ({
+  "D-Score": t(lang, "statDescDScore"),
+  "L5": t(lang, "statDescL5"),
+  "AA5": t(lang, "statDescAA5"),
+  "Min": t(lang, "statDescMin"),
+  "Max": t(lang, "statDescMax"),
+  "Reg10%": t(lang, "statDescReg"),
+  "Titu%": t(lang, "statDescTitu"),
+  "G+A/m": t(lang, "statDescGA"),
+});
 
 /* ── Sound FX ───────────────────────────── */
 function playBellSound() {
@@ -290,7 +292,7 @@ function PlayerCard({ player, score, opp, isHome, oppName, league, isWinner, log
 }
 
 /* ── Stat comparison row ── */
-function Stat({ label, v1, v2 }) {
+function Stat({ label, v1, v2, desc = "" }) {
   const w1 = v1 > v2, w2 = v2 > v1;
   const isD = label === "D-Score";
   return (
@@ -304,14 +306,15 @@ function Stat({ label, v1, v2 }) {
           {typeof v2 === "number" ? (Number.isInteger(v2) ? v2 : v2.toFixed(1)) : v2}
         </div>
       </div>
-      <div style={{ textAlign: "center", fontSize: 10, color: "rgba(255,255,255,0.30)", marginTop: 2, fontStyle: "italic" }}>{STAT_DESC[label] || ""}</div>
+      <div style={{ textAlign: "center", fontSize: 10, color: "rgba(255,255,255,0.30)", marginTop: 2, fontStyle: "italic" }}>{desc}</div>
     </div>
   );
 }
 
 /* ── Match verdict generator ── */
-function genVerdict(p, opp, isHome, d, pTeam) {
+function genVerdict(p, opp, isHome, d, pTeam, lang = "fr") {
   if (!p || !opp) return "";
+  const __ = (fr, en) => lang === "en" ? en : fr;
   const oppPpda = isHome ? (opp.ppda_ext || 12) : (opp.ppda_dom || 12);
   const oppXga = isHome ? (opp.xga_ext || 1.5) : (opp.xga_dom || 1.5);
   const oppXg = isHome ? (opp.xg_ext || 1.3) : (opp.xg_dom || 1.3);
@@ -321,49 +324,49 @@ function genVerdict(p, opp, isHome, d, pTeam) {
   const l2 = sc.length >= 2 ? (sc[0] + sc[1]) / 2 : p.l5;
   const es = p.l5 > 0 ? Math.round((l2 - p.l5) / p.l5 * 100) : 0;
   const fl = p.min_15 ?? p.floor ?? 0;
-  const haLabel = isHome ? "à domicile" : "en déplacement";
+  const haLabel = isHome ? __("à domicile", "at home") : __("en déplacement", "away");
 
-  const formeTxt = es > 15 ? `${lastName} est en pleine forme (+${es}%).`
-    : es > 5 ? `${lastName} progresse (+${es}%).`
-    : es < -10 ? `${lastName} est en baisse (${es}%).`
-    : `${lastName} est régulier.`;
+  const formeTxt = es > 15 ? `${lastName} ${__("est en pleine forme", "is in great form")} (+${es}%).`
+    : es > 5 ? `${lastName} ${__("progresse", "is improving")} (+${es}%).`
+    : es < -10 ? `${lastName} ${__("est en baisse", "is declining")} (${es}%).`
+    : `${lastName} ${__("est régulier", "is consistent")}.`;
 
   const cs = csProb(defXga, oppXg, p.league);
 
   if (p.position === "GK") {
-    const csLabel = cs >= 45 ? "très élevée" : cs >= 30 ? "correcte" : cs >= 20 ? "moyenne" : "faible";
-    return `${formeTxt} Il joue ${haLabel} face à ${opp.name}. ` +
-      `${opp.name} ${isHome ? "se déplace" : "reçoit"} et marque ${oppXg.toFixed(2)} buts attendus/match. ` +
-      `Probabilité de Clean Sheet : ${csLabel} (${cs}%). ` +
-      `${cs >= 30 ? "Attaque faible = gros potentiel CS + arrêts bonus." : cs >= 20 ? "CS possible, beaucoup d'arrêts potentiels." : "CS difficile mais arrêts = AA élevé."} ` +
-      `D-Score ${d} — ${d >= 70 ? "Top GK pick !" : d >= 60 ? "Bon choix gardien." : d >= 50 ? "Pick correct." : "Pick risqué."}`;
+    const csLabel = cs >= 45 ? __("très élevée", "very high") : cs >= 30 ? __("correcte", "decent") : cs >= 20 ? __("moyenne", "average") : __("faible", "low");
+    return `${formeTxt} ${__("Il joue", "He plays")} ${haLabel} ${__("face à", "against")} ${opp.name}. ` +
+      `${opp.name} ${isHome ? __("se déplace", "travels") : __("reçoit", "hosts")} ${__("et marque", "and scores")} ${oppXg.toFixed(2)} ${__("buts attendus/match", "expected goals/match")}. ` +
+      `${__("Probabilité de Clean Sheet", "Clean Sheet probability")} : ${csLabel} (${cs}%). ` +
+      `${cs >= 30 ? __("Attaque faible = gros potentiel CS + arrêts bonus.", "Weak attack = high CS potential + bonus saves.") : cs >= 20 ? __("CS possible, beaucoup d'arrêts potentiels.", "CS possible, lots of potential saves.") : __("CS difficile mais arrêts = AA élevé.", "CS unlikely — but saves = high AA.")} ` +
+      `D-Score ${d} — ${d >= 70 ? __("Top GK pick !", "Top GK pick!") : d >= 60 ? __("Bon choix gardien.", "Good keeper choice.") : d >= 50 ? __("Pick correct.", "Decent pick.") : __("Pick risqué.", "Risky pick.")}`;
   }
 
-  const oppDefTxt = oppXga > 1.6 ? `${opp.name} encaisse beaucoup (${oppXga.toFixed(2)} xGA) — défense poreuse.`
-    : oppXga > 1.3 ? `${opp.name} a une défense moyenne (${oppXga.toFixed(2)} xGA).`
-    : `${opp.name} est solide défensivement (${oppXga.toFixed(2)} xGA).`;
-  const oppStyleTxt = oppPpda >= 15 ? `${opp.name} joue en bloc bas — possession pour l'adversaire.`
-    : oppPpda >= 12 ? `${opp.name} joue de façon équilibrée.`
-    : `${opp.name} presse haut — espaces dans le dos.`;
+  const oppDefTxt = oppXga > 1.6 ? `${opp.name} ${__("encaisse beaucoup", "concedes a lot")} (${oppXga.toFixed(2)} xGA) — ${__("défense poreuse.", "leaky defence.")}`
+    : oppXga > 1.3 ? `${opp.name} ${__("a une défense moyenne", "has an average defence")} (${oppXga.toFixed(2)} xGA).`
+    : `${opp.name} ${__("est solide défensivement", "is defensively solid")} (${oppXga.toFixed(2)} xGA).`;
+  const oppStyleTxt = oppPpda >= 15 ? `${opp.name} ${__("joue en bloc bas — possession pour l'adversaire.", "plays a low block — opponent controls possession.")}`
+    : oppPpda >= 12 ? `${opp.name} ${__("joue de façon équilibrée.", "plays a balanced style.")}`
+    : `${opp.name} ${__("presse haut — espaces dans le dos.", "presses high — spaces in behind.")}`;
 
   let styleTxt;
   if (p.position === "DEF") {
     const csDef = cs;
-    styleTxt = csDef >= 35 ? `CS ${csDef}% — très jouable. ${p.aa5 >= 18 ? `AA5 de ${Math.round(p.aa5)} = il monte et crée en plus.` : "Le bonus CS (+10 pts) peut tout changer."}`
-      : csDef >= 22 ? `CS ${csDef}% — possible. ${p.aa5 >= 18 ? `Son AA5 (${Math.round(p.aa5)}) sécurise le score même sans CS.` : "Il faudra compter sur la solidité défensive."}`
-      : `CS seulement ${csDef}% — compliqué. ${p.aa5 >= 18 ? `Mais son AA5 (${Math.round(p.aa5)}) compense sans CS.` : "Sans CS, score moyen probable."}`;
+    styleTxt = csDef >= 35 ? `CS ${csDef}% — ${__("très jouable.", "very achievable.")} ${p.aa5 >= 18 ? `AA5 ${__("de", "of")} ${Math.round(p.aa5)} = ${__("il monte et crée en plus.", "he pushes up and creates too.")}` : __("Le bonus CS (+10 pts) peut tout changer.", "The CS bonus (+10 pts) can change everything.")}`
+      : csDef >= 22 ? `CS ${csDef}% — ${__("possible.", "possible.")} ${p.aa5 >= 18 ? `${__("Son AA5", "His AA5")} (${Math.round(p.aa5)}) ${__("sécurise le score même sans CS.", "secures the score even without CS.")}` : __("Il faudra compter sur la solidité défensive.", "Rely on defensive solidity.")}`
+      : `CS ${__("seulement", "only")} ${csDef}% — ${__("compliqué.", "tough.")} ${p.aa5 >= 18 ? `${__("Mais son AA5", "But his AA5")} (${Math.round(p.aa5)}) ${__("compense sans CS.", "compensates without CS.")}` : __("Sans CS, score moyen probable.", "Without CS, average score likely.")}`;
   } else if (p.position === "MIL") {
     styleTxt = p.aa5 >= 15
-      ? `AA élevé (${Math.round(p.aa5)}) = points garantis. ${oppPpda >= 15 ? `Face au bloc bas de ${opp.name}, score monster possible.` : "Match ouvert = duels et actions."}`
-      : `${oppXga > 1.5 ? `${opp.name} est perméable — occasions à prendre.` : "Adversaire solide — miser sur la régularité."}`;
+      ? `${__("AA élevé", "High AA")} (${Math.round(p.aa5)}) = ${__("points garantis.", "guaranteed points.")} ${oppPpda >= 15 ? `${__("Face au bloc bas de", "vs the low block of")} ${opp.name}, ${__("score monster possible.", "monster score possible.")}` : __("Match ouvert = duels et actions.", "Open game = duels and actions.")}`
+      : `${oppXga > 1.5 ? `${opp.name} ${__("est perméable — occasions à prendre.", "is leaky — chances to take.")}` : __("Adversaire solide — miser sur la régularité.", "Solid opponent — rely on consistency.")}`;
   } else {
-    styleTxt = oppXga > 1.6 ? `Défense poreuse de ${opp.name} — contexte rêvé pour scorer.`
-      : oppXga > 1.3 ? `Des occasions à saisir face à ${opp.name}.`
-      : `${opp.name} défend bien — match compliqué.`;
+    styleTxt = oppXga > 1.6 ? `${__("Défense poreuse de", "Leaky defence of")} ${opp.name} — ${__("contexte rêvé pour scorer.", "dream context to score.")}`
+      : oppXga > 1.3 ? `${__("Des occasions à saisir face à", "Chances to take against")} ${opp.name}.`
+      : `${opp.name} ${__("défend bien — match compliqué.", "defends well — tough match.")}`;
   }
 
-  return `${formeTxt} Il joue ${haLabel} face à ${opp.name}. ${oppDefTxt} ${oppStyleTxt} ${styleTxt} ` +
-    `Floor ${Math.round(fl)} pts. D-Score ${d} — ${d >= 70 ? "Top pick !" : d >= 60 ? "Bon choix." : d >= 50 ? "Pick correct." : "Pick risqué."}`;
+  return `${formeTxt} ${__("Il joue", "He plays")} ${haLabel} ${__("face à", "against")} ${opp.name}. ${oppDefTxt} ${oppStyleTxt} ${styleTxt} ` +
+    `Floor ${Math.round(fl)} pts. D-Score ${d} — ${d >= 70 ? __("Top pick !", "Top pick!") : d >= 60 ? __("Bon choix.", "Good pick.") : d >= 50 ? __("Pick correct.", "Decent pick.") : __("Pick risqué.", "Risky pick.")}`;
 }
 
 /* ── Fight Animation ── */
@@ -427,7 +430,7 @@ function FightAnimation({ phase, winner, name1, name2, d1, d2, club1, club2, log
 /* ════════════════════════════════════════════
    MAIN COMPONENT
    ════════════════════════════════════════════ */
-export default function FightTab({ players, teams, fixtures, logos = {} }) {
+export default function FightTab({ players, teams, fixtures, logos = {}, lang = "fr" }) {
   const [lg1, setLg1] = useState("L1"); const [lg2, setLg2] = useState("L1");
   const [c1, setC1] = useState(""); const [c2, setC2] = useState("");
   const [pn1, setPn1] = useState(""); const [pn2, setPn2] = useState("");
@@ -435,9 +438,14 @@ export default function FightTab({ players, teams, fixtures, logos = {} }) {
   const [h1, setH1] = useState(true); const [h2, setH2] = useState(true);
   const [launched, setLaunched] = useState(false);
   const [animPhase, setAnimPhase] = useState(0);
-  const [fightCount, setFightCount] = useState(() => {
-    try { return parseInt(localStorage.getItem(FIGHT_COUNT_KEY) || "0", 10); } catch { return 0; }
-  });
+  const [fightCount, setFightCount] = useState(0);
+
+  useEffect(() => {
+    fetch(`${COUNTER_URL}/count`)
+      .then(r => r.json())
+      .then(d => setFightCount(d.count))
+      .catch(() => {});
+  }, []);
 
   const pf = fixtures?.player_fixtures || {};
   const autoFill = (name, setO, setH) => { const fx = pf[name]; if (fx) { setO(fx.opp); setH(fx.isHome); } };
@@ -468,8 +476,10 @@ export default function FightTab({ players, teams, fixtures, logos = {} }) {
 
   const doFight = () => {
     if (!ready) return;
-    const nc = fightCount + 1; setFightCount(nc);
-    try { localStorage.setItem(FIGHT_COUNT_KEY, String(nc)); } catch {}
+    fetch(`${COUNTER_URL}/increment`, { method: 'POST' })
+      .then(r => r.json())
+      .then(d => setFightCount(d.count))
+      .catch(() => setFightCount(c => c + 1));
     setAnimPhase(1); playBellSound();
     setTimeout(() => { setAnimPhase(2); playPunchSound(); }, 1500);
     setTimeout(() => { setAnimPhase(3); playKOSound(); }, 2800);
@@ -501,31 +511,45 @@ export default function FightTab({ players, teams, fixtures, logos = {} }) {
           backgroundSize: "200% auto", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent",
           animation: "shimmer 3s linear infinite",
         }}>Deglingo Fight</div>
-        <div style={{ fontSize: 13, color: "rgba(255,255,255,0.4)", marginTop: 4 }}>Qui choisir pour ta prochaine GW Sorare ?</div>
+        <div style={{ fontSize: 13, color: "rgba(255,255,255,0.4)", marginTop: 4 }}>{t(lang, "fightSubtitle")}</div>
+        <div style={{
+          display: "inline-flex", alignItems: "center", gap: 8, marginTop: 12,
+          background: "rgba(239,68,68,0.08)", border: "1px solid rgba(239,68,68,0.2)",
+          borderRadius: 12, padding: "8px 20px",
+        }}>
+          <span style={{ fontSize: 28, fontWeight: 900, fontFamily: "Outfit",
+            background: "linear-gradient(90deg,#F87171,#FBBF24)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent"
+          }}>
+            {fightCount.toLocaleString()}
+          </span>
+          <span style={{ fontSize: 11, color: "rgba(255,255,255,0.4)", textTransform: "uppercase", letterSpacing: "1.5px", fontWeight: 700 }}>
+            {t(lang, "fightsLaunched")}
+          </span>
+        </div>
       </div>
 
       {/* Model explanation */}
       <div style={{ background: "linear-gradient(135deg,rgba(99,102,241,0.06),rgba(239,68,68,0.04))", border: "1px solid rgba(99,102,241,0.12)", borderRadius: 12, padding: "12px 14px", marginBottom: 16 }}>
-        <div style={{ fontSize: 11, fontWeight: 700, color: "#A5B4FC", marginBottom: 6 }}>🧠 Comment ca marche ?</div>
+        <div style={{ fontSize: 11, fontWeight: 700, color: "#A5B4FC", marginBottom: 6 }}>{t(lang, "howItWorks")}</div>
         <div style={{ fontSize: 11, lineHeight: 1.7, color: "rgba(255,255,255,0.5)" }}>
-          Notre <span style={{ color: "#FBBF24", fontWeight: 700 }}>D-Score</span> evalue <span style={{ color: "#fff", fontWeight: 600 }}>{players.length}+ joueurs</span> sur 4 ligues et estime leur potentiel pour <span style={{ color: "#fff", fontWeight: 600 }}>le prochain match</span>.
+          Notre <span style={{ color: "#FBBF24", fontWeight: 700 }}>D-Score</span> {lang === "en" ? "evaluates" : "evalue"} <span style={{ color: "#fff", fontWeight: 600 }}>{players.length}+ {lang === "en" ? "players" : "joueurs"}</span> {lang === "en" ? "across 4 leagues and estimates their potential for" : "sur 4 ligues et estime leur potentiel pour"} <span style={{ color: "#fff", fontWeight: 600 }}>{lang === "en" ? "the next match" : "le prochain match"}</span>.
         </div>
         <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 6, marginTop: 8 }}>
           <div style={{ background: "rgba(255,255,255,0.03)", borderRadius: 8, padding: "6px 8px" }}>
-            <div style={{ fontSize: 10, color: "#4ADE80", fontWeight: 700 }}>📊 Forme joueur</div>
-            <div style={{ fontSize: 10, color: "rgba(255,255,255,0.35)", marginTop: 2 }}>L5, L10, AA5, Floor, Regularite, G+A, Momentum</div>
+            <div style={{ fontSize: 10, color: "#4ADE80", fontWeight: 700 }}>{t(lang, "playerForm")}</div>
+            <div style={{ fontSize: 10, color: "rgba(255,255,255,0.35)", marginTop: 2 }}>{t(lang, "playerFormDesc")}</div>
           </div>
           <div style={{ background: "rgba(255,255,255,0.03)", borderRadius: 8, padding: "6px 8px" }}>
-            <div style={{ fontSize: 10, color: "#F87171", fontWeight: 700 }}>⚔ Contexte adversaire</div>
-            <div style={{ fontSize: 10, color: "rgba(255,255,255,0.35)", marginTop: 2 }}>PPDA dom/ext, xGA, style de jeu, DOM/EXT</div>
+            <div style={{ fontSize: 10, color: "#F87171", fontWeight: 700 }}>{t(lang, "oppContext")}</div>
+            <div style={{ fontSize: 10, color: "rgba(255,255,255,0.35)", marginTop: 2 }}>{t(lang, "oppContextDesc")}</div>
           </div>
         </div>
       </div>
 
       {/* Player selection */}
       <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 8, marginBottom: 16 }}>
-        {[[lg1, setLg1, c1, setC1, pn1, setPn1, o1, setO1, h1, setH1, clubs1, pls1, opps1, "🔵 JOUEUR 1", "#A5B4FC", "rgba(99,102,241,0.2)"],
-          [lg2, setLg2, c2, setC2, pn2, setPn2, o2, setO2, h2, setH2, clubs2, pls2, opps2, "🔴 JOUEUR 2", "#F87171", "rgba(239,68,68,0.2)"]].map(([lg, sLg, c, sC, pn, sPn, o, sO, h, sH, clubs, pls, opps, label, col, bgCol], idx) => (
+        {[[lg1, setLg1, c1, setC1, pn1, setPn1, o1, setO1, h1, setH1, clubs1, pls1, opps1, `🔵 ${t(lang,"player1")}`, "#A5B4FC", "rgba(99,102,241,0.2)"],
+          [lg2, setLg2, c2, setC2, pn2, setPn2, o2, setO2, h2, setH2, clubs2, pls2, opps2, `🔴 ${t(lang,"player2")}`, "#F87171", "rgba(239,68,68,0.2)"]].map(([lg, sLg, c, sC, pn, sPn, o, sO, h, sH, clubs, pls, opps, label, col, bgCol], idx) => (
           <div key={idx} style={{ display: "flex", flexDirection: "column", gap: 5 }}>
             <div style={{ fontSize: 9, color: col, fontWeight: 700, textAlign: "center", letterSpacing: "0.1em" }}>{label}</div>
             <div style={{ display: "flex", gap: 3 }}>
@@ -538,10 +562,10 @@ export default function FightTab({ players, teams, fixtures, logos = {} }) {
                 }}><img src={`https://flagcdn.com/w40/${LEAGUE_FLAG_CODES[l]}.png`} alt={l} width={14} height={10} style={{ borderRadius: 2, objectFit: "cover" }} />{l}</button>
               ))}
             </div>
-            <Sel value={c} onChange={v => { sC(v); sPn(""); resetFight(); }} options={clubs} placeholder="Club..." />
-            {c && <Sel value={pn} onChange={v => { sPn(v); autoFill(v, sO, sH); resetFight(); }} options={pls.map(x => x.name)} placeholder="Joueur..." />}
-            {pn && <Sel value={o} onChange={v => { sO(v); resetFight(); }} options={opps} placeholder="Adversaire..." />}
-            {pn && !pf[pn] && <div style={{ fontSize: 9, color: "rgba(255,150,50,0.6)", marginTop: -4 }}>⚠ Pas de match programme</div>}
+            <Sel value={c} onChange={v => { sC(v); sPn(""); resetFight(); }} options={clubs} placeholder={t(lang,"clubPlaceholder")} />
+            {c && <Sel value={pn} onChange={v => { sPn(v); autoFill(v, sO, sH); resetFight(); }} options={pls.map(x => x.name)} placeholder={t(lang,"playerPlaceholder")} />}
+            {pn && <Sel value={o} onChange={v => { sO(v); resetFight(); }} options={opps} placeholder={t(lang,"oppPlaceholder")} />}
+            {pn && !pf[pn] && <div style={{ fontSize: 9, color: "rgba(255,150,50,0.6)", marginTop: -4 }}>{t(lang,"noMatchScheduled")}</div>}
             {o && (
               <div style={{ display: "flex", gap: 4 }}>
                 {[true, false].map(v => (
@@ -549,7 +573,7 @@ export default function FightTab({ players, teams, fixtures, logos = {} }) {
                     flex: 1, padding: "8px", borderRadius: 8, border: "none", cursor: "pointer", fontFamily: "Outfit", fontWeight: 700, fontSize: 12,
                     background: h === v ? (v ? "rgba(74,222,128,0.2)" : "rgba(251,146,60,0.2)") : "rgba(255,255,255,0.03)",
                     color: h === v ? (v ? "#4ADE80" : "#FB923C") : "rgba(255,255,255,0.25)",
-                  }}>{v ? "🏠 DOM" : "✈️ EXT"}</button>
+                  }}>{v ? `🏠 ${t(lang,"home").toUpperCase()}` : `✈️ ${t(lang,"away").toUpperCase()}`}</button>
                 ))}
               </div>
             )}
@@ -570,9 +594,6 @@ export default function FightTab({ players, teams, fixtures, logos = {} }) {
           }}>
             <span style={{ position: "relative", zIndex: 1 }}>🥊 FIGHT !</span>
           </button>
-          <div style={{ fontSize: 10, color: "rgba(255,255,255,0.2)", marginTop: 8 }}>
-            {fightCount > 0 ? fightCount + " fights lances" : ""}
-          </div>
         </div>
       ) : null}
 
@@ -601,7 +622,7 @@ export default function FightTab({ players, teams, fixtures, logos = {} }) {
                 }}>VS</span>
               </div>
               <div style={{ fontSize: 8, color: "rgba(255,255,255,0.2)", marginTop: 3, fontFamily: "DM Mono" }}>Δ{delta}</div>
-              <div style={{ fontSize: 8, color: certCol, fontWeight: 800, marginTop: 2 }}>{cert}</div>
+              <div style={{ fontSize: 8, color: certCol, fontWeight: 800, marginTop: 2 }}>{t(lang, delta > 12 ? "certForte" : delta > 6 ? "certMoyenne" : "certSerree")}</div>
             </div>
             <PlayerCard player={sel2} score={d2} opp={opp2} isHome={h2} oppName={o2} league={lg2} isWinner={winner === 2} logos={logos} />
           </div>
@@ -613,16 +634,18 @@ export default function FightTab({ players, teams, fixtures, logos = {} }) {
             border: "1px solid rgba(255,255,255,0.06)", boxShadow: "0 8px 32px rgba(0,0,0,0.4)",
           }}>
             {/* Stats comparison */}
+            {(() => { const SD = getStatDesc(lang); return (
             <div style={{ padding: "12px 14px 8px" }}>
-              <Stat label="D-Score" v1={d1} v2={d2} />
-              <Stat label="L5" v1={sel1.l5} v2={sel2.l5} />
-              <Stat label="AA5" v1={sel1.aa5} v2={sel2.aa5} />
-              <Stat label="Min" v1={sel1.min_15} v2={sel2.min_15} />
-              <Stat label="Max" v1={sel1.max_15} v2={sel2.max_15} />
-              <Stat label="Reg10%" v1={sel1.regularite} v2={sel2.regularite} />
-              <Stat label="Titu%" v1={sel1.titu_pct} v2={sel2.titu_pct} />
-              <Stat label="G+A/m" v1={sel1.ga_per_match} v2={sel2.ga_per_match} />
+              <Stat label="D-Score" v1={d1} v2={d2} desc={SD["D-Score"]} />
+              <Stat label="L5" v1={sel1.l5} v2={sel2.l5} desc={SD["L5"]} />
+              <Stat label="AA5" v1={sel1.aa5} v2={sel2.aa5} desc={SD["AA5"]} />
+              <Stat label="Min" v1={sel1.min_15} v2={sel2.min_15} desc={SD["Min"]} />
+              <Stat label="Max" v1={sel1.max_15} v2={sel2.max_15} desc={SD["Max"]} />
+              <Stat label="Reg10%" v1={sel1.regularite} v2={sel2.regularite} desc={SD["Reg10%"]} />
+              <Stat label="Titu%" v1={sel1.titu_pct} v2={sel2.titu_pct} desc={SD["Titu%"]} />
+              <Stat label="G+A/m" v1={sel1.ga_per_match} v2={sel2.ga_per_match} desc={SD["G+A/m"]} />
             </div>
+            ); })()}
 
             {/* Opponent context cards */}
             <div style={{ padding: "0 14px 8px", display: "grid", gridTemplateColumns: "1fr 1fr", gap: 6 }}>
@@ -633,18 +656,18 @@ export default function FightTab({ players, teams, fixtures, logos = {} }) {
                   <div key={i} style={{ background: "rgba(255,255,255,0.02)", borderRadius: 8, padding: 8, border: "1px solid rgba(255,255,255,0.04)" }}>
                     <div style={{ fontSize: 10, color: i === 0 ? "#A5B4FC" : "#F87171", fontWeight: 700, letterSpacing: "0.08em", marginBottom: 4, display: "flex", alignItems: "center", gap: 4 }}>
                       {logos[op.name] && <img src={`/data/logos/${logos[op.name]}`} alt="" style={{ width: 14, height: 14, objectFit: "contain" }} />}
-                      vs {op.name} ({hm ? "DOM" : "EXT"})
+                      vs {op.name} ({hm ? t(lang,"home").toUpperCase() : t(lang,"away").toUpperCase()})
                     </div>
                     <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 6 }}>
                       <div>
                         <div style={{ fontSize: 9, color: "rgba(255,255,255,0.35)" }}>PPDA</div>
                         <div style={{ fontSize: 14, fontWeight: 800, fontFamily: "DM Mono", color: ppda > 13 ? "#FB923C" : ppda < 10 ? "#F87171" : "#fff" }}>{ppda}</div>
-                        <div style={{ fontSize: 9, color: "rgba(255,255,255,0.25)", fontStyle: "italic" }}>{ppda > 13 ? "Bloc bas" : ppda < 10 ? "Pressing" : "Equilibre"}</div>
+                        <div style={{ fontSize: 9, color: "rgba(255,255,255,0.25)", fontStyle: "italic" }}>{ppda > 13 ? (lang==="en"?"Low block":"Bloc bas") : ppda < 10 ? (lang==="en"?"High press":"Pressing") : (lang==="en"?"Balanced":"Equilibre")}</div>
                       </div>
                       <div>
                         <div style={{ fontSize: 9, color: "rgba(255,255,255,0.35)" }}>xGA</div>
                         <div style={{ fontSize: 14, fontWeight: 800, fontFamily: "DM Mono", color: xga > 1.6 ? "#4ADE80" : xga < 1.2 ? "#F87171" : "#fff" }}>{xga}</div>
-                        <div style={{ fontSize: 9, color: "rgba(255,255,255,0.25)", fontStyle: "italic" }}>{xga > 1.6 ? "Passoire" : xga < 1.2 ? "Solide" : "Moyen"}</div>
+                        <div style={{ fontSize: 9, color: "rgba(255,255,255,0.25)", fontStyle: "italic" }}>{xga > 1.6 ? (lang==="en"?"Sieve":"Passoire") : xga < 1.2 ? (lang==="en"?"Solid":"Solide") : (lang==="en"?"Average":"Moyen")}</div>
                       </div>
                     </div>
                   </div>
@@ -655,13 +678,13 @@ export default function FightTab({ players, teams, fixtures, logos = {} }) {
             {/* Match analysis */}
             <div style={{ padding: "0 14px 10px" }}>
               <div style={{ background: "linear-gradient(135deg,rgba(251,191,36,0.04),rgba(251,191,36,0.01))", border: "1px solid rgba(251,191,36,0.1)", borderRadius: 10, padding: 12 }}>
-                <div style={{ fontSize: 9, color: "#FBBF24", fontWeight: 800, letterSpacing: "0.1em", marginBottom: 8 }}>💬 ANALYSE MATCH</div>
+                <div style={{ fontSize: 9, color: "#FBBF24", fontWeight: 800, letterSpacing: "0.1em", marginBottom: 8 }}>{t(lang,"analyseMatchFight")}</div>
                 <div className="fight-verdicts" style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 10 }}>
                   <div style={{ fontSize: 12, lineHeight: 1.7, color: winner === 1 ? "rgba(255,255,255,0.85)" : "rgba(255,255,255,0.35)" }}>
-                    {genVerdict(sel1, opp1, h1, d1, pTeam1)}
+                    {genVerdict(sel1, opp1, h1, d1, pTeam1, lang)}
                   </div>
                   <div style={{ fontSize: 12, lineHeight: 1.7, color: winner === 2 ? "rgba(255,255,255,0.85)" : "rgba(255,255,255,0.35)" }}>
-                    {genVerdict(sel2, opp2, h2, d2, pTeam2)}
+                    {genVerdict(sel2, opp2, h2, d2, pTeam2, lang)}
                   </div>
                 </div>
               </div>
@@ -672,13 +695,13 @@ export default function FightTab({ players, teams, fixtures, logos = {} }) {
               <div style={{ padding: "16px 12px", background: "linear-gradient(135deg,rgba(74,222,128,0.08),rgba(251,191,36,0.06))", borderRadius: 12, textAlign: "center", border: "1px solid rgba(74,222,128,0.15)" }}>
                 <div style={{ fontSize: 36, marginBottom: 2 }}>🏆</div>
                 <div style={{ fontSize: 10, color: "#FBBF24", fontWeight: 700, letterSpacing: "0.12em", marginBottom: 6 }}>
-                  {Math.max(d1, d2) >= 75 ? "🔥 WINNER" : "WINNER"}
+                  {Math.max(d1, d2) >= 75 ? `🔥 ${t(lang,"winnerPanel")}` : t(lang,"winnerPanel")}
                 </div>
                 <div style={{
                   fontSize: 24, fontWeight: 900, letterSpacing: "-0.02em",
                   color: Math.max(d1, d2) >= 70 ? "#4ADE80" : Math.max(d1, d2) >= 55 ? "#FBBF24" : "#F87171",
                 }}>
-                  {winner === 1 ? sel1.name : winner === 2 ? sel2.name : "Egalite !"}
+                  {winner === 1 ? sel1.name : winner === 2 ? sel2.name : t(lang,"drawPanel")}
                 </div>
                 <DStars score={Math.max(d1, d2)} />
                 <div style={{ fontSize: 12, color: "rgba(255,255,255,0.5)", marginTop: 4, fontWeight: 600, display: "flex", alignItems: "center", justifyContent: "center", gap: 5 }}>
@@ -696,11 +719,12 @@ export default function FightTab({ players, teams, fixtures, logos = {} }) {
                   </div>
                   <div style={{ textAlign: "center" }}>
                     <div style={{ fontSize: 28, fontWeight: 900, color: certCol, fontFamily: "DM Mono" }}>Δ{delta}</div>
-                    <div style={{ fontSize: 9, color: "rgba(255,255,255,0.35)" }}>{cert}</div>
+                    <div style={{ fontSize: 9, color: "rgba(255,255,255,0.35)" }}>{t(lang, delta > 12 ? "certForte" : delta > 6 ? "certMoyenne" : "certSerree")}</div>
                   </div>
                 </div>
                 <div style={{ fontSize: 12, color: "rgba(255,255,255,0.6)", marginTop: 12, lineHeight: 1.7, textAlign: "left" }}>
                   {(() => {
+                    const __ = (fr, en) => lang === "en" ? en : fr;
                     const w = winner === 1 ? sel1 : sel2;
                     const l = winner === 1 ? sel2 : sel1;
                     const wD = Math.max(d1, d2);
@@ -715,40 +739,35 @@ export default function FightTab({ players, teams, fixtures, logos = {} }) {
                     const lPpda = lHome ? (lOpp.ppda_ext || 12) : (lOpp.ppda_dom || 12);
                     const wFloor = w.min_15 ?? w.floor ?? 0;
                     const lFloor = l.min_15 ?? l.floor ?? 0;
-                    if (winner === 0) return "🤝 Égalité parfaite ! D-Score " + d1 + " vs " + d2 + ". Même potentiel, choisis selon ton feeling ou la cote Sorare.";
+                    if (winner === 0) return `🤝 ${__("Égalité parfaite ! D-Score", "Perfect draw! D-Score")} ${d1} vs ${d2}. ${__("Même potentiel, choisis selon ton feeling ou la cote Sorare.", "Same potential — pick based on your feeling or Sorare card value.")}`;
                     let lines = [];
-                    // Why winner is safer
-                    lines.push((delta > 10 ? "🔥" : delta > 6 ? "✅" : "👍") + " " + w.name + " est le pick le plus safe (D-Score " + wD + " vs " + lD + ").");
-                    // Context advantage
+                    lines.push((delta > 10 ? "🔥" : delta > 6 ? "✅" : "👍") + " " + w.name + " " + __("est le pick le plus safe (D-Score", "is the safest pick (D-Score") + " " + wD + " vs " + lD + ").");
                     const wCtx = []; const lCtx = [];
-                    if (wHome) wCtx.push("joue à domicile"); else lCtx.push("avantage domicile");
-                    if (wXga > lXga) wCtx.push("adversaire plus perméable (xGA " + wXga.toFixed(2) + " vs " + lXga.toFixed(2) + ")");
-                    else if (lXga > wXga + 0.2) lCtx.push("adversaire plus faible défensivement");
-                    if (wFloor > lFloor) wCtx.push("meilleur floor (" + wFloor + " vs " + lFloor + ")");
-                    else if (lFloor > wFloor) lCtx.push("meilleur floor (" + lFloor + ")");
-                    if (w.regularite > l.regularite) wCtx.push("plus régulier (" + w.regularite + "% vs " + l.regularite + "%)");
-                    if (wCtx.length > 0) lines.push("📈 Ses atouts : " + wCtx.join(", ") + ".");
-                    // Risk of loser
+                    if (wHome) wCtx.push(__("joue à domicile", "plays at home")); else lCtx.push(__("avantage domicile", "home advantage"));
+                    if (wXga > lXga) wCtx.push(__("adversaire plus perméable (xGA", "more permeable opponent (xGA") + " " + wXga.toFixed(2) + " vs " + lXga.toFixed(2) + ")");
+                    else if (lXga > wXga + 0.2) lCtx.push(__("adversaire plus faible défensivement", "weaker opponent defensively"));
+                    if (wFloor > lFloor) wCtx.push(__("meilleur floor (", "better floor (") + wFloor + " vs " + lFloor + ")");
+                    else if (lFloor > wFloor) lCtx.push(__("meilleur floor (", "better floor (") + lFloor + ")");
+                    if (w.regularite > l.regularite) wCtx.push(__("plus régulier (", "more consistent (") + w.regularite + "% vs " + l.regularite + "%)");
+                    if (wCtx.length > 0) lines.push("📈 " + __("Ses atouts :", "Key advantages:") + " " + wCtx.join(", ") + ".");
                     const risks = [];
-                    if (!lHome) risks.push("en déplacement");
-                    if (lFloor < 35) risks.push("floor bas (" + lFloor + ")");
-                    if (l.regularite < 50) risks.push("irrégulier (" + l.regularite + "%)");
-                    if (lPpda < 10) risks.push("adversaire en pressing haut (risqué)");
+                    if (!lHome) risks.push(__("en déplacement", "playing away"));
+                    if (lFloor < 35) risks.push(__("floor bas (", "low floor (") + lFloor + ")");
+                    if (l.regularite < 50) risks.push(__("irrégulier (", "inconsistent (") + l.regularite + "%)");
+                    if (lPpda < 10) risks.push(__("adversaire en pressing haut (risqué)", "opponent presses high (risky)"));
                     const lSc = l.last_5 || [];
-                    if (lSc.length > 0 && lSc[0] < 25) risks.push("dernier score faible (" + lSc[0] + ")");
-                    if (risks.length > 0) lines.push("⚠️ Risques " + l.name + " : " + risks.join(", ") + ".");
-                    // Reward of loser (why you might still pick them)
+                    if (lSc.length > 0 && lSc[0] < 25) risks.push(__("dernier score faible (", "weak last score (") + lSc[0] + ")");
+                    if (risks.length > 0) lines.push("⚠️ " + __("Risques", "Risks") + " " + l.name + " : " + risks.join(", ") + ".");
                     if (lCtx.length > 0 || l.aa5 > w.aa5 || (l.last_5 && l.last_5[0] > 70)) {
                       const rewards = [...lCtx];
-                      if (l.aa5 > w.aa5) rewards.push("AA5 supérieur (" + l.aa5 + " vs " + w.aa5 + ")");
-                      if (l.last_5 && l.last_5[0] > 70) rewards.push("en forme (dernier score " + l.last_5[0] + ")");
-                      if (rewards.length > 0) lines.push("💡 Mais " + l.name + " a : " + rewards.join(", ") + ". Pick plus risqué mais ceiling plus élevé.");
+                      if (l.aa5 > w.aa5) rewards.push(__("AA5 supérieur (", "higher AA5 (") + l.aa5 + " vs " + w.aa5 + ")");
+                      if (l.last_5 && l.last_5[0] > 70) rewards.push(__("en forme (dernier score", "in form (last score") + " " + l.last_5[0] + ")");
+                      if (rewards.length > 0) lines.push("💡 " + __("Mais", "But") + " " + l.name + " " + __("a :", "has:") + " " + rewards.join(", ") + ". " + __("Pick plus risqué mais ceiling plus élevé.", "Riskier pick but higher ceiling."));
                     }
-                    // Final recommendation
-                    if (wD >= 75 && delta > 10) lines.push("🎯 Verdict : pick évident, fonce sur " + w.name + ".");
-                    else if (wD >= 70 && delta > 6) lines.push("🎯 Verdict : avantage clair pour " + w.name + ". Safe pick.");
-                    else if (delta <= 5) lines.push("🎯 Verdict : très serré ! Les deux sont jouables. " + w.name + " a un léger edge.");
-                    else lines.push("🎯 Verdict : " + w.name + " est le choix le plus rationnel cette semaine.");
+                    if (wD >= 75 && delta > 10) lines.push("🎯 " + __("Verdict : pick évident, fonce sur", "Verdict: obvious pick, go for") + " " + w.name + ".");
+                    else if (wD >= 70 && delta > 6) lines.push("🎯 " + __("Verdict : avantage clair pour", "Verdict: clear advantage for") + " " + w.name + ". " + __("Safe pick.", "Safe pick."));
+                    else if (delta <= 5) lines.push("🎯 " + __("Verdict : très serré ! Les deux sont jouables.", "Verdict: very close! Both are viable.") + " " + w.name + " " + __("a un léger edge.", "has a slight edge."));
+                    else lines.push("🎯 " + __("Verdict :", "Verdict:") + " " + w.name + " " + __("est le choix le plus rationnel cette semaine.", "is the most rational choice this week."));
                     return lines.join(" ");
                   })()}
                 </div>
@@ -759,16 +778,11 @@ export default function FightTab({ players, teams, fixtures, logos = {} }) {
       ) : !ready ? (
         <div style={{ textAlign: "center", padding: "40px 20px", color: "rgba(255,255,255,0.15)" }}>
           <div style={{ fontSize: 44, marginBottom: 8 }}>🥊</div>
-          <div style={{ fontSize: 16, fontWeight: 700 }}>Choisis tes 2 combattants</div>
-          <div style={{ fontSize: 12, marginTop: 6 }}>Ligue → Club → Joueur → Adversaire → Dom/Ext</div>
+          <div style={{ fontSize: 16, fontWeight: 700 }}>{t(lang,"chooseFighters")}</div>
+          <div style={{ fontSize: 12, marginTop: 6 }}>{t(lang,"chooseFightersDesc")}</div>
         </div>
       ) : null}
 
-      <div style={{ textAlign: "center", marginTop: 16 }}>
-        <span style={{ fontSize: 10, color: "rgba(255,255,255,0.15)", fontFamily: "DM Mono" }}>
-          {fightCount} fight{fightCount !== 1 ? "s" : ""} lances
-        </span>
-      </div>
     </div>
   );
 }

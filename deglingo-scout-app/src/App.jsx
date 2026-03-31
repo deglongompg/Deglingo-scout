@@ -2,15 +2,18 @@ import { useState, useEffect } from "react";
 import DbTab from "./components/DbTab";
 import FightTab from "./components/FightTab";
 import RecoTab from "./components/RecoTab";
+import { t } from "./utils/i18n";
 
 const TABS = [
   { id: "db", label: "Database", icon: "📊" },
   { id: "fight", label: "Fight", icon: "🥊" },
   { id: "reco", label: "Best Pick", icon: "⚽" },
+  { id: "stellar", label: "Sorare Stellar", icon: "✨", soon: true },
 ];
 
 export default function App() {
   const [tab, setTab] = useState("db");
+  const [lang, setLang] = useState("fr");
   const [players, setPlayers] = useState(null);
   const [teams, setTeams] = useState(null);
   const [fixtures, setFixtures] = useState(null);
@@ -37,7 +40,7 @@ export default function App() {
     }}>
       <div style={{ textAlign: "center" }}>
         <div style={{ fontSize: 32, marginBottom: 12 }}>⚽</div>
-        <div>Chargement des données...</div>
+        <div>{t(lang, "loading")}</div>
         <div style={{ fontSize: 12, color: "rgba(255,255,255,0.3)", marginTop: 4 }}>1419 joueurs</div>
       </div>
     </div>
@@ -74,9 +77,10 @@ export default function App() {
         borderBottom: "1px solid rgba(255,255,255,0.04)", padding: "12px 16px",
       }}>
         <div style={{
-          display: "flex", alignItems: "center", justifyContent: "space-between",
-          maxWidth: 1400, margin: "0 auto",
+          display: "grid", gridTemplateColumns: "1fr auto 1fr", alignItems: "center",
+          maxWidth: 1400, margin: "0 auto", width: "100%",
         }}>
+          {/* Logo gauche */}
           <div style={{ display: "flex", alignItems: "center", gap: 4 }}>
             <img src="/logo.png" alt="Deglingo Scout" style={{ width: 32, height: 32, objectFit: "contain" }} />
             <div>
@@ -87,18 +91,20 @@ export default function App() {
             </div>
           </div>
 
-          {/* Tabs */}
-          <div style={{ display: "flex", gap: 4 }}>
+          {/* Tabs centrés */}
+          <div style={{ display: "flex", gap: 4, justifyContent: "center" }}>
             {TABS.map(t => (
               <button
                 key={t.id}
-                onClick={() => setTab(t.id)}
+                onClick={() => !t.soon && setTab(t.id)}
                 style={{
                   padding: "6px 14px", borderRadius: 10, fontSize: 12, fontWeight: 600,
-                  border: "none", cursor: "pointer", fontFamily: "Outfit",
+                  border: "none", fontFamily: "Outfit", position: "relative",
+                  cursor: t.soon ? "default" : "pointer",
                   background: tab === t.id ? "rgba(99,102,241,0.12)" : "transparent",
                   outline: tab === t.id ? "1px solid rgba(99,102,241,0.3)" : "none",
                   transition: "all 0.2s",
+                  opacity: t.soon ? 0.5 : 1,
                   ...(tab === t.id && t.id === "reco" ? {
                     ...silverShinyStyle,
                     WebkitTextFillColor: "transparent",
@@ -108,15 +114,41 @@ export default function App() {
                 }}
               >
                 {t.icon} {t.label}
+                {t.soon && (
+                  <span style={{
+                    position: "absolute", top: -6, right: -2,
+                    fontSize: 8, fontWeight: 800, color: "#a78bfa",
+                    background: "rgba(124,58,237,0.2)", border: "1px solid rgba(124,58,237,0.4)",
+                    borderRadius: 4, padding: "1px 4px", letterSpacing: "0.5px",
+                  }}>SOON</span>
+                )}
               </button>
             ))}
+          </div>
+
+          {/* CTA + Lang toggle droite */}
+          <div style={{ display: "flex", justifyContent: "flex-end", alignItems: "center", gap: 8 }}>
+            <button
+              onClick={() => setLang(l => l === "fr" ? "en" : "fr")}
+              style={{
+                padding: "6px 10px", borderRadius: 8, fontSize: 11, fontWeight: 800,
+                fontFamily: "Outfit", border: "1px solid rgba(255,255,255,0.12)",
+                background: "rgba(255,255,255,0.05)", color: "rgba(255,255,255,0.6)",
+                cursor: "pointer", letterSpacing: "1px", transition: "all 0.2s",
+                flexShrink: 0,
+              }}
+              onMouseEnter={e => { e.currentTarget.style.background = "rgba(255,255,255,0.1)"; e.currentTarget.style.color = "#fff"; }}
+              onMouseLeave={e => { e.currentTarget.style.background = "rgba(255,255,255,0.05)"; e.currentTarget.style.color = "rgba(255,255,255,0.6)"; }}
+            >
+              {t(lang, "langToggle")}
+            </button>
             <a
               href="http://sorare.pxf.io/Deglingo"
               target="_blank"
               rel="noopener noreferrer"
               style={{
                 padding: "6px 12px", borderRadius: 10, fontSize: 11, fontWeight: 700,
-                fontFamily: "Outfit", textDecoration: "none", marginLeft: 8,
+                fontFamily: "Outfit", textDecoration: "none",
                 background: "linear-gradient(135deg, #22C55E, #16A34A)",
                 color: "#fff", display: "flex", alignItems: "center", gap: 4,
                 boxShadow: "0 0 12px rgba(34,197,94,0.3)",
@@ -125,7 +157,7 @@ export default function App() {
               onMouseEnter={e => e.currentTarget.style.boxShadow = "0 0 20px rgba(34,197,94,0.5)"}
               onMouseLeave={e => e.currentTarget.style.boxShadow = "0 0 12px rgba(34,197,94,0.3)"}
             >
-              Deviens Manager Sorare — 🎁 100€ offerts
+              {t(lang, "ctaSorare")}
             </a>
           </div>
         </div>
@@ -133,9 +165,9 @@ export default function App() {
 
       {/* Content */}
       <main style={{ maxWidth: 1400, margin: "0 auto", paddingTop: 20 }}>
-        {tab === "db" && <DbTab players={players} teams={teams} fixtures={fixtures} logos={logos} />}
-        {tab === "fight" && <FightTab players={players} teams={teams} fixtures={fixtures} logos={logos} />}
-        {tab === "reco" && <RecoTab players={players} teams={teams} fixtures={fixtures} logos={logos} />}
+        {tab === "db" && <DbTab players={players} teams={teams} fixtures={fixtures} logos={logos} lang={lang} />}
+        {tab === "fight" && <FightTab players={players} teams={teams} fixtures={fixtures} logos={logos} lang={lang} />}
+        {tab === "reco" && <RecoTab players={players} teams={teams} fixtures={fixtures} logos={logos} lang={lang} />}
       </main>
 
       {/* Footer */}

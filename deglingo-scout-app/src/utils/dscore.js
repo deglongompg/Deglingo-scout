@@ -344,6 +344,6 @@ export function dScoreMatch(player, opp, isHome, playerTeam = null) {
   const extraGoatFloor = isExtraGoat(p) && isInjuryReturn
     ? 67 + Math.max(0, momentum) + Math.max(0, domBonus) + dominationBonus + Math.round(contexte * 0.35)
     : 0;
-  const minScore = Math.max(qualityFloor, extraGoatFloor);
+  const minScore = Math.min(100, Math.max(qualityFloor, extraGoatFloor));
   return Math.round(Math.max(minScore, Math.min(100, raw)));
 }

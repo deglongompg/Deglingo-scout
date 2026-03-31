@@ -2,6 +2,7 @@ import { useState, useMemo } from "react";
 import { dsColor, dsBg, isSilver, POSITION_COLORS, LEAGUE_COLORS, LEAGUE_FLAGS, LEAGUE_FLAG_CODES, getArchetypeColor, getAAProfile } from "../utils/colors";
 import { dScoreMatch, csProb, findTeam, isExtraGoat } from "../utils/dscore";
 import PlayerCard from "./PlayerCard";
+import { t } from "../utils/i18n";
 
 // Strip position prefix from archetype (e.g. "ATT Complet" → "Complet")
 const shortArch = (a) => (a || "").replace(/^(ATT|DEF|MIL|GK)\s*/, "") || a;
@@ -19,7 +20,7 @@ function CountryFlag({ code, size = 14 }) {
   return <img src={`https://flagcdn.com/w40/${iso2}.png`} alt={iso2} width={size} height={Math.round(size * 0.75)} style={{ verticalAlign: "middle", borderRadius: 2, objectFit: "cover" }} />;
 }
 
-export default function DbTab({ players, teams, fixtures, logos = {} }) {
+export default function DbTab({ players, teams, fixtures, logos = {}, lang = "fr" }) {
   const [search, setSearch] = useState("");
   const [league, setLeague] = useState("ALL");
   const [pos, setPos] = useState("ALL");
@@ -31,32 +32,34 @@ export default function DbTab({ players, teams, fixtures, logos = {} }) {
   const [selectedPlayer, setSelectedPlayer] = useState(null);
   const [visibleCount, setVisibleCount] = useState(30);
   const [statCols, setStatCols] = useState([]);
+  const [u23Only, setU23Only] = useState(false);
 
   // Toggleable individual stat columns — 5 sections like Sorare AA
+  const __ = (fr, en) => lang === "en" ? en : fr;
   const STAT_DEFS = [
     // DÉFENSE
-    { key: "aa_defending", label: "AA Défense (pts)", short: "AA Def", cat: "DEF", isCat: true, tip: "Points Sorare Défense (pondérés par poste) — moyenne par match" },
-    { key: "avg_won_tackle", label: "Tacles/match", short: "Tac", cat: "DEF", tip: "Tacles réussis par match (nombre brut)" },
-    { key: "avg_effective_clearance", label: "Dégagements/match", short: "Clr", cat: "DEF", tip: "Dégagements par match (nombre brut)" },
-    { key: "avg_blocked_scoring_attempt", label: "Tirs bloqués/match", short: "Blk", cat: "DEF", tip: "Tirs bloqués par match (nombre brut)" },
+    { key: "aa_defending", label: __("AA Défense (pts)", "AA Defence (pts)"), short: "AA Def", cat: "DEF", isCat: true, tip: __("Points Sorare Défense (pondérés par poste) — moyenne par match", "Sorare Defence points (position-weighted) — average per match") },
+    { key: "avg_won_tackle", label: __("Tacles/match", "Tackles/match"), short: "Tac", cat: "DEF", tip: __("Tacles réussis par match (nombre brut)", "Successful tackles per match (raw count)") },
+    { key: "avg_effective_clearance", label: __("Dégagements/match", "Clearances/match"), short: "Clr", cat: "DEF", tip: __("Dégagements par match (nombre brut)", "Clearances per match (raw count)") },
+    { key: "avg_blocked_scoring_attempt", label: __("Tirs bloqués/match", "Blocked shots/match"), short: "Blk", cat: "DEF", tip: __("Tirs bloqués par match (nombre brut)", "Blocked shots per match (raw count)") },
     // POSSESSION
-    { key: "aa_possession", label: "AA Possession (pts)", short: "AA Pos", cat: "POSS", isCat: true, tip: "Points Sorare Possession (pondérés par poste) — moyenne par match" },
-    { key: "avg_interception_won", label: "Interceptions/match", short: "Int", cat: "POSS", tip: "Interceptions par match (nombre brut)" },
-    { key: "avg_duel_won", label: "Duels gagnés/match", short: "Duel", cat: "POSS", tip: "Duels gagnés par match (nombre brut)" },
-    { key: "avg_ball_recovery", label: "Récupérations/match", short: "Rec", cat: "POSS", tip: "Récupérations de balle par match (nombre brut)" },
-    { key: "avg_won_contest", label: "Contests gagnés/match", short: "Con", cat: "POSS", tip: "Contests gagnés par match (nombre brut)" },
+    { key: "aa_possession", label: __("AA Possession (pts)", "AA Possession (pts)"), short: "AA Pos", cat: "POSS", isCat: true, tip: __("Points Sorare Possession (pondérés par poste) — moyenne par match", "Sorare Possession points (position-weighted) — average per match") },
+    { key: "avg_interception_won", label: __("Interceptions/match", "Interceptions/match"), short: "Int", cat: "POSS", tip: __("Interceptions par match (nombre brut)", "Interceptions per match (raw count)") },
+    { key: "avg_duel_won", label: __("Duels gagnés/match", "Duels won/match"), short: "Duel", cat: "POSS", tip: __("Duels gagnés par match (nombre brut)", "Duels won per match (raw count)") },
+    { key: "avg_ball_recovery", label: __("Récupérations/match", "Recoveries/match"), short: "Rec", cat: "POSS", tip: __("Récupérations de balle par match (nombre brut)", "Ball recoveries per match (raw count)") },
+    { key: "avg_won_contest", label: __("Contests gagnés/match", "Contests won/match"), short: "Con", cat: "POSS", tip: __("Contests gagnés par match (nombre brut)", "Contests won per match (raw count)") },
     // PASSES
-    { key: "aa_passing", label: "AA Passes (pts)", short: "AA Pas", cat: "PASS", isCat: true, tip: "Points Sorare Passes (pondérés par poste) — moyenne par match. Ex: 1 FTP = 0.3 pts (MIL) vs 0.1 pts (ATT)" },
-    { key: "avg_accurate_pass", label: "Passes précises/match", short: "Pass", cat: "PASS", tip: "Passes précises par match (nombre brut, ~0.1 pt/passe)" },
-    { key: "avg_successful_final_third_passes", label: "Passes 1/3 final/match", short: "FTP", cat: "PASS", tip: "Passes dernier tiers par match (nombre brut, pts varient selon poste)" },
-    { key: "avg_big_chance_created", label: "Grosses occas./match", short: "BCC", cat: "PASS", tip: "Grosses occasions créées par match (nombre brut)" },
-    { key: "avg_accurate_long_balls", label: "Longs ballons/match", short: "Long", cat: "PASS", tip: "Longs ballons précis par match (nombre brut, ~0.5 pt/long ball)" },
+    { key: "aa_passing", label: __("AA Passes (pts)", "AA Passing (pts)"), short: "AA Pas", cat: "PASS", isCat: true, tip: __("Points Sorare Passes (pondérés par poste) — moyenne par match. Ex: 1 FTP = 0.3 pts (MIL) vs 0.1 pts (ATT)", "Sorare Passing points (position-weighted) — avg per match. Ex: 1 FTP = 0.3 pts (MID) vs 0.1 pts (FWD)") },
+    { key: "avg_accurate_pass", label: __("Passes précises/match", "Accurate passes/match"), short: "Pass", cat: "PASS", tip: __("Passes précises par match (nombre brut, ~0.1 pt/passe)", "Accurate passes per match (raw count, ~0.1 pt/pass)") },
+    { key: "avg_successful_final_third_passes", label: __("Passes 1/3 final/match", "Final third passes/match"), short: "FTP", cat: "PASS", tip: __("Passes dernier tiers par match (nombre brut, pts varient selon poste)", "Final third passes per match (raw count, pts vary by position)") },
+    { key: "avg_big_chance_created", label: __("Grosses occas./match", "Big chances/match"), short: "BCC", cat: "PASS", tip: __("Grosses occasions créées par match (nombre brut)", "Big chances created per match (raw count)") },
+    { key: "avg_accurate_long_balls", label: __("Longs ballons/match", "Long balls/match"), short: "Long", cat: "PASS", tip: __("Longs ballons précis par match (nombre brut, ~0.5 pt/long ball)", "Accurate long balls per match (raw count, ~0.5 pt/long ball)") },
     // ATTAQUE
-    { key: "aa_attacking", label: "AA Attaque (pts)", short: "AA Att", cat: "ATT", isCat: true, tip: "Points Sorare Attaque (pondérés par poste) — moyenne par match" },
-    { key: "avg_ontarget_scoring_att", label: "Tirs cadrés/match", short: "TiC", cat: "ATT", tip: "Tirs cadrés par match (nombre brut)" },
-    { key: "avg_successful_dribble", label: "Dribbles réussis/match", short: "Dri", cat: "ATT", tip: "Dribbles réussis par match (nombre brut)" },
-    { key: "avg_pen_area_entries", label: "Entrées surface/match", short: "Surf", cat: "ATT", tip: "Entrées dans la surface par match (nombre brut)" },
-    { key: "avg_was_fouled", label: "Fautes subies/match", short: "Foul", cat: "ATT", tip: "Fautes subies par match (nombre brut)" },
+    { key: "aa_attacking", label: __("AA Attaque (pts)", "AA Attack (pts)"), short: "AA Att", cat: "ATT", isCat: true, tip: __("Points Sorare Attaque (pondérés par poste) — moyenne par match", "Sorare Attack points (position-weighted) — average per match") },
+    { key: "avg_ontarget_scoring_att", label: __("Tirs cadrés/match", "Shots on target/match"), short: "TiC", cat: "ATT", tip: __("Tirs cadrés par match (nombre brut)", "Shots on target per match (raw count)") },
+    { key: "avg_successful_dribble", label: __("Dribbles réussis/match", "Successful dribbles/match"), short: "Dri", cat: "ATT", tip: __("Dribbles réussis par match (nombre brut)", "Successful dribbles per match (raw count)") },
+    { key: "avg_pen_area_entries", label: __("Entrées surface/match", "Box entries/match"), short: "Surf", cat: "ATT", tip: __("Entrées dans la surface par match (nombre brut)", "Penalty area entries per match (raw count)") },
+    { key: "avg_was_fouled", label: __("Fautes subies/match", "Fouls won/match"), short: "Foul", cat: "ATT", tip: __("Fautes subies par match (nombre brut)", "Fouls won per match (raw count)") },
   ];
   const toggleStat = (key) => setStatCols(prev => prev.includes(key) ? prev.filter(k => k !== key) : [...prev, key]);
 
@@ -108,6 +111,7 @@ export default function DbTab({ players, teams, fixtures, logos = {} }) {
     if (arch !== "ALL") list = list.filter(p => p.archetype === arch);
     if (minL10 === 0) list = list.filter(p => !p.l10 || p.l10 === 0);
     else if (minL10 > 0) list = list.filter(p => (p.l10 || 0) < minL10);
+    if (u23Only) list = list.filter(p => (p.age || 0) > 0 && p.age <= 24);
     if (search) {
       const q = search.toLowerCase();
       list = list.filter(p => p.name.toLowerCase().includes(q) || p.club.toLowerCase().includes(q));
@@ -117,7 +121,7 @@ export default function DbTab({ players, teams, fixtures, logos = {} }) {
       return (va - vb) * sortDir;
     });
     return list;
-  }, [enriched, league, club, pos, arch, minL10, search, sortKey, sortDir]);
+  }, [enriched, league, club, pos, arch, minL10, u23Only, search, sortKey, sortDir]);
 
   const toggleSort = (key) => {
     if (sortKey === key) setSortDir(d => -d);
@@ -187,7 +191,7 @@ export default function DbTab({ players, teams, fixtures, logos = {} }) {
       {/* Filters */}
       <div style={{ display: "flex", flexWrap: "wrap", gap: 8, marginBottom: 12, alignItems: "center" }}>
         <input
-          placeholder="🔍 Joueur ou club..."
+          placeholder={t(lang, "searchPlaceholder")}
           value={search} onChange={e => { setSearch(e.target.value); setVisibleCount(30); }}
           style={{ ...sel({ flex: "1 1 180px", minWidth: 140 }) }}
         />
@@ -200,27 +204,37 @@ export default function DbTab({ players, teams, fixtures, logos = {} }) {
               fontSize: 11, fontWeight: league === k ? 700 : 500, display: "flex", alignItems: "center", gap: 4, transition: "all 0.15s",
             }}>
               {fc ? <img src={`https://flagcdn.com/w40/${fc}.png`} alt={k} width={16} height={12} style={{ borderRadius: 2, objectFit: "cover" }} /> : null}
-              {k === "ALL" ? "Tout" : k}
+              {k === "ALL" ? t(lang,"all") : k}
             </button>
           ))}
+          <button
+            onClick={() => { setU23Only(v => !v); setVisibleCount(30); }}
+            style={{
+              padding: "4px 7px", borderRadius: 6, fontSize: 11, fontWeight: 700,
+              fontFamily: "Outfit", cursor: "pointer", transition: "all 0.15s",
+              background: u23Only ? "rgba(251,191,36,0.2)" : "rgba(255,255,255,0.04)",
+              border: u23Only ? "1px solid rgba(251,191,36,0.5)" : "1px solid rgba(255,255,255,0.08)",
+              color: u23Only ? "#FBBF24" : "rgba(255,255,255,0.5)",
+            }}
+          >U23</button>
         </div>
         <select value={club} onChange={e => { setClub(e.target.value); setVisibleCount(30); }} style={sel({ flex: "1 1 0", minWidth: 0 })}>
-          <option value="ALL">Club</option>
+          <option value="ALL">{t(lang,"club")}</option>
           {clubs.map(c => <option key={c} value={c}>{shortName(c)}</option>)}
         </select>
         <select value={pos} onChange={e => { setPos(e.target.value); setVisibleCount(30); }} style={sel({ flex: "1 1 0", minWidth: 0 })}>
-          <option value="ALL">Poste</option>
+          <option value="ALL">{t(lang,"poste")}</option>
           {["GK", "DEF", "MIL", "ATT"].map(p => (
             <option key={p} value={p}>{p}</option>
           ))}
         </select>
         <select value={arch} onChange={e => { setArch(e.target.value); setVisibleCount(30); }} style={sel({ flex: "1 1 0", minWidth: 0 })}>
-          <option value="ALL">Profil</option>
+          <option value="ALL">{t(lang,"profil")}</option>
           {archetypes.map(a => <option key={a} value={a}>{a}</option>)}
         </select>
         <select value={minL10} onChange={e => { setMinL10(Number(e.target.value)); setVisibleCount(30); }} style={sel({ flex: "1 1 0", minWidth: 0 })}>
-          <option value={-1}>L10 CAP</option>
-          <option value={0}>L10 = 0 (CAP 260)</option>
+          <option value={-1}>{t(lang,"l10Cap")}</option>
+          <option value={0}>{t(lang,"l10Zero")}</option>
           {[30, 40, 50, 55, 60, 65, 70].map(v => (
             <option key={v} value={v}>L10 &lt; {v}</option>
           ))}
@@ -231,34 +245,34 @@ export default function DbTab({ players, teams, fixtures, logos = {} }) {
       <div style={{ marginBottom: 10, padding: "10px 14px", background: "linear-gradient(135deg, rgba(99,102,241,0.06), rgba(192,132,252,0.04))", border: "1px solid rgba(99,102,241,0.1)", borderRadius: 10 }}>
         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 6 }}>
           <div style={{ fontSize: 12, fontWeight: 700, letterSpacing: "0.05em", background: "linear-gradient(90deg, #A5B4FC 0%, #C084FC 25%, #E879F9 50%, #C084FC 75%, #A5B4FC 100%)", backgroundSize: "200% auto", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent", animation: "legendShimmer 4s linear infinite" }}>
-            ⚡ D-SCORE — L'algo magique qui t'aide à choisir tes meilleurs joueurs pour ta prochaine Streak & GW Sorare ✨
+            {t(lang, "dscoreLegend")}
           </div>
         </div>
         <div style={{ fontSize: 9, color: "rgba(255,255,255,0.3)", marginTop: 3, lineHeight: 1.5, fontStyle: "italic" }}>
-          Indice de ranking contextuel, pas une prédiction exacte du score Sorare.
+          {t(lang, "dscoreDisclaimer")}
           <span style={{ color: "rgba(255,255,255,0.15)" }}> | </span>
-          <span style={{ color: "#A5B4FC" }}>45% expertise foot</span>
+          <span style={{ color: "#A5B4FC" }}>45% {lang==="en"?"football expertise":"expertise foot"}</span>
           <span style={{ color: "rgba(255,255,255,0.12)" }}> · </span>
           <span style={{ color: "#4ADE80" }}>20% data</span>
           <span style={{ color: "rgba(255,255,255,0.12)" }}> · </span>
-          <span style={{ color: "#C084FC" }}>20% IA</span>
+          <span style={{ color: "#C084FC" }}>20% AI</span>
           <span style={{ color: "rgba(255,255,255,0.12)" }}> · </span>
-          <span style={{ color: "#FBBF24" }}>10% maths</span>
+          <span style={{ color: "#FBBF24" }}>10% {lang==="en"?"maths":"maths"}</span>
           <span style={{ color: "rgba(255,255,255,0.15)" }}> | </span>
-          Les faits de jeu restent imprévisibles.
+          {t(lang, "factsImprev")}
         </div>
         <div style={{ fontSize: 10, color: "rgba(255,255,255,0.5)", lineHeight: 1.5 }}>
-          Socle (forme L5 + AA + floor + régularité) <span style={{ color: "rgba(255,255,255,0.2)" }}>›</span> Contexte (adversaire, PPDA, xGA, style de jeu) <span style={{ color: "rgba(255,255,255,0.2)" }}>›</span> Momentum (tendance L2, séries) <span style={{ color: "rgba(255,255,255,0.2)" }}>›</span> Dom/Ext
+          {__("Socle (forme L5 + AA + floor + régularité)", "Base (L5 form + AA + floor + consistency)")} <span style={{ color: "rgba(255,255,255,0.2)" }}>›</span> {__("Contexte (adversaire, PPDA, xGA, style de jeu)", "Context (opponent, PPDA, xGA, play style)")} <span style={{ color: "rgba(255,255,255,0.2)" }}>›</span> {__("Momentum (tendance L2, séries)", "Momentum (L2 trend, streaks)")} <span style={{ color: "rgba(255,255,255,0.2)" }}>›</span> {__("Dom/Ext", "H/A")}
         </div>
         <div style={{ display: "flex", gap: 14, marginTop: 6, alignItems: "center", fontSize: 10, color: "rgba(255,255,255,0.45)", flexWrap: "wrap" }}>
           <span>{filtered.length === enriched.filter(p => ["GK","DEF","MIL","ATT"].includes(p.position)).length ? `${filtered.length} joueurs` : `${filtered.length} / ${enriched.filter(p => ["GK","DEF","MIL","ATT"].includes(p.position)).length} joueurs`}</span>
           <span style={{ display: "inline-flex", alignItems: "center", gap: 3 }}>
             <span style={{ display: "inline-block", width: 10, height: 10, borderRadius: 3, background: "linear-gradient(135deg,#4ADE80,#22C55E)", boxShadow: "0 0 6px #4ADE80" }} />
-            L2 explosion
+            {__("L2 explosion", "L2 explosion")}
           </span>
-          <span>Reg10 = % matchs &gt;60 sur L10</span>
-          <span>Titu10 = % titularisations sur L10</span>
-          <span><span style={{ color: "#FBBF24" }}>&#9733;</span> Extra GOAT — élite protégée par l'algo quand ça compte</span>
+          <span>Reg10 = {__("% matchs >60 sur L10", "% matches >60 over L10")}</span>
+          <span>Titu10 = {__("% titularisations sur L10", "% starts over L10")}</span>
+          <span><span style={{ color: "#FBBF24" }}>&#9733;</span> Extra GOAT — {__("élite protégée par l'algo quand ça compte", "elite protected by the algo when it matters")}</span>
           <span><span style={{ color: "#FBBF24" }}>L€</span> Limited · <span style={{ color: "#EF4444" }}>R€</span> Rare</span>
           <span style={{ flex: 1 }} />
           <span style={{ fontSize: 9, color: "#F87171", fontWeight: 700, background: "rgba(239,68,68,0.12)", padding: "2px 8px", borderRadius: 20 }}>🚀 BETA GRATUITE</span>
@@ -312,7 +326,7 @@ export default function DbTab({ players, teams, fixtures, logos = {} }) {
       </div>
       {statCols.length > 0 && (
         <div style={{ fontSize: 11, color: "rgba(255,255,255,0.4)", marginBottom: 6, padding: "4px 8px", lineHeight: 1.5, background: "rgba(255,255,255,0.02)", borderRadius: 6, border: "1px solid rgba(255,255,255,0.06)" }}>
-          <span style={{ color: "#A78BFA", fontWeight: 600 }}>AA</span> = Points Sorare (pondérés par poste) · <span style={{ color: "rgba(255,255,255,0.55)", fontWeight: 600 }}>Sous-stats</span> = nombre brut /match · <span style={{ color: "rgba(255,255,255,0.3)", fontStyle: "italic" }}>Hover colonnes pour détails</span>
+          <span style={{ color: "#A78BFA", fontWeight: 600 }}>AA</span> = {__("Points Sorare (pondérés par poste)", "Sorare points (position-weighted)")} · <span style={{ color: "rgba(255,255,255,0.55)", fontWeight: 600 }}>{__("Sous-stats", "Sub-stats")}</span> = {__("nombre brut /match", "raw count /match")} · <span style={{ color: "rgba(255,255,255,0.3)", fontStyle: "italic" }}>{__("Hover colonnes pour détails", "Hover columns for details")}</span>
         </div>
       )}
 
@@ -321,10 +335,10 @@ export default function DbTab({ players, teams, fixtures, logos = {} }) {
         <table style={{ width: "100%", borderCollapse: "collapse", fontSize: 12, fontFamily: "Outfit" }}>
           <thead style={{ position: "sticky", top: 0, zIndex: 10 }}>
             <tr style={{ background: "#0C0C2D" }}>
-              <th style={{ ...thStyle("name"), textAlign: "left", paddingLeft: 12, cursor: "default", position: "sticky", left: 0, zIndex: 2, background: "#0C0C2D" }}>Joueur</th>
-              <th style={{ ...thStyle("position"), cursor: "default" }}>Pos</th>
+              <th style={{ ...thStyle("name"), textAlign: "left", paddingLeft: 12, cursor: "default", position: "sticky", left: 0, zIndex: 2, background: "#0C0C2D" }}>{t(lang,"colJoueur")}</th>
+              <th style={{ ...thStyle("position"), cursor: "default" }}>{t(lang,"colPos")}</th>
               <th style={thStyle("ga_season")} onClick={() => toggleSort("ga_season")}>G+A{arrow("ga_season")}</th>
-              {statCols.length === 0 && <th style={{ ...thStyle("league"), cursor: "default" }}>Ligue</th>}
+              {statCols.length === 0 && <th style={{ ...thStyle("league"), cursor: "default" }}>{t(lang,"colLigue")}</th>}
               <th style={{ ...thStyle("l2"), background: sortKey === "l2" ? "rgba(74,222,128,0.06)" : "transparent", borderLeft: "1px solid rgba(255,255,255,0.06)" }} onClick={() => toggleSort("l2")}>L2{arrow("l2")}</th>
               {statCols.length === 0 && <th style={thStyle("aa2")} onClick={() => toggleSort("aa2")}>AA2{arrow("aa2")}</th>}
               {statCols.length === 0 && <th style={{ ...thStyle("last5"), borderLeft: "1px solid rgba(255,255,255,0.06)", cursor: "default", fontSize: 8, color: "rgba(255,255,255,0.25)" }}>Last 5</th>}
@@ -334,20 +348,20 @@ export default function DbTab({ players, teams, fixtures, logos = {} }) {
               {statCols.length === 0 && <th style={thStyle("aa10")} onClick={() => toggleSort("aa10")}>AA10{arrow("aa10")}</th>}
               <th style={thStyle("titu_pct")} onClick={() => toggleSort("titu_pct")}>Titu10{arrow("titu_pct")}</th>
               <th style={thStyle("reg10")} onClick={() => toggleSort("reg10")}>Reg10{arrow("reg10")}</th>
-              {statCols.length === 0 && <th style={{ ...thStyle("min_15"), borderLeft: "1px solid rgba(255,255,255,0.06)" }} onClick={() => toggleSort("min_15")}>Min{arrow("min_15")}</th>}
-              {statCols.length === 0 && <th style={thStyle("max_15")} onClick={() => toggleSort("max_15")}>Max{arrow("max_15")}</th>}
+              <th style={{ ...thStyle("l40"), borderLeft: "1px solid rgba(255,255,255,0.06)" }} onClick={() => toggleSort("l40")}>L40{arrow("l40")}</th>
+              <th style={thStyle("aa40")} onClick={() => toggleSort("aa40")}>AA40{arrow("aa40")}</th>
               {hasFixtures && <>
                 <th style={thStyle("dsMatch")} onClick={() => toggleSort("dsMatch")}>
                   <span style={{ color: sortKey === "dsMatch" ? "#C084FC" : "#C084FC80" }}>D-Score{arrow("dsMatch")}</span>
                 </th>
                 <th style={thStyle("titu_pct")} onClick={() => toggleSort("titu_pct")}>Titu%{arrow("titu_pct")}</th>
-                <th style={{ ...thStyle("oppName"), cursor: "default" }}>Adv.</th>
+                <th style={{ ...thStyle("oppName"), cursor: "default" }}>{t(lang,"colAdv")}</th>
                 <th style={thStyle("csPercent")} onClick={() => toggleSort("csPercent")}>CS%{arrow("csPercent")}</th>
               </>}
               {statCols.length === 0 && <th style={thStyle("price_limited")} onClick={() => toggleSort("price_limited")}>L€{arrow("price_limited")}</th>}
               {statCols.length === 0 && <th style={thStyle("price_rare")} onClick={() => toggleSort("price_rare")}>R€{arrow("price_rare")}</th>}
-              {statCols.length === 0 && <th style={{ ...thStyle("archetype"), cursor: "default", padding: "4px 2px", maxWidth: 52 }}>Archétype</th>}
-              {statCols.length === 0 && <th style={{ ...thStyle("aaProfile"), cursor: "default", padding: "4px 2px", maxWidth: 52 }}>Profil AA</th>}
+              {statCols.length === 0 && <th style={{ ...thStyle("archetype"), cursor: "default", padding: "4px 2px", maxWidth: 52 }}>{t(lang,"colArchetype")}</th>}
+              {statCols.length === 0 && <th style={{ ...thStyle("aaProfile"), cursor: "default", padding: "4px 2px", maxWidth: 52 }}>{t(lang,"colProfilAA")}</th>}
               {(() => {
                 const CAT_COLORS = { GEN: "#A78BFA", DEF: "#60A5FA", POSS: "#FBBF24", PASS: "#4ADE80", ATT: "#F87171" };
                 const ordered = STAT_DEFS.filter(s => statCols.includes(s.key));
@@ -396,6 +410,7 @@ export default function DbTab({ players, teams, fixtures, logos = {} }) {
                     <div style={{ fontSize: 10, color: "rgba(255,255,255,0.4)", marginTop: 1, display: "flex", alignItems: "center", gap: 2, whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>
                       {logos[p.club] && <img src={`/data/logos/${logos[p.club]}`} alt="" style={{ width: 12, height: 12, objectFit: "contain" }} />}
                       {shortName(p.club)}
+                      {p.age > 0 && <span style={{ color: "rgba(255,255,255,0.25)", marginLeft: 2 }}>· {p.age}{__(" ans", "y")}</span>}
                     </div>
                   </td>
                   <td style={{ textAlign: "center" }}>
@@ -459,8 +474,8 @@ export default function DbTab({ players, teams, fixtures, logos = {} }) {
                   {statCols.length === 0 && <td style={{ textAlign: "center", fontFamily: "DM Mono", fontSize: 10, color: "rgba(255,255,255,0.3)" }}>{R(p.aa10)}</td>}
                   <td style={{ textAlign: "center", fontFamily: "DM Mono", fontSize: 11, color: p.titu_pct >= 80 ? "#4ADE80" : p.titu_pct >= 50 ? "#FBBF24" : "#EF4444" }}>{R(p.titu_pct)}%</td>
                   <td style={{ textAlign: "center", fontFamily: "DM Mono", fontSize: 11, color: (p.reg10 ?? p.regularite) >= 80 ? "#4ADE80" : (p.reg10 ?? p.regularite) >= 50 ? "#FBBF24" : "#EF4444" }}>{R(p.reg10 ?? p.regularite)}%</td>
-                  {statCols.length === 0 && <td style={{ textAlign: "center", fontFamily: "DM Mono", fontSize: 10, color: "rgba(255,255,255,0.3)", borderLeft: "1px solid rgba(255,255,255,0.04)" }}>{R(p.min_15)}</td>}
-                  {statCols.length === 0 && <td style={{ textAlign: "center", fontFamily: "DM Mono", fontSize: 10, color: "rgba(255,255,255,0.3)" }}>{R(p.max_15)}</td>}
+                  <td style={{ textAlign: "center", fontFamily: "DM Mono", fontWeight: 700, fontSize: 13, color: dsColor(p.l40), borderLeft: "1px solid rgba(255,255,255,0.04)" }}>{R(p.l40)}</td>
+                  <td style={{ textAlign: "center", fontFamily: "DM Mono", fontSize: 10, color: "rgba(255,255,255,0.3)" }}>{R(p.aa40)}</td>
                   {hasFixtures && <>
                     <td style={{ textAlign: "center" }}>
                       {p.dsMatch !== null ? (

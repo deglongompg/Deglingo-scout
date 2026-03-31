@@ -176,6 +176,8 @@ Q_MAIN = """query P($slug: String!) { football { player(slug: $slug) {
     stats(seasonStartYear: 2025) {
         appearances minutesPlayed goals assists yellowCards redCards
     }
+    sorare_l40:  averageScore(type: LAST_FORTY_SO5_AVERAGE_SCORE)
+    sorare_aa40: averageScore(type: LAST_FORTY_AVERAGE_ALL_AROUND_SCORE)
     so5Scores(last: 40) {
         score
         allAroundStats { category totalScore }
@@ -431,7 +433,8 @@ def fetch_player(slug, club_name, league):
         "l10": round(avg(scores[:10]), 1) if len(scores) >= 10 else round(avg(scores), 1),
         "l15": round(avg(scores[:15]), 1) if len(scores) >= 15 else round(avg(scores), 1),
         "l25": round(avg(scores[:25]), 1) if len(scores) >= 25 else round(avg(scores), 1),
-        "l40": round(avg([s["score"] for s in all_scores if s.get("score", 0) > 0][:40]), 1) if any(s.get("score", 0) > 0 for s in all_scores) else 0,
+        "l40":  round(player.get("sorare_l40") or 0, 1),
+        "aa40": round(player.get("sorare_aa40") or 0, 1),
         "aa40": round(avg([sum(a.get("totalScore", 0) for a in (s.get("allAroundStats") or [])) for s in all_scores if s.get("score", 0) > 0][:40]), 1) if any(s.get("score", 0) > 0 for s in all_scores) else 0,
         "last_5": [round(s, 1) for s in timeline_5],
         "last_10": [round(s, 1) for s in scores[:10]],

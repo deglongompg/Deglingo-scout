@@ -1,5 +1,7 @@
 import json, os, shutil
 
+STATUS_FILE = "player_status.json"
+
 LEAGUES = {
     "deglingo_ligue1_final.json": "L1",
     "deglingo_premier_league_final.json": "PL",
@@ -47,6 +49,26 @@ for filename, league_short in LEAGUES.items():
         print(f"⚠️  Anomalies: {bad_titu} titu_pct=0 suspects, {bad_reg} reg10=None")
     else:
         print(f"✅ Validation OK — aucune donnée vide détectée")
+
+# ── Merge player_status.json si dispo (généré par fetch_player_status.py) ──
+if os.path.exists(STATUS_FILE):
+    with open(STATUS_FILE, encoding="utf-8") as f:
+        status = json.load(f)
+    patched = 0
+    for p in all_players:
+        s = status.get(p.get("slug", ""))
+        if s:
+            p["injured"]     = s.get("injured",     False)
+            p["suspended"]   = s.get("suspended",   False)
+            p["sorare_proj"] = s.get("sorare_proj",  None)
+            patched += 1
+        else:
+            p.setdefault("injured",     False)
+            p.setdefault("suspended",   False)
+            p.setdefault("sorare_proj", None)
+    print(f"✅ player_status.json mergé — {patched} joueurs avec status")
+else:
+    print(f"ℹ️  Pas de player_status.json — run fetch_player_status.py le vendredi")
 
 for outdir in ["public/data", "deglingo-scout-app/public/data"]:
     os.makedirs(outdir, exist_ok=True)

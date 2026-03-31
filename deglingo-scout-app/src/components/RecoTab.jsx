@@ -334,6 +334,23 @@ function PlayerCard({ player, isSelected, onClick, logos = {}, badge }) {
           {/* ── Top accent line ── */}
           <div style={{ position: "absolute", top: 0, left: 0, right: 0, height: 2, background: `linear-gradient(90deg, transparent 10%, ${pc}70 50%, transparent 90%)`, pointerEvents: "none" }} />
 
+          {/* Injury / Suspension badge — top-right corner */}
+          {(player.injured || player.suspended) && (
+            <div style={{ position: "absolute", top: 5, right: 5, zIndex: 10, display: "flex", gap: 2 }}>
+              {player.injured && (
+                <svg width="14" height="14" viewBox="0 0 12 12" title="Blessé">
+                  <rect width="12" height="12" rx="2" fill="#EF4444"/>
+                  <rect x="5" y="2" width="2" height="8" rx="0.5" fill="#fff"/>
+                  <rect x="2" y="5" width="8" height="2" rx="0.5" fill="#fff"/>
+                </svg>
+              )}
+              {player.suspended && (
+                <svg width="10" height="14" viewBox="0 0 8 12" title="Suspendu">
+                  <rect x="0.5" y="0.5" width="7" height="11" rx="1.5" fill="#EF4444" stroke="rgba(0,0,0,0.25)" strokeWidth="0.5"/>
+                </svg>
+              )}
+            </div>
+          )}
           {/* Position badge */}
           <div style={{ background: `linear-gradient(135deg,${pc},${pc}CC)`, borderRadius: "3px", padding: "1px 6px", marginTop: "2px", fontSize: "7px", fontWeight: 800, color: "#fff", letterSpacing: "0.06em", position: "relative", zIndex: 1, boxShadow: `0 1px 4px ${pc}40` }}>{displayPos}</div>
           {/* Score circle */}

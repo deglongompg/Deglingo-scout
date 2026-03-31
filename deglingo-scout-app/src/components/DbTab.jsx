@@ -271,7 +271,7 @@ export default function DbTab({ players, teams, fixtures, logos = {}, lang = "fr
             {__("L2 explosion", "L2 explosion")}
           </span>
           <span>Reg10 = {__("% matchs >60 sur L10", "% matches >60 over L10")}</span>
-          <span>Titu10 = {__("% titularisations sur L10", "% starts over L10")}</span>
+          <span>Proj = {__("Score projeté Sorare (humains) — reflète la titularisation prévue. Vert ≥50, Orange ≥35, Rouge <35", "Sorare projected score (human-made) — reflects expected start. Green ≥50, Orange ≥35, Red <35")}</span>
           <span><span style={{ color: "#FBBF24" }}>&#9733;</span> Extra GOAT — {__("élite protégée par l'algo quand ça compte", "elite protected by the algo when it matters")}</span>
           <span><span style={{ color: "#FBBF24" }}>L€</span> Limited · <span style={{ color: "#EF4444" }}>R€</span> Rare</span>
           <span style={{ flex: 1 }} />
@@ -346,7 +346,7 @@ export default function DbTab({ players, teams, fixtures, logos = {}, lang = "fr
               {statCols.length === 0 && <th style={thStyle("aa5")} onClick={() => toggleSort("aa5")}>AA5{arrow("aa5")}</th>}
               <th style={{ ...thStyle("l10"), borderLeft: "1px solid rgba(255,255,255,0.06)" }} onClick={() => toggleSort("l10")}>L10{arrow("l10")}</th>
               {statCols.length === 0 && <th style={thStyle("aa10")} onClick={() => toggleSort("aa10")}>AA10{arrow("aa10")}</th>}
-              <th style={thStyle("titu_pct")} onClick={() => toggleSort("titu_pct")}>Titu10{arrow("titu_pct")}</th>
+              <th style={thStyle("sorare_proj")} onClick={() => toggleSort("sorare_proj")} title={__("Score projeté Sorare (prédit par Sorare pour le prochain match — reflète si le joueur est titulaire prévu)", "Sorare projected score (predicted by Sorare for next match — reflects expected starting status")}>Proj{arrow("sorare_proj")}</th>
               <th style={thStyle("reg10")} onClick={() => toggleSort("reg10")}>Reg10{arrow("reg10")}</th>
               <th style={{ ...thStyle("l40"), borderLeft: "1px solid rgba(255,255,255,0.06)" }} onClick={() => toggleSort("l40")}>L40{arrow("l40")}</th>
               <th style={thStyle("aa40")} onClick={() => toggleSort("aa40")}>AA40{arrow("aa40")}</th>
@@ -405,6 +405,18 @@ export default function DbTab({ players, teams, fixtures, logos = {}, lang = "fr
                       <span style={{ overflow: "hidden", textOverflow: "ellipsis" }}>{p.name}</span>
                       {isExtraGoat(p) && (
                         <span style={{ fontSize: 11, color: "#FBBF24", flexShrink: 0, lineHeight: 1 }}>&#9733;</span>
+                      )}
+                      {p.injured && (
+                        <svg width="12" height="12" viewBox="0 0 12 12" style={{ flexShrink: 0 }} title="Blessé">
+                          <rect width="12" height="12" rx="2" fill="#EF4444"/>
+                          <rect x="5" y="2" width="2" height="8" rx="0.5" fill="#fff"/>
+                          <rect x="2" y="5" width="8" height="2" rx="0.5" fill="#fff"/>
+                        </svg>
+                      )}
+                      {p.suspended && (
+                        <svg width="8" height="12" viewBox="0 0 8 12" style={{ flexShrink: 0 }} title="Suspendu">
+                          <rect x="0.5" y="0.5" width="7" height="11" rx="1.5" fill="#EF4444" stroke="rgba(0,0,0,0.25)" strokeWidth="0.5"/>
+                        </svg>
                       )}
                     </div>
                     <div style={{ fontSize: 10, color: "rgba(255,255,255,0.4)", marginTop: 1, display: "flex", alignItems: "center", gap: 2, whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>
@@ -472,7 +484,14 @@ export default function DbTab({ players, teams, fixtures, logos = {}, lang = "fr
                   {statCols.length === 0 && <td style={{ textAlign: "center", fontFamily: "DM Mono", fontSize: 10, color: "rgba(255,255,255,0.3)" }}>{R(p.aa5)}</td>}
                   <td style={{ textAlign: "center", fontFamily: "DM Mono", fontWeight: 700, fontSize: 14, color: dsColor(p.l10), borderLeft: "1px solid rgba(255,255,255,0.04)" }}>{R(p.l10)}</td>
                   {statCols.length === 0 && <td style={{ textAlign: "center", fontFamily: "DM Mono", fontSize: 10, color: "rgba(255,255,255,0.3)" }}>{R(p.aa10)}</td>}
-                  <td style={{ textAlign: "center", fontFamily: "DM Mono", fontSize: 11, color: p.titu_pct >= 80 ? "#4ADE80" : p.titu_pct >= 50 ? "#FBBF24" : "#EF4444" }}>{R(p.titu_pct)}%</td>
+                  {(() => {
+                    const proj = p.sorare_proj;
+                    if (proj != null) {
+                      const col = proj >= 50 ? "#4ADE80" : proj >= 35 ? "#FBBF24" : "#EF4444";
+                      return <td style={{ textAlign: "center", fontFamily: "DM Mono", fontSize: 11, color: col }}>{proj}</td>;
+                    }
+                    return <td style={{ textAlign: "center", color: "rgba(255,255,255,0.15)", fontSize: 11 }}>—</td>;
+                  })()}
                   <td style={{ textAlign: "center", fontFamily: "DM Mono", fontSize: 11, color: (p.reg10 ?? p.regularite) >= 80 ? "#4ADE80" : (p.reg10 ?? p.regularite) >= 50 ? "#FBBF24" : "#EF4444" }}>{R(p.reg10 ?? p.regularite)}%</td>
                   <td style={{ textAlign: "center", fontFamily: "DM Mono", fontWeight: 700, fontSize: 13, color: dsColor(p.l40), borderLeft: "1px solid rgba(255,255,255,0.04)" }}>{R(p.l40)}</td>
                   <td style={{ textAlign: "center", fontFamily: "DM Mono", fontSize: 10, color: "rgba(255,255,255,0.3)" }}>{R(p.aa40)}</td>

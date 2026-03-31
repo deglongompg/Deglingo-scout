@@ -1,0 +1,56 @@
+@echo off
+chcp 65001 >nul
+title Deglingo Scout — MAJ Mercredi
+
+echo.
+echo =========================================
+echo   DEGLINGO SCOUT — GROSSE MAJ MERCREDI
+echo =========================================
+echo.
+
+cd /d "%~dp0"
+
+echo [1/6] STATS JOUEURS (4 ligues, ~6 min)...
+echo -----------------------------------------
+py fetch_all_players.py ALL --fresh
+if errorlevel 1 ( echo ERREUR fetch_all_players & pause & exit /b 1 )
+
+echo.
+echo [2/6] FIXTURES CALENDRIER (~30 sec)...
+echo -----------------------------------------
+py fetch_fixtures.py
+if errorlevel 1 ( echo ERREUR fetch_fixtures & pause & exit /b 1 )
+
+echo.
+echo [3/6] STATUT BLESSES / SUSPENDUS / PROJ (~5 min)...
+echo -----------------------------------------
+py fetch_player_status.py
+if errorlevel 1 ( echo ERREUR fetch_player_status & pause & exit /b 1 )
+
+echo.
+echo [4/6] MERGE DONNEES...
+echo -----------------------------------------
+py merge_data.py
+if errorlevel 1 ( echo ERREUR merge_data & pause & exit /b 1 )
+
+echo.
+echo [5/6] BUILD APP...
+echo -----------------------------------------
+cd deglingo-scout-app
+call npm run build
+if errorlevel 1 ( echo ERREUR npm build & pause & exit /b 1 )
+cd ..
+
+echo.
+echo [6/6] PRIX CARTES (long ~2h, tourne en fond)...
+echo -----------------------------------------
+echo    Lance fetch_prices.py en arriere-plan...
+start "Fetch Prices" py fetch_prices.py ALL --fresh
+
+echo.
+echo =========================================
+echo   TOUT EST PRET — deploie sur Cloudflare
+echo   (les prix se mettent a jour en fond)
+echo =========================================
+echo.
+pause

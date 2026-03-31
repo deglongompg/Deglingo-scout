@@ -295,17 +295,22 @@ def fetch_next_matchday(comp_code, our_league):
         home = normalize_team(m["homeTeam"]["name"])
         away = normalize_team(m["awayTeam"]["name"])
         date = m["utcDate"][:10] if m.get("utcDate") else ""
+        # Extract kickoff time (HH:MM UTC) for Stellar time slots
+        kickoff = ""
+        if m.get("utcDate") and len(m["utcDate"]) >= 16:
+            kickoff = m["utcDate"][11:16]  # "HH:MM" UTC
 
         fixtures.append({
             "home": home,
             "away": away,
             "date": date,
+            "kickoff": kickoff,
             "matchday": next_md,
             "league": our_league,
             "home_api": m["homeTeam"]["name"],
             "away_api": m["awayTeam"]["name"],
         })
-        print(f"    {home} vs {away} ({date})")
+        print(f"    {home} vs {away} ({date} {kickoff})")
 
     return fixtures
 
@@ -318,8 +323,8 @@ def build_player_fixtures(fixtures, teams, players):
     # Build club → fixture mapping
     club_fixture = {}
     for f in fixtures:
-        club_fixture[f["home"]] = {"opp": f["away"], "isHome": True, "date": f["date"], "matchday": f["matchday"]}
-        club_fixture[f["away"]] = {"opp": f["home"], "isHome": False, "date": f["date"], "matchday": f["matchday"]}
+        club_fixture[f["home"]] = {"opp": f["away"], "isHome": True, "date": f["date"], "matchday": f["matchday"], "kickoff": f.get("kickoff", "")}
+        club_fixture[f["away"]] = {"opp": f["home"], "isHome": False, "date": f["date"], "matchday": f["matchday"], "kickoff": f.get("kickoff", "")}
 
     # Map player clubs to teams.json names for matching
     team_names = {t["name"] for t in teams}
@@ -370,6 +375,7 @@ def build_player_fixtures(fixtures, teams, players):
                 "isHome": fx["isHome"],
                 "date": fx["date"],
                 "matchday": fx["matchday"],
+                "kickoff": fx.get("kickoff", ""),
             }
             # Use BOTH slug (unique) and name (for backward compat) as keys
             result[p["slug"]] = entry

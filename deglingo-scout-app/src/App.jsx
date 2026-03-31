@@ -2,13 +2,14 @@ import { useState, useEffect } from "react";
 import DbTab from "./components/DbTab";
 import FightTab from "./components/FightTab";
 import RecoTab from "./components/RecoTab";
+import StellarTab from "./components/StellarTab";
 import { t } from "./utils/i18n";
 
 const TABS = [
   { id: "db", label: "Database", icon: "📊" },
   { id: "fight", label: "Fight", icon: "🥊" },
   { id: "reco", label: "Best Pick", icon: "⚽" },
-  { id: "stellar", label: "Sorare Stellar", icon: "✨", soon: true },
+  { id: "stellar", label: "Sorare Stellar", icon: "✨" },
 ];
 
 export default function App() {
@@ -96,32 +97,30 @@ export default function App() {
             {TABS.map(t => (
               <button
                 key={t.id}
-                onClick={() => !t.soon && setTab(t.id)}
+                onClick={() => setTab(t.id)}
                 style={{
                   padding: "6px 14px", borderRadius: 10, fontSize: 12, fontWeight: 600,
                   border: "none", fontFamily: "Outfit", position: "relative",
-                  cursor: t.soon ? "default" : "pointer",
+                  cursor: "pointer",
                   background: tab === t.id ? "rgba(99,102,241,0.12)" : "transparent",
                   outline: tab === t.id ? "1px solid rgba(99,102,241,0.3)" : "none",
                   transition: "all 0.2s",
-                  opacity: t.soon ? 0.5 : 1,
                   ...(tab === t.id && t.id === "reco" ? {
                     ...silverShinyStyle,
                     WebkitTextFillColor: "transparent",
+                  } : tab === t.id && t.id === "stellar" ? {
+                    background: "linear-gradient(90deg,#C4B5FD,#A78BFA,#8B5CF6,#7C3AED,#A78BFA,#C4B5FD)",
+                    backgroundSize: "200% 100%",
+                    WebkitBackgroundClip: "text",
+                    WebkitTextFillColor: "transparent",
+                    backgroundClip: "text",
+                    animation: "silverShine 3s linear infinite",
                   } : {
                     color: tab === t.id ? "#A5B4FC" : "rgba(255,255,255,0.4)",
                   }),
                 }}
               >
                 {t.icon} {t.label}
-                {t.soon && (
-                  <span style={{
-                    position: "absolute", top: -6, right: -2,
-                    fontSize: 8, fontWeight: 800, color: "#a78bfa",
-                    background: "rgba(124,58,237,0.2)", border: "1px solid rgba(124,58,237,0.4)",
-                    borderRadius: 4, padding: "1px 4px", letterSpacing: "0.5px",
-                  }}>SOON</span>
-                )}
               </button>
             ))}
           </div>
@@ -168,6 +167,7 @@ export default function App() {
         {tab === "db" && <DbTab players={players} teams={teams} fixtures={fixtures} logos={logos} lang={lang} />}
         {tab === "fight" && <FightTab players={players} teams={teams} fixtures={fixtures} logos={logos} lang={lang} />}
         {tab === "reco" && <RecoTab players={players} teams={teams} fixtures={fixtures} logos={logos} lang={lang} />}
+        {tab === "stellar" && <StellarTab players={players} teams={teams} fixtures={fixtures} logos={logos} />}
       </main>
 
       {/* Footer */}

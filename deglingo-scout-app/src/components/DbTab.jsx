@@ -22,7 +22,7 @@ function CountryFlag({ code, size = 14 }) {
 
 export default function DbTab({ players, teams, fixtures, logos = {}, lang = "fr" }) {
   const [search, setSearch] = useState("");
-  const [league, setLeague] = useState("ALL");
+  const [leagues, setLeagues] = useState(new Set()); // vide = ALL
   const [pos, setPos] = useState("ALL");
   const [club, setClub] = useState("ALL");
   const [arch, setArch] = useState("ALL");
@@ -64,10 +64,10 @@ export default function DbTab({ players, teams, fixtures, logos = {}, lang = "fr
   const toggleStat = (key) => setStatCols(prev => prev.includes(key) ? prev.filter(k => k !== key) : [...prev, key]);
 
   const clubs = useMemo(() => {
-    const list = league === "ALL" ? players : players.filter(p => p.league === league);
+    const list = leagues.size === 0 ? players : players.filter(p => leagues.has(p.league));
     const set = new Set(list.map(p => p.club).filter(Boolean));
     return [...set].sort();
-  }, [players, league]);
+  }, [players, leagues]);
 
   const archetypes = useMemo(() => {
     const set = new Set(players.map(p => p.archetype).filter(Boolean));
@@ -105,7 +105,7 @@ export default function DbTab({ players, teams, fixtures, logos = {}, lang = "fr
 
   const filtered = useMemo(() => {
     let list = enriched.filter(p => ["GK", "DEF", "MIL", "ATT"].includes(p.position));
-    if (league !== "ALL") list = list.filter(p => p.league === league);
+    if (leagues.size > 0) list = list.filter(p => leagues.has(p.league));
     if (club !== "ALL") list = list.filter(p => p.club === club);
     if (pos !== "ALL") list = list.filter(p => p.position === pos);
     if (arch !== "ALL") list = list.filter(p => p.archetype === arch);
@@ -133,7 +133,7 @@ export default function DbTab({ players, teams, fixtures, logos = {}, lang = "fr
       return (va - vb) * sortDir;
     });
     return list;
-  }, [enriched, league, club, pos, arch, minL10, u23Only, search, sortKey, sortDir]);
+  }, [enriched, leagues, club, pos, arch, minL10, u23Only, search, sortKey, sortDir]);
 
   const toggleSort = (key) => {
     if (sortKey === key) setSortDir(d => -d);
@@ -208,17 +208,30 @@ export default function DbTab({ players, teams, fixtures, logos = {}, lang = "fr
           style={{ ...sel({ flex: "1 1 180px", minWidth: 140 }) }}
         />
         <div style={{ display: "flex", alignItems: "center", gap: 3, flexShrink: 0 }}>
-          {[["ALL", null], ["L1", "fr"], ["PL", "gb-eng"], ["Liga", "es"], ["Bundes", "de"]].map(([k, fc]) => (
-            <button key={k} onClick={() => { setLeague(k); setClub("ALL"); setVisibleCount(30); }} style={{
-              background: league === k ? (k === "ALL" ? "rgba(99,102,241,0.25)" : `${LEAGUE_COLORS[k]}25`) : "rgba(255,255,255,0.04)",
-              border: league === k ? `1px solid ${k === "ALL" ? "#6366f1" : LEAGUE_COLORS[k]}60` : "1px solid rgba(255,255,255,0.08)",
-              borderRadius: 6, padding: "4px 7px", cursor: "pointer", color: league === k ? "#fff" : "rgba(255,255,255,0.5)",
-              fontSize: 11, fontWeight: league === k ? 700 : 500, display: "flex", alignItems: "center", gap: 4, transition: "all 0.15s",
-            }}>
-              {fc ? <img src={`https://flagcdn.com/w40/${fc}.png`} alt={k} width={16} height={12} style={{ borderRadius: 2, objectFit: "cover" }} /> : null}
-              {k === "ALL" ? t(lang,"all") : k}
-            </button>
-          ))}
+          {[["ALL", null], ["L1", "fr"], ["PL", "gb-eng"], ["Liga", "es"], ["Bundes", "de"]].map(([k, fc]) => {
+            const isAll = k === "ALL";
+            const active = isAll ? leagues.size === 0 : leagues.has(k);
+            const toggle = () => {
+              setClub("ALL"); setVisibleCount(30);
+              if (isAll) { setLeagues(new Set()); return; }
+              setLeagues(prev => {
+                const next = new Set(prev);
+                next.has(k) ? next.delete(k) : next.add(k);
+                return next;
+              });
+            };
+            return (
+              <button key={k} onClick={toggle} style={{
+                background: active ? (isAll ? "rgba(99,102,241,0.25)" : `${LEAGUE_COLORS[k]}25`) : "rgba(255,255,255,0.04)",
+                border: active ? `1px solid ${isAll ? "#6366f1" : LEAGUE_COLORS[k]}60` : "1px solid rgba(255,255,255,0.08)",
+                borderRadius: 6, padding: "4px 7px", cursor: "pointer", color: active ? "#fff" : "rgba(255,255,255,0.5)",
+                fontSize: 11, fontWeight: active ? 700 : 500, display: "flex", alignItems: "center", gap: 4, transition: "all 0.15s",
+              }}>
+                {fc ? <img src={`https://flagcdn.com/w40/${fc}.png`} alt={k} width={16} height={12} style={{ borderRadius: 2, objectFit: "cover" }} /> : null}
+                {isAll ? t(lang,"all") : k}
+              </button>
+            );
+          })}
           <button
             onClick={() => { setU23Only(v => !v); setVisibleCount(30); }}
             style={{

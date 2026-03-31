@@ -117,6 +117,18 @@ export default function DbTab({ players, teams, fixtures, logos = {}, lang = "fr
       list = list.filter(p => p.name.toLowerCase().includes(q) || p.club.toLowerCase().includes(q));
     }
     list = [...list].sort((a, b) => {
+      // Tri Titu% : suspendu d'abord, puis blessé, puis valeur
+      if (sortKey === "titu_pct") {
+        const rank = p => p.suspended ? 2 : p.injured ? 1 : 0;
+        const ra = rank(a), rb = rank(b);
+        if (ra !== rb) return (rb - ra) * sortDir;
+      }
+      // Tri D-Score : blessé/suspendu traités comme 0 (cohérent avec l'affichage)
+      if (sortKey === "dsMatch") {
+        const va = (a.injured || a.suspended) ? 0 : (a.dsMatch ?? -999);
+        const vb = (b.injured || b.suspended) ? 0 : (b.dsMatch ?? -999);
+        return (va - vb) * sortDir;
+      }
       const va = a[sortKey] ?? -999, vb = b[sortKey] ?? -999;
       return (va - vb) * sortDir;
     });
@@ -346,15 +358,15 @@ export default function DbTab({ players, teams, fixtures, logos = {}, lang = "fr
               {statCols.length === 0 && <th style={thStyle("aa5")} onClick={() => toggleSort("aa5")}>AA5{arrow("aa5")}</th>}
               <th style={{ ...thStyle("l10"), borderLeft: "1px solid rgba(255,255,255,0.06)" }} onClick={() => toggleSort("l10")}>L10{arrow("l10")}</th>
               {statCols.length === 0 && <th style={thStyle("aa10")} onClick={() => toggleSort("aa10")}>AA10{arrow("aa10")}</th>}
-              <th style={thStyle("sorare_proj")} onClick={() => toggleSort("sorare_proj")} title={__("Score projeté Sorare (prédit par Sorare pour le prochain match — reflète si le joueur est titulaire prévu)", "Sorare projected score (predicted by Sorare for next match — reflects expected starting status")}>Proj{arrow("sorare_proj")}</th>
               <th style={thStyle("reg10")} onClick={() => toggleSort("reg10")}>Reg10{arrow("reg10")}</th>
+              <th style={thStyle("titu_pct")} onClick={() => toggleSort("titu_pct")}>{__("Titu10","Start10")}{arrow("titu_pct")}</th>
               <th style={{ ...thStyle("l40"), borderLeft: "1px solid rgba(255,255,255,0.06)" }} onClick={() => toggleSort("l40")}>L40{arrow("l40")}</th>
               <th style={thStyle("aa40")} onClick={() => toggleSort("aa40")}>AA40{arrow("aa40")}</th>
               {hasFixtures && <>
                 <th style={thStyle("dsMatch")} onClick={() => toggleSort("dsMatch")}>
                   <span style={{ color: sortKey === "dsMatch" ? "#C084FC" : "#C084FC80" }}>D-Score{arrow("dsMatch")}</span>
                 </th>
-                <th style={thStyle("titu_pct")} onClick={() => toggleSort("titu_pct")}>Titu%{arrow("titu_pct")}</th>
+                <th style={thStyle("titu_pct")} onClick={() => toggleSort("titu_pct")}>{__("Titu%","Starter%")}{arrow("titu_pct")}</th>
                 <th style={{ ...thStyle("oppName"), cursor: "default" }}>{t(lang,"colAdv")}</th>
                 <th style={thStyle("csPercent")} onClick={() => toggleSort("csPercent")}>CS%{arrow("csPercent")}</th>
               </>}
@@ -484,20 +496,15 @@ export default function DbTab({ players, teams, fixtures, logos = {}, lang = "fr
                   {statCols.length === 0 && <td style={{ textAlign: "center", fontFamily: "DM Mono", fontSize: 10, color: "rgba(255,255,255,0.3)" }}>{R(p.aa5)}</td>}
                   <td style={{ textAlign: "center", fontFamily: "DM Mono", fontWeight: 700, fontSize: 14, color: dsColor(p.l10), borderLeft: "1px solid rgba(255,255,255,0.04)" }}>{R(p.l10)}</td>
                   {statCols.length === 0 && <td style={{ textAlign: "center", fontFamily: "DM Mono", fontSize: 10, color: "rgba(255,255,255,0.3)" }}>{R(p.aa10)}</td>}
-                  {(() => {
-                    const proj = p.sorare_proj;
-                    if (proj != null) {
-                      const col = proj >= 50 ? "#4ADE80" : proj >= 35 ? "#FBBF24" : "#EF4444";
-                      return <td style={{ textAlign: "center", fontFamily: "DM Mono", fontSize: 11, color: col }}>{proj}</td>;
-                    }
-                    return <td style={{ textAlign: "center", color: "rgba(255,255,255,0.15)", fontSize: 11 }}>—</td>;
-                  })()}
                   <td style={{ textAlign: "center", fontFamily: "DM Mono", fontSize: 11, color: (p.reg10 ?? p.regularite) >= 80 ? "#4ADE80" : (p.reg10 ?? p.regularite) >= 50 ? "#FBBF24" : "#EF4444" }}>{R(p.reg10 ?? p.regularite)}%</td>
+                  <td style={{ textAlign: "center", fontFamily: "DM Mono", fontSize: 11, color: p.titu_pct >= 80 ? "#4ADE80" : p.titu_pct >= 50 ? "#FBBF24" : "#EF4444" }}>{R(p.titu_pct)}%</td>
                   <td style={{ textAlign: "center", fontFamily: "DM Mono", fontWeight: 700, fontSize: 13, color: dsColor(p.l40), borderLeft: "1px solid rgba(255,255,255,0.04)" }}>{R(p.l40)}</td>
                   <td style={{ textAlign: "center", fontFamily: "DM Mono", fontSize: 10, color: "rgba(255,255,255,0.3)" }}>{R(p.aa40)}</td>
                   {hasFixtures && <>
                     <td style={{ textAlign: "center" }}>
-                      {p.dsMatch !== null ? (
+                      {(p.injured || p.suspended) ? (
+                        <span style={{ display: "inline-block", padding: "3px 8px", borderRadius: 8, fontFamily: "DM Mono", fontSize: 14, fontWeight: 700, color: "#fff", background: "#EF444430", border: "1px solid #EF444460" }}>0</span>
+                      ) : p.dsMatch !== null ? (
                         <span style={{
                           display: "inline-block", padding: "3px 8px", borderRadius: 8,
                           fontFamily: "DM Mono", fontSize: 14, fontWeight: 700,
@@ -512,8 +519,9 @@ export default function DbTab({ players, teams, fixtures, logos = {}, lang = "fr
                         <span style={{ fontSize: 9, color: "rgba(255,255,255,0.15)" }}>—</span>
                       )}
                     </td>
-                    <td style={{ textAlign: "center", fontFamily: "DM Mono", fontSize: 10 }}>
-                      <span style={{ color: "rgba(255,255,255,0.12)" }}>—</span>
+                    <td style={{ textAlign: "center" }}>
+                      {p.injured && <svg width="12" height="12" viewBox="0 0 12 12"><rect width="12" height="12" rx="2" fill="#EF4444"/><rect x="5" y="2" width="2" height="8" rx="0.5" fill="#fff"/><rect x="2" y="5" width="8" height="2" rx="0.5" fill="#fff"/></svg>}
+                      {p.suspended && <svg width="8" height="12" viewBox="0 0 8 12"><rect x="0.5" y="0.5" width="7" height="11" rx="1.5" fill="#EF4444" stroke="rgba(0,0,0,0.25)" strokeWidth="0.5"/></svg>}
                     </td>
                     <td style={{ textAlign: "left", fontSize: 8, paddingLeft: 2, maxWidth: 52, overflow: "hidden" }}>
                       {p.oppName ? (

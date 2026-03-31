@@ -1,0 +1,3440 @@
+🔑 API Key détectée — mode rapide activé
+🔍 Test API Sorare... ✅ API OK (Ligue 1)
+
+============================================================
+⚽ SCRAPING L1 (ligue-1-fr)
+  📅 2026-03-29 17:06
+  💤 Sleep: 0.15s/query, 1s/club
+============================================================
+  🗑️  FRESH mode — backup créé, on repart de zéro
+
+📡 Fetching clubs for ligue-1-fr...
+  ✅ Ligue 1: 18 clubs
+
+🏟️  [1/18] Angers SCO
+  👥 31 joueurs actifs
+  [1/31] Melvin Zinga... 🆕 L5=0 AA5=0 | GK
+  [2/31] Ousmane Camara... 🆕 L5=52 AA5=10 | DEF Central
+  [3/31] Lanroy Machine... 🆕 L5=44 AA5=3 | ATT Finisseur
+  [4/31] Harouna Djibirin... 🆕 L5=37 AA5=2 | ATT Finisseur
+  [5/31] Maël Gernigon... 🆕 L5=0 AA5=0 | DEF Central
+    💾 Sauvegarde (5 joueurs)
+  [6/31] Alexandre Dujeux... 🆕 L5=0 AA5=0 | ?
+  [7/31] Louis Mouton... 🆕 L5=34 AA5=-1 | MIL Rotation
+  [8/31] Yahia Jlidi... 🆕 L5=0 AA5=0 | ATT Finisseur
+  [9/31] Branco van den Boomen... 🆕 L5=44 AA5=9 | MIL Rotation
+  [10/31] Amine Moussaoui... 🆕 L5=0 AA5=0 | ATT Finisseur
+    💾 Sauvegarde (10 joueurs)
+  [11/31] Ilann Garin... 🆕 L5=0 AA5=0 | MIL Rotation
+  [12/31] Emmanuel Biumla... 🆕 L5=41 AA5=6 | MIL Rotation
+  [13/31] Pierrick Capelle... 🆕 L5=45 AA5=10 | MIL Rotation
+  [14/31] Hervé Koffi... 🆕 L5=58 AA5=13 | GK
+  [15/31] Marius Louãr... 🆕 L5=35 AA5=0 | DEF Central
+    💾 Sauvegarde (15 joueurs)
+  [16/31] Yann Llahona... 🆕 L5=0 AA5=0 | GK
+  [17/31] Prosper Peter... 🆕 L5=37 AA5=2 | ATT Finisseur
+  [18/31] Jacques Ekomié... 🆕 L5=32 AA5=-2 | DEF Central
+  [19/31] Yassin Belkhdim... 🆕 L5=39 AA5=4 | MIL Rotation
+  [20/31] Marius Courcoul... 🆕 L5=32 AA5=-3 | DEF Central
+    💾 Sauvegarde (20 joueurs)
+  [21/31] Lillian Rao-Lisoa... 🆕 L5=38 AA5=-4 | DEF Central
+  [22/31] Haris Belkebla... 🆕 L5=42 AA5=6 | MIL Rotation
+  [23/31] Dan Sinaté... 🆕 L5=34 AA5=-1 | MIL Rotation
+  [24/31] Oumar Pona... 🆕 L5=33 AA5=-2 | GK
+  [25/31] Carlens Arcus... 🆕 L5=49 AA5=14 | DEF Central
+    💾 Sauvegarde (25 joueurs)
+  [26/31] Goduine Koyalipou... 🆕 L5=37 AA5=2 | ATT Finisseur
+  [27/31] Florent Hanin... 🆕 L5=35 AA5=0 | DEF Central
+  [28/31] Amine Sbaï... 🆕 L5=47 AA5=7 | ATT Complet
+  [29/31] Nattio Sonnerat-Deschamps... 🆕 L5=0 AA5=0 | DEF Central
+  [30/31] Abdoulaye Bamba... 🆕 L5=32 AA5=-3 | DEF Central
+    💾 Sauvegarde (30 joueurs)
+  [31/31] Jordan Lefort... 🆕 L5=49 AA5=13 | DEF Central
+
+🏟️  [2/18] AJ Auxerre | ETA ~13min
+  👥 34 joueurs actifs
+  [1/34] Lamfia Dioubaté... 🆕 L5=0 AA5=0 | MIL Créateur
+  [2/34] Théo De Percin... 🆕 L5=62 AA5=2 | GK
+  [3/34] Alvin Petit Dol... 🆕 L5=0 AA5=0 | DEF Central
+  [4/34] Christophe Pélissier... 🆕 L5=0 AA5=0 | ?
+    💾 Sauvegarde (35 joueurs)
+  [5/34] Louis Mezerette... 🆕 L5=0 AA5=0 | GK
+  [6/34] Elikya Legros... 🆕 L5=0 AA5=0 | DEF Central
+  [7/34] Fredrik Oppegård... 🆕 L5=36 AA5=1 | DEF Central
+  [8/34] Sékou Mara... 🆕 L5=36 AA5=1 | ATT Finisseur
+  [9/34] Elisha Owusu... 🆕 L5=45 AA5=10 | MIL Rotation
+    💾 Sauvegarde (40 joueurs)
+  [10/34] Evan Diamalunda... 🆕 L5=0 AA5=0 | DEF Central
+  [11/34] Danny Namaso... 🆕 L5=54 AA5=8 | ATT Complet
+  [12/34] Tom Negrel... 🆕 L5=0 AA5=0 | GK
+  [13/34] Lassine Sinayoko... 🆕 L5=46 AA5=6 | ATT Complet
+  [14/34] Tidiane Devernois... 🆕 L5=37 AA5=2 | MIL Créateur
+    💾 Sauvegarde (45 joueurs)
+  [15/34] Donovan Léon... 🆕 L5=40 AA5=4 | GK
+  [16/34] Mamoudou Cissokho... 🆕 L5=0 AA5=0 | ATT Finisseur
+  [17/34] Nathan Buayi-Kiala... 🆕 L5=0 AA5=0 | MIL Rotation
+  [18/34] Lamine Sy... 🆕 L5=45 AA5=10 | DEF Central
+  [19/34] Lasso Coulibaly... 🆕 L5=36 AA5=1 | MIL Rotation
+    💾 Sauvegarde (50 joueurs)
+  [20/34] Sinaly Diomande... 🆕 L5=53 AA5=13 | DEF Central
+  [21/34] Naouirou Ahamada... 🆕 L5=40 AA5=5 | MIL Rotation
+  [22/34] Francisco Sierralta... 🆕 L5=0 AA5=0 | DEF Central
+  [23/34] Yvan Zaddy... 🆕 L5=35 AA5=0 | ATT Finisseur
+  [24/34] Clément Akpa... 🆕 L5=48 AA5=13 | DEF Central
+    💾 Sauvegarde (55 joueurs)
+  [25/34] Ryan Rodin... 🆕 L5=35 AA5=-0 | ATT Finisseur
+  [26/34] Assane Diousse... 🆕 L5=33 AA5=-2 | MIL Rotation
+  [27/34] Marvin Senaya... 🆕 L5=63 AA5=15 | DEF Central
+  [28/34] Telli Siwe... 🆕 L5=0 AA5=0 | DEF Central
+  [29/34] Bryan Okoh... 🆕 L5=66 AA5=22 | DEF Central
+    💾 Sauvegarde (60 joueurs)
+  [30/34] Romain Faivre... 🆕 L5=52 AA5=10 | MIL Créateur
+  [31/34] Gideon Mensah... 🆕 L5=53 AA5=13 | DEF Central
+  [32/34] Oussama El Azzouzi... 🆕 L5=59 AA5=24 | MIL GOAT
+  [33/34] Josué Casimir... 🆕 L5=47 AA5=7 | ATT Complet
+  [34/34] Kévin Danois... 🆕 L5=60 AA5=25 | MIL GOAT
+    💾 Sauvegarde (65 joueurs)
+
+🏟️  [3/18] Stade Brestois 29 | ETA ~12min
+  👥 28 joueurs actifs
+  [1/28] Raphaël Le Guen... 🆕 L5=40 AA5=5 | DEF Central
+  [2/28] E. Roy... 🆕 L5=0 AA5=0 | ?
+  [3/28] Ibrahim Kanté... 🆕 L5=0 AA5=0 | ATT Finisseur
+  [4/28] Rémy Labeau-Lascary... 🆕 L5=37 AA5=2 | ATT Finisseur
+  [5/28] Hugo Magnetti... 🆕 L5=60 AA5=20 | MIL GOAT
+    💾 Sauvegarde (70 joueurs)
+  [6/28] Saliou Diop... 🆕 L5=0 AA5=0 | ATT Finisseur
+  [7/28] Lucas Tousart... 🆕 L5=34 AA5=-1 | MIL Rotation
+  [8/28] Bradley Locko... 🆕 L5=47 AA5=12 | DEF Central
+  [9/28] Mama Baldé... 🆕 L5=37 AA5=2 | ATT Finisseur
+  [10/28] Luck Zogbé... 🆕 L5=34 AA5=-0 | DEF Central
+    💾 Sauvegarde (75 joueurs)
+  [11/28] Grégoire Coudert... 🆕 L5=60 AA5=8 | GK
+  [12/28] Hamidou Makalou... 🆕 L5=40 AA5=4 | MIL Rotation
+  [13/28] Brendan Chardonnet... 🆕 L5=57 AA5=17 | DEF Central
+  [14/28] Noah Jauny... 🆕 L5=0 AA5=0 | GK
+  [15/28] Daouda Guindo... 🆕 L5=35 AA5=8 | DEF Central
+    💾 Sauvegarde (80 joueurs)
+  [16/28] Radosław Majecki... 🆕 L5=0 AA5=0 | GK
+  [17/28] Axel Lassus... 🆕 L5=0 AA5=0 | MIL Rotation
+  [18/28] Pathé Mboup... 🆕 L5=32 AA5=-3 | ATT Finisseur
+  [19/28] Soumaïla Coulibaly... 🆕 L5=31 AA5=-4 | DEF Central
+  [20/28] Romain Del Castillo... 🆕 L5=46 AA5=6 | MIL Créateur
+    💾 Sauvegarde (85 joueurs)
+  [21/28] Joris Chotard... 🆕 L5=45 AA5=10 | MIL Rotation
+  [22/28] Mathis Lainé... 🆕 L5=0 AA5=0 | MIL Rotation
+  [23/28] Kenny Lala... 🆕 L5=62 AA5=22 | DEF Central
+  [24/28] Junior Dina Ebimbe... 🆕 L5=32 AA5=-3 | MIL Rotation
+  [25/28] Noan Geraux... 🆕 L5=0 AA5=0 | MIL Créateur
+    💾 Sauvegarde (90 joueurs)
+  [26/28] Kamory Doumbia... 🆕 L5=52 AA5=11 | MIL Créateur
+  [27/28] Michel Diaz... 🆕 L5=54 AA5=19 | DEF Central
+  [28/28] Ludovic Ajorque... 🆕 L5=64 AA5=7 | ATT Complet
+
+🏟️  [4/18] Le Havre AC | ETA ~11min
+  👥 36 joueurs actifs
+  [1/36] Abdoulaye Touré... 🆕 L5=0 AA5=0 | MIL Rotation
+  [2/36] Daren Mosengo... 🆕 L5=36 AA5=0 | MIL Rotation
+    💾 Sauvegarde (95 joueurs)
+  [3/36] Yassine Kechta... 🆕 L5=36 AA5=2 | MIL Rotation
+  [4/36] Lucas Gourna-Douath... 🆕 L5=39 AA5=12 | MIL Rotation
+  [5/36] Felix Mambimbi... 🆕 L5=42 AA5=1 | ATT Finisseur
+  [6/36] Thierno Bah... 🆕 L5=0 AA5=0 | MIL Rotation
+  [7/36] Didier Digard... 🆕 L5=0 AA5=0 | ?
+    💾 Sauvegarde (100 joueurs)
+  [8/36] Guy-Noël Zohouri... 🆕 L5=0 AA5=0 | MIL Rotation
+  [9/36] Yanis Zouaoui... 🆕 L5=40 AA5=2 | DEF Central
+  [10/36] Thomas Rousseau... 🆕 L5=0 AA5=0 | ?
+  [11/36] Enzo Koffi Vinette... 🆕 L5=43 AA5=8 | ATT Complet
+  [12/36] Yanis Djellel... 🆕 L5=0 AA5=0 | ATT Finisseur
+    💾 Sauvegarde (105 joueurs)
+  [13/36] Arouna Sangante... 🆕 L5=49 AA5=13 | DEF Central
+  [14/36] Fodé Doucouré... 🆕 L5=33 AA5=-2 | DEF Central
+  [15/36] Yanis Monkolot... 🆕 L5=0 AA5=0 | DEF Central
+  [16/36] Étienne Youté... 🆕 L5=0 AA5=0 | DEF Central
+  [17/36] Sofiane Boufal... 🆕 L5=50 AA5=10 | MIL Créateur
+    💾 Sauvegarde (110 joueurs)
+  [18/36] Simon Ebonog... 🆕 L5=34 AA5=-1 | MIL Rotation
+  [19/36] Mory Diaw... 🆕 L5=51 AA5=6 | GK
+  [20/36] Noam Obougou... 🆕 L5=38 AA5=3 | ATT Finisseur
+  [21/36] Stephan Zagadou... 🆕 L5=44 AA5=8 | DEF Central
+  [22/36] Loïc Nego... 🆕 L5=55 AA5=15 | DEF Central
+    💾 Sauvegarde (115 joueurs)
+  [23/36] Reda Khadra... 🆕 L5=40 AA5=5 | ATT Complet
+  [24/36] Alex Teixeira... 🆕 L5=0 AA5=0 | GK
+  [25/36] Lionel Mpasi... 🆕 L5=55 AA5=14 | GK
+  [26/36] Timothee Pembele... 🆕 L5=36 AA5=1 | DEF Central
+  [27/36] Rassoul Ndiaye... 🆕 L5=44 AA5=4 | MIL Créateur
+    💾 Sauvegarde (120 joueurs)
+  [28/36] Ayumu Seko... 🆕 L5=49 AA5=14 | DEF Central
+  [29/36] Godson Kyeremeh... 🆕 L5=63 AA5=3 | ATT Finisseur
+  [30/36] Issa Soumaré... 🆕 L5=43 AA5=8 | ATT Complet
+  [31/36] Gautier Lloris... 🆕 L5=55 AA5=20 | DEF Central
+  [32/36] Mbwana Samatta... 🆕 L5=42 AA5=2 | ATT Finisseur
+    💾 Sauvegarde (125 joueurs)
+  [33/36] Adams Diabaté... 🆕 L5=0 AA5=0 | MIL Rotation
+  [34/36] Paul Argney... 🆕 L5=0 AA5=0 | GK
+  [35/36] Kenny Quetant... 🆕 L5=34 AA5=-1 | ATT Finisseur
+  [36/36] Georges Gomis... 🆕 L5=0 AA5=0 | DEF Central
+
+🏟️  [5/18] RC Lens | ETA ~10min
+  👥 33 joueurs actifs
+  [1/33] Florian Sotoca... 🆕 L5=37 AA5=2 | ATT Finisseur
+    💾 Sauvegarde (130 joueurs)
+  [2/33] Robin Risser... 🆕 L5=45 AA5=5 | GK
+  [3/33] Fodé Sylla... 🆕 L5=47 AA5=12 | MIL Rotation
+  [4/33] Daïvy Lefranc-Yeboah... 🆕 L5=0 AA5=0 | GK
+  [5/33] Allan Saint-Maximin... 🆕 L5=51 AA5=3 | ATT Finisseur
+  [6/33] Anthony Bermont... 🆕 L5=39 AA5=4 | MIL Rotation
+    💾 Sauvegarde (135 joueurs)
+  [7/33] Ilan Jourdren... 🆕 L5=0 AA5=0 | GK
+  [8/33] Andrija Bulatović... 🆕 L5=43 AA5=8 | MIL Rotation
+  [9/33] Mathieu Gorgelin... 🆕 L5=40 AA5=5 | GK
+  [10/33] Matthieu Udol... 🆕 L5=57 AA5=12 | DEF Latéral
+  [11/33] Adrien Thomasson... 🆕 L5=67 AA5=17 | MIL Créateur
+    💾 Sauvegarde (140 joueurs)
+  [12/33] Kyllian Antonio... 🆕 L5=65 AA5=30 | DEF Central
+  [13/33] Nidal Čelik... 🆕 L5=41 AA5=10 | DEF Central
+  [14/33] Jonathan Gradit... 🆕 L5=0 AA5=0 | DEF Central
+  [15/33] Wesley Saïd... 🆕 L5=51 AA5=9 | ATT Complet
+  [16/33] Saud Abdulhamid... 🆕 L5=56 AA5=11 | DEF Latéral
+    💾 Sauvegarde (145 joueurs)
+  [17/33] Oscar Lenne... 🆕 L5=0 AA5=0 | DEF Central
+  [18/33] Samson Baidoo... 🆕 L5=57 AA5=22 | DEF Central
+  [19/33] Odsonne Edouard... 🆕 L5=49 AA5=2 | ATT Finisseur
+  [20/33] Pierre-Ismaëlo Ganiou... 🆕 L5=45 AA5=14 | DEF Central
+  [21/33] Rayan Fofana... 🆕 L5=44 AA5=2 | ATT Finisseur
+    💾 Sauvegarde (150 joueurs)
+  [22/33] Florian Thauvin... 🆕 L5=77 AA5=26 | ATT Complet
+  [23/33] Arthur Masuaku... 🆕 L5=41 AA5=6 | DEF Central
+  [24/33] Pierre Sage... 🆕 L5=0 AA5=0 | ?
+  [25/33] Régis Gurtner... 🆕 L5=0 AA5=0 | GK
+  [26/33] Mamadou Sangaré... 🆕 L5=69 AA5=19 | MIL GOAT
+    💾 Sauvegarde (155 joueurs)
+  [27/33] Alpha Diallo... 🆕 L5=0 AA5=0 | MIL Rotation
+  [28/33] Malang Sarr... 🆕 L5=65 AA5=25 | DEF Central
+  [29/33] Adam Delplace... 🆕 L5=0 AA5=0 | GK
+  [30/33] Ruben Aguilar... 🆕 L5=50 AA5=5 | DEF Latéral
+  [31/33] Abdallah Sima... 🆕 L5=50 AA5=5 | ATT Finisseur
+    💾 Sauvegarde (160 joueurs)
+  [32/33] Erawan Garnier... 🆕 L5=38 AA5=3 | ATT Finisseur
+  [33/33] Amadou Haïdara... 🆕 L5=49 AA5=8 | MIL Créateur
+
+🏟️  [6/18] LOSC Lille | ETA ~9min
+  👥 38 joueurs actifs
+  [1/38] Younes Lachaab... 🆕 L5=0 AA5=0 | ATT Finisseur
+  [2/38] Marc-Aurèle Caillard... 🆕 L5=0 AA5=0 | GK
+  [3/38] Aïssa Mandi... 🆕 L5=71 AA5=30 | DEF Central
+    💾 Sauvegarde (165 joueurs)
+  [4/38] Benjamin André... 🆕 L5=67 AA5=26 | MIL GOAT
+  [5/38] Maxima Goffi... 🆕 L5=0 AA5=0 | DEF Central
+  [6/38] Saad Boussadia... 🆕 L5=0 AA5=0 | MIL Rotation
+  [7/38] Félix Correia... 🆕 L5=44 AA5=9 | ATT Complet
+  [8/38] Berke Özer... 🆕 L5=52 AA5=7 | GK
+    💾 Sauvegarde (170 joueurs)
+  [9/38] Nabil Bentaleb... 🆕 L5=53 AA5=13 | MIL Rotation
+  [10/38] Arnaud Bodart... 🆕 L5=35 AA5=-0 | GK
+  [11/38] Olivier Giroud... 🆕 L5=48 AA5=3 | ATT Finisseur
+  [12/38] Ethan Mbappé... 🆕 L5=0 AA5=0 | MIL Créateur
+  [13/38] Lilian Baret... 🆕 L5=0 AA5=0 | MIL Rotation
+    💾 Sauvegarde (175 joueurs)
+  [14/38] Tiago Santos... 🆕 L5=49 AA5=9 | DEF Central
+  [15/38] Hákon Haraldsson... 🆕 L5=47 AA5=7 | MIL Créateur
+  [16/38] Thomas Meunier... 🆕 L5=58 AA5=2 | DEF Central
+  [17/38] Gaëtan Perrin... 🆕 L5=50 AA5=9 | ATT Complet
+  [18/38] Osame Sahraoui... 🆕 L5=0 AA5=0 | ATT Finisseur
+    💾 Sauvegarde (180 joueurs)
+  [19/38] Chancel Mbemba... 🆕 L5=58 AA5=23 | DEF Central
+  [20/38] Marius Broholm... 🆕 L5=42 AA5=6 | ATT Complet
+  [21/38] Noah Edjouma... 🆕 L5=38 AA5=3 | ATT Finisseur
+  [22/38] Ngal'ayel Mukau... 🆕 L5=37 AA5=2 | MIL Rotation
+  [23/38] Ayyoub Bouaddi... 🆕 L5=50 AA5=14 | MIL Rotation
+    💾 Sauvegarde (185 joueurs)
+  [24/38] Matias Fernandez-Pardo... 🆕 L5=57 AA5=10 | MIL Créateur
+  [25/38] Angel Yondjio... 🆕 L5=0 AA5=0 | ATT Finisseur
+  [26/38] Bruno Génésio... 🆕 L5=0 AA5=0 | ?
+  [27/38] Thomas Sajous... 🆕 L5=0 AA5=0 | GK
+  [28/38] Soriba Diaoune... 🆕 L5=38 AA5=3 | ATT Finisseur
+    💾 Sauvegarde (190 joueurs)
+  [29/38] Samy Merzouk... 🆕 L5=0 AA5=0 | GK
+  [30/38] Zadig Lanssade... 🆕 L5=0 AA5=0 | GK
+  [31/38] Morgan Costarelli... 🆕 L5=0 AA5=0 | DEF Central
+  [32/38] Ousmane Touré... 🆕 L5=0 AA5=0 | DEF Central
+  [33/38] Calvin Verdonk... 🆕 L5=52 AA5=17 | DEF Central
+    💾 Sauvegarde (195 joueurs)
+  [34/38] Stephane Noumbissie... 🆕 L5=0 AA5=0 | DEF Central
+  [35/38] Hamza Igamane... 🆕 L5=0 AA5=0 | ATT Finisseur
+  [36/38] Alexsandro... 🆕 L5=61 AA5=14 | DEF Central
+  [37/38] Nathan Ngoy... 🆕 L5=68 AA5=23 | DEF Central
+  [38/38] Romain Perraud... 🆕 L5=46 AA5=11 | DEF Latéral
+    💾 Sauvegarde (200 joueurs)
+
+🏟️  [7/18] FC Lorient | ETA ~9min
+  👥 36 joueurs actifs
+  [1/36] Bamba Dieng... 🆕 L5=54 AA5=1 | ATT Finisseur
+  [2/36] Benjamin Leroy... 🆕 L5=0 AA5=0 | GK
+  [3/36] Panos Katseris... 🆕 L5=37 AA5=2 | DEF Central
+  [4/36] Igor Silva... 🆕 L5=47 AA5=12 | DEF Central
+  [5/36] Isaac Monnier... 🆕 L5=0 AA5=0 | DEF Central
+    💾 Sauvegarde (205 joueurs)
+  [6/36] Bandiougou Fadiga... 🆕 L5=0 AA5=0 | MIL Rotation
+  [7/36] Darlin Yongwa... 🆕 L5=41 AA5=1 | DEF Central
+  [8/36] Abdoulaye Faye... 🆕 L5=48 AA5=13 | DEF Central
+  [9/36] Sambou Soumano... 🆕 L5=33 AA5=-2 | ATT Finisseur
+  [10/36] Daniel Semedo... 🆕 L5=35 AA5=-0 | MIL Rotation
+    💾 Sauvegarde (210 joueurs)
+  [11/36] Izak Akakpo... 🆕 L5=0 AA5=0 | DEF Central
+  [12/36] Olivier Pantaloni... 🆕 L5=0 AA5=0 | ?
+  [13/36] Noah Le Gal... 🆕 L5=0 AA5=0 | DEF Central
+  [14/36] Martin Bley... 🆕 L5=34 AA5=-1 | MIL Rotation
+  [15/36] Montassar Talbi... 🆕 L5=53 AA5=18 | DEF Central
+    💾 Sauvegarde (215 joueurs)
+  [16/36] Trevan Sanusi... 🆕 L5=0 AA5=0 | ATT Finisseur
+  [17/36] Théo Le Bris... 🆕 L5=41 AA5=6 | MIL Rotation
+  [18/36] Pablo Pagis... 🆕 L5=64 AA5=14 | ATT Complet
+  [19/36] Dermane Karim... 🆕 L5=45 AA5=10 | MIL Rotation
+  [20/36] Jérémy Hatchi... 🆕 L5=0 AA5=0 | ATT Finisseur
+    💾 Sauvegarde (220 joueurs)
+  [21/36] Bingourou Kamara... 🆕 L5=0 AA5=0 | GK
+  [22/36] Lucas Leaudais... 🆕 L5=0 AA5=0 | DEF Central
+  [23/36] Arthur Avom... 🆕 L5=48 AA5=8 | MIL Rotation
+  [24/36] Aiyegun Tosin... 🆕 L5=41 AA5=1 | ATT Finisseur
+  [25/36] Noah Cadiou... 🆕 L5=54 AA5=12 | MIL Rotation
+    💾 Sauvegarde (225 joueurs)
+  [26/36] Bamo Meïté... 🆕 L5=45 AA5=2 | DEF Central
+  [27/36] Nathaniel Adjei... 🆕 L5=38 AA5=6 | DEF Central
+  [28/36] Jean-Victor Makengo... 🆕 L5=42 AA5=2 | MIL Créateur
+  [29/36] Laurent Abergel... 🆕 L5=52 AA5=17 | MIL Rotation
+  [30/36] Stevan Siba... 🆕 L5=0 AA5=0 | DEF Central
+    💾 Sauvegarde (230 joueurs)
+  [31/36] Jai Semenyo... 🆕 L5=0 AA5=0 | DEF Central
+  [32/36] Isaak Touré... 🆕 L5=0 AA5=0 | DEF Central
+  [33/36] Mamadou Koné... 🆕 L5=0 AA5=0 | ATT Finisseur
+  [34/36] Arsène Kouassi... 🆕 L5=54 AA5=9 | DEF Central
+  [35/36] Mohamed Bamba... 🆕 L5=35 AA5=0 | ATT Finisseur
+    💾 Sauvegarde (235 joueurs)
+  [36/36] Yvon Mvogo... 🆕 L5=46 AA5=3 | GK
+
+🏟️  [8/18] FC Metz | ETA ~8min
+  👥 32 joueurs actifs
+  [1/32] Giorgi Kvilitaia... 🆕 L5=38 AA5=2 | ATT Finisseur
+  [2/32] Boubacar Traoré... 🆕 L5=44 AA5=9 | MIL Rotation
+  [3/32] Cléo Mélières... 🆕 L5=0 AA5=0 | DEF Central
+  [4/32] Koffi Kouao... 🆕 L5=54 AA5=14 | DEF Central
+    💾 Sauvegarde (240 joueurs)
+  [5/32] Romain Jean-Baptiste... 🆕 L5=0 AA5=0 | GK
+  [6/32] Lucas Michal... 🆕 L5=35 AA5=-0 | ATT Finisseur
+  [7/32] Yannis Lawson... 🆕 L5=0 AA5=0 | DEF Central
+  [8/32] Tahirys Dos Santos... 🆕 L5=0 AA5=0 | DEF Central
+  [9/32] Ismaël Guerti... 🆕 L5=0 AA5=0 | MIL Créateur
+    💾 Sauvegarde (245 joueurs)
+  [10/32] Terry Yegbe... 🆕 L5=40 AA5=-1 | DEF Central
+  [11/32] Fodé Ballo-Touré... 🆕 L5=42 AA5=7 | DEF Central
+  [12/32] Gauthier Hein... 🆕 L5=43 AA5=8 | MIL Créateur
+  [13/32] Habib Diallo... 🆕 L5=38 AA5=4 | ATT Finisseur
+  [14/32] Jonathan Fischer... 🆕 L5=33 AA5=-2 | GK
+    💾 Sauvegarde (250 joueurs)
+  [15/32] M. Mboula... 🆕 L5=45 AA5=14 | DEF Central
+  [16/32] Alpha Touré... 🆕 L5=29 AA5=-6 | MIL Rotation
+  [17/32] Sadibou Sané... 🆕 L5=54 AA5=19 | DEF Central
+  [18/32] Jean-Philippe Gbamin... 🆕 L5=48 AA5=13 | MIL Rotation
+  [19/32] Believe Munongo... 🆕 L5=37 AA5=2 | MIL Rotation
+    💾 Sauvegarde (255 joueurs)
+  [20/32] Maxime Colin... 🆕 L5=51 AA5=16 | DEF Central
+  [21/32] Jahyann Pandore... 🆕 L5=0 AA5=0 | ATT Finisseur
+  [22/32] Joseph Mangondo... 🆕 L5=0 AA5=0 | ATT Finisseur
+  [23/32] Benjamin Stambouli... 🆕 L5=48 AA5=6 | MIL Rotation
+  [24/32] Giorgi Abuashvili... 🆕 L5=44 AA5=4 | ATT Finisseur
+    💾 Sauvegarde (260 joueurs)
+  [25/32] Giorgi Tsitaishvili... 🆕 L5=53 AA5=13 | ATT Complet
+  [26/32] Moustapha Diop... 🆕 L5=0 AA5=0 | DEF Central
+  [27/32] Jessy Deminguet... 🆕 L5=36 AA5=1 | MIL Rotation
+  [28/32] Bouna Sarr... 🆕 L5=25 AA5=-6 | DEF Central
+  [29/32] Benoit Tavenot... 🆕 L5=0 AA5=0 | ?
+    💾 Sauvegarde (265 joueurs)
+  [30/32] Pape Sy... 🆕 L5=85 AA5=25 | GK
+  [31/32] Ousmane Ba... 🆕 L5=0 AA5=0 | GK
+  [32/32] Nathan Mbala... 🆕 L5=45 AA5=5 | ATT Complet
+
+🏟️  [9/18] AS Monaco | ETA ~7min
+  👥 35 joueurs actifs
+  [1/35] Mamadou Coulibaly... 🆕 L5=45 AA5=0 | MIL Créateur
+  [2/35] Denis Zakaria... 🆕 L5=53 AA5=13 | MIL Rotation
+    💾 Sauvegarde (270 joueurs)
+  [3/35] Lukáš Hradecky... 🆕 L5=50 AA5=2 | GK
+  [4/35] Mohammed Salisu... 🆕 L5=0 AA5=0 | DEF Central
+  [5/35] Matthias Wamu Oyatambwe... 🆕 L5=0 AA5=0 | MIL Rotation
+  [6/35] Lamine Camara... 🆕 L5=63 AA5=23 | MIL GOAT
+  [7/35] Jordan Teze... 🆕 L5=63 AA5=21 | DEF Central
+    💾 Sauvegarde (275 joueurs)
+  [8/35] Mika Biereth... 🆕 L5=36 AA5=1 | ATT Finisseur
+  [9/35] Krépin Diatta... 🆕 L5=41 AA5=6 | MIL Rotation
+  [10/35] Ansu Fati... 🆕 L5=47 AA5=7 | ATT Complet
+  [11/35] Maghnes Akliouche... 🆕 L5=60 AA5=11 | MIL Créateur
+  [12/35] Aladji Bamba... 🆕 L5=45 AA5=10 | MIL Rotation
+    💾 Sauvegarde (280 joueurs)
+  [13/35] Wout Faes... 🆕 L5=52 AA5=16 | DEF Central
+  [14/35] Vanderson... 🆕 L5=46 AA5=11 | DEF Central
+  [15/35] Takumi Minamino... 🆕 L5=0 AA5=0 | MIL Créateur
+  [16/35] Philipp Köhn... 🆕 L5=53 AA5=8 | GK
+  [17/35] Eric Dier... 🆕 L5=0 AA5=0 | DEF Central
+    💾 Sauvegarde (285 joueurs)
+  [18/35] Folarin Balogun... 🆕 L5=63 AA5=-2 | ATT Finisseur
+  [19/35] Paul Pogba... 🆕 L5=0 AA5=0 | MIL Rotation
+  [20/35] Bradel Kiwa... 🆕 L5=0 AA5=0 | DEF Central
+  [21/35] Caio Henrique... 🆕 L5=48 AA5=8 | DEF Latéral
+  [22/35] Samuel Nibombé... 🆕 L5=35 AA5=0 | MIL Rotation
+    💾 Sauvegarde (290 joueurs)
+  [23/35] Yann Lienard... 🆕 L5=0 AA5=0 | GK
+  [24/35] Pape Cabral... 🆕 L5=0 AA5=0 | MIL Rotation
+  [25/35] Christian Mawissa Elebi... 🆕 L5=46 AA5=11 | DEF Central
+  [26/35] Stanis Idumbo... 🆕 L5=64 AA5=4 | MIL Créateur
+  [27/35] Ilane Touré... 🆕 L5=0 AA5=0 | MIL Rotation
+    💾 Sauvegarde (295 joueurs)
+  [28/35] Thilo Kehrer... 🆕 L5=62 AA5=27 | DEF Central
+  [29/35] Sébastien Pocognoli... 🆕 L5=0 AA5=0 | ?
+  [30/35] Yanis Benchaouch... 🆕 L5=0 AA5=0 | GK
+  [31/35] Jules Stawiecki... 🆕 L5=0 AA5=0 | GK
+  [32/35] Aleksandr Golovin... 🆕 L5=68 AA5=13 | MIL B2B
+    💾 Sauvegarde (300 joueurs)
+  [33/35] Paris Brunner... 🆕 L5=33 AA5=-2 | ATT Finisseur
+  [34/35] Simon Adingra... 🆕 L5=39 AA5=-1 | ATT Finisseur
+  [35/35] Kassoum Ouattara... 🆕 L5=39 AA5=4 | DEF Central
+
+🏟️  [10/18] FC Nantes | ETA ~6min
+  👥 33 joueurs actifs
+  [1/33] Dehmaine Assoumani... 🆕 L5=43 AA5=7 | MIL Rotation
+  [2/33] Patrik Carlgren... 🆕 L5=0 AA5=0 | GK
+    💾 Sauvegarde (305 joueurs)
+  [3/33] Ibrahima Sissoko... 🆕 L5=34 AA5=-2 | MIL Créateur
+  [4/33] Fabien Centonze... 🆕 L5=61 AA5=21 | DEF Central
+  [5/33] Mathieu Acapandié... 🆕 L5=29 AA5=-6 | DEF Central
+  [6/33] Moutanabi Bodiang... 🆕 L5=0 AA5=0 | DEF Central
+  [7/33] Francis Coquelin... 🆕 L5=37 AA5=2 | MIL Rotation
+    💾 Sauvegarde (310 joueurs)
+  [8/33] Tylel Tati... 🆕 L5=53 AA5=12 | DEF Central
+  [9/33] Mohamed Kaba... 🆕 L5=51 AA5=16 | MIL Rotation
+  [10/33] Chidozie Awaziem... 🆕 L5=51 AA5=5 | DEF Central
+  [11/33] Mostafa Mohamed... 🆕 L5=46 AA5=4 | ATT Finisseur
+  [12/33] Sékou Doucouré... 🆕 L5=41 AA5=6 | DEF Central
+    💾 Sauvegarde (315 joueurs)
+  [13/33] H. Guirassy... 🆕 L5=36 AA5=1 | ATT Finisseur
+  [14/33] Rémy Cabella... 🆕 L5=39 AA5=4 | MIL Rotation
+  [15/33] Nicolas Cozza... 🆕 L5=44 AA5=9 | DEF Central
+  [16/33] Deiver Machado... 🆕 L5=32 AA5=-4 | DEF Central
+  [17/33] Anthony Lopes... 🆕 L5=45 AA5=5 | GK
+    💾 Sauvegarde (320 joueurs)
+  [18/33] Bahmed Deuff... 🆕 L5=32 AA5=-3 | MIL Rotation
+  [19/33] Uroš Radaković... 🆕 L5=0 AA5=0 | DEF Central
+  [20/33] Doumbia Koné... 🆕 L5=0 AA5=0 | ATT Finisseur
+  [21/33] Vahid Halilhodžić... 🆕 L5=0 AA5=0 | ?
+  [22/33] Frédéric Guilbert... 🆕 L5=40 AA5=5 | DEF Central
+    💾 Sauvegarde (325 joueurs)
+  [23/33] Matthis Abline... 🆕 L5=50 AA5=8 | ATT Complet
+  [24/33] Ignatius Ganago... 🆕 L5=42 AA5=2 | ATT Finisseur
+  [25/33] Sacha Ziani... 🆕 L5=0 AA5=0 | MIL Rotation
+  [26/33] Louis Leroux... 🆕 L5=39 AA5=4 | MIL Rotation
+  [27/33] Youssef El-Arabi... 🆕 L5=41 AA5=1 | ATT Finisseur
+    💾 Sauvegarde (330 joueurs)
+  [28/33] Johann Lepenant... 🆕 L5=43 AA5=8 | MIL Rotation
+  [29/33] Amady Camara... 🆕 L5=34 AA5=-1 | ATT Finisseur
+  [30/33] Ali Youssef... 🆕 L5=59 AA5=17 | DEF Central
+  [31/33] Abakar Sylla... 🆕 L5=34 AA5=-1 | DEF Central
+  [32/33] Kelvin Amian... 🆕 L5=28 AA5=-7 | DEF Central
+    💾 Sauvegarde (335 joueurs)
+  [33/33] Alexis Mirbach... 🆕 L5=0 AA5=0 | GK
+
+🏟️  [11/18] OGC Nice | ETA ~6min
+  👥 42 joueurs actifs
+  [1/42] Everton Pereira da Silva... 🆕 L5=36 AA5=1 | MIL Rotation
+  [2/42] Kaïl Boudache... 🆕 L5=41 AA5=1 | ATT Finisseur
+  [3/42] Gabin Bernardeau... 🆕 L5=40 AA5=5 | MIL Rotation
+  [4/42] Elye Wahi... 🆕 L5=50 AA5=1 | ATT Finisseur
+    💾 Sauvegarde (340 joueurs)
+  [5/42] Cho... 🆕 L5=42 AA5=2 | ATT Finisseur
+  [6/42] Hicham Boudaoui... 🆕 L5=38 AA5=3 | MIL Rotation
+  [7/42] Salis Samed... 🆕 L5=42 AA5=7 | MIL Rotation
+  [8/42] Charles Vanhoutte... 🆕 L5=46 AA5=11 | MIL Rotation
+  [9/42] Enguerrand Bouard... 🆕 L5=0 AA5=0 | ATT Finisseur
+    💾 Sauvegarde (345 joueurs)
+  [10/42] Claude Puel... 🆕 L5=0 AA5=0 | ?
+  [11/42] Brad-Hamilton Mantsounga... 🆕 L5=0 AA5=0 | DEF Central
+  [12/42] Tanguy Ndombélé... 🆕 L5=42 AA5=-1 | MIL Rotation
+  [13/42] Yanis Sofikitis... 🆕 L5=0 AA5=0 | DEF Central
+  [14/42] Jonathan Clauss... 🆕 L5=58 AA5=18 | DEF Latéral
+    💾 Sauvegarde (350 joueurs)
+  [15/42] Moïse Bombito... 🆕 L5=0 AA5=0 | DEF Central
+  [16/42] Youssouf Ndayishimiye... 🆕 L5=24 AA5=-1 | MIL Rotation
+  [17/42] Bartosz Żelazowski... 🆕 L5=0 AA5=0 | GK
+  [18/42] Tiago Gouveia... 🆕 L5=35 AA5=-0 | ATT Finisseur
+  [19/42] Melvin Bard... 🆕 L5=41 AA5=1 | DEF Central
+    💾 Sauvegarde (355 joueurs)
+  [20/42] Dante... 🆕 L5=40 AA5=5 | DEF Central
+  [21/42] Sofiane Diop... 🆕 L5=39 AA5=4 | MIL Créateur
+  [22/42] Kojo Peprah Oppong... 🆕 L5=57 AA5=22 | DEF Central
+  [23/42] Antoine Mendy... 🆕 L5=41 AA5=6 | DEF Central
+  [24/42] Théo Bruyère... 🆕 L5=0 AA5=0 | GK
+    💾 Sauvegarde (360 joueurs)
+  [25/42] Jah-Mason Telusson... 🆕 L5=0 AA5=0 | ATT Finisseur
+  [26/42] Millan Brignone... 🆕 L5=0 AA5=0 | MIL Rotation
+  [27/42] Matys Youst... 🆕 L5=0 AA5=0 | GK
+  [28/42] Tom Louchet... 🆕 L5=38 AA5=-4 | MIL Créateur
+  [29/42] Laurenzo Monteiro... 🆕 L5=0 AA5=0 | DEF Central
+    💾 Sauvegarde (365 joueurs)
+  [30/42] Mohamed Abdelmonem... 🆕 L5=0 AA5=0 | DEF Central
+  [31/42] Kéfren Ali... 🆕 L5=0 AA5=0 | ATT Finisseur
+  [32/42] Kayyum Alabi... 🆕 L5=0 AA5=0 | DEF Central
+  [33/42] Yehvann Diouf... 🆕 L5=54 AA5=2 | GK
+  [34/42] Zoumana Diallo... 🆕 L5=0 AA5=0 | ATT Finisseur
+    💾 Sauvegarde (370 joueurs)
+  [35/42] Isak Jansson... 🆕 L5=34 AA5=-1 | ATT Finisseur
+  [36/42] Kevin Carlos... 🆕 L5=31 AA5=-4 | ATT Finisseur
+  [37/42] Morgan Sanson... 🆕 L5=37 AA5=6 | MIL Rotation
+  [38/42] Djibril Coulibaly... 🆕 L5=34 AA5=-1 | MIL Rotation
+  [39/42] Mousslim Youssouf... 🆕 L5=0 AA5=0 | DEF Central
+    💾 Sauvegarde (375 joueurs)
+  [40/42] Ali Abdi... 🆕 L5=40 AA5=-0 | DEF Central
+  [41/42] Maxime Dupé... 🆕 L5=41 AA5=1 | GK
+  [42/42] Juma Bah... 🆕 L5=46 AA5=6 | DEF Central
+
+🏟️  [12/18] Olympique Lyonnais | ETA ~5min
+  👥 36 joueurs actifs
+  [1/36] Mathys de Carvalho... 🆕 L5=0 AA5=0 | MIL Rotation
+  [2/36] Endrick... 🆕 L5=57 AA5=10 | ATT Complet
+    💾 Sauvegarde (380 joueurs)
+  [3/36] Tyler Morton... 🆕 L5=49 AA5=14 | MIL Rotation
+  [4/36] Lassine Diarra... 🆕 L5=0 AA5=0 | GK
+  [5/36] Noham Kamara... 🆕 L5=36 AA5=1 | DEF Central
+  [6/36] Ruben Kluivert... 🆕 L5=61 AA5=14 | DEF Central
+  [7/36] Islamdine Halifa... 🆕 L5=0 AA5=0 | MIL Rotation
+    💾 Sauvegarde (385 joueurs)
+  [8/36] Ernest Nuamah... 🆕 L5=0 AA5=0 | ATT Finisseur
+  [9/36] Paulo Fonseca... 🆕 L5=0 AA5=0 | ?
+  [10/36] Nicolás Tagliafico... 🆕 L5=38 AA5=7 | DEF Central
+  [11/36] Abner... 🆕 L5=39 AA5=4 | DEF Central
+  [12/36] Rémy Descamps... 🆕 L5=79 AA5=19 | GK
+    💾 Sauvegarde (390 joueurs)
+  [13/36] Clinton Mata... 🆕 L5=44 AA5=12 | DEF Central
+  [14/36] Yaremchuk... 🆕 L5=40 AA5=-1 | ATT Finisseur
+  [15/36] Orel Mangala... 🆕 L5=41 AA5=6 | MIL Rotation
+  [16/36] Yvann Konan... 🆕 L5=0 AA5=0 | GK
+  [17/36] Khalis Merah... 🆕 L5=40 AA5=5 | MIL Rotation
+    💾 Sauvegarde (395 joueurs)
+  [18/36] Ainsley Maitland-Niles... 🆕 L5=48 AA5=8 | MIL Rotation
+  [19/36] Malick Fofana... 🆕 L5=34 AA5=-1 | MIL Créateur
+  [20/36] Pavel Šulc... 🆕 L5=56 AA5=-2 | MIL Créateur
+  [21/36] Moussa Niakhaté... 🆕 L5=61 AA5=21 | DEF Central
+  [22/36] Prince Mbatshi Mukuba... 🆕 L5=0 AA5=0 | DEF Central
+    💾 Sauvegarde (400 joueurs)
+  [23/36] Adam Karabec... 🆕 L5=44 AA5=9 | MIL Rotation
+  [24/36] Dominik Greif... 🆕 L5=53 AA5=13 | GK
+  [25/36] Fallou Fall... 🆕 L5=0 AA5=0 | MIL Rotation
+  [26/36] Matthias da Silva... 🆕 L5=0 AA5=0 | GK
+  [27/36] Tiago Gonçalves... 🆕 L5=0 AA5=0 | MIL Créateur
+    💾 Sauvegarde (405 joueurs)
+  [28/36] Hans Hateboer... 🆕 L5=44 AA5=9 | DEF Central
+  [29/36] Steeve Kango... 🆕 L5=35 AA5=-0 | DEF Central
+  [30/36] Rachid Ghezzal... 🆕 L5=36 AA5=1 | ATT Finisseur
+  [31/36] Noah Nartey... 🆕 L5=34 AA5=-1 | MIL Créateur
+  [32/36] Corentin Tolisso... 🆕 L5=58 AA5=12 | MIL B2B
+    💾 Sauvegarde (410 joueurs)
+  [33/36] Adil Hamdani... 🆕 L5=36 AA5=1 | ATT Finisseur
+  [34/36] Tanner Tessmann... 🆕 L5=40 AA5=5 | MIL Rotation
+  [35/36] Afonso Moreira... 🆕 L5=56 AA5=12 | ATT Complet
+  [36/36] Rémi Himbert... 🆕 L5=41 AA5=-0 | ATT Finisseur
+
+🏟️  [13/18] Olympique de Marseille | ETA ~4min
+  👥 32 joueurs actifs
+  [1/32] Emerson... 🆕 L5=42 AA5=7 | DEF Latéral
+    💾 Sauvegarde (415 joueurs)
+  [2/32] Tochukwu Nnadi... 🆕 L5=35 AA5=0 | MIL Rotation
+  [3/32] Hamed Traorè... 🆕 L5=38 AA5=3 | MIL Créateur
+  [4/32] Mathis Clement... 🆕 L5=0 AA5=0 | DEF Central
+  [5/32] Amine Gouiri... 🆕 L5=49 AA5=2 | ATT Finisseur
+  [6/32] Tadjidine Mmadi... 🆕 L5=0 AA5=0 | MIL Rotation
+    💾 Sauvegarde (420 joueurs)
+  [7/32] Igor Paixão... 🆕 L5=62 AA5=10 | ATT Complet
+  [8/32] Jelle Van Neck... 🆕 L5=0 AA5=0 | GK
+  [9/32] Mason Greenwood... 🆕 L5=52 AA5=12 | ATT Complet
+  [10/32] Bilal Nadir... 🆕 L5=35 AA5=0 | MIL Créateur
+  [11/32] Habib Beye... 🆕 L5=0 AA5=0 | ?
+    💾 Sauvegarde (425 joueurs)
+  [12/32] Anis Doubal... 🆕 L5=0 AA5=0 | DEF Central
+  [13/32] Pladi N'Zinga Pambani... 🆕 L5=0 AA5=0 | DEF Central
+  [14/32] Facundo Medina... 🆕 L5=40 AA5=9 | DEF Central
+  [15/32] Yanis Sellami... 🆕 L5=0 AA5=0 | MIL Rotation
+  [16/32] Pierre-Emerick Aubameyang... 🆕 L5=41 AA5=3 | ATT Finisseur
+    💾 Sauvegarde (430 joueurs)
+  [17/32] Jeffrey de Lange... 🆕 L5=27 AA5=-8 | GK
+  [18/32] Rayan Ouro Bang Na... 🆕 L5=0 AA5=0 | DEF Central
+  [19/32] CJ Egan-Riley... 🆕 L5=48 AA5=13 | DEF Central
+  [20/32] Himad Abdelli... 🆕 L5=34 AA5=-1 | MIL Rotation
+  [21/32] Ange Lago... 🆕 L5=0 AA5=0 | ATT Finisseur
+    💾 Sauvegarde (435 joueurs)
+  [22/32] Théo Vermot... 🆕 L5=0 AA5=0 | GK
+  [23/32] Timothy Weah... 🆕 L5=49 AA5=14 | ATT Complet
+  [24/32] Pierre-Emile Højbjerg... 🆕 L5=54 AA5=14 | MIL Créateur
+  [25/32] Ethan Nwaneri... 🆕 L5=43 AA5=-2 | MIL Créateur
+  [26/32] Benjamin Pavard... 🆕 L5=47 AA5=12 | DEF Central
+    💾 Sauvegarde (440 joueurs)
+  [27/32] Leonardo Balerdi... 🆕 L5=42 AA5=7 | DEF Central
+  [28/32] Gerónimo Rulli... 🆕 L5=57 AA5=12 | GK
+  [29/32] Nayef Aguerd... 🆕 L5=52 AA5=11 | DEF Central
+  [30/32] Quinten Timber... 🆕 L5=42 AA5=7 | MIL Créateur
+  [31/32] Arthur Vermeeren... 🆕 L5=37 AA5=2 | MIL Rotation
+    💾 Sauvegarde (445 joueurs)
+  [32/32] Geoffrey Kondogbia... 🆕 L5=46 AA5=11 | MIL Rotation
+
+🏟️  [14/18] Paris Saint-Germain | ETA ~3min
+  👥 32 joueurs actifs
+  [1/32] Kang-In Lee... 🆕 L5=49 AA5=13 | MIL Créateur
+  [2/32] Beraldo... 🆕 L5=47 AA5=12 | DEF Central
+  [3/32] Matvey Safonov... 🆕 L5=57 AA5=7 | GK
+  [4/32] Vitinha... 🆕 L5=65 AA5=30 | MIL GOAT
+    💾 Sauvegarde (450 joueurs)
+  [5/32] Noah Nsoki... 🆕 L5=0 AA5=0 | MIL Rotation
+  [6/32] Fabián Ruiz... 🆕 L5=0 AA5=0 | MIL Créateur
+  [7/32] Warren Zaïre-Emery... 🆕 L5=62 AA5=21 | MIL GOAT
+  [8/32] Désiré Doué... 🆕 L5=55 AA5=10 | ATT Complet
+  [9/32] Lucas Chevalier... 🆕 L5=0 AA5=0 | GK
+    💾 Sauvegarde (455 joueurs)
+  [10/32] Lucas Hernández... 🆕 L5=84 AA5=41 | DEF Latéral
+  [11/32] Achraf Hakimi... 🆕 L5=65 AA5=23 | DEF Latéral
+  [12/32] João Neves... 🆕 L5=45 AA5=10 | MIL Créateur
+  [13/32] Ibrahim Mbaye... 🆕 L5=38 AA5=3 | ATT Finisseur
+  [14/32] Yanis Khafi... 🆕 L5=0 AA5=0 | MIL Rotation
+    💾 Sauvegarde (460 joueurs)
+  [15/32] Nuno Mendes... 🆕 L5=65 AA5=22 | DEF Latéral
+  [16/32] Illia Zabarnyi... 🆕 L5=60 AA5=25 | DEF Central
+  [17/32] Mathis Jangéal... 🆕 L5=0 AA5=0 | MIL Rotation
+  [18/32] Marquinhos... 🆕 L5=0 AA5=0 | DEF Central
+  [19/32] Ousmane Dembélé... 🆕 L5=60 AA5=9 | ATT Complet
+    💾 Sauvegarde (465 joueurs)
+  [20/32] Khvicha Kvaratskhelia... 🆕 L5=46 AA5=11 | ATT Complet
+  [21/32] Martin James... 🆕 L5=0 AA5=0 | GK
+  [22/32] Bradley Barcola... 🆕 L5=60 AA5=10 | ATT Complet
+  [23/32] Renato Bellucci... 🆕 L5=0 AA5=0 | GK
+  [24/32] David Boly... 🆕 L5=0 AA5=0 | DEF Central
+    💾 Sauvegarde (470 joueurs)
+  [25/32] Luis Enrique... 🆕 L5=0 AA5=0 | ?
+  [26/32] Wassim Slama... 🆕 L5=0 AA5=0 | MIL Rotation
+  [27/32] Senny Mayulu... 🆕 L5=63 AA5=16 | MIL Récup
+  [28/32] Gonçalo Ramos... 🆕 L5=50 AA5=7 | ATT Complet
+  [29/32] Arthur Vignaud... 🆕 L5=0 AA5=0 | GK
+    💾 Sauvegarde (475 joueurs)
+  [30/32] Quentin Ndjantou... 🆕 L5=0 AA5=0 | ATT Finisseur
+  [31/32] Dro Fernández... 🆕 L5=46 AA5=6 | MIL Rotation
+  [32/32] Willian Pacho... 🆕 L5=53 AA5=18 | DEF Central
+
+🏟️  [15/18] Paris FC | ETA ~2min
+  👥 36 joueurs actifs
+  [1/36] Rudy Matondo... 🆕 L5=30 AA5=-1 | MIL Rotation
+  [2/36] Julien López... 🆕 L5=0 AA5=0 | ATT Finisseur
+    💾 Sauvegarde (480 joueurs)
+  [3/36] Sofiane Alakouch... 🆕 L5=0 AA5=0 | DEF Central
+  [4/36] Jonathan Ikoné... 🆕 L5=39 AA5=4 | ATT Finisseur
+  [5/36] Tuomas Ollila... 🆕 L5=35 AA5=0 | DEF Central
+  [6/36] Alimami Gory... 🆕 L5=46 AA5=5 | ATT Complet
+  [7/36] Ciro Immobile... 🆕 L5=40 AA5=-0 | ATT Finisseur
+    💾 Sauvegarde (485 joueurs)
+  [8/36] Ilan Kebbal... 🆕 L5=51 AA5=11 | MIL Créateur
+  [9/36] Timothée Kolodziejczak... 🆕 L5=42 AA5=11 | DEF Central
+  [10/36] Rémy Riou... 🆕 L5=0 AA5=0 | GK
+  [11/36] Luca Koleosho... 🆕 L5=36 AA5=1 | ATT Finisseur
+  [12/36] Otávio... 🆕 L5=35 AA5=4 | DEF Central
+    💾 Sauvegarde (490 joueurs)
+  [13/36] Kevin Trapp... 🆕 L5=56 AA5=11 | GK
+  [14/36] Pierre-Yves Hamel... 🆕 L5=0 AA5=0 | ATT Finisseur
+  [15/36] Vincent Marchetti... 🆕 L5=38 AA5=3 | MIL Rotation
+  [16/36] Mathieu Cafaro... 🆕 L5=35 AA5=-0 | MIL Rotation
+  [17/36] Hamari Traoré... 🆕 L5=61 AA5=13 | DEF Central
+    💾 Sauvegarde (495 joueurs)
+  [18/36] Jean-Philippe Krasso... 🆕 L5=38 AA5=3 | ATT Finisseur
+  [19/36] Pierre Lees-Melou... 🆕 L5=55 AA5=15 | MIL Rotation
+  [20/36] Diego Coppola... 🆕 L5=53 AA5=11 | DEF Central
+  [21/36] Moses Simon... 🆕 L5=48 AA5=13 | ATT Complet
+  [22/36] Moustapha Mbow... 🆕 L5=62 AA5=22 | DEF Central
+    💾 Sauvegarde (500 joueurs)
+  [23/36] Killian Prouchet... 🆕 L5=0 AA5=0 | DEF Central
+  [24/36] Thibault De Smet... 🆕 L5=42 AA5=17 | DEF Central
+  [25/36] Nhoa Sangui... 🆕 L5=48 AA5=13 | DEF Central
+  [26/36] Obed Nkambadio... 🆕 L5=0 AA5=0 | GK
+  [27/36] Willem Geubbels... 🆕 L5=33 AA5=-2 | ATT Finisseur
+    💾 Sauvegarde (505 joueurs)
+  [28/36] Maxime Lopez... 🆕 L5=39 AA5=4 | MIL Rotation
+  [29/36] Lamine Gueye... 🆕 L5=0 AA5=0 | ATT Finisseur
+  [30/36] Adama Camara... 🆕 L5=49 AA5=9 | MIL Rotation
+  [31/36] Mohamed Dao... 🆕 L5=0 AA5=0 | ATT Finisseur
+  [32/36] Zakarya Khaldi... 🆕 L5=0 AA5=0 | ATT Finisseur
+    💾 Sauvegarde (510 joueurs)
+  [33/36] Antoine Kombouare... 🆕 L5=0 AA5=0 | ?
+  [34/36] Anis Fatahine... 🆕 L5=0 AA5=0 | DEF Central
+  [35/36] Samir Chergui... 🆕 L5=0 AA5=0 | DEF Central
+  [36/36] Marshall Munetsi... 🆕 L5=54 AA5=2 | MIL Créateur
+
+🏟️  [16/18] Stade Rennais F.C. | ETA ~2min
+  👥 31 joueurs actifs
+  [1/31] Djaoui Cissé... 🆕 L5=36 AA5=1 | MIL Rotation
+    💾 Sauvegarde (515 joueurs)
+  [2/31] Lilian Brassier... 🆕 L5=60 AA5=26 | DEF Latéral
+  [3/31] Brice Samba... 🆕 L5=65 AA5=10 | GK
+  [4/31] Aboubakar Nagida... 🆕 L5=60 AA5=25 | DEF Central
+  [5/31] Arnaud Nordin... 🆕 L5=47 AA5=7 | ATT Complet
+  [6/31] Ludovic Blas... 🆕 L5=41 AA5=1 | ATT Finisseur
+    💾 Sauvegarde (520 joueurs)
+  [7/31] Chibuike Ugochukwu... 🆕 L5=0 AA5=0 | MIL Rotation
+  [8/31] Breel Embolo... 🆕 L5=40 AA5=0 | ATT Finisseur
+  [9/31] Jeremy Jacquet... 🆕 L5=44 AA5=9 | DEF Central
+  [10/31] Ayoube Akabou... 🆕 L5=0 AA5=0 | GK
+  [11/31] Sebastian Szymański... 🆕 L5=53 AA5=8 | MIL Rotation
+    💾 Sauvegarde (525 joueurs)
+  [12/31] Franck Haise... 🆕 L5=0 AA5=0 | ?
+  [13/31] Henrick Do Marcolino... 🆕 L5=47 AA5=12 | ATT Complet
+  [14/31] Quentin Merlin... 🆕 L5=63 AA5=28 | MIL GOAT
+  [15/31] Przemysław Frankowski... 🆕 L5=54 AA5=19 | MIL GOAT
+  [16/31] Mousa Tamari... 🆕 L5=49 AA5=4 | ATT Finisseur
+    💾 Sauvegarde (530 joueurs)
+  [17/31] Abdelhamid Aït Boudlal... 🆕 L5=41 AA5=6 | DEF Central
+  [18/31] Esteban Lepaul... 🆕 L5=49 AA5=-2 | ATT Finisseur
+  [19/31] Yassir Zabiri... 🆕 L5=35 AA5=0 | ATT Finisseur
+  [20/31] Mahdi Camara... 🆕 L5=56 AA5=14 | MIL Rotation
+  [21/31] Elías Legendre... 🆕 L5=35 AA5=0 | ATT Finisseur
+    💾 Sauvegarde (535 joueurs)
+  [22/31] Valentin Rongier... 🆕 L5=70 AA5=33 | MIL GOAT
+  [23/31] Anthony Rouault... 🆕 L5=56 AA5=21 | DEF Central
+  [24/31] Junior Ake... 🆕 L5=0 AA5=0 | DEF Central
+  [25/31] Nordan Mukiele... 🆕 L5=49 AA5=1 | ATT Finisseur
+  [26/31] Paolo Limon... 🆕 L5=0 AA5=0 | MIL Rotation
+    💾 Sauvegarde (540 joueurs)
+  [27/31] Mathys Silistrie... 🆕 L5=23 AA5=-12 | GK
+  [28/31] Alidu Seidu... 🆕 L5=41 AA5=6 | DEF Latéral
+  [29/31] Lucas Rosier... 🆕 L5=0 AA5=0 | ATT Finisseur
+  [30/31] Glen Kamara... 🆕 L5=42 AA5=7 | MIL Rotation
+  [31/31] Kilian Belazzoug... 🆕 L5=0 AA5=0 | GK
+    💾 Sauvegarde (545 joueurs)
+
+🏟️  [17/18] RC Strasbourg Alsace | ETA ~1min
+  👥 35 joueurs actifs
+  [1/35] Ghianny Kodia... 🆕 L5=0 AA5=0 | ATT Finisseur
+  [2/35] Rafael Luís... 🆕 L5=33 AA5=-2 | MIL Rotation
+  [3/35] Stefan Bajic... 🆕 L5=0 AA5=0 | GK
+  [4/35] Junior Mwanga... 🆕 L5=38 AA5=3 | MIL Rotation
+  [5/35] Joaquín Panichelli... 🆕 L5=55 AA5=3 | ATT Finisseur
+    💾 Sauvegarde (550 joueurs)
+  [6/35] Samir El Mourabet... 🆕 L5=62 AA5=20 | MIL GOAT
+  [7/35] Karl-Johan Johnsson... 🆕 L5=0 AA5=0 | GK
+  [8/35] Julio Enciso... 🆕 L5=44 AA5=9 | MIL Rotation
+  [9/35] Maximillian Oyedele... 🆕 L5=46 AA5=3 | MIL Créateur
+  [10/35] Emanuel Emegha... 🆕 L5=0 AA5=0 | ATT Finisseur
+    💾 Sauvegarde (555 joueurs)
+  [11/35] Diego Moreira... 🆕 L5=48 AA5=6 | ATT Complet
+  [12/35] Guela Doué... 🆕 L5=46 AA5=11 | DEF Central
+  [13/35] Mathis Amougou... 🆕 L5=0 AA5=0 | MIL Rotation
+  [14/35] Samuel Amo-Ameyaw... 🆕 L5=43 AA5=3 | ATT Finisseur
+  [15/35] Ishé Samuels-Smith... 🆕 L5=0 AA5=0 | DEF Central
+    💾 Sauvegarde (560 joueurs)
+  [16/35] Sacha Lung... 🆕 L5=0 AA5=0 | DEF Central
+  [17/35] Mike Penders... 🆕 L5=60 AA5=15 | GK
+  [18/35] Gabriel Kerckaert... 🆕 L5=0 AA5=0 | GK
+  [19/35] Max Marechal... 🆕 L5=0 AA5=0 | MIL Rotation
+  [20/35] Tyrese Noubissie... 🆕 L5=0 AA5=0 | MIL Rotation
+    💾 Sauvegarde (565 joueurs)
+  [21/35] Sebastian Nanasi... 🆕 L5=40 AA5=0 | MIL Créateur
+  [22/35] Gary O'Neil... 🆕 L5=0 AA5=0 | ?
+  [23/35] Amadou Cissé... 🆕 L5=0 AA5=0 | DEF Central
+  [24/35] Lucas Høgsberg... 🆕 L5=42 AA5=7 | DEF Central
+  [25/35] David Datro Fofana... 🆕 L5=33 AA5=-2 | ATT Finisseur
+    💾 Sauvegarde (570 joueurs)
+  [26/35] Ismaël Doukouré... 🆕 L5=44 AA5=8 | DEF Central
+  [27/35] Ben Chilwell... 🆕 L5=47 AA5=12 | DEF Central
+  [28/35] Aarón Anselmino... 🆕 L5=37 AA5=2 | DEF Central
+  [29/35] Andrew Omobamidele... 🆕 L5=56 AA5=16 | DEF Central
+  [30/35] Jean-Baptiste Bosey... 🆕 L5=0 AA5=0 | ATT Finisseur
+    💾 Sauvegarde (575 joueurs)
+  [31/35] Yoann Becker... 🆕 L5=0 AA5=0 | DEF Central
+  [32/35] Abdoul Ouattara... 🆕 L5=46 AA5=11 | MIL Rotation
+  [33/35] Gessime Yassine... 🆕 L5=53 AA5=8 | ATT Complet
+  [34/35] M. Godo... 🆕 L5=48 AA5=8 | ATT Complet
+  [35/35] Valentín Barco... 🆕 L5=50 AA5=15 | MIL Créateur
+    💾 Sauvegarde (580 joueurs)
+
+🏟️  [18/18] Toulouse FC | ETA ~0min
+  👥 35 joueurs actifs
+  [1/35] Pape Diop... 🆕 L5=65 AA5=20 | MIL GOAT
+  [2/35] Yann Gboho... 🆕 L5=56 AA5=14 | ATT Complet
+  [3/35] Aron Dønnum... 🆕 L5=51 AA5=9 | MIL Créateur
+  [4/35] Djibril Sidibé... 🆕 L5=45 AA5=10 | DEF Latéral
+  [5/35] Noah Lahmadi... 🆕 L5=0 AA5=0 | MIL Rotation
+    💾 Sauvegarde (585 joueurs)
+  [6/35] Carles Martínez... 🆕 L5=0 AA5=0 | ?
+  [7/35] Emersonn... 🆕 L5=42 AA5=2 | ATT Finisseur
+  [8/35] Naïme Saïd Mchindra... 🆕 L5=0 AA5=0 | GK
+  [9/35] Darris Zema... 🆕 L5=0 AA5=0 | MIL Rotation
+  [10/35] Ilyas Azizi... 🆕 L5=0 AA5=0 | ATT Finisseur
+    💾 Sauvegarde (590 joueurs)
+  [11/35] Mark McKenzie... 🆕 L5=53 AA5=13 | DEF Central
+  [12/35] Enzo Faty... 🆕 L5=0 AA5=0 | ATT Finisseur
+  [13/35] Seny Koumbassa... 🆕 L5=42 AA5=7 | DEF Central
+  [14/35] Frank Magri... 🆕 L5=83 AA5=13 | ATT GOAT
+  [15/35] Gaëtan Bakhouche... 🆕 L5=0 AA5=0 | DEF Central
+    💾 Sauvegarde (595 joueurs)
+  [16/35] Álex Domínguez... 🆕 L5=0 AA5=0 | GK
+  [17/35] Guillaume Restes... 🆕 L5=45 AA5=5 | GK
+  [18/35] Dayann Méthalie... 🆕 L5=31 AA5=-4 | DEF Central
+  [19/35] Adam El Ouali... 🆕 L5=0 AA5=0 | MIL Rotation
+  [20/35] Cristian Cásseres Jr.... 🆕 L5=56 AA5=16 | MIL Rotation
+    💾 Sauvegarde (600 joueurs)
+  [21/35] Jacen Russell-Rowe... 🆕 L5=35 AA5=-0 | ATT Finisseur
+  [22/35] Alexis Vossah... 🆕 L5=36 AA5=1 | MIL Rotation
+  [23/35] Santiago Hidalgo... 🆕 L5=49 AA5=4 | ATT Finisseur
+  [24/35] Mário Sauer... 🆕 L5=40 AA5=-0 | MIL Rotation
+  [25/35] Julián Vignolo... 🆕 L5=44 AA5=4 | ATT Finisseur
+    💾 Sauvegarde (605 joueurs)
+  [26/35] Louis Reynaud... 🆕 L5=0 AA5=0 | DEF Central
+  [27/35] Charlie Cresswell... 🆕 L5=51 AA5=11 | DEF Central
+  [28/35] Frédéric Efuele Ngoyala... 🆕 L5=0 AA5=0 | DEF Central
+  [29/35] Thibaud-Dorian Garondo... 🆕 L5=0 AA5=0 | DEF Central
+  [30/35] Warren Kamanzi... 🆕 L5=49 AA5=9 | DEF Central
+    💾 Sauvegarde (610 joueurs)
+  [31/35] Abu Francis... 🆕 L5=0 AA5=0 | MIL Rotation
+  [32/35] Kjetil Haug... 🆕 L5=30 AA5=-5 | GK
+  [33/35] Rasmus Nicolaisen... 🆕 L5=43 AA5=12 | DEF Central
+  [34/35] Rafik Messali... 🆕 L5=46 AA5=11 | MIL Rotation
+  [35/35] Nicolas Wasbauer... 🆕 L5=0 AA5=0 | DEF Central
+    💾 Sauvegarde (615 joueurs)
+
+============================================================
+✅ L1 terminé en 18min 22s
+  🆕 Nouveaux: 615
+  🔄 Mis à jour: 0
+  ⏭️  Skippés: 0
+  📊 Total: 615 joueurs
+  💾 deglingo_ligue1_final.json
+============================================================
+
+⏸️  Pause 30s avant la prochaine ligue...
+
+============================================================
+⚽ SCRAPING PL (premier-league-gb-eng)
+  📅 2026-03-29 17:25
+  💤 Sleep: 0.15s/query, 1s/club
+============================================================
+  🗑️  FRESH mode — backup créé, on repart de zéro
+
+📡 Fetching clubs for premier-league-gb-eng...
+  ✅ Premier League: 20 clubs
+
+🏟️  [1/20] AFC Bournemouth
+  👥 31 joueurs actifs
+  [1/31] Evanilson... 🆕 L5=48 AA5=3 | ATT Finisseur
+  [2/31] Owen Bevan... 🆕 L5=0 AA5=0 | DEF Central
+  [3/31] Rayan... 🆕 L5=43 AA5=8 | ATT Complet
+  [4/31] Remy Rees-Dottin... 🆕 L5=0 AA5=0 | ATT Finisseur
+  [5/31] Veljko Milosavljević... 🆕 L5=34 AA5=-1 | DEF Central
+    💾 Sauvegarde (5 joueurs)
+  [6/31] David Brooks... 🆕 L5=37 AA5=2 | MIL Rotation
+  [7/31] Lewis Cook... 🆕 L5=54 AA5=18 | MIL GOAT
+  [8/31] Marcos Senesi... 🆕 L5=59 AA5=19 | DEF Central
+  [9/31] Adam Smith... 🆕 L5=45 AA5=10 | DEF Central
+  [10/31] Alex Scott... 🆕 L5=56 AA5=21 | MIL GOAT
+    💾 Sauvegarde (10 joueurs)
+  [11/31] Christos Mandas... 🆕 L5=0 AA5=0 | GK
+  [12/31] Tyler Adams... 🆕 L5=44 AA5=9 | MIL Rotation
+  [13/31] James Hill... 🆕 L5=58 AA5=27 | DEF Central
+  [14/31] Enes Ünal... 🆕 L5=32 AA5=-4 | ATT Finisseur
+  [15/31] Andoni Iraola... 🆕 L5=0 AA5=0 | ?
+    💾 Sauvegarde (15 joueurs)
+  [16/31] Fraser Forster... 🆕 L5=0 AA5=0 | GK
+  [17/31] Matai Akinmboni... 🆕 L5=0 AA5=0 | DEF Central
+  [18/31] Amine Adli... 🆕 L5=40 AA5=5 | ATT Complet
+  [19/31] Malcom Dacosta... 🆕 L5=0 AA5=0 | MIL Rotation
+  [20/31] Justin Kluivert... 🆕 L5=0 AA5=0 | ATT Finisseur
+    💾 Sauvegarde (20 joueurs)
+  [21/31] Ryan Christie... 🆕 L5=50 AA5=10 | MIL Rotation
+  [22/31] Charlie Stevens... 🆕 L5=0 AA5=0 | MIL Rotation
+  [23/31] Alex Tóth... 🆕 L5=36 AA5=0 | MIL Rotation
+  [24/31] Julio Soler... 🆕 L5=0 AA5=0 | DEF Central
+  [25/31] Álex Jiménez... 🆕 L5=49 AA5=18 | DEF Central
+    💾 Sauvegarde (25 joueurs)
+  [26/31] Adrien Truffert... 🆕 L5=61 AA5=21 | DEF Central
+  [27/31] Ben Doak... 🆕 L5=30 AA5=-5 | ATT Finisseur
+  [28/31] Eli Junior Kroupi... 🆕 L5=45 AA5=5 | ATT Complet
+  [29/31] Đorđe Petrović... 🆕 L5=62 AA5=12 | GK
+  [30/31] Bafodé Diakité... 🆕 L5=33 AA5=-2 | DEF Central
+    💾 Sauvegarde (30 joueurs)
+  [31/31] Marcus Tavernier... 🆕 L5=52 AA5=12 | MIL Créateur
+
+🏟️  [2/20] Arsenal FC | ETA ~14min
+  👥 36 joueurs actifs
+  [1/36] Jack Porter... 🆕 L5=0 AA5=0 | GK
+  [2/36] Leandro Trossard... 🆕 L5=40 AA5=4 | ATT Finisseur
+  [3/36] Myles Lewis-Skelly... 🆕 L5=0 AA5=0 | DEF Central
+  [4/36] Khari Ranson... 🆕 L5=0 AA5=0 | GK
+    💾 Sauvegarde (35 joueurs)
+  [5/36] Ifeoluwa Ibrahim... 🆕 L5=0 AA5=0 | MIL Rotation
+  [6/36] Piero Hincapié... 🆕 L5=60 AA5=19 | DEF Central
+  [7/36] Gabriel Martinelli... 🆕 L5=39 AA5=-1 | ATT Finisseur
+  [8/36] Zubimendi... 🆕 L5=46 AA5=11 | MIL Rotation
+  [9/36] Jaden Dixon... 🆕 L5=0 AA5=0 | DEF Central
+    💾 Sauvegarde (40 joueurs)
+  [10/36] Joshua Nichols... 🆕 L5=0 AA5=0 | DEF Central
+  [11/36] Brando Bailey-Joseph... 🆕 L5=0 AA5=0 | ATT Finisseur
+  [12/36] Alexei Rojas... 🆕 L5=0 AA5=0 | GK
+  [13/36] Martin Ødegaard... 🆕 L5=57 AA5=6 | MIL Créateur
+  [14/36] Marli Salmon... 🆕 L5=0 AA5=0 | DEF Central
+    💾 Sauvegarde (45 joueurs)
+  [15/36] Bukayo Saka... 🆕 L5=60 AA5=15 | MIL Créateur
+  [16/36] Declan Rice... 🆕 L5=60 AA5=19 | MIL GOAT
+  [17/36] Andre Harriman-Annous... 🆕 L5=0 AA5=0 | ATT Finisseur
+  [18/36] Kepa Arrizabalaga... 🆕 L5=0 AA5=0 | GK
+  [19/36] Kai Havertz... 🆕 L5=47 AA5=4 | ATT Finisseur
+    💾 Sauvegarde (50 joueurs)
+  [20/36] Merino... 🆕 L5=0 AA5=0 | MIL Créateur
+  [21/36] Gabriel Magalhães... 🆕 L5=83 AA5=28 | DEF Central
+  [22/36] Viktor Gyökeres... 🆕 L5=49 AA5=2 | ATT Finisseur
+  [23/36] Max Dowman... 🆕 L5=72 AA5=12 | MIL B2B
+  [24/36] Tommy Setford... 🆕 L5=0 AA5=0 | GK
+    💾 Sauvegarde (55 joueurs)
+  [25/36] Ceadach O'Neill... 🆕 L5=0 AA5=0 | ATT Finisseur
+  [26/36] Riccardo Calafiori... 🆕 L5=41 AA5=6 | DEF Central
+  [27/36] Eberechi Eze... 🆕 L5=51 AA5=9 | MIL Créateur
+  [28/36] Ben White... 🆕 L5=0 AA5=0 | DEF Central
+  [29/36] Noni Madueke... 🆕 L5=47 AA5=7 | ATT Complet
+    💾 Sauvegarde (60 joueurs)
+  [30/36] Cristhian Mosquera... 🆕 L5=61 AA5=14 | DEF Central
+  [31/36] David Raya... 🆕 L5=50 AA5=9 | GK
+  [32/36] William Saliba... 🆕 L5=60 AA5=20 | DEF Central
+  [33/36] Jurriën Timber... 🆕 L5=60 AA5=10 | DEF Latéral
+  [34/36] Christian Nørgaard... 🆕 L5=33 AA5=-2 | MIL Rotation
+    💾 Sauvegarde (65 joueurs)
+  [35/36] Mikel Arteta... 🆕 L5=0 AA5=0 | ?
+  [36/36] Gabriel Jesus... 🆕 L5=44 AA5=0 | ATT Finisseur
+
+🏟️  [3/20] Aston Villa FC | ETA ~12min
+  👥 36 joueurs actifs
+  [1/36] Emiliano Martínez... 🆕 L5=46 AA5=6 | GK
+  [2/36] Unai Emery... 🆕 L5=0 AA5=0 | ?
+  [3/36] Amadou Onana... 🆕 L5=46 AA5=11 | MIL Rotation
+    💾 Sauvegarde (70 joueurs)
+  [4/36] Boubacar Kamara... 🆕 L5=0 AA5=0 | MIL Créateur
+  [5/36] Mohamed Koné... 🆕 L5=0 AA5=0 | MIL Rotation
+  [6/36] Morgan Rogers... 🆕 L5=38 AA5=3 | ATT Finisseur
+  [7/36] Leon Bailey... 🆕 L5=41 AA5=1 | ATT Finisseur
+  [8/36] Matty Cash... 🆕 L5=41 AA5=6 | DEF Latéral
+    💾 Sauvegarde (75 joueurs)
+  [9/36] Brian Madjo... 🆕 L5=0 AA5=0 | ATT Finisseur
+  [10/36] Victor Lindelöf... 🆕 L5=36 AA5=1 | DEF Central
+  [11/36] Jadon Sancho... 🆕 L5=47 AA5=7 | ATT Complet
+  [12/36] Theodore Carroll... 🆕 L5=0 AA5=0 | DEF Central
+  [13/36] Douglas Luiz... 🆕 L5=48 AA5=7 | MIL Rotation
+    💾 Sauvegarde (80 joueurs)
+  [14/36] Tammy Abraham... 🆕 L5=42 AA5=2 | ATT Finisseur
+  [15/36] Lamare Bogarde... 🆕 L5=36 AA5=5 | MIL Rotation
+  [16/36] Lucas Digne... 🆕 L5=44 AA5=14 | DEF Latéral
+  [17/36] Ross Barkley... 🆕 L5=54 AA5=14 | MIL Rotation
+  [18/36] Sam Proctor... 🆕 L5=0 AA5=0 | GK
+    💾 Sauvegarde (85 joueurs)
+  [19/36] Emiliano Buendía... 🆕 L5=40 AA5=5 | MIL Créateur
+  [20/36] Bradley-Paul Burrowes... 🆕 L5=0 AA5=0 | MIL Créateur
+  [21/36] Harvey Elliott... 🆕 L5=42 AA5=7 | MIL Rotation
+  [22/36] Alysson... 🆕 L5=39 AA5=4 | ATT Finisseur
+  [23/36] Pau Torres... 🆕 L5=59 AA5=24 | DEF Latéral
+    💾 Sauvegarde (90 joueurs)
+  [24/36] Marco Bizot... 🆕 L5=0 AA5=0 | GK
+  [25/36] John McGinn... 🆕 L5=52 AA5=5 | MIL Créateur
+  [26/36] Rhys Oakley... 🆕 L5=0 AA5=0 | GK
+  [27/36] George Hemmings... 🆕 L5=0 AA5=0 | MIL Rotation
+  [28/36] Leon Routh... 🆕 L5=0 AA5=0 | DEF Central
+    💾 Sauvegarde (95 joueurs)
+  [29/36] James Wright... 🆕 L5=0 AA5=0 | GK
+  [30/36] Ian Maatsen... 🆕 L5=40 AA5=5 | DEF Latéral
+  [31/36] Ollie Watkins... 🆕 L5=43 AA5=3 | ATT Finisseur
+  [32/36] Tyrone Mings... 🆕 L5=40 AA5=5 | DEF Central
+  [33/36] Ezri Konsa... 🆕 L5=52 AA5=17 | DEF Central
+    💾 Sauvegarde (100 joueurs)
+  [34/36] Andrés García... 🆕 L5=37 AA5=2 | DEF Central
+  [35/36] Ronnie Hollingshead... 🆕 L5=0 AA5=0 | GK
+  [36/36] Youri Tielemans... 🆕 L5=50 AA5=15 | MIL Créateur
+
+🏟️  [4/20] Brentford FC | ETA ~12min
+  👥 31 joueurs actifs
+  [1/31] Keane Lewis-Potter... 🆕 L5=46 AA5=6 | ATT Complet
+  [2/31] Yehor Yarmolyuk... 🆕 L5=39 AA5=4 | MIL Rotation
+    💾 Sauvegarde (105 joueurs)
+  [3/31] Ollie Shield... 🆕 L5=0 AA5=0 | DEF Central
+  [4/31] Caoimhin Kelleher... 🆕 L5=49 AA5=4 | GK
+  [5/31] Conor McManus... 🆕 L5=0 AA5=0 | DEF Central
+  [6/31] Aaron Hickey... 🆕 L5=36 AA5=1 | DEF Central
+  [7/31] Hákon Valdimarsson... 🆕 L5=24 AA5=-11 | GK
+    💾 Sauvegarde (110 joueurs)
+  [8/31] Kevin Schade... 🆕 L5=36 AA5=-6 | MIL Créateur
+  [9/31] Vitaly Janelt... 🆕 L5=50 AA5=8 | MIL Créateur
+  [10/31] Joshua Stephenson... 🆕 L5=0 AA5=0 | DEF Central
+  [11/31] Nathan Collins... 🆕 L5=38 AA5=7 | DEF Central
+  [12/31] Dango Ouattara... 🆕 L5=59 AA5=14 | ATT Complet
+    💾 Sauvegarde (115 joueurs)
+  [13/31] Josh Dasilva... 🆕 L5=0 AA5=0 | MIL Rotation
+  [14/31] Mathias Jensen... 🆕 L5=47 AA5=12 | MIL Rotation
+  [15/31] Sepp van den Berg... 🆕 L5=54 AA5=19 | DEF Central
+  [16/31] Kaye Furo... 🆕 L5=0 AA5=0 | ATT Finisseur
+  [17/31] Rico Henry... 🆕 L5=34 AA5=-7 | DEF Central
+    💾 Sauvegarde (120 joueurs)
+  [18/31] Julian Eyestone... 🆕 L5=0 AA5=0 | GK
+  [19/31] Kristoffer Ajer... 🆕 L5=34 AA5=-1 | DEF Central
+  [20/31] Ethan Pinnock... 🆕 L5=92 AA5=32 | DEF Central
+  [21/31] Antoni-Djibu Milambo... 🆕 L5=0 AA5=0 | MIL Rotation
+  [22/31] Romelle Donovan... 🆕 L5=36 AA5=2 | MIL Rotation
+    💾 Sauvegarde (125 joueurs)
+  [23/31] Luka Bentt... 🆕 L5=0 AA5=0 | MIL Rotation
+  [24/31] Reiss Nelson... 🆕 L5=30 AA5=-5 | ATT Finisseur
+  [25/31] Thiago... 🆕 L5=50 AA5=4 | ATT Finisseur
+  [26/31] Michael Kayode... 🆕 L5=44 AA5=10 | DEF Central
+  [27/31] Ellery Balcombe... 🆕 L5=0 AA5=0 | GK
+    💾 Sauvegarde (130 joueurs)
+  [28/31] Keith Andrews... 🆕 L5=0 AA5=0 | ?
+  [29/31] Mikkel Damsgaard... 🆕 L5=52 AA5=8 | MIL Créateur
+  [30/31] Fábio Carvalho... 🆕 L5=0 AA5=0 | MIL Rotation
+  [31/31] Jordan Henderson... 🆕 L5=42 AA5=2 | MIL Rotation
+
+🏟️  [5/20] Brighton & Hove Albion FC | ETA ~11min
+  👥 32 joueurs actifs
+  [1/32] Jack Hinshelwood... 🆕 L5=47 AA5=-2 | MIL Créateur
+    💾 Sauvegarde (135 joueurs)
+  [2/32] Georginio Rutter... 🆕 L5=39 AA5=4 | ATT Finisseur
+  [3/32] Yasin Ayari... 🆕 L5=49 AA5=4 | MIL Créateur
+  [4/32] Charlie Tasker... 🆕 L5=0 AA5=0 | DEF Central
+  [5/32] Joël Veltman... 🆕 L5=36 AA5=1 | DEF Central
+  [6/32] Carlos Baleba... 🆕 L5=35 AA5=0 | MIL Rotation
+    💾 Sauvegarde (140 joueurs)
+  [7/32] Lewis Dunk... 🆕 L5=55 AA5=20 | DEF Central
+  [8/32] Solly March... 🆕 L5=37 AA5=2 | MIL Rotation
+  [9/32] Ferdi Kadıoğlu... 🆕 L5=48 AA5=13 | DEF Latéral
+  [10/32] Nils Ramming... 🆕 L5=0 AA5=0 | GK
+  [11/32] Kaoru Mitoma... 🆕 L5=40 AA5=5 | MIL Rotation
+    💾 Sauvegarde (145 joueurs)
+  [12/32] Mats Wieffer... 🆕 L5=47 AA5=12 | MIL Rotation
+  [13/32] Fabian Hürzeler... 🆕 L5=0 AA5=0 | ?
+  [14/32] Jason Steele... 🆕 L5=0 AA5=0 | GK
+  [15/32] Stefanos Tzimas... 🆕 L5=0 AA5=0 | ATT Finisseur
+  [16/32] Igor... 🆕 L5=0 AA5=0 | DEF Central
+    💾 Sauvegarde (150 joueurs)
+  [17/32] Thomas McGill... 🆕 L5=0 AA5=0 | GK
+  [18/32] Bart Verbruggen... 🆕 L5=54 AA5=13 | GK
+  [19/32] Diego Gómez... 🆕 L5=58 AA5=8 | MIL Créateur
+  [20/32] Danny Welbeck... 🆕 L5=60 AA5=8 | ATT Complet
+  [21/32] Maxim De Cuyper... 🆕 L5=37 AA5=2 | DEF Central
+    💾 Sauvegarde (155 joueurs)
+  [22/32] Freddie Simmonds... 🆕 L5=0 AA5=0 | DEF Central
+  [23/32] Charalampos Kostoulas... 🆕 L5=39 AA5=-1 | ATT Finisseur
+  [24/32] Pascal Gross... 🆕 L5=57 AA5=17 | MIL Rotation
+  [25/32] Matt O’Riley... 🆕 L5=35 AA5=-0 | MIL Créateur
+  [26/32] Yankuba Minteh... 🆕 L5=46 AA5=6 | ATT Complet
+    💾 Sauvegarde (160 joueurs)
+  [27/32] Jan Paul Van Hecke... 🆕 L5=62 AA5=27 | DEF Central
+  [28/32] Adam Webster... 🆕 L5=0 AA5=0 | DEF Central
+  [29/32] Harry Howell... 🆕 L5=34 AA5=-1 | MIL Créateur
+  [30/32] Nehemiah Oriola... 🆕 L5=0 AA5=0 | ATT Finisseur
+  [31/32] Olivier Boscagli... 🆕 L5=54 AA5=8 | DEF Central
+    💾 Sauvegarde (165 joueurs)
+  [32/32] James Milner... 🆕 L5=46 AA5=11 | MIL Rotation
+
+🏟️  [6/20] Burnley FC | ETA ~10min
+  👥 37 joueurs actifs
+  [1/37] Zeki Amdouni... 🆕 L5=0 AA5=0 | ATT Finisseur
+  [2/37] Václav Hladký... 🆕 L5=0 AA5=0 | GK
+  [3/37] Brandon Pouani... 🆕 L5=0 AA5=0 | ATT Finisseur
+  [4/37] Maxime Esteve... 🆕 L5=41 AA5=6 | DEF Central
+    💾 Sauvegarde (170 joueurs)
+  [5/37] Loum Tchaouna... 🆕 L5=36 AA5=1 | ATT Finisseur
+  [6/37] Jordan Beyer... 🆕 L5=0 AA5=0 | DEF Central
+  [7/37] Jaidon Anthony... 🆕 L5=49 AA5=9 | ATT Complet
+  [8/37] Lyle Foster... 🆕 L5=39 AA5=-2 | ATT Finisseur
+  [9/37] Florentino Luís... 🆕 L5=34 AA5=3 | MIL Rotation
+    💾 Sauvegarde (175 joueurs)
+  [10/37] George Brierley... 🆕 L5=0 AA5=0 | MIL Rotation
+  [11/37] Connor Roberts... 🆕 L5=0 AA5=0 | DEF Central
+  [12/37] Jacob Bruun Larsen... 🆕 L5=36 AA5=1 | ATT Finisseur
+  [13/37] Marcus Edwards... 🆕 L5=42 AA5=2 | ATT Finisseur
+  [14/37] Ellis Clark... 🆕 L5=0 AA5=0 | MIL Créateur
+    💾 Sauvegarde (180 joueurs)
+  [15/37] Joseph Worrall... 🆕 L5=34 AA5=-1 | DEF Central
+  [16/37] Quilindschy Hartman... 🆕 L5=50 AA5=15 | DEF Latéral
+  [17/37] Josh Cullen... 🆕 L5=0 AA5=0 | MIL Créateur
+  [18/37] Oliver Pimlott... 🆕 L5=0 AA5=0 | MIL Rotation
+  [19/37] Kian McMahon-Brown... 🆕 L5=0 AA5=0 | ATT Finisseur
+    💾 Sauvegarde (185 joueurs)
+  [20/37] Lucas Pires... 🆕 L5=47 AA5=6 | DEF Central
+  [21/37] Scott Parker... 🆕 L5=0 AA5=0 | ?
+  [22/37] Hannibal Mejbri... 🆕 L5=47 AA5=5 | MIL Rotation
+  [23/37] Martin Dúbravka... 🆕 L5=36 AA5=-0 | GK
+  [24/37] Zian Flemming... 🆕 L5=51 AA5=1 | ATT Finisseur
+    💾 Sauvegarde (190 joueurs)
+  [25/37] Armando Broja... 🆕 L5=31 AA5=-4 | ATT Finisseur
+  [26/37] Bashir Humphreys... 🆕 L5=47 AA5=0 | DEF Central
+  [27/37] James Ward-Prowse... 🆕 L5=50 AA5=10 | MIL Rotation
+  [28/37] Axel Tuanzebe... 🆕 L5=40 AA5=4 | DEF Central
+  [29/37] Kyle Walker... 🆕 L5=44 AA5=9 | DEF Central
+    💾 Sauvegarde (195 joueurs)
+  [30/37] Enock Agyei... 🆕 L5=0 AA5=0 | ATT Finisseur
+  [31/37] Mike Trésor... 🆕 L5=0 AA5=0 | ATT Finisseur
+  [32/37] Murray Campbell... 🆕 L5=0 AA5=0 | DEF Central
+  [33/37] Hjalmar Ekdal... 🆕 L5=37 AA5=2 | DEF Central
+  [34/37] Ashley Barnes... 🆕 L5=34 AA5=-1 | ATT Finisseur
+    💾 Sauvegarde (200 joueurs)
+  [35/37] Max Weiß... 🆕 L5=0 AA5=0 | GK
+  [36/37] Lesley Ugochukwu... 🆕 L5=36 AA5=1 | MIL Rotation
+  [37/37] Joshua Laurent... 🆕 L5=40 AA5=4 | MIL Rotation
+
+🏟️  [7/20] Chelsea FC | ETA ~9min
+  👥 41 joueurs actifs
+  [1/41] Mykhailo Mudryk... 🆕 L5=0 AA5=0 | MIL Rotation
+  [2/41] Landon Emenalo... 🆕 L5=0 AA5=0 | MIL Créateur
+    💾 Sauvegarde (205 joueurs)
+  [3/41] Teddy Sharman-Lowe... 🆕 L5=0 AA5=0 | GK
+  [4/41] Dario Essugo... 🆕 L5=0 AA5=0 | MIL Créateur
+  [5/41] Andrey Santos... 🆕 L5=44 AA5=9 | MIL Rotation
+  [6/41] Filip Jörgensen... 🆕 L5=50 AA5=15 | GK
+  [7/41] Marc Cucurella... 🆕 L5=49 AA5=9 | DEF Latéral
+    💾 Sauvegarde (210 joueurs)
+  [8/41] Roméo Lavia... 🆕 L5=40 AA5=4 | MIL Rotation
+  [9/41] Liam Delap... 🆕 L5=35 AA5=0 | ATT Finisseur
+  [10/41] Jesse Derry... 🆕 L5=0 AA5=0 | ATT Finisseur
+  [11/41] Tosin Adarabioyo... 🆕 L5=40 AA5=5 | DEF Central
+  [12/41] Ollie Harrison... 🆕 L5=0 AA5=0 | MIL Rotation
+    💾 Sauvegarde (215 joueurs)
+  [13/41] Gabriel Slonina... 🆕 L5=0 AA5=0 | GK
+  [14/41] Reggie Walsh... 🆕 L5=0 AA5=0 | MIL Créateur
+  [15/41] Mamadou Sarr... 🆕 L5=30 AA5=-5 | DEF Central
+  [16/41] Kendry Páez... 🆕 L5=0 AA5=0 | MIL Rotation
+  [17/41] Levi Colwill... 🆕 L5=0 AA5=0 | DEF Central
+    💾 Sauvegarde (220 joueurs)
+  [18/41] Cole Palmer... 🆕 L5=51 AA5=11 | MIL Créateur
+  [19/41] Jorrel Hato... 🆕 L5=44 AA5=4 | DEF Central
+  [20/41] Reece James... 🆕 L5=57 AA5=22 | DEF Latéral
+  [21/41] Joshua Acheampong... 🆕 L5=31 AA5=3 | DEF Central
+  [22/41] Robert Sánchez... 🆕 L5=38 AA5=-0 | GK
+    💾 Sauvegarde (225 joueurs)
+  [23/41] Alejandro Garnacho... 🆕 L5=49 AA5=9 | ATT Complet
+  [24/41] Enzo Fernández... 🆕 L5=52 AA5=12 | MIL Créateur
+  [25/41] Benoît Badiashile... 🆕 L5=44 AA5=9 | DEF Central
+  [26/41] Wesley Fofana... 🆕 L5=42 AA5=10 | DEF Central
+  [27/41] João Pedro... 🆕 L5=54 AA5=3 | ATT Finisseur
+    💾 Sauvegarde (230 joueurs)
+  [28/41] Renato Veiga... 🆕 L5=38 AA5=3 | MIL Rotation
+  [29/41] David Datro Fofana... 🆕 L5=33 AA5=-2 | ATT Finisseur
+  [30/41] Charlie Holland... 🆕 L5=0 AA5=0 | MIL Rotation
+  [31/41] Estêvão... 🆕 L5=43 AA5=8 | ATT Complet
+  [32/41] Ryan Kavuma-McQueen... 🆕 L5=0 AA5=0 | ATT Finisseur
+    💾 Sauvegarde (235 joueurs)
+  [33/41] Marc Guiu... 🆕 L5=0 AA5=0 | ATT Finisseur
+  [34/41] Shumaira Mheuka... 🆕 L5=0 AA5=0 | ATT Finisseur
+  [35/41] Pedro Neto... 🆕 L5=44 AA5=8 | ATT Complet
+  [36/41] Liam Rosenior... 🆕 L5=0 AA5=0 | ?
+  [37/41] Trevoh Chalobah... 🆕 L5=59 AA5=14 | DEF Central
+    💾 Sauvegarde (240 joueurs)
+  [38/41] Jamie Bynoe-Gittens... 🆕 L5=37 AA5=2 | ATT Finisseur
+  [39/41] Max Merrick... 🆕 L5=0 AA5=0 | GK
+  [40/41] Malo Gusto... 🆕 L5=52 AA5=6 | DEF Latéral
+  [41/41] Moisés Caicedo... 🆕 L5=49 AA5=14 | MIL Rotation
+
+🏟️  [8/20] Crystal Palace FC | ETA ~9min
+  👥 37 joueurs actifs
+  [1/37] Rio Cardines... 🆕 L5=0 AA5=0 | MIL Créateur
+    💾 Sauvegarde (245 joueurs)
+  [2/37] Brennan Johnson... 🆕 L5=43 AA5=2 | ATT Finisseur
+  [3/37] Jean-Philippe Mateta... 🆕 L5=35 AA5=-0 | ATT Finisseur
+  [4/37] Walter Benítez... 🆕 L5=72 AA5=12 | GK
+  [5/37] Nathaniel Clyne... 🆕 L5=22 AA5=-13 | DEF Central
+  [6/37] Benjamin Casey... 🆕 L5=0 AA5=0 | ATT Finisseur
+    💾 Sauvegarde (250 joueurs)
+  [7/37] Maxence Lacroix... 🆕 L5=43 AA5=18 | DEF Central
+  [8/37] Will Hughes... 🆕 L5=33 AA5=2 | MIL Rotation
+  [9/37] Jaydee Canvot... 🆕 L5=58 AA5=24 | DEF Central
+  [10/37] Eddie Nketiah... 🆕 L5=0 AA5=0 | ATT Finisseur
+  [11/37] Daniel Muñoz... 🆕 L5=52 AA5=16 | DEF Central
+    💾 Sauvegarde (255 joueurs)
+  [12/37] Chadi Riad... 🆕 L5=36 AA5=1 | DEF Central
+  [13/37] Evann Guessand... 🆕 L5=46 AA5=4 | ATT Finisseur
+  [14/37] Jackson Izquierdo... 🆕 L5=0 AA5=0 | GK
+  [15/37] Ismaïla Sarr... 🆕 L5=49 AA5=6 | ATT Complet
+  [16/37] Christantus Uche... 🆕 L5=35 AA5=-0 | MIL Rotation
+    💾 Sauvegarde (260 joueurs)
+  [17/37] Adam Wharton... 🆕 L5=42 AA5=3 | MIL Rotation
+  [18/37] Jørgen Larsen... 🆕 L5=40 AA5=-1 | ATT Finisseur
+  [19/37] Chris Richards... 🆕 L5=58 AA5=23 | DEF Central
+  [20/37] Caleb Kporha... 🆕 L5=0 AA5=0 | DEF Central
+  [21/37] George King... 🆕 L5=0 AA5=0 | DEF Central
+    💾 Sauvegarde (265 joueurs)
+  [22/37] Zachariah Marsh... 🆕 L5=0 AA5=0 | ATT Finisseur
+  [23/37] Remi Matthews... 🆕 L5=0 AA5=0 | GK
+  [24/37] Kaden Rodney... 🆕 L5=0 AA5=0 | MIL Créateur
+  [25/37] Asher Agbinone... 🆕 L5=0 AA5=0 | MIL Créateur
+  [26/37] Oliver Glasner... 🆕 L5=0 AA5=0 | ?
+    💾 Sauvegarde (270 joueurs)
+  [27/37] Jefferson Lerma... 🆕 L5=52 AA5=17 | MIL Rotation
+  [28/37] Yeremy Pino... 🆕 L5=39 AA5=4 | MIL Rotation
+  [29/37] Dean Henderson... 🆕 L5=62 AA5=15 | GK
+  [30/37] Daichi Kamada... 🆕 L5=38 AA5=3 | MIL Rotation
+  [31/37] Dean Benamar... 🆕 L5=0 AA5=0 | DEF Central
+    💾 Sauvegarde (275 joueurs)
+  [32/37] Tyrick Mitchell... 🆕 L5=46 AA5=6 | DEF Central
+  [33/37] Cheick Doucouré... 🆕 L5=0 AA5=0 | MIL Rotation
+  [34/37] Borna Sosa... 🆕 L5=0 AA5=0 | DEF Central
+  [35/37] Joél Drakes-Thomas... 🆕 L5=0 AA5=0 | ATT Finisseur
+  [36/37] Brandon Pierrick... 🆕 L5=0 AA5=0 | MIL Rotation
+    💾 Sauvegarde (280 joueurs)
+  [37/37] Justin Devenny... 🆕 L5=0 AA5=0 | MIL Rotation
+
+🏟️  [9/20] Everton FC | ETA ~8min
+  👥 31 joueurs actifs
+  [1/31] David Moyes... 🆕 L5=0 AA5=0 | ?
+  [2/31] Roman Dixon... 🆕 L5=0 AA5=0 | DEF Central
+  [3/31] Jack Grealish... 🆕 L5=44 AA5=10 | MIL Créateur
+  [4/31] Malik Olayiwola... 🆕 L5=0 AA5=0 | MIL Créateur
+    💾 Sauvegarde (285 joueurs)
+  [5/31] Nathan Patterson... 🆕 L5=35 AA5=-0 | DEF Central
+  [6/31] Tyler-Jay Dibling... 🆕 L5=34 AA5=-1 | MIL Rotation
+  [7/31] Merlin Röhl... 🆕 L5=38 AA5=3 | MIL Rotation
+  [8/31] Dwight McNeil... 🆕 L5=44 AA5=9 | ATT Complet
+  [9/31] Beto... 🆕 L5=53 AA5=2 | ATT Finisseur
+    💾 Sauvegarde (290 joueurs)
+  [10/31] Mark Travers... 🆕 L5=0 AA5=0 | GK
+  [11/31] Jarrad Branthwaite... 🆕 L5=58 AA5=14 | DEF Central
+  [12/31] Reece Welch... 🆕 L5=0 AA5=0 | DEF Central
+  [13/31] Adam Aznou... 🆕 L5=0 AA5=0 | DEF Central
+  [14/31] Kiernan Dewsbury-Hall... 🆕 L5=58 AA5=13 | MIL Créateur
+    💾 Sauvegarde (295 joueurs)
+  [15/31] Harrison Armstrong... 🆕 L5=40 AA5=5 | MIL Rotation
+  [16/31] Jordan Pickford... 🆕 L5=55 AA5=9 | GK
+  [17/31] Braiden Graham... 🆕 L5=0 AA5=0 | ATT Finisseur
+  [18/31] Callum Bates... 🆕 L5=0 AA5=0 | MIL Rotation
+  [19/31] Thomas King... 🆕 L5=0 AA5=0 | GK
+    💾 Sauvegarde (300 joueurs)
+  [20/31] Idrissa Gana Gueye... 🆕 L5=57 AA5=17 | MIL Rotation
+  [21/31] Vitalii Mykolenko... 🆕 L5=47 AA5=12 | DEF Latéral
+  [22/31] Seamus Coleman... 🆕 L5=0 AA5=0 | DEF Central
+  [23/31] James Garner... 🆕 L5=70 AA5=20 | MIL GOAT
+  [24/31] Carlos Alcaraz... 🆕 L5=44 AA5=9 | MIL Rotation
+    💾 Sauvegarde (305 joueurs)
+  [25/31] Thierno Barry... 🆕 L5=39 AA5=-1 | ATT Finisseur
+  [26/31] Jake O'Brien... 🆕 L5=39 AA5=8 | DEF Central
+  [27/31] Timothy Iroegbunam... 🆕 L5=44 AA5=9 | MIL Rotation
+  [28/31] Tyrique George... 🆕 L5=35 AA5=0 | ATT Finisseur
+  [29/31] Michael Keane... 🆕 L5=58 AA5=18 | DEF Central
+    💾 Sauvegarde (310 joueurs)
+  [30/31] James Tarkowski... 🆕 L5=60 AA5=15 | DEF Central
+  [31/31] Iliman Ndiaye... 🆕 L5=58 AA5=13 | ATT Complet
+
+🏟️  [10/20] Fulham FC | ETA ~7min
+  👥 29 joueurs actifs
+  [1/29] Timothy Castagne... 🆕 L5=42 AA5=7 | DEF Central
+  [2/29] Oscar Bobb... 🆕 L5=41 AA5=6 | MIL Rotation
+  [3/29] Alfie McNally... 🆕 L5=0 AA5=0 | GK
+    💾 Sauvegarde (315 joueurs)
+  [4/29] Joshua King... 🆕 L5=48 AA5=6 | MIL Rotation
+  [5/29] Issa Diop... 🆕 L5=47 AA5=12 | DEF Central
+  [6/29] Harry Wilson... 🆕 L5=62 AA5=10 | ATT Complet
+  [7/29] Raúl Jiménez... 🆕 L5=54 AA5=7 | ATT Complet
+  [8/29] Rodrigo Muniz... 🆕 L5=38 AA5=3 | ATT Finisseur
+    💾 Sauvegarde (320 joueurs)
+  [9/29] Calvin Bassey... 🆕 L5=53 AA5=13 | DEF Central
+  [10/29] Saša Lukić... 🆕 L5=41 AA5=6 | MIL Rotation
+  [11/29] Marco Silva... 🆕 L5=0 AA5=0 | ?
+  [12/29] Jonah Kusi-Asare... 🆕 L5=30 AA5=-4 | ATT Finisseur
+  [13/29] Tom Cairney... 🆕 L5=38 AA5=3 | MIL Rotation
+    💾 Sauvegarde (325 joueurs)
+  [14/29] Bernd Leno... 🆕 L5=42 AA5=6 | GK
+  [15/29] Emile Smith Rowe... 🆕 L5=39 AA5=4 | MIL Rotation
+  [16/29] Kenny Tete... 🆕 L5=46 AA5=11 | DEF Central
+  [17/29] Samuel Amissah... 🆕 L5=0 AA5=0 | DEF Central
+  [18/29] Samuel Chukwueze... 🆕 L5=39 AA5=4 | ATT Finisseur
+    💾 Sauvegarde (330 joueurs)
+  [19/29] Seth Ridgeon... 🆕 L5=0 AA5=0 | MIL Créateur
+  [20/29] Jorge Cuenca... 🆕 L5=53 AA5=8 | DEF Central
+  [21/29] Ryan Sessegnon... 🆕 L5=36 AA5=5 | MIL Rotation
+  [22/29] Alex Iwobi... 🆕 L5=65 AA5=18 | ATT Complet
+  [23/29] Antonee Robinson... 🆕 L5=42 AA5=7 | DEF Latéral
+    💾 Sauvegarde (335 joueurs)
+  [24/29] Joachim Andersen... 🆕 L5=50 AA5=15 | DEF Central
+  [25/29] Sander Berge... 🆕 L5=39 AA5=4 | MIL Rotation
+  [26/29] Benjamin Lecomte... 🆕 L5=0 AA5=0 | GK
+  [27/29] Kevin... 🆕 L5=41 AA5=1 | ATT Finisseur
+  [28/29] Alexander Borto... 🆕 L5=0 AA5=0 | GK
+    💾 Sauvegarde (340 joueurs)
+  [29/29] Harrison Reed... 🆕 L5=37 AA5=2 | MIL Rotation
+
+🏟️  [11/20] Leeds United FC | ETA ~7min
+  👥 28 joueurs actifs
+  [1/28] Ao Tanaka... 🆕 L5=38 AA5=3 | MIL Rotation
+  [2/28] Wilfried Gnonto... 🆕 L5=34 AA5=-0 | ATT Finisseur
+  [3/28] Jayden Bogle... 🆕 L5=38 AA5=4 | DEF Central
+  [4/28] Samuel Chambers... 🆕 L5=0 AA5=0 | MIL Rotation
+    💾 Sauvegarde (345 joueurs)
+  [5/28] Anton Stach... 🆕 L5=57 AA5=17 | MIL Créateur
+  [6/28] Lukas Nmecha... 🆕 L5=36 AA5=1 | ATT Finisseur
+  [7/28] Sebastiaan Bornauw... 🆕 L5=35 AA5=-0 | DEF Central
+  [8/28] Brenden Aaronson... 🆕 L5=30 AA5=-5 | MIL Créateur
+  [9/28] Pascal Struijk... 🆕 L5=46 AA5=11 | DEF Central
+    💾 Sauvegarde (350 joueurs)
+  [10/28] Lucas Perri... 🆕 L5=0 AA5=0 | GK
+  [11/28] Ethan Ampadu... 🆕 L5=57 AA5=26 | DEF Latéral
+  [12/28] Karl Darlow... 🆕 L5=54 AA5=9 | GK
+  [13/28] Sam Byram... 🆕 L5=0 AA5=0 | DEF Central
+  [14/28] Jaka Bijol... 🆕 L5=43 AA5=8 | DEF Central
+    💾 Sauvegarde (355 joueurs)
+  [15/28] James Justin... 🆕 L5=48 AA5=13 | DEF Central
+  [16/28] Ilia Gruev... 🆕 L5=36 AA5=0 | MIL Rotation
+  [17/28] Joël Piroe... 🆕 L5=36 AA5=1 | ATT Finisseur
+  [18/28] Charles Crew... 🆕 L5=0 AA5=0 | MIL Rotation
+  [19/28] Dominic Calvert-Lewin... 🆕 L5=35 AA5=0 | ATT Finisseur
+    💾 Sauvegarde (360 joueurs)
+  [20/28] Facundo Buonanotte... 🆕 L5=30 AA5=-4 | MIL Rotation
+  [21/28] Noah Okafor... 🆕 L5=46 AA5=1 | ATT Finisseur
+  [22/28] Joseph Rodon... 🆕 L5=46 AA5=11 | DEF Central
+  [23/28] Alexander Cairns... 🆕 L5=0 AA5=0 | GK
+  [24/28] Gabriel Gudmundsson... 🆕 L5=25 AA5=-6 | DEF Central
+    💾 Sauvegarde (365 joueurs)
+  [25/28] Sean Longstaff... 🆕 L5=34 AA5=-1 | MIL Rotation
+  [26/28] Daniel Farke... 🆕 L5=0 AA5=0 | ?
+  [27/28] Illan Meslier... 🆕 L5=0 AA5=0 | GK
+  [28/28] Dan James... 🆕 L5=37 AA5=2 | ATT Finisseur
+
+🏟️  [12/20] Liverpool FC | ETA ~6min
+  👥 41 joueurs actifs
+  [1/41] Alexis Mac Allister... 🆕 L5=58 AA5=13 | MIL Rotation
+    💾 Sauvegarde (370 joueurs)
+  [2/41] Rio Ngumoha... 🆕 L5=46 AA5=11 | ATT Complet
+  [3/41] Virgil van Dijk... 🆕 L5=59 AA5=19 | DEF Latéral
+  [4/41] Ibrahima Konaté... 🆕 L5=63 AA5=23 | DEF Central
+  [5/41] Joe Gomez... 🆕 L5=30 AA5=-4 | DEF Central
+  [6/41] Frederick Woodman... 🆕 L5=0 AA5=0 | GK
+    💾 Sauvegarde (375 joueurs)
+  [7/41] Kieran Morrison... 🆕 L5=0 AA5=0 | MIL Créateur
+  [8/41] Treymaurice Nyoni... 🆕 L5=32 AA5=-3 | MIL Créateur
+  [9/41] Cody Gakpo... 🆕 L5=46 AA5=5 | ATT Complet
+  [10/41] Kornel Miściur... 🆕 L5=0 AA5=0 | GK
+  [11/41] Stefan Bajčetić... 🆕 L5=0 AA5=0 | MIL Rotation
+    💾 Sauvegarde (380 joueurs)
+  [12/41] Wataru Endō... 🆕 L5=42 AA5=7 | MIL Rotation
+  [13/41] Carter Pinnington... 🆕 L5=0 AA5=0 | DEF Central
+  [14/41] Mohamed Salah... 🆕 L5=51 AA5=6 | ATT Complet
+  [15/41] Keyrol Figueroa... 🆕 L5=0 AA5=0 | ATT Finisseur
+  [16/41] Curtis Jones... 🆕 L5=39 AA5=4 | MIL Rotation
+    💾 Sauvegarde (385 joueurs)
+  [17/41] Giovanni Leoni... 🆕 L5=0 AA5=0 | DEF Central
+  [18/41] James McConnell... 🆕 L5=0 AA5=0 | MIL Rotation
+  [19/41] Calvin Ramsay... 🆕 L5=0 AA5=0 | DEF Central
+  [20/41] Hugo Ekitike... 🆕 L5=48 AA5=4 | ATT Finisseur
+  [21/41] Jayden Danns... 🆕 L5=0 AA5=0 | ATT Finisseur
+    💾 Sauvegarde (390 joueurs)
+  [22/41] Jeremie Frimpong... 🆕 L5=50 AA5=16 | DEF Central
+  [23/41] Rhys Williams... 🆕 L5=0 AA5=0 | DEF Central
+  [24/41] Andy Robertson... 🆕 L5=39 AA5=8 | DEF Latéral
+  [25/41] Alisson Becker... 🆕 L5=56 AA5=11 | GK
+  [26/41] Michael Laffey... 🆕 L5=0 AA5=0 | MIL Créateur
+    💾 Sauvegarde (395 joueurs)
+  [27/41] Federico Chiesa... 🆕 L5=35 AA5=-0 | MIL Rotation
+  [28/41] Milos Kerkez... 🆕 L5=44 AA5=1 | DEF Central
+  [29/41] Amara Nallo... 🆕 L5=0 AA5=0 | DEF Central
+  [30/41] Florian Wirtz... 🆕 L5=48 AA5=13 | MIL Créateur
+  [31/41] Wellity Lucky... 🆕 L5=0 AA5=0 | DEF Central
+    💾 Sauvegarde (400 joueurs)
+  [32/41] Harvey Davies... 🆕 L5=0 AA5=0 | GK
+  [33/41] Kaide Gordon... 🆕 L5=0 AA5=0 | ATT Finisseur
+  [34/41] Tommy Pilling... 🆕 L5=0 AA5=0 | MIL Créateur
+  [35/41] Ryan Gravenberch... 🆕 L5=54 AA5=9 | MIL Créateur
+  [36/41] Ármin Pécsi... 🆕 L5=0 AA5=0 | GK
+    💾 Sauvegarde (405 joueurs)
+  [37/41] Giorgi Mamardashvili... 🆕 L5=38 AA5=3 | GK
+  [38/41] Conor Bradley... 🆕 L5=0 AA5=0 | DEF Central
+  [39/41] Alexander Isak... 🆕 L5=0 AA5=0 | ATT Finisseur
+  [40/41] Arend Slot... 🆕 L5=0 AA5=0 | ?
+  [41/41] Dominik Szoboszlai... 🆕 L5=69 AA5=23 | MIL GOAT
+    💾 Sauvegarde (410 joueurs)
+
+🏟️  [13/20] Manchester City FC | ETA ~5min
+  👥 36 joueurs actifs
+  [1/36] Marc Guéhi... 🆕 L5=65 AA5=30 | DEF Latéral
+  [2/36] Rodrigo... 🆕 L5=66 AA5=26 | MIL GOAT
+  [3/36] Kian Noble... 🆕 L5=0 AA5=0 | DEF Central
+  [4/36] Kaden Braithwaite... 🆕 L5=0 AA5=0 | DEF Central
+  [5/36] Rayan Cherki... 🆕 L5=54 AA5=14 | ATT Complet
+    💾 Sauvegarde (415 joueurs)
+  [6/36] Max Alleyne... 🆕 L5=0 AA5=0 | DEF Central
+  [7/36] Nico O'Reilly... 🆕 L5=51 AA5=4 | MIL Créateur
+  [8/36] Antoine Semenyo... 🆕 L5=57 AA5=5 | ATT Complet
+  [9/36] Mateo Kovačić... 🆕 L5=0 AA5=0 | MIL Rotation
+  [10/36] Marcus Bettinelli... 🆕 L5=0 AA5=0 | GK
+    💾 Sauvegarde (420 joueurs)
+  [11/36] Nico González... 🆕 L5=39 AA5=4 | MIL Rotation
+  [12/36] Erling Haaland... 🆕 L5=57 AA5=5 | ATT Finisseur
+  [13/36] Omar Marmoush... 🆕 L5=51 AA5=6 | ATT Complet
+  [14/36] Gianluigi Donnarumma... 🆕 L5=54 AA5=9 | GK
+  [15/36] Reigan Heskey... 🆕 L5=0 AA5=0 | ATT Finisseur
+    💾 Sauvegarde (425 joueurs)
+  [16/36] Bernardo Silva... 🆕 L5=56 AA5=16 | MIL Créateur
+  [17/36] Abdukodir Khusanov... 🆕 L5=47 AA5=12 | DEF Central
+  [18/36] Tyrone Samba... 🆕 L5=0 AA5=0 | ATT Finisseur
+  [19/36] Jahmai Simpson-Pusey... 🆕 L5=43 AA5=13 | DEF Central
+  [20/36] Phil Foden... 🆕 L5=49 AA5=8 | MIL Créateur
+    💾 Sauvegarde (430 joueurs)
+  [21/36] Joško Gvardiol... 🆕 L5=0 AA5=0 | DEF Central
+  [22/36] Sverre Nypan... 🆕 L5=0 AA5=0 | MIL Rotation
+  [23/36] Pep Guardiola... 🆕 L5=0 AA5=0 | ?
+  [24/36] Matheus Nunes... 🆕 L5=48 AA5=13 | MIL Rotation
+  [25/36] Rayan Aït Nouri... 🆕 L5=74 AA5=29 | DEF Latéral
+    💾 Sauvegarde (435 joueurs)
+  [26/36] Rico Lewis... 🆕 L5=0 AA5=0 | DEF Central
+  [27/36] Rúben Dias... 🆕 L5=60 AA5=20 | DEF Central
+  [28/36] Tijjani Reijnders... 🆕 L5=42 AA5=7 | MIL Créateur
+  [29/36] Ryan McAidoo... 🆕 L5=0 AA5=0 | ATT Finisseur
+  [30/36] Jeremy Doku... 🆕 L5=44 AA5=10 | ATT Complet
+    💾 Sauvegarde (440 joueurs)
+  [31/36] Sávio... 🆕 L5=33 AA5=-2 | ATT Finisseur
+  [32/36] Floyd Samba... 🆕 L5=0 AA5=0 | MIL Créateur
+  [33/36] Charlie Gray... 🆕 L5=0 AA5=0 | MIL Rotation
+  [34/36] Nathan Aké... 🆕 L5=40 AA5=4 | DEF Central
+  [35/36] John Stones... 🆕 L5=0 AA5=0 | DEF Central
+    💾 Sauvegarde (445 joueurs)
+  [36/36] James Trafford... 🆕 L5=0 AA5=0 | GK
+
+🏟️  [14/20] Manchester United FC | ETA ~4min
+  👥 33 joueurs actifs
+  [1/33] Tyler Fletcher... 🆕 L5=36 AA5=1 | MIL Rotation
+  [2/33] Noussair Mazraoui... 🆕 L5=39 AA5=4 | DEF Central
+  [3/33] Shea Lacey... 🆕 L5=0 AA5=0 | ATT Finisseur
+  [4/33] Diego León... 🆕 L5=0 AA5=0 | DEF Central
+    💾 Sauvegarde (450 joueurs)
+  [5/33] Bruno Fernandes... 🆕 L5=76 AA5=22 | MIL GOAT
+  [6/33] Lisandro Martínez... 🆕 L5=54 AA5=23 | DEF Central
+  [7/33] Ayden Heaven... 🆕 L5=35 AA5=-0 | DEF Central
+  [8/33] Tyrell Malacia... 🆕 L5=32 AA5=-3 | DEF Central
+  [9/33] Tyler Fredricson... 🆕 L5=0 AA5=0 | DEF Central
+    💾 Sauvegarde (455 joueurs)
+  [10/33] Amad Diallo... 🆕 L5=45 AA5=10 | ATT Complet
+  [11/33] Benjamin Šeško... 🆕 L5=51 AA5=1 | ATT Finisseur
+  [12/33] Michael Carrick... 🆕 L5=0 AA5=0 | ?
+  [13/33] Kobbie Mainoo... 🆕 L5=47 AA5=12 | MIL Rotation
+  [14/33] Altay Bayındır... 🆕 L5=0 AA5=0 | GK
+    💾 Sauvegarde (460 joueurs)
+  [15/33] Luke Shaw... 🆕 L5=40 AA5=6 | DEF Central
+  [16/33] Joshua Zirkzee... 🆕 L5=37 AA5=2 | ATT Finisseur
+  [17/33] Leny Yoro... 🆕 L5=51 AA5=11 | DEF Central
+  [18/33] Casemiro... 🆕 L5=55 AA5=10 | MIL Créateur
+  [19/33] Diogo Dalot... 🆕 L5=46 AA5=11 | DEF Latéral
+    💾 Sauvegarde (465 joueurs)
+  [20/33] Manuel Ugarte... 🆕 L5=38 AA5=3 | MIL Rotation
+  [21/33] Bryan Mbeumo... 🆕 L5=45 AA5=4 | ATT Finisseur
+  [22/33] Godwill Kukonki... 🆕 L5=0 AA5=0 | DEF Central
+  [23/33] Bendito Mantato... 🆕 L5=0 AA5=0 | ATT Finisseur
+  [24/33] Jack Fletcher... 🆕 L5=0 AA5=0 | MIL Créateur
+    💾 Sauvegarde (470 joueurs)
+  [25/33] Matthijs de Ligt... 🆕 L5=0 AA5=0 | DEF Central
+  [26/33] Mason Mount... 🆕 L5=35 AA5=-0 | MIL Rotation
+  [27/33] Patrick Dorgu... 🆕 L5=79 AA5=16 | DEF Central
+  [28/33] Chidozie Obi... 🆕 L5=0 AA5=0 | ATT Finisseur
+  [29/33] Matheus Cunha... 🆕 L5=65 AA5=15 | ATT Complet
+    💾 Sauvegarde (475 joueurs)
+  [30/33] Harry Maguire... 🆕 L5=42 AA5=12 | DEF Central
+  [31/33] Thomas Heaton... 🆕 L5=0 AA5=0 | GK
+  [32/33] Senne Lammens... 🆕 L5=46 AA5=6 | GK
+  [33/33] Jack Moorhouse... 🆕 L5=0 AA5=0 | MIL Rotation
+
+🏟️  [15/20] Newcastle United FC | ETA ~4min
+  👥 33 joueurs actifs
+  [1/33] Fabian Schar... 🆕 L5=0 AA5=0 | DEF Central
+    💾 Sauvegarde (480 joueurs)
+  [2/33] Nick Pope... 🆕 L5=36 AA5=8 | GK
+  [3/33] Sandro Tonali... 🆕 L5=57 AA5=13 | MIL Rotation
+  [4/33] Sean Neave... 🆕 L5=0 AA5=0 | ATT Finisseur
+  [5/33] William Osula... 🆕 L5=44 AA5=3 | ATT Finisseur
+  [6/33] Anthony Elanga... 🆕 L5=41 AA5=6 | ATT Complet
+    💾 Sauvegarde (485 joueurs)
+  [7/33] Samuel Alabi... 🆕 L5=0 AA5=0 | MIL Créateur
+  [8/33] Bruno Guimarães... 🆕 L5=69 AA5=34 | MIL GOAT
+  [9/33] Kieran Trippier... 🆕 L5=43 AA5=3 | DEF Latéral
+  [10/33] Lewis Hall... 🆕 L5=48 AA5=6 | DEF Latéral
+  [11/33] Alex Murphy... 🆕 L5=0 AA5=0 | DEF Central
+    💾 Sauvegarde (490 joueurs)
+  [12/33] Park Seung-Soo... 🆕 L5=0 AA5=0 | ATT Finisseur
+  [13/33] Joelinton... 🆕 L5=46 AA5=6 | MIL Rotation
+  [14/33] Anthony Gordon... 🆕 L5=59 AA5=13 | ATT Complet
+  [15/33] Lewis Miley... 🆕 L5=0 AA5=0 | MIL Créateur
+  [16/33] Aaron Ramsdale... 🆕 L5=56 AA5=12 | GK
+    💾 Sauvegarde (495 joueurs)
+  [17/33] Nick Woltemade... 🆕 L5=44 AA5=3 | ATT Finisseur
+  [18/33] Harvey Barnes... 🆕 L5=38 AA5=3 | MIL Rotation
+  [19/33] Jacob Murphy... 🆕 L5=43 AA5=2 | MIL Rotation
+  [20/33] John Ruddy... 🆕 L5=0 AA5=0 | GK
+  [21/33] Joe Willock... 🆕 L5=42 AA5=2 | MIL Rotation
+    💾 Sauvegarde (500 joueurs)
+  [22/33] Jacob Ramsey... 🆕 L5=54 AA5=12 | MIL Rotation
+  [23/33] Emil Krafth... 🆕 L5=0 AA5=0 | DEF Central
+  [24/33] Sven Botman... 🆕 L5=56 AA5=15 | DEF Central
+  [25/33] Adam Harrison... 🆕 L5=0 AA5=0 | GK
+  [26/33] Edward Howe... 🆕 L5=0 AA5=0 | ?
+    💾 Sauvegarde (505 joueurs)
+  [27/33] Tino Livramento... 🆕 L5=37 AA5=2 | DEF Central
+  [28/33] Aidan Harris... 🆕 L5=0 AA5=0 | GK
+  [29/33] Malick Thiaw... 🆕 L5=46 AA5=10 | DEF Central
+  [30/33] Mark Gillespie... 🆕 L5=0 AA5=0 | GK
+  [31/33] Yoane Wissa... 🆕 L5=34 AA5=-1 | ATT Finisseur
+    💾 Sauvegarde (510 joueurs)
+  [32/33] Dan Burn... 🆕 L5=38 AA5=-2 | DEF Central
+  [33/33] Leo Shahar... 🆕 L5=0 AA5=0 | DEF Central
+
+🏟️  [16/20] Nottingham Forest FC | ETA ~3min
+  👥 35 joueurs actifs
+  [1/35] Morato... 🆕 L5=69 AA5=21 | DEF Central
+  [2/35] Matz Sels... 🆕 L5=52 AA5=5 | GK
+  [3/35] Nicolás Domínguez... 🆕 L5=47 AA5=12 | MIL Rotation
+    💾 Sauvegarde (515 joueurs)
+  [4/35] Dilane Bakwa... 🆕 L5=32 AA5=-3 | ATT Finisseur
+  [5/35] Aaron Bott... 🆕 L5=0 AA5=0 | GK
+  [6/35] Callum Hudson-Odoi... 🆕 L5=53 AA5=8 | ATT Complet
+  [7/35] Elliot Anderson... 🆕 L5=61 AA5=21 | MIL GOAT
+  [8/35] Jair... 🆕 L5=33 AA5=-2 | DEF Central
+    💾 Sauvegarde (520 joueurs)
+  [9/35] Willy-Arnaud Boly... 🆕 L5=0 AA5=0 | DEF Central
+  [10/35] Ola Aina... 🆕 L5=47 AA5=12 | DEF Central
+  [11/35] Ryan Yates... 🆕 L5=34 AA5=-1 | MIL Rotation
+  [12/35] Stefan Ortega Moreno... 🆕 L5=59 AA5=12 | GK
+  [13/35] Vítor Pereira... 🆕 L5=0 AA5=0 | ?
+    💾 Sauvegarde (525 joueurs)
+  [14/35] Luca Netz... 🆕 L5=35 AA5=0 | DEF Central
+  [15/35] John... 🆕 L5=0 AA5=0 | GK
+  [16/35] Igor Jesus... 🆕 L5=52 AA5=2 | ATT Finisseur
+  [17/35] Omari Hutchinson... 🆕 L5=46 AA5=11 | ATT Complet
+  [18/35] Nikola Milenković... 🆕 L5=49 AA5=14 | DEF Central
+    💾 Sauvegarde (530 joueurs)
+  [19/35] Justin Hanks... 🆕 L5=0 AA5=0 | DEF Central
+  [20/35] James McAtee... 🆕 L5=34 AA5=-1 | MIL Rotation
+  [21/35] Dan Ndoye... 🆕 L5=39 AA5=4 | ATT Finisseur
+  [22/35] Zyan Blake... 🆕 L5=0 AA5=0 | ATT Finisseur
+  [23/35] Eric da Silva Moreira... 🆕 L5=0 AA5=0 | ATT Finisseur
+    💾 Sauvegarde (535 joueurs)
+  [24/35] Zach Abbott... 🆕 L5=0 AA5=0 | DEF Central
+  [25/35] Neco Williams... 🆕 L5=49 AA5=11 | DEF Central
+  [26/35] Ibrahim Sangaré... 🆕 L5=42 AA5=7 | MIL Rotation
+  [27/35] Morgan Gibbs-White... 🆕 L5=58 AA5=8 | MIL Créateur
+  [28/35] Archie Whitehall... 🆕 L5=0 AA5=0 | MIL Créateur
+    💾 Sauvegarde (540 joueurs)
+  [29/35] Nicolò Savona... 🆕 L5=0 AA5=0 | DEF Central
+  [30/35] Murillo... 🆕 L5=52 AA5=11 | DEF Central
+  [31/35] Lorenzo Lucca... 🆕 L5=35 AA5=0 | ATT Finisseur
+  [32/35] Taiwo Awoniyi... 🆕 L5=36 AA5=-6 | ATT Finisseur
+  [33/35] Angus Gunn... 🆕 L5=0 AA5=0 | GK
+    💾 Sauvegarde (545 joueurs)
+  [34/35] Keehan Willows... 🆕 L5=0 AA5=0 | GK
+  [35/35] Jimmy Sinclair... 🆕 L5=0 AA5=0 | MIL Rotation
+
+🏟️  [17/20] Sunderland AFC | ETA ~2min
+  👥 33 joueurs actifs
+  [1/33] Milan Aleksić... 🆕 L5=0 AA5=0 | MIL Rotation
+  [2/33] Chemsdine Talbi... 🆕 L5=42 AA5=2 | ATT Finisseur
+  [3/33] Abdoullah Ba... 🆕 L5=0 AA5=0 | MIL Rotation
+    💾 Sauvegarde (550 joueurs)
+  [4/33] Daniel Ballard... 🆕 L5=52 AA5=12 | DEF Central
+  [5/33] Trai Hume... 🆕 L5=46 AA5=6 | DEF Central
+  [6/33] Robin Roefs... 🆕 L5=37 AA5=1 | GK
+  [7/33] Luke O'Nien... 🆕 L5=31 AA5=-0 | MIL Rotation
+  [8/33] Jocelin Bi... 🆕 L5=38 AA5=3 | ATT Finisseur
+    💾 Sauvegarde (555 joueurs)
+  [9/33] Nordi Mukiele... 🆕 L5=52 AA5=8 | DEF Central
+  [10/33] Granit Xhaka... 🆕 L5=41 AA5=6 | MIL Créateur
+  [11/33] Ahmed Abdullahi... 🆕 L5=0 AA5=0 | ATT Finisseur
+  [12/33] Bertrand Traoré... 🆕 L5=33 AA5=-2 | ATT Finisseur
+  [13/33] Wilson Isidor... 🆕 L5=34 AA5=-1 | ATT Finisseur
+    💾 Sauvegarde (560 joueurs)
+  [14/33] Finn Geragusyan... 🆕 L5=0 AA5=0 | ATT Finisseur
+  [15/33] Christopher Rigg... 🆕 L5=46 AA5=11 | MIL Rotation
+  [16/33] Eliezer Mayenda... 🆕 L5=38 AA5=-2 | ATT Finisseur
+  [17/33] Régis Le Bris... 🆕 L5=0 AA5=0 | ?
+  [18/33] Romaine Mundle... 🆕 L5=33 AA5=-2 | ATT Finisseur
+    💾 Sauvegarde (565 joueurs)
+  [19/33] Harrison Jones... 🆕 L5=0 AA5=0 | MIL Créateur
+  [20/33] Habib Diarra... 🆕 L5=44 AA5=2 | MIL Rotation
+  [21/33] Jack Whittaker... 🆕 L5=0 AA5=0 | MIL Créateur
+  [22/33] Melker Ellborg... 🆕 L5=50 AA5=7 | GK
+  [23/33] Enzo Le Fée... 🆕 L5=50 AA5=10 | MIL Créateur
+    💾 Sauvegarde (570 joueurs)
+  [24/33] Jaydon Jones... 🆕 L5=0 AA5=0 | MIL Créateur
+  [25/33] Brian Brobbey... 🆕 L5=34 AA5=-3 | ATT Finisseur
+  [26/33] Nilson Angulo... 🆕 L5=35 AA5=-0 | ATT Finisseur
+  [27/33] Omar Alderete... 🆕 L5=41 AA5=6 | DEF Central
+  [28/33] Reinildo... 🆕 L5=37 AA5=-3 | DEF Central
+    💾 Sauvegarde (575 joueurs)
+  [29/33] Jenson Jones... 🆕 L5=0 AA5=0 | DEF Central
+  [30/33] Dennis Cirkin... 🆕 L5=34 AA5=-1 | DEF Central
+  [31/33] Lutsharel Geertruida... 🆕 L5=40 AA5=5 | DEF Central
+  [32/33] Simon Moore... 🆕 L5=0 AA5=0 | GK
+  [33/33] Noah Sadiki... 🆕 L5=38 AA5=3 | MIL Rotation
+    💾 Sauvegarde (580 joueurs)
+
+🏟️  [18/20] Tottenham Hotspur FC | ETA ~2min
+  👥 39 joueurs actifs
+  [1/39] Micky van de Ven... 🆕 L5=35 AA5=-1 | DEF Central
+  [2/39] Cristian Romero... 🆕 L5=36 AA5=11 | DEF Central
+  [3/39] Malachi Hardy... 🆕 L5=0 AA5=0 | DEF Central
+  [4/39] Xavi Simons... 🆕 L5=38 AA5=2 | MIL Rotation
+  [5/39] João Palhinha... 🆕 L5=46 AA5=6 | MIL Rotation
+    💾 Sauvegarde (585 joueurs)
+  [6/39] Lucá Williams-Barnett... 🆕 L5=0 AA5=0 | MIL Créateur
+  [7/39] Brandon Austin... 🆕 L5=0 AA5=0 | GK
+  [8/39] Kevin Danso... 🆕 L5=47 AA5=5 | DEF Central
+  [9/39] Pedro Porro... 🆕 L5=32 AA5=-3 | DEF Latéral
+  [10/39] Igor Tudor... 🆕 L5=0 AA5=0 | ?
+    💾 Sauvegarde (590 joueurs)
+  [11/39] Rodrigo Bentancur... 🆕 L5=0 AA5=0 | MIL Rotation
+  [12/39] Mathys Tel... 🆕 L5=43 AA5=12 | ATT Complet
+  [13/39] Rio Kyerematen... 🆕 L5=0 AA5=0 | MIL Créateur
+  [14/39] Luca Gunter... 🆕 L5=0 AA5=0 | GK
+  [15/39] Radu Drăgușin... 🆕 L5=38 AA5=3 | DEF Central
+    💾 Sauvegarde (595 joueurs)
+  [16/39] Pape Matar Sarr... 🆕 L5=51 AA5=16 | MIL Créateur
+  [17/39] Dominic Solanke... 🆕 L5=44 AA5=4 | ATT Finisseur
+  [18/39] Tye Hall... 🆕 L5=0 AA5=0 | MIL Créateur
+  [19/39] Dejan Kulusevski... 🆕 L5=0 AA5=0 | ATT Finisseur
+  [20/39] Yves Bissouma... 🆕 L5=41 AA5=6 | MIL Rotation
+    💾 Sauvegarde (600 joueurs)
+  [21/39] Souza... 🆕 L5=31 AA5=-4 | DEF Central
+  [22/39] James Rowswell... 🆕 L5=35 AA5=0 | DEF Central
+  [23/39] James Wilson... 🆕 L5=0 AA5=0 | ATT Finisseur
+  [24/39] Jun'ai Byfield... 🆕 L5=37 AA5=2 | DEF Central
+  [25/39] Wilson Odobert... 🆕 L5=38 AA5=3 | ATT Finisseur
+    💾 Sauvegarde (605 joueurs)
+  [26/39] Ben Davies... 🆕 L5=0 AA5=0 | DEF Central
+  [27/39] Tynan Thompson... 🆕 L5=0 AA5=0 | ATT Finisseur
+  [28/39] Mohammed Kudus... 🆕 L5=0 AA5=0 | MIL Créateur
+  [29/39] Antonín Kinský... 🆕 L5=0 AA5=0 | GK
+  [30/39] Guglielmo Vicario... 🆕 L5=35 AA5=-0 | GK
+    💾 Sauvegarde (610 joueurs)
+  [31/39] Randal Kolo Muani... 🆕 L5=42 AA5=-4 | ATT Finisseur
+  [32/39] Archie Gray... 🆕 L5=44 AA5=-2 | MIL Rotation
+  [33/39] Destiny Udogie... 🆕 L5=30 AA5=-5 | DEF Central
+  [34/39] James Maddison... 🆕 L5=0 AA5=0 | MIL Rotation
+  [35/39] Conor Gallagher... 🆕 L5=33 AA5=-2 | MIL Rotation
+    💾 Sauvegarde (615 joueurs)
+  [36/39] Callum Olusesi... 🆕 L5=38 AA5=4 | MIL Rotation
+  [37/39] Djed Spence... 🆕 L5=36 AA5=1 | DEF Central
+  [38/39] Lucas Bergvall... 🆕 L5=26 AA5=-9 | MIL Rotation
+  [39/39] Richarlison... 🆕 L5=49 AA5=4 | ATT Finisseur
+
+🏟️  [19/20] West Ham United FC | ETA ~1min
+  👥 29 joueurs actifs
+  [1/29] Taty Castellanos... 🆕 L5=44 AA5=4 | ATT Finisseur
+    💾 Sauvegarde (620 joueurs)
+  [2/29] Konstantinos Mavropanos... 🆕 L5=68 AA5=23 | DEF Central
+  [3/29] Axel Disasi... 🆕 L5=42 AA5=7 | DEF Central
+  [4/29] Jarrod Bowen... 🆕 L5=61 AA5=10 | ATT Complet
+  [5/29] Mads Hermansen... 🆕 L5=52 AA5=11 | GK
+  [6/29] Freddie Potts... 🆕 L5=43 AA5=8 | MIL Rotation
+    💾 Sauvegarde (625 joueurs)
+  [7/29] Adama Traoré... 🆕 L5=34 AA5=-1 | ATT Finisseur
+  [8/29] Soungoutou Magassa... 🆕 L5=35 AA5=-0 | MIL Rotation
+  [9/29] Joshua Ajala... 🆕 L5=0 AA5=0 | ATT Finisseur
+  [10/29] Finlay Herrick... 🆕 L5=0 AA5=0 | GK
+  [11/29] Pablo... 🆕 L5=36 AA5=1 | ATT Finisseur
+    💾 Sauvegarde (630 joueurs)
+  [12/29] Aaron Wan-Bissaka... 🆕 L5=37 AA5=2 | DEF Central
+  [13/29] Callum Wilson... 🆕 L5=33 AA5=-2 | ATT Finisseur
+  [14/29] Airidas Golambeckis... 🆕 L5=0 AA5=0 | DEF Central
+  [15/29] Ezra Mayers... 🆕 L5=37 AA5=2 | DEF Central
+  [16/29] Alphonse Aréola... 🆕 L5=36 AA5=2 | GK
+    💾 Sauvegarde (635 joueurs)
+  [17/29] Jean-Clair Todibo... 🆕 L5=60 AA5=24 | DEF Central
+  [18/29] Crysencio Summerville... 🆕 L5=59 AA5=14 | ATT Complet
+  [19/29] Tomáš Souček... 🆕 L5=44 AA5=3 | MIL Rotation
+  [20/29] Łukasz Fabiański... 🆕 L5=0 AA5=0 | GK
+  [21/29] Mateus Fernandes... 🆕 L5=46 AA5=11 | MIL Créateur
+    💾 Sauvegarde (640 joueurs)
+  [22/29] Oliver Scarles... 🆕 L5=51 AA5=11 | DEF Central
+  [23/29] Nuno Espírito Santo... 🆕 L5=0 AA5=0 | ?
+  [24/29] El Diouf... 🆕 L5=54 AA5=12 | DEF Central
+  [25/29] Maximilian Kilman... 🆕 L5=33 AA5=-2 | DEF Central
+  [26/29] Mohamadou Kanté... 🆕 L5=36 AA5=1 | MIL Créateur
+    💾 Sauvegarde (645 joueurs)
+  [27/29] Kyle Walker-Peters... 🆕 L5=33 AA5=-2 | DEF Central
+  [28/29] Keiber Lamadrid... 🆕 L5=0 AA5=0 | MIL Créateur
+  [29/29] Lewis Orford... 🆕 L5=0 AA5=0 | MIL Créateur
+
+🏟️  [20/20] Wolverhampton Wanderers FC | ETA ~0min
+  👥 30 joueurs actifs
+  [1/30] José Sá... 🆕 L5=47 AA5=11 | GK
+  [2/30] Hugo Bueno... 🆕 L5=52 AA5=12 | DEF Central
+    💾 Sauvegarde (650 joueurs)
+  [3/30] André... 🆕 L5=55 AA5=15 | MIL Rotation
+  [4/30] Saheed Olagunju... 🆕 L5=0 AA5=0 | DEF Central
+  [5/30] Jeanricner Bellegarde... 🆕 L5=43 AA5=7 | MIL Rotation
+  [6/30] David Møller Wolfe... 🆕 L5=39 AA5=4 | DEF Central
+  [7/30] Sam Johnstone... 🆕 L5=0 AA5=0 | GK
+    💾 Sauvegarde (655 joueurs)
+  [8/30] Mateus Mané... 🆕 L5=39 AA5=4 | ATT Finisseur
+  [9/30] Ethan Sutherland... 🆕 L5=0 AA5=0 | MIL Créateur
+  [10/30] Robert Edwards... 🆕 L5=0 AA5=0 | ?
+  [11/30] Pedro Pereira... 🆕 L5=0 AA5=0 | MIL Rotation
+  [12/30] Nathan Fraser... 🆕 L5=0 AA5=0 | ATT Finisseur
+    💾 Sauvegarde (660 joueurs)
+  [13/30] Rodrigo Gomes... 🆕 L5=48 AA5=2 | DEF Central
+  [14/30] Jackson Tchatchoua... 🆕 L5=47 AA5=7 | DEF Central
+  [15/30] Yerson Mosquera... 🆕 L5=57 AA5=12 | DEF Central
+  [16/30] Hwang Hee-Chan... 🆕 L5=41 AA5=6 | ATT Complet
+  [17/30] Enso González... 🆕 L5=0 AA5=0 | ATT Finisseur
+    💾 Sauvegarde (665 joueurs)
+  [18/30] Tolu Arokodare ... 🆕 L5=45 AA5=-0 | ATT Finisseur
+  [19/30] João Gomes... 🆕 L5=61 AA5=16 | MIL Rotation
+  [20/30] Jerome Abbey... 🆕 L5=0 AA5=0 | MIL Rotation
+  [21/30] Daniel Bentley... 🆕 L5=0 AA5=0 | GK
+  [22/30] Thomas Edozie... 🆕 L5=63 AA5=3 | ATT Finisseur
+    💾 Sauvegarde (670 joueurs)
+  [23/30] Adam Armstrong... 🆕 L5=46 AA5=-1 | ATT Finisseur
+  [24/30] Angel Gomes... 🆕 L5=36 AA5=1 | MIL Rotation
+  [25/30] Ladislav Krejčí... 🆕 L5=36 AA5=5 | DEF Central
+  [26/30] SANTIAGO... 🆕 L5=52 AA5=6 | DEF Central
+  [27/30] Matt Doherty... 🆕 L5=20 AA5=-5 | DEF Central
+    💾 Sauvegarde (675 joueurs)
+  [28/30] Pedro Lima... 🆕 L5=32 AA5=-3 | DEF Central
+  [29/30] Toti... 🆕 L5=70 AA5=35 | DEF Central
+  [30/30] Lucas Rawlings... 🆕 L5=0 AA5=0 | MIL Rotation
+
+============================================================
+✅ PL terminé en 19min 18s
+  🆕 Nouveaux: 678
+  🔄 Mis à jour: 0
+  ⏭️  Skippés: 0
+  📊 Total: 678 joueurs
+  💾 deglingo_premier_league_final.json
+============================================================
+
+⏸️  Pause 30s avant la prochaine ligue...
+
+============================================================
+⚽ SCRAPING Liga (laliga-es)
+  📅 2026-03-29 17:45
+  💤 Sleep: 0.15s/query, 1s/club
+============================================================
+  🗑️  FRESH mode — backup créé, on repart de zéro
+
+📡 Fetching clubs for laliga-es...
+  ✅ LALIGA EA Sports: 20 clubs
+
+🏟️  [1/20] Athletic Club
+  👥 40 joueurs actifs
+  [1/40] Unai Gómez... 🆕 L5=30 AA5=-4 | MIL Rotation
+  [2/40] Oihan Sancet... 🆕 L5=43 AA5=3 | MIL Rotation
+  [3/40] Aimar Duñabeitia... 🆕 L5=0 AA5=0 | DEF Central
+  [4/40] Jon de Luis... 🆕 L5=0 AA5=0 | DEF Central
+  [5/40] Nico Williams... 🆕 L5=41 AA5=6 | ATT Complet
+    💾 Sauvegarde (5 joueurs)
+  [6/40] Mikel Santos... 🆕 L5=0 AA5=0 | GK
+  [7/40] Aitor Paredes... 🆕 L5=42 AA5=6 | DEF Central
+  [8/40] Yuri... 🆕 L5=69 AA5=19 | DEF Latéral
+  [9/40] Adama Boiro... 🆕 L5=47 AA5=12 | DEF Central
+  [10/40] Ernesto Valverde... 🆕 L5=0 AA5=0 | ?
+    💾 Sauvegarde (10 joueurs)
+  [11/40] Eder García... 🆕 L5=30 AA5=-5 | MIL Rotation
+  [12/40] Beñat Prados... 🆕 L5=0 AA5=0 | MIL Rotation
+  [13/40] Ander Izagirre... 🆕 L5=0 AA5=0 | DEF Central
+  [14/40] Yeray... 🆕 L5=0 AA5=0 | DEF Central
+  [15/40] Aymeric Laporte... 🆕 L5=62 AA5=17 | DEF Central
+    💾 Sauvegarde (15 joueurs)
+  [16/40] Gorosabel... 🆕 L5=42 AA5=7 | DEF Central
+  [17/40] Mikel Vesga... 🆕 L5=40 AA5=5 | MIL Rotation
+  [18/40] Gorka Guruzeta... 🆕 L5=44 AA5=2 | ATT Finisseur
+  [19/40] Elijah Gift... 🆕 L5=0 AA5=0 | ATT Finisseur
+  [20/40] Lekue... 🆕 L5=31 AA5=-4 | DEF Central
+    💾 Sauvegarde (20 joueurs)
+  [21/40] Endika Buján... 🆕 L5=0 AA5=0 | ATT Finisseur
+  [22/40] Dani Vivian... 🆕 L5=51 AA5=11 | DEF Central
+  [23/40] Iker Monreal... 🆕 L5=0 AA5=0 | DEF Central
+  [24/40] Williams... 🆕 L5=48 AA5=1 | ATT Finisseur
+  [25/40] Unai Eguíluz... 🆕 L5=0 AA5=0 | DEF Central
+    💾 Sauvegarde (25 joueurs)
+  [26/40] Álex Berenguer... 🆕 L5=51 AA5=11 | ATT Complet
+  [27/40] Alejandro Rego... 🆕 L5=42 AA5=7 | MIL Rotation
+  [28/40] Urko Izeta... 🆕 L5=36 AA5=1 | ATT Finisseur
+  [29/40] Nico Serrano... 🆕 L5=46 AA5=6 | ATT Complet
+  [30/40] Unai Simón... 🆕 L5=46 AA5=11 | GK
+    💾 Sauvegarde (30 joueurs)
+  [31/40] Selton Sánchez... 🆕 L5=42 AA5=-3 | MIL Rotation
+  [32/40] Areso... 🆕 L5=48 AA5=8 | DEF Central
+  [33/40] Á. Padilla... 🆕 L5=0 AA5=0 | GK
+  [34/40] Mikel Jauregizar... 🆕 L5=43 AA5=3 | MIL Rotation
+  [35/40] Ruiz de Galarreta... 🆕 L5=44 AA5=9 | MIL Rotation
+    💾 Sauvegarde (35 joueurs)
+  [36/40] Asier Hierro... 🆕 L5=37 AA5=2 | ATT Finisseur
+  [37/40] Maroan Sannadi... 🆕 L5=0 AA5=0 | ATT Finisseur
+  [38/40] Navarro... 🆕 L5=36 AA5=2 | MIL Créateur
+  [39/40] Ibon Sánchez... 🆕 L5=0 AA5=0 | MIL Rotation
+  [40/40] Adrián Pérez... 🆕 L5=0 AA5=0 | ATT Finisseur
+    💾 Sauvegarde (40 joueurs)
+
+🏟️  [2/20] Atlético de Madrid | ETA ~13min
+  👥 39 joueurs actifs
+  [1/39] Ademola Lookman... 🆕 L5=50 AA5=5 | ATT Complet
+  [2/39] Álex Baena... 🆕 L5=54 AA5=13 | MIL Créateur
+  [3/39] Matteo Ruggeri... 🆕 L5=61 AA5=11 | DEF Latéral
+  [4/39] Marc Pubill... 🆕 L5=60 AA5=25 | DEF Central
+  [5/39] Dávid Hancko... 🆕 L5=36 AA5=7 | DEF Latéral
+    💾 Sauvegarde (45 joueurs)
+  [6/39] Robin Le Normand... 🆕 L5=41 AA5=6 | DEF Central
+  [7/39] Salvi Esquivel... 🆕 L5=0 AA5=0 | GK
+  [8/39] Rodrigo Mendoza... 🆕 L5=39 AA5=4 | MIL Rotation
+  [9/39] Jan Oblak... 🆕 L5=44 AA5=3 | GK
+  [10/39] Javi Serrano... 🆕 L5=0 AA5=0 | MIL Rotation
+    💾 Sauvegarde (50 joueurs)
+  [11/39] Iker Luque... 🆕 L5=0 AA5=0 | ATT Finisseur
+  [12/39] Adrián Corral... 🆕 L5=0 AA5=0 | DEF Central
+  [13/39] João Cardoso... 🆕 L5=49 AA5=14 | MIL Rotation
+  [14/39] Julio Díaz... 🆕 L5=41 AA5=6 | MIL Rotation
+  [15/39] Diego Simeone... 🆕 L5=0 AA5=0 | ?
+    💾 Sauvegarde (55 joueurs)
+  [16/39] Ilias Kostis... 🆕 L5=0 AA5=0 | DEF Central
+  [17/39] Juan Musso... 🆕 L5=55 AA5=8 | GK
+  [18/39] Antoine Griezmann... 🆕 L5=49 AA5=9 | ATT Complet
+  [19/39] Nahuel Molina... 🆕 L5=58 AA5=14 | DEF Latéral
+  [20/39] Sergio Esteban... 🆕 L5=0 AA5=0 | ATT Finisseur
+    💾 Sauvegarde (60 joueurs)
+  [21/39] Mario de Luis... 🆕 L5=0 AA5=0 | GK
+  [22/39] Obed Vargas... 🆕 L5=48 AA5=13 | MIL Rotation
+  [23/39] Nicolás González... 🆕 L5=54 AA5=8 | ATT Complet
+  [24/39] Javier Boñar... 🆕 L5=0 AA5=0 | DEF Central
+  [25/39] Koke... 🆕 L5=52 AA5=17 | MIL Rotation
+    💾 Sauvegarde (65 joueurs)
+  [26/39] Sorloth... 🆕 L5=49 AA5=2 | ATT Finisseur
+  [27/39] José María Giménez... 🆕 L5=55 AA5=19 | DEF Central
+  [28/39] Pablo Barrios... 🆕 L5=0 AA5=0 | MIL Rotation
+  [29/39] Aleksa Puric... 🆕 L5=0 AA5=0 | DEF Central
+  [30/39] Rayane Belaid... 🆕 L5=0 AA5=0 | ATT Finisseur
+    💾 Sauvegarde (70 joueurs)
+  [31/39] Marcos Llorente... 🆕 L5=48 AA5=8 | MIL Rotation
+  [32/39] Julián Álvarez... 🆕 L5=52 AA5=7 | ATT Complet
+  [33/39] Álvaro Moreno... 🆕 L5=0 AA5=0 | GK
+  [34/39] Jano Monserrate... 🆕 L5=0 AA5=0 | MIL Rotation
+  [35/39] Clément Lenglet... 🆕 L5=45 AA5=20 | DEF Central
+    💾 Sauvegarde (75 joueurs)
+  [36/39] Thiago Almada... 🆕 L5=42 AA5=7 | MIL Créateur
+  [37/39] Giuliano Simeone... 🆕 L5=61 AA5=13 | ATT Complet
+  [38/39] Dani Martínez... 🆕 L5=0 AA5=0 | DEF Central
+  [39/39] Taufik Seidu... 🆕 L5=0 AA5=0 | MIL Rotation
+
+🏟️  [3/20] FC Barcelona | ETA ~12min
+  👥 34 joueurs actifs
+  [1/34] Wojciech Szczęsny... 🆕 L5=0 AA5=0 | GK
+    💾 Sauvegarde (80 joueurs)
+  [2/34] Diego Kochen... 🆕 L5=0 AA5=0 | GK
+  [3/34] Guille Fernández... 🆕 L5=0 AA5=0 | MIL Rotation
+  [4/34] Marcus Rashford... 🆕 L5=45 AA5=10 | ATT Complet
+  [5/34] Jofre Torrents... 🆕 L5=0 AA5=0 | DEF Central
+  [6/34] Ronald Araújo... 🆕 L5=47 AA5=7 | DEF Central
+    💾 Sauvegarde (85 joueurs)
+  [7/34] Gerard Martín... 🆕 L5=54 AA5=19 | DEF Central
+  [8/34] Álvaro Cortés... 🆕 L5=0 AA5=0 | DEF Central
+  [9/34] Hans-Dieter Flick... 🆕 L5=0 AA5=0 | ?
+  [10/34] Dani Rodríguez... 🆕 L5=0 AA5=0 | ATT Finisseur
+  [11/34] Robert Lewandowski... 🆕 L5=40 AA5=0 | ATT Finisseur
+    💾 Sauvegarde (90 joueurs)
+  [12/34] Xavi Espart... 🆕 L5=46 AA5=11 | DEF Central
+  [13/34] Eder Aller... 🆕 L5=0 AA5=0 | GK
+  [14/34] Jules Koundé... 🆕 L5=70 AA5=25 | DEF Latéral
+  [15/34] Toni Fernández... 🆕 L5=0 AA5=0 | ATT Finisseur
+  [16/34] Ferran Torres... 🆕 L5=34 AA5=-1 | ATT Finisseur
+    💾 Sauvegarde (95 joueurs)
+  [17/34] Dani Olmo... 🆕 L5=51 AA5=11 | MIL Créateur
+  [18/34] Pedri... 🆕 L5=65 AA5=20 | MIL GOAT
+  [19/34] Fermín... 🆕 L5=60 AA5=8 | MIL Créateur
+  [20/34] Pau Cubarsí... 🆕 L5=58 AA5=18 | DEF Central
+  [21/34] João Cancelo... 🆕 L5=73 AA5=23 | DEF Latéral
+    💾 Sauvegarde (100 joueurs)
+  [22/34] Frenkie de Jong... 🆕 L5=82 AA5=33 | MIL GOAT
+  [23/34] Marc Bernal... 🆕 L5=54 AA5=14 | MIL Rotation
+  [24/34] Roony Bardghji... 🆕 L5=40 AA5=5 | ATT Finisseur
+  [25/34] Tomás Marqués... 🆕 L5=33 AA5=-2 | MIL Rotation
+  [26/34] Eric García... 🆕 L5=78 AA5=38 | DEF Central
+    💾 Sauvegarde (105 joueurs)
+  [27/34] Gavi... 🆕 L5=37 AA5=2 | MIL Créateur
+  [28/34] Joan García... 🆕 L5=75 AA5=18 | GK
+  [29/34] Alejandro Balde... 🆕 L5=50 AA5=15 | DEF Latéral
+  [30/34] Marc Casadó... 🆕 L5=47 AA5=12 | MIL Rotation
+  [31/34] Andreas Christensen... 🆕 L5=0 AA5=0 | DEF Central
+    💾 Sauvegarde (110 joueurs)
+  [32/34] Juan Hernández... 🆕 L5=0 AA5=0 | MIL Rotation
+  [33/34] Raphinha... 🆕 L5=55 AA5=11 | ATT Complet
+  [34/34] Lamine Yamal... 🆕 L5=66 AA5=13 | ATT Complet
+
+🏟️  [4/20] RC Celta | ETA ~11min
+  👥 36 joueurs actifs
+  [1/36] Iago Aspas... 🆕 L5=51 AA5=7 | ATT Complet
+  [2/36] A.Nuñez... 🆕 L5=41 AA5=6 | DEF Central
+    💾 Sauvegarde (115 joueurs)
+  [3/36] Jones El Abdellaoui... 🆕 L5=36 AA5=1 | ATT Finisseur
+  [4/36] Joseph Aidoo... 🆕 L5=61 AA5=26 | DEF Central
+  [5/36] Óscar Mingueza... 🆕 L5=50 AA5=3 | DEF Latéral
+  [6/36] Fer López... 🆕 L5=36 AA5=1 | MIL Rotation
+  [7/36] Javi Rueda... 🆕 L5=45 AA5=4 | DEF Central
+    💾 Sauvegarde (120 joueurs)
+  [8/36] Claudio Giráldez... 🆕 L5=0 AA5=0 | ?
+  [9/36] Franco Cervi... 🆕 L5=0 AA5=0 | MIL Rotation
+  [10/36] Ángel Arcos... 🆕 L5=0 AA5=0 | ATT Finisseur
+  [11/36] Yoel Lago... 🆕 L5=0 AA5=0 | DEF Central
+  [12/36] Marc Vidal... 🆕 L5=0 AA5=0 | GK
+    💾 Sauvegarde (125 joueurs)
+  [13/36] Marcos Alonso... 🆕 L5=56 AA5=21 | DEF Latéral
+  [14/36] Williot Swedberg... 🆕 L5=46 AA5=-1 | MIL Créateur
+  [15/36] Ferran Jutglà... 🆕 L5=62 AA5=9 | ATT Complet
+  [16/36] Matías Vecino... 🆕 L5=41 AA5=6 | MIL Rotation
+  [17/36] Carlos Domínguez... 🆕 L5=28 AA5=3 | DEF Latéral
+    💾 Sauvegarde (130 joueurs)
+  [18/36] Javi Rodríguez... 🆕 L5=54 AA5=10 | DEF Central
+  [19/36] Borja Iglesias... 🆕 L5=50 AA5=1 | ATT Finisseur
+  [20/36] Carl Starfelt... 🆕 L5=54 AA5=19 | DEF Central
+  [21/36] Hugo Burcio... 🆕 L5=0 AA5=0 | MIL Rotation
+  [22/36] Ilaix Moriba... 🆕 L5=46 AA5=10 | MIL Rotation
+    💾 Sauvegarde (135 joueurs)
+  [23/36] Pablo Meixús... 🆕 L5=0 AA5=0 | DEF Central
+  [24/36] Ionuț Radu... 🆕 L5=49 AA5=9 | GK
+  [25/36] Iván Villar... 🆕 L5=0 AA5=0 | GK
+  [26/36] Andrés Antañón... 🆕 L5=30 AA5=-5 | MIL Rotation
+  [27/36] Marcos González... 🆕 L5=0 AA5=0 | GK
+    💾 Sauvegarde (140 joueurs)
+  [28/36] Pablo Durán... 🆕 L5=42 AA5=1 | ATT Finisseur
+  [29/36] Hugo González... 🆕 L5=0 AA5=0 | ATT Finisseur
+  [30/36] Sergio Carreira... 🆕 L5=40 AA5=6 | DEF Latéral
+  [31/36] Hugo Álvarez... 🆕 L5=50 AA5=10 | MIL Créateur
+  [32/36] Miguel Román... 🆕 L5=44 AA5=9 | MIL Rotation
+    💾 Sauvegarde (145 joueurs)
+  [33/36] Mihailo Ristić... 🆕 L5=0 AA5=0 | DEF Central
+  [34/36] Óscar Marcos... 🆕 L5=0 AA5=0 | ATT Finisseur
+  [35/36] Manu Fernández... 🆕 L5=36 AA5=1 | DEF Central
+  [36/36] Hugo Sotelo... 🆕 L5=66 AA5=18 | MIL GOAT
+
+🏟️  [5/20] D. Alavés | ETA ~11min
+  👥 35 joueurs actifs
+  [1/35] Mariano Díaz... 🆕 L5=35 AA5=0 | ATT Finisseur
+    💾 Sauvegarde (150 joueurs)
+  [2/35] Guridi... 🆕 L5=40 AA5=5 | MIL Rotation
+  [3/35] Jonny... 🆕 L5=45 AA5=10 | DEF Central
+  [4/35] Guevara... 🆕 L5=37 AA5=6 | MIL Rotation
+  [5/35] Quique Sánchez Flores... 🆕 L5=0 AA5=0 | ?
+  [6/35] Paco Sanz... 🆕 L5=0 AA5=0 | DEF Central
+    💾 Sauvegarde (155 joueurs)
+  [7/35] Ibrahim Diabate... 🆕 L5=38 AA5=3 | ATT Finisseur
+  [8/35] Jon Pacheco... 🆕 L5=38 AA5=7 | DEF Central
+  [9/35] A. Rebbach... 🆕 L5=45 AA5=3 | ATT Finisseur
+  [10/35] C. Benavìdez... 🆕 L5=41 AA5=6 | MIL Rotation
+  [11/35] Denis Suárez... 🆕 L5=43 AA5=3 | MIL Rotation
+    💾 Sauvegarde (160 joueurs)
+  [12/35] Raúl Fernández... 🆕 L5=0 AA5=0 | GK
+  [13/35] Álvaro García... 🆕 L5=0 AA5=0 | DEF Central
+  [14/35] Lander Pinillos... 🆕 L5=0 AA5=0 | MIL Rotation
+  [15/35] Egoitz Muñoz... 🆕 L5=0 AA5=0 | DEF Central
+  [16/35] Ibáñez... 🆕 L5=46 AA5=11 | MIL Rotation
+    💾 Sauvegarde (165 joueurs)
+  [17/35] Toni Martínez... 🆕 L5=58 AA5=9 | ATT Complet
+  [18/35] Ville Koski... 🆕 L5=38 AA5=3 | DEF Central
+  [19/35] Calebe... 🆕 L5=40 AA5=5 | MIL Rotation
+  [20/35] Víctor Parada... 🆕 L5=41 AA5=-1 | DEF Central
+  [21/35] Carles Aleñà... 🆕 L5=36 AA5=1 | MIL Rotation
+    💾 Sauvegarde (170 joueurs)
+  [22/35] Sivera... 🆕 L5=35 AA5=4 | GK
+  [23/35] Antonio Blanco... 🆕 L5=48 AA5=13 | MIL Rotation
+  [24/35] Xanet Oláiz... 🆕 L5=0 AA5=0 | DEF Central
+  [25/35] Grégoire Świderski... 🆕 L5=0 AA5=0 | GK
+  [26/35] Rubén Montero... 🆕 L5=0 AA5=0 | GK
+    💾 Sauvegarde (175 joueurs)
+  [27/35] Facundo Garcés... 🆕 L5=36 AA5=1 | DEF Central
+  [28/35] Izei Hernández... 🆕 L5=0 AA5=0 | ATT Finisseur
+  [29/35] Ángel Pérez... 🆕 L5=42 AA5=-0 | DEF Latéral
+  [30/35] Youssef Lekhedim... 🆕 L5=41 AA5=1 | DEF Central
+  [31/35] Carlos Ballestero... 🆕 L5=29 AA5=-6 | DEF Central
+    💾 Sauvegarde (180 joueurs)
+  [32/35] Diego Morcillo... 🆕 L5=0 AA5=0 | ATT Finisseur
+  [33/35] Nahuel Tenaglia... 🆕 L5=59 AA5=14 | DEF Central
+  [34/35] Lucas Boyé... 🆕 L5=49 AA5=0 | ATT Finisseur
+  [35/35] Aitor Mañas... 🆕 L5=34 AA5=-1 | ATT Finisseur
+
+🏟️  [6/20] Elche CF | ETA ~10min
+  👥 37 joueurs actifs
+  [1/37] Adam El Mokhtari... 🆕 L5=47 AA5=4 | ATT Finisseur
+    💾 Sauvegarde (185 joueurs)
+  [2/37] Yago Santiago... 🆕 L5=33 AA5=-2 | ATT Finisseur
+  [3/37] John C.... 🆕 L5=32 AA5=-3 | MIL Rotation
+  [4/37] Jesús... 🆕 L5=0 AA5=0 | GK
+  [5/37] Léo Pétrot... 🆕 L5=38 AA5=3 | DEF Central
+  [6/37] Marc Aguado... 🆕 L5=46 AA5=6 | MIL Rotation
+    💾 Sauvegarde (190 joueurs)
+  [7/37] Grady Diangana... 🆕 L5=36 AA5=1 | ATT Finisseur
+  [8/37] Nico Salvador... 🆕 L5=0 AA5=0 | DEF Central
+  [9/37] Buba Sangaré... 🆕 L5=32 AA5=-3 | DEF Central
+  [10/37] Febas... 🆕 L5=52 AA5=17 | MIL Rotation
+  [11/37] Iñaki Peña... 🆕 L5=38 AA5=3 | GK
+    💾 Sauvegarde (195 joueurs)
+  [12/37] André Silva... 🆕 L5=49 AA5=3 | ATT Finisseur
+  [13/37] Martim Neto... 🆕 L5=39 AA5=3 | MIL Créateur
+  [14/37] Germán Valera... 🆕 L5=60 AA5=15 | ATT Complet
+  [15/37] Tete Morente... 🆕 L5=44 AA5=4 | MIL Rotation
+  [16/37] Alex Sánchez... 🆕 L5=60 AA5=-1 | ATT Finisseur
+    💾 Sauvegarde (200 joueurs)
+  [17/37] Lucas Cepeda... 🆕 L5=44 AA5=9 | ATT Complet
+  [18/37] Federico Redondo... 🆕 L5=42 AA5=2 | MIL Rotation
+  [19/37] Héctor Fort... 🆕 L5=0 AA5=0 | DEF Central
+  [20/37] Alejandro Iturbe... 🆕 L5=0 AA5=0 | GK
+  [21/37] Adrià Pedrosa... 🆕 L5=33 AA5=-2 | DEF Central
+    💾 Sauvegarde (205 joueurs)
+  [22/37] Víctor Chust... 🆕 L5=45 AA5=10 | DEF Central
+  [23/37] David Delgado... 🆕 L5=0 AA5=0 | DEF Central
+  [24/37] Alex Herráiz... 🆕 L5=0 AA5=0 | MIL Rotation
+  [25/37] Antonio Martínez... 🆕 L5=0 AA5=0 | MIL Rotation
+  [26/37] Rafa Mir... 🆕 L5=49 AA5=4 | ATT Finisseur
+    💾 Sauvegarde (210 joueurs)
+  [27/37] Álvaro Rodríguez... 🆕 L5=36 AA5=1 | ATT Finisseur
+  [28/37] Josan Ferrández... 🆕 L5=43 AA5=8 | MIL Rotation
+  [29/37] David Affengruber... 🆕 L5=67 AA5=22 | DEF Central
+  [30/37] Albert Niculăesei... 🆕 L5=0 AA5=0 | DEF Central
+  [31/37] Piri... 🆕 L5=0 AA5=0 | ATT Finisseur
+    💾 Sauvegarde (215 joueurs)
+  [32/37] Bema Sina... 🆕 L5=0 AA5=0 | DEF Central
+  [33/37] Matías Dituro... 🆕 L5=43 AA5=12 | GK
+  [34/37] Bigas... 🆕 L5=33 AA5=6 | DEF Central
+  [35/37] Gonzalo Villar... 🆕 L5=34 AA5=-1 | MIL Rotation
+  [36/37] Eder Sarabia... 🆕 L5=0 AA5=0 | ?
+    💾 Sauvegarde (220 joueurs)
+  [37/37] Pablo Belda... 🆕 L5=0 AA5=0 | DEF Central
+
+🏟️  [7/20] RCD Espanyol de Barcelona | ETA ~10min
+  👥 30 joueurs actifs
+  [1/30] Roberto Fernández... 🆕 L5=38 AA5=-2 | ATT Finisseur
+  [2/30] Kike G.... 🆕 L5=49 AA5=8 | ATT Complet
+  [3/30] José Ángel... 🆕 L5=0 AA5=0 | DEF Central
+  [4/30] Cyril Ngonge... 🆕 L5=53 AA5=8 | ATT Complet
+    💾 Sauvegarde (225 joueurs)
+  [5/30] José Luis Català... 🆕 L5=0 AA5=0 | DEF Central
+  [6/30] Llorenç Serred... 🆕 L5=0 AA5=0 | GK
+  [7/30] Ferrán Gómez... 🆕 L5=0 AA5=0 | MIL Rotation
+  [8/30] Antoniu Roca... 🆕 L5=30 AA5=-5 | ATT Finisseur
+  [9/30] Tyrhys Dolan... 🆕 L5=50 AA5=10 | ATT Complet
+    💾 Sauvegarde (230 joueurs)
+  [10/30] José Salinas... 🆕 L5=17 AA5=-8 | DEF Central
+  [11/30] Rubén Sánchez... 🆕 L5=29 AA5=-2 | DEF Central
+  [12/30] Omar El Hilali... 🆕 L5=46 AA5=5 | DEF Central
+  [13/30] Pol Lozano... 🆕 L5=48 AA5=8 | MIL Rotation
+  [14/30] Marko Dmitrović... 🆕 L5=46 AA5=10 | GK
+    💾 Sauvegarde (235 joueurs)
+  [15/30] Javi Puado... 🆕 L5=0 AA5=0 | ATT Finisseur
+  [16/30] Fernando Calero... 🆕 L5=45 AA5=5 | DEF Central
+  [17/30] Charles Pickel... 🆕 L5=31 AA5=0 | MIL Rotation
+  [18/30] Clemens Riedel... 🆕 L5=29 AA5=-6 | DEF Central
+  [19/30] Edu Expósito... 🆕 L5=59 AA5=9 | MIL Créateur
+    💾 Sauvegarde (240 joueurs)
+  [20/30] Miguel Rubio... 🆕 L5=36 AA5=1 | DEF Central
+  [21/30] Ángel Fortuño... 🆕 L5=0 AA5=0 | GK
+  [22/30] Pol Tristán... 🆕 L5=0 AA5=0 | GK
+  [23/30] Manolo González... 🆕 L5=0 AA5=0 | ?
+  [24/30] Urko González De Zarate... 🆕 L5=37 AA5=2 | DEF Latéral
+    💾 Sauvegarde (245 joueurs)
+  [25/30] Pere Milla... 🆕 L5=38 AA5=4 | MIL Créateur
+  [26/30] Jofre Carreras... 🆕 L5=42 AA5=2 | ATT Finisseur
+  [27/30] Carlos Romero... 🆕 L5=34 AA5=-1 | DEF Latéral
+  [28/30] Leandro Cabrera... 🆕 L5=44 AA5=8 | DEF Central
+  [29/30] Ramon Terrats... 🆕 L5=36 AA5=1 | MIL Rotation
+    💾 Sauvegarde (250 joueurs)
+  [30/30] Adama Timera... 🆕 L5=0 AA5=0 | ATT Finisseur
+
+🏟️  [8/20] Getafe CF | ETA ~9min
+  👥 39 joueurs actifs
+  [1/39] Jiří Letáček... 🆕 L5=0 AA5=0 | GK
+  [2/39] Veljko Birmančević... 🆕 L5=38 AA5=2 | MIL Créateur
+  [3/39] Adrián Riquelme... 🆕 L5=0 AA5=0 | MIL Rotation
+  [4/39] Mauro Arambarri... 🆕 L5=47 AA5=2 | MIL Créateur
+    💾 Sauvegarde (255 joueurs)
+  [5/39] Davinchi... 🆕 L5=0 AA5=0 | DEF Central
+  [6/39] Adrian Liso... 🆕 L5=38 AA5=2 | ATT Finisseur
+  [7/39] Hugo Solozábal... 🆕 L5=0 AA5=0 | MIL Créateur
+  [8/39] Allan Nyom... 🆕 L5=32 AA5=-3 | DEF Central
+  [9/39] Sebastián Boselli... 🆕 L5=40 AA5=4 | DEF Central
+    💾 Sauvegarde (260 joueurs)
+  [10/39] Borja Mayoral... 🆕 L5=0 AA5=0 | ATT Finisseur
+  [11/39] Ismael Bekhoucha... 🆕 L5=0 AA5=0 | DEF Central
+  [12/39] Diego Ferrer... 🆕 L5=0 AA5=0 | GK
+  [13/39] Juan Iglesias... 🆕 L5=56 AA5=21 | DEF Central
+  [14/39] Rico... 🆕 L5=33 AA5=-2 | DEF Central
+    💾 Sauvegarde (265 joueurs)
+  [15/39] Marc Vilaplana... 🆕 L5=0 AA5=0 | DEF Central
+  [16/39] David Soria... 🆕 L5=55 AA5=14 | GK
+  [17/39] Abu Kamara... 🆕 L5=0 AA5=0 | ATT Finisseur
+  [18/39] Djené Dakonam... 🆕 L5=36 AA5=5 | DEF Central
+  [19/39] Javi Muñoz... 🆕 L5=35 AA5=0 | MIL Rotation
+    💾 Sauvegarde (270 joueurs)
+  [20/39] Domingos Duarte... 🆕 L5=54 AA5=6 | DEF Central
+  [21/39] A. Abqar... 🆕 L5=40 AA5=1 | DEF Central
+  [22/39] Mario Martín... 🆕 L5=34 AA5=-0 | MIL Rotation
+  [23/39] Luis Milla... 🆕 L5=48 AA5=8 | MIL Créateur
+  [24/39] Zaid Romero... 🆕 L5=54 AA5=14 | DEF Central
+    💾 Sauvegarde (275 joueurs)
+  [25/39] Jorge Benito... 🆕 L5=0 AA5=0 | GK
+  [26/39] Juanmi... 🆕 L5=37 AA5=2 | ATT Finisseur
+  [27/39] Alberto Cordero... 🆕 L5=0 AA5=0 | DEF Central
+  [28/39] Mykyta Aleksandrov... 🆕 L5=0 AA5=0 | ATT Finisseur
+  [29/39] José Bordalás... 🆕 L5=0 AA5=0 | ?
+    💾 Sauvegarde (280 joueurs)
+  [30/39] Álex Sancris... 🆕 L5=35 AA5=-0 | ATT Finisseur
+  [31/39] Alejandro Mestanza... 🆕 L5=33 AA5=-2 | MIL Créateur
+  [32/39] Luis Vázquez... 🆕 L5=34 AA5=-0 | ATT Finisseur
+  [33/39] Alberto Risco... 🆕 L5=0 AA5=0 | MIL Rotation
+  [34/39] Lucas Laso... 🆕 L5=0 AA5=0 | DEF Central
+    💾 Sauvegarde (285 joueurs)
+  [35/39] Joselu Pérez... 🆕 L5=0 AA5=0 | ATT Finisseur
+  [36/39] Yassin Tallal... 🆕 L5=0 AA5=0 | ATT Finisseur
+  [37/39] Jorge Montes... 🆕 L5=0 AA5=0 | DEF Central
+  [38/39] Kiko Femenía... 🆕 L5=33 AA5=-3 | DEF Central
+  [39/39] Martín Satriano... 🆕 L5=54 AA5=8 | ATT Complet
+    💾 Sauvegarde (290 joueurs)
+
+🏟️  [9/20] Girona FC | ETA ~8min
+  👥 35 joueurs actifs
+  [1/35] Juan Arango... 🆕 L5=38 AA5=4 | ATT Finisseur
+  [2/35] Papa Ba... 🆕 L5=0 AA5=0 | ATT Finisseur
+  [3/35] Bryan Gil... 🆕 L5=46 AA5=12 | ATT Complet
+  [4/35] Fran Beltrán... 🆕 L5=48 AA5=13 | MIL Rotation
+  [5/35] Daley Blind... 🆕 L5=63 AA5=28 | DEF Latéral
+    💾 Sauvegarde (295 joueurs)
+  [6/35] Claudio Echeverri... 🆕 L5=47 AA5=5 | MIL Rotation
+  [7/35] Vladyslav Vanat... 🆕 L5=50 AA5=5 | ATT Finisseur
+  [8/35] Álex Moreno... 🆕 L5=45 AA5=5 | DEF Central
+  [9/35] Axel Witsel... 🆕 L5=62 AA5=17 | DEF Latéral
+  [10/35] Rubén Blanco... 🆕 L5=0 AA5=0 | GK
+    💾 Sauvegarde (300 joueurs)
+  [11/35] Joel Roca... 🆕 L5=47 AA5=7 | MIL Rotation
+  [12/35] Alejandro Francés... 🆕 L5=47 AA5=7 | DEF Central
+  [13/35] Pol Arnau... 🆕 L5=0 AA5=0 | DEF Central
+  [14/35] Iván Martín... 🆕 L5=40 AA5=5 | MIL Rotation
+  [15/35] Míchel... 🆕 L5=0 AA5=0 | ?
+    💾 Sauvegarde (305 joueurs)
+  [16/35] Cristhian Stuani... 🆕 L5=32 AA5=-3 | ATT Finisseur
+  [17/35] ter Stegen... 🆕 L5=41 AA5=6 | GK
+  [18/35] Lancinet Kourouma... 🆕 L5=0 AA5=0 | MIL Rotation
+  [19/35] Viktor Tsygankov... 🆕 L5=62 AA5=15 | ATT Complet
+  [20/35] Vladyslav Krapyvtsov... 🆕 L5=0 AA5=0 | GK
+    💾 Sauvegarde (310 joueurs)
+  [21/35] Juan Carlos... 🆕 L5=0 AA5=0 | GK
+  [22/35] Azzedine Ounahi... 🆕 L5=59 AA5=14 | MIL Créateur
+  [23/35] Donny van de Beek... 🆕 L5=0 AA5=0 | MIL Rotation
+  [24/35] Abel Ruiz... 🆕 L5=36 AA5=0 | ATT Finisseur
+  [25/35] Aleksandar Andreev... 🆕 L5=0 AA5=0 | GK
+    💾 Sauvegarde (315 joueurs)
+  [26/35] Antonio Salguero... 🆕 L5=0 AA5=0 | DEF Central
+  [27/35] Javi Sarasa... 🆕 L5=0 AA5=0 | ATT Finisseur
+  [28/35] Arnau Martínez... 🆕 L5=56 AA5=16 | DEF Central
+  [29/35] Paulo Gazzaniga... 🆕 L5=54 AA5=18 | GK
+  [30/35] Portu... 🆕 L5=0 AA5=0 | ATT Finisseur
+    💾 Sauvegarde (320 joueurs)
+  [31/35] Hugo Rincón... 🆕 L5=57 AA5=12 | DEF Central
+  [32/35] David López... 🆕 L5=35 AA5=0 | DEF Central
+  [33/35] Gibert Jordana... 🆕 L5=0 AA5=0 | DEF Central
+  [34/35] Vitor Reis... 🆕 L5=49 AA5=8 | DEF Central
+  [35/35] Thomas Lemar... 🆕 L5=49 AA5=9 | MIL Rotation
+    💾 Sauvegarde (325 joueurs)
+
+🏟️  [10/20] Levante UD | ETA ~7min
+  👥 35 joueurs actifs
+  [1/35] P. Martínez... 🆕 L5=50 AA5=8 | MIL Rotation
+  [2/35] Dani Cervera... 🆕 L5=0 AA5=0 | MIL Créateur
+  [3/35] Kareem Tunde... 🆕 L5=45 AA5=5 | ATT Complet
+  [4/35] Kervin Arriaga... 🆕 L5=33 AA5=2 | MIL Rotation
+  [5/35] Unai Vencedor... 🆕 L5=38 AA5=3 | MIL Rotation
+    💾 Sauvegarde (330 joueurs)
+  [6/35] Manu Sánchez... 🆕 L5=45 AA5=10 | DEF Central
+  [7/35] Pablo Rosón... 🆕 L5=0 AA5=0 | MIL Rotation
+  [8/35] R. Brugué... 🆕 L5=0 AA5=0 | MIL Rotation
+  [9/35] Martín Krug... 🆕 L5=0 AA5=0 | DEF Central
+  [10/35] Matías Moreno... 🆕 L5=53 AA5=18 | DEF Central
+    💾 Sauvegarde (335 joueurs)
+  [11/35] Ugo Raghouber... 🆕 L5=45 AA5=3 | MIL Rotation
+  [12/35] Morales... 🆕 L5=37 AA5=2 | ATT Finisseur
+  [13/35] Luís Castro... 🆕 L5=0 AA5=0 | ?
+  [14/35] Nacho Pérez... 🆕 L5=39 AA5=4 | DEF Central
+  [15/35] C.Álvarez... 🆕 L5=40 AA5=5 | ATT Complet
+    💾 Sauvegarde (340 joueurs)
+  [16/35] P. Campos... 🆕 L5=0 AA5=0 | GK
+  [17/35] Joan Ruiz... 🆕 L5=0 AA5=0 | MIL Rotation
+  [18/35] Diego Pampín... 🆕 L5=31 AA5=-4 | DEF Latéral
+  [19/35] Jeremy Toljan... 🆕 L5=46 AA5=6 | DEF Central
+  [20/35] Víctor García... 🆕 L5=43 AA5=3 | DEF Central
+    💾 Sauvegarde (345 joueurs)
+  [21/35] Paco Cortés... 🆕 L5=40 AA5=5 | ATT Finisseur
+  [22/35] Unai Elgezabal... 🆕 L5=60 AA5=0 | DEF Central
+  [23/35] Olasagasti... 🆕 L5=43 AA5=7 | MIL Rotation
+  [24/35] Iker Losada... 🆕 L5=50 AA5=5 | ATT Finisseur
+  [25/35] I.Romero... 🆕 L5=51 AA5=11 | ATT Complet
+    💾 Sauvegarde (350 joueurs)
+  [26/35] Edouard Eyong... 🆕 L5=40 AA5=0 | ATT Finisseur
+  [27/35] Huseini... 🆕 L5=0 AA5=0 | DEF Central
+  [28/35] O.Rey... 🆕 L5=36 AA5=1 | MIL Rotation
+  [29/35] Carlos Espí... 🆕 L5=64 AA5=4 | ATT Finisseur
+  [30/35] Mathew Ryan... 🆕 L5=53 AA5=13 | GK
+    💾 Sauvegarde (355 joueurs)
+  [31/35] Cayetano... 🆕 L5=0 AA5=0 | GK
+  [32/35] Alan Matturro... 🆕 L5=39 AA5=4 | DEF Central
+  [33/35] Álex Primo... 🆕 L5=0 AA5=0 | GK
+  [34/35] Dela... 🆕 L5=58 AA5=24 | DEF Central
+  [35/35] Tai Abed... 🆕 L5=34 AA5=-1 | ATT Finisseur
+    💾 Sauvegarde (360 joueurs)
+
+🏟️  [11/20] RCD Mallorca | ETA ~7min
+  👥 34 joueurs actifs
+  [1/34] Leo Sánchez... 🆕 L5=0 AA5=0 | DEF Central
+  [2/34] Toni Lato... 🆕 L5=36 AA5=1 | DEF Central
+  [3/34] Pichu Cuéllar... 🆕 L5=0 AA5=0 | GK
+  [4/34] Luis Orejuela... 🆕 L5=0 AA5=0 | DEF Central
+  [5/34] Marash Kumbulla... 🆕 L5=30 AA5=-5 | DEF Central
+    💾 Sauvegarde (365 joueurs)
+  [6/34] Zito Luvumbo... 🆕 L5=48 AA5=7 | ATT Complet
+  [7/34] Iliesse Salhi... 🆕 L5=0 AA5=0 | DEF Central
+  [8/34] David López... 🆕 L5=47 AA5=6 | DEF Central
+  [9/34] Pablo Maffeo... 🆕 L5=60 AA5=16 | DEF Central
+  [10/34] Jandro García... 🆕 L5=0 AA5=0 | MIL Rotation
+    💾 Sauvegarde (370 joueurs)
+  [11/34] Lucas Bergström... 🆕 L5=0 AA5=0 | GK
+  [12/34] Manu Morlanes... 🆕 L5=41 AA5=6 | MIL Rotation
+  [13/34] Justin-Noël Kalumba... 🆕 L5=34 AA5=-1 | ATT Finisseur
+  [14/34] Abdón Prats... 🆕 L5=36 AA5=0 | ATT Finisseur
+  [15/34] Mateo Joseph... 🆕 L5=43 AA5=8 | ATT Complet
+    💾 Sauvegarde (375 joueurs)
+  [16/34] Antonio Sánchez... 🆕 L5=38 AA5=3 | MIL Rotation
+  [17/34] Raíllo... 🆕 L5=46 AA5=15 | DEF Central
+  [18/34] Nil Torreguitart... 🆕 L5=0 AA5=0 | GK
+  [19/34] J. Mojica... 🆕 L5=41 AA5=6 | DEF Latéral
+  [20/34] Miquel Salas... 🆕 L5=0 AA5=0 | MIL Rotation
+    💾 Sauvegarde (380 joueurs)
+  [21/34] Rareș Vlad... 🆕 L5=0 AA5=0 | GK
+  [22/34] Jan Virgili... 🆕 L5=36 AA5=5 | ATT Complet
+  [23/34] Javier Llabrés... 🆕 L5=35 AA5=0 | ATT Finisseur
+  [24/34] Martín Demichelis... 🆕 L5=0 AA5=0 | ?
+  [25/34] Martin Valjent... 🆕 L5=41 AA5=1 | DEF Central
+    💾 Sauvegarde (385 joueurs)
+  [26/34] Samú Costa... 🆕 L5=44 AA5=4 | MIL Rotation
+  [27/34] Mateu Morey Bauza... 🆕 L5=28 AA5=-8 | DEF Central
+  [28/34] Omar Mascarell... 🆕 L5=46 AA5=10 | MIL Rotation
+  [29/34] Takuma Asano... 🆕 L5=32 AA5=-3 | ATT Finisseur
+  [30/34] Darder... 🆕 L5=44 AA5=4 | MIL Rotation
+    💾 Sauvegarde (390 joueurs)
+  [31/34] Javier Olaizola... 🆕 L5=0 AA5=0 | DEF Central
+  [32/34] Pablo Torre... 🆕 L5=50 AA5=5 | MIL Rotation
+  [33/34] Leo Román... 🆕 L5=38 AA5=3 | GK
+  [34/34] Vedat Muriqi... 🆕 L5=43 AA5=1 | ATT Finisseur
+
+🏟️  [12/20] CA Osasuna | ETA ~6min
+  👥 34 joueurs actifs
+  [1/34] Martín Pedroarena... 🆕 L5=0 AA5=0 | ATT Finisseur
+    💾 Sauvegarde (395 joueurs)
+  [2/34] S. HERRERA... 🆕 L5=35 AA5=3 | GK
+  [3/34] Catena... 🆕 L5=44 AA5=9 | DEF Central
+  [4/34] Iker Muñoz... 🆕 L5=46 AA5=11 | MIL Rotation
+  [5/34] Dimitrios Stamatakis... 🆕 L5=0 AA5=0 | GK
+  [6/34] Aimar... 🆕 L5=47 AA5=12 | MIL Rotation
+    💾 Sauvegarde (400 joueurs)
+  [7/34] Raúl Chasco... 🆕 L5=0 AA5=0 | DEF Central
+  [8/34] Boyomo... 🆕 L5=51 AA5=15 | DEF Central
+  [9/34] Budimir... 🆕 L5=57 AA5=7 | ATT Complet
+  [10/34] Javier Galán... 🆕 L5=48 AA5=13 | DEF Latéral
+  [11/34] Asier Osambela... 🆕 L5=35 AA5=-0 | MIL Rotation
+    💾 Sauvegarde (405 joueurs)
+  [12/34] Valentin Rosier... 🆕 L5=52 AA5=17 | DEF Central
+  [13/34] Rubén García... 🆕 L5=46 AA5=11 | MIL Créateur
+  [14/34] Juan Cruz... 🆕 L5=38 AA5=3 | DEF Central
+  [15/34] Raúl Moro... 🆕 L5=46 AA5=6 | ATT Complet
+  [16/34] Unai Santos... 🆕 L5=0 AA5=0 | DEF Central
+    💾 Sauvegarde (410 joueurs)
+  [17/34] Kike Barja... 🆕 L5=52 AA5=0 | MIL Rotation
+  [18/34] Jon García... 🆕 L5=0 AA5=0 | MIL Rotation
+  [19/34] Raúl... 🆕 L5=37 AA5=1 | ATT Finisseur
+  [20/34] AITOR FDEZ.... 🆕 L5=0 AA5=0 | GK
+  [21/34] Moncayola... 🆕 L5=37 AA5=2 | MIL Rotation
+    💾 Sauvegarde (415 joueurs)
+  [22/34] IKER BENITO... 🆕 L5=0 AA5=0 | ATT Finisseur
+  [23/34] Mauro Echegoyen... 🆕 L5=0 AA5=0 | MIL Rotation
+  [24/34] Íñigo Arguibide... 🆕 L5=32 AA5=-4 | DEF Central
+  [25/34] Mikel Serrano... 🆕 L5=0 AA5=0 | DEF Central
+  [26/34] HERRANDO... 🆕 L5=41 AA5=6 | DEF Central
+    💾 Sauvegarde (420 joueurs)
+  [27/34] Moi Gómez... 🆕 L5=44 AA5=4 | ATT Finisseur
+  [28/34] Roberto Arroyo... 🆕 L5=0 AA5=0 | ATT Finisseur
+  [29/34] Víctor Muñoz... 🆕 L5=54 AA5=8 | ATT Complet
+  [30/34] Alessio Lisci... 🆕 L5=0 AA5=0 | ?
+  [31/34] Aly Doumbia... 🆕 L5=0 AA5=0 | ATT Finisseur
+    💾 Sauvegarde (425 joueurs)
+  [32/34] Abel Bretones... 🆕 L5=31 AA5=-4 | DEF Central
+  [33/34] Ander Yoldi... 🆕 L5=0 AA5=0 | ATT Finisseur
+  [34/34] TORRÓ... 🆕 L5=43 AA5=8 | MIL Rotation
+
+🏟️  [13/20] Rayo Vallecano | ETA ~5min
+  👥 34 joueurs actifs
+  [1/34] Luiz Felipe... 🆕 L5=50 AA5=15 | DEF Central
+  [2/34] Adrián Molina... 🆕 L5=0 AA5=0 | GK
+    💾 Sauvegarde (430 joueurs)
+  [3/34] Randy Nteka... 🆕 L5=34 AA5=-1 | MIL Rotation
+  [4/34] Samu Becerra... 🆕 L5=0 AA5=0 | MIL Rotation
+  [5/34] Marco Román... 🆕 L5=0 AA5=0 | MIL Rotation
+  [6/34] Álvaro García... 🆕 L5=56 AA5=9 | MIL Créateur
+  [7/34] Sergio Lozano... 🆕 L5=0 AA5=0 | DEF Central
+    💾 Sauvegarde (435 joueurs)
+  [8/34] Gumbau... 🆕 L5=38 AA5=2 | MIL Rotation
+  [9/34] Óscar Trejo... 🆕 L5=33 AA5=-2 | MIL Rotation
+  [10/34] Andrei Rațiu... 🆕 L5=47 AA5=7 | DEF Latéral
+  [11/34] Unai López... 🆕 L5=39 AA5=4 | MIL Rotation
+  [12/34] Jozhua Vertrouwd... 🆕 L5=36 AA5=1 | DEF Central
+    💾 Sauvegarde (440 joueurs)
+  [13/34] Marco de las Sías... 🆕 L5=0 AA5=0 | DEF Central
+  [14/34] Juanpe Gil... 🆕 L5=0 AA5=0 | GK
+  [15/34] Pedro Diaz... 🆕 L5=37 AA5=2 | MIL Rotation
+  [16/34] Ilias Akhomach... 🆕 L5=41 AA5=6 | ATT Complet
+  [17/34] Pep Chavarría... 🆕 L5=47 AA5=12 | DEF Central
+    💾 Sauvegarde (445 joueurs)
+  [18/34] Isi Palazón... 🆕 L5=44 AA5=9 | MIL Créateur
+  [19/34] Fran Pérez... 🆕 L5=40 AA5=0 | MIL Rotation
+  [20/34] Florian Lejeune... 🆕 L5=70 AA5=24 | DEF Central
+  [21/34] Abdul Mumin... 🆕 L5=0 AA5=0 | DEF Central
+  [22/34] Iñigo Pérez... 🆕 L5=0 AA5=0 | ?
+    💾 Sauvegarde (450 joueurs)
+  [23/34] Carlos Martín... 🆕 L5=31 AA5=-4 | ATT Finisseur
+  [24/34] Diego Méndez... 🆕 L5=0 AA5=0 | MIL Rotation
+  [25/34] Iván Balliu... 🆕 L5=43 AA5=8 | DEF Central
+  [26/34] Alfonso Espino... 🆕 L5=54 AA5=14 | DEF Central
+  [27/34] Augusto Batalla... 🆕 L5=43 AA5=3 | GK
+    💾 Sauvegarde (455 joueurs)
+  [28/34] De Frutos... 🆕 L5=52 AA5=5 | MIL Créateur
+  [29/34] Pathé Ciss... 🆕 L5=49 AA5=9 | MIL Rotation
+  [30/34] Nobel Mendy... 🆕 L5=49 AA5=13 | DEF Central
+  [31/34] Cárdenas... 🆕 L5=0 AA5=0 | GK
+  [32/34] Alemão... 🆕 L5=33 AA5=-2 | ATT Finisseur
+    💾 Sauvegarde (460 joueurs)
+  [33/34] Sergio Camello... 🆕 L5=38 AA5=3 | ATT Finisseur
+  [34/34] Óscar Valentín... 🆕 L5=44 AA5=9 | MIL Rotation
+
+🏟️  [14/20] Real Betis | ETA ~5min
+  👥 36 joueurs actifs
+  [1/36] Darling Bladi... 🆕 L5=0 AA5=0 | DEF Central
+  [2/36] Isco... 🆕 L5=0 AA5=0 | MIL Créateur
+  [3/36] Germán García... 🆕 L5=0 AA5=0 | GK
+    💾 Sauvegarde (465 joueurs)
+  [4/36] Nelson Deossa... 🆕 L5=43 AA5=8 | MIL Rotation
+  [5/36] Pablo Fornals... 🆕 L5=54 AA5=14 | MIL Créateur
+  [6/36] Cucho Hernández... 🆕 L5=40 AA5=5 | ATT Complet
+  [7/36] Manu González... 🆕 L5=0 AA5=0 | GK
+  [8/36] Pau López... 🆕 L5=72 AA5=12 | GK
+    💾 Sauvegarde (470 joueurs)
+  [9/36] Aitor Ruibal... 🆕 L5=50 AA5=10 | ATT Complet
+  [10/36] Junior Firpo... 🆕 L5=28 AA5=-7 | DEF Central
+  [11/36] Antony... 🆕 L5=46 AA5=6 | ATT Complet
+  [12/36] Pablo García... 🆕 L5=36 AA5=0 | ATT Finisseur
+  [13/36] José Antonio Morante... 🆕 L5=0 AA5=0 | ATT Finisseur
+    💾 Sauvegarde (475 joueurs)
+  [14/36] Adrian San Miguel... 🆕 L5=0 AA5=0 | GK
+  [15/36] Dani Pérez... 🆕 L5=0 AA5=0 | MIL Rotation
+  [16/36] Bellerín... 🆕 L5=59 AA5=12 | DEF Latéral
+  [17/36] Chimy Ávila... 🆕 L5=54 AA5=11 | ATT Complet
+  [18/36] Ángel Ortiz... 🆕 L5=43 AA5=8 | DEF Central
+    💾 Sauvegarde (480 joueurs)
+  [19/36] Rodri Marina... 🆕 L5=0 AA5=0 | ATT Finisseur
+  [20/36] Ricardo Rodríguez... 🆕 L5=34 AA5=-1 | DEF Central
+  [21/36] Álvaro Fidalgo... 🆕 L5=50 AA5=10 | MIL Rotation
+  [22/36] Manuel Pellegrini... 🆕 L5=0 AA5=0 | ?
+  [23/36] Carlos de Roa... 🆕 L5=0 AA5=0 | DEF Central
+    💾 Sauvegarde (485 joueurs)
+  [24/36] Iván Corralejo... 🆕 L5=0 AA5=0 | MIL Rotation
+  [25/36] Marc Bartra... 🆕 L5=41 AA5=6 | DEF Central
+  [26/36] Natan... 🆕 L5=40 AA5=5 | DEF Central
+  [27/36] Giovani Lo Celso... 🆕 L5=0 AA5=0 | MIL Créateur
+  [28/36] Rodrigo Riquelme... 🆕 L5=36 AA5=1 | MIL Rotation
+    💾 Sauvegarde (490 joueurs)
+  [29/36] Cédric Bakambu... 🆕 L5=40 AA5=0 | ATT Finisseur
+  [30/36] Álvaro Valles... 🆕 L5=34 AA5=4 | GK
+  [31/36] Marc Roca... 🆕 L5=44 AA5=9 | MIL Rotation
+  [32/36] Sofyan Amrabat... 🆕 L5=40 AA5=6 | MIL Rotation
+  [33/36] Sergi Altimira... 🆕 L5=45 AA5=10 | MIL Rotation
+    💾 Sauvegarde (495 joueurs)
+  [34/36] Diego Llorente... 🆕 L5=50 AA5=10 | DEF Central
+  [35/36] Abde... 🆕 L5=48 AA5=8 | ATT Complet
+  [36/36] Valentín Gómez... 🆕 L5=43 AA5=8 | DEF Central
+
+🏟️  [15/20] Real Madrid | ETA ~4min
+  👥 43 joueurs actifs
+  [1/43] Rodrygo... 🆕 L5=38 AA5=3 | ATT Finisseur
+  [2/43] Federico Valverde... 🆕 L5=67 AA5=17 | MIL B2B
+    💾 Sauvegarde (500 joueurs)
+  [3/43] Franco Mastantuono... 🆕 L5=22 AA5=7 | ATT Complet
+  [4/43] Dani Ceballos... 🆕 L5=27 AA5=2 | MIL Rotation
+  [5/43] Diego Aguado... 🆕 L5=34 AA5=-1 | DEF Central
+  [6/43] Fran García... 🆕 L5=62 AA5=14 | DEF Central
+  [7/43] Andriy Lunin... 🆕 L5=50 AA5=14 | GK
+    💾 Sauvegarde (505 joueurs)
+  [8/43] Jude Bellingham... 🆕 L5=36 AA5=1 | MIL Créateur
+  [9/43] David Alaba... 🆕 L5=45 AA5=10 | DEF Central
+  [10/43] Sergio Mestre... 🆕 L5=0 AA5=0 | GK
+  [11/43] Eduardo Camavinga... 🆕 L5=40 AA5=11 | MIL Rotation
+  [12/43] Brahim... 🆕 L5=49 AA5=9 | ATT Complet
+    💾 Sauvegarde (510 joueurs)
+  [13/43] David Jiménez... 🆕 L5=0 AA5=0 | DEF Central
+  [14/43] Lamini Fati... 🆕 L5=0 AA5=0 | DEF Central
+  [15/43] Trent Alexander-Arnold... 🆕 L5=52 AA5=7 | DEF Latéral
+  [16/43] Fran González... 🆕 L5=0 AA5=0 | GK
+  [17/43] Gonzalo García... 🆕 L5=46 AA5=6 | ATT Complet
+    💾 Sauvegarde (515 joueurs)
+  [18/43] Vinícius Júnior... 🆕 L5=59 AA5=12 | ATT Complet
+  [19/43] Javier Navarro... 🆕 L5=0 AA5=0 | GK
+  [20/43] Daniel Yáñez... 🆕 L5=71 AA5=11 | ATT Complet
+  [21/43] Álvaro Carreras... 🆕 L5=59 AA5=17 | DEF Latéral
+  [22/43] Ferland Mendy... 🆕 L5=78 AA5=18 | DEF Latéral
+    💾 Sauvegarde (520 joueurs)
+  [23/43] Dean Huijsen... 🆕 L5=52 AA5=8 | DEF Latéral
+  [24/43] Dani Meso... 🆕 L5=0 AA5=0 | MIL Rotation
+  [25/43] Pol Fortuny... 🆕 L5=0 AA5=0 | MIL Rotation
+  [26/43] Ávaro Leiva... 🆕 L5=0 AA5=0 | ATT Finisseur
+  [27/43] Jesús Fortea... 🆕 L5=0 AA5=0 | DEF Central
+    💾 Sauvegarde (525 joueurs)
+  [28/43] Arda Güler... 🆕 L5=67 AA5=22 | MIL GOAT
+  [29/43] Kylian Mbappé... 🆕 L5=40 AA5=5 | ATT Finisseur
+  [30/43] César Palacios... 🆕 L5=43 AA5=8 | MIL Créateur
+  [31/43] Raúl Asencio... 🆕 L5=35 AA5=-0 | DEF Latéral
+  [32/43] Mario Rivas... 🆕 L5=0 AA5=0 | DEF Central
+    💾 Sauvegarde (530 joueurs)
+  [33/43] Álvaro Arbeloa... 🆕 L5=0 AA5=0 | ?
+  [34/43] Thiago Pitarch... 🆕 L5=36 AA5=0 | MIL Rotation
+  [35/43] Valde... 🆕 L5=0 AA5=0 | DEF Central
+  [36/43] Manuel Ángel... 🆕 L5=30 AA5=5 | MIL Rotation
+  [37/43] Cestero... 🆕 L5=34 AA5=-1 | MIL Rotation
+    💾 Sauvegarde (535 joueurs)
+  [38/43] Thibaut Courtois... 🆕 L5=35 AA5=4 | GK
+  [39/43] Éder Militão... 🆕 L5=0 AA5=0 | DEF Central
+  [40/43] Joan Martínez... 🆕 L5=0 AA5=0 | DEF Central
+  [41/43] Carvajal... 🆕 L5=43 AA5=8 | DEF Latéral
+  [42/43] Antonio Rüdiger... 🆕 L5=53 AA5=11 | DEF Latéral
+    💾 Sauvegarde (540 joueurs)
+  [43/43] Aurélien Tchouaméni... 🆕 L5=62 AA5=22 | MIL GOAT
+
+🏟️  [16/20] Real Oviedo | ETA ~3min
+  👥 35 joueurs actifs
+  [1/35] Diego Espinosa... 🆕 L5=0 AA5=0 | DEF Central
+  [2/35] Nicolás Fonseca... 🆕 L5=46 AA5=11 | MIL Rotation
+  [3/35] Lucas Ahijado... 🆕 L5=40 AA5=9 | DEF Central
+  [4/35] Cheli Pereda... 🆕 L5=0 AA5=0 | MIL Rotation
+    💾 Sauvegarde (545 joueurs)
+  [5/35] Rahim Alhassane... 🆕 L5=37 AA5=2 | DEF Central
+  [6/35] Horaţiu Moldovan... 🆕 L5=0 AA5=0 | GK
+  [7/35] David Costas... 🆕 L5=45 AA5=10 | DEF Central
+  [8/35] Aarón Escandell... 🆕 L5=49 AA5=9 | GK
+  [9/35] Pablo Agudín... 🆕 L5=29 AA5=-6 | MIL Rotation
+    💾 Sauvegarde (550 joueurs)
+  [10/35] Álex Forés... 🆕 L5=35 AA5=-0 | ATT Finisseur
+  [11/35] Diego Menéndez... 🆕 L5=0 AA5=0 | MIL Créateur
+  [12/35] Dani Calvo... 🆕 L5=43 AA5=8 | DEF Central
+  [13/35] Javi López... 🆕 L5=45 AA5=5 | DEF Central
+  [14/35] A. Cardero... 🆕 L5=0 AA5=0 | MIL Rotation
+    💾 Sauvegarde (555 joueurs)
+  [15/35] Luka Ilić... 🆕 L5=35 AA5=0 | MIL Rotation
+  [16/35] Santiago Colombatto... 🆕 L5=40 AA5=4 | MIL Rotation
+  [17/35] Oviemuno Ejaria... 🆕 L5=0 AA5=0 | ATT Finisseur
+  [18/35] David Carmo... 🆕 L5=43 AA5=16 | DEF Central
+  [19/35] Federico Viñas... 🆕 L5=52 AA5=12 | ATT Complet
+    💾 Sauvegarde (560 joueurs)
+  [20/35] Thiago Fernández... 🆕 L5=40 AA5=-0 | ATT Finisseur
+  [21/35] Nacho Vidal... 🆕 L5=47 AA5=12 | DEF Central
+  [22/35] Lamine Gueye... 🆕 L5=0 AA5=0 | ATT Finisseur
+  [23/35] Haissem Hassan... 🆕 L5=41 AA5=6 | ATT Complet
+  [24/35] Adri Fernández... 🆕 L5=0 AA5=0 | DEF Central
+    💾 Sauvegarde (565 joueurs)
+  [25/35] Ilyas Chaira... 🆕 L5=44 AA5=4 | ATT Finisseur
+  [26/35] Sibo... 🆕 L5=44 AA5=9 | MIL Rotation
+  [27/35] Miguel Narváez... 🆕 L5=0 AA5=0 | GK
+  [28/35] Thiago Borbas... 🆕 L5=37 AA5=2 | ATT Finisseur
+  [29/35] Omar Falah... 🆕 L5=0 AA5=0 | DEF Central
+    💾 Sauvegarde (570 joueurs)
+  [30/35] Santi Cazorla... 🆕 L5=38 AA5=2 | MIL Rotation
+  [31/35] Guillermo Almada... 🆕 L5=0 AA5=0 | ?
+  [32/35] Eric Bailly... 🆕 L5=46 AA5=5 | DEF Central
+  [33/35] Alberto Reina... 🆕 L5=43 AA5=3 | MIL Rotation
+  [34/35] Leander Dendoncker... 🆕 L5=33 AA5=-2 | MIL Rotation
+    💾 Sauvegarde (575 joueurs)
+  [35/35] Marco Esteban... 🆕 L5=0 AA5=0 | DEF Central
+
+🏟️  [17/20] Real Sociedad | ETA ~2min
+  👥 39 joueurs actifs
+  [1/39] Luken Beitia... 🆕 L5=0 AA5=0 | DEF Central
+  [2/39] Karrikaburu... 🆕 L5=0 AA5=0 | ATT Finisseur
+  [3/39] Álex Remiro... 🆕 L5=48 AA5=12 | GK
+  [4/39] Odriozola... 🆕 L5=42 AA5=1 | DEF Central
+    💾 Sauvegarde (580 joueurs)
+  [5/39] Wesley... 🆕 L5=36 AA5=0 | ATT Finisseur
+  [6/39] Take... 🆕 L5=40 AA5=6 | ATT Complet
+  [7/39] Turrientes... 🆕 L5=50 AA5=8 | MIL Rotation
+  [8/39] Alex Marchal... 🆕 L5=0 AA5=0 | ATT Finisseur
+  [9/39] Sergio Gómez... 🆕 L5=51 AA5=11 | ATT Complet
+    💾 Sauvegarde (585 joueurs)
+  [10/39] Jon Gorrotxategi... 🆕 L5=46 AA5=6 | MIL Rotation
+  [11/39] Oyarzabal... 🆕 L5=50 AA5=5 | ATT Finisseur
+  [12/39] Kazunari Kita... 🆕 L5=0 AA5=0 | DEF Central
+  [13/39] Gorka Carrera... 🆕 L5=0 AA5=0 | ATT Finisseur
+  [14/39] Job Ochieng... 🆕 L5=0 AA5=0 | ATT Finisseur
+    💾 Sauvegarde (590 joueurs)
+  [15/39] Barrenetxea... 🆕 L5=45 AA5=10 | ATT Complet
+  [16/39] Gonçalo Guedes... 🆕 L5=53 AA5=6 | ATT Complet
+  [17/39] Jon Aramburu... 🆕 L5=42 AA5=7 | DEF Central
+  [18/39] Brais Méndez... 🆕 L5=40 AA5=4 | MIL Créateur
+  [19/39] Lander Astiazarán... 🆕 L5=0 AA5=0 | MIL Créateur
+    💾 Sauvegarde (595 joueurs)
+  [20/39] Aihen... 🆕 L5=36 AA5=1 | DEF Central
+  [21/39] Luka Sučić... 🆕 L5=55 AA5=5 | MIL Créateur
+  [22/39] Pellegrino Matarazzo... 🆕 L5=0 AA5=0 | ?
+  [23/39] Zubeldia... 🆕 L5=34 AA5=-1 | DEF Central
+  [24/39] Orri Óskarsson... 🆕 L5=41 AA5=-1 | ATT Finisseur
+    💾 Sauvegarde (600 joueurs)
+  [25/39] Tomás Carbonell... 🆕 L5=0 AA5=0 | MIL Rotation
+  [26/39] Aitor Fraga... 🆕 L5=0 AA5=0 | GK
+  [27/39] Iñaki Rupérez... 🆕 L5=0 AA5=0 | DEF Central
+  [28/39] Carlos Soler... 🆕 L5=62 AA5=17 | MIL Créateur
+  [29/39] Duje Ćaleta-Car... 🆕 L5=54 AA5=14 | DEF Central
+    💾 Sauvegarde (605 joueurs)
+  [30/39] Ibai Aguirre... 🆕 L5=0 AA5=0 | MIL Rotation
+  [31/39] Pablo Marín... 🆕 L5=30 AA5=-5 | MIL Rotation
+  [32/39] Theo Folgado... 🆕 L5=0 AA5=0 | GK
+  [33/39] Jon Martín... 🆕 L5=57 AA5=12 | DEF Central
+  [34/39] Unai Marrero... 🆕 L5=0 AA5=0 | GK
+    💾 Sauvegarde (610 joueurs)
+  [35/39] Dani Díaz... 🆕 L5=0 AA5=0 | ATT Finisseur
+  [36/39] Aritz... 🆕 L5=40 AA5=5 | DEF Central
+  [37/39] Alex Lebarbier... 🆕 L5=0 AA5=0 | MIL Rotation
+  [38/39] Yangel Herrera... 🆕 L5=37 AA5=-3 | MIL Rotation
+  [39/39] Arsen Zakharyan... 🆕 L5=33 AA5=-2 | MIL Rotation
+    💾 Sauvegarde (615 joueurs)
+
+🏟️  [18/20] Sevilla FC | ETA ~2min
+  👥 35 joueurs actifs
+  [1/35] Álex Costa... 🆕 L5=0 AA5=0 | ATT Finisseur
+  [2/35] Federico Gattoni... 🆕 L5=37 AA5=2 | DEF Central
+  [3/35] Adnan Januzaj... 🆕 L5=39 AA5=4 | MIL Rotation
+  [4/35] Djibril Sow... 🆕 L5=56 AA5=11 | MIL Créateur
+  [5/35] José Ángel Carmona... 🆕 L5=37 AA5=2 | DEF Central
+    💾 Sauvegarde (620 joueurs)
+  [6/35] MARCAO... 🆕 L5=0 AA5=0 | DEF Central
+  [7/35] Manu Bueno... 🆕 L5=36 AA5=1 | MIL Rotation
+  [8/35] Isaac Romero... 🆕 L5=42 AA5=2 | ATT Finisseur
+  [9/35] Rafael Romero... 🆕 L5=0 AA5=0 | GK
+  [10/35] Joan Jordán... 🆕 L5=25 AA5=-10 | MIL Rotation
+    💾 Sauvegarde (625 joueurs)
+  [11/35] Odysseas... 🆕 L5=38 AA5=-2 | GK
+  [12/35] Ørjan Nyland... 🆕 L5=0 AA5=0 | GK
+  [13/35] Alexis Sánchez... 🆕 L5=42 AA5=2 | ATT Finisseur
+  [14/35] Ruben Vargas... 🆕 L5=34 AA5=-2 | MIL Créateur
+  [15/35] Tanguy Nianzou... 🆕 L5=36 AA5=1 | DEF Central
+    💾 Sauvegarde (630 joueurs)
+  [16/35] Edu Altozano... 🆕 L5=0 AA5=0 | MIL Rotation
+  [17/35] Juanlu Sánchez... 🆕 L5=34 AA5=-3 | MIL Rotation
+  [18/35] Lucien Agoumé... 🆕 L5=40 AA5=5 | MIL Rotation
+  [19/35] Nemanja Gudelj... 🆕 L5=54 AA5=12 | MIL Rotation
+  [20/35] Oso... 🆕 L5=54 AA5=3 | DEF Latéral
+    💾 Sauvegarde (635 joueurs)
+  [21/35] Lorenzo Luchino... 🆕 L5=0 AA5=0 | GK
+  [22/35] Andrés Castrín... 🆕 L5=44 AA5=9 | DEF Central
+  [23/35] Alberto Flores... 🆕 L5=0 AA5=0 | GK
+  [24/35] César Azpilicueta... 🆕 L5=54 AA5=13 | DEF Central
+  [25/35] Neal Maupay... 🆕 L5=36 AA5=1 | ATT Finisseur
+    💾 Sauvegarde (640 joueurs)
+  [26/35] Chidera Ejuke... 🆕 L5=39 AA5=4 | ATT Finisseur
+  [27/35] Iker Ortín... 🆕 L5=0 AA5=0 | DEF Central
+  [28/35] Fábio Cardoso... 🆕 L5=34 AA5=-0 | DEF Central
+  [29/35] Luis García... 🆕 L5=0 AA5=0 | ?
+  [30/35] Kike Salas... 🆕 L5=52 AA5=17 | DEF Central
+    💾 Sauvegarde (645 joueurs)
+  [31/35] Miguel Ángel... 🆕 L5=36 AA5=1 | ATT Finisseur
+  [32/35] Akor Adams... 🆕 L5=48 AA5=3 | ATT Finisseur
+  [33/35] Gabriel Suazo... 🆕 L5=40 AA5=5 | DEF Latéral
+  [34/35] Batista Mendy... 🆕 L5=41 AA5=6 | MIL Rotation
+  [35/35] Peque Fernández... 🆕 L5=50 AA5=5 | ATT Complet
+    💾 Sauvegarde (650 joueurs)
+
+🏟️  [19/20] Valencia CF | ETA ~1min
+  👥 40 joueurs actifs
+  [1/40] Cristian Rivero... 🆕 L5=0 AA5=0 | GK
+  [2/40] Carlos Corberán... 🆕 L5=0 AA5=0 | ?
+  [3/40] Copete... 🆕 L5=36 AA5=9 | DEF Central
+  [4/40] Aimar Blázquez... 🆕 L5=0 AA5=0 | ATT Finisseur
+  [5/40] Baptiste Santamaría... 🆕 L5=38 AA5=3 | MIL Rotation
+    💾 Sauvegarde (655 joueurs)
+  [6/40] André Almeida... 🆕 L5=48 AA5=13 | MIL Rotation
+  [7/40] Largie Ramazani... 🆕 L5=56 AA5=11 | ATT Complet
+  [8/40] Lucas Beltrán... 🆕 L5=42 AA5=2 | ATT Finisseur
+  [9/40] Joel Fontanet... 🆕 L5=0 AA5=0 | DEF Central
+  [10/40] Hugo Duro... 🆕 L5=47 AA5=1 | ATT Finisseur
+    💾 Sauvegarde (660 joueurs)
+  [11/40] Eray Cömert... 🆕 L5=66 AA5=16 | DEF Central
+  [12/40] Rubo Iranzo... 🆕 L5=36 AA5=1 | DEF Central
+  [13/40] Marcos Navarro... 🆕 L5=0 AA5=0 | DEF Central
+  [14/40] Aaron Mayol... 🆕 L5=0 AA5=0 | DEF Central
+  [15/40] Dimitri Foulquier... 🆕 L5=27 AA5=-8 | DEF Central
+    💾 Sauvegarde (665 joueurs)
+  [16/40] Filip Ugrinic... 🆕 L5=42 AA5=7 | MIL Rotation
+  [17/40] Alex Panach... 🆕 L5=0 AA5=0 | DEF Central
+  [18/40] Stole Dimitrievski... 🆕 L5=52 AA5=7 | GK
+  [19/40] Lucas Núñez... 🆕 L5=0 AA5=0 | MIL Rotation
+  [20/40] César Tárrega... 🆕 L5=41 AA5=6 | DEF Central
+    💾 Sauvegarde (670 joueurs)
+  [21/40] Julen Agirrezabala... 🆕 L5=0 AA5=0 | GK
+  [22/40] Pepelu... 🆕 L5=40 AA5=5 | MIL Rotation
+  [23/40] Renzo Saravia... 🆕 L5=0 AA5=0 | DEF Central
+  [24/40] Javi Guerra... 🆕 L5=53 AA5=13 | MIL Rotation
+  [25/40] Dani Raba... 🆕 L5=39 AA5=4 | ATT Finisseur
+    💾 Sauvegarde (675 joueurs)
+  [26/40] Mario Domínguez... 🆕 L5=0 AA5=0 | ATT Finisseur
+  [27/40] Gayà... 🆕 L5=47 AA5=12 | DEF Central
+  [28/40] Marc Jurado... 🆕 L5=0 AA5=0 | ATT Finisseur
+  [29/40] L. Rioja... 🆕 L5=47 AA5=7 | ATT Complet
+  [30/40] Thierry Correia... 🆕 L5=44 AA5=8 | DEF Central
+    💾 Sauvegarde (680 joueurs)
+  [31/40] David Otorbi... 🆕 L5=0 AA5=0 | ATT Finisseur
+  [32/40] Arnaut Danjuma... 🆕 L5=36 AA5=1 | ATT Finisseur
+  [33/40] Vicent Abril... 🆕 L5=0 AA5=0 | GK
+  [34/40] Sadiq... 🆕 L5=53 AA5=3 | ATT Finisseur
+  [35/40] Guido Rodríguez... 🆕 L5=48 AA5=17 | MIL Rotation
+    💾 Sauvegarde (685 joueurs)
+  [36/40] Mouctar Diakhaby... 🆕 L5=0 AA5=0 | DEF Central
+  [37/40] Diego López... 🆕 L5=37 AA5=2 | ATT Finisseur
+  [38/40] Jesús Vázquez... 🆕 L5=33 AA5=-2 | DEF Central
+  [39/40] Unai Núñez... 🆕 L5=43 AA5=8 | DEF Central
+  [40/40] Pere García... 🆕 L5=0 AA5=0 | GK
+    💾 Sauvegarde (690 joueurs)
+
+🏟️  [20/20] Villarreal CF | ETA ~0min
+  👥 36 joueurs actifs
+  [1/36] Diego Conde... 🆕 L5=0 AA5=0 | GK
+  [2/36] Santiago Mouriño... 🆕 L5=55 AA5=6 | DEF Central
+  [3/36] Alfon González... 🆕 L5=34 AA5=-1 | ATT Finisseur
+  [4/36] Willy Kambwala... 🆕 L5=0 AA5=0 | DEF Central
+  [5/36] Gerard Moreno... 🆕 L5=54 AA5=4 | ATT Finisseur
+    💾 Sauvegarde (695 joueurs)
+  [6/36] Pape Gueye... 🆕 L5=67 AA5=22 | MIL GOAT
+  [7/36] Alex Freeman... 🆕 L5=33 AA5=-2 | DEF Central
+  [8/36] Thomas Partey... 🆕 L5=38 AA5=3 | MIL Rotation
+  [9/36] Arnau Tenas... 🆕 L5=0 AA5=0 | GK
+  [10/36] Isma Sierra... 🆕 L5=0 AA5=0 | DEF Central
+    💾 Sauvegarde (700 joueurs)
+  [11/36] Alberto Moleiro... 🆕 L5=38 AA5=2 | MIL Créateur
+  [12/36] Santi Comesaña... 🆕 L5=68 AA5=8 | MIL Créateur
+  [13/36] Pau Cabanes... 🆕 L5=0 AA5=0 | ATT Finisseur
+  [14/36] Joselillo Gaitán... 🆕 L5=0 AA5=0 | ATT Finisseur
+  [15/36] Rafa Marín... 🆕 L5=42 AA5=12 | DEF Central
+    💾 Sauvegarde (705 joueurs)
+  [16/36] Mahamoud Barry... 🆕 L5=0 AA5=0 | ATT Finisseur
+  [17/36] Carlos Maciá... 🆕 L5=0 AA5=0 | MIL Rotation
+  [18/36] Georges Mikautadze... 🆕 L5=48 AA5=4 | ATT Finisseur
+  [19/36] Alfonso Pedraza... 🆕 L5=39 AA5=4 | DEF Central
+  [20/36] Hugo López... 🆕 L5=34 AA5=-1 | ATT Finisseur
+    💾 Sauvegarde (710 joueurs)
+  [21/36] Pau Navarro... 🆕 L5=63 AA5=23 | DEF Central
+  [22/36] Sergi Cardona... 🆕 L5=44 AA5=10 | DEF Central
+  [23/36] Renato Veiga... 🆕 L5=38 AA5=3 | MIL Rotation
+  [24/36] Alassane Diatta... 🆕 L5=0 AA5=0 | MIL Rotation
+  [25/36] Marcelino... 🆕 L5=0 AA5=0 | ?
+    💾 Sauvegarde (715 joueurs)
+  [26/36] Logan Costa... 🆕 L5=0 AA5=0 | DEF Central
+  [27/36] Nicolas Pépé... 🆕 L5=60 AA5=14 | ATT Complet
+  [28/36] Luíz Júnior... 🆕 L5=31 AA5=4 | GK
+  [29/36] Dani Parejo... 🆕 L5=36 AA5=1 | MIL Rotation
+  [30/36] Tajon Buchanan... 🆕 L5=40 AA5=0 | MIL Créateur
+    💾 Sauvegarde (720 joueurs)
+  [31/36] Daniel Budesca... 🆕 L5=0 AA5=0 | DEF Central
+  [32/36] Jean Valou... 🆕 L5=0 AA5=0 | DEF Central
+  [33/36] Rubén Gómez... 🆕 L5=0 AA5=0 | GK
+  [34/36] Ayoze Pérez... 🆕 L5=34 AA5=-1 | ATT Finisseur
+  [35/36] Juan Foyth... 🆕 L5=0 AA5=0 | DEF Central
+    💾 Sauvegarde (725 joueurs)
+  [36/36] Tani Oluwaseyi... 🆕 L5=33 AA5=-2 | ATT Finisseur
+
+============================================================
+✅ Liga terminé en 20min 53s
+  🆕 Nouveaux: 726
+  🔄 Mis à jour: 0
+  ⏭️  Skippés: 0
+  📊 Total: 726 joueurs
+  💾 deglingo_la_liga_final.json
+============================================================
+
+⏸️  Pause 30s avant la prochaine ligue...
+
+============================================================
+⚽ SCRAPING Bundes (bundesliga-de)
+  📅 2026-03-29 18:06
+  💤 Sleep: 0.15s/query, 1s/club
+============================================================
+  🗑️  FRESH mode — backup créé, on repart de zéro
+
+📡 Fetching clubs for bundesliga-de...
+  ✅ Bundesliga: 18 clubs
+
+🏟️  [1/18] FC Augsburg
+  👥 32 joueurs actifs
+  [1/32] Leonhard Schroetter... 🆕 L5=0 AA5=0 | DEF Central
+  [2/32] Mahmut Kücüksahin... 🆕 L5=0 AA5=0 | MIL Rotation
+  [3/32] Mads Pedersen... 🆕 L5=29 AA5=-6 | DEF Central
+  [4/32] Finn Dahmen... 🆕 L5=44 AA5=8 | GK
+  [5/32] Mert Kömür... 🆕 L5=40 AA5=6 | MIL Créateur
+    💾 Sauvegarde (5 joueurs)
+  [6/32] Fabian Rieder... 🆕 L5=53 AA5=8 | MIL Créateur
+  [7/32] Alexis Claude-Maurice... 🆕 L5=54 AA5=2 | MIL Créateur
+  [8/32] Anton Kade... 🆕 L5=41 AA5=1 | MIL Rotation
+  [9/32] Dimitris Giannoulis... 🆕 L5=35 AA5=0 | DEF Latéral
+  [10/32] Uchenna Ogundu... 🆕 L5=33 AA5=-2 | ATT Finisseur
+    💾 Sauvegarde (10 joueurs)
+  [11/32] Nediljko Labrović... 🆕 L5=0 AA5=0 | GK
+  [12/32] Cédric Zesiger... 🆕 L5=39 AA5=4 | DEF Central
+  [13/32] Felix Meiser... 🆕 L5=0 AA5=0 | DEF Central
+  [14/32] Keven Schlotterbeck... 🆕 L5=58 AA5=22 | DEF Central
+  [15/32] Chrislain Matsima... 🆕 L5=0 AA5=0 | DEF Central
+    💾 Sauvegarde (15 joueurs)
+  [16/32] Jeffrey Gouweleeuw... 🆕 L5=0 AA5=0 | DEF Central
+  [17/32] Robin Fellhauer... 🆕 L5=47 AA5=7 | DEF Latéral
+  [18/32] Noahkai Banks... 🆕 L5=46 AA5=6 | DEF Central
+  [19/32] Manuel Baum... 🆕 L5=0 AA5=0 | ?
+  [20/32] Arthur Chaves... 🆕 L5=37 AA5=1 | DEF Central
+    💾 Sauvegarde (20 joueurs)
+  [21/32] Thomas Kastanaras... 🆕 L5=0 AA5=0 | ATT Finisseur
+  [22/32] Daniel Klein... 🆕 L5=0 AA5=0 | GK
+  [23/32] Rodrigo Ribeiro... 🆕 L5=43 AA5=-2 | ATT Finisseur
+  [24/32] Kristijan Jakić... 🆕 L5=31 AA5=-4 | MIL Rotation
+  [25/32] Han-Noah Massengo... 🆕 L5=38 AA5=3 | MIL Rotation
+    💾 Sauvegarde (25 joueurs)
+  [26/32] Yannik Keitel... 🆕 L5=38 AA5=3 | MIL Rotation
+  [27/32] Tim Schnitzer... 🆕 L5=34 AA5=-1 | MIL Rotation
+  [28/32] Michael Gregoritsch... 🆕 L5=46 AA5=0 | ATT Finisseur
+  [29/32] Ismaël Gharbi... 🆕 L5=0 AA5=0 | ATT Finisseur
+  [30/32] Elvis Rexhbecaj... 🆕 L5=41 AA5=1 | MIL Rotation
+    💾 Sauvegarde (30 joueurs)
+  [31/32] Oliver Sorg... 🆕 L5=0 AA5=0 | DEF Central
+  [32/32] Marius Wolf... 🆕 L5=35 AA5=-0 | DEF Central
+
+🏟️  [2/18] Bayer 04 Leverkusen | ETA ~11min
+  👥 34 joueurs actifs
+  [1/34] Christian Kofane... 🆕 L5=55 AA5=1 | ATT Finisseur
+  [2/34] Ibrahim Maza... 🆕 L5=49 AA5=9 | ATT Complet
+  [3/34] Lucas Vázquez... 🆕 L5=49 AA5=14 | ATT Complet
+    💾 Sauvegarde (35 joueurs)
+  [4/34] Ignacio Fernández... 🆕 L5=45 AA5=10 | MIL Rotation
+  [5/34] Loïc Badé... 🆕 L5=44 AA5=8 | DEF Latéral
+  [6/34] Axel Tape... 🆕 L5=30 AA5=-5 | DEF Central
+  [7/34] Emmanuel Owen... 🆕 L5=0 AA5=0 | ATT Finisseur
+  [8/34] Jeremiah Mensah... 🆕 L5=0 AA5=0 | MIL Créateur
+    💾 Sauvegarde (40 joueurs)
+  [9/34] Jarell Quansah... 🆕 L5=53 AA5=13 | DEF Latéral
+  [10/34] Alejandro Grimaldo... 🆕 L5=60 AA5=11 | DEF Latéral
+  [11/34] Jonas Hofmann... 🆕 L5=37 AA5=2 | MIL Rotation
+  [12/34] Janis Blaswich... 🆕 L5=51 AA5=11 | GK
+  [13/34] Ferdinand Pohl... 🆕 L5=0 AA5=0 | DEF Central
+    💾 Sauvegarde (45 joueurs)
+  [14/34] Ben Hawighorst... 🆕 L5=0 AA5=0 | DEF Central
+  [15/34] Kasper Hjulmand... 🆕 L5=0 AA5=0 | ?
+  [16/34] Arthur... 🆕 L5=51 AA5=3 | DEF Central
+  [17/34] Jonas Omlin... 🆕 L5=0 AA5=0 | GK
+  [18/34] Martin Terrier... 🆕 L5=47 AA5=5 | ATT Finisseur
+    💾 Sauvegarde (50 joueurs)
+  [19/34] Niklas Lomb... 🆕 L5=0 AA5=0 | GK
+  [20/34] Naba Mensah... 🆕 L5=0 AA5=0 | MIL Rotation
+  [21/34] Jesper Schlich... 🆕 L5=0 AA5=0 | GK
+  [22/34] Edmond Tapsoba... 🆕 L5=44 AA5=9 | DEF Latéral
+  [23/34] Ernest Poku... 🆕 L5=40 AA5=5 | ATT Complet
+    💾 Sauvegarde (55 joueurs)
+  [24/34] Robert Andrich... 🆕 L5=44 AA5=17 | MIL Rotation
+  [25/34] Nathan Tella... 🆕 L5=43 AA5=8 | ATT Complet
+  [26/34] Aleix García... 🆕 L5=60 AA5=15 | MIL Créateur
+  [27/34] Mark Flekken... 🆕 L5=29 AA5=-6 | GK
+  [28/34] Issa Traoré... 🆕 L5=0 AA5=0 | DEF Central
+    💾 Sauvegarde (60 joueurs)
+  [29/34] Exequiel Palacios... 🆕 L5=48 AA5=13 | MIL Rotation
+  [30/34] Eliesse Ben Seghir... 🆕 L5=0 AA5=0 | ATT Finisseur
+  [31/34] Malik Tillman... 🆕 L5=45 AA5=5 | MIL Créateur
+  [32/34] Tim Oermann... 🆕 L5=34 AA5=-0 | DEF Central
+  [33/34] Patrik Schick... 🆕 L5=54 AA5=4 | ATT Finisseur
+    💾 Sauvegarde (65 joueurs)
+  [34/34] Montrell Culbreath... 🆕 L5=51 AA5=10 | MIL Rotation
+
+🏟️  [3/18] FC Bayern München | ETA ~11min
+  👥 36 joueurs actifs
+  [1/36] Bara Ndiaye... 🆕 L5=0 AA5=0 | ATT Finisseur
+  [2/36] Sven Ulreich... 🆕 L5=42 AA5=7 | GK
+  [3/36] Leon Goretzka... 🆕 L5=46 AA5=6 | MIL Rotation
+  [4/36] Guido Della Rovere... 🆕 L5=0 AA5=0 | MIL Rotation
+    💾 Sauvegarde (70 joueurs)
+  [5/36] Tom Bischof... 🆕 L5=43 AA5=8 | MIL Rotation
+  [6/36] Minjae Kim ... 🆕 L5=50 AA5=19 | DEF Central
+  [7/36] Vincent Kompany... 🆕 L5=0 AA5=0 | ?
+  [8/36] Maycon Douglas Cardozo... 🆕 L5=36 AA5=1 | MIL Créateur
+  [9/36] Harry Kane... 🆕 L5=75 AA5=16 | ATT GOAT
+    💾 Sauvegarde (75 joueurs)
+  [10/36] Jonas Urbig... 🆕 L5=49 AA5=9 | GK
+  [11/36] David Daiber... 🆕 L5=33 AA5=-2 | MIL Rotation
+  [12/36] Aleksandar Pavlović... 🆕 L5=56 AA5=16 | MIL Rotation
+  [13/36] Leon Klanac... 🆕 L5=0 AA5=0 | GK
+  [14/36] Erblin Osmani... 🆕 L5=38 AA5=3 | MIL Rotation
+    💾 Sauvegarde (80 joueurs)
+  [15/36] Serge Gnabry... 🆕 L5=56 AA5=9 | ATT Complet
+  [16/36] Alphonso Davies... 🆕 L5=55 AA5=8 | DEF Latéral
+  [17/36] Konrad Laimer... 🆕 L5=59 AA5=14 | MIL Créateur
+  [18/36] Leonard Prescott... 🆕 L5=0 AA5=0 | GK
+  [19/36] Jannis Bärtl... 🆕 L5=0 AA5=0 | GK
+    💾 Sauvegarde (85 joueurs)
+  [20/36] Lennart Karl... 🆕 L5=54 AA5=9 | MIL Créateur
+  [21/36] Dayot Upamecano... 🆕 L5=65 AA5=30 | DEF Central
+  [22/36] Jamal Musiala... 🆕 L5=51 AA5=6 | MIL Créateur
+  [23/36] Cassiano Kiala... 🆕 L5=0 AA5=0 | DEF Central
+  [24/36] Luis Díaz... 🆕 L5=53 AA5=10 | ATT Complet
+    💾 Sauvegarde (90 joueurs)
+  [25/36] Hiroki Ito... 🆕 L5=36 AA5=1 | DEF Central
+  [26/36] Nicolas Jackson... 🆕 L5=43 AA5=4 | ATT Finisseur
+  [27/36] Filip Pavic... 🆕 L5=0 AA5=0 | MIL Rotation
+  [28/36] Wisdom Mike... 🆕 L5=0 AA5=0 | ATT Finisseur
+  [29/36] Joshua Kimmich... 🆕 L5=72 AA5=26 | MIL GOAT
+    💾 Sauvegarde (95 joueurs)
+  [30/36] Raphaël Guerreiro... 🆕 L5=37 AA5=2 | DEF Central
+  [31/36] Josip Stanišić... 🆕 L5=72 AA5=27 | DEF Latéral
+  [32/36] Manuel Neuer... 🆕 L5=34 AA5=4 | GK
+  [33/36] Deniz Ofli... 🆕 L5=0 AA5=0 | DEF Central
+  [34/36] Jonathan Tah... 🆕 L5=55 AA5=15 | DEF Central
+    💾 Sauvegarde (100 joueurs)
+  [35/36] Michael Olise... 🆕 L5=76 AA5=26 | MIL GOAT
+  [36/36] Vincent Manuba... 🆕 L5=0 AA5=0 | DEF Central
+
+🏟️  [4/18] Borussia Dortmund | ETA ~10min
+  👥 31 joueurs actifs
+  [1/31] Carney Chukwuemeka... 🆕 L5=36 AA5=1 | MIL Rotation
+  [2/31] Danylo Krevsun... 🆕 L5=0 AA5=0 | MIL Rotation
+  [3/31] Silas Ostrzinski... 🆕 L5=0 AA5=0 | GK
+    💾 Sauvegarde (105 joueurs)
+  [4/31] Salih Özcan... 🆕 L5=37 AA5=2 | MIL Rotation
+  [5/31] Niklas Süle... 🆕 L5=41 AA5=6 | DEF Central
+  [6/31] Serhou Guirassy... 🆕 L5=46 AA5=1 | ATT Finisseur
+  [7/31] Felix Nmecha... 🆕 L5=41 AA5=10 | MIL Rotation
+  [8/31] Julian Brandt... 🆕 L5=44 AA5=4 | MIL Créateur
+    💾 Sauvegarde (110 joueurs)
+  [9/31] Yan Couto... 🆕 L5=31 AA5=-4 | DEF Latéral
+  [10/31] Filippo Mané... 🆕 L5=46 AA5=11 | DEF Central
+  [11/31] Emre Can... 🆕 L5=62 AA5=27 | MIL GOAT
+  [12/31] Fábio Silva... 🆕 L5=44 AA5=4 | ATT Finisseur
+  [13/31] Luca Reggiani... 🆕 L5=47 AA5=10 | DEF Central
+    💾 Sauvegarde (115 joueurs)
+  [14/31] Daniel Svensson... 🆕 L5=42 AA5=3 | DEF Latéral
+  [15/31] Karim Adeyemi... 🆕 L5=45 AA5=0 | ATT Finisseur
+  [16/31] Almugera Kabar... 🆕 L5=0 AA5=0 | DEF Central
+  [17/31] Marcel Sabitzer... 🆕 L5=51 AA5=11 | MIL Rotation
+  [18/31] Mussa Kaba... 🆕 L5=0 AA5=0 | MIL Rotation
+    💾 Sauvegarde (120 joueurs)
+  [19/31] Alexander Meyer... 🆕 L5=0 AA5=0 | GK
+  [20/31] Nico Schlotterbeck... 🆕 L5=58 AA5=23 | DEF Latéral
+  [21/31] Maximilian Beier... 🆕 L5=49 AA5=2 | ATT Finisseur
+  [22/31] Ramy Bensebaini... 🆕 L5=60 AA5=4 | DEF Central
+  [23/31] Julian Ryerson... 🆕 L5=62 AA5=15 | DEF Latéral
+    💾 Sauvegarde (125 joueurs)
+  [24/31] Jobe Bellingham... 🆕 L5=50 AA5=15 | MIL Rotation
+  [25/31] Niko Kovač... 🆕 L5=0 AA5=0 | ?
+  [26/31] Gregor Kobel... 🆕 L5=44 AA5=4 | GK
+  [27/31] Elias Benkara... 🆕 L5=0 AA5=0 | DEF Central
+  [28/31] Mathis Albert... 🆕 L5=0 AA5=0 | ATT Finisseur
+    💾 Sauvegarde (130 joueurs)
+  [29/31] Patrick Drewes... 🆕 L5=0 AA5=0 | GK
+  [30/31] Samuele Inácio... 🆕 L5=37 AA5=2 | ATT Finisseur
+  [31/31] Waldemar Anton... 🆕 L5=50 AA5=15 | DEF Central
+
+🏟️  [5/18] Borussia Mönchengladbach | ETA ~10min
+  👥 32 joueurs actifs
+  [1/32] Joe Scally... 🆕 L5=41 AA5=1 | DEF Central
+  [2/32] Kota Takai... 🆕 L5=39 AA5=9 | DEF Central
+    💾 Sauvegarde (135 joueurs)
+  [3/32] Niklas Swider... 🆕 L5=0 AA5=0 | MIL Rotation
+  [4/32] Robin Hack... 🆕 L5=0 AA5=0 | MIL Rotation
+  [5/32] Jens Castrop... 🆕 L5=49 AA5=7 | MIL Rotation
+  [6/32] Hugo Bolin... 🆕 L5=44 AA5=4 | MIL Créateur
+  [7/32] Marvin Friedrich... 🆕 L5=39 AA5=4 | DEF Central
+    💾 Sauvegarde (140 joueurs)
+  [8/32] Nathan Ngoumou... 🆕 L5=0 AA5=0 | MIL Rotation
+  [9/32] Tiago Pereira Cardoso... 🆕 L5=0 AA5=0 | GK
+  [10/32] Tobias Sippel... 🆕 L5=0 AA5=0 | GK
+  [11/32] Fritz Fleck... 🆕 L5=0 AA5=0 | MIL Créateur
+  [12/32] Kevin Diks... 🆕 L5=54 AA5=14 | DEF Central
+    💾 Sauvegarde (145 joueurs)
+  [13/32] Haris Tabaković... 🆕 L5=40 AA5=-1 | ATT Finisseur
+  [14/32] Moritz Nicolas... 🆕 L5=46 AA5=1 | GK
+  [15/32] Jan Urbich... 🆕 L5=0 AA5=0 | ATT Finisseur
+  [16/32] Jan Olschowsky... 🆕 L5=0 AA5=0 | GK
+  [17/32] Giovanni Reyna... 🆕 L5=0 AA5=0 | MIL Rotation
+    💾 Sauvegarde (150 joueurs)
+  [18/32] Kevin Stöger... 🆕 L5=48 AA5=3 | MIL Rotation
+  [19/32] Rocco Reitz... 🆕 L5=29 AA5=-0 | MIL Rotation
+  [20/32] Yannik Engelhardt... 🆕 L5=50 AA5=9 | MIL Rotation
+  [21/32] Charles Herrmann... 🆕 L5=0 AA5=0 | MIL Rotation
+  [22/32] Eugen Polanski... 🆕 L5=0 AA5=0 | ?
+    💾 Sauvegarde (155 joueurs)
+  [23/32] Philipp Sander... 🆕 L5=61 AA5=21 | MIL GOAT
+  [24/32] Nico Elvedi... 🆕 L5=52 AA5=17 | DEF Central
+  [25/32] Florian Neuhaus... 🆕 L5=37 AA5=2 | MIL Rotation
+  [26/32] Wael Mohya... 🆕 L5=45 AA5=5 | MIL Rotation
+  [27/32] Franck Honorat... 🆕 L5=48 AA5=2 | MIL Créateur
+    💾 Sauvegarde (160 joueurs)
+  [28/32] Tim Kleindienst... 🆕 L5=0 AA5=0 | ATT Finisseur
+  [29/32] Alejo Sarco... 🆕 L5=37 AA5=2 | ATT Finisseur
+  [30/32] Lukas Ullrich... 🆕 L5=34 AA5=-1 | DEF Central
+  [31/32] Shuto Machino... 🆕 L5=38 AA5=3 | ATT Finisseur
+  [32/32] Fabio Chiarodia... 🆕 L5=39 AA5=4 | DEF Central
+    💾 Sauvegarde (165 joueurs)
+
+🏟️  [6/18] Eintracht Frankfurt | ETA ~9min
+  👥 33 joueurs actifs
+  [1/33] Michael Zetterer... 🆕 L5=63 AA5=9 | GK
+  [2/33] Amil Siljevic... 🆕 L5=0 AA5=0 | GK
+  [3/33] Timothy Chandler... 🆕 L5=0 AA5=0 | MIL Rotation
+  [4/33] Oscar Højlund... 🆕 L5=38 AA5=2 | MIL Rotation
+  [5/33] Ayoube Amaimouni-Echghouyab... 🆕 L5=36 AA5=1 | ATT Finisseur
+    💾 Sauvegarde (170 joueurs)
+  [6/33] Ansgar Knauff... 🆕 L5=41 AA5=0 | ATT Finisseur
+  [7/33] Jens Grahl... 🆕 L5=0 AA5=0 | GK
+  [8/33] Nnamdi Collins... 🆕 L5=63 AA5=23 | DEF Central
+  [9/33] Kauã Santos... 🆕 L5=46 AA5=6 | GK
+  [10/33] Younes Ebnoutalib... 🆕 L5=0 AA5=0 | ATT Finisseur
+    💾 Sauvegarde (175 joueurs)
+  [11/33] Michy Batshuayi... 🆕 L5=0 AA5=0 | ATT Finisseur
+  [12/33] Nathaniel Brown... 🆕 L5=56 AA5=16 | DEF Central
+  [13/33] Mahmoud Dahoud... 🆕 L5=44 AA5=0 | MIL Créateur
+  [14/33] Keita Kosugi... 🆕 L5=0 AA5=0 | DEF Central
+  [15/33] Alexander Staff... 🆕 L5=0 AA5=0 | ATT Finisseur
+    💾 Sauvegarde (180 joueurs)
+  [16/33] Fares Chaïbi... 🆕 L5=48 AA5=6 | MIL Créateur
+  [17/33] Arthur Theate... 🆕 L5=46 AA5=18 | DEF Latéral
+  [18/33] Marvin Dills... 🆕 L5=0 AA5=0 | MIL Rotation
+  [19/33] Jean-Mattéo Bahoya... 🆕 L5=63 AA5=18 | ATT Complet
+  [20/33] Rasmus Kristensen... 🆕 L5=40 AA5=6 | DEF Latéral
+    💾 Sauvegarde (185 joueurs)
+  [21/33] Elias Baum... 🆕 L5=34 AA5=-1 | DEF Central
+  [22/33] Mario Götze... 🆕 L5=39 AA5=4 | MIL Rotation
+  [23/33] Aurèle Amenda... 🆕 L5=67 AA5=32 | DEF Central
+  [24/33] Hugo Larsson... 🆕 L5=44 AA5=9 | MIL Rotation
+  [25/33] Fousseny Doumbia... 🆕 L5=0 AA5=0 | DEF Central
+    💾 Sauvegarde (190 joueurs)
+  [26/33] Ellyes Skhiri... 🆕 L5=38 AA5=3 | MIL Rotation
+  [27/33] L. Arrhov... 🆕 L5=32 AA5=-3 | MIL Rotation
+  [28/33] Albert Riera... 🆕 L5=0 AA5=0 | ?
+  [29/33] Ritsu Dōan... 🆕 L5=39 AA5=4 | MIL Créateur
+  [30/33] Jonathan Burkardt... 🆕 L5=40 AA5=-0 | ATT Finisseur
+    💾 Sauvegarde (195 joueurs)
+  [31/33] Arnaud Kalimuendo... 🆕 L5=53 AA5=8 | ATT Complet
+  [32/33] Robin Koch... 🆕 L5=70 AA5=35 | DEF Central
+  [33/33] Can Uzun... 🆕 L5=40 AA5=5 | ATT Finisseur
+
+🏟️  [7/18] Sport-Club Freiburg | ETA ~8min
+  👥 28 joueurs actifs
+  [1/28] Daniel-Kofi Kyereh... 🆕 L5=0 AA5=0 | MIL Rotation
+  [2/28] Cyriaque Irié... 🆕 L5=39 AA5=4 | ATT Finisseur
+    💾 Sauvegarde (200 joueurs)
+  [3/28] Lucas Höler... 🆕 L5=37 AA5=2 | ATT Finisseur
+  [4/28] Patrick Osterhage... 🆕 L5=35 AA5=0 | MIL Rotation
+  [5/28] Rouven Tarnutzer... 🆕 L5=0 AA5=0 | MIL Rotation
+  [6/28] Florian Müller... 🆕 L5=0 AA5=0 | GK
+  [7/28] Vincenzo Grifo... 🆕 L5=49 AA5=9 | MIL Créateur
+    💾 Sauvegarde (205 joueurs)
+  [8/28] Philipp Lienhart... 🆕 L5=55 AA5=20 | DEF Central
+  [9/28] Noah Atubolu... 🆕 L5=42 AA5=7 | GK
+  [10/28] Karl Steinmann... 🆕 L5=0 AA5=0 | DEF Central
+  [11/28] Igor Matanović... 🆕 L5=50 AA5=1 | ATT Finisseur
+  [12/28] Jannik Huth... 🆕 L5=0 AA5=0 | GK
+    💾 Sauvegarde (210 joueurs)
+  [13/28] Max Rosenfelder... 🆕 L5=45 AA5=10 | DEF Central
+  [14/28] Anthony Jung... 🆕 L5=39 AA5=4 | DEF Central
+  [15/28] Yuito Suzuki... 🆕 L5=45 AA5=5 | MIL Créateur
+  [16/28] Julian Schuster... 🆕 L5=0 AA5=0 | ?
+  [17/28] Bruno Ogbus... 🆕 L5=37 AA5=2 | DEF Central
+    💾 Sauvegarde (215 joueurs)
+  [18/28] Johan Manzambi... 🆕 L5=43 AA5=13 | MIL Créateur
+  [19/28] Matthias Ginter... 🆕 L5=58 AA5=11 | DEF Central
+  [20/28] Christian Günter... 🆕 L5=50 AA5=4 | DEF Central
+  [21/28] Derry Scherhant... 🆕 L5=44 AA5=4 | ATT Finisseur
+  [22/28] Jan-Niklas Beste... 🆕 L5=35 AA5=0 | DEF Latéral
+    💾 Sauvegarde (220 joueurs)
+  [23/28] Maximilian Eggestein... 🆕 L5=45 AA5=10 | MIL Rotation
+  [24/28] Lukas Kübler... 🆕 L5=0 AA5=0 | DEF Central
+  [25/28] Maximilian Philipp... 🆕 L5=0 AA5=0 | ATT Finisseur
+  [26/28] Nicolas Höfler... 🆕 L5=37 AA5=2 | MIL Rotation
+  [27/28] Jordy Makengo... 🆕 L5=46 AA5=11 | DEF Central
+    💾 Sauvegarde (225 joueurs)
+  [28/28] Philipp Treu... 🆕 L5=42 AA5=2 | DEF Latéral
+
+🏟️  [8/18] Hamburger SV | ETA ~7min
+  👥 32 joueurs actifs
+  [1/32] Otto Stange... 🆕 L5=36 AA5=0 | ATT Finisseur
+  [2/32] Miro Muheim... 🆕 L5=36 AA5=5 | DEF Central
+  [3/32] Albert Sambi Lokonga... 🆕 L5=44 AA5=4 | MIL Créateur
+  [4/32] Damion Downs... 🆕 L5=37 AA5=2 | ATT Finisseur
+    💾 Sauvegarde (230 joueurs)
+  [5/32] Merlin Polzin... 🆕 L5=0 AA5=0 | ?
+  [6/32] Daniel Elfadli... 🆕 L5=31 AA5=-0 | MIL Rotation
+  [7/32] Fábio Vieira... 🆕 L5=51 AA5=6 | MIL Créateur
+  [8/32] Noah Katterbach... 🆕 L5=0 AA5=0 | DEF Central
+  [9/32] Sander Tangvik... 🆕 L5=0 AA5=0 | GK
+    💾 Sauvegarde (235 joueurs)
+  [10/32] Nicolai Remberg... 🆕 L5=40 AA5=9 | MIL Rotation
+  [11/32] Nicolás Capaldo... 🆕 L5=52 AA5=12 | MIL Rotation
+  [12/32] Jean-Luc Dompé... 🆕 L5=46 AA5=6 | ATT Complet
+  [13/32] Rayan Philippe... 🆕 L5=40 AA5=-0 | ATT Finisseur
+  [14/32] Fábio Baldé... 🆕 L5=35 AA5=0 | ATT Finisseur
+    💾 Sauvegarde (240 joueurs)
+  [15/32] Luka Vušković... 🆕 L5=58 AA5=19 | DEF Central
+  [16/32] Shafiq Nandja... 🆕 L5=0 AA5=0 | DEF Central
+  [17/32] Philip Otele... 🆕 L5=44 AA5=4 | ATT Finisseur
+  [18/32] Warmed Omari... 🆕 L5=38 AA5=7 | DEF Central
+  [19/32] Fernando Dickes... 🆕 L5=0 AA5=0 | GK
+    💾 Sauvegarde (245 joueurs)
+  [20/32] Alexander Røssing-Lelesiit... 🆕 L5=35 AA5=0 | ATT Finisseur
+  [21/32] Hannes Hermann... 🆕 L5=0 AA5=0 | GK
+  [22/32] Daniel Heuer Fernandes... 🆕 L5=45 AA5=5 | GK
+  [23/32] Jordan Torunarigha... 🆕 L5=37 AA5=2 | DEF Central
+  [24/32] Yussuf Poulsen... 🆕 L5=36 AA5=1 | ATT Finisseur
+    💾 Sauvegarde (250 joueurs)
+  [25/32] Robert Glatzel... 🆕 L5=42 AA5=1 | ATT Finisseur
+  [26/32] William Mikelbrencis... 🆕 L5=45 AA5=-0 | DEF Central
+  [27/32] Omar Abdel Megeed... 🆕 L5=0 AA5=0 | ATT Finisseur
+  [28/32] Louis Lemke... 🆕 L5=0 AA5=0 | DEF Central
+  [29/32] Giorgi Gocholeishvili... 🆕 L5=41 AA5=1 | DEF Central
+    💾 Sauvegarde (255 joueurs)
+  [30/32] Ransford-Yeboah Königsdörffer... 🆕 L5=37 AA5=2 | ATT Finisseur
+  [31/32] Albert Grønbæk... 🆕 L5=0 AA5=0 | MIL Rotation
+  [32/32] Bakery Jatta... 🆕 L5=39 AA5=-2 | MIL Rotation
+
+🏟️  [9/18] 1. FC Heidenheim 1846 | ETA ~7min
+  👥 31 joueurs actifs
+  [1/31] Tobias Weigel... 🆕 L5=0 AA5=0 | ATT Finisseur
+  [2/31] Sirlord Conteh... 🆕 L5=41 AA5=-0 | ATT Finisseur
+    💾 Sauvegarde (260 joueurs)
+  [3/31] Eren Dinkçi... 🆕 L5=44 AA5=2 | MIL Rotation
+  [4/31] Arijon Ibrahimović... 🆕 L5=48 AA5=8 | ATT Complet
+  [5/31] Leonidas Stergiou... 🆕 L5=43 AA5=-2 | DEF Central
+  [6/31] Hennes Behrens... 🆕 L5=57 AA5=9 | MIL Créateur
+  [7/31] Diant Ramaj... 🆕 L5=36 AA5=5 | GK
+    💾 Sauvegarde (265 joueurs)
+  [8/31] Luca Kerber... 🆕 L5=41 AA5=-1 | MIL Rotation
+  [9/31] Patrick Mainka... 🆕 L5=38 AA5=3 | DEF Central
+  [10/31] Yannik Wagner... 🆕 L5=0 AA5=0 | ATT Finisseur
+  [11/31] Nick Rothweiler... 🆕 L5=0 AA5=0 | MIL Rotation
+  [12/31] Mathias Honsak... 🆕 L5=38 AA5=4 | ATT Finisseur
+    💾 Sauvegarde (270 joueurs)
+  [13/31] Budu Zivzivadze... 🆕 L5=35 AA5=-0 | ATT Finisseur
+  [14/31] Benedikt Gimber... 🆕 L5=41 AA5=6 | MIL Rotation
+  [15/31] Tim Siersleben... 🆕 L5=14 AA5=-11 | DEF Central
+  [16/31] Mikkel Kaufmann... 🆕 L5=33 AA5=-2 | ATT Finisseur
+  [17/31] Jan Schöppner... 🆕 L5=33 AA5=2 | MIL Rotation
+    💾 Sauvegarde (275 joueurs)
+  [18/31] Adrian Beck... 🆕 L5=41 AA5=1 | MIL Rotation
+  [19/31] Julian Niehues... 🆕 L5=37 AA5=2 | MIL Rotation
+  [20/31] Adam Kölle... 🆕 L5=19 AA5=-16 | DEF Central
+  [21/31] Frank Schmidt... 🆕 L5=0 AA5=0 | ?
+  [22/31] Christian Conteh... 🆕 L5=36 AA5=5 | ATT Finisseur
+    💾 Sauvegarde (280 joueurs)
+  [23/31] Stefan Schimmer... 🆕 L5=35 AA5=-0 | ATT Finisseur
+  [24/31] Omar Traoré... 🆕 L5=31 AA5=-4 | DEF Central
+  [25/31] Jonas Föhrenbach... 🆕 L5=41 AA5=6 | DEF Central
+  [26/31] Marnon Busch... 🆕 L5=46 AA5=6 | DEF Central
+  [27/31] Frank Feller... 🆕 L5=47 AA5=12 | GK
+    💾 Sauvegarde (285 joueurs)
+  [28/31] Leart Pacarada... 🆕 L5=0 AA5=0 | DEF Central
+  [29/31] Niklas Dorsch... 🆕 L5=37 AA5=2 | MIL Rotation
+  [30/31] Marvin Pieringer... 🆕 L5=46 AA5=4 | ATT Finisseur
+  [31/31] Paul Tschernuth... 🆕 L5=0 AA5=0 | GK
+
+🏟️  [10/18] TSG Hoffenheim | ETA ~6min
+  👥 32 joueurs actifs
+  [1/32] Christian Ilzer... 🆕 L5=0 AA5=0 | ?
+    💾 Sauvegarde (290 joueurs)
+  [2/32] Oliver Baumann... 🆕 L5=31 AA5=-0 | GK
+  [3/32] Tim Lemperle... 🆕 L5=41 AA5=1 | ATT Finisseur
+  [4/32] Ihlas Bebou... 🆕 L5=35 AA5=0 | ATT Finisseur
+  [5/32] Grischa Prömel... 🆕 L5=42 AA5=2 | MIL Créateur
+  [6/32] Cole Campbell... 🆕 L5=35 AA5=-0 | ATT Finisseur
+    💾 Sauvegarde (295 joueurs)
+  [7/32] Andrej Kramarić... 🆕 L5=53 AA5=8 | ATT Complet
+  [8/32] Vladimír Coufal... 🆕 L5=43 AA5=8 | DEF Latéral
+  [9/32] Robin Hranáč... 🆕 L5=38 AA5=3 | DEF Central
+  [10/32] Luka Đurić... 🆕 L5=34 AA5=-1 | MIL Créateur
+  [11/32] Fisnik Asllani... 🆕 L5=47 AA5=5 | ATT Complet
+    💾 Sauvegarde (300 joueurs)
+  [12/32] Bazoumana Touré... 🆕 L5=50 AA5=5 | ATT Complet
+  [13/32] Bernardo... 🆕 L5=42 AA5=7 | DEF Central
+  [14/32] Alexander Prass... 🆕 L5=50 AA5=8 | DEF Latéral
+  [15/32] Leon Avdullahu... 🆕 L5=52 AA5=17 | MIL Rotation
+  [16/32] Muhammed Damar... 🆕 L5=34 AA5=-1 | MIL Rotation
+    💾 Sauvegarde (305 joueurs)
+  [17/32] Luca Philipp... 🆕 L5=0 AA5=0 | GK
+  [18/32] Valentin Gendrey... 🆕 L5=42 AA5=1 | DEF Central
+  [19/32] Lúkas Petersson... 🆕 L5=0 AA5=0 | GK
+  [20/32] Koki Machida... 🆕 L5=0 AA5=0 | DEF Central
+  [21/32] Yannick Eduardo... 🆕 L5=34 AA5=-1 | ATT Finisseur
+    💾 Sauvegarde (310 joueurs)
+  [22/32] Kevin Akpoguma... 🆕 L5=24 AA5=-1 | DEF Central
+  [23/32] Albian Hajdari... 🆕 L5=52 AA5=12 | DEF Central
+  [24/32] Luis Engelns... 🆕 L5=0 AA5=0 | MIL Rotation
+  [25/32] Ozan Kabak... 🆕 L5=52 AA5=12 | DEF Central
+  [26/32] Kelven Frees... 🆕 L5=0 AA5=0 | DEF Central
+    💾 Sauvegarde (315 joueurs)
+  [27/32] Florian Micheler... 🆕 L5=0 AA5=0 | MIL Créateur
+  [28/32] Adam Hložek... 🆕 L5=0 AA5=0 | ATT Finisseur
+  [29/32] Valentin Lässig... 🆕 L5=0 AA5=0 | DEF Central
+  [30/32] Max Moerstedt... 🆕 L5=36 AA5=0 | ATT Finisseur
+  [31/32] Wouter Burger... 🆕 L5=42 AA5=7 | MIL Créateur
+    💾 Sauvegarde (320 joueurs)
+  [32/32] Luca Erlein... 🆕 L5=0 AA5=0 | DEF Central
+
+🏟️  [11/18] 1. FC Köln | ETA ~5min
+  👥 34 joueurs actifs
+  [1/34] René Wagner... 🆕 L5=0 AA5=0 | ?
+  [2/34] Fynn Schenten... 🆕 L5=34 AA5=-1 | ATT Finisseur
+  [3/34] Tom Krauß... 🆕 L5=45 AA5=10 | MIL Rotation
+  [4/34] Kristoffer Lund... 🆕 L5=37 AA5=2 | DEF Latéral
+    💾 Sauvegarde (325 joueurs)
+  [5/34] Florian Kainz... 🆕 L5=42 AA5=-2 | MIL Rotation
+  [6/34] Fayssal Harchaoui... 🆕 L5=0 AA5=0 | MIL Rotation
+  [7/34] David Fürst... 🆕 L5=0 AA5=0 | DEF Central
+  [8/34] Ron-Robert Zieler... 🆕 L5=0 AA5=0 | GK
+  [9/34] Alessio Castro-Montes... 🆕 L5=56 AA5=20 | DEF Latéral
+    💾 Sauvegarde (330 joueurs)
+  [10/34] Linton Maina... 🆕 L5=43 AA5=3 | MIL Rotation
+  [11/34] Felipe Chávez... 🆕 L5=37 AA5=2 | MIL Rotation
+  [12/34] Marius Bülter... 🆕 L5=37 AA5=2 | ATT Finisseur
+  [13/34] Luca Waldschmidt... 🆕 L5=42 AA5=2 | ATT Finisseur
+  [14/34] Joël Schmied... 🆕 L5=33 AA5=-2 | DEF Central
+    💾 Sauvegarde (335 joueurs)
+  [15/34] Cenny Neumann... 🆕 L5=32 AA5=-3 | DEF Central
+  [16/34] Ísak Bergmann Jóhannesson... 🆕 L5=42 AA5=2 | MIL Rotation
+  [17/34] Luca Kilian... 🆕 L5=0 AA5=0 | DEF Central
+  [18/34] Denis Huseinbašić... 🆕 L5=35 AA5=0 | MIL Rotation
+  [19/34] Marvin Schwäbe... 🆕 L5=39 AA5=4 | GK
+    💾 Sauvegarde (340 joueurs)
+  [20/34] Ragnar Ache... 🆕 L5=51 AA5=6 | ATT Complet
+  [21/34] Said El Mala... 🆕 L5=52 AA5=-5 | MIL Créateur
+  [22/34] Jan Thielmann... 🆕 L5=39 AA5=-2 | MIL Créateur
+  [23/34] Dominique Heintz... 🆕 L5=32 AA5=-3 | DEF Central
+  [24/34] Jakub Kamiński... 🆕 L5=60 AA5=10 | MIL Créateur
+    💾 Sauvegarde (345 joueurs)
+  [25/34] Cenk Özkaçar... 🆕 L5=45 AA5=10 | DEF Central
+  [26/34] Malek El Mala... 🆕 L5=0 AA5=0 | ATT Finisseur
+  [27/34] Jahmai Simpson-Pusey... 🆕 L5=43 AA5=13 | DEF Central
+  [28/34] Youssoupha Niang... 🆕 L5=37 AA5=2 | ATT Finisseur
+  [29/34] Eric Martel... 🆕 L5=52 AA5=12 | MIL Rotation
+    💾 Sauvegarde (350 joueurs)
+  [30/34] Rav van den Berg... 🆕 L5=48 AA5=8 | DEF Central
+  [31/34] Timo Hübers... 🆕 L5=0 AA5=0 | DEF Central
+  [32/34] Matthias Köbbing... 🆕 L5=0 AA5=0 | GK
+  [33/34] Sebastian Sebulonsen... 🆕 L5=30 AA5=-1 | DEF Central
+  [34/34] Emin Kujović... 🆕 L5=0 AA5=0 | MIL Rotation
+    💾 Sauvegarde (355 joueurs)
+
+🏟️  [12/18] 1. FSV Mainz 05 | ETA ~5min
+  👥 33 joueurs actifs
+  [1/33] Andreas Hanche-Olsen... 🆕 L5=0 AA5=0 | DEF Central
+  [2/33] Robin Zentner... 🆕 L5=0 AA5=0 | GK
+  [3/33] Sota Kawasaki... 🆕 L5=34 AA5=-1 | MIL Rotation
+  [4/33] Silas Katompa Mvumpa... 🆕 L5=35 AA5=-0 | ATT Finisseur
+  [5/33] Nelson Weiper... 🆕 L5=37 AA5=2 | ATT Finisseur
+    💾 Sauvegarde (360 joueurs)
+  [6/33] Jae-Sung Lee... 🆕 L5=49 AA5=4 | MIL Créateur
+  [7/33] Danny da Costa... 🆕 L5=54 AA5=7 | DEF Central
+  [8/33] Louis Babatz... 🆕 L5=0 AA5=0 | GK
+  [9/33] William Bøving... 🆕 L5=38 AA5=2 | ATT Finisseur
+  [10/33] Kaishu Sano... 🆕 L5=53 AA5=18 | MIL Rotation
+    💾 Sauvegarde (365 joueurs)
+  [11/33] Stefan Bell... 🆕 L5=52 AA5=8 | DEF Central
+  [12/33] Kacper Potulski... 🆕 L5=36 AA5=1 | DEF Central
+  [13/33] Benedict Hollerbach... 🆕 L5=33 AA5=-2 | ATT Finisseur
+  [14/33] Lasse Riess... 🆕 L5=0 AA5=0 | GK
+  [15/33] Anthony Caci... 🆕 L5=0 AA5=0 | DEF Central
+    💾 Sauvegarde (370 joueurs)
+  [16/33] Fabio Moreno Fell... 🆕 L5=0 AA5=0 | ATT Finisseur
+  [17/33] Phillip Tietz... 🆕 L5=33 AA5=-2 | ATT Finisseur
+  [18/33] Urs Fischer... 🆕 L5=0 AA5=0 | ?
+  [19/33] Daniel Gleiber... 🆕 L5=0 AA5=0 | MIL Rotation
+  [20/33] Daniel Batz... 🆕 L5=48 AA5=8 | GK
+    💾 Sauvegarde (375 joueurs)
+  [21/33] Silvan Widmer... 🆕 L5=34 AA5=-1 | DEF Central
+  [22/33] Phillipp Mwene... 🆕 L5=46 AA5=6 | DEF Central
+  [23/33] Nikolas Veratschnig... 🆕 L5=35 AA5=0 | DEF Central
+  [24/33] Nadiem Amiri... 🆕 L5=71 AA5=15 | MIL B2B
+  [25/33] Armindo Sieb... 🆕 L5=35 AA5=-0 | ATT Finisseur
+    💾 Sauvegarde (380 joueurs)
+  [26/33] Stefan Posch... 🆕 L5=54 AA5=14 | DEF Central
+  [27/33] Lennard Maloney... 🆕 L5=36 AA5=0 | MIL Rotation
+  [28/33] Maxim Leitsch... 🆕 L5=0 AA5=0 | DEF Central
+  [29/33] Dominik Kohr... 🆕 L5=49 AA5=14 | MIL Rotation
+  [30/33] Jeremiah Debrah... 🆕 L5=0 AA5=0 | MIL Rotation
+    💾 Sauvegarde (385 joueurs)
+  [31/33] Sheraldo Becker... 🆕 L5=58 AA5=8 | ATT Complet
+  [32/33] Kasey Bos... 🆕 L5=0 AA5=0 | ATT Finisseur
+  [33/33] Paul Nebel... 🆕 L5=69 AA5=17 | MIL Créateur
+
+🏟️  [13/18] RB Leipzig | ETA ~4min
+  👥 32 joueurs actifs
+  [1/32] Conrad Harder... 🆕 L5=40 AA5=0 | ATT Finisseur
+  [2/32] David Raum... 🆕 L5=70 AA5=26 | DEF Latéral
+    💾 Sauvegarde (390 joueurs)
+  [3/32] Kosta Nedeljković... 🆕 L5=0 AA5=0 | DEF Central
+  [4/32] Maarten Vandevoordt... 🆕 L5=51 AA5=10 | GK
+  [5/32] Péter Gulácsi... 🆕 L5=43 AA5=3 | GK
+  [6/32] Benjamin Henrichs... 🆕 L5=41 AA5=1 | DEF Central
+  [7/32] Andrija Maksimović... 🆕 L5=38 AA5=3 | MIL Rotation
+    💾 Sauvegarde (395 joueurs)
+  [8/32] Johan Bakayoko... 🆕 L5=36 AA5=1 | ATT Finisseur
+  [9/32] Nicolas Seiwald... 🆕 L5=51 AA5=16 | MIL Rotation
+  [10/32] Viggo Gebel... 🆕 L5=0 AA5=0 | MIL Rotation
+  [11/32] Assan Ouédraogo... 🆕 L5=0 AA5=0 | MIL Créateur
+  [12/32] Samba Konaté... 🆕 L5=0 AA5=0 | ATT Finisseur
+    💾 Sauvegarde (400 joueurs)
+  [13/32] Ridle Baku... 🆕 L5=54 AA5=14 | MIL Rotation
+  [14/32] Xaver Schlager... 🆕 L5=48 AA5=8 | MIL Rotation
+  [15/32] Antonio Nusa... 🆕 L5=39 AA5=4 | MIL Rotation
+  [16/32] Lukas Klostermann... 🆕 L5=0 AA5=0 | DEF Central
+  [17/32] Leopold Zingerle... 🆕 L5=0 AA5=0 | GK
+    💾 Sauvegarde (405 joueurs)
+  [18/32] Willi Orbán... 🆕 L5=56 AA5=21 | DEF Central
+  [19/32] Tidiam Gomis... 🆕 L5=35 AA5=0 | ATT Finisseur
+  [20/32] Brajan Gruda... 🆕 L5=52 AA5=11 | ATT Complet
+  [21/32] Max Finkgräfe... 🆕 L5=41 AA5=6 | DEF Central
+  [22/32] Ezechiel Banzuzi... 🆕 L5=37 AA5=2 | MIL Rotation
+    💾 Sauvegarde (410 joueurs)
+  [23/32] Christoph Baumgartner... 🆕 L5=42 AA5=-4 | MIL Créateur
+  [24/32] Ole Werner... 🆕 L5=0 AA5=0 | ?
+  [25/32] Rômulo... 🆕 L5=40 AA5=1 | ATT Finisseur
+  [26/32] Sani Suleiman... 🆕 L5=0 AA5=0 | ATT Finisseur
+  [27/32] Benno Kaltefleiter... 🆕 L5=0 AA5=0 | MIL Créateur
+    💾 Sauvegarde (415 joueurs)
+  [28/32] Castello Lukeba... 🆕 L5=57 AA5=17 | DEF Central
+  [29/32] El Chadaille Bitshiabu... 🆕 L5=69 AA5=17 | DEF Central
+  [30/32] Ayodele Thomas... 🆕 L5=0 AA5=0 | ATT Finisseur
+  [31/32] Yan Diomande... 🆕 L5=72 AA5=17 | ATT Complet
+  [32/32] Jonathan Norbye... 🆕 L5=0 AA5=0 | DEF Central
+    💾 Sauvegarde (420 joueurs)
+
+🏟️  [14/18] FC St. Pauli | ETA ~3min
+  👥 32 joueurs actifs
+  [1/32] Tomoya Ando... 🆕 L5=56 AA5=16 | DEF Central
+  [2/32] Manolis Saliakas... 🆕 L5=64 AA5=14 | DEF Central
+  [3/32] Mathias Pereira Lage... 🆕 L5=41 AA5=1 | MIL Rotation
+  [4/32] Martijn Kaars... 🆕 L5=36 AA5=1 | ATT Finisseur
+  [5/32] Arkadiusz Pyrka... 🆕 L5=44 AA5=9 | DEF Central
+    💾 Sauvegarde (425 joueurs)
+  [6/32] Romeo Aigbekaen... 🆕 L5=0 AA5=0 | ATT Finisseur
+  [7/32] Ricky-Jade Jones... 🆕 L5=35 AA5=-0 | ATT Finisseur
+  [8/32] Jackson Irvine... 🆕 L5=38 AA5=4 | MIL Rotation
+  [9/32] Karol Mets... 🆕 L5=45 AA5=10 | DEF Central
+  [10/32] David Nemeth... 🆕 L5=0 AA5=0 | DEF Central
+    💾 Sauvegarde (430 joueurs)
+  [11/32] Mathias Rasmussen... 🆕 L5=32 AA5=-3 | MIL Rotation
+  [12/32] Emil Gazdov... 🆕 L5=0 AA5=0 | GK
+  [13/32] Hauke Wahl... 🆕 L5=64 AA5=25 | DEF Central
+  [14/32] Nikola Vasilj... 🆕 L5=52 AA5=15 | GK
+  [15/32] Lars Ritzka... 🆕 L5=38 AA5=3 | DEF Central
+    💾 Sauvegarde (435 joueurs)
+  [16/32] Connor Metcalfe... 🆕 L5=35 AA5=0 | MIL Rotation
+  [17/32] Andréas Hountondji... 🆕 L5=34 AA5=-1 | ATT Finisseur
+  [18/32] Nick Schmidt... 🆕 L5=0 AA5=0 | MIL Rotation
+  [19/32] Ben Voll... 🆕 L5=0 AA5=0 | GK
+  [20/32] Abdoulie Ceesay... 🆕 L5=35 AA5=0 | ATT Finisseur
+    💾 Sauvegarde (440 joueurs)
+  [21/32] Eric Smith... 🆕 L5=52 AA5=17 | MIL Rotation
+  [22/32] Adam Dźwigała... 🆕 L5=54 AA5=14 | DEF Central
+  [23/32] Louis Oppie... 🆕 L5=42 AA5=6 | DEF Central
+  [24/32] Finley Stevens... 🆕 L5=0 AA5=0 | DEF Central
+  [25/32] Joel Chima Fujita... 🆕 L5=44 AA5=4 | MIL Rotation
+    💾 Sauvegarde (445 joueurs)
+  [26/32] Taichi Hara... 🆕 L5=33 AA5=-2 | ATT Finisseur
+  [27/32] Alexander Blessin... 🆕 L5=0 AA5=0 | ?
+  [28/32] Simon Spari... 🆕 L5=0 AA5=0 | GK
+  [29/32] Danel Sinani... 🆕 L5=54 AA5=9 | ATT Complet
+  [30/32] Jannik Robatsch... 🆕 L5=0 AA5=0 | DEF Central
+    💾 Sauvegarde (450 joueurs)
+  [31/32] Marwin Schmitz... 🆕 L5=0 AA5=0 | MIL Rotation
+  [32/32] James Sands... 🆕 L5=47 AA5=12 | MIL Rotation
+
+🏟️  [15/18] VfB Stuttgart | ETA ~2min
+  👥 34 joueurs actifs
+  [1/34] Bilal El Khannous... 🆕 L5=50 AA5=14 | MIL Créateur
+  [2/34] Ramon Hendriks... 🆕 L5=42 AA5=7 | DEF Central
+  [3/34] Luca Jaquez... 🆕 L5=61 AA5=18 | DEF Central
+    💾 Sauvegarde (455 joueurs)
+  [4/34] Yanik Spalt... 🆕 L5=0 AA5=0 | DEF Central
+  [5/34] Chema Andrés... 🆕 L5=48 AA5=7 | MIL Rotation
+  [6/34] Noah Darvich... 🆕 L5=0 AA5=0 | MIL Créateur
+  [7/34] Angelo Stiller... 🆕 L5=59 AA5=24 | MIL GOAT
+  [8/34] Pascal Stenzel... 🆕 L5=0 AA5=0 | DEF Central
+    💾 Sauvegarde (460 joueurs)
+  [9/34] Sebastian Hoeneß... 🆕 L5=0 AA5=0 | ?
+  [10/34] Jeff Chabot... 🆕 L5=40 AA5=10 | DEF Central
+  [11/34] Josha Vagnoman... 🆕 L5=31 AA5=-4 | DEF Central
+  [12/34] Alexander Nübel... 🆕 L5=50 AA5=5 | GK
+  [13/34] Stefan Drljača... 🆕 L5=0 AA5=0 | GK
+    💾 Sauvegarde (465 joueurs)
+  [14/34] Badredine Bouanani... 🆕 L5=0 AA5=0 | ATT Finisseur
+  [15/34] Amin Al-Dakhil... 🆕 L5=46 AA5=11 | DEF Central
+  [16/34] Deniz Undav... 🆕 L5=74 AA5=8 | ATT Complet
+  [17/34] Lorenz Assignon... 🆕 L5=39 AA5=4 | DEF Central
+  [18/34] Lauri Penna... 🆕 L5=0 AA5=0 | MIL Rotation
+    💾 Sauvegarde (470 joueurs)
+  [19/34] Chris Führich... 🆕 L5=65 AA5=15 | MIL B2B
+  [20/34] Christopher Olivier... 🆕 L5=0 AA5=0 | MIL Rotation
+  [21/34] Nikolas Nartey... 🆕 L5=56 AA5=4 | MIL Créateur
+  [22/34] Jeremy Arévalo... 🆕 L5=36 AA5=1 | ATT Finisseur
+  [23/34] Florian Hellstern... 🆕 L5=0 AA5=0 | GK
+    💾 Sauvegarde (475 joueurs)
+  [24/34] Tiago Tomás... 🆕 L5=52 AA5=2 | ATT Finisseur
+  [25/34] Maximilian Herwerth... 🆕 L5=0 AA5=0 | DEF Central
+  [26/34] Mirza Ćatović... 🆕 L5=0 AA5=0 | MIL Rotation
+  [27/34] Jamie Leweling... 🆕 L5=57 AA5=10 | ATT Complet
+  [28/34] Ermedin Demirović... 🆕 L5=50 AA5=-0 | ATT Finisseur
+    💾 Sauvegarde (480 joueurs)
+  [29/34] Lazar Jovanović... 🆕 L5=0 AA5=0 | ATT Finisseur
+  [30/34] Atakan Karazor... 🆕 L5=40 AA5=5 | MIL Rotation
+  [31/34] Finn Jeltsch... 🆕 L5=44 AA5=9 | DEF Central
+  [32/34] Maximilian Mittelstädt... 🆕 L5=60 AA5=20 | DEF Latéral
+  [33/34] Dan-Axel Zagadou... 🆕 L5=0 AA5=0 | DEF Central
+    💾 Sauvegarde (485 joueurs)
+  [34/34] Fabian Bredlow... 🆕 L5=0 AA5=0 | GK
+
+🏟️  [16/18] 1. FC Union Berlin | ETA ~2min
+  👥 27 joueurs actifs
+  [1/27] Aljoscha Kemlein... 🆕 L5=37 AA5=-3 | MIL Rotation
+  [2/27] Alex Král... 🆕 L5=38 AA5=3 | MIL Rotation
+  [3/27] Matheo Raab... 🆕 L5=87 AA5=27 | GK
+  [4/27] András Schäfer... 🆕 L5=43 AA5=7 | MIL Rotation
+    💾 Sauvegarde (490 joueurs)
+  [5/27] Andrik Markgraf... 🆕 L5=0 AA5=0 | DEF Central
+  [6/27] Derrick Köhn... 🆕 L5=48 AA5=8 | DEF Central
+  [7/27] Livan Burcu... 🆕 L5=38 AA5=3 | ATT Finisseur
+  [8/27] Steffen Baumgart... 🆕 L5=0 AA5=0 | ?
+  [9/27] Tom Rothe... 🆕 L5=46 AA5=11 | DEF Central
+    💾 Sauvegarde (495 joueurs)
+  [10/27] Oliver Burke... 🆕 L5=42 AA5=2 | ATT Finisseur
+  [11/27] Dmytro Bohdanov... 🆕 L5=35 AA5=0 | ATT Finisseur
+  [12/27] Josip Juranovic... 🆕 L5=53 AA5=12 | DEF Latéral
+  [13/27] Tim Skarke... 🆕 L5=35 AA5=0 | MIL Rotation
+  [14/27] Andrej Ilić... 🆕 L5=47 AA5=5 | ATT Finisseur
+    💾 Sauvegarde (500 joueurs)
+  [15/27] Christopher Trimmel... 🆕 L5=46 AA5=6 | DEF Central
+  [16/27] Danilho Doekhi... 🆕 L5=42 AA5=7 | DEF Central
+  [17/27] Stanley Nsoki... 🆕 L5=48 AA5=12 | DEF Central
+  [18/27] Diogo Leite... 🆕 L5=36 AA5=8 | DEF Latéral
+  [19/27] Janik Haberer... 🆕 L5=32 AA5=-3 | MIL Rotation
+    💾 Sauvegarde (505 joueurs)
+  [20/27] Frederik Rønnow... 🆕 L5=40 AA5=4 | GK
+  [21/27] Rani Khedira... 🆕 L5=36 AA5=-4 | MIL Rotation
+  [22/27] Robert Skov... 🆕 L5=0 AA5=0 | MIL Rotation
+  [23/27] Ilyas Ansah... 🆕 L5=38 AA5=-2 | ATT Finisseur
+  [24/27] David Preu... 🆕 L5=0 AA5=0 | ATT Finisseur
+    💾 Sauvegarde (510 joueurs)
+  [25/27] Carl Klaus... 🆕 L5=0 AA5=0 | GK
+  [26/27] Wooyeong Jeong... 🆕 L5=38 AA5=-2 | MIL Rotation
+  [27/27] Leopold Querfeld... 🆕 L5=52 AA5=7 | DEF Central
+
+🏟️  [17/18] SV Werder Bremen | ETA ~1min
+  👥 32 joueurs actifs
+  [1/32] Samuel-Germain Mbangula... 🆕 L5=42 AA5=7 | ATT Complet
+  [2/32] K. Coulibaly... 🆕 L5=37 AA5=2 | DEF Central
+    💾 Sauvegarde (515 joueurs)
+  [3/32] Wesley Adeh... 🆕 L5=0 AA5=0 | MIL Rotation
+  [4/32] Marco Grüll... 🆕 L5=41 AA5=1 | ATT Finisseur
+  [5/32] Keke Topp... 🆕 L5=33 AA5=-2 | ATT Finisseur
+  [6/32] Olivier Deman... 🆕 L5=55 AA5=15 | MIL Créateur
+  [7/32] Felix Agu... 🆕 L5=45 AA5=10 | DEF Central
+    💾 Sauvegarde (520 joueurs)
+  [8/32] Stefan Smarkalev... 🆕 L5=0 AA5=0 | GK
+  [9/32] Salim Musah... 🆕 L5=38 AA5=3 | ATT Finisseur
+  [10/32] Mitchell Weiser... 🆕 L5=0 AA5=0 | DEF Central
+  [11/32] Markus Kolke... 🆕 L5=0 AA5=0 | GK
+  [12/32] Justin Njinmah... 🆕 L5=47 AA5=7 | ATT Complet
+    💾 Sauvegarde (525 joueurs)
+  [13/32] Senne Lynen... 🆕 L5=39 AA5=10 | MIL Rotation
+  [14/32] Isaac Schmidt... 🆕 L5=36 AA5=1 | DEF Central
+  [15/32] Victor Boniface... 🆕 L5=0 AA5=0 | ATT Finisseur
+  [16/32] Mats Heitmann... 🆕 L5=0 AA5=0 | DEF Central
+  [17/32] Marco Friedl... 🆕 L5=53 AA5=18 | DEF Central
+    💾 Sauvegarde (530 joueurs)
+  [18/32] Julián Malatini... 🆕 L5=32 AA5=1 | DEF Central
+  [19/32] Patrice Čović... 🆕 L5=47 AA5=6 | MIL Rotation
+  [20/32] Karl Hein... 🆕 L5=0 AA5=0 | GK
+  [21/32] Daniel Thioune... 🆕 L5=0 AA5=0 | ?
+  [22/32] Jens Stage... 🆕 L5=42 AA5=-0 | MIL Créateur
+    💾 Sauvegarde (535 joueurs)
+  [23/32] Niklas Stark... 🆕 L5=44 AA5=13 | DEF Central
+  [24/32] Yukinari Sugawara... 🆕 L5=47 AA5=12 | DEF Latéral
+  [25/32] Maximilian Wöber... 🆕 L5=0 AA5=0 | DEF Central
+  [26/32] Leonardo Bittencourt... 🆕 L5=51 AA5=11 | MIL Rotation
+  [27/32] Cameron Puertas... 🆕 L5=57 AA5=17 | MIL Rotation
+    💾 Sauvegarde (540 joueurs)
+  [28/32] Amos Pieper... 🆕 L5=39 AA5=4 | DEF Central
+  [29/32] Jovan Milošević... 🆕 L5=45 AA5=-1 | ATT Finisseur
+  [30/32] Romano Schmid... 🆕 L5=51 AA5=6 | MIL Créateur
+  [31/32] Mio Backhaus... 🆕 L5=48 AA5=7 | GK
+  [32/32] Mick Schmetgens... 🆕 L5=55 AA5=8 | DEF Central
+    💾 Sauvegarde (545 joueurs)
+
+🏟️  [18/18] VfL Wolfsburg | ETA ~0min
+  👥 37 joueurs actifs
+  [1/37] Pavao Pervan... 🆕 L5=0 AA5=0 | GK
+  [2/37] Kamil Grabara... 🆕 L5=45 AA5=10 | GK
+  [3/37] Kilian Fischer... 🆕 L5=39 AA5=4 | DEF Central
+  [4/37] Dieter-Klaus Hecking... 🆕 L5=0 AA5=0 | ?
+  [5/37] Denis Vavro... 🆕 L5=51 AA5=10 | DEF Central
+    💾 Sauvegarde (550 joueurs)
+  [6/37] Jesper Lindstrøm... 🆕 L5=32 AA5=-3 | MIL Rotation
+  [7/37] Jan Bürger... 🆕 L5=30 AA5=-5 | DEF Central
+  [8/37] Moritz Jenz... 🆕 L5=22 AA5=-5 | DEF Central
+  [9/37] Cleiton... 🆕 L5=0 AA5=0 | DEF Central
+  [10/37] Bruno Katz... 🆕 L5=0 AA5=0 | ATT Finisseur
+    💾 Sauvegarde (555 joueurs)
+  [11/37] Jonas Wind... 🆕 L5=38 AA5=4 | ATT Finisseur
+  [12/37] Kento Shiogai... 🆕 L5=39 AA5=-1 | ATT Finisseur
+  [13/37] Mattias Svanberg... 🆕 L5=41 AA5=-0 | MIL Créateur
+  [14/37] Adam Daghim... 🆕 L5=43 AA5=8 | ATT Complet
+  [15/37] Pharell Hensel... 🆕 L5=31 AA5=-4 | MIL Créateur
+    💾 Sauvegarde (560 joueurs)
+  [16/37] Aaron Zehnter... 🆕 L5=28 AA5=-7 | DEF Central
+  [17/37] Jonas Adjetey... 🆕 L5=29 AA5=-6 | DEF Central
+  [18/37] Joakim Mæhle... 🆕 L5=43 AA5=8 | DEF Central
+  [19/37] Vinicius Souza... 🆕 L5=41 AA5=10 | MIL Rotation
+  [20/37] Jakub Zieliński... 🆕 L5=0 AA5=0 | GK
+    💾 Sauvegarde (565 joueurs)
+  [21/37] Bence Dárdai... 🆕 L5=0 AA5=0 | MIL Rotation
+  [22/37] Maximilian Arnold... 🆕 L5=50 AA5=10 | MIL Créateur
+  [23/37] Rogério... 🆕 L5=0 AA5=0 | DEF Central
+  [24/37] Till Neininger... 🆕 L5=0 AA5=0 | DEF Central
+  [25/37] Jenson Seelt... 🆕 L5=0 AA5=0 | DEF Central
+    💾 Sauvegarde (570 joueurs)
+  [26/37] Jeanuël Belocian... 🆕 L5=35 AA5=0 | DEF Central
+  [27/37] Saël Kumbedi... 🆕 L5=49 AA5=9 | DEF Central
+  [28/37] Trevor Benedict... 🆕 L5=0 AA5=0 | ATT Finisseur
+  [29/37] Kevin Paredes... 🆕 L5=39 AA5=4 | MIL Rotation
+  [30/37] Marius Müller... 🆕 L5=0 AA5=0 | GK
+    💾 Sauvegarde (575 joueurs)
+  [31/37] Christian Eriksen... 🆕 L5=59 AA5=9 | MIL Créateur
+  [32/37] Mohammed Amoura... 🆕 L5=44 AA5=4 | ATT Finisseur
+  [33/37] Dženan Pejčinović... 🆕 L5=33 AA5=-2 | ATT Finisseur
+  [34/37] Lovro Majer... 🆕 L5=30 AA5=-5 | MIL Créateur
+  [35/37] Konstantinos Koulierakis... 🆕 L5=48 AA5=12 | DEF Central
+    💾 Sauvegarde (580 joueurs)
+  [36/37] Patrick Wimmer... 🆕 L5=31 AA5=-4 | MIL Créateur
+  [37/37] Yannick Gerhardt... 🆕 L5=43 AA5=-3 | MIL Rotation
+
+============================================================
+✅ Bundes terminé en 17min 6s
+  🆕 Nouveaux: 582
+  🔄 Mis à jour: 0
+  ⏭️  Skippés: 0
+  📊 Total: 582 joueurs
+  💾 deglingo_bundesliga_final.json
+============================================================
+
+⏸️  Pause 30s avant la prochaine ligue...
+
+🏁 Terminé! Prochaines étapes:
+  python3 merge_data.py
+  cd deglingo-scout-app && npx vite build
+  rm -rf /Users/damiengheza/Desktop/Moonwalk/.claude/scout-dist/assets
+  cp -r dist/* /Users/damiengheza/Desktop/Moonwalk/.claude/scout-dist/

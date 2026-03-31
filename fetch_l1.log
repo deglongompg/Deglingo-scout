@@ -1,0 +1,77 @@
+/Users/damiengheza/Library/Python/3.9/lib/python/site-packages/urllib3/__init__.py:35: NotOpenSSLWarning: urllib3 v2 only supports OpenSSL 1.1.1+, currently the 'ssl' module is compiled with 'LibreSSL 2.8.3'. See: https://github.com/urllib3/urllib3/issues/3020
+  warnings.warn(
+
+============================================================
+⚽ SCRAPING L1 (ligue-1-fr)
+============================================================
+📂 Base existante: 348 joueurs
+
+📡 Fetching clubs for ligue-1-fr...
+  ✅ 18 clubs trouvés
+
+🏟️  [1/18] Angers SCO (angers-sco-angers)
+  👥 0 joueurs actifs
+
+🏟️  [2/18] AJ Auxerre (auxerre-auxerre)
+  👥 0 joueurs actifs
+
+🏟️  [3/18] Stade Brestois 29 (brest-brest)
+  👥 0 joueurs actifs
+
+🏟️  [4/18] Le Havre AC (le-havre-harfleur)
+  👥 0 joueurs actifs
+
+🏟️  [5/18] RC Lens (lens-avion)
+  👥 0 joueurs actifs
+
+🏟️  [6/18] LOSC Lille (lille-villeneuve-d-ascq)
+  👥 0 joueurs actifs
+
+🏟️  [7/18] FC Lorient (lorient-ploemeur)
+  👥 0 joueurs actifs
+
+🏟️  [8/18] FC Metz (metz-metz)
+  👥 0 joueurs actifs
+
+🏟️  [9/18] AS Monaco (monaco-monaco)
+  👥 0 joueurs actifs
+
+🏟️  [10/18] FC Nantes (nantes-la-chapelle-sur-erdre)
+  👥 0 joueurs actifs
+
+🏟️  [11/18] OGC Nice (nice-nice)
+  👥 0 joueurs actifs
+
+🏟️  [12/18] Olympique Lyonnais (olympique-lyonnais-lyon)
+  👥 0 joueurs actifs
+
+🏟️  [13/18] Olympique de Marseille (olympique-marseille-marseille)
+  👥 0 joueurs actifs
+
+🏟️  [14/18] Paris Saint-Germain (psg-paris)
+  👥 0 joueurs actifs
+
+🏟️  [15/18] Paris FC (paris-paris)
+  👥 0 joueurs actifs
+
+🏟️  [16/18] Stade Rennais F.C. (rennes-rennes)
+  👥 0 joueurs actifs
+
+🏟️  [17/18] RC Strasbourg Alsace (strasbourg-strasbourg)
+  👥 0 joueurs actifs
+
+🏟️  [18/18] Toulouse FC (toulouse-toulouse)
+  👥 0 joueurs actifs
+
+============================================================
+✅ L1 terminé!
+  🆕 Nouveaux: 0
+  🔄 Mis à jour: 0
+  ⏭️  Skippés (< 2 matchs): 0
+  📊 Total: 348 joueurs
+  💾 Sauvé: deglingo_ligue1_final.json
+============================================================
+
+🏁 Done! Lance ensuite:
+  python3 merge_data.py
+  cd deglingo-scout-app && npx vite build

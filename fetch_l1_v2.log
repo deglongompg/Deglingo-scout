@@ -1,0 +1,709 @@
+/Users/damiengheza/Library/Python/3.9/lib/python/site-packages/urllib3/__init__.py:35: NotOpenSSLWarning: urllib3 v2 only supports OpenSSL 1.1.1+, currently the 'ssl' module is compiled with 'LibreSSL 2.8.3'. See: https://github.com/urllib3/urllib3/issues/3020
+  warnings.warn(
+
+============================================================
+⚽ SCRAPING L1 (ligue-1-fr)
+============================================================
+📂 Base existante: 379 joueurs
+
+📡 Fetching clubs for ligue-1-fr...
+  ✅ 18 clubs trouvés
+
+🏟️  [1/18] Angers SCO (angers-sco-angers)
+  👥 31 joueurs actifs
+  [1/31] Melvin Zinga... skip (< 2 matchs)
+  [2/31] Ousmane Camara... ✅ updated | L5=52 AA5=50 | DEF Central
+  [3/31] Lanroy Machine... ✅ updated | L5=44 AA5=44 | ATT Complet
+  [4/31] Harouna Djibirin... ✅ updated | L5=37 AA5=37 | ATT Complet
+  [5/31] Maël Gernigon... skip (< 2 matchs)
+  [6/31] Alexandre Dujeux... skip (< 2 matchs)
+  [7/31] Louis Mouton... ✅ updated | L5=34 AA5=34 | MIL GOAT
+  [8/31] Yahia Jlidi... skip (< 2 matchs)
+  [9/31] Branco van den Boomen... ✅ updated | L5=44 AA5=44 | MIL GOAT
+  [10/31] Amine Moussaoui... skip (< 2 matchs)
+  [11/31] Ilann Garin... skip (< 2 matchs)
+  [12/31] Emmanuel Biumla... ✅ updated | L5=41 AA5=41 | MIL GOAT
+  [13/31] Pierrick Capelle... ✅ updated | L5=45 AA5=45 | MIL GOAT
+  [14/31] Hervé Koffi... ✅ updated | L5=58 AA5=58 | GK
+  [15/31] Marius Louãr... ✅ updated | L5=35 AA5=35 | DEF Central
+  [16/31] Yann Llahona... skip (< 2 matchs)
+  [17/31] Prosper Peter... ✅ updated | L5=37 AA5=37 | ATT Complet
+  [18/31] Jacques Ekomié... ✅ updated | L5=32 AA5=32 | DEF Central
+  [19/31] Yassin Belkhdim... ✅ updated | L5=39 AA5=39 | MIL GOAT
+  [20/31] Marius Courcoul... ✅ updated | L5=32 AA5=32 | DEF Central
+  [21/31] Lillian Rao-Lisoa... ✅ updated | L5=38 AA5=36 | DEF Central
+  [22/31] Haris Belkebla... ✅ updated | L5=42 AA5=42 | MIL GOAT
+  [23/31] Dan Sinaté... ✅ updated | L5=34 AA5=34 | MIL GOAT
+  [24/31] Oumar Pona... ✅ updated | L5=33 AA5=33 | GK
+  [25/31] Carlens Arcus... ✅ updated | L5=49 AA5=49 | DEF Central
+  [26/31] Goduine Koyalipou... ✅ updated | L5=37 AA5=37 | ATT Complet
+  [27/31] Florent Hanin... ✅ updated | L5=35 AA5=35 | DEF Central
+  [28/31] Amine Sbaï... ✅ updated | L5=47 AA5=47 | ATT Complet
+  [29/31] Nattio Sonnerat-Deschamps... skip (< 2 matchs)
+  [30/31] Abdoulaye Bamba... skip (< 2 matchs)
+  [31/31] Jordan Lefort... ✅ updated | L5=49 AA5=49 | DEF Central
+
+🏟️  [2/18] AJ Auxerre (auxerre-auxerre)
+  👥 34 joueurs actifs
+  [1/34] Lamfia Dioubaté... skip (< 2 matchs)
+  [2/34] Théo De Percin... skip (< 2 matchs)
+  [3/34] Alvin Petit Dol... skip (< 2 matchs)
+  [4/34] Christophe Pélissier... skip (< 2 matchs)
+  [5/34] Louis Mezerette... skip (< 2 matchs)
+  [6/34] Elikya Legros... skip (< 2 matchs)
+  [7/34] Fredrik Oppegård... ✅ updated | L5=36 AA5=36 | DEF Central
+  [8/34] Sékou Mara... ✅ updated | L5=36 AA5=36 | ATT Complet
+  [9/34] Elisha Owusu... ✅ updated | L5=45 AA5=45 | MIL GOAT
+  [10/34] Evan Diamalunda... skip (< 2 matchs)
+  [11/34] Danny Namaso... ✅ updated | L5=54 AA5=54 | ATT Complet
+  [12/34] Tom Negrel... skip (< 2 matchs)
+  [13/34] Lassine Sinayoko... ✅ updated | L5=46 AA5=46 | ATT Complet
+  [14/34] Tidiane Devernois... skip (< 2 matchs)
+  [15/34] Donovan Léon... ✅ updated | L5=40 AA5=40 | GK
+  [16/34] Mamoudou Cissokho... skip (< 2 matchs)
+  [17/34] Nathan Buayi-Kiala... skip (< 2 matchs)
+  [18/34] Lamine Sy... ✅ updated | L5=45 AA5=45 | DEF Central
+  [19/34] Lasso Coulibaly... ✅ updated | L5=36 AA5=36 | MIL GOAT
+  [20/34] Sinaly Diomande... ✅ updated | L5=53 AA5=53 | DEF Central
+  [21/34] Naouirou Ahamada... ✅ updated | L5=40 AA5=40 | MIL GOAT
+  [22/34] Francisco Sierralta... skip (< 2 matchs)
+  [23/34] Yvan Zaddy... skip (< 2 matchs)
+  [24/34] Clément Akpa... ✅ updated | L5=48 AA5=48 | DEF Central
+  [25/34] Ryan Rodin... skip (< 2 matchs)
+  [26/34] Assane Diousse... ✅ updated | L5=33 AA5=33 | MIL GOAT
+  [27/34] Marvin Senaya... ✅ updated | L5=63 AA5=65 | DEF Central
+  [28/34] Telli Siwe... skip (< 2 matchs)
+  [29/34] Bryan Okoh... ✅ updated | L5=66 AA5=69 | DEF Central
+  [30/34] Romain Faivre... ✅ updated | L5=52 AA5=52 | MIL GOAT
+  [31/34] Gideon Mensah... ✅ updated | L5=53 AA5=53 | DEF Central
+  [32/34] Oussama El Azzouzi... ✅ updated | L5=59 AA5=59 | MIL GOAT
+  [33/34] Josué Casimir... ✅ updated | L5=47 AA5=47 | ATT Complet
+  [34/34] Kévin Danois... ✅ updated | L5=60 AA5=60 | MIL GOAT
+
+🏟️  [3/18] Stade Brestois 29 (brest-brest)
+  👥 28 joueurs actifs
+  [1/28] Raphaël Le Guen... skip (< 2 matchs)
+  [2/28] E. Roy... skip (< 2 matchs)
+  [3/28] Ibrahim Kanté... skip (< 2 matchs)
+  [4/28] Rémy Labeau-Lascary... ✅ updated | L5=37 AA5=37 | ATT Complet
+  [5/28] Hugo Magnetti... ✅ updated | L5=60 AA5=60 | MIL GOAT
+  [6/28] Saliou Diop... skip (< 2 matchs)
+  [7/28] Lucas Tousart... ✅ updated | L5=34 AA5=34 | MIL GOAT
+  [8/28] Bradley Locko... ✅ updated | L5=47 AA5=47 | DEF Central
+  [9/28] Mama Baldé... skip (< 2 matchs)
+  [10/28] Luck Zogbé... ✅ updated | L5=34 AA5=34 | DEF Central
+  [11/28] Grégoire Coudert... ✅ updated | L5=60 AA5=60 | GK
+  [12/28] Hamidou Makalou... ✅ updated | L5=40 AA5=40 | MIL GOAT
+  [13/28] Brendan Chardonnet... ✅ updated | L5=57 AA5=57 | DEF Central
+  [14/28] Noah Jauny... skip (< 2 matchs)
+  [15/28] Daouda Guindo... ✅ updated | L5=35 AA5=35 | DEF Central
+  [16/28] Radosław Majecki... skip (< 2 matchs)
+  [17/28] Axel Lassus... skip (< 2 matchs)
+  [18/28] Pathé Mboup... ✅ updated | L5=32 AA5=32 | ATT Complet
+  [19/28] Soumaïla Coulibaly... ✅ updated | L5=31 AA5=31 | DEF Central
+  [20/28] Romain Del Castillo... ✅ updated | L5=46 AA5=46 | MIL GOAT
+  [21/28] Joris Chotard... ✅ updated | L5=45 AA5=45 | MIL GOAT
+  [22/28] Mathis Lainé... skip (< 2 matchs)
+  [23/28] Kenny Lala... ✅ updated | L5=62 AA5=62 | DEF Central
+  [24/28] Junior Dina Ebimbe... ✅ updated | L5=32 AA5=32 | MIL GOAT
+  [25/28] Noan Geraux... skip (< 2 matchs)
+  [26/28] Kamory Doumbia... ✅ updated | L5=52 AA5=51 | MIL GOAT
+  [27/28] Michel Diaz... ✅ updated | L5=54 AA5=54 | DEF Central
+  [28/28] Ludovic Ajorque... ✅ updated | L5=64 AA5=64 | ATT Complet
+
+🏟️  [4/18] Le Havre AC (le-havre-harfleur)
+  👥 36 joueurs actifs
+  [1/36] Abdoulaye Touré... skip (< 2 matchs)
+  [2/36] Daren Mosengo... ✅ updated | L5=36 AA5=36 | MIL GOAT
+  [3/36] Yassine Kechta... ✅ updated | L5=36 AA5=36 | MIL GOAT
+  [4/36] Lucas Gourna-Douath... ✅ updated | L5=39 AA5=39 | MIL GOAT
+  [5/36] Felix Mambimbi... ✅ updated | L5=42 AA5=42 | ATT Complet
+  [6/36] Thierno Bah... skip (< 2 matchs)
+  [7/36] Didier Digard... skip (< 2 matchs)
+  [8/36] Guy-Noël Zohouri... skip (< 2 matchs)
+  [9/36] Yanis Zouaoui... ✅ updated | L5=40 AA5=38 | DEF Central
+  [10/36] Thomas Rousseau... skip (< 2 matchs)
+  [11/36] Enzo Koffi Vinette... ✅ updated | L5=43 AA5=43 | ATT Complet
+  [12/36] Yanis Djellel... skip (< 2 matchs)
+  [13/36] Arouna Sangante... ✅ updated | L5=49 AA5=49 | DEF Central
+  [14/36] Fodé Doucouré... ✅ updated | L5=33 AA5=33 | DEF Central
+  [15/36] Yanis Monkolot... skip (< 2 matchs)
+  [16/36] Étienne Youté... skip (< 2 matchs)
+  [17/36] Sofiane Boufal... ✅ updated | L5=50 AA5=50 | MIL GOAT
+  [18/36] Simon Ebonog... ✅ updated | L5=34 AA5=34 | MIL GOAT
+  [19/36] Mory Diaw... ✅ updated | L5=51 AA5=51 | GK
+  [20/36] Noam Obougou... ✅ updated | L5=38 AA5=38 | ATT Complet
+  [21/36] Stephan Zagadou... ✅ updated | L5=44 AA5=44 | DEF Central
+  [22/36] Loïc Nego... ✅ updated | L5=55 AA5=55 | DEF Central
+  [23/36] Reda Khadra... ✅ updated | L5=40 AA5=40 | ATT Complet
+  [24/36] Alex Teixeira... skip (< 2 matchs)
+  [25/36] Lionel Mpasi... ✅ updated | L5=55 AA5=55 | GK
+  [26/36] Timothee Pembele... ✅ updated | L5=36 AA5=36 | DEF Central
+  [27/36] Rassoul Ndiaye... ✅ updated | L5=44 AA5=44 | MIL GOAT
+  [28/36] Ayumu Seko... ✅ updated | L5=49 AA5=49 | DEF Central
+  [29/36] Godson Kyeremeh... skip (< 2 matchs)
+  [30/36] Issa Soumaré... ✅ updated | L5=43 AA5=43 | ATT Complet
+  [31/36] Gautier Lloris... ✅ updated | L5=55 AA5=55 | DEF Central
+  [32/36] Mbwana Samatta... ✅ updated | L5=42 AA5=42 | ATT Complet
+  [33/36] Adams Diabaté... skip (< 2 matchs)
+  [34/36] Paul Argney... skip (< 2 matchs)
+  [35/36] Kenny Quetant... ✅ updated | L5=34 AA5=34 | ATT Complet
+  [36/36] Georges Gomis... skip (< 2 matchs)
+
+🏟️  [5/18] RC Lens (lens-avion)
+  👥 33 joueurs actifs
+  [1/33] Florian Sotoca... ✅ updated | L5=37 AA5=37 | ATT Complet
+  [2/33] Robin Risser... ✅ updated | L5=45 AA5=45 | GK
+  [3/33] Fodé Sylla... skip (< 2 matchs)
+  [4/33] Daïvy Lefranc-Yeboah... skip (< 2 matchs)
+  [5/33] Allan Saint-Maximin... ✅ updated | L5=51 AA5=50 | ATT Complet
+  [6/33] Anthony Bermont... ✅ updated | L5=39 AA5=39 | MIL GOAT
+  [7/33] Ilan Jourdren... skip (< 2 matchs)
+  [8/33] Andrija Bulatović... ✅ updated | L5=43 AA5=43 | MIL GOAT
+  [9/33] Mathieu Gorgelin... skip (< 2 matchs)
+  [10/33] Matthieu Udol... ✅ updated | L5=57 AA5=57 | DEF Latéral
+  [11/33] Adrien Thomasson... ✅ updated | L5=67 AA5=67 | MIL GOAT
+  [12/33] Kyllian Antonio... ✅ updated | L5=65 AA5=65 | DEF Central
+  [13/33] Nidal Čelik... ✅ updated | L5=41 AA5=41 | DEF Central
+  [14/33] Jonathan Gradit... skip (< 2 matchs)
+  [15/33] Wesley Saïd... ✅ updated | L5=51 AA5=51 | ATT Complet
+  [16/33] Saud Abdulhamid... ✅ updated | L5=56 AA5=56 | DEF Latéral
+  [17/33] Oscar Lenne... skip (< 2 matchs)
+  [18/33] Samson Baidoo... ✅ updated | L5=57 AA5=57 | DEF Central
+  [19/33] Odsonne Edouard... ✅ updated | L5=49 AA5=49 | ATT Complet
+  [20/33] Pierre-Ismaëlo Ganiou... ✅ updated | L5=45 AA5=45 | DEF Central
+  [21/33] Rayan Fofana... ✅ updated | L5=44 AA5=44 | ATT Complet
+  [22/33] Florian Thauvin... ✅ updated | L5=77 AA5=80 | ATT Complet
+  [23/33] Arthur Masuaku... skip (< 2 matchs)
+  [24/33] Pierre Sage... skip (< 2 matchs)
+  [25/33] Régis Gurtner... skip (< 2 matchs)
+  [26/33] Mamadou Sangaré... ✅ updated | L5=69 AA5=69 | MIL GOAT
+  [27/33] Alpha Diallo... skip (< 2 matchs)
+  [28/33] Malang Sarr... ✅ updated | L5=65 AA5=65 | DEF Central
+  [29/33] Adam Delplace... skip (< 2 matchs)
+  [30/33] Ruben Aguilar... ✅ updated | L5=50 AA5=50 | DEF Latéral
+  [31/33] Abdallah Sima... ✅ updated | L5=50 AA5=50 | ATT Complet
+  [32/33] Erawan Garnier... skip (< 2 matchs)
+  [33/33] Amadou Haïdara... ✅ updated | L5=49 AA5=49 | MIL GOAT
+
+🏟️  [6/18] LOSC Lille (lille-villeneuve-d-ascq)
+  👥 38 joueurs actifs
+  [1/38] Younes Lachaab... skip (< 2 matchs)
+  [2/38] Marc-Aurèle Caillard... skip (< 2 matchs)
+  [3/38] Aïssa Mandi... ✅ updated | L5=60 AA5=60 | DEF Central
+  [4/38] Benjamin André... ✅ updated | L5=69 AA5=69 | MIL GOAT
+  [5/38] Maxima Goffi... skip (< 2 matchs)
+  [6/38] Saad Boussadia... skip (< 2 matchs)
+  [7/38] Félix Correia... ✅ updated | L5=40 AA5=40 | ATT Complet
+  [8/38] Berke Özer... ✅ updated | L5=41 AA5=41 | GK
+  [9/38] Nabil Bentaleb... ✅ updated | L5=63 AA5=63 | MIL GOAT
+  [10/38] Arnaud Bodart... skip (< 2 matchs)
+  [11/38] Olivier Giroud... ✅ updated | L5=39 AA5=39 | ATT Complet
+  [12/38] Ethan Mbappé... skip (< 2 matchs)
+  [13/38] Lilian Baret... skip (< 2 matchs)
+  [14/38] Tiago Santos... ✅ updated | L5=36 AA5=36 | DEF Central
+  [15/38] Hákon Haraldsson... ✅ updated | L5=45 AA5=45 | MIL GOAT
+  [16/38] Thomas Meunier... ✅ updated | L5=51 AA5=51 | DEF Central
+  [17/38] Gaëtan Perrin... ✅ updated | L5=40 AA5=40 | ATT Complet
+  [18/38] Osame Sahraoui... skip (< 2 matchs)
+  [19/38] Chancel Mbemba... ✅ updated | L5=61 AA5=61 | DEF Central
+  [20/38] Marius Broholm... skip (< 2 matchs)
+  [21/38] Noah Edjouma... ✅ updated | L5=40 AA5=40 | ATT Complet
+  [22/38] Ngal'ayel Mukau... ✅ updated | L5=35 AA5=35 | MIL GOAT
+  [23/38] Ayyoub Bouaddi... ✅ updated | L5=35 AA5=35 | MIL GOAT
+  [24/38] Matias Fernandez-Pardo... ✅ updated | L5=54 AA5=54 | MIL GOAT
+  [25/38] Angel Yondjio... skip (< 2 matchs)
+  [26/38] Bruno Génésio... skip (< 2 matchs)
+  [27/38] Thomas Sajous... skip (< 2 matchs)
+  [28/38] Soriba Diaoune... ✅ updated | L5=36 AA5=36 | ATT Complet
+  [29/38] Samy Merzouk... skip (< 2 matchs)
+  [30/38] Zadig Lanssade... skip (< 2 matchs)
+  [31/38] Morgan Costarelli... skip (< 2 matchs)
+  [32/38] Ousmane Touré... skip (< 2 matchs)
+  [33/38] Calvin Verdonk... ✅ updated | L5=48 AA5=48 | DEF Central
+  [34/38] Stephane Noumbissie... skip (< 2 matchs)
+  [35/38] Hamza Igamane... skip (< 2 matchs)
+  [36/38] Alexsandro... ✅ updated | L5=62 AA5=62 | DEF Central
+  [37/38] Nathan Ngoy... ✅ updated | L5=68 AA5=68 | DEF Central
+  [38/38] Romain Perraud... ✅ updated | L5=41 AA5=41 | DEF Latéral
+
+🏟️  [7/18] FC Lorient (lorient-ploemeur)
+  👥 36 joueurs actifs
+  [1/36] Bamba Dieng... ✅ updated | L5=54 AA5=53 | ATT Complet
+  [2/36] Benjamin Leroy... skip (< 2 matchs)
+  [3/36] Panos Katseris... ✅ updated | L5=37 AA5=37 | DEF Central
+  [4/36] Igor Silva... ✅ updated | L5=47 AA5=47 | DEF Central
+  [5/36] Isaac Monnier... skip (< 2 matchs)
+  [6/36] Bandiougou Fadiga... skip (< 2 matchs)
+  [7/36] Darlin Yongwa... ✅ updated | L5=41 AA5=41 | DEF Central
+  [8/36] Abdoulaye Faye... ✅ updated | L5=48 AA5=48 | DEF Central
+  [9/36] Sambou Soumano... ✅ updated | L5=33 AA5=33 | ATT Complet
+  [10/36] Daniel Semedo... skip (< 2 matchs)
+  [11/36] Izak Akakpo... skip (< 2 matchs)
+  [12/36] Olivier Pantaloni... skip (< 2 matchs)
+  [13/36] Noah Le Gal... skip (< 2 matchs)
+  [14/36] Martin Bley... skip (< 2 matchs)
+  [15/36] Montassar Talbi... ✅ updated | L5=53 AA5=53 | DEF Central
+  [16/36] Trevan Sanusi... skip (< 2 matchs)
+  [17/36] Théo Le Bris... ✅ updated | L5=41 AA5=41 | MIL GOAT
+  [18/36] Pablo Pagis... ✅ updated | L5=64 AA5=64 | ATT Complet
+  [19/36] Dermane Karim... ✅ updated | L5=45 AA5=45 | MIL GOAT
+  [20/36] Jérémy Hatchi... ✅ updated | L5=40 AA5=40 | ATT Complet
+  [21/36] Bingourou Kamara... skip (< 2 matchs)
+  [22/36] Lucas Leaudais... skip (< 2 matchs)
+  [23/36] Arthur Avom... ✅ updated | L5=48 AA5=48 | MIL GOAT
+  [24/36] Aiyegun Tosin... ✅ updated | L5=41 AA5=41 | ATT Complet
+  [25/36] Noah Cadiou... ✅ updated | L5=54 AA5=54 | MIL GOAT
+  [26/36] Bamo Meïté... ✅ updated | L5=45 AA5=42 | DEF Central
+  [27/36] Nathaniel Adjei... ✅ updated | L5=38 AA5=38 | DEF Central
+  [28/36] Jean-Victor Makengo... ✅ updated | L5=42 AA5=42 | MIL GOAT
+  [29/36] Laurent Abergel... ✅ updated | L5=52 AA5=52 | MIL GOAT
+  [30/36] Stevan Siba... skip (< 2 matchs)
+  [31/36] Jai Semenyo... skip (< 2 matchs)
+  [32/36] Isaak Touré... skip (< 2 matchs)
+  [33/36] Mamadou Koné... skip (< 2 matchs)
+  [34/36] Arsène Kouassi... ✅ updated | L5=54 AA5=54 | DEF Central
+  [35/36] Mohamed Bamba... ✅ updated | L5=35 AA5=35 | ATT Complet
+  [36/36] Yvon Mvogo... ✅ updated | L5=46 AA5=43 | GK
+
+🏟️  [8/18] FC Metz (metz-metz)
+  👥 33 joueurs actifs
+  [1/33] Giorgi Kvilitaia... ✅ updated | L5=38 AA5=38 | ATT Complet
+  [2/33] Boubacar Traoré... ✅ updated | L5=44 AA5=44 | MIL GOAT
+  [3/33] Cléo Mélières... skip (< 2 matchs)
+  [4/33] Koffi Kouao... ✅ updated | L5=54 AA5=54 | DEF Central
+  [5/33] Romain Jean-Baptiste... skip (< 2 matchs)
+  [6/33] Joel Asoro... skip (< 2 matchs)
+  [7/33] Lucas Michal... ✅ updated | L5=35 AA5=35 | ATT Complet
+  [8/33] Yannis Lawson... skip (< 2 matchs)
+  [9/33] Tahirys Dos Santos... skip (< 2 matchs)
+  [10/33] Ismaël Guerti... skip (< 2 matchs)
+  [11/33] Terry Yegbe... ✅ updated | L5=40 AA5=39 | DEF Central
+  [12/33] Fodé Ballo-Touré... ✅ updated | L5=42 AA5=42 | DEF Central
+  [13/33] Gauthier Hein... ✅ updated | L5=43 AA5=43 | MIL GOAT
+  [14/33] Habib Diallo... ✅ updated | L5=38 AA5=38 | ATT Complet
+  [15/33] Jonathan Fischer... ✅ updated | L5=33 AA5=33 | GK
+  [16/33] M. Mboula... ✅ updated | L5=45 AA5=45 | DEF Central
+  [17/33] Alpha Touré... ✅ updated | L5=29 AA5=29 | MIL GOAT
+  [18/33] Sadibou Sané... ✅ updated | L5=54 AA5=54 | DEF Central
+  [19/33] Jean-Philippe Gbamin... ✅ updated | L5=48 AA5=48 | MIL GOAT
+  [20/33] Believe Munongo... ✅ updated | L5=37 AA5=37 | MIL GOAT
+  [21/33] Maxime Colin... ✅ updated | L5=51 AA5=51 | DEF Central
+  [22/33] Jahyann Pandore... skip (< 2 matchs)
+  [23/33] Joseph Mangondo... skip (< 2 matchs)
+  [24/33] Benjamin Stambouli... ✅ updated | L5=48 AA5=48 | MIL GOAT
+  [25/33] Giorgi Abuashvili... ✅ updated | L5=44 AA5=44 | ATT Complet
+  [26/33] Giorgi Tsitaishvili... ✅ updated | L5=53 AA5=53 | ATT Complet
+  [27/33] Moustapha Diop... skip (< 2 matchs)
+  [28/33] Jessy Deminguet... ✅ updated | L5=36 AA5=36 | MIL GOAT
+  [29/33] Bouna Sarr... ✅ updated | L5=25 AA5=25 | DEF Central
+  [30/33] Benoit Tavenot... skip (< 2 matchs)
+  [31/33] Pape Sy... skip (< 2 matchs)
+  [32/33] Ousmane Ba... skip (< 2 matchs)
+  [33/33] Nathan Mbala... ✅ updated | L5=45 AA5=45 | ATT Complet
+
+🏟️  [9/18] AS Monaco (monaco-monaco)
+  👥 35 joueurs actifs
+  [1/35] Mamadou Coulibaly... ✅ updated | L5=46 AA5=46 | MIL GOAT
+  [2/35] Denis Zakaria... ✅ updated | L5=47 AA5=47 | MIL GOAT
+  [3/35] Lukáš Hradecky... ✅ updated | L5=50 AA5=50 | GK
+  [4/35] Mohammed Salisu... skip (< 2 matchs)
+  [5/35] Matthias Wamu Oyatambwe... skip (< 2 matchs)
+  [6/35] Lamine Camara... ✅ updated | L5=66 AA5=66 | MIL GOAT
+  [7/35] Jordan Teze... ✅ updated | L5=66 AA5=66 | DEF Central
+  [8/35] Mika Biereth... ✅ updated | L5=34 AA5=34 | ATT Complet
+  [9/35] Krépin Diatta... ✅ updated | L5=40 AA5=40 | MIL GOAT
+  [10/35] Ansu Fati... ✅ updated | L5=47 AA5=47 | ATT Complet
+  [11/35] Maghnes Akliouche... ✅ updated | L5=70 AA5=70 | MIL GOAT
+  [12/35] Aladji Bamba... ✅ updated | L5=47 AA5=47 | MIL GOAT
+  [13/35] Wout Faes... ✅ updated | L5=56 AA5=56 | DEF Central
+  [14/35] Vanderson... ✅ updated | L5=44 AA5=44 | DEF Central
+  [15/35] Takumi Minamino... skip (< 2 matchs)
+  [16/35] Philipp Köhn... ✅ updated | L5=54 AA5=54 | GK
+  [17/35] Eric Dier... skip (< 2 matchs)
+  [18/35] Folarin Balogun... ✅ updated | L5=58 AA5=55 | ATT Complet
+  [19/35] Paul Pogba... skip (< 2 matchs)
+  [20/35] Bradel Kiwa... skip (< 2 matchs)
+  [21/35] Caio Henrique... ✅ updated | L5=48 AA5=48 | DEF Central
+  [22/35] Samuel Nibombé... ✅ updated | L5=34 AA5=34 | MIL GOAT
+  [23/35] Yann Lienard... skip (< 2 matchs)
+  [24/35] Pape Cabral... skip (< 2 matchs)
+  [25/35] Christian Mawissa Elebi... ✅ updated | L5=44 AA5=44 | DEF Central
+  [26/35] Stanis Idumbo... skip (< 2 matchs)
+  [27/35] Ilane Touré... skip (< 2 matchs)
+  [28/35] Thilo Kehrer... ✅ updated | L5=59 AA5=64 | DEF Central
+  [29/35] Sébastien Pocognoli... skip (< 2 matchs)
+  [30/35] Yanis Benchaouch... skip (< 2 matchs)
+  [31/35] Jules Stawiecki... skip (< 2 matchs)
+  [32/35] Aleksandr Golovin... ✅ updated | L5=62 AA5=62 | MIL GOAT
+  [33/35] Paris Brunner... skip (< 2 matchs)
+  [34/35] Simon Adingra... ✅ updated | L5=42 AA5=42 | ATT Complet
+  [35/35] Kassoum Ouattara... ✅ updated | L5=39 AA5=39 | DEF Central
+
+🏟️  [10/18] FC Nantes (nantes-la-chapelle-sur-erdre)
+  👥 33 joueurs actifs
+  [1/33] Dehmaine Assoumani... ✅ updated | L5=43 AA5=43 | MIL GOAT
+  [2/33] Patrik Carlgren... skip (< 2 matchs)
+  [3/33] Ibrahima Sissoko... ✅ updated | L5=34 AA5=34 | MIL GOAT
+  [4/33] Fabien Centonze... ✅ updated | L5=61 AA5=61 | DEF Central
+  [5/33] Mathieu Acapandié... skip (< 2 matchs)
+  [6/33] Moutanabi Bodiang... skip (< 2 matchs)
+  [7/33] Francis Coquelin... ✅ updated | L5=37 AA5=37 | MIL GOAT
+  [8/33] Tylel Tati... ✅ updated | L5=53 AA5=53 | DEF Central
+  [9/33] Mohamed Kaba... ✅ updated | L5=51 AA5=51 | MIL GOAT
+  [10/33] Chidozie Awaziem... ✅ updated | L5=51 AA5=50 | DEF Central
+  [11/33] Mostafa Mohamed... ✅ updated | L5=44 AA5=44 | ATT Complet
+  [12/33] Sékou Doucouré... skip (< 2 matchs)
+  [13/33] H. Guirassy... ✅ updated | L5=36 AA5=36 | ATT Complet
+  [14/33] Rémy Cabella... ✅ updated | L5=39 AA5=39 | MIL GOAT
+  [15/33] Nicolas Cozza... ✅ updated | L5=44 AA5=44 | DEF Central
+  [16/33] Deiver Machado... ✅ updated | L5=32 AA5=32 | DEF Central
+  [17/33] Anthony Lopes... ✅ updated | L5=45 AA5=45 | GK
+  [18/33] Bahmed Deuff... skip (< 2 matchs)
+  [19/33] Uroš Radaković... skip (< 2 matchs)
+  [20/33] Doumbia Koné... skip (< 2 matchs)
+  [21/33] Vahid Halilhodžić... skip (< 2 matchs)
+  [22/33] Frédéric Guilbert... skip (< 2 matchs)
+  [23/33] Matthis Abline... ✅ updated | L5=50 AA5=50 | ATT Complet
+  [24/33] Ignatius Ganago... ✅ updated | L5=42 AA5=42 | ATT Complet
+  [25/33] Sacha Ziani... skip (< 2 matchs)
+  [26/33] Louis Leroux... ✅ updated | L5=39 AA5=39 | MIL GOAT
+  [27/33] Youssef El-Arabi... ✅ updated | L5=41 AA5=41 | ATT Complet
+  [28/33] Johann Lepenant... ✅ updated | L5=43 AA5=43 | MIL GOAT
+  [29/33] Amady Camara... skip (< 2 matchs)
+  [30/33] Ali Youssef... ✅ updated | L5=59 AA5=59 | DEF Central
+  [31/33] Abakar Sylla... ✅ updated | L5=34 AA5=34 | DEF Central
+  [32/33] Kelvin Amian... ✅ updated | L5=28 AA5=28 | DEF Central
+  [33/33] Alexis Mirbach... skip (< 2 matchs)
+
+🏟️  [11/18] OGC Nice (nice-nice)
+  👥 42 joueurs actifs
+  [1/42] Everton Pereira da Silva... ✅ updated | L5=36 AA5=36 | MIL GOAT
+  [2/42] Kaïl Boudache... ✅ updated | L5=41 AA5=41 | ATT Complet
+  [3/42] Gabin Bernardeau... ✅ updated | L5=40 AA5=40 | MIL GOAT
+  [4/42] Elye Wahi... ✅ updated | L5=50 AA5=48 | ATT Complet
+  [5/42] Cho... ✅ updated | L5=42 AA5=42 | ATT Complet
+  [6/42] Hicham Boudaoui... ✅ updated | L5=38 AA5=38 | MIL GOAT
+  [7/42] Salis Samed... ✅ updated | L5=42 AA5=42 | MIL GOAT
+  [8/42] Charles Vanhoutte... ✅ updated | L5=46 AA5=46 | MIL GOAT
+  [9/42] Enguerrand Bouard... skip (< 2 matchs)
+  [10/42] Claude Puel... skip (< 2 matchs)
+  [11/42] Brad-Hamilton Mantsounga... skip (< 2 matchs)
+  [12/42] Tanguy Ndombélé... ✅ updated | L5=42 AA5=42 | MIL GOAT
+  [13/42] Yanis Sofikitis... skip (< 2 matchs)
+  [14/42] Jonathan Clauss... ✅ updated | L5=58 AA5=58 | DEF Latéral
+  [15/42] Moïse Bombito... skip (< 2 matchs)
+  [16/42] Youssouf Ndayishimiye... ✅ updated | L5=24 AA5=24 | MIL GOAT
+  [17/42] Bartosz Żelazowski... skip (< 2 matchs)
+  [18/42] Tiago Gouveia... ✅ updated | L5=36 AA5=36 | ATT Complet
+  [19/42] Melvin Bard... ✅ updated | L5=41 AA5=41 | DEF Central
+  [20/42] Dante... ✅ updated | L5=40 AA5=40 | DEF Central
+  [21/42] Sofiane Diop... ✅ updated | L5=39 AA5=39 | MIL GOAT
+  [22/42] Kojo Peprah Oppong... ✅ updated | L5=57 AA5=57 | DEF Central
+  [23/42] Antoine Mendy... ✅ updated | L5=40 AA5=40 | DEF Central
+  [24/42] Théo Bruyère... skip (< 2 matchs)
+  [25/42] Jah-Mason Telusson... skip (< 2 matchs)
+  [26/42] Millan Brignone... skip (< 2 matchs)
+  [27/42] Matys Youst... skip (< 2 matchs)
+  [28/42] Tom Louchet... ✅ updated | L5=38 AA5=38 | MIL GOAT
+  [29/42] Laurenzo Monteiro... skip (< 2 matchs)
+  [30/42] Mohamed Abdelmonem... skip (< 2 matchs)
+  [31/42] Kéfren Ali... skip (< 2 matchs)
+  [32/42] Kayyum Alabi... skip (< 2 matchs)
+  [33/42] Yehvann Diouf... ✅ updated | L5=55 AA5=54 | GK
+  [34/42] Zoumana Diallo... skip (< 2 matchs)
+  [35/42] Isak Jansson... ✅ updated | L5=35 AA5=35 | ATT Complet
+  [36/42] Kevin Carlos... ✅ updated | L5=31 AA5=31 | ATT Complet
+  [37/42] Morgan Sanson... ✅ updated | L5=37 AA5=37 | MIL GOAT
+  [38/42] Djibril Coulibaly... ✅ updated | L5=38 AA5=38 | MIL GOAT
+  [39/42] Mousslim Youssouf... skip (< 2 matchs)
+  [40/42] Ali Abdi... ✅ updated | L5=40 AA5=40 | DEF Central
+  [41/42] Maxime Dupé... ✅ updated | L5=41 AA5=41 | GK
+  [42/42] Juma Bah... ✅ updated | L5=46 AA5=46 | DEF Central
+
+🏟️  [12/18] Olympique Lyonnais (olympique-lyonnais-lyon)
+  👥 36 joueurs actifs
+  [1/36] Mathys de Carvalho... skip (< 2 matchs)
+  [2/36] Endrick... ✅ updated | L5=58 AA5=58 | ATT Complet
+  [3/36] Tyler Morton... ✅ updated | L5=50 AA5=50 | MIL GOAT
+  [4/36] Lassine Diarra... skip (< 2 matchs)
+  [5/36] Noham Kamara... skip (< 2 matchs)
+  [6/36] Ruben Kluivert... ✅ updated | L5=61 AA5=62 | DEF Central
+  [7/36] Islamdine Halifa... skip (< 2 matchs)
+  [8/36] Ernest Nuamah... skip (< 2 matchs)
+  [9/36] Paulo Fonseca... skip (< 2 matchs)
+  [10/36] Nicolás Tagliafico... ✅ updated | L5=40 AA5=40 | DEF Central
+  [11/36] Abner... ✅ updated | L5=41 AA5=41 | DEF Latéral
+  [12/36] Rémy Descamps... skip (< 2 matchs)
+  [13/36] Clinton Mata... ✅ updated | L5=54 AA5=54 | DEF Central
+  [14/36] Yaremchuk... ✅ updated | L5=35 AA5=35 | ATT Complet
+  [15/36] Orel Mangala... ✅ updated | L5=38 AA5=38 | MIL GOAT
+  [16/36] Yvann Konan... skip (< 2 matchs)
+  [17/36] Khalis Merah... ✅ updated | L5=40 AA5=40 | MIL GOAT
+  [18/36] Ainsley Maitland-Niles... ✅ updated | L5=48 AA5=48 | MIL GOAT
+  [19/36] Malick Fofana... ✅ updated | L5=35 AA5=35 | MIL GOAT
+  [20/36] Pavel Šulc... ✅ updated | L5=52 AA5=49 | MIL GOAT
+  [21/36] Moussa Niakhaté... ✅ updated | L5=62 AA5=62 | DEF Central
+  [22/36] Prince Mbatshi Mukuba... skip (< 2 matchs)
+  [23/36] Adam Karabec... ✅ updated | L5=40 AA5=40 | MIL GOAT
+  [24/36] Dominik Greif... ✅ updated | L5=46 AA5=46 | GK
+  [25/36] Fallou Fall... skip (< 2 matchs)
+  [26/36] Matthias da Silva... skip (< 2 matchs)
+  [27/36] Tiago Gonçalves... skip (< 2 matchs)
+  [28/36] Hans Hateboer...     ⚠️ HTTPSConnectionPool(host='api.sorare.com', port=443): Read timed out. (read timeout=30)
+    ⚠️ HTTPSConnectionPool(host='api.sorare.com', port=443): Max retries exceeded with url: /federation/graphql (Caused by NameResolutionError("HTTPSConnection(host='api.sorare.com', port=443): Failed to resolve 'api.sorare.com' ([Errno 8] nodename nor servname provided, or not known)"))
+✅ updated | L5=44 AA5=44 | DEF Central
+  [29/36] Steeve Kango...     ⚠️ HTTPSConnectionPool(host='api.sorare.com', port=443): Read timed out. (read timeout=30)
+    ⚠️ HTTPSConnectionPool(host='api.sorare.com', port=443): Max retries exceeded with url: /federation/graphql (Caused by NameResolutionError("HTTPSConnection(host='api.sorare.com', port=443): Failed to resolve 'api.sorare.com' ([Errno 8] nodename nor servname provided, or not known)"))
+    ⚠️ HTTPSConnectionPool(host='api.sorare.com', port=443): Max retries exceeded with url: /federation/graphql (Caused by NameResolutionError("HTTPSConnection(host='api.sorare.com', port=443): Failed to resolve 'api.sorare.com' ([Errno 8] nodename nor servname provided, or not known)"))
+✅ updated | L5=37 AA5=0 | DEF Central
+  [30/36] Rachid Ghezzal...     ⚠️ HTTPSConnectionPool(host='api.sorare.com', port=443): Max retries exceeded with url: /federation/graphql (Caused by NameResolutionError("HTTPSConnection(host='api.sorare.com', port=443): Failed to resolve 'api.sorare.com' ([Errno 8] nodename nor servname provided, or not known)"))
+    ⚠️ HTTPSConnectionPool(host='api.sorare.com', port=443): Max retries exceeded with url: /federation/graphql (Caused by NameResolutionError("HTTPSConnection(host='api.sorare.com', port=443): Failed to resolve 'api.sorare.com' ([Errno 8] nodename nor servname provided, or not known)"))
+    ⚠️ HTTPSConnectionPool(host='api.sorare.com', port=443): Max retries exceeded with url: /federation/graphql (Caused by NameResolutionError("HTTPSConnection(host='api.sorare.com', port=443): Failed to resolve 'api.sorare.com' ([Errno 8] nodename nor servname provided, or not known)"))
+skip (< 2 matchs)
+  [31/36] Noah Nartey...     ⚠️ HTTPSConnectionPool(host='api.sorare.com', port=443): Max retries exceeded with url: /federation/graphql (Caused by NameResolutionError("HTTPSConnection(host='api.sorare.com', port=443): Failed to resolve 'api.sorare.com' ([Errno 8] nodename nor servname provided, or not known)"))
+    ⚠️ HTTPSConnectionPool(host='api.sorare.com', port=443): Max retries exceeded with url: /federation/graphql (Caused by NameResolutionError("HTTPSConnection(host='api.sorare.com', port=443): Failed to resolve 'api.sorare.com' ([Errno 8] nodename nor servname provided, or not known)"))
+    ⚠️ HTTPSConnectionPool(host='api.sorare.com', port=443): Max retries exceeded with url: /federation/graphql (Caused by NameResolutionError("HTTPSConnection(host='api.sorare.com', port=443): Failed to resolve 'api.sorare.com' ([Errno 8] nodename nor servname provided, or not known)"))
+skip (< 2 matchs)
+  [32/36] Corentin Tolisso...     ⚠️ HTTPSConnectionPool(host='api.sorare.com', port=443): Max retries exceeded with url: /federation/graphql (Caused by NameResolutionError("HTTPSConnection(host='api.sorare.com', port=443): Failed to resolve 'api.sorare.com' ([Errno 8] nodename nor servname provided, or not known)"))
+    ⚠️ HTTPSConnectionPool(host='api.sorare.com', port=443): Max retries exceeded with url: /federation/graphql (Caused by NameResolutionError("HTTPSConnection(host='api.sorare.com', port=443): Failed to resolve 'api.sorare.com' ([Errno 8] nodename nor servname provided, or not known)"))
+    ⚠️ HTTPSConnectionPool(host='api.sorare.com', port=443): Max retries exceeded with url: /federation/graphql (Caused by NameResolutionError("HTTPSConnection(host='api.sorare.com', port=443): Failed to resolve 'api.sorare.com' ([Errno 8] nodename nor servname provided, or not known)"))
+skip (< 2 matchs)
+  [33/36] Adil Hamdani...     ⚠️ HTTPSConnectionPool(host='api.sorare.com', port=443): Max retries exceeded with url: /federation/graphql (Caused by NameResolutionError("HTTPSConnection(host='api.sorare.com', port=443): Failed to resolve 'api.sorare.com' ([Errno 8] nodename nor servname provided, or not known)"))
+    ⚠️ ('Connection aborted.', ConnectionResetError(54, 'Connection reset by peer'))
+✅ updated | L5=36 AA5=36 | ATT Complet
+  [34/36] Tanner Tessmann... ✅ updated | L5=39 AA5=39 | MIL GOAT
+  [35/36] Afonso Moreira... ✅ updated | L5=53 AA5=53 | ATT Complet
+  [36/36] Rémi Himbert... ✅ updated | L5=40 AA5=40 | ATT Complet
+
+🏟️  [13/18] Olympique de Marseille (olympique-marseille-marseille)
+  👥 32 joueurs actifs
+  [1/32] Emerson... ✅ updated | L5=42 AA5=42 | DEF Latéral
+  [2/32] Tochukwu Nnadi... ✅ updated | L5=39 AA5=39 | MIL GOAT
+  [3/32] Hamed Traorè... ✅ updated | L5=38 AA5=38 | MIL GOAT
+  [4/32] Mathis Clement... skip (< 2 matchs)
+  [5/32] Amine Gouiri... ✅ updated | L5=49 AA5=49 | ATT Complet
+  [6/32] Tadjidine Mmadi... skip (< 2 matchs)
+  [7/32] Igor Paixão... ✅ updated | L5=62 AA5=62 | ATT Complet
+  [8/32] Jelle Van Neck... skip (< 2 matchs)
+  [9/32] Mason Greenwood... ✅ updated | L5=52 AA5=52 | ATT Complet
+  [10/32] Bilal Nadir... ✅ updated | L5=35 AA5=35 | MIL GOAT
+  [11/32] Habib Beye... skip (< 2 matchs)
+  [12/32] Anis Doubal... skip (< 2 matchs)
+  [13/32] Pladi N'Zinga Pambani... skip (< 2 matchs)
+  [14/32] Facundo Medina... ✅ updated | L5=40 AA5=40 | DEF Central
+  [15/32] Yanis Sellami... skip (< 2 matchs)
+  [16/32] Pierre-Emerick Aubameyang... ✅ updated | L5=41 AA5=41 | ATT Complet
+  [17/32] Jeffrey de Lange... skip (< 2 matchs)
+  [18/32] Rayan Ouro Bang Na... skip (< 2 matchs)
+  [19/32] CJ Egan-Riley... skip (< 2 matchs)
+  [20/32] Himad Abdelli... ✅ updated | L5=34 AA5=34 | MIL GOAT
+  [21/32] Ange Lago... skip (< 2 matchs)
+  [22/32] Théo Vermot... skip (< 2 matchs)
+  [23/32] Timothy Weah... ✅ updated | L5=49 AA5=49 | ATT Complet
+  [24/32] Pierre-Emile Højbjerg... ✅ updated | L5=54 AA5=54 | MIL GOAT
+  [25/32] Ethan Nwaneri... ✅ updated | L5=43 AA5=43 | MIL GOAT
+  [26/32] Benjamin Pavard... ✅ updated | L5=47 AA5=47 | DEF Central
+  [27/32] Leonardo Balerdi... ✅ updated | L5=42 AA5=42 | DEF Central
+  [28/32] Gerónimo Rulli... ✅ updated | L5=57 AA5=57 | GK
+  [29/32] Nayef Aguerd... ✅ updated | L5=50 AA5=49 | DEF Central
+  [30/32] Quinten Timber... ✅ updated | L5=42 AA5=42 | MIL GOAT
+  [31/32] Arthur Vermeeren... ✅ updated | L5=37 AA5=37 | MIL GOAT
+  [32/32] Geoffrey Kondogbia... ✅ updated | L5=48 AA5=48 | MIL GOAT
+
+🏟️  [14/18] Paris Saint-Germain (psg-paris)
+  👥 32 joueurs actifs
+  [1/32] Kang-In Lee... ✅ updated | L5=42 AA5=42 | MIL GOAT
+  [2/32] Beraldo... ✅ updated | L5=47 AA5=47 | DEF Central
+  [3/32] Matvey Safonov... ✅ updated | L5=60 AA5=60 | GK
+  [4/32] Vitinha... ✅ updated | L5=67 AA5=67 | MIL GOAT
+  [5/32] Noah Nsoki... skip (< 2 matchs)
+  [6/32] Fabián Ruiz... skip (< 2 matchs)
+  [7/32] Warren Zaïre-Emery... ✅ updated | L5=52 AA5=52 | MIL GOAT
+  [8/32] Désiré Doué... ✅ updated | L5=50 AA5=50 | ATT Complet
+  [9/32] Lucas Chevalier... skip (< 2 matchs)
+  [10/32] Lucas Hernández... ✅ updated | L5=52 AA5=52 | DEF Central
+  [11/32] Achraf Hakimi... ✅ updated | L5=73 AA5=73 | DEF Latéral
+  [12/32] João Neves... ✅ updated | L5=57 AA5=59 | MIL GOAT
+  [13/32] Ibrahim Mbaye... ✅ updated | L5=38 AA5=38 | ATT Complet
+  [14/32] Yanis Khafi... skip (< 2 matchs)
+  [15/32] Nuno Mendes... ✅ updated | L5=62 AA5=62 | DEF Latéral
+  [16/32] Illia Zabarnyi... ✅ updated | L5=60 AA5=60 | DEF Central
+  [17/32] Mathis Jangéal... skip (< 2 matchs)
+  [18/32] Marquinhos... ✅ updated | L5=60 AA5=60 | DEF Central
+  [19/32] Ousmane Dembélé... ✅ updated | L5=52 AA5=52 | ATT Complet
+  [20/32] Khvicha Kvaratskhelia... ✅ updated | L5=56 AA5=56 | ATT Complet
+  [21/32] Martin James... skip (< 2 matchs)
+  [22/32] Bradley Barcola... ✅ updated | L5=61 AA5=61 | ATT Complet
+  [23/32] Renato Bellucci... skip (< 2 matchs)
+  [24/32] David Boly... skip (< 2 matchs)
+  [25/32] Luis Enrique... skip (< 2 matchs)
+  [26/32] Wassim Slama... skip (< 2 matchs)
+  [27/32] Senny Mayulu... ✅ updated | L5=58 AA5=58 | MIL GOAT
+  [28/32] Gonçalo Ramos... ✅ updated | L5=46 AA5=46 | ATT Complet
+  [29/32] Arthur Vignaud... skip (< 2 matchs)
+  [30/32] Quentin Ndjantou... skip (< 2 matchs)
+  [31/32] Dro Fernández... ✅ updated | L5=45 AA5=45 | MIL GOAT
+  [32/32] Willian Pacho... ✅ updated | L5=59 AA5=59 | DEF Central
+
+🏟️  [15/18] Paris FC (paris-paris)
+  👥 36 joueurs actifs
+  [1/36] Rudy Matondo... ✅ updated | L5=30 AA5=30 | MIL GOAT
+  [2/36] Julien López... skip (< 2 matchs)
+  [3/36] Sofiane Alakouch... skip (< 2 matchs)
+  [4/36] Jonathan Ikoné... ✅ updated | L5=39 AA5=39 | ATT Complet
+  [5/36] Tuomas Ollila... ✅ updated | L5=35 AA5=35 | DEF Central
+  [6/36] Alimami Gory... ✅ updated | L5=46 AA5=46 | ATT Complet
+  [7/36] Ciro Immobile... ✅ updated | L5=40 AA5=40 | ATT Complet
+  [8/36] Ilan Kebbal... ✅ updated | L5=51 AA5=51 | MIL GOAT
+  [9/36] Timothée Kolodziejczak... ✅ updated | L5=42 AA5=42 | DEF Central
+  [10/36] Rémy Riou... skip (< 2 matchs)
+  [11/36] Luca Koleosho... ✅ updated | L5=36 AA5=36 | ATT Complet
+  [12/36] Otávio... ✅ updated | L5=35 AA5=35 | DEF Central
+  [13/36] Kevin Trapp... ✅ updated | L5=56 AA5=56 | GK
+  [14/36] Pierre-Yves Hamel... skip (< 2 matchs)
+  [15/36] Vincent Marchetti... ✅ updated | L5=38 AA5=38 | MIL GOAT
+  [16/36] Mathieu Cafaro... skip (< 2 matchs)
+  [17/36] Hamari Traoré... ✅ updated | L5=61 AA5=61 | DEF Central
+  [18/36] Jean-Philippe Krasso... ✅ updated | L5=38 AA5=38 | ATT Complet
+  [19/36] Pierre Lees-Melou... ✅ updated | L5=55 AA5=55 | MIL GOAT
+  [20/36] Diego Coppola... ✅ updated | L5=53 AA5=53 | DEF Central
+  [21/36] Moses Simon... ✅ updated | L5=48 AA5=48 | ATT Complet
+  [22/36] Moustapha Mbow... ✅ updated | L5=62 AA5=62 | DEF Central
+  [23/36] Killian Prouchet... skip (< 2 matchs)
+  [24/36] Thibault De Smet... ✅ updated | L5=42 AA5=42 | DEF Central
+  [25/36] Nhoa Sangui... ✅ updated | L5=48 AA5=48 | DEF Central
+  [26/36] Obed Nkambadio... skip (< 2 matchs)
+  [27/36] Willem Geubbels... ✅ updated | L5=33 AA5=33 | ATT Complet
+  [28/36] Maxime Lopez... ✅ updated | L5=39 AA5=39 | MIL GOAT
+  [29/36] Lamine Gueye... skip (< 2 matchs)
+  [30/36] Adama Camara... ✅ updated | L5=49 AA5=49 | MIL GOAT
+  [31/36] Mohamed Dao... skip (< 2 matchs)
+  [32/36] Zakarya Khaldi... skip (< 2 matchs)
+  [33/36] Antoine Kombouare... skip (< 2 matchs)
+  [34/36] Anis Fatahine... skip (< 2 matchs)
+  [35/36] Samir Chergui... skip (< 2 matchs)
+  [36/36] Marshall Munetsi... ✅ updated | L5=54 AA5=52 | MIL GOAT
+
+🏟️  [16/18] Stade Rennais F.C. (rennes-rennes)
+  👥 31 joueurs actifs
+  [1/31] Djaoui Cissé... ✅ updated | L5=36 AA5=36 | MIL GOAT
+  [2/31] Lilian Brassier... ✅ updated | L5=60 AA5=60 | DEF Latéral
+  [3/31] Brice Samba... ✅ updated | L5=65 AA5=65 | GK
+  [4/31] Aboubakar Nagida... ✅ updated | L5=60 AA5=60 | DEF Central
+  [5/31] Arnaud Nordin... ✅ updated | L5=47 AA5=47 | ATT Complet
+  [6/31] Ludovic Blas... ✅ updated | L5=41 AA5=41 | ATT Complet
+  [7/31] Chibuike Ugochukwu... skip (< 2 matchs)
+  [8/31] Breel Embolo... ✅ updated | L5=40 AA5=40 | ATT Complet
+  [9/31] Jeremy Jacquet... ✅ updated | L5=44 AA5=44 | DEF Central
+  [10/31] Ayoube Akabou... skip (< 2 matchs)
+  [11/31] Sebastian Szymański... ✅ updated | L5=53 AA5=53 | MIL GOAT
+  [12/31] Franck Haise... skip (< 2 matchs)
+  [13/31] Henrick Do Marcolino... skip (< 2 matchs)
+  [14/31] Quentin Merlin... ✅ updated | L5=63 AA5=63 | MIL GOAT
+  [15/31] Przemysław Frankowski... ✅ updated | L5=54 AA5=54 | MIL GOAT
+  [16/31] Mousa Tamari... ✅ updated | L5=49 AA5=49 | ATT Complet
+  [17/31] Abdelhamid Aït Boudlal... ✅ updated | L5=41 AA5=41 | DEF Central
+  [18/31] Esteban Lepaul... ✅ updated | L5=49 AA5=48 | ATT Complet
+  [19/31] Yassir Zabiri... ✅ updated | L5=37 AA5=37 | ATT Complet
+  [20/31] Mahdi Camara... ✅ updated | L5=56 AA5=56 | MIL GOAT
+  [21/31] Elías Legendre... ✅ updated | L5=35 AA5=35 | ATT Complet
+  [22/31] Valentin Rongier... ✅ updated | L5=70 AA5=75 | MIL GOAT
+  [23/31] Anthony Rouault... ✅ updated | L5=56 AA5=56 | DEF Central
+  [24/31] Junior Ake... skip (< 2 matchs)
+  [25/31] Nordan Mukiele... ✅ updated | L5=49 AA5=49 | ATT Complet
+  [26/31] Paolo Limon... skip (< 2 matchs)
+  [27/31] Mathys Silistrie... skip (< 2 matchs)
+  [28/31] Alidu Seidu... ✅ updated | L5=41 AA5=41 | DEF Latéral
+  [29/31] Lucas Rosier... skip (< 2 matchs)
+  [30/31] Glen Kamara... skip (< 2 matchs)
+  [31/31] Kilian Belazzoug... skip (< 2 matchs)
+
+🏟️  [17/18] RC Strasbourg Alsace (strasbourg-strasbourg)
+  👥 35 joueurs actifs
+  [1/35] Ghianny Kodia... skip (< 2 matchs)
+  [2/35] Rafael Luís... ✅ updated | L5=34 AA5=34 | MIL GOAT
+  [3/35] Stefan Bajic... skip (< 2 matchs)
+  [4/35] Junior Mwanga... skip (< 2 matchs)
+  [5/35] Joaquín Panichelli... ✅ updated | L5=51 AA5=51 | ATT Complet
+  [6/35] Samir El Mourabet... ✅ updated | L5=49 AA5=49 | MIL GOAT
+  [7/35] Karl-Johan Johnsson... skip (< 2 matchs)
+  [8/35] Julio Enciso... ✅ updated | L5=45 AA5=45 | MIL GOAT
+  [9/35] Maximillian Oyedele... ✅ updated | L5=44 AA5=44 | MIL GOAT
+  [10/35] Emanuel Emegha... skip (< 2 matchs)
+  [11/35] Diego Moreira... ✅ updated | L5=48 AA5=48 | ATT Complet
+  [12/35] Guela Doué... ✅ updated | L5=49 AA5=49 | DEF Central
+  [13/35] Mathis Amougou... skip (< 2 matchs)
+  [14/35] Samuel Amo-Ameyaw... ✅ updated | L5=44 AA5=44 | ATT Complet
+  [15/35] Ishé Samuels-Smith... skip (< 2 matchs)
+  [16/35] Sacha Lung... skip (< 2 matchs)
+  [17/35] Mike Penders... ✅ updated | L5=62 AA5=62 | GK
+  [18/35] Gabriel Kerckaert... skip (< 2 matchs)
+  [19/35] Max Marechal... skip (< 2 matchs)
+  [20/35] Tyrese Noubissie... skip (< 2 matchs)
+  [21/35] Sebastian Nanasi... ✅ updated | L5=49 AA5=49 | MIL GOAT
+  [22/35] Gary O'Neil... skip (< 2 matchs)
+  [23/35] Amadou Cissé... skip (< 2 matchs)
+  [24/35] Lucas Høgsberg... ✅ updated | L5=51 AA5=51 | DEF Central
+  [25/35] David Datro Fofana... ✅ updated | L5=33 AA5=33 | ATT Complet
+  [26/35] Ismaël Doukouré... ✅ updated | L5=54 AA5=54 | DEF Central
+  [27/35] Ben Chilwell... ✅ updated | L5=43 AA5=43 | DEF Central
+  [28/35] Aarón Anselmino... ✅ updated | L5=37 AA5=37 | DEF Central
+  [29/35] Andrew Omobamidele... ✅ updated | L5=48 AA5=48 | DEF Central
+  [30/35] Jean-Baptiste Bosey... skip (< 2 matchs)
+  [31/35] Yoann Becker... skip (< 2 matchs)
+  [32/35] Abdoul Ouattara... ✅ updated | L5=49 AA5=49 | MIL GOAT
+  [33/35] Gessime Yassine... ✅ updated | L5=52 AA5=52 | ATT Complet
+  [34/35] M. Godo... ✅ updated | L5=46 AA5=46 | ATT Complet
+  [35/35] Valentín Barco... ✅ updated | L5=59 AA5=59 | MIL GOAT
+
+🏟️  [18/18] Toulouse FC (toulouse-toulouse)
+  👥 35 joueurs actifs
+  [1/35] Pape Diop... ✅ updated | L5=65 AA5=65 | MIL GOAT
+  [2/35] Yann Gboho... ✅ updated | L5=56 AA5=56 | ATT Complet
+  [3/35] Aron Dønnum... ✅ updated | L5=51 AA5=51 | MIL GOAT
+  [4/35] Djibril Sidibé... ✅ updated | L5=45 AA5=45 | DEF Latéral
+  [5/35] Noah Lahmadi... skip (< 2 matchs)
+  [6/35] Carles Martínez... skip (< 2 matchs)
+  [7/35] Emersonn... ✅ updated | L5=42 AA5=42 | ATT Complet
+  [8/35] Naïme Saïd Mchindra... skip (< 2 matchs)
+  [9/35] Darris Zema... skip (< 2 matchs)
+  [10/35] Ilyas Azizi... skip (< 2 matchs)
+  [11/35] Mark McKenzie... ✅ updated | L5=53 AA5=53 | DEF Central
+  [12/35] Enzo Faty... skip (< 2 matchs)
+  [13/35] Seny Koumbassa... ✅ updated | L5=42 AA5=42 | DEF Central
+  [14/35] Frank Magri... skip (< 2 matchs)
+  [15/35] Gaëtan Bakhouche... skip (< 2 matchs)
+  [16/35] Álex Domínguez... skip (< 2 matchs)
+  [17/35] Guillaume Restes... ✅ updated | L5=45 AA5=45 | GK
+  [18/35] Dayann Méthalie... ✅ updated | L5=31 AA5=31 | DEF Central
+  [19/35] Adam El Ouali... skip (< 2 matchs)
+  [20/35] Cristian Cásseres Jr.... ✅ updated | L5=56 AA5=56 | MIL GOAT
+  [21/35] Jacen Russell-Rowe... ✅ updated | L5=35 AA5=35 | ATT Complet
+  [22/35] Alexis Vossah... ✅ updated | L5=36 AA5=36 | MIL GOAT
+  [23/35] Santiago Hidalgo... ✅ updated | L5=49 AA5=49 | ATT Complet
+  [24/35] Mário Sauer... ✅ updated | L5=40 AA5=40 | MIL GOAT
+  [25/35] Julián Vignolo... ✅ updated | L5=44 AA5=44 | ATT Complet
+  [26/35] Louis Reynaud... skip (< 2 matchs)
+  [27/35] Charlie Cresswell... ✅ updated | L5=51 AA5=51 | DEF Central
+  [28/35] Frédéric Efuele Ngoyala... skip (< 2 matchs)
+  [29/35] Thibaud-Dorian Garondo... skip (< 2 matchs)
+  [30/35] Warren Kamanzi... ✅ updated | L5=49 AA5=49 | DEF Central
+  [31/35] Abu Francis... skip (< 2 matchs)
+  [32/35] Kjetil Haug... skip (< 2 matchs)
+  [33/35] Rasmus Nicolaisen... ✅ updated | L5=43 AA5=43 | DEF Central
+  [34/35] Rafik Messali... ✅ updated | L5=46 AA5=46 | MIL GOAT
+  [35/35] Nicolas Wasbauer... skip (< 2 matchs)
+
+============================================================
+✅ L1 terminé!
+  🆕 Nouveaux: 0
+  🔄 Mis à jour: 377
+  ⏭️  Skippés (< 2 matchs): 239
+  📊 Total: 379 joueurs
+  💾 Sauvé: deglingo_ligue1_final.json
+============================================================
+
+🏁 Done! Lance ensuite:
+  python3 merge_data.py
+  cd deglingo-scout-app && npx vite build

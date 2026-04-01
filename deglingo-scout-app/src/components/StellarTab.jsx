@@ -466,21 +466,36 @@ export default function StellarTab({ players, teams, fixtures, logos = {}, onFig
         </div>
 
         {/* Blocs explicatifs — centre */}
-        <div style={{ flex: 1, background: "rgba(8,4,25,0.65)", backdropFilter: "blur(10px)", borderRadius: 10, padding: "8px 12px", border: "1px solid rgba(196,181,253,0.15)", display: "flex", gap: 8, alignItems: "center" }}>
-          <span style={{ fontSize: 14, flexShrink: 0 }}>★</span>
+        <div style={{ flex: 1, background: "rgba(8,4,25,0.65)", backdropFilter: "blur(10px)", borderRadius: 10, padding: "8px 12px", border: "1px solid rgba(196,181,253,0.15)", display: "flex", gap: 8, alignItems: "flex-start" }}>
+          <span style={{ fontSize: 14, flexShrink: 0, marginTop: 1 }}>★</span>
           <div>
-            <div style={{ fontSize: 10, fontWeight: 800, color: "#C4B5FD", marginBottom: 2 }}>{S.stellarUltimeTitle}</div>
-            <div style={{ fontSize: 9.5, color: "rgba(255,255,255,0.55)", lineHeight: 1.4 }}>
-              {S.stellarUltimeDesc}
+            <div style={{ fontSize: 9.5, color: "rgba(255,255,255,0.75)", lineHeight: 1.5, fontStyle: "italic", marginBottom: 6 }}>
+              {lang === "fr"
+                ? <><span style={{ color: "#C4B5FD", fontWeight: 700, fontStyle: "normal" }}>Bienvenue</span> sur le Sorare Stellar Scout — j'ai développé un <span style={{ color: "#A78BFA", fontWeight: 700, fontStyle: "normal" }}>algo propriétaire</span> basé sur l'indicateur <span style={{ color: "#facc15", fontWeight: 800, fontStyle: "normal", letterSpacing: "0.05em" }}>⚡ D-SCORE</span> pour optimiser le choix journalier de tes équipes.</>
+                : <><span style={{ color: "#C4B5FD", fontWeight: 700, fontStyle: "normal" }}>Welcome</span> to the Sorare Stellar Scout — I built a <span style={{ color: "#A78BFA", fontWeight: 700, fontStyle: "normal" }}>proprietary algorithm</span> based on the <span style={{ color: "#facc15", fontWeight: 800, fontStyle: "normal", letterSpacing: "0.05em" }}>⚡ D-SCORE</span> indicator to optimize your daily team selection.</>}
+            </div>
+            <div style={{ borderTop: "1px solid rgba(196,181,253,0.1)", paddingTop: 5 }}>
+              <div style={{ fontSize: 10, fontWeight: 800, color: "#C4B5FD", marginBottom: 2 }}>{S.stellarUltimeTitle}</div>
+              <div style={{ fontSize: 9.5, color: "rgba(255,255,255,0.45)", lineHeight: 1.4 }}>
+                {S.stellarUltimeDesc}
+              </div>
             </div>
           </div>
         </div>
-        <div style={{ flex: 1, background: "rgba(8,4,25,0.65)", backdropFilter: "blur(10px)", borderRadius: 10, padding: "8px 12px", border: "1px solid rgba(196,181,253,0.15)", display: "flex", gap: 8, alignItems: "center" }}>
-          <span style={{ fontSize: 14, flexShrink: 0 }}>⏰</span>
+        <div style={{ flex: 1, background: "rgba(8,4,25,0.65)", backdropFilter: "blur(10px)", borderRadius: 10, padding: "8px 12px", border: "1px solid rgba(196,181,253,0.15)", display: "flex", gap: 8, alignItems: "flex-start" }}>
+          <span style={{ fontSize: 14, flexShrink: 0, marginTop: 1 }}>⏰</span>
           <div>
             <div style={{ fontSize: 10, fontWeight: 800, color: "#C4B5FD", marginBottom: 2 }}>{S.stellarCreneauTitle}</div>
             <div style={{ fontSize: 9.5, color: "rgba(255,255,255,0.55)", lineHeight: 1.4 }}>
               {S.stellarCreneauDesc} <span style={{ color: "#A78BFA", fontWeight: 700 }}>{S.stellarCreneauDesc2}</span>{S.stellarCreneauDesc3}
+            </div>
+            <div style={{ marginTop: 6, borderTop: "1px solid rgba(196,181,253,0.1)", paddingTop: 5 }}>
+              <div style={{ fontSize: 9, fontWeight: 800, color: "#A78BFA", marginBottom: 2 }}>⚡ DECISIVE PICKER</div>
+              <div style={{ fontSize: 9, color: "rgba(255,255,255,0.45)", lineHeight: 1.4 }}>
+                {lang === "fr"
+                  ? "1 joueur recommandé par jour — le plus susceptible de faire une action décisive. Calculé sur G+A/match × forme récente (L5) × faiblesse défensive adverse (xGA)."
+                  : "1 recommended player per day — most likely to make a decisive action. Based on G+A/match × recent form (L5) × opponent defensive weakness (xGA)."}
+              </div>
             </div>
           </div>
         </div>
@@ -532,15 +547,11 @@ export default function StellarTab({ players, teams, fixtures, logos = {}, onFig
         </div>
       </a>
 
-      {/* ═══ LIGNE 3 : NAVIGATEUR SEMAINE + CALENDRIER ═══ */}
-      <div style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: 10, marginBottom: 8 }}>
+      {/* ═══ CALENDRIER + bouton semaine suivante ═══ */}
+      <div style={{ display: "grid", gridTemplateColumns: "auto repeat(7, 1fr) auto", gap: 6, marginBottom: 24, alignItems: "stretch" }}>
+        {/* Bouton semaine précédente */}
         <button onClick={() => { setWeekOffset(w => w - 1); setSelectedDay(null); }}
-          style={{ background: "rgba(255,255,255,0.06)", border: "1px solid rgba(255,255,255,0.12)", borderRadius: 8, color: "#C4B5FD", padding: "4px 10px", cursor: "pointer", fontSize: 13, fontWeight: 700, fontFamily: "Outfit" }}>◀</button>
-        <div style={{ fontSize: 11, fontWeight: 700, color: "rgba(255,255,255,0.5)", letterSpacing: "0.05em" }}>{weekLabel}</div>
-        <button onClick={() => { setWeekOffset(w => w + 1); setSelectedDay(null); }}
-          style={{ background: "rgba(255,255,255,0.06)", border: "1px solid rgba(255,255,255,0.12)", borderRadius: 8, color: "#C4B5FD", padding: "4px 10px", cursor: "pointer", fontSize: 13, fontWeight: 700, fontFamily: "Outfit" }}>▶</button>
-      </div>
-      <div style={{ display: "grid", gridTemplateColumns: "repeat(7, 1fr)", gap: 6, marginBottom: 24 }}>
+          style={{ background: "rgba(255,255,255,0.06)", border: "1px solid rgba(255,255,255,0.12)", borderRadius: 10, color: "#C4B5FD", cursor: "pointer", fontSize: 13, fontWeight: 700, fontFamily: "Outfit", display: "flex", alignItems: "center", justifyContent: "center", padding: "0 10px" }}>◀</button>
         {weekDays.map((day, i) => {
           const dateStr = isoDate(day);
           const dayFixtures = fixturesByDate[dateStr] || [];
@@ -563,6 +574,7 @@ export default function StellarTab({ players, teams, fixtures, logos = {}, onFig
               <div style={{ display: "flex", alignItems: "baseline", justifyContent: "center", gap: 5 }}>
                 <div style={{ fontSize: 10, fontWeight: 800, color: isSelected ? "#C4B5FD" : "rgba(255,255,255,0.7)", letterSpacing: "0.05em" }}>{S.stellarDays[i]}</div>
                 <div style={{ fontSize: 14, fontWeight: 700, color: "#fff" }}>{day.getDate()}</div>
+                <div style={{ fontSize: 8, fontWeight: 600, color: isSelected ? "#A78BFA" : "rgba(255,255,255,0.35)", letterSpacing: "0.04em" }}>{day.toLocaleDateString(S.stellarDateLocale, { timeZone: TZ, month: "short" }).toUpperCase().replace(".","")}</div>
               </div>
               {hasMatches ? (
                 <div style={{ fontSize: 9, color: isSelected ? "#C4B5FD" : "#A78BFA", fontWeight: 600 }}>{dayFixtures.length} {dayFixtures.length > 1 ? S.stellarMatches : S.stellarMatch}</div>
@@ -580,6 +592,9 @@ export default function StellarTab({ players, teams, fixtures, logos = {}, onFig
             </div>
           );
         })}
+        {/* Bouton semaine suivante */}
+        <button onClick={() => { setWeekOffset(w => w + 1); setSelectedDay(null); }}
+          style={{ background: "rgba(255,255,255,0.06)", border: "1px solid rgba(255,255,255,0.12)", borderRadius: 10, color: "#C4B5FD", cursor: "pointer", fontSize: 13, fontWeight: 700, fontFamily: "Outfit", display: "flex", alignItems: "center", justifyContent: "center", padding: "0 10px" }}>▶</button>
       </div>
 
       {/* ═══ SELECTED DAY CONTENT ═══ */}

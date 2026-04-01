@@ -690,7 +690,7 @@ export default function StellarTab({ players, teams, fixtures, logos = {}, onFig
                       {g.fixtures.map((f, i) => {
                         const lgColor = f.league === "L1" ? "#4FC3F7" : f.league === "PL" ? "#B388FF" : "#FF8A80";
                         return (
-                          <div key={i} className="st-match-chip" style={{ display: "inline-flex", alignItems: "center", gap: 6, padding: "4px 8px", background: "rgba(30,10,70,0.45)", border: "1px solid rgba(140,100,255,0.12)", borderRadius: 6, backdropFilter: "blur(6px)" }}>
+                          <div key={i} className="st-match-chip" style={{ display: "grid", gridTemplateColumns: "38px 28px 16px 1fr 22px 1fr 16px", alignItems: "center", columnGap: 6, padding: "4px 8px", background: "rgba(30,10,70,0.45)", border: "1px solid rgba(140,100,255,0.12)", borderRadius: 6, backdropFilter: "blur(6px)" }}>
                             <span className="st-match-time-inline" style={{ display: "none", fontSize: 8, fontWeight: 900, color: "#A78BFA", fontFamily: "'DM Mono',monospace", flexShrink: 0 }}>{g.time}</span>
                             <span style={{ fontSize: 8, fontWeight: 800, color: lgColor, minWidth: 22 }}>{f.league}</span>
                             <img src={logos[f.home] ? `/data/logos/${logos[f.home]}` : ""} alt="" style={{ width: 14, height: 14, objectFit: "contain", visibility: logos[f.home] ? "visible" : "hidden" }} />

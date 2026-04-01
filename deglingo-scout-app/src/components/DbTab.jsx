@@ -308,10 +308,11 @@ export default function DbTab({ players, teams, fixtures, logos = {}, lang = "fr
 
       {/* D-Score legend */}
       <div style={{ marginBottom: 10, padding: "10px 14px", background: "linear-gradient(135deg, rgba(99,102,241,0.06), rgba(192,132,252,0.04))", border: "1px solid rgba(99,102,241,0.1)", borderRadius: 10 }}>
-        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 6 }}>
+        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: 6, gap: 8 }}>
           <div style={{ fontSize: 12, fontWeight: 700, letterSpacing: "0.05em", background: "linear-gradient(90deg, #A5B4FC 0%, #C084FC 25%, #E879F9 50%, #C084FC 75%, #A5B4FC 100%)", backgroundSize: "200% auto", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent", animation: "legendShimmer 4s linear infinite" }}>
             {t(lang, "dscoreLegend")}
           </div>
+          <span style={{ fontSize: 9, color: "#F87171", fontWeight: 700, background: "rgba(239,68,68,0.12)", padding: "2px 8px", borderRadius: 20, flexShrink: 0 }}>🚀 BETA GRATUITE</span>
         </div>
         <div className="db-legend-detail" style={{ fontSize: 9, color: "rgba(255,255,255,0.3)", marginTop: 3, lineHeight: 1.5, fontStyle: "italic" }}>
           {t(lang, "dscoreDisclaimer")}
@@ -338,8 +339,6 @@ export default function DbTab({ players, teams, fixtures, logos = {}, lang = "fr
           <span>Reg10 = {__("% matchs >60 sur L10", "% matches >60 over L10")}</span>
           <span className="db-legend-detail">Proj = {__("Score projeté Sorare (humains) — reflète la titularisation prévue. Vert ≥50, Orange ≥35, Rouge <35", "Sorare projected score (human-made) — reflects expected start. Green ≥50, Orange ≥35, Red <35")}</span>
           <span className="db-legend-detail"><span style={{ color: "#FBBF24" }}>&#9733;</span> Extra GOAT — {__("élite protégée par l'algo quand ça compte", "elite protected by the algo when it matters")}</span>
-          <span style={{ flex: 1 }} />
-          <span style={{ fontSize: 9, color: "#F87171", fontWeight: 700, background: "rgba(239,68,68,0.12)", padding: "2px 8px", borderRadius: 20 }}>🚀 BETA GRATUITE</span>
         </div>
       </div>
 

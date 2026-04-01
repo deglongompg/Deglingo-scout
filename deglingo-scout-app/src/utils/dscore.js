@@ -130,9 +130,10 @@ export function dScoreMatch(player, opp, isHome, playerTeam = null) {
     // Un GK backup qui prend la place après 1 match a L40 qui prouve sa vraie qualité
     const l40GK = p.l40 || 0;
     const hasL40 = l40GK > 0;
-    // Si L40 connu et GK joue actuellement → blender L40 (70%) + L5 récent (30%)
-    // Si L40 connu mais 0 match récent → utiliser L40 pur (forma établie historiquement)
-    const lEffGK = hasL40 && gkRecentPlays >= 1
+    // >= 2 matchs récents = titulaire confirmé → blender L40 (70%) + L5 récent (30%)
+    // == 1 match récent = 1 apparition isolée → utiliser L40 pur (pas de boost L5)
+    // 0 match récent + hasL40 → L40*0.85 (qualité établie mais inactif)
+    const lEffGK = hasL40 && gkRecentPlays >= 2
       ? _l5 * 0.3 + l40GK * 0.7
       : hasL40 ? l40GK * 0.85
       : lEff;
@@ -141,14 +142,14 @@ export function dScoreMatch(player, opp, isHome, playerTeam = null) {
     const aaEffGK = hasL40 && aa40GK > 0 && gkRecentPlays <= 1
       ? aaEff * 0.4 + aa40GK * 0.6
       : aaEff;
-    // Sample + inactivité : si L40 connu ET GK joue actuellement → qualité établie, 0 pénalité
-    // L40 = référence Sorare officielle sur 40 matchs → on sait ce que vaut ce GK
-    const gkSamplePenalty = (hasL40 && gkRecentPlays >= 1) ? 0
+    // 0 pénalité SEULEMENT si GK titulaire confirmé (>= 2 matchs récents) + L40 connu
+    // 1 match isolé : L40 pur mais petites pénalités restent (pas un titu régulier)
+    const gkSamplePenalty = (hasL40 && gkRecentPlays >= 2) ? 0
       : gkRecentPlays >= 2 ? Math.round(samplePenalty * 0.4)
       : hasL40 ? Math.round(samplePenalty * 0.5)
       : samplePenalty;
-    // Même logique pour inactivity : L40 connu + joue actuellement → 0 pénalité historique
-    const gkInactivityPenaltyFinal = (hasL40 && gkRecentPlays >= 1) ? 0 : gkInactivityPenalty;
+    // Même logique pour inactivity : zéro seulement si titu confirmé (>= 2 récents)
+    const gkInactivityPenaltyFinal = (hasL40 && gkRecentPlays >= 2) ? 0 : gkInactivityPenalty;
 
     // SOCLE GK (40 pts max) — forme + AA (range GK: -20 à +15) + floor + régularité
     const fGK = norm(lEffGK, 20, 70) * 14;

@@ -405,7 +405,27 @@ export default function StellarTab({ players, teams, fixtures, logos = {}, onFig
     }
 
     const stellarTeams = buildStellarTeams(dayPlayers, dateStr);
-    return { fixtures: dayFixtures, players: dayPlayers, teams: stellarTeams };
+
+    // ─── Decisive Pick ───
+    const POS_MULT = { ATT: 1.4, MIL: 1.05, DEF: 0.5, GK: 0.1 };
+    const decisivePick = dayPlayers
+      .filter(p => p.appearances >= 3 && (p.position === "ATT" || p.position === "MIL" || p.position === "DEF"))
+      .map(p => {
+        const gaRate = p.ga_per_match || 0;
+        const posMult = POS_MULT[p.position] || 1;
+        const formFactor = Math.min(1.5, (p.l5 || 0) / 60 + 0.5);
+        const oppXga = p.isHome ? (p.oppTeam?.xga_dom || 1.2) : (p.oppTeam?.xga_ext || 1.2);
+        const oppFactor = Math.min(1.5, oppXga / 1.2);
+        const decisive = gaRate * posMult * formFactor * oppFactor;
+        // Poisson: P(≥1 action décisive) = 1 - e^(-λ), λ = gaRate * oppFactor * 0.5
+        // formFactor intégré légèrement (racine carrée pour atténuer l'impact)
+        const formImpact = Math.sqrt(formFactor);
+        const pDecisive = Math.min(99, Math.round((1 - Math.exp(-gaRate * oppFactor * formImpact * 0.5)) * 100));
+        return { ...p, decisive, pDecisive };
+      })
+      .sort((a, b) => b.decisive - a.decisive)[0] || null;
+
+    return { fixtures: dayFixtures, players: dayPlayers, teams: stellarTeams, decisivePick };
   }, [selectedDay, weekDays, fixturesByDate, players, teams, fixtures]);
 
   // Auto-select first day with matches
@@ -565,20 +585,20 @@ export default function StellarTab({ players, teams, fixtures, logos = {}, onFig
       {/* ═══ SELECTED DAY CONTENT ═══ */}
       {selectedDay !== null && dayData && (
         <div>
-          {/* Titre du jour */}
-          <div style={{ margin: "0 0 10px" }}>
-            <h2 style={{ fontSize: 16, fontWeight: 800, color: "#fff", margin: 0, display: "flex", alignItems: "center", gap: 8 }}>
-              <span style={{ color: "#C4B5FD" }}>{weekDays[selectedDay].toLocaleDateString(S.stellarDateLocale, { timeZone: TZ, weekday: "long", day: "numeric", month: "long" }).toUpperCase()}</span>
-              <span style={{ fontSize: 11, color: "rgba(255,255,255,0.3)", fontWeight: 500 }}>— {dayData.fixtures.length} {dayData.fixtures.length > 1 ? S.stellarMatches : S.stellarMatch}</span>
-            </h2>
-            <div style={{ fontSize: 9, color: "rgba(255,255,255,0.35)", fontWeight: 600, letterSpacing: "0.08em", marginTop: 2 }}>{lang === "fr" ? "HEURE PARIS" : "PARIS TIME"}</div>
-          </div>
-
-          {/* Layout principal : matchs à gauche | teams à droite */}
+          {/* Layout principal : colonne gauche (date + matchs) | colonne droite (decisive + teams) */}
           <div style={{ display: "flex", gap: 16, alignItems: "flex-start" }}>
 
-          {/* Colonne gauche — Matchs */}
+          {/* Colonne gauche — Date + Matchs */}
           <div style={{ flexShrink: 0 }}>
+
+            {/* Titre du jour */}
+            <div style={{ marginBottom: 8 }}>
+              <h2 style={{ fontSize: 16, fontWeight: 800, color: "#fff", margin: 0, display: "flex", alignItems: "center", gap: 8 }}>
+                <span style={{ color: "#C4B5FD" }}>{weekDays[selectedDay].toLocaleDateString(S.stellarDateLocale, { timeZone: TZ, weekday: "long", day: "numeric", month: "long" }).toUpperCase()}</span>
+                <span style={{ fontSize: 11, color: "rgba(255,255,255,0.3)", fontWeight: 500 }}>— {dayData.fixtures.length} {dayData.fixtures.length > 1 ? S.stellarMatches : S.stellarMatch}</span>
+              </h2>
+              <div style={{ fontSize: 9, color: "rgba(255,255,255,0.35)", fontWeight: 600, letterSpacing: "0.08em", marginTop: 2 }}>{lang === "fr" ? "HEURE PARIS" : "PARIS TIME"}</div>
+            </div>
 
             {/* Match list — groupé par créneau horaire, trié chrono heure France */}
             {(() => {
@@ -616,8 +636,43 @@ export default function StellarTab({ players, teams, fixtures, logos = {}, onFig
             })()}
           </div>{/* fin colonne gauche */}
 
-          {/* Colonne droite — Teams 2×2 */}
+          {/* Colonne droite — Decisive Pick + Teams 2×2 */}
           <div style={{ flex: 1, minWidth: 0 }}>
+
+            {/* ─── DECISIVE PICK — pleine largeur colonne droite ─── */}
+            {dayData.decisivePick && (() => {
+              const dp = dayData.decisivePick;
+              const parisTime = utcToParisTime(dp.kickoff, dp.matchDate);
+              const gaR = dp.ga_per_match?.toFixed(2) || "0.00";
+              const lgColor = dp.league === "L1" ? "#4FC3F7" : dp.league === "PL" ? "#B388FF" : "#FF8A80";
+              const pc = PC[dp.position];
+              return (
+                <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 10, background: "linear-gradient(135deg, rgba(6,2,20,0.9), rgba(15,5,40,0.85))", border: "1px solid rgba(196,181,253,0.2)", borderRadius: 10, padding: "8px 14px", backdropFilter: "blur(12px)", boxShadow: "0 0 16px rgba(139,92,246,0.1)" }}>
+                  <div style={{ flexShrink: 0, fontSize: 18 }}>⚡</div>
+                  <div style={{ flex: 1, minWidth: 0 }}>
+                    <div style={{ fontSize: 8, fontWeight: 800, color: "#A78BFA", letterSpacing: "0.1em", marginBottom: 3 }}>
+                      {lang === "fr" ? "DECISIVE PICKER — 2 000 ESSENCE" : "DECISIVE PICKER — 2,000 ESSENCE"}
+                    </div>
+                    <div style={{ display: "flex", alignItems: "center", gap: 6, flexWrap: "wrap" }}>
+                      {logos[dp.club] && <img src={`/data/logos/${logos[dp.club]}`} alt="" style={{ width: 16, height: 16, objectFit: "contain" }} />}
+                      <span style={{ fontSize: 13, fontWeight: 900, color: "#fff" }}>{dp.name}</span>
+                      <span style={{ fontSize: 8, fontWeight: 800, background: `linear-gradient(135deg,${pc},${pc}CC)`, borderRadius: 3, padding: "1px 5px", color: "#fff" }}>{dp.position}</span>
+                      <span style={{ fontSize: 8, fontWeight: 700, color: lgColor }}>{dp.league}</span>
+                      <span style={{ fontSize: 8, color: "rgba(255,255,255,0.45)" }}>vs <span style={{ color: "#fff", fontWeight: 600 }}>{sn(dp.oppName)}</span></span>
+                      {parisTime && <span style={{ fontSize: 8, color: "#C4B5FD", fontWeight: 700 }}>⏰ {parisTime}</span>}
+                      <span style={{ fontSize: 8, color: "rgba(255,255,255,0.45)" }}>G+A/match <span style={{ color: "#4ADE80", fontWeight: 700 }}>{gaR}</span></span>
+                      <span style={{ fontSize: 8, color: "rgba(255,255,255,0.45)" }}>L5 <span style={{ color: dp.l5 >= 60 ? "#4ADE80" : dp.l5 >= 40 ? "#F59E0B" : "#EF4444", fontWeight: 700 }}>{dp.l5 ?? "—"}</span></span>
+                      <span style={{ fontSize: 8, color: "rgba(255,255,255,0.45)" }}>D-Score <span style={{ color: "#C4B5FD", fontWeight: 700 }}>{dp.ds}</span></span>
+                    </div>
+                  </div>
+                  <div style={{ flexShrink: 0, textAlign: "center", background: "rgba(139,92,246,0.15)", border: "1px solid rgba(167,139,250,0.3)", borderRadius: 8, padding: "6px 12px" }}>
+                    <div style={{ fontSize: 18, fontWeight: 900, color: dp.pDecisive >= 50 ? "#4ADE80" : dp.pDecisive >= 30 ? "#F59E0B" : "#C4B5FD", fontFamily: "'DM Mono',monospace", lineHeight: 1 }}>{dp.pDecisive}%</div>
+                    <div style={{ fontSize: 7, color: "rgba(255,255,255,0.4)", marginTop: 2 }}>CHANCE</div>
+                  </div>
+                </div>
+              );
+            })()}
+
           {dayData.teams.length === 0 ? (
             <div style={{ textAlign: "center", padding: "40px 0", color: "rgba(255,255,255,0.2)" }}>
               <div style={{ fontSize: 32, marginBottom: 8 }}>🔭</div>

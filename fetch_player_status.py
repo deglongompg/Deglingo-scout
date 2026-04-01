@@ -82,13 +82,14 @@ for i, p in enumerate(players):
     try:
         s = fetch_status(slug)
         status[slug] = s
-        tag = " 🏥 BLESSÉ" if s["injured"] else (" 🟥 SUSPENDU" if s["suspended"] else "")
+        tag = " BLESSE" if s["injured"] else (" SUSPENDU" if s["suspended"] else "")
         if s["injured"]:
             injured_list.append(f"{p.get('name','?')} ({p.get('club','?')})")
         if s["suspended"]:
             suspended_list.append(f"{p.get('name','?')} ({p.get('club','?')})")
-        if tag:
-            print(f"  [{i+1:4}/{total}] {p.get('name','?'):<28} proj={str(s['sorare_proj'] or '-'):>5}{tag}")
+        starter = f"{s['sorare_starter_pct']}%" if s["sorare_starter_pct"] is not None else "-"
+        if tag or (i+1) % 50 == 0:
+            print(f"  [{i+1:4}/{total}] {p.get('name','?'):<28} proj={str(s['sorare_proj'] or '-'):>5}  start={starter:>4}{tag}")
         time.sleep(SLEEP)
     except Exception as e:
         errors += 1

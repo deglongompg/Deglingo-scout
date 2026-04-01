@@ -88,9 +88,12 @@ const starsKeyframes = `
 @keyframes silverShine { 0%{background-position:0% 50%} 100%{background-position:200% 50%} }
 @media(max-width:768px){
   .st-root { padding: 0 8px 40px !important; }
-  .st-info-row { flex-direction: column !important; gap: 6px !important; padding: 8px 0 8px !important; }
-  .st-info-bloc-expl { flex: unset !important; }
+  .st-info-row { flex-direction: row !important; flex-wrap: nowrap !important; gap: 6px !important; padding: 8px 0 8px !important; align-items: stretch !important; }
+  .st-info-bloc-title { flex: 0 0 auto !important; }
+  .st-info-bloc-expl { display: none !important; }
   .st-info-bloc-paliers { display: none !important; }
+  .st-cta-mobile { display: flex !important; }
+  .st-cta-banner { display: none !important; }
   .st-calendar-wrap { display: grid !important; grid-template-columns: 28px repeat(7, 1fr) 28px !important; gap: 3px !important; overflow-x: unset !important; }
   .st-calendar-wrap button { padding: 0 4px !important; font-size: 11px !important; }
   .st-cal-day { padding: 5px 2px !important; }
@@ -489,6 +492,27 @@ export default function StellarTab({ players, teams, fixtures, logos = {}, onFig
           <div style={{ fontSize: 13, fontWeight: 800, color: "#fff", letterSpacing: "0.05em", marginTop: 6, textTransform: "uppercase" }}>Free 2 Play</div>
           <div style={{ fontSize: 10, color: "rgba(255,255,255,0.55)", marginTop: 2 }}>{S.stellarSubtitle}</div>
         </div>
+
+        {/* Mini CTA — mobile only, à droite du bloc STELLAR */}
+        <a href="http://sorare.pxf.io/Deglingo" target="_blank" rel="noopener noreferrer"
+          className="st-cta-mobile"
+          style={{
+            display: "none", flex: 1, flexDirection: "column", alignItems: "center", justifyContent: "center",
+            background: "linear-gradient(135deg, rgba(139,92,246,0.15), rgba(109,40,217,0.1))",
+            border: "1px solid rgba(167,139,250,0.4)", borderRadius: 12,
+            padding: "10px 8px", textDecoration: "none", gap: 6, textAlign: "center",
+          }}>
+          <span style={{ fontSize: 22 }}>🎁</span>
+          <div style={{ fontSize: 10, fontWeight: 800, color: "#C4B5FD", lineHeight: 1.3 }}>
+            {lang === "fr" ? "Packs gratuits" : "Free packs"}
+          </div>
+          <div style={{ fontSize: 9, color: "rgba(255,255,255,0.45)", lineHeight: 1.3 }}>
+            {lang === "fr" ? "100% gratuit" : "100% free"}
+          </div>
+          <div style={{ fontSize: 10, fontWeight: 800, color: "#fff", background: "linear-gradient(135deg, #8B5CF6, #6D28D9)", borderRadius: 6, padding: "4px 10px" }}>
+            {lang === "fr" ? "Jouer →" : "Play →"}
+          </div>
+        </a>
 
         {/* Blocs explicatifs — centre */}
         <div className="st-info-bloc-expl" style={{ flex: 1, background: "rgba(8,4,25,0.65)", backdropFilter: "blur(10px)", borderRadius: 10, padding: "8px 12px", border: "1px solid rgba(196,181,253,0.15)", display: "flex", gap: 8, alignItems: "flex-start" }}>

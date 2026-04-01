@@ -92,8 +92,13 @@ const starsKeyframes = `
   .st-info-bloc-title { flex: 0 0 auto !important; }
   .st-info-bloc-expl { display: none !important; }
   .st-info-bloc-paliers { display: none !important; }
-  .st-calendar-wrap { overflow-x: auto !important; -webkit-overflow-scrolling: touch !important; display: flex !important; gap: 4px !important; padding-bottom: 4px !important; }
-  .st-calendar-wrap > * { flex-shrink: 0 !important; min-width: 44px !important; }
+  .st-calendar-wrap { display: grid !important; grid-template-columns: 28px repeat(7, 1fr) 28px !important; gap: 3px !important; overflow-x: unset !important; }
+  .st-calendar-wrap button { padding: 0 4px !important; font-size: 11px !important; }
+  .st-cal-day { padding: 5px 2px !important; }
+  .st-cal-day .cal-day-name { font-size: 8px !important; }
+  .st-cal-day .cal-day-num { font-size: 11px !important; }
+  .st-cal-day .cal-day-month { display: none !important; }
+  .st-cal-day .cal-match-count { font-size: 8px !important; }
   .st-main-layout { flex-direction: column !important; }
   .st-main-layout > div:first-child { flex-shrink: unset !important; }
   .st-teams-grid { grid-template-columns: 1fr !important; }
@@ -581,7 +586,7 @@ export default function StellarTab({ players, teams, fixtures, logos = {}, onFig
           const isToday = dateStr === isoDate(today);
 
           return (
-            <div key={i} onClick={() => hasMatches && setSelectedDay(i)}
+            <div key={i} className="st-cal-day" onClick={() => hasMatches && setSelectedDay(i)}
               style={{
                 background: isSelected ? "rgba(120,60,240,0.40)" : hasMatches ? "rgba(15,8,40,0.70)" : "rgba(8,4,25,0.55)",
                 border: isSelected ? "1px solid rgba(196,181,253,0.7)" : isToday ? "1px solid rgba(180,140,255,0.4)" : "1px solid rgba(100,70,200,0.18)",
@@ -592,13 +597,13 @@ export default function StellarTab({ players, teams, fixtures, logos = {}, onFig
                 transition: "all 0.2s",
                 boxShadow: isSelected ? "0 0 24px rgba(160,80,255,0.25), inset 0 0 12px rgba(140,60,255,0.1)" : "none",
               }}>
-              <div style={{ display: "flex", alignItems: "baseline", justifyContent: "center", gap: 5 }}>
-                <div style={{ fontSize: 10, fontWeight: 800, color: isSelected ? "#C4B5FD" : "rgba(255,255,255,0.7)", letterSpacing: "0.05em" }}>{S.stellarDays[i]}</div>
-                <div style={{ fontSize: 14, fontWeight: 700, color: "#fff" }}>{day.getDate()}</div>
-                <div style={{ fontSize: 8, fontWeight: 600, color: isSelected ? "#A78BFA" : "rgba(255,255,255,0.35)", letterSpacing: "0.04em" }}>{day.toLocaleDateString(S.stellarDateLocale, { timeZone: TZ, month: "short" }).toUpperCase().replace(".","")}</div>
+              <div style={{ display: "flex", alignItems: "baseline", justifyContent: "center", gap: 3, flexWrap: "wrap" }}>
+                <div className="cal-day-name" style={{ fontSize: 10, fontWeight: 800, color: isSelected ? "#C4B5FD" : "rgba(255,255,255,0.7)", letterSpacing: "0.05em", width: "100%" }}>{S.stellarDays[i]}</div>
+                <div className="cal-day-num" style={{ fontSize: 14, fontWeight: 700, color: "#fff" }}>{day.getDate()}</div>
+                <div className="cal-day-month" style={{ fontSize: 8, fontWeight: 600, color: isSelected ? "#A78BFA" : "rgba(255,255,255,0.35)", letterSpacing: "0.04em" }}>{day.toLocaleDateString(S.stellarDateLocale, { timeZone: TZ, month: "short" }).toUpperCase().replace(".","")}</div>
               </div>
               {hasMatches ? (
-                <div style={{ fontSize: 9, color: isSelected ? "#C4B5FD" : "#A78BFA", fontWeight: 600 }}>{dayFixtures.length} {dayFixtures.length > 1 ? S.stellarMatches : S.stellarMatch}</div>
+                <div className="cal-match-count" style={{ fontSize: 9, color: isSelected ? "#C4B5FD" : "#A78BFA", fontWeight: 600 }}>{dayFixtures.length} {dayFixtures.length > 1 ? S.stellarMatches : S.stellarMatch}</div>
               ) : (
                 <div style={{ fontSize: 9, color: "rgba(255,255,255,0.2)" }}>—</div>
               )}

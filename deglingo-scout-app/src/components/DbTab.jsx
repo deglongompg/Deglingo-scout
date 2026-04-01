@@ -27,6 +27,7 @@ export default function DbTab({ players, teams, fixtures, logos = {}, lang = "fr
   const [club, setClub] = useState("ALL");
   const [arch, setArch] = useState("ALL");
   const [minL10, setMinL10] = useState(-1);
+  const [selectedDate, setSelectedDate] = useState(null);
   const [sortKey, setSortKey] = useState(fixtures?.player_fixtures ? "dsMatch" : "l2");
   const [sortDir, setSortDir] = useState(-1);
   const [selectedPlayer, setSelectedPlayer] = useState(null);
@@ -89,7 +90,7 @@ export default function DbTab({ players, teams, fixtures, logos = {}, lang = "fr
     return players.map(p => {
       const fx = pf[p.slug] || pf[p.name];
       const base = { ...p, reg10: p.reg10 ?? p.regularite, ds10: p.ds10 ?? p.ds_rate, ga_season: (p.goals || 0) + (p.assists || 0) };
-      if (!fx) return { ...base, dsMatch: null, oppName: null, isHome: null, matchday: null, csPercent: null };
+      if (!fx) return { ...base, dsMatch: null, oppName: null, isHome: null, matchday: null, csPercent: null, matchDate: null };
       const oppTeam = findTeam(teams, fx.opp);
       const playerTeam = findTeam(teams, p.club);
       const ds = oppTeam ? dScoreMatch(p, oppTeam, fx.isHome, playerTeam) : null;
@@ -99,7 +100,7 @@ export default function DbTab({ players, teams, fixtures, logos = {}, lang = "fr
         const defXga = playerTeam ? (fx.isHome ? (playerTeam.xga_dom || 1.3) : (playerTeam.xga_ext || 1.5)) : 1.3;
         csPercent = csProb(defXga, oppXg, p.league);
       }
-      return { ...base, dsMatch: ds, oppName: fx.opp, isHome: fx.isHome, matchday: fx.matchday, csPercent };
+      return { ...base, dsMatch: ds, oppName: fx.opp, isHome: fx.isHome, matchday: fx.matchday, csPercent, matchDate: fx.date || null };
     });
   }, [players, teams, fixtures]);
 
@@ -112,6 +113,7 @@ export default function DbTab({ players, teams, fixtures, logos = {}, lang = "fr
     if (minL10 === 0) list = list.filter(p => !p.l10 || p.l10 === 0);
     else if (minL10 > 0) list = list.filter(p => (p.l10 || 0) < minL10);
     if (u23Only) list = list.filter(p => (p.age || 0) > 0 && p.age <= 24);
+    if (selectedDate) list = list.filter(p => p.matchDate === selectedDate);
     if (search) {
       const q = search.toLowerCase();
       list = list.filter(p => p.name.toLowerCase().includes(q) || p.club.toLowerCase().includes(q));
@@ -133,7 +135,7 @@ export default function DbTab({ players, teams, fixtures, logos = {}, lang = "fr
       return (va - vb) * sortDir;
     });
     return list;
-  }, [enriched, leagues, club, pos, arch, minL10, u23Only, search, sortKey, sortDir]);
+  }, [enriched, leagues, club, pos, arch, minL10, u23Only, selectedDate, search, sortKey, sortDir]);
 
   const toggleSort = (key) => {
     if (sortKey === key) setSortDir(d => -d);
@@ -142,6 +144,11 @@ export default function DbTab({ players, teams, fixtures, logos = {}, lang = "fr
 
   const hasFixtures = !!fixtures?.player_fixtures;
   const matchdays = fixtures?.matchdays || {};
+
+  const availableDates = useMemo(() => {
+    const dates = new Set(enriched.map(p => p.matchDate).filter(Boolean));
+    return [...dates].sort();
+  }, [enriched]);
 
   const sel = (style) => ({
     background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.08)",
@@ -200,6 +207,43 @@ export default function DbTab({ players, teams, fixtures, logos = {}, lang = "fr
         @keyframes legendShimmer { 0%{background-position:-200% center} 100%{background-position:200% center} }
         @keyframes silverShine { 0%{background-position:200% center} 100%{background-position:-200% center} }
       `}</style>
+      {/* Day filter */}
+      {availableDates.length > 0 && (
+        <div style={{ display: "flex", gap: 6, marginBottom: 10, flexWrap: "wrap", alignItems: "center" }}>
+          <span style={{ fontSize: 10, color: "rgba(255,255,255,0.4)", fontWeight: 700, letterSpacing: "0.05em" }}>
+            {lang === "fr" ? "JOUR" : "DAY"}
+          </span>
+          <button
+            onClick={() => { setSelectedDate(null); setVisibleCount(30); }}
+            style={{ padding: "4px 12px", borderRadius: 8, fontSize: 11, fontWeight: 700, cursor: "pointer", fontFamily: "Outfit", border: "none",
+              background: selectedDate === null ? "rgba(99,102,241,0.25)" : "rgba(255,255,255,0.05)",
+              color: selectedDate === null ? "#A5B4FC" : "rgba(255,255,255,0.5)",
+              outline: selectedDate === null ? "1px solid rgba(99,102,241,0.4)" : "none",
+            }}
+          >{lang === "fr" ? "Tous" : "All"}</button>
+          {availableDates.map(date => {
+            const d = new Date(date + "T12:00:00Z");
+            const dayNames = lang === "fr" ? ["Dim","Lun","Mar","Mer","Jeu","Ven","Sam"] : ["Sun","Mon","Tue","Wed","Thu","Fri","Sat"];
+            const day = dayNames[d.getUTCDay()];
+            const num = d.getUTCDate();
+            const months = lang === "fr" ? ["jan","fév","mar","avr","mai","jun","jul","aoû","sep","oct","nov","déc"] : ["jan","feb","mar","apr","may","jun","jul","aug","sep","oct","nov","dec"];
+            const mon = months[d.getUTCMonth()];
+            const isSelected = selectedDate === date;
+            const count = enriched.filter(p => p.matchDate === date).length;
+            return (
+              <button key={date}
+                onClick={() => { setSelectedDate(isSelected ? null : date); setVisibleCount(30); }}
+                style={{ padding: "4px 12px", borderRadius: 8, fontSize: 11, fontWeight: 700, cursor: "pointer", fontFamily: "Outfit", border: "none",
+                  background: isSelected ? "rgba(99,102,241,0.25)" : "rgba(255,255,255,0.05)",
+                  color: isSelected ? "#A5B4FC" : "rgba(255,255,255,0.5)",
+                  outline: isSelected ? "1px solid rgba(99,102,241,0.4)" : "none",
+                }}
+              >{day} {num} {mon} <span style={{ fontSize: 9, opacity: 0.6 }}>({count})</span></button>
+            );
+          })}
+        </div>
+      )}
+
       {/* Filters */}
       <div style={{ display: "flex", flexWrap: "wrap", gap: 8, marginBottom: 12, alignItems: "center" }}>
         <input

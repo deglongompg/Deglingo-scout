@@ -240,7 +240,7 @@ export default function App() {
       </header>
 
       {/* Content */}
-      <main style={{ maxWidth: 1400, margin: "0 auto", paddingTop: 20 }}>
+      <main style={{ maxWidth: 1400, margin: "0 auto", paddingTop: 8 }}>
         {tab === "db" && <DbTab players={players} teams={teams} fixtures={fixtures} logos={logos} lang={lang} />}
         {tab === "fight" && <FightTab players={players} teams={teams} fixtures={fixtures} logos={logos} lang={lang} />}
         {tab === "reco" && <RecoTab players={players} teams={teams} fixtures={fixtures} logos={logos} lang={lang} />}

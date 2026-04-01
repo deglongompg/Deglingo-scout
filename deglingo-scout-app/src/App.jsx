@@ -13,7 +13,10 @@ const TABS = [
 ];
 
 export default function App() {
-  const [tab, setTab] = useState("db");
+  const [tab, setTab] = useState(() => {
+    const p = new URLSearchParams(window.location.search).get("tab");
+    return ["db","fight","reco","stellar"].includes(p) ? p : "db";
+  });
   const [lang, setLang] = useState("fr");
   const [players, setPlayers] = useState(null);
   const [teams, setTeams] = useState(null);

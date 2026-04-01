@@ -207,43 +207,41 @@ export default function DbTab({ players, teams, fixtures, logos = {}, lang = "fr
         @keyframes legendShimmer { 0%{background-position:-200% center} 100%{background-position:200% center} }
         @keyframes silverShine { 0%{background-position:200% center} 100%{background-position:-200% center} }
       `}</style>
-      {/* Day filter — dropdown */}
-      {availableDates.length > 0 && (
-        <div style={{ display: "flex", gap: 6, marginBottom: 10, alignItems: "center" }}>
-          <span style={{ fontSize: 10, color: "rgba(255,255,255,0.4)", fontWeight: 700, letterSpacing: "0.05em", flexShrink: 0 }}>
-            {lang === "fr" ? "JOUR" : "DAY"}
-          </span>
-          <select
-            value={selectedDate ?? ""}
-            onChange={e => { setSelectedDate(e.target.value || null); setVisibleCount(30); }}
-            style={{
-              background: "rgba(255,255,255,0.05)", color: selectedDate ? "#A5B4FC" : "rgba(255,255,255,0.55)",
-              border: selectedDate ? "1px solid rgba(99,102,241,0.5)" : "1px solid rgba(255,255,255,0.12)",
-              borderRadius: 8, padding: "5px 10px", fontSize: 11, fontWeight: 700,
-              fontFamily: "Outfit", cursor: "pointer", outline: "none",
-            }}
-          >
-            <option value="">{lang === "fr" ? "Tous les jours" : "All days"}</option>
-            {availableDates.map(date => {
-              const d = new Date(date + "T12:00:00Z");
-              const dayNames = lang === "fr" ? ["Dim","Lun","Mar","Mer","Jeu","Ven","Sam"] : ["Sun","Mon","Tue","Wed","Thu","Fri","Sat"];
-              const day = dayNames[d.getUTCDay()];
-              const num = d.getUTCDate();
-              const months = lang === "fr" ? ["jan","fév","mar","avr","mai","jun","jul","aoû","sep","oct","nov","déc"] : ["jan","feb","mar","apr","may","jun","jul","aug","sep","oct","nov","dec"];
-              const mon = months[d.getUTCMonth()];
-              const count = enriched.filter(p => p.matchDate === date).length;
-              return <option key={date} value={date}>{day} {num} {mon} ({count})</option>;
-            })}
-          </select>
-        </div>
-      )}
-
       {/* Filters */}
       <div style={{ display: "flex", flexWrap: "wrap", gap: 8, marginBottom: 12, alignItems: "center" }}>
+        {availableDates.length > 0 && (
+          <>
+            <span style={{ fontSize: 10, color: "rgba(255,255,255,0.4)", fontWeight: 700, letterSpacing: "0.05em", flexShrink: 0 }}>
+              {lang === "fr" ? "JOUR" : "DAY"}
+            </span>
+            <select
+              value={selectedDate ?? ""}
+              onChange={e => { setSelectedDate(e.target.value || null); setVisibleCount(30); }}
+              style={{
+                background: "rgba(255,255,255,0.05)", color: selectedDate ? "#A5B4FC" : "rgba(255,255,255,0.55)",
+                border: selectedDate ? "1px solid rgba(99,102,241,0.5)" : "1px solid rgba(255,255,255,0.12)",
+                borderRadius: 8, padding: "5px 10px", fontSize: 11, fontWeight: 700,
+                fontFamily: "Outfit", cursor: "pointer", outline: "none", flexShrink: 0,
+              }}
+            >
+              <option value="">{lang === "fr" ? "Tous les jours" : "All days"}</option>
+              {availableDates.map(date => {
+                const d = new Date(date + "T12:00:00Z");
+                const dayNames = lang === "fr" ? ["Dim","Lun","Mar","Mer","Jeu","Ven","Sam"] : ["Sun","Mon","Tue","Wed","Thu","Fri","Sat"];
+                const day = dayNames[d.getUTCDay()];
+                const num = d.getUTCDate();
+                const months = lang === "fr" ? ["jan","fév","mar","avr","mai","jun","jul","aoû","sep","oct","nov","déc"] : ["jan","feb","mar","apr","may","jun","jul","aug","sep","oct","nov","dec"];
+                const mon = months[d.getUTCMonth()];
+                const count = enriched.filter(p => p.matchDate === date).length;
+                return <option key={date} value={date}>{day} {num} {mon} ({count})</option>;
+              })}
+            </select>
+          </>
+        )}
         <input
           placeholder={t(lang, "searchPlaceholder")}
           value={search} onChange={e => { setSearch(e.target.value); setVisibleCount(30); }}
-          style={{ ...sel({ flex: "1 1 180px", minWidth: 140 }) }}
+          style={{ ...sel({ flex: "1 1 140px", minWidth: 120 }) }}
         />
         <div style={{ display: "flex", alignItems: "center", gap: 3, flexShrink: 0 }}>
           {[["ALL", null], ["L1", "fr"], ["PL", "gb-eng"], ["Liga", "es"], ["Bundes", "de"]].map(([k, fc]) => {

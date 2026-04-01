@@ -38,6 +38,7 @@ Q = """query($slug: String!) {
       activeInjuries   { active }
       activeSuspensions { active }
       nextClassicFixtureProjectedScore
+      nextClassicFixturePlayingStatusOdds { starterOddsBasisPoints }
     }
   }
 }"""
@@ -50,10 +51,14 @@ def fetch_status(slug):
     injured   = any(x.get("active") for x in (p.get("activeInjuries")    or []))
     suspended = any(x.get("active") for x in (p.get("activeSuspensions") or []))
     proj      = p.get("nextClassicFixtureProjectedScore")
+    odds      = (p.get("nextClassicFixturePlayingStatusOdds") or {})
+    bp        = odds.get("starterOddsBasisPoints")
+    starter_pct = round(bp / 100) if bp is not None else None
     return {
-        "injured":    injured,
-        "suspended":  suspended,
-        "sorare_proj": round(proj, 1) if proj is not None else None,
+        "injured":          injured,
+        "suspended":        suspended,
+        "sorare_proj":      round(proj, 1) if proj is not None else None,
+        "sorare_starter_pct": starter_pct,
     }
 
 
@@ -105,15 +110,17 @@ for path in OUT_PATHS:
     for p in data:
         s = status.get(p.get("slug", ""))
         if s:
-            p["injured"]     = s["injured"]
-            p["suspended"]   = s["suspended"]
-            p["sorare_proj"] = s["sorare_proj"]
+            p["injured"]            = s["injured"]
+            p["suspended"]          = s["suspended"]
+            p["sorare_proj"]        = s["sorare_proj"]
+            p["sorare_starter_pct"] = s["sorare_starter_pct"]
             patched += 1
         else:
             # Pas de status = on met des valeurs neutres (pas de badge affiché)
-            p.setdefault("injured",     False)
-            p.setdefault("suspended",   False)
-            p.setdefault("sorare_proj", None)
+            p.setdefault("injured",            False)
+            p.setdefault("suspended",          False)
+            p.setdefault("sorare_proj",        None)
+            p.setdefault("sorare_starter_pct", None)
     with open(path, "w", encoding="utf-8") as f:
         json.dump(data, f, ensure_ascii=False)
     print(f"✅ {patched} joueurs patchés → {path}")

@@ -389,6 +389,7 @@ export default function StellarTab({ players, teams, fixtures, logos = {}, onFig
       const pTeam = findTeam(lgTeams, p.club);
       const ds = dScoreMatch(p, opp, fx.isHome, pTeam);
       if (ds < 20) continue; // Filter ghosts
+      if (p.injured || p.suspended) continue; // Filter injured/suspended
 
       let csPercent = null;
       if (p.position === "GK") {

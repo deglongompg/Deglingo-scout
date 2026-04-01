@@ -103,7 +103,13 @@ const starsKeyframes = `
   .st-cal-day .cal-day-month { display: none !important; }
   .st-cal-day .cal-match-count { font-size: 8px !important; }
   .st-main-layout { flex-direction: column !important; }
-  .st-main-layout > div:first-child { flex-shrink: unset !important; }
+  .st-main-layout > div { width: 100% !important; flex-shrink: unset !important; }
+  .st-match-chip { width: 100% !important; box-sizing: border-box !important; display: grid !important; grid-template-columns: 28px 22px 15px 1fr 18px 1fr 15px !important; align-items: center !important; gap: 0 4px !important; justify-content: unset !important; }
+  .st-match-chip .mc-vs { text-align: center !important; }
+  .st-match-chip .mc-home { text-align: right !important; }
+  .st-match-chip .mc-away { text-align: left !important; }
+  .st-match-time-inline { display: inline !important; }
+  .st-match-group-time-label { display: none !important; }
   .st-teams-grid { grid-template-columns: 1fr !important; }
   .st-top10-grid { grid-template-columns: repeat(2, 1fr) !important; }
   .st-cta-banner { flex-direction: column !important; gap: 8px !important; align-items: flex-start !important; }
@@ -680,17 +686,18 @@ export default function StellarTab({ players, teams, fixtures, logos = {}, onFig
                 <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
                   {groups.map((g, gi) => (
                     <div key={gi} style={{ display: "flex", flexDirection: "column", gap: 2 }}>
-                      <div style={{ fontSize: 10, fontWeight: 900, color: "#fff", fontFamily: "'DM Mono',monospace", paddingLeft: 2 }}>{g.time}</div>
+                      <div className="st-match-group-time-label" style={{ fontSize: 10, fontWeight: 900, color: "#fff", fontFamily: "'DM Mono',monospace", paddingLeft: 2 }}>{g.time}</div>
                       {g.fixtures.map((f, i) => {
                         const lgColor = f.league === "L1" ? "#4FC3F7" : f.league === "PL" ? "#B388FF" : "#FF8A80";
                         return (
-                          <div key={i} style={{ display: "inline-flex", alignItems: "center", gap: 6, padding: "4px 8px", background: "rgba(30,10,70,0.45)", border: "1px solid rgba(140,100,255,0.12)", borderRadius: 6, backdropFilter: "blur(6px)" }}>
+                          <div key={i} className="st-match-chip" style={{ display: "inline-flex", alignItems: "center", gap: 6, padding: "4px 8px", background: "rgba(30,10,70,0.45)", border: "1px solid rgba(140,100,255,0.12)", borderRadius: 6, backdropFilter: "blur(6px)" }}>
+                            <span className="st-match-time-inline" style={{ display: "none", fontSize: 8, fontWeight: 900, color: "#A78BFA", fontFamily: "'DM Mono',monospace", flexShrink: 0 }}>{g.time}</span>
                             <span style={{ fontSize: 8, fontWeight: 800, color: lgColor, minWidth: 22 }}>{f.league}</span>
-                            {logos[f.home] && <img src={`/data/logos/${logos[f.home]}`} alt="" style={{ width: 13, height: 13, objectFit: "contain" }} />}
-                            <span style={{ fontSize: 11, fontWeight: 600, color: "#fff" }}>{sn(f.home)}</span>
-                            <span style={{ fontSize: 9, color: "rgba(255,255,255,0.25)" }}>vs</span>
-                            <span style={{ fontSize: 11, fontWeight: 600, color: "#fff" }}>{sn(f.away)}</span>
-                            {logos[f.away] && <img src={`/data/logos/${logos[f.away]}`} alt="" style={{ width: 13, height: 13, objectFit: "contain" }} />}
+                            <img src={logos[f.home] ? `/data/logos/${logos[f.home]}` : ""} alt="" style={{ width: 14, height: 14, objectFit: "contain", visibility: logos[f.home] ? "visible" : "hidden" }} />
+                            <span className="mc-home" style={{ fontSize: 11, fontWeight: 600, color: "#fff" }}>{sn(f.home)}</span>
+                            <span className="mc-vs" style={{ fontSize: 9, color: "rgba(255,255,255,0.25)" }}>vs</span>
+                            <span className="mc-away" style={{ fontSize: 11, fontWeight: 600, color: "#fff" }}>{sn(f.away)}</span>
+                            <img src={logos[f.away] ? `/data/logos/${logos[f.away]}` : ""} alt="" style={{ width: 14, height: 14, objectFit: "contain", visibility: logos[f.away] ? "visible" : "hidden" }} />
                           </div>
                         );
                       })}

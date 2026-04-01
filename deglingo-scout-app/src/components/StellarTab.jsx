@@ -88,9 +88,8 @@ const starsKeyframes = `
 @keyframes silverShine { 0%{background-position:0% 50%} 100%{background-position:200% 50%} }
 @media(max-width:768px){
   .st-root { padding: 0 8px 40px !important; }
-  .st-info-row { flex-direction: row !important; flex-wrap: wrap !important; gap: 6px !important; padding: 8px 0 8px !important; }
-  .st-info-bloc-title { flex: 0 0 auto !important; }
-  .st-info-bloc-expl { display: none !important; }
+  .st-info-row { flex-direction: column !important; gap: 6px !important; padding: 8px 0 8px !important; }
+  .st-info-bloc-expl { flex: unset !important; }
   .st-info-bloc-paliers { display: none !important; }
   .st-calendar-wrap { display: grid !important; grid-template-columns: 28px repeat(7, 1fr) 28px !important; gap: 3px !important; overflow-x: unset !important; }
   .st-calendar-wrap button { padding: 0 4px !important; font-size: 11px !important; }

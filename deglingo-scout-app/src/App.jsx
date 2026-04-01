@@ -171,6 +171,7 @@ export default function App() {
                   padding: "6px 14px", borderRadius: 10, fontSize: 12, fontWeight: 600,
                   border: "none", fontFamily: "Outfit", position: "relative",
                   cursor: "pointer", display: "inline-flex", alignItems: "center", gap: 4,
+                  whiteSpace: "nowrap", flexShrink: 0,
                   background: tab === tab2.id ? "rgba(99,102,241,0.12)" : "transparent",
                   outline: tab === tab2.id ? "1px solid rgba(99,102,241,0.3)" : "none",
                   transition: "all 0.2s",

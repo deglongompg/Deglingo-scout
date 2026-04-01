@@ -129,15 +129,15 @@ export default function App() {
         @keyframes holoShift { 0%{filter:hue-rotate(0deg) brightness(1.4) saturate(1.2)} 50%{filter:hue-rotate(180deg) brightness(1.8) saturate(1.6)} 100%{filter:hue-rotate(360deg) brightness(1.4) saturate(1.2)} }
         @media(max-width:768px){
           .ds-app-root { zoom: 1 !important; }
-          .ds-header-tabs { overflow-x: auto; -webkit-overflow-scrolling: touch; flex-wrap: nowrap !important; scrollbar-width: none; }
+          .ds-header-inner { display: flex !important; flex-wrap: wrap !important; align-items: center !important; row-gap: 6px !important; }
+          .ds-header-tabs { order: 10 !important; width: 100% !important; overflow-x: auto !important; -webkit-overflow-scrolling: touch !important; flex-wrap: nowrap !important; scrollbar-width: none !important; justify-content: flex-start !important; }
           .ds-header-tabs::-webkit-scrollbar { display: none; }
-          .ds-header-inner { grid-template-columns: auto 1fr auto !important; }
-          .ds-cta-area { gap: 4px !important; }
+          .ds-cta-area { margin-left: auto !important; }
           .ds-cta-area a { padding: 5px 10px !important; font-size: 10px !important; }
           .ds-logo-sub { display: none !important; }
         }
         @media(max-width:480px){
-          .ds-cta-area .ds-lang-btn { display: none !important; }
+          .ds-lang-btn { display: none !important; }
         }
       `}</style>
       {/* Header */}
@@ -163,21 +163,21 @@ export default function App() {
 
           {/* Tabs centrés */}
           <div className="ds-header-tabs" style={{ display: "flex", gap: 4, justifyContent: "center" }}>
-            {TABS.map(t => (
+            {TABS.map(tab2 => (
               <button
-                key={t.id}
-                onClick={() => setTab(t.id)}
+                key={tab2.id}
+                onClick={() => setTab(tab2.id)}
                 style={{
                   padding: "6px 14px", borderRadius: 10, fontSize: 12, fontWeight: 600,
                   border: "none", fontFamily: "Outfit", position: "relative",
                   cursor: "pointer", display: "inline-flex", alignItems: "center", gap: 4,
-                  background: tab === t.id ? "rgba(99,102,241,0.12)" : "transparent",
-                  outline: tab === t.id ? "1px solid rgba(99,102,241,0.3)" : "none",
+                  background: tab === tab2.id ? "rgba(99,102,241,0.12)" : "transparent",
+                  outline: tab === tab2.id ? "1px solid rgba(99,102,241,0.3)" : "none",
                   transition: "all 0.2s",
-                  ...(tab === t.id && t.id === "reco" ? {
+                  ...(tab === tab2.id && tab2.id === "reco" ? {
                     ...silverShinyStyle,
                     WebkitTextFillColor: "transparent",
-                  } : tab === t.id && t.id === "stellar" ? {
+                  } : tab === tab2.id && tab2.id === "stellar" ? {
                     background: "linear-gradient(90deg,#C4B5FD,#A78BFA,#8B5CF6,#7C3AED,#A78BFA,#C4B5FD)",
                     backgroundSize: "200% 100%",
                     WebkitBackgroundClip: "text",
@@ -185,14 +185,14 @@ export default function App() {
                     backgroundClip: "text",
                     animation: "silverShine 3s linear infinite",
                   } : {
-                    color: tab === t.id ? "#A5B4FC" : "rgba(255,255,255,0.4)",
+                    color: tab === tab2.id ? "#A5B4FC" : "rgba(255,255,255,0.4)",
                   }),
                 }}
               >
-                {t.id === "stellar"
+                {tab2.id === "stellar"
                   ? <img src="/Stellar.png" alt="" style={{ width: 16, height: 16, objectFit: "contain", mixBlendMode: "screen", animation: "holoShift 3s linear infinite", flexShrink: 0 }} />
-                  : <>{t.icon}{" "}</>
-                }{t.label}
+                  : <>{tab2.icon}{" "}</>
+                }{tab2.label}
               </button>
             ))}
           </div>

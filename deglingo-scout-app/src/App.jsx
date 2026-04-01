@@ -7,8 +7,8 @@ import { t } from "./utils/i18n";
 
 const TABS = [
   { id: "db", label: "Database", icon: "📊" },
-  { id: "stellar", label: "Sorare Stellar", icon: "✨" },
   { id: "reco", label: "Best Pick", icon: "⚽" },
+  { id: "stellar", label: "Sorare Stellar", icon: "✨" },
   { id: "fight", label: "Fight", icon: "🥊" },
 ];
 

@@ -87,9 +87,13 @@ const starsKeyframes = `
 @keyframes nebulaPulse { 0%,100%{opacity:0.1} 50%{opacity:0.2} }
 @keyframes silverShine { 0%{background-position:0% 50%} 100%{background-position:200% 50%} }
 @media(max-width:768px){
-  .st-info-row { flex-direction: column !important; gap: 6px !important; }
-  .st-calendar-wrap { overflow-x: auto !important; -webkit-overflow-scrolling: touch !important; display: flex !important; gap: 6px !important; padding-bottom: 4px !important; }
-  .st-calendar-wrap > * { flex-shrink: 0 !important; min-width: 48px !important; }
+  .st-root { padding: 0 8px 40px !important; }
+  .st-info-row { flex-direction: row !important; flex-wrap: wrap !important; gap: 6px !important; padding: 8px 0 8px !important; }
+  .st-info-bloc-title { flex: 0 0 auto !important; }
+  .st-info-bloc-expl { display: none !important; }
+  .st-info-bloc-paliers { display: none !important; }
+  .st-calendar-wrap { overflow-x: auto !important; -webkit-overflow-scrolling: touch !important; display: flex !important; gap: 4px !important; padding-bottom: 4px !important; }
+  .st-calendar-wrap > * { flex-shrink: 0 !important; min-width: 44px !important; }
   .st-main-layout { flex-direction: column !important; }
   .st-main-layout > div:first-child { flex-shrink: unset !important; }
   .st-teams-grid { grid-template-columns: 1fr !important; }
@@ -456,7 +460,7 @@ export default function StellarTab({ players, teams, fixtures, logos = {}, onFig
   const weekLabel = `${fmtDate(weekDays[0])} — ${fmtDate(weekDays[6])}`;
 
   return (
-    <div style={{ position: "relative", minHeight: "80vh", padding: "0 16px 40px", zIndex: 1 }}>
+    <div className="st-root" style={{ position: "relative", minHeight: "80vh", padding: "0 16px 40px", zIndex: 1 }}>
       <style>{starsKeyframes}</style>
 
       {/* Vignette bords — position absolute, scroll avec le contenu */}
@@ -465,7 +469,7 @@ export default function StellarTab({ players, teams, fixtures, logos = {}, onFig
       {/* ═══ LIGNE UNIQUE : STELLAR + EXPLICATIONS + PALIERS ═══ */}
       <div className="st-info-row" style={{ display: "flex", alignItems: "stretch", padding: "16px 0 12px", gap: 10 }}>
         {/* Titre STELLAR — gauche */}
-        <div style={{ flexShrink: 0, background: "rgba(8,4,25,0.60)", backdropFilter: "blur(10px)", borderRadius: 12, padding: "8px 14px", border: "1px solid rgba(196,181,253,0.12)", display: "flex", flexDirection: "column", justifyContent: "center" }}>
+        <div className="st-info-bloc-title" style={{ flexShrink: 0, background: "rgba(8,4,25,0.60)", backdropFilter: "blur(10px)", borderRadius: 12, padding: "8px 14px", border: "1px solid rgba(196,181,253,0.12)", display: "flex", flexDirection: "column", justifyContent: "center" }}>
           <div style={{ display: "flex", flexDirection: "column", gap: 0 }}>
             <div style={{ fontSize: 20, fontWeight: 800, letterSpacing: "0.18em", color: "#fff", textTransform: "uppercase", lineHeight: 1, marginBottom: -8 }}>SORARE</div>
             <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
@@ -482,7 +486,7 @@ export default function StellarTab({ players, teams, fixtures, logos = {}, onFig
         </div>
 
         {/* Blocs explicatifs — centre */}
-        <div style={{ flex: 1, background: "rgba(8,4,25,0.65)", backdropFilter: "blur(10px)", borderRadius: 10, padding: "8px 12px", border: "1px solid rgba(196,181,253,0.15)", display: "flex", gap: 8, alignItems: "flex-start" }}>
+        <div className="st-info-bloc-expl" style={{ flex: 1, background: "rgba(8,4,25,0.65)", backdropFilter: "blur(10px)", borderRadius: 10, padding: "8px 12px", border: "1px solid rgba(196,181,253,0.15)", display: "flex", gap: 8, alignItems: "flex-start" }}>
           <span style={{ fontSize: 14, flexShrink: 0, marginTop: 1 }}>★</span>
           <div>
             <div style={{ fontSize: 9.5, color: "rgba(255,255,255,0.75)", lineHeight: 1.5, fontStyle: "italic", marginBottom: 6 }}>
@@ -498,7 +502,7 @@ export default function StellarTab({ players, teams, fixtures, logos = {}, onFig
             </div>
           </div>
         </div>
-        <div style={{ flex: 1, background: "rgba(8,4,25,0.65)", backdropFilter: "blur(10px)", borderRadius: 10, padding: "8px 12px", border: "1px solid rgba(196,181,253,0.15)", display: "flex", gap: 8, alignItems: "flex-start" }}>
+        <div className="st-info-bloc-expl" style={{ flex: 1, background: "rgba(8,4,25,0.65)", backdropFilter: "blur(10px)", borderRadius: 10, padding: "8px 12px", border: "1px solid rgba(196,181,253,0.15)", display: "flex", gap: 8, alignItems: "flex-start" }}>
           <span style={{ fontSize: 14, flexShrink: 0, marginTop: 1 }}>⏰</span>
           <div>
             <div style={{ fontSize: 10, fontWeight: 800, color: "#C4B5FD", marginBottom: 2 }}>{S.stellarCreneauTitle}</div>
@@ -517,7 +521,7 @@ export default function StellarTab({ players, teams, fixtures, logos = {}, onFig
         </div>
 
         {/* Paliers — droite */}
-        <div style={{ flexShrink: 0, display: "flex", gap: 5, flexWrap: "wrap", justifyContent: "flex-end", alignContent: "center", background: "rgba(8,4,25,0.60)", backdropFilter: "blur(10px)", borderRadius: 12, padding: "8px 10px", border: "1px solid rgba(196,181,253,0.12)" }}>
+        <div className="st-info-bloc-paliers" style={{ flexShrink: 0, display: "flex", gap: 5, flexWrap: "wrap", justifyContent: "flex-end", alignContent: "center", background: "rgba(8,4,25,0.60)", backdropFilter: "blur(10px)", borderRadius: 12, padding: "8px 10px", border: "1px solid rgba(196,181,253,0.12)" }}>
           {PALIERS.map((p, i) => (
             <div key={i} style={{ background: `${p.color}18`, border: `1px solid ${p.color}40`, borderRadius: 6, padding: "3px 8px", textAlign: "center" }}>
               <div style={{ fontSize: 11, fontWeight: 800, color: p.color, fontFamily: "'DM Mono',monospace" }}>{p.pts}</div>

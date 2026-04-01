@@ -63,14 +63,68 @@ export default function App() {
     animation: "silverShine 3s linear infinite",
   };
 
+  const STARS = [
+    { top:"8%",  left:"7%",  big:true,  dur:2.1, delay:0    },
+    { top:"15%", left:"22%", big:false, dur:3.4, delay:0.7  },
+    { top:"6%",  left:"45%", big:false, dur:2.8, delay:1.2  },
+    { top:"12%", left:"68%", big:true,  dur:1.9, delay:0.3  },
+    { top:"4%",  left:"82%", big:false, dur:3.1, delay:1.8  },
+    { top:"22%", left:"5%",  big:false, dur:2.5, delay:0.5  },
+    { top:"28%", left:"38%", big:false, dur:3.7, delay:2.1  },
+    { top:"18%", left:"90%", big:true,  dur:2.3, delay:0.9  },
+    { top:"35%", left:"15%", big:false, dur:4.0, delay:1.5  },
+    { top:"42%", left:"72%", big:false, dur:2.6, delay:0.2  },
+    { top:"50%", left:"3%",  big:true,  dur:1.8, delay:1.1  },
+    { top:"55%", left:"55%", big:false, dur:3.3, delay:2.4  },
+    { top:"62%", left:"30%", big:false, dur:2.9, delay:0.6  },
+    { top:"70%", left:"85%", big:true,  dur:2.2, delay:1.7  },
+    { top:"75%", left:"12%", big:false, dur:3.6, delay:0.4  },
+    { top:"80%", left:"48%", big:false, dur:2.7, delay:2.0  },
+    { top:"88%", left:"65%", big:false, dur:3.0, delay:0.8  },
+    { top:"92%", left:"25%", big:true,  dur:2.4, delay:1.3  },
+    { top:"32%", left:"58%", big:false, dur:4.2, delay:1.9  },
+    { top:"48%", left:"92%", big:false, dur:3.8, delay:0.1  },
+  ];
+
   return (
+    <>
+      {/* ═══ Étoiles scintillantes — HORS du zoom, position:fixed réelle ═══ */}
+      {tab === "stellar" && (
+        <>
+          <style>{`
+            @keyframes starPulse { 0%,100%{opacity:0.2;transform:scale(0.8)} 50%{opacity:0.9;transform:scale(1.3)} }
+            @keyframes starPulseBig { 0%,100%{opacity:0.4;transform:scale(0.9)} 50%{opacity:1;transform:scale(1.6);filter:drop-shadow(0 0 5px rgba(220,200,255,0.9))} }
+          `}</style>
+          {STARS.map((s, i) => (
+            <div key={i} style={{ position:"fixed", top:s.top, left:s.left, zIndex:9999, pointerEvents:"none",
+              width:0, height:0, animation:`${s.big?"starPulseBig":"starPulse"} ${s.dur}s ease-in-out ${s.delay}s infinite` }}>
+              <div style={{ position:"absolute", width:s.big?"14px":"6px", height:s.big?"1px":"0.8px",
+                background:"linear-gradient(90deg,transparent,rgba(255,255,255,0.95),transparent)",
+                top:s.big?"-0.5px":"-0.4px", left:s.big?"-7px":"-3px" }} />
+              <div style={{ position:"absolute", width:s.big?"1px":"0.8px", height:s.big?"14px":"6px",
+                background:"linear-gradient(180deg,transparent,rgba(255,255,255,0.95),transparent)",
+                top:s.big?"-7px":"-3px", left:s.big?"-0.5px":"-0.4px" }} />
+              <div style={{ position:"absolute", width:s.big?"2px":"1px", height:s.big?"2px":"1px",
+                borderRadius:"50%", background:"#fff",
+                top:s.big?"-1px":"-0.5px", left:s.big?"-1px":"-0.5px",
+                boxShadow:s.big?"0 0 4px 2px rgba(220,200,255,0.8)":"0 0 2px 1px rgba(255,255,255,0.7)" }} />
+            </div>
+          ))}
+        </>
+      )}
     <div style={{
       minHeight: "100vh",
-      background: "linear-gradient(170deg, #0A0A1E, #0E0E2A 25%, #121236 50%, #10102E 75%, #0C0C22)",
       color: "#ffffff", fontFamily: "'Outfit', sans-serif",
       zoom: 1.15,
+      ...(tab === "stellar"
+        ? { backgroundImage: "linear-gradient(rgba(2,0,12,0.82), rgba(2,0,12,0.82)), url('/galaxy-bg.jpg')", backgroundSize: "cover", backgroundPosition: "center", backgroundRepeat: "no-repeat", backgroundAttachment: "fixed", backgroundColor: "#03010e" }
+        : { background: "linear-gradient(170deg, #0A0A1E, #0E0E2A 25%, #121236 50%, #10102E 75%, #0C0C22)" }
+      ),
     }}>
-      <style>{`@keyframes silverShine { 0%{background-position:200% center} 100%{background-position:-200% center} }`}</style>
+      <style>{`
+        @keyframes silverShine { 0%{background-position:200% center} 100%{background-position:-200% center} }
+        @keyframes holoShift { 0%{filter:hue-rotate(0deg) brightness(1.4) saturate(1.2)} 50%{filter:hue-rotate(180deg) brightness(1.8) saturate(1.6)} 100%{filter:hue-rotate(360deg) brightness(1.4) saturate(1.2)} }
+      `}</style>
       {/* Header */}
       <header style={{
         position: "sticky", top: 0, zIndex: 100,
@@ -101,7 +155,7 @@ export default function App() {
                 style={{
                   padding: "6px 14px", borderRadius: 10, fontSize: 12, fontWeight: 600,
                   border: "none", fontFamily: "Outfit", position: "relative",
-                  cursor: "pointer",
+                  cursor: "pointer", display: "inline-flex", alignItems: "center", gap: 4,
                   background: tab === t.id ? "rgba(99,102,241,0.12)" : "transparent",
                   outline: tab === t.id ? "1px solid rgba(99,102,241,0.3)" : "none",
                   transition: "all 0.2s",
@@ -120,7 +174,10 @@ export default function App() {
                   }),
                 }}
               >
-                {t.icon} {t.label}
+                {t.id === "stellar"
+                  ? <img src="/Stellar.png" alt="" style={{ width: 16, height: 16, objectFit: "contain", mixBlendMode: "screen", animation: "holoShift 3s linear infinite", flexShrink: 0 }} />
+                  : <>{t.icon}{" "}</>
+                }{t.label}
               </button>
             ))}
           </div>
@@ -167,7 +224,7 @@ export default function App() {
         {tab === "db" && <DbTab players={players} teams={teams} fixtures={fixtures} logos={logos} lang={lang} />}
         {tab === "fight" && <FightTab players={players} teams={teams} fixtures={fixtures} logos={logos} lang={lang} />}
         {tab === "reco" && <RecoTab players={players} teams={teams} fixtures={fixtures} logos={logos} lang={lang} />}
-        {tab === "stellar" && <StellarTab players={players} teams={teams} fixtures={fixtures} logos={logos} />}
+        {tab === "stellar" && <StellarTab players={players} teams={teams} fixtures={fixtures} logos={logos} onFight={() => setTab("fight")} lang={lang} />}
       </main>
 
       {/* Footer */}
@@ -179,5 +236,6 @@ export default function App() {
         Deglingo Scout · deglingosorare.com · {players.length} joueurs · 4 ligues
       </footer>
     </div>
+    </>
   );
 }

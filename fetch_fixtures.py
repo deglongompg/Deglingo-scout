@@ -397,9 +397,9 @@ def main():
     data_dir = os.path.join(script_dir, "deglingo-scout-app", "public", "data")
 
     # Load existing data
-    with open(os.path.join(data_dir, "teams.json")) as f:
+    with open(os.path.join(data_dir, "teams.json"), encoding="utf-8") as f:
         teams = json.load(f)
-    with open(os.path.join(data_dir, "players.json")) as f:
+    with open(os.path.join(data_dir, "players.json"), encoding="utf-8") as f:
         players = json.load(f)
 
     print("⚽ Deglingo Scout — Récupération des prochaines journées")

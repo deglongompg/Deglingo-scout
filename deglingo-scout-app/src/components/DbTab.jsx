@@ -312,7 +312,7 @@ export default function DbTab({ players, teams, fixtures, logos = {}, lang = "fr
           <div style={{ fontSize: 12, fontWeight: 700, letterSpacing: "0.05em", background: "linear-gradient(90deg, #A5B4FC 0%, #C084FC 25%, #E879F9 50%, #C084FC 75%, #A5B4FC 100%)", backgroundSize: "200% auto", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent", animation: "legendShimmer 4s linear infinite" }}>
             {t(lang, "dscoreLegend")}
           </div>
-          <span style={{ fontSize: 9, color: "#F87171", fontWeight: 700, background: "rgba(239,68,68,0.12)", padding: "2px 8px", borderRadius: 20, flexShrink: 0 }}>🚀 BETA GRATUITE</span>
+          <span className="db-legend-detail" style={{ fontSize: 9, color: "#F87171", fontWeight: 700, background: "rgba(239,68,68,0.12)", padding: "2px 8px", borderRadius: 20, flexShrink: 0 }}>🚀 BETA GRATUITE</span>
         </div>
         <div className="db-legend-detail" style={{ fontSize: 9, color: "rgba(255,255,255,0.3)", marginTop: 3, lineHeight: 1.5, fontStyle: "italic" }}>
           {t(lang, "dscoreDisclaimer")}

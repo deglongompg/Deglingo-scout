@@ -130,7 +130,7 @@ export default function App() {
         @media(max-width:768px){
           .ds-app-root { zoom: 1 !important; }
           .ds-header-inner { display: flex !important; flex-wrap: wrap !important; align-items: center !important; row-gap: 6px !important; }
-          .ds-header-tabs { order: 10 !important; width: 100% !important; overflow-x: auto !important; -webkit-overflow-scrolling: touch !important; flex-wrap: nowrap !important; scrollbar-width: none !important; justify-content: flex-start !important; }
+          .ds-header-tabs { order: 10 !important; width: 100% !important; box-sizing: border-box !important; overflow-x: auto !important; -webkit-overflow-scrolling: touch !important; flex-wrap: nowrap !important; scrollbar-width: none !important; justify-content: flex-start !important; padding-right: 24px !important; }
           .ds-header-tabs::-webkit-scrollbar { display: none; }
           .ds-cta-area { margin-left: auto !important; }
           .ds-cta-area a { padding: 5px 10px !important; font-size: 10px !important; }

@@ -251,12 +251,14 @@ function StellarCard({ player, logos, size = "md" }) {
     <div style={{ textAlign: "center", width: W + 4 }}>
       <div style={{
         position: "relative", width: W, height: H, borderRadius: 10,
-        background: `linear-gradient(155deg, rgba(8,4,28,0.92) 0%, rgba(18,10,50,0.88) 40%, ${pc}18 70%, rgba(6,4,22,0.95) 100%)`,
-        border: player.isCaptain ? `2px solid #FFD700` : `1.5px solid ${pc}30`,
+        border: player.isCaptain ? `2px solid transparent` : `1.5px solid ${pc}30`,
+        background: player.isCaptain
+          ? `linear-gradient(#0d0818, #0d0818) padding-box, linear-gradient(135deg, #e2e8f0, #94a3b8, #f8fafc, #64748b, #e2e8f0) border-box`
+          : `linear-gradient(155deg, rgba(8,4,28,0.92) 0%, rgba(18,10,50,0.88) 40%, ${pc}18 70%, rgba(6,4,22,0.95) 100%)`,
         display: "flex", flexDirection: "column", alignItems: "center",
         padding: "4px 2px 0", overflow: "hidden",
         boxShadow: player.isCaptain
-          ? "0 0 16px rgba(255,215,0,0.3), 0 4px 12px rgba(0,0,0,0.5)"
+          ? "0 0 14px rgba(148,163,184,0.25), 0 4px 12px rgba(0,0,0,0.5)"
           : `0 4px 12px rgba(0,0,0,0.4)`,
       }}>
         {/* Star dust */}
@@ -264,11 +266,11 @@ function StellarCard({ player, logos, size = "md" }) {
           backgroundImage: "radial-gradient(0.8px 0.8px at 15% 20%, #fff, transparent), radial-gradient(0.5px 0.5px at 50% 65%, #C4B5FD, transparent), radial-gradient(0.7px 0.7px at 80% 15%, #fff, transparent), radial-gradient(0.6px 0.6px at 35% 80%, #A78BFA, transparent), radial-gradient(0.4px 0.4px at 70% 50%, #fff, transparent)"
         }} />
         {/* Top accent */}
-        <div style={{ position: "absolute", top: 0, left: 0, right: 0, height: 2, background: player.isCaptain ? "linear-gradient(90deg, transparent, #FFD700, transparent)" : `linear-gradient(90deg, transparent, ${pc}60, transparent)`, pointerEvents: "none" }} />
+        <div style={{ position: "absolute", top: 0, left: 0, right: 0, height: 2, background: player.isCaptain ? "linear-gradient(90deg, transparent, #e2e8f0, #f8fafc, #e2e8f0, transparent)" : `linear-gradient(90deg, transparent, ${pc}60, transparent)`, pointerEvents: "none" }} />
 
         {/* Captain badge */}
         {player.isCaptain && (
-          <div style={{ position: "absolute", top: 2, right: 4, background: "linear-gradient(135deg, #FFD700, #FFA500)", borderRadius: "50%", width: 18, height: 18, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 10, fontWeight: 900, color: "#1a1a2e", boxShadow: "0 0 8px rgba(255,215,0,0.5)", zIndex: 2 }}>C</div>
+          <div style={{ position: "absolute", top: 2, right: 4, borderRadius: "50%", width: 18, height: 18, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 10, fontWeight: 900, color: "#fff", zIndex: 2, background: "linear-gradient(135deg, #A78BFA, #7C3AED)", border: "1.5px solid rgba(196,181,253,0.5)", boxShadow: "0 0 6px rgba(139,92,246,0.5)" }}>C</div>
         )}
 
         {/* Position */}
@@ -564,10 +566,13 @@ export default function StellarTab({ players, teams, fixtures, logos = {}, onFig
       {selectedDay !== null && dayData && (
         <div>
           {/* Titre du jour */}
-          <h2 style={{ fontSize: 16, fontWeight: 800, color: "#fff", margin: "0 0 12px", display: "flex", alignItems: "center", gap: 8 }}>
-            <span style={{ color: "#C4B5FD" }}>{weekDays[selectedDay].toLocaleDateString(S.stellarDateLocale, { timeZone: TZ, weekday: "long", day: "numeric", month: "long" }).toUpperCase()}</span>
-            <span style={{ fontSize: 11, color: "rgba(255,255,255,0.3)", fontWeight: 500 }}>— {dayData.fixtures.length} {dayData.fixtures.length > 1 ? S.stellarMatches : S.stellarMatch}</span>
-          </h2>
+          <div style={{ margin: "0 0 10px" }}>
+            <h2 style={{ fontSize: 16, fontWeight: 800, color: "#fff", margin: 0, display: "flex", alignItems: "center", gap: 8 }}>
+              <span style={{ color: "#C4B5FD" }}>{weekDays[selectedDay].toLocaleDateString(S.stellarDateLocale, { timeZone: TZ, weekday: "long", day: "numeric", month: "long" }).toUpperCase()}</span>
+              <span style={{ fontSize: 11, color: "rgba(255,255,255,0.3)", fontWeight: 500 }}>— {dayData.fixtures.length} {dayData.fixtures.length > 1 ? S.stellarMatches : S.stellarMatch}</span>
+            </h2>
+            <div style={{ fontSize: 9, color: "rgba(255,255,255,0.35)", fontWeight: 600, letterSpacing: "0.08em", marginTop: 2 }}>{lang === "fr" ? "HEURE PARIS" : "PARIS TIME"}</div>
+          </div>
 
           {/* Layout principal : matchs à gauche | teams à droite */}
           <div style={{ display: "flex", gap: 16, alignItems: "flex-start" }}>
@@ -578,35 +583,36 @@ export default function StellarTab({ players, teams, fixtures, logos = {}, onFig
             {/* Match list — groupé par créneau horaire, trié chrono heure France */}
             {(() => {
               const sorted = [...dayData.fixtures].sort((a, b) => (a.kickoff || "99:99").localeCompare(b.kickoff || "99:99"));
-              // Grouper par heure Paris
-              const groups = {};
+              // Grouper par créneau horaire
+              const groups = [];
               for (const f of sorted) {
                 const parisTime = utcToParisTime(f.kickoff, f.date) || "TBD";
-                if (!groups[parisTime]) groups[parisTime] = [];
-                groups[parisTime].push(f);
+                const last = groups[groups.length - 1];
+                if (last && last.time === parisTime) last.fixtures.push(f);
+                else groups.push({ time: parisTime, fixtures: [f] });
               }
-              return Object.entries(groups).map(([time, gFixtures]) => (
-                <div key={time} style={{ marginBottom: 10 }}>
-                  {/* Header créneau */}
-                  <div style={{ display: "inline-flex", alignItems: "center", gap: 8, marginBottom: 5, background: "rgba(10,5,30,0.65)", backdropFilter: "blur(8px)", borderRadius: 8, padding: "4px 10px", border: "1px solid rgba(196,181,253,0.15)" }}>
-                    <span style={{ fontSize: 14, fontWeight: 900, color: "#fff", fontFamily: "'DM Mono',monospace", textShadow: "0 0 10px rgba(196,181,253,0.8)" }}>{time}</span>
-                    <span style={{ fontSize: 9, color: "rgba(196,181,253,0.7)", fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.12em" }}>{S.stellarParisTime}</span>
-                  </div>
-                  {/* Matchs de ce créneau */}
-                  <div style={{ display: "flex", flexDirection: "column", gap: 3, paddingLeft: 8, borderLeft: "2px solid rgba(167,139,250,0.2)" }}>
-                    {gFixtures.map((f, i) => (
-                      <div key={i} style={{ background: "rgba(30,10,70,0.55)", border: "1px solid rgba(140,100,255,0.15)", borderRadius: 7, padding: "5px 10px", fontSize: 11, display: "inline-flex", alignItems: "center", gap: 6, minWidth: chipMinWidth, backdropFilter: "blur(6px)" }}>
-                        <span style={{ fontSize: 8, fontWeight: 800, color: f.league === "L1" ? "#4FC3F7" : f.league === "PL" ? "#B388FF" : "#FF8A80", minWidth: 28 }}>{f.league}</span>
-                        {logos[f.home] && <img src={`/data/logos/${logos[f.home]}`} alt="" style={{ width: 14, height: 14, objectFit: "contain" }} />}
-                        <span style={{ fontWeight: 600, color: "#fff" }}>{sn(f.home)}</span>
-                        <span style={{ color: "rgba(255,255,255,0.25)", fontSize: 9 }}>vs</span>
-                        <span style={{ fontWeight: 600, color: "#fff" }}>{sn(f.away)}</span>
-                        {logos[f.away] && <img src={`/data/logos/${logos[f.away]}`} alt="" style={{ width: 14, height: 14, objectFit: "contain" }} />}
-                      </div>
-                    ))}
-                  </div>
+              return (
+                <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
+                  {groups.map((g, gi) => (
+                    <div key={gi} style={{ display: "flex", flexDirection: "column", gap: 3 }}>
+                      {g.fixtures.map((f, i) => {
+                        const lgColor = f.league === "L1" ? "#4FC3F7" : f.league === "PL" ? "#B388FF" : "#FF8A80";
+                        return (
+                          <div key={i} style={{ display: "inline-flex", alignItems: "center", gap: 6, padding: "4px 8px", background: "rgba(30,10,70,0.45)", border: "1px solid rgba(140,100,255,0.12)", borderRadius: 6, backdropFilter: "blur(6px)" }}>
+                            <span style={{ fontSize: 10, fontWeight: 900, color: i === 0 ? "#fff" : "transparent", fontFamily: "'DM Mono',monospace", minWidth: 36 }}>{g.time}</span>
+                            <span style={{ fontSize: 8, fontWeight: 800, color: lgColor, minWidth: 22 }}>{f.league}</span>
+                            {logos[f.home] && <img src={`/data/logos/${logos[f.home]}`} alt="" style={{ width: 13, height: 13, objectFit: "contain" }} />}
+                            <span style={{ fontSize: 11, fontWeight: 600, color: "#fff" }}>{sn(f.home)}</span>
+                            <span style={{ fontSize: 9, color: "rgba(255,255,255,0.25)" }}>vs</span>
+                            <span style={{ fontSize: 11, fontWeight: 600, color: "#fff" }}>{sn(f.away)}</span>
+                            {logos[f.away] && <img src={`/data/logos/${logos[f.away]}`} alt="" style={{ width: 13, height: 13, objectFit: "contain" }} />}
+                          </div>
+                        );
+                      })}
+                    </div>
+                  ))}
                 </div>
-              ));
+              );
             })()}
           </div>{/* fin colonne gauche */}
 

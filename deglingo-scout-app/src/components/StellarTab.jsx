@@ -118,6 +118,7 @@ const starsKeyframes = `
   .st-team-players > div { width: 62px !important; }
   .st-team-players > div > div:first-child { width: 62px !important; height: 88px !important; }
   .st-team-card { padding: 6px !important; }
+  .st-card-bonus-info { display: none !important; }
 }
 `;
 
@@ -779,7 +780,7 @@ export default function StellarTab({ players, teams, fixtures, logos = {}, onFig
                     </div>
                     <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
                       {/* Infos à gauche du score */}
-                      <div style={{ textAlign: "right" }}>
+                      <div className="st-card-bonus-info" style={{ textAlign: "right" }}>
                         <div style={{ fontSize: 7, color: "rgba(255,255,255,0.25)", fontStyle: "italic" }}>{S.stellarBonusCard}</div>
                         <div style={{ fontSize: 7, color: "rgba(255,255,255,0.2)" }}>{S.stellarProjScore}</div>
                         {palier && <div style={{ fontSize: 7, color: palier.color, fontWeight: 600 }}>→ {palier.reward}</div>}

@@ -504,13 +504,13 @@ export default function StellarTab({ players, teams, fixtures, logos = {}, onFig
           }}>
           <span style={{ fontSize: 22 }}>🎁</span>
           <div style={{ fontSize: 10, fontWeight: 800, color: "#C4B5FD", lineHeight: 1.3 }}>
-            {lang === "fr" ? "Packs gratuits" : "Free packs"}
+            {lang === "fr" ? "Ouvre tes premiers packs gratuitement" : "Open your first packs for free"}
           </div>
           <div style={{ fontSize: 9, color: "rgba(255,255,255,0.45)", lineHeight: 1.3 }}>
-            {lang === "fr" ? "100% gratuit" : "100% free"}
+            {lang === "fr" ? "Sorare Stellar — joue ce soir" : "Sorare Stellar — play tonight"}
           </div>
           <div style={{ fontSize: 10, fontWeight: 800, color: "#fff", background: "linear-gradient(135deg, #8B5CF6, #6D28D9)", borderRadius: 6, padding: "4px 10px" }}>
-            {lang === "fr" ? "Jouer →" : "Play →"}
+            {lang === "fr" ? "Ouvrir mes packs →" : "Open my packs →"}
           </div>
         </a>
 

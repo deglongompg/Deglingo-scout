@@ -629,12 +629,12 @@ export default function StellarTab({ players, teams, fixtures, logos = {}, onFig
               return (
                 <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
                   {groups.map((g, gi) => (
-                    <div key={gi} style={{ display: "flex", flexDirection: "column", gap: 3 }}>
+                    <div key={gi} style={{ display: "flex", flexDirection: "column", gap: 2 }}>
+                      <div style={{ fontSize: 10, fontWeight: 900, color: "#fff", fontFamily: "'DM Mono',monospace", paddingLeft: 2 }}>{g.time}</div>
                       {g.fixtures.map((f, i) => {
                         const lgColor = f.league === "L1" ? "#4FC3F7" : f.league === "PL" ? "#B388FF" : "#FF8A80";
                         return (
                           <div key={i} style={{ display: "inline-flex", alignItems: "center", gap: 6, padding: "4px 8px", background: "rgba(30,10,70,0.45)", border: "1px solid rgba(140,100,255,0.12)", borderRadius: 6, backdropFilter: "blur(6px)" }}>
-                            <span style={{ fontSize: 10, fontWeight: 900, color: i === 0 ? "#fff" : "transparent", fontFamily: "'DM Mono',monospace", minWidth: 36 }}>{g.time}</span>
                             <span style={{ fontSize: 8, fontWeight: 800, color: lgColor, minWidth: 22 }}>{f.league}</span>
                             {logos[f.home] && <img src={`/data/logos/${logos[f.home]}`} alt="" style={{ width: 13, height: 13, objectFit: "contain" }} />}
                             <span style={{ fontSize: 11, fontWeight: 600, color: "#fff" }}>{sn(f.home)}</span>

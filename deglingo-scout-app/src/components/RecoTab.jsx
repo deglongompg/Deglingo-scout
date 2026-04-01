@@ -563,6 +563,7 @@ export default function RecoTab({ players, teams, fixtures, logos = {}, lang = "
     if (!lgTeams.length) return [];
     const pf = fixtures?.player_fixtures || {};
     return lgPlayers.map(p => {
+      if (p.injured || p.suspended) return null; // Blessés/suspendus exclus du stack
       const fx = pf[p.slug] || pf[p.name];
       if (!fx) return null;
       const opp = lgTeams.find(t => t.name === fx.opp);

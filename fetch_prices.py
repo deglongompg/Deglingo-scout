@@ -223,6 +223,23 @@ def process_league(league_code, fresh=False):
     with open(filename, "w", encoding="utf-8") as f:
         json.dump(players, f, ensure_ascii=False, indent=2)
 
+    # ── Backup séparé dans player_prices.json (survit au --fresh) ──
+    PRICES_FILE = "player_prices.json"
+    existing_prices = {}
+    if os.path.exists(PRICES_FILE):
+        with open(PRICES_FILE, encoding="utf-8") as f:
+            existing_prices = json.load(f)
+    for p in players:
+        slug = p.get("slug")
+        if slug and (p.get("price_limited") is not None or p.get("price_rare") is not None):
+            existing_prices[slug] = {
+                "price_limited": p.get("price_limited"),
+                "price_rare":    p.get("price_rare"),
+            }
+    with open(PRICES_FILE, "w", encoding="utf-8") as f:
+        json.dump(existing_prices, f, ensure_ascii=False)
+    print(f"  💾 player_prices.json mis à jour ({len(existing_prices)} joueurs avec prix)")
+
     elapsed = time.time() - start
     print(f"\n✅ {league_code} terminé en {int(elapsed/60)}min {int(elapsed%60)}s")
     print(f"  💰 {found} nouveaux prix trouvés")

@@ -1,6 +1,7 @@
 import json, os, shutil
 
-STATUS_FILE = "player_status.json"
+STATUS_FILE  = "player_status.json"
+PRICES_FILE  = "player_prices.json"
 
 LEAGUES = {
     "deglingo_ligue1_final.json": "L1",
@@ -69,6 +70,24 @@ if os.path.exists(STATUS_FILE):
     print(f"✅ player_status.json mergé — {patched} joueurs avec status")
 else:
     print(f"ℹ️  Pas de player_status.json — run fetch_player_status.py le vendredi")
+
+# ── Merge player_prices.json si dispo (généré par fetch_prices.py) ──
+if os.path.exists(PRICES_FILE):
+    with open(PRICES_FILE, encoding="utf-8") as f:
+        prices = json.load(f)
+    patched_prices = 0
+    for p in all_players:
+        pr = prices.get(p.get("slug", ""))
+        if pr:
+            p["price_limited"] = pr.get("price_limited")
+            p["price_rare"]    = pr.get("price_rare")
+            patched_prices += 1
+        else:
+            p.setdefault("price_limited", None)
+            p.setdefault("price_rare",    None)
+    print(f"✅ player_prices.json mergé — {patched_prices} joueurs avec prix")
+else:
+    print(f"ℹ️  Pas de player_prices.json — run fetch_prices.py pour les prix")
 
 for outdir in ["public/data", "deglingo-scout-app/public/data"]:
     os.makedirs(outdir, exist_ok=True)

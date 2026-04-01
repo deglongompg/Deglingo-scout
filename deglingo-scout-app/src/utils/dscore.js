@@ -113,12 +113,49 @@ export function dScoreMatch(player, opp, isHome, playerTeam = null) {
     const lambda = Math.max(0.5, Math.min(2.0, rawLambda));
     const csProbGK = Math.exp(-lambda) * 100;
 
+    // STARTER DETECTION — pour les GK, regarder les 3 matchs les plus récents (index 0,1,2)
+    // last_5[0] = match le plus récent, inclut DNP=0
+    // 2+ non-zéros dans les 3 derniers = titulaire actuel → pas de pénalité
+    // 1 non-zéro dans les 3 derniers = partagé/incertain → petite pénalité
+    // 0 non-zéros dans les 3 derniers MAIS jouait avant = a perdu sa place → pénalité supplémentaire
+    const last5arr = p.last_5 || [];
+    const gkRecentPlays = last5arr.slice(0, 3).filter(s => s > 0).length;
+    const gkLostSpot = last5arr[0] === 0 && last5arr[1] === 0 && last5arr.some(s => s > 0);
+    const gkInactivityPenalty = gkRecentPlays >= 2 ? 0
+      : gkRecentPlays >= 1 ? -5
+      : gkLostSpot ? Math.min(inactivityPenalty - 10, -10)
+      : inactivityPenalty;
+
+    // BASE FORME GK — L40 comme référence principale quand données récentes sparse
+    // Un GK backup qui prend la place après 1 match a L40 qui prouve sa vraie qualité
+    const l40GK = p.l40 || 0;
+    const hasL40 = l40GK > 0;
+    // Si L40 connu et GK joue actuellement → blender L40 (70%) + L5 récent (30%)
+    // Si L40 connu mais 0 match récent → utiliser L40 pur (forma établie historiquement)
+    const lEffGK = hasL40 && gkRecentPlays >= 1
+      ? _l5 * 0.3 + l40GK * 0.7
+      : hasL40 ? l40GK * 0.85
+      : lEff;
+    // AA: même logique — aa40 comme base si sparse
+    const aa40GK = p.aa40 || 0;
+    const aaEffGK = hasL40 && aa40GK > 0 && gkRecentPlays <= 1
+      ? aaEff * 0.4 + aa40GK * 0.6
+      : aaEff;
+    // Sample + inactivité : si L40 connu ET GK joue actuellement → qualité établie, 0 pénalité
+    // L40 = référence Sorare officielle sur 40 matchs → on sait ce que vaut ce GK
+    const gkSamplePenalty = (hasL40 && gkRecentPlays >= 1) ? 0
+      : gkRecentPlays >= 2 ? Math.round(samplePenalty * 0.4)
+      : hasL40 ? Math.round(samplePenalty * 0.5)
+      : samplePenalty;
+    // Même logique pour inactivity : L40 connu + joue actuellement → 0 pénalité historique
+    const gkInactivityPenaltyFinal = (hasL40 && gkRecentPlays >= 1) ? 0 : gkInactivityPenalty;
+
     // SOCLE GK (40 pts max) — forme + AA (range GK: -20 à +15) + floor + régularité
-    const fGK = norm(lEff, 20, 70) * 14;
-    const aaGK = norm(aaEff, -20, 15) * 10;  // GK AA range: négatif = buts encaissés, positif = arrêts
+    const fGK = norm(lEffGK, 20, 70) * 14;
+    const aaGK = norm(aaEffGK, -20, 15) * 10;  // GK AA range: négatif = buts encaissés, positif = arrêts
     const flGK = norm(_floor, 10, 60) * 8;
     const rgGK = norm(_reg, 0, 100) * 5;
-    const l25GK = l25 > lEff ? norm(l25, 25, 70) * 3 : 0;
+    const l25GK = l25 > lEffGK ? norm(l25, 25, 70) * 3 : 0;
     const socleGK = fGK + aaGK + flGK + rgGK + l25GK;
 
     // CONTEXTE GK (50 pts max) — basé sur le scoring Sorare réel
@@ -163,11 +200,14 @@ export function dScoreMatch(player, opp, isHome, playerTeam = null) {
       goatGK += _reg >= 80 ? 2 : _reg >= 50 ? 1 : 0;          // Régularité (2:1:0 vs 4:2:0 avant)
     }
 
-    const rawGK = socleGK + contexteGK + momentumGK + domBonusGK + goatGK + samplePenalty + inactivityPenalty;
+    const rawGK = socleGK + contexteGK + momentumGK + domBonusGK + goatGK + gkSamplePenalty + gkInactivityPenaltyFinal;
     const minScoreGK = mp >= 5 ? _floor / 100 * 50 : 0;
     // Un GK ne peut pas dépasser son ceiling historique (meilleur match récent)
     const ceilGK = p.ceiling || 100;
-    return Math.round(Math.max(minScoreGK, Math.min(ceilGK, rawGK)));
+    // GK qui a perdu sa place (DNP 2 derniers matchs) → score plafonné à 42
+    // Il ne jouera très probablement pas → D-Score élevé serait trompeur pour Sorare
+    const gkLostSpotCap = gkLostSpot ? 35 : ceilGK;
+    return Math.round(Math.max(minScoreGK, Math.min(gkLostSpotCap, rawGK)));
   }
 
   // ─── OUTFIELD PLAYERS ───

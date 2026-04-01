@@ -276,7 +276,7 @@ export default function DbTab({ players, teams, fixtures, logos = {}, lang = "fr
         <div style={{ fontSize: 9, color: "rgba(255,255,255,0.3)", marginTop: 3, lineHeight: 1.5, fontStyle: "italic" }}>
           {t(lang, "dscoreDisclaimer")}
           <span style={{ color: "rgba(255,255,255,0.15)" }}> | </span>
-          <span style={{ color: "#A5B4FC" }}>45% {lang==="en"?"football expertise":"expertise foot"}</span>
+          <span style={{ color: "#A5B4FC" }}>50% {lang==="en"?"football expertise":"expertise foot"}</span>
           <span style={{ color: "rgba(255,255,255,0.12)" }}> · </span>
           <span style={{ color: "#4ADE80" }}>20% data</span>
           <span style={{ color: "rgba(255,255,255,0.12)" }}> · </span>

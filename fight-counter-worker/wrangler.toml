@@ -1,0 +1,7 @@
+name = "deglingo-fight-counter"
+main = "worker.js"
+compatibility_date = "2024-01-01"
+
+[[kv_namespaces]]
+binding = "FIGHT_KV"
+id = "5588c8c98b4843b4b1fc54b9baf20d4d"

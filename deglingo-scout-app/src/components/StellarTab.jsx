@@ -96,6 +96,10 @@ const starsKeyframes = `
   .st-top10-grid { grid-template-columns: repeat(2, 1fr) !important; }
   .st-cta-banner { flex-direction: column !important; gap: 8px !important; align-items: flex-start !important; }
   .st-decisive { flex-wrap: wrap !important; }
+  .st-team-players { gap: 2px !important; }
+  .st-team-players > div { width: 62px !important; }
+  .st-team-players > div > div:first-child { width: 62px !important; height: 88px !important; }
+  .st-team-card { padding: 6px !important; }
 }
 `;
 
@@ -713,7 +717,7 @@ export default function StellarTab({ players, teams, fixtures, logos = {}, onFig
               const totalScore = team.players.reduce((sum, p) => sum + (p.isCaptain ? Math.round(p.ds * 1.5) : p.ds), 0);
               const palier = PALIERS.filter(p => totalScore >= p.pts).pop();
               return (
-                <div key={ti} style={{
+                <div key={ti} className="st-team-card" style={{
                   borderRadius: 14, padding: "12px",
                   background: isUltime
                     ? "linear-gradient(135deg, rgba(220,210,255,0.14) 0%, rgba(140,80,240,0.10) 25%, rgba(180,140,255,0.08) 50%, rgba(100,80,220,0.10) 75%, rgba(220,210,255,0.14) 100%)"
@@ -747,7 +751,7 @@ export default function StellarTab({ players, teams, fixtures, logos = {}, onFig
                       </div>
                     </div>
                   </div>
-                  <div style={{ display: "flex", justifyContent: "center", gap: 4, flexWrap: "nowrap", overflow: "hidden" }}>
+                  <div className="st-team-players" style={{ display: "flex", justifyContent: "center", gap: 4, flexWrap: "nowrap" }}>
                     {team.players.map((p, pi) => (
                       <StellarCard key={pi} player={p} logos={logos} size="sm" />
                     ))}

@@ -203,15 +203,17 @@ export default function App() {
               target="_blank"
               rel="noopener noreferrer"
               style={{
-                padding: "6px 12px", borderRadius: 10, fontSize: 11, fontWeight: 700,
-                fontFamily: "Outfit", textDecoration: "none",
-                background: "linear-gradient(135deg, #22C55E, #16A34A)",
-                color: "#fff", display: "flex", alignItems: "center", gap: 4,
-                boxShadow: "0 0 12px rgba(34,197,94,0.3)",
-                transition: "all 0.2s",
+                padding: "7px 16px", borderRadius: 20, fontSize: 11, fontWeight: 800,
+                fontFamily: "Outfit", textDecoration: "none", letterSpacing: "0.04em",
+                background: "linear-gradient(#0a0618, #0a0618) padding-box, linear-gradient(135deg, #4ade80, #22d3ee, #818cf8, #c084fc, #f472b6, #4ade80) border-box",
+                border: "2px solid transparent",
+                color: "#fff", display: "flex", alignItems: "center", gap: 6,
+                boxShadow: "0 0 16px rgba(129,140,248,0.4)",
+                animation: "holoShift 3s linear infinite",
+                transition: "box-shadow 0.2s, transform 0.2s",
               }}
-              onMouseEnter={e => e.currentTarget.style.boxShadow = "0 0 20px rgba(34,197,94,0.5)"}
-              onMouseLeave={e => e.currentTarget.style.boxShadow = "0 0 12px rgba(34,197,94,0.3)"}
+              onMouseEnter={e => { e.currentTarget.style.boxShadow = "0 0 28px rgba(129,140,248,0.7)"; e.currentTarget.style.transform = "translateY(-1px)"; }}
+              onMouseLeave={e => { e.currentTarget.style.boxShadow = "0 0 16px rgba(129,140,248,0.4)"; e.currentTarget.style.transform = "translateY(0)"; }}
             >
               {t(lang, "ctaSorare")}
             </a>

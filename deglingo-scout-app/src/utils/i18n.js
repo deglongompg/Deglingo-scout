@@ -6,7 +6,7 @@ export const T = {
     tabFight: "Fight",
     tabBestPick: "Best Pick",
     tabStellar: "Sorare Stellar",
-    ctaSorare: "Deviens Manager Sorare — 🎁 100€ offerts",
+    ctaSorare: "100€ offerts sur Sorare Pro",
     loading: "Chargement des données...",
     langToggle: "EN",
 
@@ -125,7 +125,7 @@ export const T = {
     tabFight: "Fight",
     tabBestPick: "Best Pick",
     tabStellar: "Sorare Stellar",
-    ctaSorare: "Become a Sorare Manager — 🎁 €100 bonus",
+    ctaSorare: "€100 bonus on Sorare Pro",
     loading: "Loading data...",
     langToggle: "FR",
 

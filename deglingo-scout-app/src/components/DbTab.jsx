@@ -338,7 +338,6 @@ export default function DbTab({ players, teams, fixtures, logos = {}, lang = "fr
           <span>Reg10 = {__("% matchs >60 sur L10", "% matches >60 over L10")}</span>
           <span className="db-legend-detail">Proj = {__("Score projeté Sorare (humains) — reflète la titularisation prévue. Vert ≥50, Orange ≥35, Rouge <35", "Sorare projected score (human-made) — reflects expected start. Green ≥50, Orange ≥35, Red <35")}</span>
           <span className="db-legend-detail"><span style={{ color: "#FBBF24" }}>&#9733;</span> Extra GOAT — {__("élite protégée par l'algo quand ça compte", "elite protected by the algo when it matters")}</span>
-          <span><span style={{ color: "#FBBF24" }}>L€</span> Limited · <span style={{ color: "#EF4444" }}>R€</span> Rare</span>
           <span style={{ flex: 1 }} />
           <span style={{ fontSize: 9, color: "#F87171", fontWeight: 700, background: "rgba(239,68,68,0.12)", padding: "2px 8px", borderRadius: 20 }}>🚀 BETA GRATUITE</span>
         </div>

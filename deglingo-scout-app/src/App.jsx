@@ -138,6 +138,7 @@ export default function App() {
         }
         @media(max-width:480px){
           .ds-lang-btn { display: none !important; }
+          .ds-stellar-icon { display: none !important; }
         }
       `}</style>
       {/* Header */}
@@ -191,7 +192,7 @@ export default function App() {
                 }}
               >
                 {tab2.id === "stellar"
-                  ? <img src="/Stellar.png" alt="" style={{ width: 16, height: 16, objectFit: "contain", mixBlendMode: "screen", animation: "holoShift 3s linear infinite", flexShrink: 0 }} />
+                  ? <img className="ds-stellar-icon" src="/Stellar.png" alt="" style={{ width: 16, height: 16, objectFit: "contain", mixBlendMode: "screen", animation: "holoShift 3s linear infinite", flexShrink: 0 }} />
                   : <>{tab2.icon}{" "}</>
                 }{tab2.label}
               </button>

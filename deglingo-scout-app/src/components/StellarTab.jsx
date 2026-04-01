@@ -439,7 +439,8 @@ export default function StellarTab({ players, teams, fixtures, logos = {}, onFig
               <img src="/Stellar.png" alt="" style={{ width: 42, height: 42, objectFit: "contain", mixBlendMode: "screen", animation: "holoShift 3s linear infinite", flexShrink: 0 }} />
             </div>
           </div>
-          <div style={{ fontSize: 10, color: "rgba(255,255,255,0.55)", marginTop: 4 }}>{S.stellarSubtitle}</div>
+          <div style={{ fontSize: 13, fontWeight: 800, color: "#fff", letterSpacing: "0.05em", marginTop: 6, textTransform: "uppercase" }}>Free 2 Play</div>
+          <div style={{ fontSize: 10, color: "rgba(255,255,255,0.55)", marginTop: 2 }}>{S.stellarSubtitle}</div>
         </div>
 
         {/* Blocs explicatifs — centre */}
@@ -472,6 +473,42 @@ export default function StellarTab({ players, teams, fixtures, logos = {}, onFig
           ))}
         </div>
       </div>
+
+      {/* ═══ CTA AFFILIATION ═══ */}
+      <a
+        href="http://sorare.pxf.io/Deglingo"
+        target="_blank"
+        rel="noopener noreferrer"
+        style={{
+          display: "flex", alignItems: "center", justifyContent: "space-between",
+          background: "linear-gradient(135deg, rgba(139,92,246,0.12), rgba(109,40,217,0.08))",
+          border: "1px solid rgba(167,139,250,0.35)", borderRadius: 10,
+          padding: "10px 16px", marginBottom: 10, textDecoration: "none",
+          boxShadow: "0 0 18px rgba(139,92,246,0.12)",
+          transition: "all 0.2s",
+        }}
+        onMouseEnter={e => { e.currentTarget.style.boxShadow = "0 0 28px rgba(139,92,246,0.28)"; e.currentTarget.style.borderColor = "rgba(167,139,250,0.6)"; }}
+        onMouseLeave={e => { e.currentTarget.style.boxShadow = "0 0 18px rgba(139,92,246,0.12)"; e.currentTarget.style.borderColor = "rgba(167,139,250,0.35)"; }}
+      >
+        <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+          <span style={{ fontSize: 18 }}>🎁</span>
+          <div>
+            <div style={{ fontSize: 12, fontWeight: 800, color: "#C4B5FD", letterSpacing: "0.03em" }}>
+              {lang === "fr" ? "Viens ouvrir tes premiers packs de cartes gratuitement" : "Open your first card packs for free"}
+            </div>
+            <div style={{ fontSize: 10, color: "rgba(255,255,255,0.5)", marginTop: 1 }}>
+              {lang === "fr" ? "Sorare Stellar est 100% gratuit — inscris-toi et joue dès ce soir" : "Sorare Stellar is 100% free — sign up and play tonight"}
+            </div>
+          </div>
+        </div>
+        <div style={{
+          fontSize: 11, fontWeight: 800, color: "#fff", whiteSpace: "nowrap",
+          background: "linear-gradient(135deg, #8B5CF6, #6D28D9)", borderRadius: 8,
+          padding: "6px 14px", boxShadow: "0 0 10px rgba(139,92,246,0.4)", flexShrink: 0,
+        }}>
+          {lang === "fr" ? "Ouvrir mes packs →" : "Open my packs →"}
+        </div>
+      </a>
 
       {/* ═══ LIGNE 3 : NAVIGATEUR SEMAINE + CALENDRIER ═══ */}
       <div style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: 10, marginBottom: 8 }}>

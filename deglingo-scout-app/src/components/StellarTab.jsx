@@ -95,7 +95,8 @@ const starsKeyframes = `
   .st-calendar-wrap { display: grid !important; grid-template-columns: 28px repeat(7, 1fr) 28px !important; gap: 3px !important; overflow-x: unset !important; }
   .st-calendar-wrap button { padding: 0 4px !important; font-size: 11px !important; }
   .st-cal-day { padding: 5px 2px !important; }
-  .st-cal-day .cal-day-name { font-size: 8px !important; }
+  .st-cal-day > div:first-child { flex-wrap: wrap !important; gap: 2px !important; }
+  .st-cal-day .cal-day-name { font-size: 8px !important; display: block !important; width: 100% !important; }
   .st-cal-day .cal-day-num { font-size: 11px !important; }
   .st-cal-day .cal-day-month { display: none !important; }
   .st-cal-day .cal-match-count { font-size: 8px !important; }
@@ -597,8 +598,8 @@ export default function StellarTab({ players, teams, fixtures, logos = {}, onFig
                 transition: "all 0.2s",
                 boxShadow: isSelected ? "0 0 24px rgba(160,80,255,0.25), inset 0 0 12px rgba(140,60,255,0.1)" : "none",
               }}>
-              <div style={{ display: "flex", alignItems: "baseline", justifyContent: "center", gap: 3, flexWrap: "wrap" }}>
-                <div className="cal-day-name" style={{ fontSize: 10, fontWeight: 800, color: isSelected ? "#C4B5FD" : "rgba(255,255,255,0.7)", letterSpacing: "0.05em", width: "100%" }}>{S.stellarDays[i]}</div>
+              <div style={{ display: "flex", alignItems: "baseline", justifyContent: "center", gap: 5 }}>
+                <div className="cal-day-name" style={{ fontSize: 10, fontWeight: 800, color: isSelected ? "#C4B5FD" : "rgba(255,255,255,0.7)", letterSpacing: "0.05em" }}>{S.stellarDays[i]}</div>
                 <div className="cal-day-num" style={{ fontSize: 14, fontWeight: 700, color: "#fff" }}>{day.getDate()}</div>
                 <div className="cal-day-month" style={{ fontSize: 8, fontWeight: 600, color: isSelected ? "#A78BFA" : "rgba(255,255,255,0.35)", letterSpacing: "0.04em" }}>{day.toLocaleDateString(S.stellarDateLocale, { timeZone: TZ, month: "short" }).toUpperCase().replace(".","")}</div>
               </div>

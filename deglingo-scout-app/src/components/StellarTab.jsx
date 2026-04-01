@@ -86,6 +86,17 @@ const starsKeyframes = `
 @keyframes starPulseBig { 0%,100%{opacity:0.4;transform:scale(0.9);box-shadow:0 0 3px 1px rgba(255,255,255,0.5)} 50%{opacity:1;transform:scale(1.5);box-shadow:0 0 8px 4px rgba(255,255,255,0.9), 0 0 18px 8px rgba(196,181,253,0.5)} }
 @keyframes nebulaPulse { 0%,100%{opacity:0.1} 50%{opacity:0.2} }
 @keyframes silverShine { 0%{background-position:0% 50%} 100%{background-position:200% 50%} }
+@media(max-width:768px){
+  .st-info-row { flex-direction: column !important; gap: 6px !important; }
+  .st-calendar-wrap { overflow-x: auto !important; -webkit-overflow-scrolling: touch !important; display: flex !important; gap: 6px !important; padding-bottom: 4px !important; }
+  .st-calendar-wrap > * { flex-shrink: 0 !important; min-width: 48px !important; }
+  .st-main-layout { flex-direction: column !important; }
+  .st-main-layout > div:first-child { flex-shrink: unset !important; }
+  .st-teams-grid { grid-template-columns: 1fr !important; }
+  .st-top10-grid { grid-template-columns: repeat(2, 1fr) !important; }
+  .st-cta-banner { flex-direction: column !important; gap: 8px !important; align-items: flex-start !important; }
+  .st-decisive { flex-wrap: wrap !important; }
+}
 `;
 
 /* ─── Étoiles scintillantes individuelles ─── */
@@ -448,7 +459,7 @@ export default function StellarTab({ players, teams, fixtures, logos = {}, onFig
       <div style={{ position: "fixed", inset: 0, zIndex: 0, pointerEvents: "none", boxShadow: "inset 0 0 100px rgba(1,0,6,0.5)" }} />
 
       {/* ═══ LIGNE UNIQUE : STELLAR + EXPLICATIONS + PALIERS ═══ */}
-      <div style={{ display: "flex", alignItems: "stretch", padding: "16px 0 12px", gap: 10 }}>
+      <div className="st-info-row" style={{ display: "flex", alignItems: "stretch", padding: "16px 0 12px", gap: 10 }}>
         {/* Titre STELLAR — gauche */}
         <div style={{ flexShrink: 0, background: "rgba(8,4,25,0.60)", backdropFilter: "blur(10px)", borderRadius: 12, padding: "8px 14px", border: "1px solid rgba(196,181,253,0.12)", display: "flex", flexDirection: "column", justifyContent: "center" }}>
           <div style={{ display: "flex", flexDirection: "column", gap: 0 }}>
@@ -517,6 +528,7 @@ export default function StellarTab({ players, teams, fixtures, logos = {}, onFig
         href="http://sorare.pxf.io/Deglingo"
         target="_blank"
         rel="noopener noreferrer"
+        className="st-cta-banner"
         style={{
           display: "flex", alignItems: "center", justifyContent: "space-between",
           background: "linear-gradient(135deg, rgba(139,92,246,0.12), rgba(109,40,217,0.08))",
@@ -549,7 +561,7 @@ export default function StellarTab({ players, teams, fixtures, logos = {}, onFig
       </a>
 
       {/* ═══ CALENDRIER + bouton semaine suivante ═══ */}
-      <div style={{ display: "grid", gridTemplateColumns: "auto repeat(7, 1fr) auto", gap: 6, marginBottom: 24, alignItems: "stretch" }}>
+      <div className="st-calendar-wrap" style={{ display: "grid", gridTemplateColumns: "auto repeat(7, 1fr) auto", gap: 6, marginBottom: 24, alignItems: "stretch" }}>
         {/* Bouton semaine précédente */}
         <button onClick={() => { setWeekOffset(w => w - 1); setSelectedDay(null); }}
           style={{ background: "rgba(255,255,255,0.06)", border: "1px solid rgba(255,255,255,0.12)", borderRadius: 10, color: "#C4B5FD", cursor: "pointer", fontSize: 13, fontWeight: 700, fontFamily: "Outfit", display: "flex", alignItems: "center", justifyContent: "center", padding: "0 10px" }}>◀</button>
@@ -602,7 +614,7 @@ export default function StellarTab({ players, teams, fixtures, logos = {}, onFig
       {selectedDay !== null && dayData && (
         <div>
           {/* Layout principal : colonne gauche (date + matchs) | colonne droite (decisive + teams) */}
-          <div style={{ display: "flex", gap: 16, alignItems: "flex-start" }}>
+          <div className="st-main-layout" style={{ display: "flex", gap: 16, alignItems: "flex-start" }}>
 
           {/* Colonne gauche — Date + Matchs */}
           <div style={{ flexShrink: 0 }}>
@@ -695,7 +707,7 @@ export default function StellarTab({ players, teams, fixtures, logos = {}, onFig
               <div style={{ fontSize: 13 }}>{S.stellarNoTeams}</div>
             </div>
           ) : (
-            <div style={{ display: "grid", gridTemplateColumns: "repeat(2, 1fr)", gap: 12 }}>
+            <div className="st-teams-grid" style={{ display: "grid", gridTemplateColumns: "repeat(2, 1fr)", gap: 12 }}>
             {dayData.teams.map((team, ti) => {
               const isUltime = team.label === "ULTIME";
               const totalScore = team.players.reduce((sum, p) => sum + (p.isCaptain ? Math.round(p.ds * 1.5) : p.ds), 0);
@@ -752,7 +764,7 @@ export default function StellarTab({ players, teams, fixtures, logos = {}, onFig
               <div style={{ marginBottom: 8 }}>
                 <div style={{ fontSize: 10, fontWeight: 800, color: "rgba(196,181,253,0.5)", letterSpacing: "0.15em", textTransform: "uppercase", marginBottom: 3 }}>{S.stellarTop10Title}</div>
               </div>
-              <div style={{ display: "grid", gridTemplateColumns: `repeat(${dayData.teams.length}, 1fr)`, gap: 8 }}>
+              <div className="st-top10-grid" style={{ display: "grid", gridTemplateColumns: `repeat(${dayData.teams.length}, 1fr)`, gap: 8 }}>
                 {dayData.teams.map((team, ti) => (
                   <Top10Column key={ti} team={team} logos={logos} dateStr={isoDate(weekDays[selectedDay])} lang={lang} />
                 ))}

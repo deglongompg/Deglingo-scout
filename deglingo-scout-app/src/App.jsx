@@ -115,7 +115,7 @@ export default function App() {
           ))}
         </>
       )}
-    <div style={{
+    <div className="ds-app-root" style={{
       minHeight: "100vh",
       color: "#ffffff", fontFamily: "'Outfit', sans-serif",
       zoom: 1.15,
@@ -127,6 +127,18 @@ export default function App() {
       <style>{`
         @keyframes silverShine { 0%{background-position:200% center} 100%{background-position:-200% center} }
         @keyframes holoShift { 0%{filter:hue-rotate(0deg) brightness(1.4) saturate(1.2)} 50%{filter:hue-rotate(180deg) brightness(1.8) saturate(1.6)} 100%{filter:hue-rotate(360deg) brightness(1.4) saturate(1.2)} }
+        @media(max-width:768px){
+          .ds-app-root { zoom: 1 !important; }
+          .ds-header-tabs { overflow-x: auto; -webkit-overflow-scrolling: touch; flex-wrap: nowrap !important; scrollbar-width: none; }
+          .ds-header-tabs::-webkit-scrollbar { display: none; }
+          .ds-header-inner { grid-template-columns: auto 1fr auto !important; }
+          .ds-cta-area { gap: 4px !important; }
+          .ds-cta-area a { padding: 5px 10px !important; font-size: 10px !important; }
+          .ds-logo-sub { display: none !important; }
+        }
+        @media(max-width:480px){
+          .ds-cta-area .ds-lang-btn { display: none !important; }
+        }
       `}</style>
       {/* Header */}
       <header style={{
@@ -134,7 +146,7 @@ export default function App() {
         background: "rgba(4,4,15,0.9)", backdropFilter: "blur(20px)",
         borderBottom: "1px solid rgba(255,255,255,0.04)", padding: "12px 16px",
       }}>
-        <div style={{
+        <div className="ds-header-inner" style={{
           display: "grid", gridTemplateColumns: "1fr auto 1fr", alignItems: "center",
           maxWidth: 1400, margin: "0 auto", width: "100%",
         }}>
@@ -143,14 +155,14 @@ export default function App() {
             <img src="/logo.png" alt="Deglingo Scout" style={{ width: 32, height: 32, objectFit: "contain" }} />
             <div>
               <div style={{ fontSize: 16, fontWeight: 800, letterSpacing: "-0.5px", ...silverShinyStyle }}>DEGLINGO SCOUT</div>
-              <div style={{ fontSize: 9, color: "rgba(255,255,255,0.3)", letterSpacing: "2px", textTransform: "uppercase" }}>
+              <div className="ds-logo-sub" style={{ fontSize: 9, color: "rgba(255,255,255,0.3)", letterSpacing: "2px", textTransform: "uppercase" }}>
                 Sorare Analytics
               </div>
             </div>
           </div>
 
           {/* Tabs centrés */}
-          <div style={{ display: "flex", gap: 4, justifyContent: "center" }}>
+          <div className="ds-header-tabs" style={{ display: "flex", gap: 4, justifyContent: "center" }}>
             {TABS.map(t => (
               <button
                 key={t.id}
@@ -186,8 +198,9 @@ export default function App() {
           </div>
 
           {/* CTA + Lang toggle droite */}
-          <div style={{ display: "flex", justifyContent: "flex-end", alignItems: "center", gap: 8 }}>
+          <div className="ds-cta-area" style={{ display: "flex", justifyContent: "flex-end", alignItems: "center", gap: 8 }}>
             <button
+              className="ds-lang-btn"
               onClick={() => setLang(l => l === "fr" ? "en" : "fr")}
               style={{
                 padding: "6px 10px", borderRadius: 8, fontSize: 11, fontWeight: 800,

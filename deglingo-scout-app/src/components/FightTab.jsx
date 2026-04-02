@@ -84,7 +84,11 @@ function Sel({ value, onChange, options, placeholder }) {
       width: "100%", appearance: "none", cursor: "pointer", outline: "none", fontFamily: "Outfit",
     }}>
       <option value="" style={{ background: "#111" }}>{placeholder}</option>
-      {options.map(o => <option key={o} value={o} style={{ background: "#111" }}>{o}</option>)}
+      {options.map(o => {
+        const val = typeof o === "object" ? o.value : o;
+        const lbl = typeof o === "object" ? o.label : o;
+        return <option key={val} value={val} style={{ background: "#111" }}>{lbl}</option>;
+      })}
     </select>
   );
 }
@@ -563,7 +567,7 @@ export default function FightTab({ players, teams, fixtures, logos = {}, lang = 
               ))}
             </div>
             <Sel value={c} onChange={v => { sC(v); sPn(""); resetFight(); }} options={clubs} placeholder={t(lang,"clubPlaceholder")} />
-            {c && <Sel value={pn} onChange={v => { sPn(v); autoFill(v, sO, sH); resetFight(); }} options={pls.map(x => x.name)} placeholder={t(lang,"playerPlaceholder")} />}
+            {c && <Sel value={pn} onChange={v => { sPn(v); autoFill(v, sO, sH); resetFight(); }} options={pls.map(x => ({ value: x.name, label: x.sorare_starter_pct != null ? `${x.name}  ·  ${x.sorare_starter_pct}%` : x.name }))} placeholder={t(lang,"playerPlaceholder")} />}
             {pn && <Sel value={o} onChange={v => { sO(v); resetFight(); }} options={opps} placeholder={t(lang,"oppPlaceholder")} />}
             {pn && !pf[pn] && <div style={{ fontSize: 9, color: "rgba(255,150,50,0.6)", marginTop: -4 }}>{t(lang,"noMatchScheduled")}</div>}
             {o && (

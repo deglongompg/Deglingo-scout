@@ -306,6 +306,16 @@ function StellarCard({ player, logos, size = "md" }) {
         {player.isCaptain && (
           <div style={{ position: "absolute", top: 2, right: 4, borderRadius: "50%", width: 18, height: 18, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 10, fontWeight: 900, color: "#fff", zIndex: 2, background: "linear-gradient(135deg, #A78BFA, #7C3AED)", border: "1.5px solid rgba(196,181,253,0.5)", boxShadow: "0 0 6px rgba(139,92,246,0.5)" }}>C</div>
         )}
+        {/* Titu% badge — top-left */}
+        {player.sorare_starter_pct != null && (
+          <div style={{ position: "absolute", top: 4, left: 4, zIndex: 2,
+            background: player.sorare_starter_pct >= 80 ? "rgba(74,222,128,0.2)" : "rgba(251,191,36,0.2)",
+            border: `1px solid ${player.sorare_starter_pct >= 80 ? "#4ADE8066" : "#FBBF2466"}`,
+            borderRadius: 4, padding: "1px 3px", fontSize: 7, fontWeight: 800,
+            color: player.sorare_starter_pct >= 80 ? "#4ADE80" : "#FBBF24",
+            fontFamily: "'DM Mono',monospace",
+          }}>{player.sorare_starter_pct}%</div>
+        )}
 
         {/* Position */}
         <div style={{ background: `linear-gradient(135deg,${pc},${pc}CC)`, borderRadius: 3, padding: "1px 5px", marginTop: 2, fontSize: 7, fontWeight: 800, color: "#fff", letterSpacing: "0.06em", zIndex: 1 }}>{player.role}</div>

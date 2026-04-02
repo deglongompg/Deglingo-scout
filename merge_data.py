@@ -59,14 +59,16 @@ if os.path.exists(STATUS_FILE):
     for p in all_players:
         s = status.get(p.get("slug", ""))
         if s:
-            p["injured"]     = s.get("injured",     False)
-            p["suspended"]   = s.get("suspended",   False)
-            p["sorare_proj"] = s.get("sorare_proj",  None)
+            p["injured"]            = s.get("injured",            False)
+            p["suspended"]          = s.get("suspended",          False)
+            p["sorare_proj"]        = s.get("sorare_proj",        None)
+            p["sorare_starter_pct"] = s.get("sorare_starter_pct", None)
             patched += 1
         else:
-            p.setdefault("injured",     False)
-            p.setdefault("suspended",   False)
-            p.setdefault("sorare_proj", None)
+            p.setdefault("injured",            False)
+            p.setdefault("suspended",          False)
+            p.setdefault("sorare_proj",        None)
+            p.setdefault("sorare_starter_pct", None)
     print(f"✅ player_status.json mergé — {patched} joueurs avec status")
 else:
     print(f"ℹ️  Pas de player_status.json — run fetch_player_status.py le vendredi")

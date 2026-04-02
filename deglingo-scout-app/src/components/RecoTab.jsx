@@ -334,9 +334,9 @@ function PlayerCard({ player, isSelected, onClick, logos = {}, badge }) {
           {/* ── Top accent line ── */}
           <div style={{ position: "absolute", top: 0, left: 0, right: 0, height: 2, background: `linear-gradient(90deg, transparent 10%, ${pc}70 50%, transparent 90%)`, pointerEvents: "none" }} />
 
-          {/* Injury / Suspension badge — top-right corner */}
+          {/* Injury / Suspension badge — top-left corner */}
           {(player.injured || player.suspended) && (
-            <div style={{ position: "absolute", top: 5, right: 5, zIndex: 10, display: "flex", gap: 2 }}>
+            <div style={{ position: "absolute", top: 5, left: 5, zIndex: 10, display: "flex", gap: 2 }}>
               {player.injured && (
                 <svg width="14" height="14" viewBox="0 0 12 12" title="Blessé">
                   <rect width="12" height="12" rx="2" fill="#EF4444"/>
@@ -350,6 +350,16 @@ function PlayerCard({ player, isSelected, onClick, logos = {}, badge }) {
                 </svg>
               )}
             </div>
+          )}
+          {/* Titu% badge — top-right corner */}
+          {player.sorare_starter_pct != null && (
+            <div style={{ position: "absolute", top: 5, right: 5, zIndex: 10,
+              background: player.sorare_starter_pct >= 80 ? "rgba(74,222,128,0.2)" : player.sorare_starter_pct >= 70 ? "rgba(251,191,36,0.2)" : "rgba(239,68,68,0.2)",
+              border: `1px solid ${player.sorare_starter_pct >= 80 ? "#4ADE8066" : player.sorare_starter_pct >= 70 ? "#FBBF2466" : "#EF444466"}`,
+              borderRadius: 4, padding: "1px 4px", fontSize: 8, fontWeight: 800,
+              color: player.sorare_starter_pct >= 80 ? "#4ADE80" : player.sorare_starter_pct >= 70 ? "#FBBF24" : "#EF4444",
+              fontFamily: "'DM Mono',monospace",
+            }}>{player.sorare_starter_pct}%</div>
           )}
           {/* Position badge */}
           <div style={{ background: `linear-gradient(135deg,${pc},${pc}CC)`, borderRadius: "3px", padding: "1px 6px", marginTop: "2px", fontSize: "7px", fontWeight: 800, color: "#fff", letterSpacing: "0.06em", position: "relative", zIndex: 1, boxShadow: `0 1px 4px ${pc}40` }}>{displayPos}</div>

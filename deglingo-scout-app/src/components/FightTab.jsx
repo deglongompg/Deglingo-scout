@@ -267,6 +267,10 @@ function PlayerCard({ player, score, opp, isHome, oppName, league, isWinner, log
             <span style={{ fontSize: 7, color: "rgba(255,255,255,0.2)" }}>vs</span>
             {logos[oppName] && <img src={`/data/logos/${logos[oppName]}`} alt="" style={{ width: 12, height: 12, objectFit: "contain" }} />}
             <span style={{ fontSize: 7, color: "rgba(255,255,255,0.45)", fontWeight: 700 }}>{oppName}</span>
+            {player.sorare_starter_pct != null && <>
+              <span style={{ fontSize: 7, color: "rgba(255,255,255,0.2)" }}>·</span>
+              <span style={{ fontSize: 7, fontWeight: 800, fontFamily: "'DM Mono',monospace", color: player.sorare_starter_pct >= 80 ? "#4ADE80" : "#FBBF24" }}>{player.sorare_starter_pct}%</span>
+            </>}
           </div>
         </div>
 

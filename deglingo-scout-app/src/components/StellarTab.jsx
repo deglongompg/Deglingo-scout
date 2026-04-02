@@ -160,7 +160,7 @@ function buildStellarTeams(dayPlayers, dateStr) {
       if (pick) { team.push({ ...pick, role: pos }); used.add(pick.slug); }
     }
     if (team.length < 4) return null;
-    const flex = pool.find(p => !used.has(p.slug));
+    const flex = pool.find(p => !used.has(p.slug) && p.position !== "GK");
     if (!flex) return null;
     team.push({ ...flex, role: "FLEX" }); used.add(flex.slug);
     const capIdx = team.reduce((best, p, i) => p.ds > team[best].ds ? i : best, 0);

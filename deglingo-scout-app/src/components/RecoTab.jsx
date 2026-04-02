@@ -306,7 +306,22 @@ function PlayerCard({ player, isSelected, onClick, logos = {}, badge }) {
   }[player.position] || `linear-gradient(145deg, #1a1040, #0d0820)`;
 
   return (
-    <div onClick={onClick} style={{ textAlign: "center", cursor: "pointer", width: "114px" }}>
+    <div onClick={onClick} style={{ textAlign: "center", cursor: "pointer", width: "114px", position: "relative" }}>
+      {/* Titu% clip badge — right edge */}
+      {player.sorare_starter_pct != null && (
+        <div style={{
+          position: "absolute", top: 18, right: -2, zIndex: 20,
+          background: player.sorare_starter_pct >= 80
+            ? "linear-gradient(135deg, #22c55e, #16a34a)"
+            : "linear-gradient(135deg, #eab308, #ca8a04)",
+          borderRadius: "5px 0 0 5px",
+          padding: "3px 5px 3px 6px",
+          fontSize: 9, fontWeight: 900, color: "#fff",
+          fontFamily: "'DM Mono',monospace",
+          boxShadow: "-2px 2px 8px rgba(0,0,0,0.5)",
+          letterSpacing: "0.02em",
+        }}>{player.sorare_starter_pct}%</div>
+      )}
       <div style={{
         position: "relative", display: "inline-block",
         transform: isSelected ? "scale(1.06) translateY(-3px)" : "scale(1)",
@@ -350,16 +365,6 @@ function PlayerCard({ player, isSelected, onClick, logos = {}, badge }) {
                 </svg>
               )}
             </div>
-          )}
-          {/* Titu% badge — top-right corner */}
-          {player.sorare_starter_pct != null && (
-            <div style={{ position: "absolute", top: 5, right: 5, zIndex: 10,
-              background: player.sorare_starter_pct >= 80 ? "rgba(74,222,128,0.2)" : player.sorare_starter_pct >= 70 ? "rgba(251,191,36,0.2)" : "rgba(239,68,68,0.2)",
-              border: `1px solid ${player.sorare_starter_pct >= 80 ? "#4ADE8066" : player.sorare_starter_pct >= 70 ? "#FBBF2466" : "#EF444466"}`,
-              borderRadius: 4, padding: "1px 4px", fontSize: 8, fontWeight: 800,
-              color: player.sorare_starter_pct >= 80 ? "#4ADE80" : player.sorare_starter_pct >= 70 ? "#FBBF24" : "#EF4444",
-              fontFamily: "'DM Mono',monospace",
-            }}>{player.sorare_starter_pct}%</div>
           )}
           {/* Position badge */}
           <div style={{ background: `linear-gradient(135deg,${pc},${pc}CC)`, borderRadius: "3px", padding: "1px 6px", marginTop: "2px", fontSize: "7px", fontWeight: 800, color: "#fff", letterSpacing: "0.06em", position: "relative", zIndex: 1, boxShadow: `0 1px 4px ${pc}40` }}>{displayPos}</div>

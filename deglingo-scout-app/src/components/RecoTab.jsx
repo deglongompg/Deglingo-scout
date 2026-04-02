@@ -316,10 +316,10 @@ function PlayerCard({ player, isSelected, onClick, logos = {}, badge }) {
             : "linear-gradient(135deg, #eab308, #ca8a04)",
           borderRadius: "5px 0 0 5px",
           padding: "3px 5px 3px 6px",
-          fontSize: 10, fontWeight: 900, color: "#fff",
+          fontSize: 10, fontWeight: 700, color: "#fff",
           fontFamily: "system-ui, -apple-system, Arial, sans-serif",
           boxShadow: "-2px 2px 8px rgba(0,0,0,0.5)",
-          letterSpacing: "0.03em",
+          letterSpacing: "0.02em",
         }}>{player.sorare_starter_pct}%</div>
       )}
       <div style={{

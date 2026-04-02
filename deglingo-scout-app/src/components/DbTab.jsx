@@ -414,12 +414,12 @@ export default function DbTab({ players, teams, fixtures, logos = {}, lang = "fr
               <th style={{ ...thStyle("l40"), borderLeft: "1px solid rgba(255,255,255,0.06)" }} onClick={() => toggleSort("l40")}>L40{arrow("l40")}</th>
               <th style={thStyle("aa40")} onClick={() => toggleSort("aa40")}>AA40{arrow("aa40")}</th>
               {hasFixtures && <>
-                <th style={thStyle("dsMatch")} onClick={() => toggleSort("dsMatch")}>
+                <th style={{ ...thStyle("dsMatch"), width: 52, maxWidth: 52, padding: "6px 4px" }} onClick={() => toggleSort("dsMatch")}>
                   <span style={{ color: sortKey === "dsMatch" ? "#C084FC" : "#C084FC80" }}>D-Score{arrow("dsMatch")}</span>
                 </th>
-                <th style={thStyle("titu_pct")} onClick={() => toggleSort("titu_pct")}>{__("Titu%","Starter%")}{arrow("titu_pct")}</th>
-                <th style={{ ...thStyle("oppName"), cursor: "default" }}>{t(lang,"colAdv")}</th>
-                <th style={thStyle("csPercent")} onClick={() => toggleSort("csPercent")}>CS%{arrow("csPercent")}</th>
+                <th style={{ ...thStyle("titu_pct"), width: 38, maxWidth: 38, padding: "6px 2px" }} onClick={() => toggleSort("titu_pct")}>{__("Titu%","Starter%")}{arrow("titu_pct")}</th>
+                <th style={{ ...thStyle("oppName"), cursor: "default", width: 72, maxWidth: 72, padding: "6px 2px" }}>{t(lang,"colAdv")}</th>
+                <th style={{ ...thStyle("csPercent"), width: 34, maxWidth: 34, padding: "6px 2px" }} onClick={() => toggleSort("csPercent")}>CS%{arrow("csPercent")}</th>
               </>}
               {statCols.length === 0 && <th style={thStyle("price_limited")} onClick={() => toggleSort("price_limited")}>L€{arrow("price_limited")}</th>}
               {statCols.length === 0 && <th style={thStyle("price_rare")} onClick={() => toggleSort("price_rare")}>R€{arrow("price_rare")}</th>}
@@ -552,7 +552,7 @@ export default function DbTab({ players, teams, fixtures, logos = {}, lang = "fr
                   <td style={{ textAlign: "center", fontFamily: "DM Mono", fontWeight: 700, fontSize: 13, color: dsColor(p.l40), borderLeft: "1px solid rgba(255,255,255,0.04)" }}>{R(p.l40)}</td>
                   <td style={{ textAlign: "center", fontFamily: "DM Mono", fontSize: 10, color: "rgba(255,255,255,0.3)" }}>{R(p.aa40)}</td>
                   {hasFixtures && <>
-                    <td style={{ textAlign: "center" }}>
+                    <td style={{ textAlign: "center", width: 52, maxWidth: 52, padding: "4px 2px" }}>
                       {(p.injured || p.suspended) ? (
                         <span style={{ display: "inline-block", padding: "3px 8px", borderRadius: 8, fontFamily: "DM Mono", fontSize: 14, fontWeight: 700, color: "#fff", background: "#EF444430", border: "1px solid #EF444460" }}>0</span>
                       ) : p.dsMatch !== null ? (
@@ -570,7 +570,7 @@ export default function DbTab({ players, teams, fixtures, logos = {}, lang = "fr
                         <span style={{ fontSize: 9, color: "rgba(255,255,255,0.15)" }}>—</span>
                       )}
                     </td>
-                    <td style={{ textAlign: "center", fontFamily: "DM Mono", fontSize: 11 }}>
+                    <td style={{ textAlign: "center", fontFamily: "DM Mono", fontSize: 11, width: 38, maxWidth: 38, padding: "4px 2px" }}>
                       {(() => {
                         const pct = p.sorare_starter_pct;
                         const color = p.injured || p.suspended ? "#EF4444" : pct >= 80 ? "#4ADE80" : pct >= 50 ? "#FBBF24" : "#EF4444";
@@ -586,7 +586,7 @@ export default function DbTab({ players, teams, fixtures, logos = {}, lang = "fr
                         );
                       })()}
                     </td>
-                    <td style={{ textAlign: "left", fontSize: 8, paddingLeft: 2, maxWidth: 52, overflow: "hidden" }}>
+                    <td style={{ textAlign: "left", fontSize: 8, padding: "4px 2px", width: 72, maxWidth: 72, overflow: "hidden" }}>
                       {p.oppName ? (
                         <div style={{ display: "flex", alignItems: "center", gap: 2 }}>
                           <span style={{ fontSize: 13, flexShrink: 0, lineHeight: 1 }}>

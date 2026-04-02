@@ -155,14 +155,23 @@ function buildStellarTeams(dayPlayers, dateStr) {
   function pickTeam(pool) {
     const team = [];
     const used = new Set();
+    const conflicted = new Set(); // clubs adversaires des joueurs déjà pickés
+
+    const canPick = (p) => !used.has(p.slug) && !conflicted.has(p.club);
+    const addPick = (p, role) => {
+      team.push({ ...p, role });
+      used.add(p.slug);
+      if (p.oppName) conflicted.add(p.oppName); // bloquer les joueurs du club adverse
+    };
+
     for (const pos of ["GK", "DEF", "MIL", "ATT"]) {
-      const pick = pool.find(p => p.position === pos && !used.has(p.slug));
-      if (pick) { team.push({ ...pick, role: pos }); used.add(pick.slug); }
+      const pick = pool.find(p => p.position === pos && canPick(p));
+      if (pick) addPick(pick, pos);
     }
     if (team.length < 4) return null;
-    const flex = pool.find(p => !used.has(p.slug) && p.position !== "GK");
+    const flex = pool.find(p => p.position !== "GK" && canPick(p));
     if (!flex) return null;
-    team.push({ ...flex, role: "FLEX" }); used.add(flex.slug);
+    addPick(flex, "FLEX");
     const capIdx = team.reduce((best, p, i) => p.ds > team[best].ds ? i : best, 0);
     team[capIdx].isCaptain = true;
     return { players: team, usedSlugs: used };

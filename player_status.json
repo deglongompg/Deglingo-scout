@@ -932,7 +932,7 @@
   "alpha-diallo": {
     "injured": false,
     "suspended": false,
-    "sorare_proj": 9.0,
+    "sorare_proj": 8.0,
     "sorare_starter_pct": 0
   },
   "malang-sarr": {
@@ -968,7 +968,7 @@
   "amadou-haidara": {
     "injured": false,
     "suspended": false,
-    "sorare_proj": 39.0,
+    "sorare_proj": 38.0,
     "sorare_starter_pct": 0
   },
   "younes-lachaab": {
@@ -1202,13 +1202,13 @@
   "cheikh-bamba-dieng": {
     "injured": false,
     "suspended": false,
-    "sorare_proj": 49.0,
+    "sorare_proj": 50.0,
     "sorare_starter_pct": 90
   },
   "benjamin-leroy": {
     "injured": false,
     "suspended": false,
-    "sorare_proj": 32.0,
+    "sorare_proj": 33.0,
     "sorare_starter_pct": 0
   },
   "panos-katseris": {
@@ -1340,7 +1340,7 @@
   "tosin-aiyegun": {
     "injured": false,
     "suspended": false,
-    "sorare_proj": 43.0,
+    "sorare_proj": 44.0,
     "sorare_starter_pct": 10
   },
   "noah-cadiou": {
@@ -2048,7 +2048,7 @@
   "hichem-boudaoui": {
     "injured": false,
     "suspended": false,
-    "sorare_proj": 43.0,
+    "sorare_proj": 44.0,
     "sorare_starter_pct": 90
   },
   "salis-abdul-samed": {
@@ -2084,7 +2084,7 @@
   "tanguy-ndombele-alvaro": {
     "injured": true,
     "suspended": false,
-    "sorare_proj": 40.0,
+    "sorare_proj": 41.0,
     "sorare_starter_pct": 10
   },
   "yanis-sofikitis": {
@@ -2307,7 +2307,7 @@
     "injured": false,
     "suspended": false,
     "sorare_proj": 10.0,
-    "sorare_starter_pct": null
+    "sorare_starter_pct": 10
   },
   "ernest-appiah-nuamah": {
     "injured": false,
@@ -2679,25 +2679,25 @@
     "injured": true,
     "suspended": false,
     "sorare_proj": 48.0,
-    "sorare_starter_pct": null
+    "sorare_starter_pct": 60
   },
   "lucas-lopes-beraldo": {
     "injured": false,
     "suspended": false,
     "sorare_proj": 55.0,
-    "sorare_starter_pct": null
+    "sorare_starter_pct": 40
   },
   "matvey-safonov": {
     "injured": false,
     "suspended": false,
     "sorare_proj": 57.0,
-    "sorare_starter_pct": null
+    "sorare_starter_pct": 80
   },
   "vitor-machado-ferreira": {
     "injured": false,
     "suspended": false,
     "sorare_proj": 64.0,
-    "sorare_starter_pct": null
+    "sorare_starter_pct": 40
   },
   "noah-nsoki": {
     "injured": false,
@@ -2709,49 +2709,49 @@
     "injured": true,
     "suspended": false,
     "sorare_proj": 58.0,
-    "sorare_starter_pct": null
+    "sorare_starter_pct": 40
   },
   "warren-zaire-emery": {
     "injured": false,
     "suspended": false,
     "sorare_proj": 54.0,
-    "sorare_starter_pct": null
+    "sorare_starter_pct": 90
   },
   "desire-doue": {
     "injured": false,
     "suspended": false,
     "sorare_proj": 57.0,
-    "sorare_starter_pct": null
+    "sorare_starter_pct": 90
   },
   "lucas-chevalier": {
     "injured": false,
     "suspended": false,
     "sorare_proj": 56.0,
-    "sorare_starter_pct": null
+    "sorare_starter_pct": 20
   },
   "lucas-hernandez-pi": {
     "injured": false,
     "suspended": false,
     "sorare_proj": 54.0,
-    "sorare_starter_pct": null
+    "sorare_starter_pct": 40
   },
   "achraf-hakimi-mouh": {
     "injured": false,
     "suspended": false,
     "sorare_proj": 64.0,
-    "sorare_starter_pct": null
+    "sorare_starter_pct": 90
   },
   "joao-pedro-goncalves-neves": {
     "injured": false,
     "suspended": false,
     "sorare_proj": 56.0,
-    "sorare_starter_pct": null
+    "sorare_starter_pct": 60
   },
   "ibrahim-mbaye": {
     "injured": false,
     "suspended": false,
     "sorare_proj": 47.0,
-    "sorare_starter_pct": null
+    "sorare_starter_pct": 20
   },
   "yanis-khafi": {
     "injured": false,
@@ -2763,13 +2763,13 @@
     "injured": false,
     "suspended": false,
     "sorare_proj": 63.0,
-    "sorare_starter_pct": null
+    "sorare_starter_pct": 60
   },
   "illia-zabarnyi": {
     "injured": false,
     "suspended": false,
     "sorare_proj": 53.0,
-    "sorare_starter_pct": null
+    "sorare_starter_pct": 70
   },
   "mathis-jangeal": {
     "injured": false,
@@ -2781,19 +2781,19 @@
     "injured": false,
     "suspended": false,
     "sorare_proj": 58.0,
-    "sorare_starter_pct": null
+    "sorare_starter_pct": 30
   },
   "ousmane-dembele": {
     "injured": false,
     "suspended": false,
     "sorare_proj": 57.0,
-    "sorare_starter_pct": null
+    "sorare_starter_pct": 70
   },
   "khvicha-kvaratskhelia": {
     "injured": false,
     "suspended": false,
     "sorare_proj": 57.0,
-    "sorare_starter_pct": null
+    "sorare_starter_pct": 80
   },
   "martin-james": {
     "injured": false,
@@ -2805,13 +2805,13 @@
     "injured": true,
     "suspended": false,
     "sorare_proj": 56.0,
-    "sorare_starter_pct": null
+    "sorare_starter_pct": 0
   },
   "renato-bellucci-marin": {
     "injured": false,
     "suspended": false,
     "sorare_proj": 14.0,
-    "sorare_starter_pct": null
+    "sorare_starter_pct": 0
   },
   "david-boly": {
     "injured": false,
@@ -2835,13 +2835,13 @@
     "injured": true,
     "suspended": false,
     "sorare_proj": 50.0,
-    "sorare_starter_pct": null
+    "sorare_starter_pct": 0
   },
   "goncalo-matias-ramos": {
     "injured": false,
     "suspended": false,
     "sorare_proj": 44.0,
-    "sorare_starter_pct": null
+    "sorare_starter_pct": 30
   },
   "arthur-vignaud": {
     "injured": false,
@@ -2859,13 +2859,13 @@
     "injured": false,
     "suspended": false,
     "sorare_proj": 44.0,
-    "sorare_starter_pct": null
+    "sorare_starter_pct": 0
   },
   "william-joel-pacho-tenorio": {
     "injured": false,
     "suspended": false,
     "sorare_proj": 57.0,
-    "sorare_starter_pct": null
+    "sorare_starter_pct": 60
   },
   "rudy-matondo": {
     "injured": false,
@@ -2948,7 +2948,7 @@
   "pierre-yves-hamel": {
     "injured": true,
     "suspended": false,
-    "sorare_proj": 39.0,
+    "sorare_proj": 38.0,
     "sorare_starter_pct": 0
   },
   "vincent-marchetti": {
@@ -3080,7 +3080,7 @@
   "marshall-nyasha-munetsi": {
     "injured": false,
     "suspended": false,
-    "sorare_proj": 42.0,
+    "sorare_proj": 41.0,
     "sorare_starter_pct": 90
   },
   "djaoui-cisse-2004-01-31": {
@@ -3482,25 +3482,25 @@
   "pape-demba-diop": {
     "injured": false,
     "suspended": false,
-    "sorare_proj": 46.0,
+    "sorare_proj": 47.0,
     "sorare_starter_pct": 90
   },
   "yann-gboho": {
     "injured": false,
     "suspended": false,
-    "sorare_proj": 48.0,
+    "sorare_proj": 49.0,
     "sorare_starter_pct": 90
   },
   "aron-donnum": {
     "injured": false,
     "suspended": false,
-    "sorare_proj": 44.0,
+    "sorare_proj": 45.0,
     "sorare_starter_pct": 90
   },
   "djibril-sidibe": {
     "injured": true,
     "suspended": false,
-    "sorare_proj": 40.0,
+    "sorare_proj": 41.0,
     "sorare_starter_pct": 90
   },
   "noah-lahmadi": {
@@ -3518,7 +3518,7 @@
   "emersonn-correia-da-silva": {
     "injured": false,
     "suspended": false,
-    "sorare_proj": 37.0,
+    "sorare_proj": 38.0,
     "sorare_starter_pct": 80
   },
   "naime-ben-zayer-said-mchindra": {
@@ -3542,7 +3542,7 @@
   "mark-mckenzie": {
     "injured": false,
     "suspended": false,
-    "sorare_proj": 41.0,
+    "sorare_proj": 42.0,
     "sorare_starter_pct": 90
   },
   "enzo-faty": {
@@ -3554,19 +3554,19 @@
   "seny-koumbassa": {
     "injured": false,
     "suspended": false,
-    "sorare_proj": 34.0,
+    "sorare_proj": 35.0,
     "sorare_starter_pct": 90
   },
   "frank-magri": {
     "injured": true,
     "suspended": false,
-    "sorare_proj": 38.0,
+    "sorare_proj": 39.0,
     "sorare_starter_pct": 0
   },
   "gaetan-bakhouche-piernas": {
     "injured": false,
     "suspended": false,
-    "sorare_proj": 1.0,
+    "sorare_proj": 2.0,
     "sorare_starter_pct": null
   },
   "alejandro-dominguez-romero": {
@@ -3578,13 +3578,13 @@
   "guillaume-restes": {
     "injured": false,
     "suspended": false,
-    "sorare_proj": 43.0,
+    "sorare_proj": 44.0,
     "sorare_starter_pct": 90
   },
   "dayann-methalie": {
     "injured": true,
     "suspended": false,
-    "sorare_proj": 28.0,
+    "sorare_proj": 29.0,
     "sorare_starter_pct": 70
   },
   "adam-el-ouali": {
@@ -3596,19 +3596,19 @@
   "cristian-sleiker-casseres-yepes": {
     "injured": false,
     "suspended": false,
-    "sorare_proj": 45.0,
+    "sorare_proj": 46.0,
     "sorare_starter_pct": 90
   },
   "jacen-russell-rowe": {
     "injured": false,
     "suspended": false,
-    "sorare_proj": 37.0,
+    "sorare_proj": 38.0,
     "sorare_starter_pct": 20
   },
   "alexis-vossah": {
     "injured": false,
     "suspended": false,
-    "sorare_proj": 30.0,
+    "sorare_proj": 31.0,
     "sorare_starter_pct": 0
   },
   "santiago-hidalgo-massa": {
@@ -3620,7 +3620,7 @@
   "mario-sauer": {
     "injured": false,
     "suspended": false,
-    "sorare_proj": 31.0,
+    "sorare_proj": 32.0,
     "sorare_starter_pct": 0
   },
   "julian-ariel-vignolo": {
@@ -3632,43 +3632,43 @@
   "louis-reynaud": {
     "injured": false,
     "suspended": false,
-    "sorare_proj": 1.0,
+    "sorare_proj": 2.0,
     "sorare_starter_pct": null
   },
   "charlie-cresswell": {
     "injured": true,
     "suspended": false,
-    "sorare_proj": 46.0,
+    "sorare_proj": 47.0,
     "sorare_starter_pct": 0
   },
   "frederic-efuele-ngoyala": {
     "injured": false,
     "suspended": false,
-    "sorare_proj": 1.0,
+    "sorare_proj": 2.0,
     "sorare_starter_pct": null
   },
   "thibaud-dorian-garondo": {
     "injured": false,
     "suspended": false,
-    "sorare_proj": 1.0,
+    "sorare_proj": 2.0,
     "sorare_starter_pct": null
   },
   "warren-kamanzi": {
     "injured": false,
     "suspended": false,
-    "sorare_proj": 34.0,
+    "sorare_proj": 35.0,
     "sorare_starter_pct": 30
   },
   "abu-francis": {
     "injured": true,
     "suspended": false,
-    "sorare_proj": 25.0,
+    "sorare_proj": 26.0,
     "sorare_starter_pct": 0
   },
   "christian-kjetil-haug": {
     "injured": false,
     "suspended": false,
-    "sorare_proj": 30.0,
+    "sorare_proj": 31.0,
     "sorare_starter_pct": 0
   },
   "rasmus-nicolaisen": {
@@ -3686,7 +3686,7 @@
   "nicolas-wasbauer": {
     "injured": false,
     "suspended": false,
-    "sorare_proj": 1.0,
+    "sorare_proj": 2.0,
     "sorare_starter_pct": 10
   },
   "francisco-evanilson-de-lima-barbosa": {
@@ -6254,7 +6254,7 @@
   "jahmai-simpson-pusey": {
     "injured": false,
     "suspended": false,
-    "sorare_proj": 48.0,
+    "sorare_proj": 47.0,
     "sorare_starter_pct": 60
   },
   "philip-foden": {
@@ -7754,7 +7754,7 @@
   "oihan-sancet-tirapu": {
     "injured": false,
     "suspended": false,
-    "sorare_proj": 42.0,
+    "sorare_proj": 41.0,
     "sorare_starter_pct": 80
   },
   "aimar-dunabeitia-madariaga": {
@@ -7825,7 +7825,7 @@
   },
   "yeray-alvarez-lopez": {
     "injured": false,
-    "suspended": true,
+    "suspended": false,
     "sorare_proj": 44.0,
     "sorare_starter_pct": 10
   },
@@ -7886,7 +7886,7 @@
   "inaki-williams-arthuer": {
     "injured": true,
     "suspended": false,
-    "sorare_proj": 43.0,
+    "sorare_proj": 42.0,
     "sorare_starter_pct": 70
   },
   "unai-eguiluz-arroyo": {
@@ -7904,13 +7904,13 @@
   "alejandro-rego-mora": {
     "injured": false,
     "suspended": false,
-    "sorare_proj": 42.0,
+    "sorare_proj": 41.0,
     "sorare_starter_pct": 60
   },
   "urko-iruretagoiena-lertxundi": {
     "injured": false,
     "suspended": false,
-    "sorare_proj": 38.0,
+    "sorare_proj": 37.0,
     "sorare_starter_pct": 10
   },
   "nicolas-serrano-galdeano": {
@@ -7952,7 +7952,7 @@
   "inigo-ruiz-de-galarreta-etxeberria": {
     "injured": false,
     "suspended": false,
-    "sorare_proj": 45.0,
+    "sorare_proj": 44.0,
     "sorare_starter_pct": 80
   },
   "asier-hierro-campo": {
@@ -8058,7 +8058,7 @@
     "sorare_starter_pct": 0
   },
   "joao-lucas-de-souza-cardoso": {
-    "injured": false,
+    "injured": true,
     "suspended": true,
     "sorare_proj": 43.0,
     "sorare_starter_pct": 0
@@ -8136,7 +8136,7 @@
     "sorare_starter_pct": 70
   },
   "alexander-sorloth": {
-    "injured": false,
+    "injured": true,
     "suspended": false,
     "sorare_proj": 46.0,
     "sorare_starter_pct": 40
@@ -8286,7 +8286,7 @@
     "sorare_starter_pct": 60
   },
   "xavi-espart-font": {
-    "injured": false,
+    "injured": true,
     "suspended": false,
     "sorare_proj": 44.0,
     "sorare_starter_pct": 20
@@ -8678,7 +8678,7 @@
   "ibrahim-yalatif-diabate": {
     "injured": false,
     "suspended": false,
-    "sorare_proj": 41.0,
+    "sorare_proj": 40.0,
     "sorare_starter_pct": 30
   },
   "jon-pacheco-dozagarat": {
@@ -8708,7 +8708,7 @@
   "raul-fernandez-cavada-mateos": {
     "injured": false,
     "suspended": false,
-    "sorare_proj": 39.0,
+    "sorare_proj": 38.0,
     "sorare_starter_pct": 10
   },
   "alvaro-garcia-blanes": {
@@ -8750,7 +8750,7 @@
   "calebe-goncalves-ferreira-da-silva": {
     "injured": false,
     "suspended": false,
-    "sorare_proj": 44.0,
+    "sorare_proj": 43.0,
     "sorare_starter_pct": 10
   },
   "victor-parada-gonzalez": {
@@ -8762,7 +8762,7 @@
   "carles-alena-castillo": {
     "injured": false,
     "suspended": false,
-    "sorare_proj": 45.0,
+    "sorare_proj": 44.0,
     "sorare_starter_pct": 40
   },
   "antonio-sivera-salva": {
@@ -8774,7 +8774,7 @@
   "antonio-blanco-conde": {
     "injured": false,
     "suspended": false,
-    "sorare_proj": 51.0,
+    "sorare_proj": 50.0,
     "sorare_starter_pct": 80
   },
   "xanet-olaiz-ibarzabal": {
@@ -8786,13 +8786,13 @@
   "gregoire-swiderski": {
     "injured": false,
     "suspended": false,
-    "sorare_proj": 10.0,
+    "sorare_proj": 9.0,
     "sorare_starter_pct": 0
   },
   "ruben-montero-fernandez": {
     "injured": false,
     "suspended": false,
-    "sorare_proj": 10.0,
+    "sorare_proj": 9.0,
     "sorare_starter_pct": null
   },
   "facundo-tomas-garces": {
@@ -8822,7 +8822,7 @@
   "carlos-ballestero-garcia": {
     "injured": false,
     "suspended": false,
-    "sorare_proj": 35.0,
+    "sorare_proj": 34.0,
     "sorare_starter_pct": 10
   },
   "diego-morcillo-munoz": {
@@ -9104,7 +9104,7 @@
   "llorenc-serred": {
     "injured": false,
     "suspended": false,
-    "sorare_proj": 11.0,
+    "sorare_proj": 12.0,
     "sorare_starter_pct": null
   },
   "ferran-gomez-gomez": {
@@ -9194,13 +9194,13 @@
   "angel-fortuno-vinas": {
     "injured": false,
     "suspended": false,
-    "sorare_proj": 11.0,
+    "sorare_proj": 12.0,
     "sorare_starter_pct": 10
   },
   "pol-tristan-jimenez": {
     "injured": false,
     "suspended": false,
-    "sorare_proj": 11.0,
+    "sorare_proj": 12.0,
     "sorare_starter_pct": 0
   },
   "jose-manuel-gonzalez-alvarez": {
@@ -9576,7 +9576,7 @@
     "sorare_starter_pct": null
   },
   "cristhian-ricardo-stuani-curbelo": {
-    "injured": true,
+    "injured": false,
     "suspended": false,
     "sorare_proj": 44.0,
     "sorare_starter_pct": 10
@@ -9780,7 +9780,7 @@
     "sorare_starter_pct": null
   },
   "carlos-alvarez-rivera": {
-    "injured": true,
+    "injured": false,
     "suspended": false,
     "sorare_proj": null,
     "sorare_starter_pct": null
@@ -9834,7 +9834,7 @@
     "sorare_starter_pct": null
   },
   "iker-losada-aragunde": {
-    "injured": true,
+    "injured": false,
     "suspended": false,
     "sorare_proj": null,
     "sorare_starter_pct": null
@@ -9908,14 +9908,14 @@
   "leonardo-lucas-sanchez-escobar": {
     "injured": false,
     "suspended": false,
-    "sorare_proj": 6.0,
+    "sorare_proj": 5.0,
     "sorare_starter_pct": 0
   },
   "antonio-latorre-grueso": {
     "injured": false,
     "suspended": false,
     "sorare_proj": 38.0,
-    "sorare_starter_pct": 0
+    "sorare_starter_pct": 30
   },
   "ivan-cuellar-sacristan": {
     "injured": false,
@@ -9926,85 +9926,85 @@
   "luis-orejuela-de-la-rosa": {
     "injured": false,
     "suspended": false,
-    "sorare_proj": 6.0,
+    "sorare_proj": 5.0,
     "sorare_starter_pct": 0
   },
   "marash-kumbulla": {
     "injured": true,
     "suspended": false,
-    "sorare_proj": 37.0,
-    "sorare_starter_pct": 0
+    "sorare_proj": 36.0,
+    "sorare_starter_pct": 10
   },
   "zito-andre-sebastiao-luvumbo": {
     "injured": false,
     "suspended": false,
-    "sorare_proj": 41.0,
-    "sorare_starter_pct": 90
+    "sorare_proj": 40.0,
+    "sorare_starter_pct": 60
   },
   "iliesse-salhi": {
     "injured": false,
     "suspended": false,
-    "sorare_proj": 6.0,
+    "sorare_proj": 5.0,
     "sorare_starter_pct": 0
   },
   "david-lopez-guijarro": {
     "injured": false,
     "suspended": false,
-    "sorare_proj": 40.0,
-    "sorare_starter_pct": 0
+    "sorare_proj": 39.0,
+    "sorare_starter_pct": 10
   },
   "pablo-maffeo-becerra": {
     "injured": true,
     "suspended": false,
     "sorare_proj": 43.0,
-    "sorare_starter_pct": 90
+    "sorare_starter_pct": 70
   },
   "alejandro-garcia-gomez": {
     "injured": false,
     "suspended": false,
-    "sorare_proj": 6.0,
+    "sorare_proj": 5.0,
     "sorare_starter_pct": 0
   },
   "lucas-bergstrom": {
     "injured": true,
     "suspended": false,
     "sorare_proj": 55.0,
-    "sorare_starter_pct": 0
+    "sorare_starter_pct": 10
   },
   "manuel-morlanes-arino": {
     "injured": false,
     "suspended": false,
     "sorare_proj": 41.0,
-    "sorare_starter_pct": 0
+    "sorare_starter_pct": 20
   },
   "justin-noel-kalumba-mwana-ngongo": {
     "injured": false,
     "suspended": false,
     "sorare_proj": 36.0,
-    "sorare_starter_pct": 0
+    "sorare_starter_pct": 10
   },
   "abdon-prats-bastidas": {
     "injured": false,
     "suspended": false,
     "sorare_proj": 35.0,
-    "sorare_starter_pct": 0
+    "sorare_starter_pct": 10
   },
   "mateo-joseph-fernandez-regatillo": {
     "injured": false,
     "suspended": false,
     "sorare_proj": 39.0,
-    "sorare_starter_pct": 0
+    "sorare_starter_pct": 90
   },
   "antonio-sanchez-navarro": {
     "injured": false,
     "suspended": false,
     "sorare_proj": 35.0,
-    "sorare_starter_pct": 0
+    "sorare_starter_pct": 30
   },
   "antonio-jose-raillo-arenas": {
     "injured": false,
     "suspended": false,
-    "sorare_proj": 43.0,
+    "sorare_proj": 42.0,
     "sorare_starter_pct": 90
   },
   "nil-torreguitart-perez": {
@@ -10017,7 +10017,7 @@
     "injured": false,
     "suspended": false,
     "sorare_proj": 38.0,
-    "sorare_starter_pct": 90
+    "sorare_starter_pct": 70
   },
   "miquel-jan-salas-franch": {
     "injured": true,
@@ -10035,13 +10035,13 @@
     "injured": false,
     "suspended": false,
     "sorare_proj": 43.0,
-    "sorare_starter_pct": 90
+    "sorare_starter_pct": 40
   },
   "javier-llabres-exposito": {
     "injured": false,
     "suspended": false,
     "sorare_proj": 36.0,
-    "sorare_starter_pct": 0
+    "sorare_starter_pct": 10
   },
   "martin-gaston-demichelis": {
     "injured": false,
@@ -10065,36 +10065,36 @@
     "injured": false,
     "suspended": false,
     "sorare_proj": 32.0,
-    "sorare_starter_pct": 0
+    "sorare_starter_pct": 10
   },
   "omar-mascarell-gonzalez": {
     "injured": false,
     "suspended": false,
     "sorare_proj": 40.0,
-    "sorare_starter_pct": 90
+    "sorare_starter_pct": 80
   },
   "takuma-asano": {
     "injured": true,
     "suspended": false,
     "sorare_proj": 37.0,
-    "sorare_starter_pct": 0
+    "sorare_starter_pct": 10
   },
   "sergi-darder-moll": {
     "injured": false,
     "suspended": false,
     "sorare_proj": 47.0,
-    "sorare_starter_pct": 0
+    "sorare_starter_pct": 10
   },
   "javier-olaizola-jimenez": {
     "injured": false,
     "suspended": false,
-    "sorare_proj": 6.0,
-    "sorare_starter_pct": 0
+    "sorare_proj": 5.0,
+    "sorare_starter_pct": 10
   },
   "pablo-torre-carral": {
     "injured": false,
     "suspended": false,
-    "sorare_proj": 40.0,
+    "sorare_proj": 39.0,
     "sorare_starter_pct": 90
   },
   "leonardo-roman-riquelme": {
@@ -10106,7 +10106,7 @@
   "vedat-muriqi": {
     "injured": false,
     "suspended": false,
-    "sorare_proj": 48.0,
+    "sorare_proj": 47.0,
     "sorare_starter_pct": 90
   },
   "martin-pedroarena-espinal": {
@@ -10208,7 +10208,7 @@
   "enrique-barja-afonso": {
     "injured": false,
     "suspended": false,
-    "sorare_proj": 42.0,
+    "sorare_proj": 43.0,
     "sorare_starter_pct": 20
   },
   "jon-garcia-fuentes": {
@@ -10250,7 +10250,7 @@
   "inigo-arguibide-goni": {
     "injured": false,
     "suspended": false,
-    "sorare_proj": 39.0,
+    "sorare_proj": 40.0,
     "sorare_starter_pct": 10
   },
   "mikel-serrano-garcia": {
@@ -10264,6 +10264,12 @@
     "suspended": false,
     "sorare_proj": 45.0,
     "sorare_starter_pct": 20
+  },
+  "moises-gomez-bordonado": {
+    "injured": false,
+    "suspended": false,
+    "sorare_proj": 43.0,
+    "sorare_starter_pct": 10
   },
   "roberto-arroyo-gregorio": {
     "injured": false,
@@ -10304,32 +10310,32 @@
   "lucas-torro-marset": {
     "injured": false,
     "suspended": false,
-    "sorare_proj": 43.0,
+    "sorare_proj": 44.0,
     "sorare_starter_pct": 40
   },
   "luiz-felipe-ramos-marchi": {
     "injured": false,
     "suspended": false,
     "sorare_proj": 45.0,
-    "sorare_starter_pct": null
+    "sorare_starter_pct": 40
   },
   "adrian-molina-colorado": {
     "injured": false,
     "suspended": false,
     "sorare_proj": 9.0,
-    "sorare_starter_pct": null
+    "sorare_starter_pct": 0
   },
   "randy-ntekja": {
     "injured": false,
     "suspended": false,
     "sorare_proj": 38.0,
-    "sorare_starter_pct": null
+    "sorare_starter_pct": 10
   },
   "samuel-becerra-gomez": {
     "injured": false,
     "suspended": false,
     "sorare_proj": 32.0,
-    "sorare_starter_pct": null
+    "sorare_starter_pct": 0
   },
   "marco-roman-santos": {
     "injured": false,
@@ -10341,7 +10347,7 @@
     "injured": false,
     "suspended": false,
     "sorare_proj": 54.0,
-    "sorare_starter_pct": null
+    "sorare_starter_pct": 70
   },
   "sergio-jose-lozano-martinez": {
     "injured": false,
@@ -10353,85 +10359,85 @@
     "injured": false,
     "suspended": false,
     "sorare_proj": 44.0,
-    "sorare_starter_pct": null
+    "sorare_starter_pct": 60
   },
   "oscar-guido-trejo": {
     "injured": false,
     "suspended": false,
     "sorare_proj": 40.0,
-    "sorare_starter_pct": null
+    "sorare_starter_pct": 0
   },
   "andrei-florin-ratiu": {
     "injured": false,
     "suspended": false,
     "sorare_proj": 49.0,
-    "sorare_starter_pct": null
+    "sorare_starter_pct": 70
   },
   "unai-lopez-cabrera": {
     "injured": false,
     "suspended": false,
     "sorare_proj": 50.0,
-    "sorare_starter_pct": null
+    "sorare_starter_pct": 30
   },
   "jozhua-vertrouwd": {
     "injured": false,
     "suspended": false,
     "sorare_proj": 39.0,
-    "sorare_starter_pct": null
+    "sorare_starter_pct": 0
   },
   "marco-de-las-sias-lopez": {
     "injured": false,
     "suspended": false,
     "sorare_proj": 10.0,
-    "sorare_starter_pct": null
+    "sorare_starter_pct": 0
   },
   "juan-pedro-gil-bueno": {
     "injured": false,
     "suspended": false,
     "sorare_proj": 9.0,
-    "sorare_starter_pct": null
+    "sorare_starter_pct": 0
   },
   "pedro-diaz-fanjul": {
     "injured": false,
     "suspended": false,
     "sorare_proj": 42.0,
-    "sorare_starter_pct": null
+    "sorare_starter_pct": 30
   },
   "ilias-akhomach-chakkour": {
     "injured": false,
     "suspended": false,
     "sorare_proj": 44.0,
-    "sorare_starter_pct": null
+    "sorare_starter_pct": 60
   },
   "josep-maria-chavarria-perez": {
     "injured": false,
     "suspended": false,
     "sorare_proj": 46.0,
-    "sorare_starter_pct": null
+    "sorare_starter_pct": 70
   },
   "isaac-palazon-camacho": {
     "injured": false,
     "suspended": false,
     "sorare_proj": 48.0,
-    "sorare_starter_pct": null
+    "sorare_starter_pct": 80
   },
   "francisco-perez-martinez": {
     "injured": true,
     "suspended": false,
     "sorare_proj": 44.0,
-    "sorare_starter_pct": null
+    "sorare_starter_pct": 30
   },
   "florian-lejeune": {
     "injured": false,
     "suspended": false,
     "sorare_proj": 57.0,
-    "sorare_starter_pct": null
+    "sorare_starter_pct": 90
   },
   "abdul-mumin": {
     "injured": false,
     "suspended": false,
     "sorare_proj": 10.0,
-    "sorare_starter_pct": null
+    "sorare_starter_pct": 0
   },
   "inigo-perez-soto": {
     "injured": false,
@@ -10443,73 +10449,73 @@
     "injured": false,
     "suspended": false,
     "sorare_proj": 37.0,
-    "sorare_starter_pct": null
+    "sorare_starter_pct": 20
   },
   "diego-mendez-molero": {
     "injured": true,
     "suspended": false,
     "sorare_proj": 33.0,
-    "sorare_starter_pct": null
+    "sorare_starter_pct": 0
   },
   "ivan-balliu-campeny": {
     "injured": false,
     "suspended": false,
     "sorare_proj": 42.0,
-    "sorare_starter_pct": null
+    "sorare_starter_pct": 30
   },
   "luis-alfonso-espino-garcia": {
     "injured": false,
     "suspended": false,
     "sorare_proj": 46.0,
-    "sorare_starter_pct": null
+    "sorare_starter_pct": 30
   },
   "augusto-martin-batalla-barga": {
     "injured": false,
     "suspended": false,
     "sorare_proj": 47.0,
-    "sorare_starter_pct": null
+    "sorare_starter_pct": 90
   },
   "jorge-de-frutos-sebastian": {
     "injured": false,
     "suspended": false,
     "sorare_proj": 48.0,
-    "sorare_starter_pct": null
+    "sorare_starter_pct": 70
   },
   "pathe-ciss": {
     "injured": false,
     "suspended": true,
     "sorare_proj": 47.0,
-    "sorare_starter_pct": null
+    "sorare_starter_pct": 0
   },
   "nobel-mendy": {
     "injured": false,
     "suspended": false,
     "sorare_proj": 45.0,
-    "sorare_starter_pct": null
+    "sorare_starter_pct": 60
   },
   "daniel-cardenas-lindez": {
     "injured": false,
     "suspended": false,
     "sorare_proj": 9.0,
-    "sorare_starter_pct": null
+    "sorare_starter_pct": 0
   },
   "alexandre-zurawski": {
     "injured": false,
     "suspended": false,
     "sorare_proj": 43.0,
-    "sorare_starter_pct": null
+    "sorare_starter_pct": 20
   },
   "sergio-camello-perez": {
     "injured": false,
     "suspended": false,
     "sorare_proj": 42.0,
-    "sorare_starter_pct": null
+    "sorare_starter_pct": 0
   },
   "oscar-valentin-martin-luengo": {
     "injured": false,
     "suspended": false,
     "sorare_proj": 47.0,
-    "sorare_starter_pct": null
+    "sorare_starter_pct": 70
   },
   "darling-bladi": {
     "injured": false,
@@ -10572,7 +10578,7 @@
     "sorare_starter_pct": 30
   },
   "antony-matheus-dos-santos": {
-    "injured": true,
+    "injured": false,
     "suspended": false,
     "sorare_proj": 62.0,
     "sorare_starter_pct": 80
@@ -10746,7 +10752,7 @@
     "sorare_starter_pct": 10
   },
   "daniel-ceballos-fernandez": {
-    "injured": true,
+    "injured": false,
     "suspended": false,
     "sorare_proj": 43.0,
     "sorare_starter_pct": 10
@@ -10898,7 +10904,7 @@
   "kylian-mbappe-lottin": {
     "injured": false,
     "suspended": false,
-    "sorare_proj": 65.0,
+    "sorare_proj": 66.0,
     "sorare_starter_pct": 70
   },
   "cesar-palacios-perez": {
@@ -10910,7 +10916,7 @@
   "raul-asencio-del-rosario": {
     "injured": false,
     "suspended": false,
-    "sorare_proj": 48.0,
+    "sorare_proj": 49.0,
     "sorare_starter_pct": 20
   },
   "mario-rivas-lago": {
@@ -10970,7 +10976,7 @@
   "daniel-carvajal-ramos": {
     "injured": false,
     "suspended": false,
-    "sorare_proj": 42.0,
+    "sorare_proj": 43.0,
     "sorare_starter_pct": 30
   },
   "antonio-rudiger": {
@@ -10980,7 +10986,7 @@
     "sorare_starter_pct": 80
   },
   "aurelien-tchouameni": {
-    "injured": false,
+    "injured": true,
     "suspended": false,
     "sorare_proj": 56.0,
     "sorare_starter_pct": 90
@@ -11274,7 +11280,7 @@
     "sorare_starter_pct": 0
   },
   "job-nguono-ochieng": {
-    "injured": false,
+    "injured": true,
     "suspended": false,
     "sorare_proj": 52.0,
     "sorare_starter_pct": 0
@@ -12072,7 +12078,7 @@
     "sorare_starter_pct": 0
   },
   "ayoze-perez-gutierrez": {
-    "injured": true,
+    "injured": false,
     "suspended": false,
     "sorare_proj": 44.0,
     "sorare_starter_pct": 10
@@ -12344,7 +12350,7 @@
   "jonas-hofmann-1992-07-14": {
     "injured": false,
     "suspended": false,
-    "sorare_proj": 46.0,
+    "sorare_proj": 45.0,
     "sorare_starter_pct": 20
   },
   "janis-blaswich": {
@@ -12512,7 +12518,7 @@
   "tom-bischof": {
     "injured": false,
     "suspended": false,
-    "sorare_proj": 45.0,
+    "sorare_proj": 46.0,
     "sorare_starter_pct": null
   },
   "min-jae-kim": {
@@ -12912,7 +12918,7 @@
     "sorare_starter_pct": 0
   },
   "jens-castrop": {
-    "injured": false,
+    "injured": true,
     "suspended": false,
     "sorare_proj": 45.0,
     "sorare_starter_pct": 60
@@ -12942,7 +12948,7 @@
     "sorare_starter_pct": 10
   },
   "tobias-sippel": {
-    "injured": false,
+    "injured": true,
     "suspended": false,
     "sorare_proj": 13.0,
     "sorare_starter_pct": 0
@@ -13106,7 +13112,7 @@
   "ayoube-amaimouni-echghouyab": {
     "injured": false,
     "suspended": false,
-    "sorare_proj": 44.0,
+    "sorare_proj": 45.0,
     "sorare_starter_pct": 20
   },
   "ansgar-knauff": {
@@ -13178,7 +13184,7 @@
   "arthur-theate": {
     "injured": false,
     "suspended": false,
-    "sorare_proj": 52.0,
+    "sorare_proj": 53.0,
     "sorare_starter_pct": 90
   },
   "marvin-dills": {
@@ -13298,7 +13304,7 @@
   "patrick-osterhage": {
     "injured": false,
     "suspended": false,
-    "sorare_proj": 38.0,
+    "sorare_proj": 37.0,
     "sorare_starter_pct": 40
   },
   "rouven-vuk-tarnutzer": {
@@ -13316,7 +13322,7 @@
   "vincenzo-grifo": {
     "injured": false,
     "suspended": false,
-    "sorare_proj": 43.0,
+    "sorare_proj": 42.0,
     "sorare_starter_pct": 40
   },
   "philipp-lienhart": {
@@ -13358,7 +13364,7 @@
   "anthony-jung": {
     "injured": false,
     "suspended": false,
-    "sorare_proj": 34.0,
+    "sorare_proj": 33.0,
     "sorare_starter_pct": 10
   },
   "yuito-suzuki": {
@@ -13506,15 +13512,15 @@
     "sorare_starter_pct": 0
   },
   "nicolas-capaldo": {
-    "injured": true,
+    "injured": false,
     "suspended": false,
     "sorare_proj": 50.0,
     "sorare_starter_pct": 30
   },
   "mamadou-jean-luc-diarra-dompe": {
-    "injured": false,
+    "injured": true,
     "suspended": false,
-    "sorare_proj": 52.0,
+    "sorare_proj": 53.0,
     "sorare_starter_pct": 20
   },
   "rayan-philippe": {
@@ -13590,7 +13596,7 @@
     "sorare_starter_pct": 0
   },
   "robert-nesta-glatzel": {
-    "injured": false,
+    "injured": true,
     "suspended": false,
     "sorare_proj": 44.0,
     "sorare_starter_pct": 0
@@ -13956,7 +13962,7 @@
     "sorare_starter_pct": 10
   },
   "albian-hajdari": {
-    "injured": false,
+    "injured": true,
     "suspended": false,
     "sorare_proj": 47.0,
     "sorare_starter_pct": 30
@@ -14240,7 +14246,7 @@
   "nelson-felix-patrick-weiper": {
     "injured": false,
     "suspended": false,
-    "sorare_proj": 39.0,
+    "sorare_proj": 40.0,
     "sorare_starter_pct": 20
   },
   "jae-sung-lee": {
@@ -14288,7 +14294,7 @@
   "benedict-hollerbach": {
     "injured": true,
     "suspended": false,
-    "sorare_proj": 42.0,
+    "sorare_proj": 43.0,
     "sorare_starter_pct": 0
   },
   "lasse-finn-riess": {
@@ -14396,7 +14402,7 @@
   "sheraldo-becker": {
     "injured": false,
     "suspended": false,
-    "sorare_proj": 43.0,
+    "sorare_proj": 44.0,
     "sorare_starter_pct": 90
   },
   "kasey-bos": {
@@ -14684,7 +14690,7 @@
   "nikola-vasilj": {
     "injured": false,
     "suspended": false,
-    "sorare_proj": 47.0,
+    "sorare_proj": 46.0,
     "sorare_starter_pct": 90
   },
   "lars-ritzka": {
@@ -14714,7 +14720,7 @@
   "ben-alexander-voll": {
     "injured": false,
     "suspended": false,
-    "sorare_proj": 33.0,
+    "sorare_proj": 32.0,
     "sorare_starter_pct": 10
   },
   "abdoulie-ceesay": {
@@ -14952,7 +14958,7 @@
     "sorare_starter_pct": 0
   },
   "jamie-leweling": {
-    "injured": true,
+    "injured": false,
     "suspended": false,
     "sorare_proj": 52.0,
     "sorare_starter_pct": 30
@@ -15206,7 +15212,7 @@
   "stefan-stefanov-smarkalev": {
     "injured": false,
     "suspended": false,
-    "sorare_proj": 9.0,
+    "sorare_proj": 8.0,
     "sorare_starter_pct": null
   },
   "salim-amani-musah": {
@@ -15224,7 +15230,7 @@
   "markus-kolke": {
     "injured": false,
     "suspended": false,
-    "sorare_proj": 9.0,
+    "sorare_proj": 8.0,
     "sorare_starter_pct": 10
   },
   "justin-gideon-njinmah": {
@@ -15234,7 +15240,7 @@
     "sorare_starter_pct": 80
   },
   "senne-lynen": {
-    "injured": true,
+    "injured": false,
     "suspended": false,
     "sorare_proj": 44.0,
     "sorare_starter_pct": 70
@@ -15288,7 +15294,7 @@
     "sorare_starter_pct": null
   },
   "jens-stage": {
-    "injured": true,
+    "injured": false,
     "suspended": false,
     "sorare_proj": 48.0,
     "sorare_starter_pct": 80
@@ -15362,7 +15368,7 @@
   "kamil-grabara": {
     "injured": false,
     "suspended": false,
-    "sorare_proj": 41.0,
+    "sorare_proj": 42.0,
     "sorare_starter_pct": 90
   },
   "kilian-fischer": {
@@ -15482,7 +15488,7 @@
   "maximilian-arnold": {
     "injured": false,
     "suspended": false,
-    "sorare_proj": 45.0,
+    "sorare_proj": 46.0,
     "sorare_starter_pct": 30
   },
   "rogerio-oliveira-da-silva": {
@@ -15500,7 +15506,7 @@
   "jenson-seelt": {
     "injured": true,
     "suspended": false,
-    "sorare_proj": 38.0,
+    "sorare_proj": 39.0,
     "sorare_starter_pct": 0
   },
   "jeanuel-belocian": {
@@ -15536,7 +15542,7 @@
   "christian-dannemann-eriksen": {
     "injured": false,
     "suspended": false,
-    "sorare_proj": 46.0,
+    "sorare_proj": 47.0,
     "sorare_starter_pct": 80
   },
   "mohamed-el-amine-amoura": {

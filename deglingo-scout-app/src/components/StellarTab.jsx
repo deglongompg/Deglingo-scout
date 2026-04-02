@@ -207,15 +207,18 @@ function buildStellarTeams(dayPlayers, dateStr) {
     return result;
   }
 
+  // Fallback : essaie avec contrainte, sinon sans (1 seul match dans le créneau = full stack)
+  const pickSafe = (pool) => pickTeam(pool) || pickTeam(pool.map(p => ({ ...p, oppName: null })));
+
   // ULTIME — top 5 du jour
-  const ultime = pickTeam(sorted);
+  const ultime = pickSafe(sorted);
   if (ultime) teams.push({ label: "ULTIME", icon: "★", players: ultime.players, top10: buildTop10(sorted) });
 
   // 3 créneaux fixes : 13H, 17H, 20H
   for (const slot of ["13H", "17H", "20H"]) {
     const pool = sorted.filter(p => getSlot(p) === slot);
     if (pool.length < 5) continue;
-    const t = pickTeam(pool);
+    const t = pickSafe(pool);
     if (t) teams.push({ label: slot, icon: "⏰", players: t.players, top10: buildTop10(pool) });
   }
 

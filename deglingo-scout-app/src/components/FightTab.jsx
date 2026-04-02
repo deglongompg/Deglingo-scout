@@ -681,9 +681,13 @@ export default function FightTab({ players, teams, fixtures, logos = {}, lang = 
                 <div style={{ fontSize: 9, color: "#FBBF24", fontWeight: 800, letterSpacing: "0.1em", marginBottom: 8 }}>{t(lang,"analyseMatchFight")}</div>
                 <div className="fight-verdicts" style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 10 }}>
                   <div style={{ fontSize: 12, lineHeight: 1.7, color: winner === 1 ? "rgba(255,255,255,0.85)" : "rgba(255,255,255,0.35)" }}>
+                    {sel1?.injured && <div style={{ fontSize: 10, fontWeight: 800, color: "#EF4444", marginBottom: 4 }}>⚠️ {sel1.name} est blessé</div>}
+                    {sel1?.suspended && <div style={{ fontSize: 10, fontWeight: 800, color: "#EF4444", marginBottom: 4 }}>⚠️ {sel1.name} est suspendu</div>}
                     {genVerdict(sel1, opp1, h1, d1, pTeam1, lang)}
                   </div>
                   <div style={{ fontSize: 12, lineHeight: 1.7, color: winner === 2 ? "rgba(255,255,255,0.85)" : "rgba(255,255,255,0.35)" }}>
+                    {sel2?.injured && <div style={{ fontSize: 10, fontWeight: 800, color: "#EF4444", marginBottom: 4 }}>⚠️ {sel2.name} est blessé</div>}
+                    {sel2?.suspended && <div style={{ fontSize: 10, fontWeight: 800, color: "#EF4444", marginBottom: 4 }}>⚠️ {sel2.name} est suspendu</div>}
                     {genVerdict(sel2, opp2, h2, d2, pTeam2, lang)}
                   </div>
                 </div>

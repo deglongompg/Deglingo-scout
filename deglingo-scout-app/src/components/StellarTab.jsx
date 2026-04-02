@@ -424,6 +424,7 @@ export default function StellarTab({ players, teams, fixtures, logos = {}, onFig
       const ds = dScoreMatch(p, opp, fx.isHome, pTeam);
       if (ds < 20) continue; // Filter ghosts
       if (p.injured || p.suspended) continue; // Filter injured/suspended
+      if (p.sorare_starter_pct != null && p.sorare_starter_pct < 70) continue; // Titu% Sorare < 70%
 
       let csPercent = null;
       if (p.position === "GK") {

@@ -564,6 +564,7 @@ export default function RecoTab({ players, teams, fixtures, logos = {}, lang = "
     const pf = fixtures?.player_fixtures || {};
     return lgPlayers.map(p => {
       if (p.injured || p.suspended) return null; // Blessés/suspendus exclus du stack
+      if (p.sorare_starter_pct != null && p.sorare_starter_pct < 70) return null; // Titu% Sorare < 70% exclus
       const fx = pf[p.slug] || pf[p.name];
       if (!fx) return null;
       const opp = lgTeams.find(t => t.name === fx.opp);

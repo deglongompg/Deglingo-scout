@@ -572,14 +572,16 @@ export default function DbTab({ players, teams, fixtures, logos = {}, lang = "fr
                     </td>
                     <td style={{ textAlign: "center", fontFamily: "DM Mono", fontSize: 11 }}>
                       {(() => {
-                        const pct = p.sorare_starter_pct ?? p.titu_pct;
+                        const pct = p.sorare_starter_pct;
                         const color = p.injured || p.suspended ? "#EF4444" : pct >= 80 ? "#4ADE80" : pct >= 50 ? "#FBBF24" : "#EF4444";
                         return (
                           <span style={{ display: "inline-flex", alignItems: "center", gap: 3 }}>
                             {p.injured && <svg width="10" height="10" viewBox="0 0 12 12" style={{ flexShrink: 0 }}><rect width="12" height="12" rx="2" fill="#EF4444"/><rect x="5" y="2" width="2" height="8" rx="0.5" fill="#fff"/><rect x="2" y="5" width="8" height="2" rx="0.5" fill="#fff"/></svg>}
                             {p.suspended && <svg width="7" height="10" viewBox="0 0 8 12" style={{ flexShrink: 0 }}><rect x="0.5" y="0.5" width="7" height="11" rx="1.5" fill="#EF4444" stroke="rgba(0,0,0,0.25)" strokeWidth="0.5"/></svg>}
-                            <span style={{ color }}>{pct != null ? `${R(pct)}%` : "—"}</span>
-                            {p.sorare_starter_pct != null && <span style={{ fontSize: 7, color: "#A78BFA", fontWeight: 700 }}>S</span>}
+                            {pct != null
+                              ? <span style={{ color }}>{R(pct)}%</span>
+                              : <span style={{ color: "rgba(255,255,255,0.15)" }}>—</span>
+                            }
                           </span>
                         );
                       })()}

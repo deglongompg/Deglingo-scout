@@ -34,6 +34,7 @@ export default function DbTab({ players, teams, fixtures, logos = {}, lang = "fr
   const [visibleCount, setVisibleCount] = useState(30);
   const [statCols, setStatCols] = useState([]);
   const [u23Only, setU23Only] = useState(false);
+  const [showStatPanel, setShowStatPanel] = useState(true);
 
   // Toggleable individual stat columns — 5 sections like Sorare AA
   const __ = (fr, en) => lang === "en" ? en : fr;
@@ -343,7 +344,16 @@ export default function DbTab({ players, teams, fixtures, logos = {}, lang = "fr
       </div>
 
       {/* Stat columns toggle — Sorare daily missions */}
-      <div style={{ marginBottom: 8, display: "flex", flexWrap: "wrap", gap: 4, alignItems: "center" }}>
+      <div style={{ marginBottom: 8 }}>
+      <button onClick={() => setShowStatPanel(v => !v)} style={{
+        marginBottom: showStatPanel ? 6 : 0,
+        padding: "3px 10px", borderRadius: 6, fontSize: 10, fontWeight: 700, cursor: "pointer",
+        border: "1px solid rgba(255,255,255,0.1)", background: "rgba(255,255,255,0.04)",
+        color: "rgba(255,255,255,0.4)", transition: "all 0.15s", display: "flex", alignItems: "center", gap: 4,
+      }}>
+        <span style={{ fontSize: 8 }}>{showStatPanel ? "▲" : "▼"}</span> Stats AA
+      </button>
+      {showStatPanel && <div style={{ display: "flex", flexWrap: "wrap", gap: 4, alignItems: "center" }}>
         {["DEF", "POSS", "PASS", "ATT"].map(cat => {
           const CAT_LABELS = { DEF: "🛡️ DEF", POSS: "🔄 POSS", PASS: "🎯 PASS", ATT: "⚔️ ATT" };
           const CAT_COLORS = { DEF: "#60A5FA", POSS: "#FBBF24", PASS: "#4ADE80", ATT: "#F87171" };
@@ -386,6 +396,7 @@ export default function DbTab({ players, teams, fixtures, logos = {}, lang = "fr
         {statCols.length > 0 && !STAT_DEFS.map(s => s.key).every(k => statCols.includes(k)) && (
           <button onClick={() => setStatCols([])} style={{ padding: "3px 8px", borderRadius: 6, fontSize: 9, cursor: "pointer", border: "1px solid rgba(239,68,68,0.3)", background: "rgba(239,68,68,0.1)", color: "#EF4444" }}>✕ Reset</button>
         )}
+      </div>}
       </div>
       {statCols.length > 0 && (
         <div style={{ fontSize: 11, color: "rgba(255,255,255,0.4)", marginBottom: 6, padding: "4px 8px", lineHeight: 1.5, background: "rgba(255,255,255,0.02)", borderRadius: 6, border: "1px solid rgba(255,255,255,0.06)" }}>

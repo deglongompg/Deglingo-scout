@@ -433,7 +433,7 @@ export default function DbTab({ players, teams, fixtures, logos = {}, lang = "fr
                   <span style={{ color: sortKey === "dsMatch" ? "#C084FC" : "#C084FC80" }}>D-Score{arrow("dsMatch")}</span>
                 </th>
                 <th style={{ ...thStyle("sorare_starter_pct"), width: 38, maxWidth: 38, padding: "6px 2px" }} onClick={() => toggleSort("sorare_starter_pct")}>{__("Titu%","Starter%")}{arrow("sorare_starter_pct")}</th>
-                <th style={{ ...thStyle("oppName"), cursor: "default", width: 72, maxWidth: 72, padding: "6px 2px" }}>{t(lang,"colAdv")}</th>
+                <th style={{ ...thStyle("oppName"), cursor: "default", width: 90, maxWidth: 90, padding: "6px 2px" }}>{t(lang,"colAdv")}</th>
                 <th style={{ ...thStyle("csPercent"), width: 34, maxWidth: 34, padding: "6px 2px" }} onClick={() => toggleSort("csPercent")}>CS%{arrow("csPercent")}</th>
               </>}
               {statCols.length === 0 && <th style={thStyle("price_limited")} onClick={() => toggleSort("price_limited")}>L€{arrow("price_limited")}</th>}
@@ -601,14 +601,14 @@ export default function DbTab({ players, teams, fixtures, logos = {}, lang = "fr
                         );
                       })()}
                     </td>
-                    <td style={{ textAlign: "left", fontSize: 8, padding: "4px 2px", width: 72, maxWidth: 72, overflow: "hidden" }}>
+                    <td style={{ textAlign: "left", fontSize: 8, padding: "4px 2px", width: 90, maxWidth: 90, overflow: "hidden" }}>
                       {p.oppName ? (
                         <div style={{ display: "flex", alignItems: "center", gap: 2 }}>
                           <span style={{ fontSize: 13, flexShrink: 0, lineHeight: 1 }}>
                             {p.isHome ? "🏠" : "✈️"}
                           </span>
                           {logos[p.oppName] && <img src={`/data/logos/${logos[p.oppName]}`} alt="" style={{ width: 14, height: 14, objectFit: "contain", flexShrink: 0 }} />}
-                          <span style={{ fontSize: 11, color: "rgba(255,255,255,0.5)", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis", ...(shortName(p.oppName).length >= 12 ? { maxWidth: 30 } : {}) }}>{shortName(p.oppName)}</span>
+                          <span style={{ fontSize: 11, color: "rgba(255,255,255,0.5)", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>{shortName(p.oppName)}</span>
                         </div>
                       ) : (
                         <span style={{ color: "rgba(255,255,255,0.15)", paddingLeft: 10 }}>—</span>

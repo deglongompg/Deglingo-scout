@@ -137,7 +137,7 @@ export default function App() {
           .ds-logo-sub { display: none !important; }
         }
         @media(max-width:480px){
-          .ds-lang-btn { display: none !important; }
+          .ds-lang-btn { padding: 4px 7px !important; font-size: 10px !important; }
           .ds-stellar-icon { display: none !important; }
         }
       `}</style>

@@ -120,10 +120,15 @@ export default function DbTab({ players, teams, fixtures, logos = {}, lang = "fr
       list = list.filter(p => p.name.toLowerCase().includes(q) || p.club.toLowerCase().includes(q));
     }
     list = [...list].sort((a, b) => {
-      // Tri Titu% : basé sur sorare_starter_pct (null = -1 pour tri), blessé/suspendu en dernier
-      if (sortKey === "titu_pct") {
+      // Tri Titu% Sorare : basé sur sorare_starter_pct (null = -1 pour tri)
+      if (sortKey === "sorare_starter_pct") {
         const val = p => p.sorare_starter_pct != null ? p.sorare_starter_pct : -1;
         return (val(a) - val(b)) * sortDir;
+      }
+      // Tri Titu10 : basé sur titu_pct calculé
+      if (sortKey === "titu_pct") {
+        const va = a.titu_pct ?? -1, vb = b.titu_pct ?? -1;
+        return (va - vb) * sortDir;
       }
       // Tri D-Score : blessé/suspendu traités comme 0 (cohérent avec l'affichage)
       if (sortKey === "dsMatch") {
@@ -427,7 +432,7 @@ export default function DbTab({ players, teams, fixtures, logos = {}, lang = "fr
                 <th style={{ ...thStyle("dsMatch"), width: 52, maxWidth: 52, padding: "6px 4px" }} onClick={() => toggleSort("dsMatch")}>
                   <span style={{ color: sortKey === "dsMatch" ? "#C084FC" : "#C084FC80" }}>D-Score{arrow("dsMatch")}</span>
                 </th>
-                <th style={{ ...thStyle("titu_pct"), width: 38, maxWidth: 38, padding: "6px 2px" }} onClick={() => toggleSort("titu_pct")}>{__("Titu%","Starter%")}{arrow("titu_pct")}</th>
+                <th style={{ ...thStyle("sorare_starter_pct"), width: 38, maxWidth: 38, padding: "6px 2px" }} onClick={() => toggleSort("sorare_starter_pct")}>{__("Titu%","Starter%")}{arrow("sorare_starter_pct")}</th>
                 <th style={{ ...thStyle("oppName"), cursor: "default", width: 72, maxWidth: 72, padding: "6px 2px" }}>{t(lang,"colAdv")}</th>
                 <th style={{ ...thStyle("csPercent"), width: 34, maxWidth: 34, padding: "6px 2px" }} onClick={() => toggleSort("csPercent")}>CS%{arrow("csPercent")}</th>
               </>}

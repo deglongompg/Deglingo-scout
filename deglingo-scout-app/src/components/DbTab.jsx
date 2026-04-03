@@ -120,11 +120,10 @@ export default function DbTab({ players, teams, fixtures, logos = {}, lang = "fr
       list = list.filter(p => p.name.toLowerCase().includes(q) || p.club.toLowerCase().includes(q));
     }
     list = [...list].sort((a, b) => {
-      // Tri Titu% : suspendu d'abord, puis blessé, puis valeur
+      // Tri Titu% : basé sur sorare_starter_pct (null = -1 pour tri), blessé/suspendu en dernier
       if (sortKey === "titu_pct") {
-        const rank = p => p.suspended ? 2 : p.injured ? 1 : 0;
-        const ra = rank(a), rb = rank(b);
-        if (ra !== rb) return (rb - ra) * sortDir;
+        const val = p => p.sorare_starter_pct != null ? p.sorare_starter_pct : -1;
+        return (val(a) - val(b)) * sortDir;
       }
       // Tri D-Score : blessé/suspendu traités comme 0 (cohérent avec l'affichage)
       if (sortKey === "dsMatch") {

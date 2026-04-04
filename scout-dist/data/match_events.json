@@ -20,5 +20,93 @@
     "away_scorers": [],
     "home_assists": [],
     "away_assists": []
+  },
+  "Game:aacd5c0b-82e4-47ad-a2fb-adbae8843635": {
+    "home": "Real Sociedad",
+    "away": "Levante UD",
+    "date": "2026-04-04",
+    "home_goals": 2,
+    "away_goals": 0,
+    "home_scorers": [],
+    "away_scorers": [],
+    "home_assists": [],
+    "away_assists": []
+  },
+  "Game:1eb5726c-fa8c-44a0-abb7-df2a1fdeac90": {
+    "home": "Hamburger SV",
+    "away": "FC Augsburg",
+    "date": "2026-04-04",
+    "home_goals": 1,
+    "away_goals": 1,
+    "home_scorers": [],
+    "away_scorers": [],
+    "home_assists": [],
+    "away_assists": []
+  },
+  "Game:345dc2c7-f4a7-4309-bffd-161152402903": {
+    "home": "Bayer 04 Leverkusen",
+    "away": "VfL Wolfsburg",
+    "date": "2026-04-04",
+    "home_goals": 6,
+    "away_goals": 3,
+    "home_scorers": [],
+    "away_scorers": [],
+    "home_assists": [],
+    "away_assists": []
+  },
+  "Game:1c4ce249-c2d8-4b61-a98b-406b8632a5d6": {
+    "home": "Sport-Club Freiburg",
+    "away": "FC Bayern München",
+    "date": "2026-04-04",
+    "home_goals": 2,
+    "away_goals": 3,
+    "home_scorers": [],
+    "away_scorers": [],
+    "home_assists": [],
+    "away_assists": []
+  },
+  "Game:c9800c7b-c3e9-4d10-8423-63e06fbed794": {
+    "home": "Borussia Mönchengladbach",
+    "away": "1. FC Heidenheim 1846",
+    "date": "2026-04-04",
+    "home_goals": 2,
+    "away_goals": 2,
+    "home_scorers": [],
+    "away_scorers": [],
+    "home_assists": [],
+    "away_assists": []
+  },
+  "Game:a162c553-9326-4d8e-af25-ff67f7f4a5d8": {
+    "home": "TSG Hoffenheim",
+    "away": "1. FSV Mainz 05",
+    "date": "2026-04-04",
+    "home_goals": 1,
+    "away_goals": 2,
+    "home_scorers": [],
+    "away_scorers": [],
+    "home_assists": [],
+    "away_assists": []
+  },
+  "Game:69223ec5-09fd-4356-b842-8bd19d9095dc": {
+    "home": "SV Werder Bremen",
+    "away": "RB Leipzig",
+    "date": "2026-04-04",
+    "home_goals": 1,
+    "away_goals": 2,
+    "home_scorers": [],
+    "away_scorers": [],
+    "home_assists": [],
+    "away_assists": []
+  },
+  "Game:9fa46d88-2f5d-4fbe-bb14-400dc42f9f9b": {
+    "home": "RB Leipzig",
+    "away": "TSG Hoffenheim",
+    "date": "2026-03-20",
+    "home_goals": 5,
+    "away_goals": 0,
+    "home_scorers": [],
+    "away_scorers": [],
+    "home_assists": [],
+    "away_assists": []
   }
 }

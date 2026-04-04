@@ -449,7 +449,11 @@ export default function StellarTab({ players, teams, fixtures, logos = {}, match
   const todayStr = getParisTodayStr(); // "2026-04-03"
   const today = new Date(todayStr + "T12:00:00"); // objet Date safe pour getMonday
   const [weekOffset, setWeekOffset] = useState(0);
-  const [selectedDay, setSelectedDay] = useState(null);
+  // Défaut = jour courant (0=Lun … 6=Dim)
+  const [selectedDay, setSelectedDay] = useState(() => {
+    const d = new Date(getParisTodayStr() + "T12:00:00");
+    return (d.getDay() + 6) % 7; // JS: 0=Dim → on convertit en Lun=0
+  });
   const [expandedFixture, setExpandedFixture] = useState(null); // { key, side: "home"|"away" }
   const CURRENT_GW_START = "2026-04-03";
 

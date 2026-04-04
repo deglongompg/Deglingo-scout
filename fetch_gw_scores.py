@@ -12,7 +12,7 @@ Usage :
   py fetch_gw_scores.py
 """
 import requests, json, os, time, sys
-from datetime import date
+from datetime import date, datetime, timedelta, timezone
 sys.stdout.reconfigure(errors="replace")
 from dotenv import load_dotenv
 
@@ -71,7 +71,12 @@ def fetch_score(slug):
 
 
 # ── DÉTECTION AUTOMATIQUE DES CLUBS AYANT JOUÉ ──────────────────────────────
-today = str(date.today())
+# Les kickoffs dans fixtures.json sont en UTC
+# La date GW est en heure Paris (CEST = UTC+2 en avril)
+_utc_now   = datetime.now(timezone.utc)
+_paris_now = _utc_now + timedelta(hours=2)
+today      = _paris_now.strftime("%Y-%m-%d")
+now_hhmm   = _utc_now.strftime("%H:%M")   # UTC pour comparer aux kickoffs UTC
 print(f"Aujourd'hui : {today}")
 
 with open(FIXTURES_FILE, encoding="utf-8") as f:
@@ -82,12 +87,40 @@ player_fixtures = fixtures.get("player_fixtures", {})
 with open(OUT_PATHS[0], encoding="utf-8") as f:
     players = json.load(f)
 
+# Calcul du début de GW : Vendredi 16h ou Mardi 16h, selon le plus récent
+def get_gw_start(now):
+    best = None
+    for target_wd in [4, 1]:  # Vendredi=4, Mardi=1
+        days_back = (now.weekday() - target_wd) % 7
+        candidate = (now - timedelta(days=days_back)).replace(hour=16, minute=0, second=0, microsecond=0)
+        if candidate > now:
+            candidate -= timedelta(days=7)
+        if best is None or candidate > best:
+            best = candidate
+    return best
+
+_gw_start = get_gw_start(_paris_now)
+gw_cutoff_date  = _gw_start.strftime("%Y-%m-%d")
+gw_cutoff_hhmm  = _gw_start.strftime("%H:%M")  # toujours "16:00"
+print(f"Debut GW    : {gw_cutoff_date} {gw_cutoff_hhmm} (heure Paris)")
+
 played_clubs = set()
 for p in players:
     slug = p.get("slug", "")
     fx = player_fixtures.get(slug)
-    if fx and fx.get("date", "") < today:
-        played_clubs.add(p.get("club", ""))
+    if fx:
+        fx_date = fx.get("date", "")
+        kickoff = fx.get("kickoff", "99:99")
+        in_gw = fx_date > gw_cutoff_date or (fx_date == gw_cutoff_date and kickoff >= gw_cutoff_hhmm)
+        # +2h après le coup d'envoi pour que le match soit terminé
+        if kickoff and kickoff != "99:99":
+            ko_h, ko_m = int(kickoff[:2]), int(kickoff[3:])
+            ko_end_hhmm = f"{(ko_h + 2) % 24:02d}:{ko_m:02d}"
+        else:
+            ko_end_hhmm = "99:99"
+        already_started = fx_date < today or (fx_date == today and ko_end_hhmm <= now_hhmm)
+        if in_gw and already_started:
+            played_clubs.add(p.get("club", ""))
 
 if not played_clubs:
     print("Aucun match joue avant aujourd'hui dans les fixtures. Rien a faire.")

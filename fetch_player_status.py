@@ -11,7 +11,8 @@ Workflow vendredi :
   npm run build
   [déployer]
 """
-import requests, json, os, time
+import requests, json, os, time, sys
+sys.stdout.reconfigure(errors="replace")
 from dotenv import load_dotenv
 
 load_dotenv()
@@ -53,7 +54,7 @@ def fetch_status(slug):
     proj      = p.get("nextClassicFixtureProjectedScore")
     odds      = (p.get("nextClassicFixturePlayingStatusOdds") or {})
     bp        = odds.get("starterOddsBasisPoints")
-    starter_pct = round(bp / 100) if bp is not None else None
+    starter_pct = min(round(bp / 100), 90) if bp is not None else None
     return {
         "injured":          injured,
         "suspended":        suspended,
@@ -111,13 +112,21 @@ for path in OUT_PATHS:
     for p in data:
         s = status.get(p.get("slug", ""))
         if s:
-            p["injured"]            = s["injured"]
-            p["suspended"]          = s["suspended"]
-            p["sorare_proj"]        = s["sorare_proj"]
-            p["sorare_starter_pct"] = s["sorare_starter_pct"]
+            # Toujours écraser injured/suspended (toujours fiables)
+            p["injured"]   = s["injured"]
+            p["suspended"] = s["suspended"]
+            # sorare_proj : écraser seulement si on a une valeur (ne pas effacer les données précédentes)
+            if s["sorare_proj"] is not None:
+                p["sorare_proj"] = s["sorare_proj"]
+            else:
+                p.setdefault("sorare_proj", None)
+            # sorare_starter_pct : idem — conserver si l'API retourne null (deadline dépassée)
+            if s["sorare_starter_pct"] is not None:
+                p["sorare_starter_pct"] = s["sorare_starter_pct"]
+            else:
+                p.setdefault("sorare_starter_pct", None)
             patched += 1
         else:
-            # Pas de status = on met des valeurs neutres (pas de badge affiché)
             p.setdefault("injured",            False)
             p.setdefault("suspended",          False)
             p.setdefault("sorare_proj",        None)

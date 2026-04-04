@@ -125,10 +125,20 @@ export default function DbTab({ players, teams, fixtures, logos = {}, lang = "fr
         const val = p => p.sorare_starter_pct != null ? p.sorare_starter_pct : -1;
         return (val(a) - val(b)) * sortDir;
       }
+      // Tri Proj Sorare : null = -1
+      if (sortKey === "sorare_proj") {
+        const val = p => p.sorare_proj != null ? p.sorare_proj : -1;
+        return (val(a) - val(b)) * sortDir;
+      }
       // Tri Titu10 : basé sur titu_pct calculé
       if (sortKey === "titu_pct") {
         const va = a.titu_pct ?? -1, vb = b.titu_pct ?? -1;
         return (va - vb) * sortDir;
+      }
+      // Tri Score réel : null = -1
+      if (sortKey === "last_so5_score") {
+        const val = p => p.last_so5_score != null ? p.last_so5_score : -1;
+        return (val(a) - val(b)) * sortDir;
       }
       // Tri D-Score : blessé/suspendu traités comme 0 (cohérent avec l'affichage)
       if (sortKey === "dsMatch") {
@@ -170,6 +180,9 @@ export default function DbTab({ players, teams, fixtures, logos = {}, lang = "fr
   const arrow = (key) => sortKey === key ? (sortDir === -1 ? "↓" : "↑") : "";
 
   const R = v => v != null ? Math.round(v) : "—";
+
+  // GW en cours — joueurs ayant joué depuis cette date ont un score réel
+  const CURRENT_GW_START = "2026-04-03";
 
   const SHORT_NAMES = {
     // Fixtures names
@@ -432,6 +445,9 @@ export default function DbTab({ players, teams, fixtures, logos = {}, lang = "fr
                 <th style={{ ...thStyle("dsMatch"), width: 52, maxWidth: 52, padding: "6px 4px" }} onClick={() => toggleSort("dsMatch")}>
                   <span style={{ color: sortKey === "dsMatch" ? "#C084FC" : "#C084FC80" }}>D-Score{arrow("dsMatch")}</span>
                 </th>
+                <th style={{ ...thStyle("last_so5_score"), width: 38, maxWidth: 38, padding: "6px 2px" }} onClick={() => toggleSort("last_so5_score")}>
+                  <span style={{ color: sortKey === "last_so5_score" ? "#38BDF8" : "#38BDF880", fontSize: 9 }}>{__("Score","Score")}{arrow("last_so5_score")}</span>
+                </th>
                 <th style={{ ...thStyle("sorare_starter_pct"), width: 38, maxWidth: 38, padding: "6px 2px" }} onClick={() => toggleSort("sorare_starter_pct")}>{__("Titu%","Starter%")}{arrow("sorare_starter_pct")}</th>
                 <th style={{ ...thStyle("oppName"), cursor: "default", width: 90, maxWidth: 90, padding: "6px 2px" }}>{t(lang,"colAdv")}</th>
                 <th style={{ ...thStyle("csPercent"), width: 34, maxWidth: 34, padding: "6px 2px" }} onClick={() => toggleSort("csPercent")}>CS%{arrow("csPercent")}</th>
@@ -587,6 +603,22 @@ export default function DbTab({ players, teams, fixtures, logos = {}, lang = "fr
                     </td>
                     <td style={{ textAlign: "center", fontFamily: "DM Mono", fontSize: 11, width: 38, maxWidth: 38, padding: "4px 2px" }}>
                       {(() => {
+                        const playedThisGw = p.last_so5_date && p.last_so5_date >= CURRENT_GW_START;
+                        const score = p.last_so5_score;
+                        if (playedThisGw && score != null) {
+                          const sc = score;
+                          const scoreColor = sc >= 75 ? "#4ADE80" : sc >= 60 ? "#A3E635" : sc >= 50 ? "#FBBF24" : sc >= 40 ? "#FB923C" : "#EF4444";
+                          return <span style={{ color: scoreColor, fontWeight: 700, fontSize: 12 }}>{Math.round(sc)}</span>;
+                        }
+                        return <span style={{ color: "rgba(255,255,255,0.15)", fontSize: 9 }}>—</span>;
+                      })()}
+                    </td>
+                    <td style={{ textAlign: "center", fontFamily: "DM Mono", fontSize: 11, width: 38, maxWidth: 38, padding: "4px 2px" }}>
+                      {(() => {
+                        const playedThisGw = p.last_so5_date && p.last_so5_date >= CURRENT_GW_START;
+                        if (playedThisGw) {
+                          return <span style={{ color: "rgba(255,255,255,0.2)", fontSize: 10 }}>—</span>;
+                        }
                         const pct = p.sorare_starter_pct;
                         const color = p.injured || p.suspended ? "#EF4444" : pct >= 80 ? "#4ADE80" : pct >= 50 ? "#FBBF24" : "#EF4444";
                         return (

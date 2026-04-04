@@ -292,10 +292,25 @@ function Stars({ n }) {
   );
 }
 
-function PlayerCard({ player, isSelected, onClick, logos = {}, badge }) {
+function PlayerCard({ player, isSelected, onClick, logos = {}, badge, isCaptain, gwStart = "" }) {
   const displayPos = badge || player.position;
   const pc = PC[player.position];
   const conf = player.ds >= 75 ? 5 : player.ds >= 60 ? 4 : player.ds >= 50 ? 3 : player.ds >= 40 ? 2 : player.ds >= 30 ? 1 : 0;
+
+  const hasPlayed = gwStart && player.last_so5_date && player.last_so5_date >= gwStart && player.last_so5_score != null;
+  const realScore = hasPlayed ? Math.round(player.last_so5_score) : null;
+  const realColor = hasPlayed ? (player.last_so5_score >= 75 ? "#4ADE80" : player.last_so5_score >= 60 ? "#A3E635" : player.last_so5_score >= 50 ? "#FBBF24" : player.last_so5_score >= 40 ? "#FB923C" : "#EF4444") : null;
+
+  // Résultat du match réel (buts) : "3-1" si domicile, "1-3" si extérieur
+  const hg = player.last_match_home_goals;
+  const ag = player.last_match_away_goals;
+  const matchResult = hasPlayed && hg != null && ag != null
+    ? (player.isHome ? `${hg}-${ag}` : `${ag}-${hg}`)
+    : null;
+  const matchResultColor = matchResult
+    ? (player.isHome ? (hg > ag ? "#4ADE80" : hg === ag ? "#FBBF24" : "#EF4444")
+                     : (ag > hg ? "#4ADE80" : ag === hg ? "#FBBF24" : "#EF4444"))
+    : null;
 
   // Position-based card gradient (deep, diagonal, futuristic)
   const cardBg = {
@@ -308,7 +323,7 @@ function PlayerCard({ player, isSelected, onClick, logos = {}, badge }) {
   return (
     <div onClick={onClick} style={{ textAlign: "center", cursor: "pointer", width: "114px", position: "relative" }}>
       {/* Titu% clip badge — right edge */}
-      {player.sorare_starter_pct != null && (
+      {player.sorare_starter_pct != null && !hasPlayed && (
         <div style={{
           position: "absolute", top: 18, right: -2, zIndex: 20,
           background: player.sorare_starter_pct >= 80
@@ -349,6 +364,10 @@ function PlayerCard({ player, isSelected, onClick, logos = {}, badge }) {
           {/* ── Top accent line ── */}
           <div style={{ position: "absolute", top: 0, left: 0, right: 0, height: 2, background: `linear-gradient(90deg, transparent 10%, ${pc}70 50%, transparent 90%)`, pointerEvents: "none" }} />
 
+          {/* Captain badge — top-left */}
+          {(isCaptain || player.isCaptain) && (
+            <div style={{ position: "absolute", top: 4, left: 4, zIndex: 15, width: 18, height: 18, borderRadius: "50%", background: "linear-gradient(135deg, #A78BFA, #7C3AED)", border: "1.5px solid rgba(196,181,253,0.5)", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 9, fontWeight: 900, color: "#fff", boxShadow: "0 0 8px rgba(139,92,246,0.6)" }}>C</div>
+          )}
           {/* Injury / Suspension badge — top-left corner */}
           {(player.injured || player.suspended) && (
             <div style={{ position: "absolute", top: 5, left: 5, zIndex: 10, display: "flex", gap: 2 }}>
@@ -368,17 +387,33 @@ function PlayerCard({ player, isSelected, onClick, logos = {}, badge }) {
           )}
           {/* Position badge */}
           <div style={{ background: `linear-gradient(135deg,${pc},${pc}CC)`, borderRadius: "3px", padding: "1px 6px", marginTop: "2px", fontSize: "7px", fontWeight: 800, color: "#fff", letterSpacing: "0.06em", position: "relative", zIndex: 1, boxShadow: `0 1px 4px ${pc}40` }}>{displayPos}</div>
-          {/* Score circle */}
+          {/* Score : cercle vide (D-Score) → cercle plein (score réel) */}
           <div style={{ marginTop: "5px", display: "flex", alignItems: "center", justifyContent: "center", position: "relative", zIndex: 1 }}>
-            <div style={{
-              width: 38, height: 38, borderRadius: "50%",
-              background: isSilver(player.ds) ? "linear-gradient(135deg,#C0C0C0,#A8E8D0,#B0C4E8,#D4B0E8,#E0D0E8,#C0C0C0)" : dsBg(player.ds),
-              boxShadow: isSilver(player.ds) ? "0 0 12px rgba(180,200,232,0.5), 0 0 24px rgba(212,176,232,0.3)" : `0 2px 8px rgba(0,0,0,0.5), 0 0 12px ${dsColor(player.ds)}30`,
-              display: "flex", alignItems: "center", justifyContent: "center",
-              fontFamily: "'DM Mono',monospace", fontSize: 16, fontWeight: 700,
-              color: isSilver(player.ds) ? "#1a1a2e" : "#fff",
-              border: isSilver(player.ds) ? "2px solid rgba(255,255,255,0.6)" : "2px solid rgba(255,255,255,0.25)",
-            }}>{player.ds}</div>
+            {hasPlayed ? (
+              /* Cercle plein — score réel */
+              <div style={{
+                width: 42, height: 42, borderRadius: "50%",
+                background: realColor,
+                boxShadow: `0 0 14px ${realColor}99, 0 2px 8px rgba(0,0,0,0.5)`,
+                display: "flex", alignItems: "center", justifyContent: "center",
+                fontFamily: "'DM Mono',monospace", fontSize: 17, fontWeight: 900,
+                color: "#fff",
+                border: "2px solid rgba(255,255,255,0.3)",
+                transition: "all 0.4s",
+              }}>{realScore}</div>
+            ) : (
+              /* Cercle vide — D-Score projeté */
+              <div style={{
+                width: 42, height: 42, borderRadius: "50%",
+                background: "transparent",
+                display: "flex", alignItems: "center", justifyContent: "center",
+                fontFamily: "'DM Mono',monospace", fontSize: 16, fontWeight: 700,
+                color: isSilver(player.ds) ? "rgba(255,255,255,0.9)" : dsColor(player.ds),
+                border: isSilver(player.ds) ? "1px dashed rgba(255,255,255,0.4)" : `1px dashed ${dsColor(player.ds)}80`,
+                boxShadow: isSilver(player.ds) ? "0 0 8px rgba(200,200,232,0.3)" : `0 0 8px ${dsColor(player.ds)}40`,
+                transition: "all 0.4s",
+              }}>{player.ds}</div>
+            )}
           </div>
           {/* Name */}
           <div style={{ fontSize: "12px", fontWeight: 700, color: "#fff", marginTop: "4px", letterSpacing: "-0.01em", lineHeight: 1.1, position: "relative", zIndex: 1, textShadow: "0 1px 4px rgba(0,0,0,0.5)" }}>{player.name.split(" ").pop()}</div>
@@ -399,6 +434,12 @@ function PlayerCard({ player, isSelected, onClick, logos = {}, badge }) {
         <span style={{ fontSize: "10px", lineHeight: 1 }}>{player.isHome ? "🏠" : "✈️"}</span>
         {logos[player.oppName] && <img src={`/data/logos/${logos[player.oppName]}`} alt="" style={{ width: 10, height: 10, objectFit: "contain" }} />}
         <span style={{ fontWeight: 600 }}>{sn(player.oppName)}</span>
+        {matchResult && (
+          <>
+            <span style={{ color: "rgba(255,255,255,0.25)", margin: "0 1px" }}>·</span>
+            <span style={{ fontWeight: 800, fontFamily: "'DM Mono',monospace", color: matchResultColor, fontSize: 9 }}>{matchResult}</span>
+          </>
+        )}
       </div>
     </div>
   );
@@ -567,6 +608,7 @@ export default function RecoTab({ players, teams, fixtures, logos = {}, lang = "
   const [mode, setMode] = useState("so5");
   const [sel, setSel] = useState(null);
   const [stackIdx, setStackIdx] = useState(0);
+  const [gambling, setGambling] = useState(false);
 
   const hasFixtures = !!fixtures?.player_fixtures;
   const matchdays = fixtures?.matchdays || {};
@@ -578,22 +620,25 @@ export default function RecoTab({ players, teams, fixtures, logos = {}, lang = "
     if (!lgTeams.length) return [];
     const pf = fixtures?.player_fixtures || {};
     return lgPlayers.map(p => {
-      if (p.injured || p.suspended) return null; // Blessés/suspendus exclus du stack
-      if (p.sorare_starter_pct != null && p.sorare_starter_pct < 70) return null; // Titu% Sorare < 70% exclus
+      if (p.injured || p.suspended) return null;
+      const tituMin = gambling ? 40 : 70;
+      if (p.sorare_starter_pct != null && p.sorare_starter_pct < tituMin) return null;
       const fx = pf[p.slug] || pf[p.name];
       if (!fx) return null;
       const opp = lgTeams.find(t => t.name === fx.opp);
       if (!opp) return null;
       const pTeam = findTeam(lgTeams, p.club);
       const ds = dScoreMatch(p, opp, fx.isHome, pTeam);
-      return { ...p, ds, oppName: opp.name, oppTeam: opp, playerTeam: pTeam, isHome: fx.isHome };
+      // matchId canonique : pTeam.name (normalisé via lgTeams) évite les mismatches "Toulouse" vs "Toulouse FC"
+      const matchId = pTeam ? [pTeam.name, opp.name].sort().join("|") : null;
+      return { ...p, ds, oppName: opp.name, oppTeam: opp, playerTeam: pTeam, isHome: fx.isHome, matchId };
     }).filter(Boolean).sort((a, b) => {
       // GK en dernier — optimiser les joueurs de champ d'abord
       if (a.position === "GK" && b.position !== "GK") return 1;
       if (b.position === "GK" && a.position !== "GK") return -1;
       return b.ds - a.ds;
     });
-  }, [players, teams, league, fixtures]);
+  }, [players, teams, league, fixtures, gambling]);
 
   // Top 3 stacks for Stack mode
   const top3Stacks = useMemo(() => {
@@ -630,6 +675,56 @@ export default function RecoTab({ players, teams, fixtures, logos = {}, lang = "
 
   // Pick logic per mode
   const picks = useMemo(() => {
+    if (mode === "so5") {
+      // Cross-match : même match mais équipes différentes (via matchId canonique)
+      const wouldConflict = (p, existing) => {
+        if (!p.matchId) return false;
+        for (const x of existing) {
+          if (x.matchId === p.matchId && x.club !== p.club) return true;
+        }
+        return false;
+      };
+
+      // ALGORITHME : top 3 outfield absolus (par ds) → 4e = force poste manquant → meilleur GK
+      const outfield = allScored.filter(p => p.position !== "GK");
+      const gkPool = allScored.filter(p => p.position === "GK");
+      const tryPick4 = (maxClub) => {
+        const res = []; const cc = {};
+        for (const p of outfield) {
+          if (res.length >= 4) break;
+          if ((cc[p.club] || 0) >= maxClub) continue;
+          if (wouldConflict(p, res)) continue;
+          const remaining = 4 - res.length;
+          const covered = new Set(res.map(x => x.position));
+          const missing = ["DEF", "MIL", "ATT"].filter(pos => !covered.has(pos));
+          if (remaining <= missing.length && !missing.includes(p.position)) continue;
+          res.push(p); cc[p.club] = (cc[p.club] || 0) + 1;
+        }
+        return res;
+      };
+      let picks4 = tryPick4(2);
+      if (picks4.length < 4) picks4 = tryPick4(3);
+      if (picks4.length < 4) return [];
+      // Assigner rôles : DEF/MIL/ATT obligatoires → FLEX = restant
+      const usedSlugs = new Set();
+      const sorted4 = [...picks4].sort((a, b) => (b.ds || 0) - (a.ds || 0));
+      const result = [];
+      for (const pos of ["DEF", "MIL", "ATT"]) {
+        const p = sorted4.find(x => x.position === pos && !usedSlugs.has(x.slug));
+        if (p) { result.push({ ...p, isFlex: false }); usedSlugs.add(p.slug); }
+      }
+      const flexP = picks4.find(p => !usedSlugs.has(p.slug));
+      if (flexP) result.push({ ...flexP, isFlex: true });
+      // GK : meilleur dispo (club max 2 parmi les picks outfield, pas de cross-match)
+      const picks4ClubCount = picks4.reduce((acc, p) => { acc[p.club] = (acc[p.club] || 0) + 1; return acc; }, {});
+      const gk = gkPool.find(p => (picks4ClubCount[p.club] || 0) < 2 && !wouldConflict(p, picks4));
+      if (gk) result.push({ ...gk, isFlex: false });
+      // Mark captain (highest ds, non-GK preferred)
+      const capIdx = result.reduce((best, p, i) =>
+        (p.position !== "GK" || result[best].position === "GK") && (p.ds || 0) > (result[best].ds || 0) ? i : best, 0);
+      result[capIdx] = { ...result[capIdx], isCaptain: true };
+      return result;
+    }
     if (mode === "so7") {
       const result = [];
       const quota = { GK: 1, DEF: 2, MIL: 2, ATT: 2 };
@@ -644,36 +739,18 @@ export default function RecoTab({ players, teams, fixtures, logos = {}, lang = "
         }
         if (result.length >= 7) break;
       }
-      return result;
-    }
-    if (mode === "so5") {
-      const result = [];
-      const quota = { GK: 1, DEF: 1, MIL: 1, ATT: 1 };
-      const counts = { GK: 0, DEF: 0, MIL: 0, ATT: 0 };
-      const clubCounts = {};
-      // First pass: fill mandatory slots
-      for (const p of allScored) {
-        const cc = clubCounts[p.club] || 0;
-        if (counts[p.position] < quota[p.position] && cc < 2) {
-          result.push({ ...p, isFlex: false });
-          counts[p.position]++;
-          clubCounts[p.club] = cc + 1;
-        }
-        if (result.length >= 4) break;
-      }
-      // Second pass: flex = best remaining D-Score
-      for (const p of allScored) {
-        if (result.find(r => r.name === p.name)) continue;
-        const cc = clubCounts[p.club] || 0;
-        if (cc < 2) {
-          result.push({ ...p, isFlex: true });
-          break;
-        }
-      }
+      // Mark captain
+      const capIdx7 = result.reduce((best, p, i) =>
+        (p.position !== "GK" || result[best].position === "GK") && (p.ds || 0) > (result[best].ds || 0) ? i : best, 0);
+      if (result[capIdx7]) result[capIdx7] = { ...result[capIdx7], isCaptain: true };
       return result;
     }
     if (mode === "stack") {
-      return top3Stacks[stackIdx]?.players || [];
+      const res = top3Stacks[stackIdx]?.players || [];
+      const capIdx = res.reduce((best, p, i) =>
+        (p.position !== "GK" || res[best].position === "GK") && (p.ds || 0) > (res[best].ds || 0) ? i : best, 0);
+      if (res[capIdx]) { const r = [...res]; r[capIdx] = { ...r[capIdx], isCaptain: true }; return r; }
+      return res;
     }
     return [];
   }, [allScored, mode, top3Stacks, stackIdx]);
@@ -698,6 +775,29 @@ export default function RecoTab({ players, teams, fixtures, logos = {}, lang = "
 
   const modeInfo = MODES.find(m => m.id === mode);
   const stackClub = mode === "stack" && picks.length > 0 ? picks[0].club : null;
+
+  const CURRENT_GW_START = "2026-04-03";
+
+  // Score total équipe : tous ×1.1 (+10%) + capitaine ×1.5 (soit ×1.6 total pour cap)
+  const teamTotalDs = picks.length > 0 ? (() => {
+    const scores = picks.map(p => p.ds || 0);
+    const sum = scores.reduce((a, b) => a + b, 0);
+    const maxDs = Math.max(...scores);
+    return Math.round(sum * 1.1 + maxDs * 0.5);
+  })() : null;
+
+  // Score réel : remplace ds par last_so5_score pour joueurs ayant joué cette GW
+  const hasRealData = picks.some(p => p.last_so5_date && p.last_so5_date >= CURRENT_GW_START && p.last_so5_score != null);
+  const teamRealDs = hasRealData && picks.length > 0 ? (() => {
+    const getRealScore = p => {
+      const played = p.last_so5_date && p.last_so5_date >= CURRENT_GW_START && p.last_so5_score != null;
+      return played ? p.last_so5_score : (p.ds || 0);
+    };
+    const scores = picks.map(getRealScore);
+    const sum = scores.reduce((a, b) => a + b, 0);
+    const maxScore = Math.max(...scores);
+    return Math.round(sum * 1.1 + maxScore * 0.5);
+  })() : null;
 
   return (
     <div style={{ padding: "0 10px 40px", maxWidth: 480, margin: "0 auto" }}>
@@ -737,8 +837,39 @@ export default function RecoTab({ players, teams, fixtures, logos = {}, lang = "
 
       {/* Title */}
       <div style={{ textAlign: "center", marginBottom: "8px" }}>
-        <div style={{ fontSize: "26px", fontWeight: 900, letterSpacing: "-0.03em", background: "linear-gradient(135deg,#fff 0%,#A5B4FC 40%,#C084FC 80%,#E879F9 100%)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent" }}>
-          {mode === "stack" ? "STACK OF THE WEEK" : `BEST PICK ${mode.toUpperCase()}`}
+        <div style={{ display: "inline-flex", alignItems: "center", gap: 10, justifyContent: "center" }}>
+          <div style={{ fontSize: "26px", fontWeight: 900, letterSpacing: "-0.03em", background: "linear-gradient(135deg,#fff 0%,#A5B4FC 40%,#C084FC 80%,#E879F9 100%)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent" }}>
+            {mode === "stack" ? "STACK OF THE WEEK" : `BEST PICK ${mode.toUpperCase()}`}
+          </div>
+          {teamTotalDs != null && (
+            hasRealData && teamRealDs != null ? (
+              <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
+                <span style={{
+                  fontFamily: "'DM Mono',monospace", fontSize: 13, fontWeight: 700,
+                  color: "rgba(255,255,255,0.3)", textDecoration: "line-through",
+                }}>⚡ {teamTotalDs}</span>
+                <div style={{
+                  background: "linear-gradient(135deg, #15803D, #16A34A)",
+                  borderRadius: 10, padding: "3px 10px",
+                  fontSize: 13, fontWeight: 900, color: "#fff",
+                  fontFamily: "'DM Mono',monospace",
+                  boxShadow: "0 0 12px rgba(74,222,128,0.4)",
+                  letterSpacing: "0.03em",
+                  border: "1px solid rgba(74,222,128,0.4)",
+                }}>✓ {teamRealDs}</div>
+              </div>
+            ) : (
+              <div style={{
+                background: "linear-gradient(135deg, #7C3AED, #A855F7)",
+                borderRadius: 10, padding: "3px 10px",
+                fontSize: 13, fontWeight: 900, color: "#fff",
+                fontFamily: "'DM Mono',monospace",
+                boxShadow: "0 0 12px rgba(139,92,246,0.5)",
+                letterSpacing: "0.03em",
+                border: "1px solid rgba(196,181,253,0.3)",
+              }}>⚡ {teamTotalDs}</div>
+            )
+          )}
         </div>
         <div style={{ fontSize: "13px", fontWeight: 600, color: "rgba(255,255,255,0.45)", marginTop: "2px" }}>
           <img src={`https://flagcdn.com/w40/${lg.flagCode}.png`} alt={lg.flagCode} width={14} height={10} style={{ verticalAlign: "middle", borderRadius: 2, objectFit: "cover", marginRight: 4 }} />{lg.name}{matchdays[league] ? ` · ${lang==="en"?"Matchday":"Journée"} ${matchdays[league]}` : ""}
@@ -748,8 +879,32 @@ export default function RecoTab({ players, teams, fixtures, logos = {}, lang = "
         <div style={{ fontSize: "9px", color: "rgba(255,255,255,0.45)", marginTop: "5px" }}>
           {modeInfo.desc}
         </div>
-        <div style={{ fontSize: "9px", color: "#A5B4FC", marginTop: "3px" }}>
-          👇 {lang==="en"?"Click a card to see detailed player analysis":"Clique sur une carte pour voir l'analyse détaillée du joueur"}
+        {/* Bonus explanation */}
+        <div style={{ display: "inline-flex", alignItems: "center", gap: 8, marginTop: 5, padding: "3px 10px", background: "rgba(139,92,246,0.08)", borderRadius: 20, border: "1px solid rgba(139,92,246,0.2)" }}>
+          <span style={{ fontSize: 9, color: "rgba(255,255,255,0.5)" }}>⚡ {lang==="en"?"All players":"Tous les joueurs"}</span>
+          <span style={{ fontSize: 9, fontWeight: 800, color: "#A78BFA", fontFamily: "'DM Mono',monospace" }}>+10%</span>
+          <span style={{ width: 1, height: 10, background: "rgba(255,255,255,0.12)", display: "inline-block" }} />
+          <span style={{ fontSize: 9, color: "rgba(255,255,255,0.5)" }}>C {lang==="en"?"Captain":"Capitaine"}</span>
+          <span style={{ fontSize: 9, fontWeight: 800, color: "#C084FC", fontFamily: "'DM Mono',monospace" }}>+50%+10%</span>
+        </div>
+        <div style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: 8, marginTop: "3px" }}>
+          <div style={{ fontSize: "9px", color: "#A5B4FC" }}>
+            👇 {lang==="en"?"Click a card to see detailed player analysis":"Clique sur une carte pour voir l'analyse détaillée du joueur"}
+          </div>
+          <button onClick={() => { setGambling(g => !g); setSel(null); }} style={{
+            display: "flex", alignItems: "center", gap: 4, padding: "3px 8px", borderRadius: 20,
+            border: gambling ? "1px solid #F59E0B" : "1px solid rgba(255,255,255,0.1)",
+            background: gambling ? "rgba(245,158,11,0.15)" : "rgba(255,255,255,0.03)",
+            cursor: "pointer", transition: "all 0.2s", flexShrink: 0,
+          }}>
+            <span style={{ fontSize: 11 }}>🎲</span>
+            <span style={{ fontSize: 9, fontWeight: 700, color: gambling ? "#F59E0B" : "rgba(255,255,255,0.3)", fontFamily: "Outfit", whiteSpace: "nowrap" }}>
+              {gambling ? "≥40%" : "Gamble"}
+            </span>
+            <div style={{ width: 22, height: 12, borderRadius: 6, background: gambling ? "#F59E0B" : "rgba(255,255,255,0.1)", position: "relative", transition: "all 0.2s" }}>
+              <div style={{ position: "absolute", top: 2, left: gambling ? 12 : 2, width: 8, height: 8, borderRadius: "50%", background: "#fff", transition: "left 0.2s" }} />
+            </div>
+          </button>
         </div>
       </div>
 
@@ -782,46 +937,46 @@ export default function RecoTab({ players, teams, fixtures, logos = {}, lang = "
           /* SO7: classic 1-2-2-2 formation */
           <div style={{ position: "relative", zIndex: 2, display: "flex", flexDirection: "column", gap: "18px", alignItems: "center" }}>
             <div style={{ display: "flex", justifyContent: "center", gap: "80px" }}>
-              {att.map((p, i) => <PlayerCard key={i} player={p} isSelected={sel === `ATT${i}`} onClick={() => setSel(sel === `ATT${i}` ? null : `ATT${i}`)} logos={logos} />)}
+              {att.map((p, i) => <PlayerCard key={i} player={p} isSelected={sel === `ATT${i}`} onClick={() => setSel(sel === `ATT${i}` ? null : `ATT${i}`)} logos={logos} isCaptain={p.isCaptain} gwStart={CURRENT_GW_START} />)}
             </div>
             <div style={{ width: "100%", display: "flex", justifyContent: "space-between", padding: "0 25px" }}>
-              {mil.map((p, i) => <PlayerCard key={i} player={p} isSelected={sel === `MIL${i}`} onClick={() => setSel(sel === `MIL${i}` ? null : `MIL${i}`)} logos={logos} />)}
+              {mil.map((p, i) => <PlayerCard key={i} player={p} isSelected={sel === `MIL${i}`} onClick={() => setSel(sel === `MIL${i}` ? null : `MIL${i}`)} logos={logos} isCaptain={p.isCaptain} gwStart={CURRENT_GW_START} />)}
             </div>
             <div style={{ width: "100%", display: "flex", justifyContent: "space-between", padding: "0 10px" }}>
-              {def.map((p, i) => <PlayerCard key={i} player={p} isSelected={sel === `DEF${i}`} onClick={() => setSel(sel === `DEF${i}` ? null : `DEF${i}`)} logos={logos} />)}
+              {def.map((p, i) => <PlayerCard key={i} player={p} isSelected={sel === `DEF${i}`} onClick={() => setSel(sel === `DEF${i}` ? null : `DEF${i}`)} logos={logos} isCaptain={p.isCaptain} gwStart={CURRENT_GW_START} />)}
             </div>
             <div style={{ display: "flex", justifyContent: "center", marginTop: "-150px" }}>
-              {gk.map((p, i) => <PlayerCard key={i} player={p} isSelected={sel === `GK${i}`} onClick={() => setSel(sel === `GK${i}` ? null : `GK${i}`)} logos={logos} />)}
+              {gk.map((p, i) => <PlayerCard key={i} player={p} isSelected={sel === `GK${i}`} onClick={() => setSel(sel === `GK${i}` ? null : `GK${i}`)} logos={logos} isCaptain={p.isCaptain} gwStart={CURRENT_GW_START} />)}
             </div>
           </div>
         ) : mode === "so5" ? (
           /* SO5: Sorare layout — top: ATT + EX, bottom: DEF + GK + MIL */
           <div style={{ position: "relative", zIndex: 2, display: "flex", flexDirection: "column", gap: "24px", alignItems: "center", padding: "10px 0" }}>
             <div style={{ display: "flex", justifyContent: "center", gap: "40px" }}>
-              {att.map((p, i) => <PlayerCard key={i} player={p} isSelected={sel === `ATT${i}`} onClick={() => setSel(sel === `ATT${i}` ? null : `ATT${i}`)} logos={logos} />)}
-              {flex.map((p, i) => <PlayerCard key={i} player={p} isSelected={sel === `FLEX${i}`} onClick={() => setSel(sel === `FLEX${i}` ? null : `FLEX${i}`)} logos={logos} badge="EX" />)}
+              {att.map((p, i) => <PlayerCard key={i} player={p} isSelected={sel === `ATT${i}`} onClick={() => setSel(sel === `ATT${i}` ? null : `ATT${i}`)} logos={logos} isCaptain={p.isCaptain} gwStart={CURRENT_GW_START} />)}
+              {flex.map((p, i) => <PlayerCard key={i} player={p} isSelected={sel === `FLEX${i}`} onClick={() => setSel(sel === `FLEX${i}` ? null : `FLEX${i}`)} logos={logos} badge="EX" isCaptain={p.isCaptain} gwStart={CURRENT_GW_START} />)}
             </div>
             <div style={{ display: "flex", justifyContent: "center", gap: "20px", alignItems: "flex-start" }}>
-              {def.map((p, i) => <PlayerCard key={i} player={p} isSelected={sel === `DEF${i}`} onClick={() => setSel(sel === `DEF${i}` ? null : `DEF${i}`)} logos={logos} />)}
+              {def.map((p, i) => <PlayerCard key={i} player={p} isSelected={sel === `DEF${i}`} onClick={() => setSel(sel === `DEF${i}` ? null : `DEF${i}`)} logos={logos} isCaptain={p.isCaptain} gwStart={CURRENT_GW_START} />)}
               <div style={{ marginTop: "50px" }}>
-                {gk.map((p, i) => <PlayerCard key={i} player={p} isSelected={sel === `GK${i}`} onClick={() => setSel(sel === `GK${i}` ? null : `GK${i}`)} logos={logos} />)}
+                {gk.map((p, i) => <PlayerCard key={i} player={p} isSelected={sel === `GK${i}`} onClick={() => setSel(sel === `GK${i}` ? null : `GK${i}`)} logos={logos} isCaptain={p.isCaptain} gwStart={CURRENT_GW_START} />)}
               </div>
-              {mil.slice(0, 1).map((p, i) => <PlayerCard key={i} player={p} isSelected={sel === `MIL${i}`} onClick={() => setSel(sel === `MIL${i}` ? null : `MIL${i}`)} logos={logos} />)}
+              {mil.slice(0, 1).map((p, i) => <PlayerCard key={i} player={p} isSelected={sel === `MIL${i}`} onClick={() => setSel(sel === `MIL${i}` ? null : `MIL${i}`)} logos={logos} isCaptain={p.isCaptain} gwStart={CURRENT_GW_START} />)}
             </div>
           </div>
         ) : (
           /* Stack: same layout as SO5 — ATT + EX top, DEF + GK↓ + MIL bottom */
           <div style={{ position: "relative", zIndex: 2, display: "flex", flexDirection: "column", gap: "24px", alignItems: "center", padding: "10px 0" }}>
             <div style={{ display: "flex", justifyContent: "center", gap: "40px" }}>
-              {att.map((p, i) => <PlayerCard key={i} player={p} isSelected={sel === `ATT${i}`} onClick={() => setSel(sel === `ATT${i}` ? null : `ATT${i}`)} logos={logos} />)}
-              {flex.map((p, i) => <PlayerCard key={i} player={p} isSelected={sel === `FLEX${i}`} onClick={() => setSel(sel === `FLEX${i}` ? null : `FLEX${i}`)} logos={logos} badge="EX" />)}
+              {att.map((p, i) => <PlayerCard key={i} player={p} isSelected={sel === `ATT${i}`} onClick={() => setSel(sel === `ATT${i}` ? null : `ATT${i}`)} logos={logos} isCaptain={p.isCaptain} gwStart={CURRENT_GW_START} />)}
+              {flex.map((p, i) => <PlayerCard key={i} player={p} isSelected={sel === `FLEX${i}`} onClick={() => setSel(sel === `FLEX${i}` ? null : `FLEX${i}`)} logos={logos} badge="EX" isCaptain={p.isCaptain} gwStart={CURRENT_GW_START} />)}
             </div>
             <div style={{ display: "flex", justifyContent: "center", gap: "20px", alignItems: "flex-start" }}>
-              {def.map((p, i) => <PlayerCard key={i} player={p} isSelected={sel === `DEF${i}`} onClick={() => setSel(sel === `DEF${i}` ? null : `DEF${i}`)} logos={logos} />)}
+              {def.map((p, i) => <PlayerCard key={i} player={p} isSelected={sel === `DEF${i}`} onClick={() => setSel(sel === `DEF${i}` ? null : `DEF${i}`)} logos={logos} isCaptain={p.isCaptain} gwStart={CURRENT_GW_START} />)}
               <div style={{ marginTop: "50px" }}>
-                {gk.map((p, i) => <PlayerCard key={i} player={p} isSelected={sel === `GK${i}`} onClick={() => setSel(sel === `GK${i}` ? null : `GK${i}`)} logos={logos} />)}
+                {gk.map((p, i) => <PlayerCard key={i} player={p} isSelected={sel === `GK${i}`} onClick={() => setSel(sel === `GK${i}` ? null : `GK${i}`)} logos={logos} isCaptain={p.isCaptain} gwStart={CURRENT_GW_START} />)}
               </div>
-              {mil.slice(0, 1).map((p, i) => <PlayerCard key={i} player={p} isSelected={sel === `MIL${i}`} onClick={() => setSel(sel === `MIL${i}` ? null : `MIL${i}`)} logos={logos} />)}
+              {mil.slice(0, 1).map((p, i) => <PlayerCard key={i} player={p} isSelected={sel === `MIL${i}`} onClick={() => setSel(sel === `MIL${i}` ? null : `MIL${i}`)} logos={logos} isCaptain={p.isCaptain} gwStart={CURRENT_GW_START} />)}
             </div>
           </div>
         )}

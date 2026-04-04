@@ -3,8 +3,8 @@
   "configurations": [
     {
       "name": "scout-dev",
-      "runtimeExecutable": "C:\\Program Files\\nodejs\\npx.cmd",
-      "runtimeArgs": ["vite"],
+      "runtimeExecutable": "C:\\Program Files\\nodejs\\node.exe",
+      "runtimeArgs": ["C:\\Users\\Dekstop\\Desktop\\Deglingo Scout\\Deglingo Scout\\deglingo-scout-app\\node_modules\\vite\\bin\\vite.js"],
       "port": 5173,
       "cwd": "deglingo-scout-app"
     }

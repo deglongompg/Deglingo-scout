@@ -377,14 +377,28 @@ export function dScoreMatch(player, opp, isHome, playerTeam = null) {
   const rawBase = socle + contexte + momentum + domBonus + pivotMalus + dominationBonus + goatSeasonBonus + samplePenalty + inactivityPenalty + recencyPenalty;
   const extraGoatBonus = isExtraGoat(p) && rawBase <= 85 ? 8 : 0;
   const raw = rawBase + extraGoatBonus;
+  // ─── DECISIVE BONUS — ATT / MIL / DEF uniquement ───────────────────────────
+  // Un joueur avec fort ratio G+A peut passer de 35 à 60+ en cas d'action décisive.
+  // Le bonus est pondéré par :
+  //   1. cf : contexte adversaire (défense poreuse = plus d'espaces = plus de chances)
+  //   2. dampening : diminishing returns — moins de bonus si le raw est déjà élevé
+  //      (raw=55 → plein bonus, raw=75 → demi bonus, raw=95 → 0)
+  const oppXgBonus = isHome ? o.xg_ext : o.xg_dom;
+  const cfBonus = Math.max(0, Math.min(1, ((oppXgBonus || 1.3) - 0.8) / 1.2));
+  const dampening = Math.max(0, 1 - (raw - 45) / 40);
+  const decisiveBonus = p.position !== "GK"
+    ? Math.min(25, (p.ga_per_match || 0) * 45 * cfBonus * dampening)
+    : 0;
+  const rawWithBonus = raw + decisiveBonus;
+
   // Floor clamp désactivé si sample < 5 (floor gonflé artificiellement sur 1-2 matchs)
   const qualityFloor = mp >= 5 ? _floor / 100 * 55 : 0;
   // Extra GOAT floor: protection retour de blessure uniquement (mp 1, 2 ou 3)
-  // Pour les EG qui jouent normalement (mp >= 4), pas de floor — seulement le +8 bonus
   const isInjuryReturn = mp >= 1 && mp < 4;
   const extraGoatFloor = isExtraGoat(p) && isInjuryReturn
     ? 67 + Math.max(0, momentum) + Math.max(0, domBonus) + dominationBonus + Math.round(contexte * 0.35)
     : 0;
   const minScore = Math.min(100, Math.max(qualityFloor, extraGoatFloor));
-  return Math.round(Math.max(minScore, Math.min(100, raw)));
+
+  return Math.round(Math.max(minScore, Math.min(100, rawWithBonus)));
 }

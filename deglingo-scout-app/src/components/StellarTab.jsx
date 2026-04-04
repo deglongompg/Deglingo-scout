@@ -153,28 +153,79 @@ function buildStellarTeams(dayPlayers, dateStr) {
   const sorted = [...dayPlayers].sort((a, b) => b.ds - a.ds);
 
   function pickTeam(pool) {
-    const team = [];
-    const used = new Set();
-    const conflicted = new Set(); // clubs adversaires des joueurs déjà pickés
+    // ALGORITHME (simple & optimal) :
+    // 1. Meilleur GK dispo
+    // 2. Trier tous les outfield par ds desc
+    // 3. Sélectionner 4 outfield greedily :
+    //    - Club max 2 (saut si déjà 2)
+    //    - Couverture positions : si les slots restants == postes manquants, forcer le bon poste
+    // 4. Assign roles : DEF/MIL/ATT obligatoires → FLEX = restant
+    // 5. Cross-match check (pas adversaires dans même match)
 
-    const canPick = (p) => !used.has(p.slug) && !conflicted.has(p.club);
-    const addPick = (p, role) => {
-      team.push({ ...p, role });
-      used.add(p.slug);
-      if (p.oppName) conflicted.add(p.oppName); // bloquer les joueurs du club adverse
+    // Cross-match : même match mais équipes différentes (via matchId canonique)
+    const wouldConflict = (p, existing) => {
+      if (!p.matchId) return false;
+      for (const x of existing) {
+        if (x.matchId === p.matchId && x.club !== p.club) return true;
+      }
+      return false;
     };
 
-    for (const pos of ["GK", "DEF", "MIL", "ATT"]) {
-      const pick = pool.find(p => p.position === pos && canPick(p));
-      if (pick) addPick(pick, pos);
+    // Best GK (pas cross-match avec pool outfield top)
+    const gkSorted = pool.filter(p => p.position === "GK");
+
+    // All outfield sorted by ds desc
+    const outfieldSorted = pool
+      .filter(p => p.position !== "GK")
+      .sort((a, b) => (b.ds || 0) - (a.ds || 0));
+
+    // Pick 4 outfield greedily — essaie d'abord maxClub=2, puis maxClub=3 si pool trop petit
+    const tryPickOutfield = (maxClub) => {
+      const result = [];
+      const cc = {};
+      for (const p of outfieldSorted) {
+        if (result.length >= 4) break;
+        if ((cc[p.club] || 0) >= maxClub) continue;
+        if (wouldConflict(p, result)) continue;
+        const remaining = 4 - result.length;
+        const covered = new Set(result.map(x => x.position));
+        const missing = ["DEF", "MIL", "ATT"].filter(pos => !covered.has(pos));
+        if (remaining <= missing.length && !missing.includes(p.position)) continue;
+        result.push(p);
+        cc[p.club] = (cc[p.club] || 0) + 1;
+      }
+      return result;
+    };
+
+    let picks = tryPickOutfield(2);
+    if (picks.length < 4) picks = tryPickOutfield(3); // fallback pool réduit
+    if (picks.length < 4) return null;
+
+    // Best GK : pas de cross-match avec les outfield picks
+    const gk = gkSorted.find(g => !wouldConflict(g, picks));
+    if (!gk) return null;
+
+    // Assigner les rôles : mandatory pos first (highest ds), FLEX = restant
+    const roles = [];
+    const usedFinal = new Set();
+    const addRole = (p, role) => { roles.push({ ...p, role }); usedFinal.add(p.slug); };
+
+    addRole(gk, "GK");
+    const picksSorted = [...picks].sort((a, b) => (b.ds || 0) - (a.ds || 0));
+    for (const pos of ["DEF", "MIL", "ATT"]) {
+      const p = picksSorted.find(x => x.position === pos && !usedFinal.has(x.slug));
+      if (p) addRole(p, pos);
     }
-    if (team.length < 4) return null;
-    const flex = pool.find(p => p.position !== "GK" && canPick(p));
-    if (!flex) return null;
-    addPick(flex, "FLEX");
-    const capIdx = team.reduce((best, p, i) => p.ds > team[best].ds ? i : best, 0);
-    team[capIdx].isCaptain = true;
-    return { players: team, usedSlugs: used };
+    const flex = picks.find(p => !usedFinal.has(p.slug));
+    if (flex) addRole(flex, "FLEX");
+
+    if (roles.length < 5) return null;
+
+    const capIdx = roles.reduce((best, p, i) => (p.ds || 0) > (roles[best].ds || 0) ? i : best, 0);
+    roles[capIdx].isCaptain = true;
+    const capDs = roles[capIdx].ds || 0;
+    const totalDs = Math.round(capDs * 0.5 + roles.reduce((s, p) => s + (p.ds || 0), 0));
+    return { players: roles, usedSlugs: new Set(roles.map(p => p.slug)), totalDs };
   }
 
   // Assigner chaque joueur à un créneau Paris
@@ -212,14 +263,14 @@ function buildStellarTeams(dayPlayers, dateStr) {
 
   // ULTIME — top 5 du jour
   const ultime = pickSafe(sorted);
-  if (ultime) teams.push({ label: "ULTIME", icon: "★", players: ultime.players, top10: buildTop10(sorted) });
+  if (ultime) teams.push({ label: "ULTIME", icon: "★", players: ultime.players, top10: buildTop10(sorted), totalDs: ultime.totalDs });
 
   // 3 créneaux fixes : 13H, 17H, 20H
   for (const slot of ["13H", "17H", "20H"]) {
     const pool = sorted.filter(p => getSlot(p) === slot);
     if (pool.length < 5) continue;
     const t = pickSafe(pool);
-    if (t) teams.push({ label: slot, icon: "⏰", players: t.players, top10: buildTop10(pool) });
+    if (t) teams.push({ label: slot, icon: "⏰", players: t.players, top10: buildTop10(pool), totalDs: t.totalDs });
   }
 
   return teams;
@@ -287,11 +338,17 @@ function Top10Column({ team, logos, dateStr, lang }) {
 }
 
 /* ─── Player Mini Card (compact for Stellar) ─── */
-function StellarCard({ player, logos, size = "md" }) {
+function StellarCard({ player, logos, size = "md", isValidated = false, gwStart = "" }) {
   const pc = PC[player.position];
   const sm = size === "sm";
   const W = sm ? 78 : 96;
   const H = sm ? 108 : 130;
+
+  const hasPlayed = player.last_so5_date && gwStart && player.last_so5_date >= gwStart && player.last_so5_score != null;
+  const displayScore = isValidated && hasPlayed ? Math.round(player.last_so5_score) : player.ds;
+  const scoreColor = isValidated && hasPlayed
+    ? (player.last_so5_score >= 75 ? "#4ADE80" : player.last_so5_score >= 60 ? "#A3E635" : player.last_so5_score >= 50 ? "#FBBF24" : player.last_so5_score >= 40 ? "#FB923C" : "#EF4444")
+    : null; // null = garde le dsBg habituel
 
   return (
     <div style={{ textAlign: "center", width: W + 4 }}>
@@ -322,15 +379,21 @@ function StellarCard({ player, logos, size = "md" }) {
         {/* Position */}
         <div style={{ background: `linear-gradient(135deg,${pc},${pc}CC)`, borderRadius: 3, padding: "1px 5px", marginTop: 2, fontSize: 7, fontWeight: 800, color: "#fff", letterSpacing: "0.06em", zIndex: 1 }}>{player.role}</div>
 
-        {/* D-Score */}
+        {/* D-Score / Score réel */}
         <div style={{ marginTop: 3, width: sm ? 28 : 34, height: sm ? 28 : 34, borderRadius: "50%",
-          background: isSilver(player.ds) ? "linear-gradient(135deg,#C0C0C0,#A8E8D0,#B0C4E8,#D4B0E8)" : dsBg(player.ds),
+          background: isValidated && hasPlayed
+            ? scoreColor                                                          /* Cercle plein — score réel */
+            : "transparent",                                                     /* Cercle vide pointillé — D-Score */
           display: "flex", alignItems: "center", justifyContent: "center",
           fontFamily: "'DM Mono',monospace", fontSize: sm ? 12 : 15, fontWeight: 700,
-          color: isSilver(player.ds) ? "#1a1a2e" : "#fff",
-          border: isSilver(player.ds) ? "2px solid rgba(255,255,255,0.6)" : "2px solid rgba(255,255,255,0.2)",
-          zIndex: 1, boxShadow: `0 2px 8px rgba(0,0,0,0.5)`,
-        }}>{player.ds}</div>
+          color: isValidated && hasPlayed ? "#fff" : isSilver(player.ds) ? "rgba(255,255,255,0.9)" : dsColor(player.ds),
+          border: isValidated && hasPlayed
+            ? "2px solid rgba(255,255,255,0.3)"
+            : isSilver(player.ds) ? "1px dashed rgba(255,255,255,0.4)" : `1px dashed ${dsColor(player.ds)}80`,
+          zIndex: 1,
+          boxShadow: isValidated && hasPlayed ? `0 0 10px ${scoreColor}99` : `0 0 6px ${dsColor(player.ds)}40`,
+          transition: "all 0.3s",
+        }}>{displayScore}</div>
 
         {/* Name */}
         <div style={{ fontSize: sm ? 9 : 11, fontWeight: 700, color: "#fff", marginTop: 2, zIndex: 1, lineHeight: 1.1, maxWidth: "95%", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{player.name.split(" ").pop()}</div>
@@ -340,27 +403,39 @@ function StellarCard({ player, logos, size = "md" }) {
 
         {/* Club logo */}
         {logos[player.club] && <img src={`/data/logos/${logos[player.club]}`} alt="" style={{ width: sm ? 18 : 22, height: sm ? 18 : 22, objectFit: "contain", marginTop: 2, zIndex: 1 }} />}
+
       </div>
 
       {/* Opponent + heure */}
+      {(() => {
+        const hg = player.last_match_home_goals;
+        const ag = player.last_match_away_goals;
+        const matchResult = hasPlayed && hg != null && ag != null
+          ? (player.isHome ? `${hg}-${ag}` : `${ag}-${hg}`)
+          : null;
+        const matchResultColor = matchResult
+          ? (player.isHome ? (hg > ag ? "#4ADE80" : hg === ag ? "#FBBF24" : "#EF4444")
+                           : (ag > hg ? "#4ADE80" : ag === hg ? "#FBBF24" : "#EF4444"))
+          : null;
+        return (
       <div style={{ marginTop: 4, display: "flex", flexDirection: "column", alignItems: "center", gap: 2 }}>
         <div style={{ fontSize: 7, color: "rgba(255,255,255,0.45)", display: "inline-flex", alignItems: "center", gap: 2, background: "rgba(0,0,0,0.4)", padding: "2px 5px", borderRadius: 3 }}>
           <span style={{ fontSize: 9 }}>{player.isHome ? "🏠" : "✈️"}</span>
           <span style={{ fontWeight: 600 }}>{sn(player.oppName)}</span>
-          {player.sorare_starter_pct != null && (
-            <span style={{
-              fontSize: 7, fontWeight: 800, fontFamily: "'DM Mono',monospace",
-              color: player.sorare_starter_pct >= 80 ? "#4ADE80" : "#FBBF24",
-              marginLeft: 2,
-            }}>{player.sorare_starter_pct}%</span>
+          {matchResult ? (
+            <span style={{ fontSize: 7, fontWeight: 800, fontFamily: "'DM Mono',monospace", color: matchResultColor, marginLeft: 2 }}>{matchResult}</span>
+          ) : player.sorare_starter_pct != null && (
+            <span style={{ fontSize: 7, fontWeight: 800, fontFamily: "'DM Mono',monospace", color: player.sorare_starter_pct >= 80 ? "#4ADE80" : "#FBBF24", marginLeft: 2 }}>{player.sorare_starter_pct}%</span>
           )}
         </div>
-        {player.kickoff && player.matchDate && (
+        {player.kickoff && player.matchDate && !hasPlayed && (
           <div style={{ fontSize: 8, fontWeight: 800, color: "#A78BFA", fontFamily: "'DM Mono',monospace" }}>
             {utcToParisTime(player.kickoff, player.matchDate)}
           </div>
         )}
       </div>
+        );
+      })()}
     </div>
   );
 }
@@ -368,13 +443,14 @@ function StellarCard({ player, logos, size = "md" }) {
 /* ═══════════════════════════════════════════════════════════════════
    STELLAR TAB — Main Component
    ═══════════════════════════════════════════════════════════════════ */
-export default function StellarTab({ players, teams, fixtures, logos = {}, onFight, lang = "fr" }) {
+export default function StellarTab({ players, teams, fixtures, logos = {}, matchEvents = {}, onFight, lang = "fr" }) {
   const S = T[lang] ?? T.fr;
   // ⚠️ Toujours en heure de Paris — peu importe le timezone du navigateur
   const todayStr = getParisTodayStr(); // "2026-04-03"
   const today = new Date(todayStr + "T12:00:00"); // objet Date safe pour getMonday
   const [weekOffset, setWeekOffset] = useState(0);
   const [selectedDay, setSelectedDay] = useState(null);
+  const CURRENT_GW_START = "2026-04-03";
 
   const monday = useMemo(() => {
     const m = getMonday(today);
@@ -451,11 +527,14 @@ export default function StellarTab({ players, teams, fixtures, logos = {}, onFig
         const defXga = pTeam ? (fx.isHome ? (pTeam.xga_dom || 1.3) : (pTeam.xga_ext || 1.5)) : 1.3;
         csPercent = csProb(defXga, oppXg, p.league);
       }
+      // matchId canonique : on utilise pTeam.name (normalisé) pour éviter les mismatches club/team
+      const matchId = pTeam ? [pTeam.name, opp.name].sort().join("|") : null;
       dayPlayers.push({
         ...p, ds, oppName: opp.name, oppTeam: opp, playerTeam: pTeam, isHome: fx.isHome,
         kickoff: fx.kickoff || fx.time || "",
         matchDate: dateStr,
-        csPercent,
+        csPercent, matchId,
+        proj: p.sorare_proj ?? null,
       });
     }
 
@@ -694,6 +773,17 @@ export default function StellarTab({ players, teams, fixtures, logos = {}, onFig
 
             {/* Match list — groupé par créneau horaire, trié chrono heure France */}
             {(() => {
+              // Build club→score map from players who already played this GW
+              // Normalise les noms (ex: "Paris Saint-Germain" → "Paris Saint Germain")
+              const normClub = (n) => (n || "").replace(/-/g, " ").trim();
+              const clubScores = {};
+              for (const p of dayData.players || []) {
+                if (p.last_so5_date && p.last_so5_date >= CURRENT_GW_START && p.last_match_home_goals != null) {
+                  const key = normClub(p.club);
+                  if (!clubScores[key]) clubScores[key] = { home: p.last_match_home_goals, away: p.last_match_away_goals };
+                }
+              }
+
               const sorted = [...dayData.fixtures].sort((a, b) => (a.kickoff || "99:99").localeCompare(b.kickoff || "99:99"));
               // Grouper par créneau horaire
               const groups = [];
@@ -710,15 +800,51 @@ export default function StellarTab({ players, teams, fixtures, logos = {}, onFig
                       <div className="st-match-group-time-label" style={{ fontSize: 10, fontWeight: 900, color: "#fff", fontFamily: "'DM Mono',monospace", paddingLeft: 2 }}>{g.time}</div>
                       {g.fixtures.map((f, i) => {
                         const lgColor = f.league === "L1" ? "#4FC3F7" : f.league === "PL" ? "#B388FF" : "#FF8A80";
+                        const sc = clubScores[normClub(f.home)] ?? clubScores[normClub(f.away)] ?? null;
+                        const scoreStr = sc != null ? `${sc.home}-${sc.away}` : null;
+
+                        // Trouver les events de ce match dans matchEvents
+                        const ev = Object.values(matchEvents).find(e =>
+                          normClub(e.home || "") === normClub(f.home) || normClub(e.away || "") === normClub(f.away)
+                        ) || null;
+
+                        // Formatter buteurs : "Dembélé x2, Ramos"
+                        const fmtScorers = (scorers) => scorers.map(s => {
+                          const lastName = (s.name || "").split(" ").pop();
+                          return s.goals > 1 ? `${lastName} x${s.goals}` : lastName;
+                        }).join(", ");
+
+                        const homeScorersStr = ev ? fmtScorers(ev.home_scorers || []) : "";
+                        const awayScorersStr = ev ? fmtScorers(ev.away_scorers || []) : "";
+                        const hasScorers = homeScorersStr || awayScorersStr;
+
                         return (
-                          <div key={i} className="st-match-chip" style={{ display: "grid", gridTemplateColumns: "38px 28px 16px 1fr 22px 1fr 16px", alignItems: "center", columnGap: 6, padding: "4px 8px", background: "rgba(30,10,70,0.45)", border: "1px solid rgba(140,100,255,0.12)", borderRadius: 6, backdropFilter: "blur(6px)" }}>
-                            <span className="st-match-time-inline" style={{ visibility: "hidden", fontSize: 8, fontWeight: 900, color: "#A78BFA", fontFamily: "'DM Mono',monospace", flexShrink: 0 }}>{g.time}</span>
-                            <span style={{ fontSize: 8, fontWeight: 800, color: lgColor, minWidth: 22 }}>{f.league}</span>
-                            <img src={logos[f.home] ? `/data/logos/${logos[f.home]}` : ""} alt="" style={{ width: 14, height: 14, objectFit: "contain", visibility: logos[f.home] ? "visible" : "hidden" }} />
-                            <span className="mc-home" style={{ fontSize: 11, fontWeight: 600, color: "#fff" }}>{sn(f.home)}</span>
-                            <span className="mc-vs" style={{ fontSize: 9, color: "rgba(255,255,255,0.25)" }}>vs</span>
-                            <span className="mc-away" style={{ fontSize: 11, fontWeight: 600, color: "#fff" }}>{sn(f.away)}</span>
-                            <img src={logos[f.away] ? `/data/logos/${logos[f.away]}` : ""} alt="" style={{ width: 14, height: 14, objectFit: "contain", visibility: logos[f.away] ? "visible" : "hidden" }} />
+                          <div key={i} style={{ display: "flex", flexDirection: "column", gap: 2 }}>
+                            <div className="st-match-chip" style={{ display: "grid", gridTemplateColumns: "38px 28px 16px 1fr 22px 1fr 16px", alignItems: "center", columnGap: 6, padding: "4px 8px", background: "rgba(30,10,70,0.45)", border: "1px solid rgba(140,100,255,0.12)", borderRadius: scoreStr ? "6px 6px 0 0" : 6, backdropFilter: "blur(6px)" }}>
+                              <span className="st-match-time-inline" style={{ visibility: "hidden", fontSize: 8, fontWeight: 900, color: "#A78BFA", fontFamily: "'DM Mono',monospace", flexShrink: 0 }}>{g.time}</span>
+                              <span style={{ fontSize: 8, fontWeight: 800, color: lgColor, minWidth: 22 }}>{f.league}</span>
+                              <img src={logos[f.home] ? `/data/logos/${logos[f.home]}` : ""} alt="" style={{ width: 14, height: 14, objectFit: "contain", visibility: logos[f.home] ? "visible" : "hidden" }} />
+                              <span className="mc-home" style={{ fontSize: 11, fontWeight: 600, color: "#fff" }}>{sn(f.home)}</span>
+                              {scoreStr ? (
+                                <span className="mc-vs" style={{ fontSize: 10, fontWeight: 900, color: "#fff", fontFamily: "'DM Mono',monospace", textAlign: "center" }}>{scoreStr}</span>
+                              ) : (
+                                <span className="mc-vs" style={{ fontSize: 9, color: "rgba(255,255,255,0.25)" }}>vs</span>
+                              )}
+                              <span className="mc-away" style={{ fontSize: 11, fontWeight: 600, color: "#fff" }}>{sn(f.away)}</span>
+                              <img src={logos[f.away] ? `/data/logos/${logos[f.away]}` : ""} alt="" style={{ width: 14, height: 14, objectFit: "contain", visibility: logos[f.away] ? "visible" : "hidden" }} />
+                            </div>
+                            {/* Buteurs sous le chip */}
+                            {hasScorers && (
+                              <div style={{ padding: "3px 8px 4px", background: "rgba(20,6,50,0.5)", borderRadius: "0 0 6px 6px", border: "1px solid rgba(140,100,255,0.08)", borderTop: "none", display: "flex", justifyContent: "space-between", gap: 6 }}>
+                                <span style={{ fontSize: 8, color: "rgba(255,255,255,0.55)", fontStyle: "italic", flex: 1 }}>
+                                  {homeScorersStr}
+                                </span>
+                                {awayScorersStr && homeScorersStr && <span style={{ fontSize: 8, color: "rgba(255,255,255,0.2)" }}>|</span>}
+                                <span style={{ fontSize: 8, color: "rgba(255,255,255,0.55)", fontStyle: "italic", flex: 1, textAlign: "right" }}>
+                                  {awayScorersStr}
+                                </span>
+                              </div>
+                            )}
                           </div>
                         );
                       })}
@@ -739,28 +865,49 @@ export default function StellarTab({ players, teams, fixtures, logos = {}, onFig
               const gaR = dp.ga_per_match?.toFixed(2) || "0.00";
               const lgColor = dp.league === "L1" ? "#4FC3F7" : dp.league === "PL" ? "#B388FF" : "#FF8A80";
               const pc = PC[dp.position];
+              const dpPlayed = dp.last_so5_date && dp.last_so5_date >= CURRENT_GW_START && dp.last_so5_score != null;
+              const dpRealScore = dpPlayed ? Math.round(dp.last_so5_score) : null;
+              const dpRealColor = dpPlayed ? (dp.last_so5_score >= 75 ? "#4ADE80" : dp.last_so5_score >= 60 ? "#A3E635" : dp.last_so5_score >= 50 ? "#FBBF24" : dp.last_so5_score >= 40 ? "#FB923C" : "#EF4444") : null;
+              const hg = dp.last_match_home_goals;
+              const ag = dp.last_match_away_goals;
+              const dpMatchResult = dpPlayed && hg != null ? (dp.isHome ? `${hg}-${ag}` : `${ag}-${hg}`) : null;
               return (
-                <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 10, background: "linear-gradient(135deg, rgba(6,2,20,0.9), rgba(15,5,40,0.85))", border: "1px solid rgba(196,181,253,0.2)", borderRadius: 10, padding: "8px 14px", backdropFilter: "blur(12px)", boxShadow: "0 0 16px rgba(139,92,246,0.1)" }}>
-                  <div style={{ flexShrink: 0, fontSize: 18 }}>⚡</div>
+                <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 10, background: dpPlayed ? `linear-gradient(135deg, rgba(6,2,20,0.9), ${dpRealColor}18)` : "linear-gradient(135deg, rgba(6,2,20,0.9), rgba(15,5,40,0.85))", border: dpPlayed ? `1px solid ${dpRealColor}50` : "1px solid rgba(196,181,253,0.2)", borderRadius: 10, padding: "8px 14px", backdropFilter: "blur(12px)", boxShadow: dpPlayed ? `0 0 16px ${dpRealColor}30` : "0 0 16px rgba(139,92,246,0.1)" }}>
+                  <div style={{ flexShrink: 0, fontSize: 18 }}>{dpPlayed ? "✅" : "⚡"}</div>
                   <div style={{ flex: 1, minWidth: 0 }}>
-                    <div style={{ fontSize: 8, fontWeight: 800, color: "#A78BFA", letterSpacing: "0.1em", marginBottom: 3 }}>
-                      {lang === "fr" ? "DECISIVE PICKER — 2 000 ESSENCE" : "DECISIVE PICKER — 2,000 ESSENCE"}
+                    <div style={{ fontSize: 8, fontWeight: 800, color: dpPlayed ? dpRealColor : "#A78BFA", letterSpacing: "0.1em", marginBottom: 3 }}>
+                      {dpPlayed
+                        ? (lang === "fr" ? "DECISIVE PICKER — SCORÉ !" : "DECISIVE PICKER — SCORED!")
+                        : (lang === "fr" ? "DECISIVE PICKER — 2 000 ESSENCE" : "DECISIVE PICKER — 2,000 ESSENCE")}
                     </div>
                     <div style={{ display: "flex", alignItems: "center", gap: 6, flexWrap: "wrap" }}>
                       {logos[dp.club] && <img src={`/data/logos/${logos[dp.club]}`} alt="" style={{ width: 16, height: 16, objectFit: "contain" }} />}
                       <span style={{ fontSize: 13, fontWeight: 900, color: "#fff" }}>{dp.name}</span>
                       <span style={{ fontSize: 8, fontWeight: 800, background: `linear-gradient(135deg,${pc},${pc}CC)`, borderRadius: 3, padding: "1px 5px", color: "#fff" }}>{dp.position}</span>
                       <span style={{ fontSize: 8, fontWeight: 700, color: lgColor }}>{dp.league}</span>
-                      <span style={{ fontSize: 8, color: "rgba(255,255,255,0.45)" }}>vs <span style={{ color: "#fff", fontWeight: 600 }}>{sn(dp.oppName)}</span></span>
-                      {parisTime && <span style={{ fontSize: 8, color: "#C4B5FD", fontWeight: 700 }}>⏰ {parisTime}</span>}
+                      <span style={{ fontSize: 8, color: "rgba(255,255,255,0.45)" }}>vs <span style={{ color: "#fff", fontWeight: 600 }}>{sn(dp.oppName)}</span>{dpMatchResult && <span style={{ color: dpRealColor, fontWeight: 700 }}> {dpMatchResult}</span>}</span>
+                      {!dpPlayed && parisTime && <span style={{ fontSize: 8, color: "#C4B5FD", fontWeight: 700 }}>⏰ {parisTime}</span>}
                       <span style={{ fontSize: 8, color: "rgba(255,255,255,0.45)" }}>G+A/match <span style={{ color: "#4ADE80", fontWeight: 700 }}>{gaR}</span></span>
                       <span style={{ fontSize: 8, color: "rgba(255,255,255,0.45)" }}>L5 <span style={{ color: dp.l5 >= 60 ? "#4ADE80" : dp.l5 >= 40 ? "#F59E0B" : "#EF4444", fontWeight: 700 }}>{dp.l5 ?? "—"}</span></span>
-                      <span style={{ fontSize: 8, color: "rgba(255,255,255,0.45)" }}>D-Score <span style={{ color: "#C4B5FD", fontWeight: 700 }}>{dp.ds}</span></span>
+                      {!dpPlayed && <span style={{ fontSize: 8, color: "rgba(255,255,255,0.45)" }}>D-Score <span style={{ color: "#C4B5FD", fontWeight: 700 }}>{dp.ds}</span></span>}
                     </div>
                   </div>
-                  <div style={{ flexShrink: 0, textAlign: "center", background: "rgba(139,92,246,0.15)", border: "1px solid rgba(167,139,250,0.3)", borderRadius: 8, padding: "6px 12px" }}>
-                    <div style={{ fontSize: 18, fontWeight: 900, color: dp.pDecisive >= 50 ? "#4ADE80" : dp.pDecisive >= 30 ? "#F59E0B" : "#C4B5FD", fontFamily: "'DM Mono',monospace", lineHeight: 1 }}>{dp.pDecisive}%</div>
-                    <div style={{ fontSize: 7, color: "rgba(255,255,255,0.4)", marginTop: 2 }}>CHANCE</div>
+                  <div style={{ flexShrink: 0, textAlign: "center", background: dpPlayed ? `${dpRealColor}22` : "rgba(139,92,246,0.15)", border: dpPlayed ? `1px solid ${dpRealColor}60` : "1px solid rgba(167,139,250,0.3)", borderRadius: 8, padding: "6px 12px" }}>
+                    {dpPlayed ? (
+                      <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+                        <img src="/data/essence.png" alt="essence" style={{ width: 44, height: 44, objectFit: "contain", filter: `drop-shadow(0 0 8px #A855F7)` }} />
+                        <div>
+                          <div style={{ fontSize: 22, fontWeight: 900, color: "#E9D5FF", fontFamily: "'DM Mono',monospace", lineHeight: 1 }}>+2 000</div>
+                          <div style={{ fontSize: 10, fontWeight: 800, color: "#A855F7", letterSpacing: "0.05em" }}>ESSENCE</div>
+                          <div style={{ fontSize: 18, fontWeight: 900, color: dpRealColor, fontFamily: "'DM Mono',monospace", lineHeight: 1.1, marginTop: 2 }}>{dpRealScore} pts</div>
+                        </div>
+                      </div>
+                    ) : (
+                      <>
+                        <div style={{ fontSize: 18, fontWeight: 900, color: dp.pDecisive >= 50 ? "#4ADE80" : dp.pDecisive >= 30 ? "#F59E0B" : "#C4B5FD", fontFamily: "'DM Mono',monospace", lineHeight: 1 }}>{dp.pDecisive}%</div>
+                        <div style={{ fontSize: 7, color: "rgba(255,255,255,0.4)", marginTop: 2 }}>CHANCE</div>
+                      </>
+                    )}
                   </div>
                 </div>
               );
@@ -777,6 +924,17 @@ export default function StellarTab({ players, teams, fixtures, logos = {}, onFig
               const isUltime = team.label === "ULTIME";
               const totalScore = team.players.reduce((sum, p) => sum + (p.isCaptain ? Math.round(p.ds * 1.5) : p.ds), 0);
               const palier = PALIERS.filter(p => totalScore >= p.pts).pop();
+              // Score réel : remplace ds par last_so5_score si le joueur a joué cette GW
+              const hasRealData = team.players.some(p => p.last_so5_date && p.last_so5_date >= CURRENT_GW_START && p.last_so5_score != null);
+              const isValidated = hasRealData; // automatique dès que des scores réels existent
+              const realScore = Math.round(team.players.reduce((sum, p) => {
+                const played = p.last_so5_date && p.last_so5_date >= CURRENT_GW_START;
+                const sc = played && p.last_so5_score != null ? p.last_so5_score : p.ds;
+                return sum + (p.isCaptain ? sc * 1.5 : sc);
+              }, 0));
+              const realPalier = PALIERS.filter(p => realScore >= p.pts).pop();
+              const realPalierIdx = realPalier ? PALIERS.indexOf(realPalier) + 1 : null;
+
               return (
                 <div key={ti} className="st-team-card" style={{
                   borderRadius: 14, padding: "12px",
@@ -796,6 +954,7 @@ export default function StellarTab({ players, teams, fixtures, logos = {}, onFig
                         </div>
                         <div style={{ fontSize: 9, color: "rgba(255,255,255,0.3)" }}>{isUltime ? S.stellarTop5 : S.stellarTeamFrom(team.label)}
                         </div>
+                        {team.totalDs > 0 && <div style={{ fontSize: 9, fontWeight: 800, color: "#A78BFA", fontFamily: "'DM Mono',monospace", marginTop: 1 }}>⚡ Score : {team.totalDs}</div>}
                       </div>
                     </div>
                     <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
@@ -803,18 +962,44 @@ export default function StellarTab({ players, teams, fixtures, logos = {}, onFig
                       <div className="st-card-bonus-info" style={{ textAlign: "right" }}>
                         <div style={{ fontSize: 7, color: "rgba(255,255,255,0.25)", fontStyle: "italic" }}>{S.stellarBonusCard}</div>
                         <div style={{ fontSize: 7, color: "rgba(255,255,255,0.2)" }}>{S.stellarProjScore}</div>
-                        {palier && <div style={{ fontSize: 7, color: palier.color, fontWeight: 600 }}>→ {palier.reward}</div>}
+                        {isValidated && hasRealData
+                          ? realPalier && <div style={{ fontSize: 7, color: realPalier.color, fontWeight: 600 }}>→ {realPalier.reward}</div>
+                          : palier && <div style={{ fontSize: 7, color: palier.color, fontWeight: 600 }}>→ {palier.reward}</div>
+                        }
                       </div>
-                      {/* Score à droite */}
-                      <div style={{ textAlign: "right" }}>
-                        <div style={{ fontSize: 8, fontWeight: 700, color: "rgba(196,181,253,0.6)", letterSpacing: "0.12em", textTransform: "uppercase", marginBottom: 1 }}>{S.stellarScore}</div>
-                        <div style={{ fontFamily: "'DM Mono',monospace", fontSize: 20, fontWeight: 800, color: palier ? palier.color : "#fff" }}>{totalScore}</div>
+                      {/* Score + palier réel */}
+                      <div style={{ textAlign: "right", display: "flex", flexDirection: "column", alignItems: "flex-end", gap: 3 }}>
+                        <div style={{ fontSize: 8, fontWeight: 700, color: "rgba(196,181,253,0.6)", letterSpacing: "0.12em", textTransform: "uppercase" }}>{S.stellarScore}</div>
+                        {isValidated ? (
+                          <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
+                            <span style={{ fontFamily: "'DM Mono',monospace", fontSize: 14, fontWeight: 700, color: "rgba(255,255,255,0.25)", textDecoration: "line-through" }}>{totalScore}</span>
+                            <span style={{ fontFamily: "'DM Mono',monospace", fontSize: 22, fontWeight: 900, color: realPalier ? realPalier.color : "#4ADE80", textShadow: `0 0 12px ${realPalier ? realPalier.color : "#4ADE80"}66` }}>{realScore}</span>
+                          </div>
+                        ) : (
+                          <div style={{ fontFamily: "'DM Mono',monospace", fontSize: 20, fontWeight: 800, color: palier ? palier.color : "#fff" }}>{totalScore}</div>
+                        )}
+                        {/* Palier atteint */}
+                        {isValidated && (
+                          <div style={{
+                            display: "flex", alignItems: "center", gap: 4, padding: "3px 8px",
+                            borderRadius: 20, background: realPalier ? `${realPalier.color}22` : "rgba(255,255,255,0.06)",
+                            border: `1px solid ${realPalier ? realPalier.color + "66" : "rgba(255,255,255,0.1)"}`,
+                          }}>
+                            <svg width="10" height="10" viewBox="0 0 14 14" fill="none">
+                              <circle cx="7" cy="7" r="6.5" stroke={realPalier ? realPalier.color : "#4ADE80"} strokeWidth="1.5"/>
+                              <path d="M4 7l2.2 2.2L10 4.5" stroke={realPalier ? realPalier.color : "#4ADE80"} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                            </svg>
+                            <span style={{ fontSize: 9, fontWeight: 800, color: realPalier ? realPalier.color : "rgba(255,255,255,0.3)", whiteSpace: "nowrap" }}>
+                              {realPalierIdx ? `Palier ${realPalierIdx}` : "Hors palier"}
+                            </span>
+                          </div>
+                        )}
                       </div>
                     </div>
                   </div>
                   <div className="st-team-players" style={{ display: "flex", justifyContent: "center", gap: 4, flexWrap: "nowrap" }}>
                     {team.players.map((p, pi) => (
-                      <StellarCard key={pi} player={p} logos={logos} size="sm" />
+                      <StellarCard key={pi} player={p} logos={logos} size="sm" isValidated={isValidated} gwStart={CURRENT_GW_START} />
                     ))}
                   </div>
 

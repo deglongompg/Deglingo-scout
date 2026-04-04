@@ -1,0 +1,24 @@
+{
+  "Game:60d674f3-3489-466d-a3f9-2cf1c0e4bf25": {
+    "home": "Paris Saint-Germain",
+    "away": "Toulouse FC",
+    "date": "2026-04-03",
+    "home_goals": 3,
+    "away_goals": 1,
+    "home_scorers": [],
+    "away_scorers": [],
+    "home_assists": [],
+    "away_assists": []
+  },
+  "Game:eac059a0-18d9-49a4-ae5c-d95a5a9484f4": {
+    "home": "Rayo Vallecano",
+    "away": "Elche CF",
+    "date": "2026-04-03",
+    "home_goals": 1,
+    "away_goals": 0,
+    "home_scorers": [],
+    "away_scorers": [],
+    "home_assists": [],
+    "away_assists": []
+  }
+}

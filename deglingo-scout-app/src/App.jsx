@@ -22,6 +22,7 @@ export default function App() {
   const [teams, setTeams] = useState(null);
   const [fixtures, setFixtures] = useState(null);
   const [logos, setLogos] = useState({});
+  const [matchEvents, setMatchEvents] = useState({});
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
@@ -31,8 +32,9 @@ export default function App() {
       fetch("/data/teams.json").then(r => { if (!r.ok) throw new Error("teams.json"); return r.json(); }),
       fetch("/data/fixtures.json").then(r => r.ok ? r.json() : null).catch(() => null),
       fetch("/data/club_logos.json").then(r => r.ok ? r.json() : {}).catch(() => ({})),
+      fetch("/data/match_events.json").then(r => r.ok ? r.json() : {}).catch(() => ({})),
     ])
-      .then(([p, t, f, l]) => { setPlayers(p); setTeams(t); setFixtures(f); setLogos(l || {}); setLoading(false); })
+      .then(([p, t, f, l, me]) => { setPlayers(p); setTeams(t); setFixtures(f); setLogos(l || {}); setMatchEvents(me || {}); setLoading(false); })
       .catch(e => { setError(e.message); setLoading(false); });
   }, []);
 
@@ -244,7 +246,7 @@ export default function App() {
         {tab === "db" && <DbTab players={players} teams={teams} fixtures={fixtures} logos={logos} lang={lang} />}
         {tab === "fight" && <FightTab players={players} teams={teams} fixtures={fixtures} logos={logos} lang={lang} />}
         {tab === "reco" && <RecoTab players={players} teams={teams} fixtures={fixtures} logos={logos} lang={lang} />}
-        {tab === "stellar" && <StellarTab players={players} teams={teams} fixtures={fixtures} logos={logos} onFight={() => setTab("fight")} lang={lang} />}
+        {tab === "stellar" && <StellarTab players={players} teams={teams} fixtures={fixtures} logos={logos} matchEvents={matchEvents} onFight={() => setTab("fight")} lang={lang} />}
       </main>
 
       {/* Footer */}

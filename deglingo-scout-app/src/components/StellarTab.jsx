@@ -450,6 +450,7 @@ export default function StellarTab({ players, teams, fixtures, logos = {}, match
   const today = new Date(todayStr + "T12:00:00"); // objet Date safe pour getMonday
   const [weekOffset, setWeekOffset] = useState(0);
   const [selectedDay, setSelectedDay] = useState(null);
+  const [expandedFixture, setExpandedFixture] = useState(null); // { key, side: "home"|"away" }
   const CURRENT_GW_START = "2026-04-03";
 
   const monday = useMemo(() => {
@@ -776,6 +777,11 @@ export default function StellarTab({ players, teams, fixtures, logos = {}, match
               // Build club→score map from players who already played this GW
               // Normalise les noms (ex: "Paris Saint-Germain" → "Paris Saint Germain")
               const normClub = (n) => (n || "").replace(/-/g, " ").trim();
+              const clubMatch = (a, b) => {
+                const na = normClub(a).toLowerCase();
+                const nb = normClub(b).toLowerCase();
+                return na === nb || na.startsWith(nb) || nb.startsWith(na);
+              };
               const clubScores = {};
               for (const p of dayData.players || []) {
                 if (p.last_so5_date && p.last_so5_date >= CURRENT_GW_START && p.last_match_home_goals != null) {
@@ -818,31 +824,60 @@ export default function StellarTab({ players, teams, fixtures, logos = {}, match
                         const awayScorersStr = ev ? fmtScorers(ev.away_scorers || []) : "";
                         const hasScorers = homeScorersStr || awayScorersStr;
 
+                        // Joueurs ayant scoré dans ce match
+                        const matchKey = `${normClub(f.home)}_${normClub(f.away)}`;
+                        const isOpenHome = expandedFixture?.key === matchKey && expandedFixture?.side === "home";
+                        const isOpenAway = expandedFixture?.key === matchKey && expandedFixture?.side === "away";
+                        const isOpen = isOpenHome || isOpenAway;
+                        const activeSide = isOpenHome ? "home" : isOpenAway ? "away" : null;
+                        const playersOf = (club) => [...(players || [])].filter(p =>
+                          p.last_so5_date && p.last_so5_date >= CURRENT_GW_START &&
+                          p.last_so5_score != null && p.last_so5_score > 0 &&
+                          clubMatch(p.club, club)
+                        ).sort((a, b) => b.last_so5_score - a.last_so5_score);
+                        const hasHomePlayers = scoreStr && playersOf(f.home).length > 0;
+                        const hasAwayPlayers = scoreStr && playersOf(f.away).length > 0;
+                        const matchPlayers = activeSide ? playersOf(activeSide === "home" ? f.home : f.away) : [];
+                        const toggleSide = (side) => {
+                          if (expandedFixture?.key === matchKey && expandedFixture?.side === side) setExpandedFixture(null);
+                          else setExpandedFixture({ key: matchKey, side });
+                        };
+
                         return (
-                          <div key={i} style={{ display: "flex", flexDirection: "column", gap: 2 }}>
-                            <div className="st-match-chip" style={{ display: "grid", gridTemplateColumns: "38px 28px 16px 1fr 22px 1fr 16px", alignItems: "center", columnGap: 6, padding: "4px 8px", background: "rgba(30,10,70,0.45)", border: "1px solid rgba(140,100,255,0.12)", borderRadius: scoreStr ? "6px 6px 0 0" : 6, backdropFilter: "blur(6px)" }}>
+                          <div key={i} style={{ display: "flex", flexDirection: "column", gap: 0 }}>
+                            {/* Chip cliquable */}
+                            <div className="st-match-chip" style={{ display: "grid", gridTemplateColumns: "38px 28px 16px 1fr 22px 1fr 16px", alignItems: "center", columnGap: 6, padding: "4px 8px", background: isOpen ? "rgba(50,20,100,0.6)" : "rgba(30,10,70,0.45)", border: `1px solid ${isOpen ? "rgba(196,181,253,0.3)" : "rgba(140,100,255,0.12)"}`, borderRadius: isOpen ? "6px 6px 0 0" : 6, backdropFilter: "blur(6px)" }}>
                               <span className="st-match-time-inline" style={{ visibility: "hidden", fontSize: 8, fontWeight: 900, color: "#A78BFA", fontFamily: "'DM Mono',monospace", flexShrink: 0 }}>{g.time}</span>
                               <span style={{ fontSize: 8, fontWeight: 800, color: lgColor, minWidth: 22 }}>{f.league}</span>
                               <img src={logos[f.home] ? `/data/logos/${logos[f.home]}` : ""} alt="" style={{ width: 14, height: 14, objectFit: "contain", visibility: logos[f.home] ? "visible" : "hidden" }} />
-                              <span className="mc-home" style={{ fontSize: 11, fontWeight: 600, color: "#fff" }}>{sn(f.home)}</span>
+                              <span className="mc-home" onClick={() => hasHomePlayers && toggleSide("home")} style={{ fontSize: 11, fontWeight: 600, color: isOpenHome ? "#C4B5FD" : "#fff", cursor: hasHomePlayers ? "pointer" : "default", textDecoration: isOpenHome ? "underline" : "none", transition: "color 0.15s" }}>{sn(f.home)}</span>
                               {scoreStr ? (
                                 <span className="mc-vs" style={{ fontSize: 10, fontWeight: 900, color: "#fff", fontFamily: "'DM Mono',monospace", textAlign: "center" }}>{scoreStr}</span>
                               ) : (
                                 <span className="mc-vs" style={{ fontSize: 9, color: "rgba(255,255,255,0.25)" }}>vs</span>
                               )}
-                              <span className="mc-away" style={{ fontSize: 11, fontWeight: 600, color: "#fff" }}>{sn(f.away)}</span>
+                              <span className="mc-away" onClick={() => hasAwayPlayers && toggleSide("away")} style={{ fontSize: 11, fontWeight: 600, color: isOpenAway ? "#C4B5FD" : hasAwayPlayers ? "#fff" : "rgba(255,255,255,0.35)", cursor: hasAwayPlayers ? "pointer" : "default", textDecoration: isOpenAway ? "underline" : "none", transition: "color 0.15s" }}>{sn(f.away)}</span>
                               <img src={logos[f.away] ? `/data/logos/${logos[f.away]}` : ""} alt="" style={{ width: 14, height: 14, objectFit: "contain", visibility: logos[f.away] ? "visible" : "hidden" }} />
                             </div>
-                            {/* Buteurs sous le chip */}
-                            {hasScorers && (
-                              <div style={{ padding: "3px 8px 4px", background: "rgba(20,6,50,0.5)", borderRadius: "0 0 6px 6px", border: "1px solid rgba(140,100,255,0.08)", borderTop: "none", display: "flex", justifyContent: "space-between", gap: 6 }}>
-                                <span style={{ fontSize: 8, color: "rgba(255,255,255,0.55)", fontStyle: "italic", flex: 1 }}>
-                                  {homeScorersStr}
-                                </span>
-                                {awayScorersStr && homeScorersStr && <span style={{ fontSize: 8, color: "rgba(255,255,255,0.2)" }}>|</span>}
-                                <span style={{ fontSize: 8, color: "rgba(255,255,255,0.55)", fontStyle: "italic", flex: 1, textAlign: "right" }}>
-                                  {awayScorersStr}
-                                </span>
+
+                            {/* Dropdown scores joueurs */}
+                            {isOpen && matchPlayers.length > 0 && (
+                              <div style={{ background: "rgba(15,5,40,0.95)", border: "1px solid rgba(196,181,253,0.15)", borderTop: "none", borderRadius: "0 0 6px 6px", padding: "4px 0", backdropFilter: "blur(8px)" }}>
+                                {matchPlayers.map((p, pi) => {
+                                  const sc = Math.round(p.last_so5_score);
+                                  const col = p.last_so5_score >= 75 ? "#4ADE80" : p.last_so5_score >= 60 ? "#A3E635" : p.last_so5_score >= 50 ? "#FBBF24" : p.last_so5_score >= 40 ? "#FB923C" : "#EF4444";
+                                  const pc = PC[p.position] || "#888";
+                                  const isHome = normClub(p.club) === normClub(f.home);
+                                  return (
+                                    <div key={pi} style={{ display: "flex", alignItems: "center", gap: 6, padding: "3px 10px", borderBottom: pi < matchPlayers.length - 1 ? "1px solid rgba(255,255,255,0.04)" : "none" }}>
+                                      <span style={{ fontSize: 7, fontWeight: 800, background: pc, borderRadius: 2, padding: "1px 4px", color: "#fff", minWidth: 22, textAlign: "center" }}>{p.position}</span>
+                                      {logos[p.club] && <img src={`/data/logos/${logos[p.club]}`} alt="" style={{ width: 10, height: 10, objectFit: "contain" }} />}
+                                      <span style={{ fontSize: 10, color: "rgba(255,255,255,0.8)", flex: 1, whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>{p.name.split(" ").pop()}</span>
+                                      <span style={{ fontSize: 8, color: "rgba(255,255,255,0.3)", marginLeft: "auto" }}>{isHome ? "🏠" : "✈️"}</span>
+                                      <span style={{ fontSize: 12, fontWeight: 900, color: col, fontFamily: "'DM Mono',monospace", minWidth: 28, textAlign: "right" }}>{sc}</span>
+                                    </div>
+                                  );
+                                })}
                               </div>
                             )}
                           </div>
@@ -895,11 +930,10 @@ export default function StellarTab({ players, teams, fixtures, logos = {}, match
                   <div style={{ flexShrink: 0, textAlign: "center", background: dpPlayed ? `${dpRealColor}22` : "rgba(139,92,246,0.15)", border: dpPlayed ? `1px solid ${dpRealColor}60` : "1px solid rgba(167,139,250,0.3)", borderRadius: 8, padding: "6px 12px" }}>
                     {dpPlayed ? (
                       <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-                        <img src="/data/essence.png" alt="essence" style={{ width: 44, height: 44, objectFit: "contain", filter: `drop-shadow(0 0 8px #A855F7)` }} />
+                        <img src="/essence.png" alt="essence" style={{ width: 44, height: 44, objectFit: "contain", filter: `drop-shadow(0 0 8px #A855F7)` }} />
                         <div>
                           <div style={{ fontSize: 22, fontWeight: 900, color: "#E9D5FF", fontFamily: "'DM Mono',monospace", lineHeight: 1 }}>+2 000</div>
                           <div style={{ fontSize: 10, fontWeight: 800, color: "#A855F7", letterSpacing: "0.05em" }}>ESSENCE</div>
-                          <div style={{ fontSize: 18, fontWeight: 900, color: dpRealColor, fontFamily: "'DM Mono',monospace", lineHeight: 1.1, marginTop: 2 }}>{dpRealScore} pts</div>
                         </div>
                       </div>
                     ) : (

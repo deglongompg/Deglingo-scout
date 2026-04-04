@@ -444,7 +444,7 @@ export default function DbTab({ players, teams, fixtures, logos = {}, lang = "fr
       }}>
         <span style={{ fontSize: 8 }}>{showStatPanel ? "▲" : "▼"}</span> Stats AA
       </button>
-      {showStatPanel && <div style={{ display: "flex", flexWrap: "nowrap", gap: 4, alignItems: "center", overflowX: "auto", paddingBottom: 2 }}>
+      {showStatPanel && <div style={{ overflowX: "auto", paddingBottom: 2 }}><div style={{ display: "flex", flexWrap: "nowrap", gap: 4, alignItems: "center", width: "max-content" }}>
         {["DEF", "POSS", "PASS", "ATT"].map(cat => {
           const CAT_LABELS = { DEF: "🛡️ DEF", POSS: "🔄 POSS", PASS: "🎯 PASS", ATT: "⚔️ ATT" };
           const CAT_COLORS = { DEF: "#60A5FA", POSS: "#FBBF24", PASS: "#4ADE80", ATT: "#F87171" };
@@ -487,7 +487,7 @@ export default function DbTab({ players, teams, fixtures, logos = {}, lang = "fr
         {statCols.length > 0 && !STAT_DEFS.map(s => s.key).every(k => statCols.includes(k)) && (
           <button onClick={() => setStatCols([])} style={{ padding: "3px 8px", borderRadius: 6, fontSize: 9, cursor: "pointer", border: "1px solid rgba(239,68,68,0.3)", background: "rgba(239,68,68,0.1)", color: "#EF4444" }}>✕ Reset</button>
         )}
-      </div>}
+      </div></div>}
       </div>
       {statCols.length > 0 && (
         <div style={{ fontSize: 11, color: "rgba(255,255,255,0.4)", marginBottom: 6, padding: "4px 8px", lineHeight: 1.5, background: "rgba(255,255,255,0.02)", borderRadius: 6, border: "1px solid rgba(255,255,255,0.06)" }}>

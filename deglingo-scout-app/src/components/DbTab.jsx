@@ -178,6 +178,47 @@ export default function DbTab({ players, teams, fixtures, logos = {}, lang = "fr
     else { setSortKey(key); setSortDir(-1); }
   };
 
+  // Cycle filter: off → ≤40 → ≤50 → ≤60 → ≤70 → ≤80 → off
+  const CYCLE = [100, 40, 50, 60, 70, 80];
+  const FILTER_CFG = {
+    l2:                 { val: maxL2,    set: setMaxL2,    color: "#4ADE80" },
+    aa2:                { val: maxAA2,   set: setMaxAA2,   color: "#34D399" },
+    l5:                 { val: maxL5,    set: setMaxL5,    color: "#4ADE80" },
+    aa5:                { val: maxAA5,   set: setMaxAA5,   color: "#34D399" },
+    l10:                { val: maxL10s,  set: setMaxL10s,  color: "#4ADE80" },
+    aa10:               { val: maxAA10,  set: setMaxAA10,  color: "#34D399" },
+    aa40:               { val: maxAA40,  set: setMaxAA40,  color: "#34D399" },
+    dsMatch:            { val: maxDs,    set: setMaxDs,    color: "#A5B4FC" },
+    last_so5_score:     { val: maxScore, set: setMaxScore, color: "#FBBF24" },
+    sorare_starter_pct: { val: maxTitu,  set: setMaxTitu,  color: "#C084FC" },
+  };
+
+  const FilterBtn = ({ colKey }) => {
+    const cfg = FILTER_CFG[colKey];
+    if (!cfg) return null;
+    const isActive = cfg.val < 100;
+    const cycle = () => {
+      const idx = CYCLE.indexOf(cfg.val);
+      const next = CYCLE[(idx + 1) % CYCLE.length];
+      cfg.set(next); setVisibleCount(30);
+    };
+    return (
+      <button
+        onClick={e => { e.stopPropagation(); cycle(); }}
+        title={isActive ? `≤${cfg.val} — clic pour changer` : "Clic pour filtrer"}
+        style={{
+          marginLeft: 3, padding: "1px 4px", fontSize: 8, lineHeight: "11px",
+          background: isActive ? `${cfg.color}25` : "transparent",
+          border: isActive ? `1px solid ${cfg.color}60` : "1px solid rgba(255,255,255,0.12)",
+          borderRadius: 3, cursor: "pointer",
+          color: isActive ? cfg.color : "rgba(255,255,255,0.3)",
+          fontFamily: "'DM Mono',monospace", fontWeight: 800,
+          verticalAlign: "middle", whiteSpace: "nowrap",
+        }}
+      >{isActive ? `≤${cfg.val}` : "▾"}</button>
+    );
+  };
+
   const hasFixtures = !!fixtures?.player_fixtures;
   const matchdays = fixtures?.matchdays || {};
 
@@ -343,63 +384,7 @@ export default function DbTab({ players, teams, fixtures, logos = {}, lang = "fr
             <option key={v} value={v}>L10 &lt; {v}</option>
           ))}
         </select>
-        <button
-          onClick={() => setShowSliders(v => !v)}
-          style={{
-            padding: "4px 10px", borderRadius: 6, fontSize: 11, fontWeight: 700,
-            fontFamily: "Outfit", cursor: "pointer", transition: "all 0.15s", flexShrink: 0,
-            background: showSliders ? "rgba(99,102,241,0.2)" : "rgba(255,255,255,0.04)",
-            border: showSliders ? "1px solid rgba(99,102,241,0.5)" : "1px solid rgba(255,255,255,0.08)",
-            color: showSliders ? "#A5B4FC" : "rgba(255,255,255,0.5)",
-          }}
-        >⧗ Filtres</button>
       </div>
-
-      {/* Slider filters panel */}
-      {showSliders && (() => {
-        const sliders = [
-          { label: "D-Score", val: maxDs,    set: setMaxDs,    color: "#A5B4FC" },
-          { label: "L2",      val: maxL2,    set: setMaxL2,    color: "#4ADE80" },
-          { label: "AA2",     val: maxAA2,   set: setMaxAA2,   color: "#34D399" },
-          { label: "L5",      val: maxL5,    set: setMaxL5,    color: "#4ADE80" },
-          { label: "AA5",     val: maxAA5,   set: setMaxAA5,   color: "#34D399" },
-          { label: "L10",     val: maxL10s,  set: setMaxL10s,  color: "#4ADE80" },
-          { label: "AA10",    val: maxAA10,  set: setMaxAA10,  color: "#34D399" },
-          { label: "AA40",    val: maxAA40,  set: setMaxAA40,  color: "#34D399" },
-          { label: "Score",   val: maxScore, set: setMaxScore, color: "#FBBF24" },
-          { label: "Titu%",   val: maxTitu,  set: setMaxTitu,  color: "#C084FC" },
-        ];
-        const hasActive = sliders.some(s => s.val < 100);
-        return (
-          <div style={{ marginBottom: 10, padding: "10px 14px", background: "rgba(99,102,241,0.06)", border: "1px solid rgba(99,102,241,0.15)", borderRadius: 10, display: "flex", flexWrap: "wrap", gap: "8px 20px", alignItems: "center" }}>
-            <span style={{ fontSize: 9, fontWeight: 700, color: "rgba(255,255,255,0.35)", letterSpacing: "0.06em" }}>MAX ≤</span>
-            <style>{`
-              .db-slider { -webkit-appearance:none; appearance:none; height:3px; border-radius:2px; outline:none; cursor:pointer; background:rgba(255,255,255,0.1); }
-              .db-slider::-webkit-slider-thumb { -webkit-appearance:none; width:12px; height:12px; border-radius:50%; cursor:pointer; }
-            `}</style>
-            {sliders.map(({ label, val, set, max, color }) => (
-              <div key={label} style={{ display: "flex", alignItems: "center", gap: 6 }}>
-                <span style={{ fontSize: 9, fontWeight: 700, color: val > 0 ? color : "rgba(255,255,255,0.4)", minWidth: 38, textAlign: "right", letterSpacing: "0.04em" }}>{label}</span>
-                <input
-                  type="range" min={0} max={100} step={5} value={val}
-                  onChange={e => { set(Number(e.target.value)); setVisibleCount(30); }}
-                  className="db-slider"
-                  style={{ width: 90, accentColor: color }}
-                />
-                <span style={{ fontSize: 10, fontWeight: 800, color: val < 100 ? color : "rgba(255,255,255,0.25)", minWidth: 26, fontFamily: "'DM Mono',monospace" }}>
-                  {val < 100 ? `≤${val}` : "—"}
-                </span>
-              </div>
-            ))}
-            {hasActive && (
-              <button onClick={() => { setMaxDs(100); setMaxL2(100); setMaxL5(100); setMaxL10s(100); setMaxScore(100); setMaxTitu(100); setMaxAA2(100); setMaxAA5(100); setMaxAA10(100); setMaxAA40(100); setVisibleCount(30); }}
-                style={{ fontSize: 10, fontWeight: 700, color: "#F87171", background: "rgba(239,68,68,0.1)", border: "1px solid rgba(239,68,68,0.3)", borderRadius: 6, padding: "3px 8px", cursor: "pointer" }}>
-                Reset
-              </button>
-            )}
-          </div>
-        );
-      })()}
 
       {/* D-Score legend */}
       <div style={{ marginBottom: 10, padding: "10px 14px", background: "linear-gradient(135deg, rgba(99,102,241,0.06), rgba(192,132,252,0.04))", border: "1px solid rgba(99,102,241,0.1)", borderRadius: 10 }}>
@@ -507,25 +492,25 @@ export default function DbTab({ players, teams, fixtures, logos = {}, lang = "fr
               <th style={{ ...thStyle("position"), cursor: "default" }}>{t(lang,"colPos")}</th>
               <th style={thStyle("ga_season")} onClick={() => toggleSort("ga_season")}>G+A{arrow("ga_season")}</th>
               {statCols.length === 0 && <th style={{ ...thStyle("league"), cursor: "default" }}>{t(lang,"colLigue")}</th>}
-              <th style={{ ...thStyle("l2"), background: sortKey === "l2" ? "rgba(74,222,128,0.06)" : "transparent", borderLeft: "1px solid rgba(255,255,255,0.06)" }} onClick={() => toggleSort("l2")}>L2{arrow("l2")}</th>
-              {statCols.length === 0 && <th style={thStyle("aa2")} onClick={() => toggleSort("aa2")}>AA2{arrow("aa2")}</th>}
+              <th style={{ ...thStyle("l2"), background: sortKey === "l2" ? "rgba(74,222,128,0.06)" : "transparent", borderLeft: "1px solid rgba(255,255,255,0.06)", position: "relative" }} onClick={() => toggleSort("l2")}>L2{arrow("l2")}<FilterBtn colKey="l2" /></th>
+              {statCols.length === 0 && <th style={{ ...thStyle("aa2"), position: "relative" }} onClick={() => toggleSort("aa2")}>AA2{arrow("aa2")}<FilterBtn colKey="aa2" /></th>}
               {statCols.length === 0 && <th style={{ ...thStyle("last5"), borderLeft: "1px solid rgba(255,255,255,0.06)", cursor: "default", fontSize: 8, color: "rgba(255,255,255,0.25)" }}>Last 5</th>}
-              <th style={thStyle("l5")} onClick={() => toggleSort("l5")}>L5{arrow("l5")}</th>
-              {statCols.length === 0 && <th style={thStyle("aa5")} onClick={() => toggleSort("aa5")}>AA5{arrow("aa5")}</th>}
-              <th style={{ ...thStyle("l10"), borderLeft: "1px solid rgba(255,255,255,0.06)" }} onClick={() => toggleSort("l10")}>L10{arrow("l10")}</th>
-              {statCols.length === 0 && <th style={thStyle("aa10")} onClick={() => toggleSort("aa10")}>AA10{arrow("aa10")}</th>}
+              <th style={{ ...thStyle("l5"), position: "relative" }} onClick={() => toggleSort("l5")}>L5{arrow("l5")}<FilterBtn colKey="l5" /></th>
+              {statCols.length === 0 && <th style={{ ...thStyle("aa5"), position: "relative" }} onClick={() => toggleSort("aa5")}>AA5{arrow("aa5")}<FilterBtn colKey="aa5" /></th>}
+              <th style={{ ...thStyle("l10"), borderLeft: "1px solid rgba(255,255,255,0.06)", position: "relative" }} onClick={() => toggleSort("l10")}>L10{arrow("l10")}<FilterBtn colKey="l10" /></th>
+              {statCols.length === 0 && <th style={{ ...thStyle("aa10"), position: "relative" }} onClick={() => toggleSort("aa10")}>AA10{arrow("aa10")}<FilterBtn colKey="aa10" /></th>}
               <th style={thStyle("reg10")} onClick={() => toggleSort("reg10")}>Reg10{arrow("reg10")}</th>
               <th style={thStyle("titu_pct")} onClick={() => toggleSort("titu_pct")}>{__("Titu10","Start10")}{arrow("titu_pct")}</th>
               <th style={{ ...thStyle("l40"), borderLeft: "1px solid rgba(255,255,255,0.06)" }} onClick={() => toggleSort("l40")}>L40{arrow("l40")}</th>
-              <th style={thStyle("aa40")} onClick={() => toggleSort("aa40")}>AA40{arrow("aa40")}</th>
+              <th style={{ ...thStyle("aa40"), position: "relative" }} onClick={() => toggleSort("aa40")}>AA40{arrow("aa40")}<FilterBtn colKey="aa40" /></th>
               {hasFixtures && <>
-                <th style={{ ...thStyle("dsMatch"), width: 52, maxWidth: 52, padding: "6px 4px" }} onClick={() => toggleSort("dsMatch")}>
-                  <span style={{ color: sortKey === "dsMatch" ? "#C084FC" : "#C084FC80" }}>D-Score{arrow("dsMatch")}</span>
+                <th style={{ ...thStyle("dsMatch"), width: 52, maxWidth: 52, padding: "6px 4px", position: "relative" }} onClick={() => toggleSort("dsMatch")}>
+                  <span style={{ color: sortKey === "dsMatch" ? "#C084FC" : "#C084FC80" }}>D-Score{arrow("dsMatch")}</span><FilterBtn colKey="dsMatch" />
                 </th>
-                <th style={{ ...thStyle("last_so5_score"), width: 38, maxWidth: 38, padding: "6px 2px" }} onClick={() => toggleSort("last_so5_score")}>
-                  <span style={{ color: sortKey === "last_so5_score" ? "#38BDF8" : "#38BDF880", fontSize: 9 }}>{__("Score","Score")}{arrow("last_so5_score")}</span>
+                <th style={{ ...thStyle("last_so5_score"), width: 38, maxWidth: 38, padding: "6px 2px", position: "relative" }} onClick={() => toggleSort("last_so5_score")}>
+                  <span style={{ color: sortKey === "last_so5_score" ? "#38BDF8" : "#38BDF880", fontSize: 9 }}>{__("Score","Score")}{arrow("last_so5_score")}</span><FilterBtn colKey="last_so5_score" />
                 </th>
-                <th style={{ ...thStyle("sorare_starter_pct"), width: 38, maxWidth: 38, padding: "6px 2px" }} onClick={() => toggleSort("sorare_starter_pct")}>{__("Titu%","Starter%")}{arrow("sorare_starter_pct")}</th>
+                <th style={{ ...thStyle("sorare_starter_pct"), width: 38, maxWidth: 38, padding: "6px 2px", position: "relative" }} onClick={() => toggleSort("sorare_starter_pct")}>{__("Titu%","Starter%")}{arrow("sorare_starter_pct")}<FilterBtn colKey="sorare_starter_pct" /></th>
                 <th style={{ ...thStyle("oppName"), cursor: "default", width: 90, maxWidth: 90, padding: "6px 2px" }}>{t(lang,"colAdv")}</th>
                 <th style={{ ...thStyle("csPercent"), width: 34, maxWidth: 34, padding: "6px 2px" }} onClick={() => toggleSort("csPercent")}>CS%{arrow("csPercent")}</th>
               </>}

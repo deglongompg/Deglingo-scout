@@ -35,6 +35,17 @@ export default function DbTab({ players, teams, fixtures, logos = {}, lang = "fr
   const [statCols, setStatCols] = useState([]);
   const [u23Only, setU23Only] = useState(false);
   const [showStatPanel, setShowStatPanel] = useState(true);
+  const [showSliders, setShowSliders] = useState(false);
+  const [maxDs, setMaxDs] = useState(100);
+  const [maxL2, setMaxL2] = useState(100);
+  const [maxL5, setMaxL5] = useState(100);
+  const [maxL10s, setMaxL10s] = useState(100);
+  const [maxScore, setMaxScore] = useState(100);
+  const [maxTitu, setMaxTitu] = useState(100);
+  const [maxAA2, setMaxAA2] = useState(100);
+  const [maxAA5, setMaxAA5] = useState(100);
+  const [maxAA10, setMaxAA10] = useState(100);
+  const [maxAA40, setMaxAA40] = useState(100);
 
   // Toggleable individual stat columns — 5 sections like Sorare AA
   const __ = (fr, en) => lang === "en" ? en : fr;
@@ -115,6 +126,16 @@ export default function DbTab({ players, teams, fixtures, logos = {}, lang = "fr
     else if (minL10 > 0) list = list.filter(p => (p.l10 || 0) < minL10);
     if (u23Only) list = list.filter(p => (p.age || 0) > 0 && p.age <= 24);
     if (selectedDate) list = list.filter(p => p.matchDate === selectedDate);
+    if (maxDs < 100) list = list.filter(p => (p.ds ?? 0) <= maxDs);
+    if (maxL2 < 100) list = list.filter(p => (p.l2 ?? 0) <= maxL2);
+    if (maxL5 < 100) list = list.filter(p => (p.l5 ?? 0) <= maxL5);
+    if (maxL10s < 100) list = list.filter(p => (p.l10 ?? 0) <= maxL10s);
+    if (maxScore < 100) list = list.filter(p => (p.last_so5_score ?? 0) <= maxScore);
+    if (maxTitu < 100) list = list.filter(p => (p.sorare_starter_pct ?? 0) <= maxTitu);
+    if (maxAA2 < 100) list = list.filter(p => (p.aa2 ?? 0) <= maxAA2);
+    if (maxAA5 < 100) list = list.filter(p => (p.aa5 ?? 0) <= maxAA5);
+    if (maxAA10 < 100) list = list.filter(p => (p.aa10 ?? 0) <= maxAA10);
+    if (maxAA40 < 100) list = list.filter(p => (p.aa40 ?? 0) <= maxAA40);
     if (search) {
       const q = search.toLowerCase();
       list = list.filter(p => p.name.toLowerCase().includes(q) || p.club.toLowerCase().includes(q));
@@ -150,7 +171,7 @@ export default function DbTab({ players, teams, fixtures, logos = {}, lang = "fr
       return (va - vb) * sortDir;
     });
     return list;
-  }, [enriched, leagues, club, pos, arch, minL10, u23Only, selectedDate, search, sortKey, sortDir]);
+  }, [enriched, leagues, club, pos, arch, minL10, u23Only, selectedDate, search, sortKey, sortDir, maxDs, maxL2, maxL5, maxL10s, maxScore, maxTitu, maxAA2, maxAA5, maxAA10, maxAA40]);
 
   const toggleSort = (key) => {
     if (sortKey === key) setSortDir(d => -d);
@@ -322,7 +343,63 @@ export default function DbTab({ players, teams, fixtures, logos = {}, lang = "fr
             <option key={v} value={v}>L10 &lt; {v}</option>
           ))}
         </select>
+        <button
+          onClick={() => setShowSliders(v => !v)}
+          style={{
+            padding: "4px 10px", borderRadius: 6, fontSize: 11, fontWeight: 700,
+            fontFamily: "Outfit", cursor: "pointer", transition: "all 0.15s", flexShrink: 0,
+            background: showSliders ? "rgba(99,102,241,0.2)" : "rgba(255,255,255,0.04)",
+            border: showSliders ? "1px solid rgba(99,102,241,0.5)" : "1px solid rgba(255,255,255,0.08)",
+            color: showSliders ? "#A5B4FC" : "rgba(255,255,255,0.5)",
+          }}
+        >⧗ Filtres</button>
       </div>
+
+      {/* Slider filters panel */}
+      {showSliders && (() => {
+        const sliders = [
+          { label: "D-Score", val: maxDs,    set: setMaxDs,    color: "#A5B4FC" },
+          { label: "L2",      val: maxL2,    set: setMaxL2,    color: "#4ADE80" },
+          { label: "AA2",     val: maxAA2,   set: setMaxAA2,   color: "#34D399" },
+          { label: "L5",      val: maxL5,    set: setMaxL5,    color: "#4ADE80" },
+          { label: "AA5",     val: maxAA5,   set: setMaxAA5,   color: "#34D399" },
+          { label: "L10",     val: maxL10s,  set: setMaxL10s,  color: "#4ADE80" },
+          { label: "AA10",    val: maxAA10,  set: setMaxAA10,  color: "#34D399" },
+          { label: "AA40",    val: maxAA40,  set: setMaxAA40,  color: "#34D399" },
+          { label: "Score",   val: maxScore, set: setMaxScore, color: "#FBBF24" },
+          { label: "Titu%",   val: maxTitu,  set: setMaxTitu,  color: "#C084FC" },
+        ];
+        const hasActive = sliders.some(s => s.val < 100);
+        return (
+          <div style={{ marginBottom: 10, padding: "10px 14px", background: "rgba(99,102,241,0.06)", border: "1px solid rgba(99,102,241,0.15)", borderRadius: 10, display: "flex", flexWrap: "wrap", gap: "8px 20px", alignItems: "center" }}>
+            <span style={{ fontSize: 9, fontWeight: 700, color: "rgba(255,255,255,0.35)", letterSpacing: "0.06em" }}>MAX ≤</span>
+            <style>{`
+              .db-slider { -webkit-appearance:none; appearance:none; height:3px; border-radius:2px; outline:none; cursor:pointer; background:rgba(255,255,255,0.1); }
+              .db-slider::-webkit-slider-thumb { -webkit-appearance:none; width:12px; height:12px; border-radius:50%; cursor:pointer; }
+            `}</style>
+            {sliders.map(({ label, val, set, max, color }) => (
+              <div key={label} style={{ display: "flex", alignItems: "center", gap: 6 }}>
+                <span style={{ fontSize: 9, fontWeight: 700, color: val > 0 ? color : "rgba(255,255,255,0.4)", minWidth: 38, textAlign: "right", letterSpacing: "0.04em" }}>{label}</span>
+                <input
+                  type="range" min={0} max={100} step={5} value={val}
+                  onChange={e => { set(Number(e.target.value)); setVisibleCount(30); }}
+                  className="db-slider"
+                  style={{ width: 90, accentColor: color }}
+                />
+                <span style={{ fontSize: 10, fontWeight: 800, color: val < 100 ? color : "rgba(255,255,255,0.25)", minWidth: 26, fontFamily: "'DM Mono',monospace" }}>
+                  {val < 100 ? `≤${val}` : "—"}
+                </span>
+              </div>
+            ))}
+            {hasActive && (
+              <button onClick={() => { setMaxDs(100); setMaxL2(100); setMaxL5(100); setMaxL10s(100); setMaxScore(100); setMaxTitu(100); setMaxAA2(100); setMaxAA5(100); setMaxAA10(100); setMaxAA40(100); setVisibleCount(30); }}
+                style={{ fontSize: 10, fontWeight: 700, color: "#F87171", background: "rgba(239,68,68,0.1)", border: "1px solid rgba(239,68,68,0.3)", borderRadius: 6, padding: "3px 8px", cursor: "pointer" }}>
+                Reset
+              </button>
+            )}
+          </div>
+        );
+      })()}
 
       {/* D-Score legend */}
       <div style={{ marginBottom: 10, padding: "10px 14px", background: "linear-gradient(135deg, rgba(99,102,241,0.06), rgba(192,132,252,0.04))", border: "1px solid rgba(99,102,241,0.1)", borderRadius: 10 }}>

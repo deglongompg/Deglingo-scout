@@ -451,7 +451,7 @@ export default function DbTab({ players, teams, fixtures, logos = {}, lang = "fr
           const stats = STAT_DEFS.filter(s => s.cat === cat);
           const catColor = CAT_COLORS[cat];
           return (
-            <div key={cat} style={{ display: "flex", alignItems: "center", gap: 3, marginRight: 6, padding: "3px 6px", borderRadius: 8, border: "1px solid rgba(255,255,255,0.08)", background: "rgba(255,255,255,0.02)" }}>
+            <div key={cat} style={{ display: "flex", alignItems: "center", gap: 3, marginRight: 6, padding: "3px 6px", borderRadius: 8, border: "1px solid rgba(255,255,255,0.08)", background: "rgba(255,255,255,0.02)", flexShrink: 0 }}>
               <span style={{ fontSize: 9, color: catColor, fontWeight: 700, marginRight: 2, opacity: 0.7 }}>{CAT_LABELS[cat]}</span>
               {stats.map(s => {
                 const active = statCols.includes(s.key);

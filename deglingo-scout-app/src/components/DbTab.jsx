@@ -487,30 +487,31 @@ export default function DbTab({ players, teams, fixtures, logos = {}, lang = "fr
       <div style={{ overflowX: "auto", maxHeight: "75vh", overflowY: "auto", borderRadius: 12, border: "1px solid rgba(255,255,255,0.06)" }}>
         <table style={{ width: "100%", borderCollapse: "collapse", fontSize: 12, fontFamily: "Outfit" }}>
           <thead style={{ position: "sticky", top: 0, zIndex: 10 }}>
+            {/* Ligne en-têtes */}
             <tr style={{ background: "#0C0C2D" }}>
               <th style={{ ...thStyle("name"), textAlign: "left", paddingLeft: 12, cursor: "default", position: "sticky", left: 0, zIndex: 2, background: "#0C0C2D" }}>{t(lang,"colJoueur")}</th>
               <th style={{ ...thStyle("position"), cursor: "default" }}>{t(lang,"colPos")}</th>
               <th style={thStyle("ga_season")} onClick={() => toggleSort("ga_season")}>G+A{arrow("ga_season")}</th>
               {statCols.length === 0 && <th style={{ ...thStyle("league"), cursor: "default" }}>{t(lang,"colLigue")}</th>}
-              <th style={{ ...thStyle("l2"), background: sortKey === "l2" ? "rgba(74,222,128,0.06)" : "transparent", borderLeft: "1px solid rgba(255,255,255,0.06)", position: "relative" }} onClick={() => toggleSort("l2")}>L2{arrow("l2")}<FilterBtn colKey="l2" /></th>
-              {statCols.length === 0 && <th style={{ ...thStyle("aa2"), position: "relative" }} onClick={() => toggleSort("aa2")}>AA2{arrow("aa2")}<FilterBtn colKey="aa2" /></th>}
+              <th style={{ ...thStyle("l2"), background: sortKey === "l2" ? "rgba(74,222,128,0.06)" : "transparent", borderLeft: "1px solid rgba(255,255,255,0.06)" }} onClick={() => toggleSort("l2")}>L2{arrow("l2")}</th>
+              {statCols.length === 0 && <th style={thStyle("aa2")} onClick={() => toggleSort("aa2")}>AA2{arrow("aa2")}</th>}
               {statCols.length === 0 && <th style={{ ...thStyle("last5"), borderLeft: "1px solid rgba(255,255,255,0.06)", cursor: "default", fontSize: 8, color: "rgba(255,255,255,0.25)" }}>Last 5</th>}
-              <th style={{ ...thStyle("l5"), position: "relative" }} onClick={() => toggleSort("l5")}>L5{arrow("l5")}<FilterBtn colKey="l5" /></th>
-              {statCols.length === 0 && <th style={{ ...thStyle("aa5"), position: "relative" }} onClick={() => toggleSort("aa5")}>AA5{arrow("aa5")}<FilterBtn colKey="aa5" /></th>}
-              <th style={{ ...thStyle("l10"), borderLeft: "1px solid rgba(255,255,255,0.06)", position: "relative" }} onClick={() => toggleSort("l10")}>L10{arrow("l10")}<FilterBtn colKey="l10" /></th>
-              {statCols.length === 0 && <th style={{ ...thStyle("aa10"), position: "relative" }} onClick={() => toggleSort("aa10")}>AA10{arrow("aa10")}<FilterBtn colKey="aa10" /></th>}
+              <th style={thStyle("l5")} onClick={() => toggleSort("l5")}>L5{arrow("l5")}</th>
+              {statCols.length === 0 && <th style={thStyle("aa5")} onClick={() => toggleSort("aa5")}>AA5{arrow("aa5")}</th>}
+              <th style={{ ...thStyle("l10"), borderLeft: "1px solid rgba(255,255,255,0.06)" }} onClick={() => toggleSort("l10")}>L10{arrow("l10")}</th>
+              {statCols.length === 0 && <th style={thStyle("aa10")} onClick={() => toggleSort("aa10")}>AA10{arrow("aa10")}</th>}
               <th style={thStyle("reg10")} onClick={() => toggleSort("reg10")}>Reg10{arrow("reg10")}</th>
               <th style={thStyle("titu_pct")} onClick={() => toggleSort("titu_pct")}>{__("Titu10","Start10")}{arrow("titu_pct")}</th>
               <th style={{ ...thStyle("l40"), borderLeft: "1px solid rgba(255,255,255,0.06)" }} onClick={() => toggleSort("l40")}>L40{arrow("l40")}</th>
-              <th style={{ ...thStyle("aa40"), position: "relative" }} onClick={() => toggleSort("aa40")}>AA40{arrow("aa40")}<FilterBtn colKey="aa40" /></th>
+              <th style={thStyle("aa40")} onClick={() => toggleSort("aa40")}>AA40{arrow("aa40")}</th>
               {hasFixtures && <>
-                <th style={{ ...thStyle("dsMatch"), width: 52, maxWidth: 52, padding: "6px 4px", position: "relative" }} onClick={() => toggleSort("dsMatch")}>
-                  <span style={{ color: sortKey === "dsMatch" ? "#C084FC" : "#C084FC80" }}>D-Score{arrow("dsMatch")}</span><FilterBtn colKey="dsMatch" />
+                <th style={{ ...thStyle("dsMatch"), width: 52, maxWidth: 52, padding: "6px 4px" }} onClick={() => toggleSort("dsMatch")}>
+                  <span style={{ color: sortKey === "dsMatch" ? "#C084FC" : "#C084FC80" }}>D-Score{arrow("dsMatch")}</span>
                 </th>
-                <th style={{ ...thStyle("last_so5_score"), width: 38, maxWidth: 38, padding: "6px 2px", position: "relative" }} onClick={() => toggleSort("last_so5_score")}>
-                  <span style={{ color: sortKey === "last_so5_score" ? "#38BDF8" : "#38BDF880", fontSize: 9 }}>{__("Score","Score")}{arrow("last_so5_score")}</span><FilterBtn colKey="last_so5_score" />
+                <th style={{ ...thStyle("last_so5_score"), width: 38, maxWidth: 38, padding: "6px 2px" }} onClick={() => toggleSort("last_so5_score")}>
+                  <span style={{ color: sortKey === "last_so5_score" ? "#38BDF8" : "#38BDF880", fontSize: 9 }}>{__("Score","Score")}{arrow("last_so5_score")}</span>
                 </th>
-                <th style={{ ...thStyle("sorare_starter_pct"), width: 38, maxWidth: 38, padding: "6px 2px", position: "relative" }} onClick={() => toggleSort("sorare_starter_pct")}>{__("Titu%","Starter%")}{arrow("sorare_starter_pct")}<FilterBtn colKey="sorare_starter_pct" /></th>
+                <th style={{ ...thStyle("sorare_starter_pct"), width: 38, maxWidth: 38, padding: "6px 2px" }} onClick={() => toggleSort("sorare_starter_pct")}>{__("Titu%","Starter%")}{arrow("sorare_starter_pct")}</th>
                 <th style={{ ...thStyle("oppName"), cursor: "default", width: 90, maxWidth: 90, padding: "6px 2px" }}>{t(lang,"colAdv")}</th>
                 <th style={{ ...thStyle("csPercent"), width: 34, maxWidth: 34, padding: "6px 2px" }} onClick={() => toggleSort("csPercent")}>CS%{arrow("csPercent")}</th>
               </>}
@@ -519,13 +520,13 @@ export default function DbTab({ players, teams, fixtures, logos = {}, lang = "fr
               {statCols.length === 0 && <th style={{ ...thStyle("archetype"), cursor: "default", padding: "4px 2px", maxWidth: 52 }}>{t(lang,"colArchetype")}</th>}
               {statCols.length === 0 && <th style={{ ...thStyle("aaProfile"), cursor: "default", padding: "4px 2px", maxWidth: 52 }}>{t(lang,"colProfilAA")}</th>}
               {(() => {
-                const CAT_COLORS = { GEN: "#A78BFA", DEF: "#60A5FA", POSS: "#FBBF24", PASS: "#4ADE80", ATT: "#F87171" };
-                const ordered = STAT_DEFS.filter(s => statCols.includes(s.key));
-                let lastCat = null;
-                return ordered.map(def => {
-                  const isNewSection = def.cat !== lastCat;
-                  lastCat = def.cat;
-                  const catColor = CAT_COLORS[def.cat];
+                const CAT_COLORS2 = { GEN: "#A78BFA", DEF: "#60A5FA", POSS: "#FBBF24", PASS: "#4ADE80", ATT: "#F87171" };
+                const ordered2 = STAT_DEFS.filter(s => statCols.includes(s.key));
+                let lastCat2 = null;
+                return ordered2.map(def => {
+                  const isNewSection = def.cat !== lastCat2;
+                  lastCat2 = def.cat;
+                  const catColor = CAT_COLORS2[def.cat];
                   const isCatCol = def.isCat;
                   return <th key={def.key} style={{
                     ...thStyle(def.key),
@@ -538,6 +539,40 @@ export default function DbTab({ players, teams, fixtures, logos = {}, lang = "fr
                 });
               })()}
             </tr>
+            {/* Ligne filtres — collée sous les titres */}
+            {(() => {
+              const BG = "#0C0C2D";
+              const fc = (colKey) => (
+                <td style={{ textAlign: "center", padding: "2px 1px", background: BG, borderBottom: "2px solid rgba(255,255,255,0.06)" }}>
+                  <FilterBtn colKey={colKey} />
+                </td>
+              );
+              const fd = (extra = {}) => <td style={{ background: BG, borderBottom: "2px solid rgba(255,255,255,0.06)", ...extra }} />;
+              return (
+                <tr>
+                  <td style={{ position: "sticky", left: 0, zIndex: 2, background: BG, borderBottom: "2px solid rgba(255,255,255,0.06)" }} />
+                  {fd()}{fd()}
+                  {statCols.length === 0 && fd()}
+                  {fc("l2")}
+                  {statCols.length === 0 && fc("aa2")}
+                  {statCols.length === 0 && fd()}
+                  {fc("l5")}
+                  {statCols.length === 0 && fc("aa5")}
+                  {fc("l10")}
+                  {statCols.length === 0 && fc("aa10")}
+                  {fd()}{fd()}{fd()}
+                  {fc("aa40")}
+                  {hasFixtures && <>
+                    {fc("dsMatch")}
+                    {fc("last_so5_score")}
+                    {fc("sorare_starter_pct")}
+                    {fd()}{fd()}
+                  </>}
+                  {statCols.length === 0 && <>{fd()}{fd()}{fd()}{fd()}</>}
+                  {STAT_DEFS.filter(s => statCols.includes(s.key)).map(s => fd({ key: s.key }))}
+                </tr>
+              );
+            })()}
           </thead>
           <tbody>
             {filtered.slice(0, visibleCount).map((p, i) => {

@@ -46,6 +46,10 @@ export default function DbTab({ players, teams, fixtures, logos = {}, lang = "fr
   const [maxAA5, setMaxAA5] = useState(100);
   const [maxAA10, setMaxAA10] = useState(100);
   const [maxAA40, setMaxAA40] = useState(100);
+  const [maxL40, setMaxL40] = useState(100);
+  const [maxReg10, setMaxReg10] = useState(100);
+  const [maxTitu10, setMaxTitu10] = useState(100);
+  const [maxCS, setMaxCS] = useState(100);
 
   // Toggleable individual stat columns — 5 sections like Sorare AA
   const __ = (fr, en) => lang === "en" ? en : fr;
@@ -136,6 +140,10 @@ export default function DbTab({ players, teams, fixtures, logos = {}, lang = "fr
     if (maxAA5 < 100) list = list.filter(p => (p.aa5 ?? 0) <= maxAA5);
     if (maxAA10 < 100) list = list.filter(p => (p.aa10 ?? 0) <= maxAA10);
     if (maxAA40 < 100) list = list.filter(p => (p.aa40 ?? 0) <= maxAA40);
+    if (maxL40 < 100) list = list.filter(p => (p.l40 ?? 0) <= maxL40);
+    if (maxReg10 < 100) list = list.filter(p => (p.reg10 ?? 0) <= maxReg10);
+    if (maxTitu10 < 100) list = list.filter(p => (p.titu_pct ?? 0) <= maxTitu10);
+    if (maxCS < 100) list = list.filter(p => (p.csPercent ?? 0) <= maxCS);
     if (search) {
       const q = search.toLowerCase();
       list = list.filter(p => p.name.toLowerCase().includes(q) || p.club.toLowerCase().includes(q));
@@ -171,7 +179,7 @@ export default function DbTab({ players, teams, fixtures, logos = {}, lang = "fr
       return (va - vb) * sortDir;
     });
     return list;
-  }, [enriched, leagues, club, pos, arch, minL10, u23Only, selectedDate, search, sortKey, sortDir, maxDs, maxL2, maxL5, maxL10s, maxScore, maxTitu, maxAA2, maxAA5, maxAA10, maxAA40]);
+  }, [enriched, leagues, club, pos, arch, minL10, u23Only, selectedDate, search, sortKey, sortDir, maxDs, maxL2, maxL5, maxL10s, maxScore, maxTitu, maxAA2, maxAA5, maxAA10, maxAA40, maxL40, maxReg10, maxTitu10, maxCS]);
 
   const toggleSort = (key) => {
     if (sortKey === key) setSortDir(d => -d);
@@ -188,9 +196,13 @@ export default function DbTab({ players, teams, fixtures, logos = {}, lang = "fr
     l10:                { val: maxL10s,  set: setMaxL10s,  color: "#4ADE80" },
     aa10:               { val: maxAA10,  set: setMaxAA10,  color: "#34D399" },
     aa40:               { val: maxAA40,  set: setMaxAA40,  color: "#34D399" },
+    l40:                { val: maxL40,   set: setMaxL40,   color: "#4ADE80" },
+    reg10:              { val: maxReg10, set: setMaxReg10, color: "#60A5FA" },
+    titu_pct:           { val: maxTitu10,set: setMaxTitu10,color: "#FBBF24" },
     dsMatch:            { val: maxDs,    set: setMaxDs,    color: "#A5B4FC" },
     last_so5_score:     { val: maxScore, set: setMaxScore, color: "#FBBF24" },
     sorare_starter_pct: { val: maxTitu,  set: setMaxTitu,  color: "#C084FC" },
+    csPercent:          { val: maxCS,    set: setMaxCS,    color: "#38BDF8" },
   };
 
   const FilterBtn = ({ colKey }) => {
@@ -432,7 +444,7 @@ export default function DbTab({ players, teams, fixtures, logos = {}, lang = "fr
       }}>
         <span style={{ fontSize: 8 }}>{showStatPanel ? "▲" : "▼"}</span> Stats AA
       </button>
-      {showStatPanel && <div style={{ display: "flex", flexWrap: "wrap", gap: 4, alignItems: "center" }}>
+      {showStatPanel && <div style={{ display: "flex", flexWrap: "nowrap", gap: 4, alignItems: "center", overflowX: "auto", paddingBottom: 2 }}>
         {["DEF", "POSS", "PASS", "ATT"].map(cat => {
           const CAT_LABELS = { DEF: "🛡️ DEF", POSS: "🔄 POSS", PASS: "🎯 PASS", ATT: "⚔️ ATT" };
           const CAT_COLORS = { DEF: "#60A5FA", POSS: "#FBBF24", PASS: "#4ADE80", ATT: "#F87171" };
@@ -487,6 +499,43 @@ export default function DbTab({ players, teams, fixtures, logos = {}, lang = "fr
       <div style={{ overflowX: "auto", maxHeight: "75vh", overflowY: "auto", borderRadius: 12, border: "1px solid rgba(255,255,255,0.06)" }}>
         <table style={{ width: "100%", borderCollapse: "collapse", fontSize: 12, fontFamily: "Outfit" }}>
           <thead style={{ position: "sticky", top: 0, zIndex: 10 }}>
+            {/* Ligne filtres — au-dessus des titres */}
+            {(() => {
+              const BG = "#0C0C2D";
+              const fc = (colKey) => (
+                <td style={{ textAlign: "center", padding: "2px 1px", background: BG }}>
+                  <FilterBtn colKey={colKey} />
+                </td>
+              );
+              const fd = () => <td style={{ background: BG }} />;
+              return (
+                <tr>
+                  <td style={{ position: "sticky", left: 0, zIndex: 2, background: BG }} />
+                  {fd()}{fd()}
+                  {statCols.length === 0 && fd()}
+                  {fc("l2")}
+                  {statCols.length === 0 && fc("aa2")}
+                  {statCols.length === 0 && fd()}
+                  {fc("l5")}
+                  {statCols.length === 0 && fc("aa5")}
+                  {fc("l10")}
+                  {statCols.length === 0 && fc("aa10")}
+                  {fc("reg10")}
+                  {fc("titu_pct")}
+                  {fc("l40")}
+                  {fc("aa40")}
+                  {hasFixtures && <>
+                    {fc("dsMatch")}
+                    {fc("last_so5_score")}
+                    {fc("sorare_starter_pct")}
+                    {fd()}
+                    {fc("csPercent")}
+                  </>}
+                  {statCols.length === 0 && <>{fd()}{fd()}{fd()}{fd()}</>}
+                  {STAT_DEFS.filter(s => statCols.includes(s.key)).map(s => <td key={s.key} style={{ background: BG }} />)}
+                </tr>
+              );
+            })()}
             {/* Ligne en-têtes */}
             <tr style={{ background: "#0C0C2D" }}>
               <th style={{ ...thStyle("name"), textAlign: "left", paddingLeft: 12, cursor: "default", position: "sticky", left: 0, zIndex: 2, background: "#0C0C2D" }}>{t(lang,"colJoueur")}</th>
@@ -539,40 +588,6 @@ export default function DbTab({ players, teams, fixtures, logos = {}, lang = "fr
                 });
               })()}
             </tr>
-            {/* Ligne filtres — collée sous les titres */}
-            {(() => {
-              const BG = "#0C0C2D";
-              const fc = (colKey) => (
-                <td style={{ textAlign: "center", padding: "2px 1px", background: BG, borderBottom: "2px solid rgba(255,255,255,0.06)" }}>
-                  <FilterBtn colKey={colKey} />
-                </td>
-              );
-              const fd = (extra = {}) => <td style={{ background: BG, borderBottom: "2px solid rgba(255,255,255,0.06)", ...extra }} />;
-              return (
-                <tr>
-                  <td style={{ position: "sticky", left: 0, zIndex: 2, background: BG, borderBottom: "2px solid rgba(255,255,255,0.06)" }} />
-                  {fd()}{fd()}
-                  {statCols.length === 0 && fd()}
-                  {fc("l2")}
-                  {statCols.length === 0 && fc("aa2")}
-                  {statCols.length === 0 && fd()}
-                  {fc("l5")}
-                  {statCols.length === 0 && fc("aa5")}
-                  {fc("l10")}
-                  {statCols.length === 0 && fc("aa10")}
-                  {fd()}{fd()}{fd()}
-                  {fc("aa40")}
-                  {hasFixtures && <>
-                    {fc("dsMatch")}
-                    {fc("last_so5_score")}
-                    {fc("sorare_starter_pct")}
-                    {fd()}{fd()}
-                  </>}
-                  {statCols.length === 0 && <>{fd()}{fd()}{fd()}{fd()}</>}
-                  {STAT_DEFS.filter(s => statCols.includes(s.key)).map(s => fd({ key: s.key }))}
-                </tr>
-              );
-            })()}
           </thead>
           <tbody>
             {filtered.slice(0, visibleCount).map((p, i) => {

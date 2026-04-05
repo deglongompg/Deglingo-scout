@@ -1,4 +1,5 @@
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
+import { getGwLockKey, loadFrozen, saveFrozen } from "../utils/freeze";
 import { dsColor, dsBg, isSilver, LEAGUE_FLAGS, LEAGUE_NAMES, POSITION_COLORS, getAAProfile } from "../utils/colors";
 import { dScoreMatch, csProb, findTeam, isExtraGoat } from "../utils/dscore";
 import { t } from "../utils/i18n";
@@ -305,7 +306,7 @@ function PlayerCard({ player, isSelected, onClick, logos = {}, badge, isCaptain,
   const hg = player.last_match_home_goals;
   const ag = player.last_match_away_goals;
   const matchResult = hasPlayed && hg != null && ag != null
-    ? (player.isHome ? `${hg}-${ag}` : `${ag}-${hg}`)
+    ? `${hg}-${ag}`
     : null;
   const matchResultColor = matchResult
     ? (player.isHome ? (hg > ag ? "#4ADE80" : hg === ag ? "#FBBF24" : "#EF4444")
@@ -429,17 +430,19 @@ function PlayerCard({ player, isSelected, onClick, logos = {}, badge, isCaptain,
       </div>
       {/* Stars */}
       <div style={{ marginTop: "6px" }}><Stars n={conf} /></div>
-      {/* Opponent badge */}
-      <div style={{ marginTop: "4px", fontSize: "8px", color: "rgba(255,255,255,0.5)", display: "inline-flex", alignItems: "center", gap: "3px", background: "rgba(0,0,0,0.5)", padding: "2px 6px", borderRadius: "4px", backdropFilter: "blur(4px)" }}>
-        <span style={{ fontSize: "10px", lineHeight: 1 }}>{player.isHome ? "🏠" : "✈️"}</span>
-        {logos[player.oppName] && <img src={`/data/logos/${logos[player.oppName]}`} alt="" style={{ width: 10, height: 10, objectFit: "contain" }} />}
-        <span style={{ fontWeight: 600 }}>{sn(player.oppName)}</span>
-        {matchResult && (
-          <>
-            <span style={{ color: "rgba(255,255,255,0.25)", margin: "0 1px" }}>·</span>
-            <span style={{ fontWeight: 800, fontFamily: "'DM Mono',monospace", color: matchResultColor, fontSize: 9 }}>{matchResult}</span>
-          </>
-        )}
+      {/* Opponent badge — wrapper centre le pill, pill limité à 100% pour truncation */}
+      <div style={{ marginTop: "4px", display: "flex", justifyContent: "center", width: "100%" }}>
+        <div style={{ fontSize: "8px", color: "rgba(255,255,255,0.5)", display: "inline-flex", alignItems: "center", gap: "3px", background: "rgba(0,0,0,0.5)", padding: "2px 6px", borderRadius: "4px", backdropFilter: "blur(4px)", maxWidth: "100%", overflow: "hidden" }}>
+          <span style={{ fontSize: "10px", lineHeight: 1, flexShrink: 0 }}>{player.isHome ? "🏠" : "✈️"}</span>
+          {logos[player.oppName] && <img src={`/data/logos/${logos[player.oppName]}`} alt="" style={{ width: 10, height: 10, objectFit: "contain", flexShrink: 0 }} />}
+          <span className="bp-opp-name" style={{ fontWeight: 600, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap", minWidth: 0 }}>{sn(player.oppName)}</span>
+          {matchResult && (
+            <>
+              <span style={{ color: "rgba(255,255,255,0.25)", margin: "0 1px", flexShrink: 0 }}>·</span>
+              <span style={{ fontWeight: 800, fontFamily: "'DM Mono',monospace", color: matchResultColor, fontSize: 9, flexShrink: 0, whiteSpace: "nowrap" }}>{matchResult}</span>
+            </>
+          )}
+        </div>
       </div>
     </div>
   );
@@ -673,8 +676,14 @@ export default function RecoTab({ players, teams, fixtures, logos = {}, lang = "
     return stacks.slice(0, 3);
   }, [allScored]);
 
+  // ── Freeze GW ──────────────────────────────────────────────────────────────
+  const gwLockKey   = useMemo(() => getGwLockKey(), []);
+  const isGwLocked  = !!gwLockKey;
+  const bpKey       = gwLockKey ? `bp_${league}_${mode}_${gambling ? "gamble" : "normal"}_${gwLockKey}` : null;
+  const frozenPicks = useMemo(() => (bpKey ? loadFrozen(bpKey) : null), [bpKey]);
+
   // Pick logic per mode
-  const picks = useMemo(() => {
+  const computedPicks = useMemo(() => {
     if (mode === "so5") {
       // Cross-match : même match mais équipes différentes (via matchId canonique)
       const wouldConflict = (p, existing) => {
@@ -754,6 +763,16 @@ export default function RecoTab({ players, teams, fixtures, logos = {}, lang = "
     }
     return [];
   }, [allScored, mode, top3Stacks, stackIdx]);
+
+  // Save to localStorage when GW is locked and not yet frozen
+  useEffect(() => {
+    if (isGwLocked && bpKey && !frozenPicks && computedPicks.length > 0) {
+      saveFrozen(bpKey, computedPicks);
+    }
+  }, [isGwLocked, bpKey, frozenPicks, computedPicks]);
+
+  // Picks finaux : figés si GW démarrée, sinon live
+  const picks = frozenPicks || computedPicks;
 
   const lg = LG_META[league];
   const flex = (mode === "so5" || mode === "stack") ? picks.filter(p => p.isFlex) : [];

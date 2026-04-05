@@ -104,23 +104,32 @@ gw_cutoff_date  = _gw_start.strftime("%Y-%m-%d")
 gw_cutoff_hhmm  = _gw_start.strftime("%H:%M")  # toujours "16:00"
 print(f"Debut GW    : {gw_cutoff_date} {gw_cutoff_hhmm} (heure Paris)")
 
+def is_played(fx_date, kickoff):
+    """Retourne True si le match est terminé (date passée + +2h après ko)."""
+    if not fx_date:
+        return False
+    if kickoff and kickoff != "99:99":
+        ko_h, ko_m = int(kickoff[:2]), int(kickoff[3:])
+        ko_end = f"{(ko_h + 2) % 24:02d}:{ko_m:02d}"
+    else:
+        ko_end = "99:99"
+    in_gw = fx_date > gw_cutoff_date or (fx_date == gw_cutoff_date and kickoff >= gw_cutoff_hhmm)
+    started = fx_date < today or (fx_date == today and ko_end <= now_hhmm)
+    return in_gw and started
+
+# Source 1 : fixtures list (home_api / away_api = noms exacts dans players.json)
 played_clubs = set()
+fixtures_list = fixtures.get("fixtures", [])
+for f in fixtures_list:
+    if is_played(f.get("date", ""), f.get("kickoff", "99:99")):
+        if f.get("home_api"): played_clubs.add(f["home_api"])
+        if f.get("away_api"): played_clubs.add(f["away_api"])
+
+# Source 2 : player_fixtures (complément si home_api manquant)
 for p in players:
-    slug = p.get("slug", "")
-    fx = player_fixtures.get(slug)
-    if fx:
-        fx_date = fx.get("date", "")
-        kickoff = fx.get("kickoff", "99:99")
-        in_gw = fx_date > gw_cutoff_date or (fx_date == gw_cutoff_date and kickoff >= gw_cutoff_hhmm)
-        # +2h après le coup d'envoi pour que le match soit terminé
-        if kickoff and kickoff != "99:99":
-            ko_h, ko_m = int(kickoff[:2]), int(kickoff[3:])
-            ko_end_hhmm = f"{(ko_h + 2) % 24:02d}:{ko_m:02d}"
-        else:
-            ko_end_hhmm = "99:99"
-        already_started = fx_date < today or (fx_date == today and ko_end_hhmm <= now_hhmm)
-        if in_gw and already_started:
-            played_clubs.add(p.get("club", ""))
+    fx = player_fixtures.get(p.get("slug", ""))
+    if fx and is_played(fx.get("date", ""), fx.get("kickoff", "99:99")):
+        played_clubs.add(p.get("club", ""))
 
 if not played_clubs:
     print("Aucun match joue avant aujourd'hui dans les fixtures. Rien a faire.")

@@ -1,7 +1,25 @@
-import json, os, shutil
+import json, os, shutil, sys
+sys.stdout.reconfigure(errors="replace")
 
 STATUS_FILE  = "player_status.json"
 PRICES_FILE  = "player_prices.json"
+
+# ── Sauvegarde des champs à préserver depuis players.json existant ──────────
+GW_FIELDS     = ["last_so5_score", "last_so5_date",
+                  "last_match_home_goals", "last_match_away_goals",
+                  "game_id", "game_home_team", "game_away_team"]
+STATUS_FIELDS = ["injured", "suspended", "sorare_proj", "sorare_starter_pct"]
+PRESERVE_FIELDS = GW_FIELDS + STATUS_FIELDS
+
+_existing_data = {}
+_existing_path = "deglingo-scout-app/public/data/players.json"
+if os.path.exists(_existing_path):
+    with open(_existing_path, encoding="utf-8") as _f:
+        for _p in json.load(_f):
+            slug = _p.get("slug", "")
+            if slug:
+                _existing_data[slug] = {k: _p.get(k) for k in PRESERVE_FIELDS}
+    print(f"OK {len(_existing_data)} joueurs preserves (GW + status) depuis players.json existant")
 
 LEAGUES = {
     "deglingo_ligue1_final.json": "L1",
@@ -91,11 +109,28 @@ if os.path.exists(PRICES_FILE):
 else:
     print(f"ℹ️  Pas de player_prices.json — run fetch_prices.py pour les prix")
 
+# ── Réinjection des champs préservés (GW + status) ────────────────────────
+# player_status.json a déjà injecté les champs status → on ne réinjecte
+# depuis l'existant QUE les champs encore absents (None/pas définis)
+restored = 0
+for p in all_players:
+    saved = _existing_data.get(p.get("slug", ""))
+    if saved:
+        for k, v in saved.items():
+            if v is not None and p.get(k) is None:
+                p[k] = v
+        restored += 1
+if restored:
+    print(f"✅ {restored} joueurs avec champs restaurés (GW + status fallback)")
+
 for outdir in ["public/data", "deglingo-scout-app/public/data"]:
-    os.makedirs(outdir, exist_ok=True)
-    with open(f"{outdir}/players.json", "w", encoding="utf-8") as f:
-        json.dump(all_players, f, ensure_ascii=False)
-    shutil.copy("teams_data.json", f"{outdir}/teams.json")
+    try:
+        os.makedirs(outdir, exist_ok=True)
+        with open(f"{outdir}/players.json", "w", encoding="utf-8") as f:
+            json.dump(all_players, f, ensure_ascii=False)
+        shutil.copy("teams_data.json", f"{outdir}/teams.json")
+    except Exception as e:
+        print(f"Skip {outdir} : {e}")
 
 print(f"✅ {len(all_players)} joueurs exportés → public/data/ + deglingo-scout-app/public/data/")
 print(f"✅ teams.json copié dans les deux répertoires")

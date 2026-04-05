@@ -1,4 +1,37 @@
 {
+  "Game:462cd569-b84d-4f03-ae4b-ab21b86bb934": {
+    "home": "Stade Brestois 29",
+    "away": "Stade Rennais F.C.",
+    "date": "2026-04-04",
+    "home_goals": 3,
+    "away_goals": 4,
+    "home_scorers": [],
+    "away_scorers": [],
+    "home_assists": [],
+    "away_assists": []
+  },
+  "Game:f21c29dd-d71b-442e-b333-60663e1d95e6": {
+    "home": "LOSC Lille",
+    "away": "RC Lens",
+    "date": "2026-04-04",
+    "home_goals": 3,
+    "away_goals": 0,
+    "home_scorers": [],
+    "away_scorers": [],
+    "home_assists": [],
+    "away_assists": []
+  },
+  "Game:df5a3a33-3bd9-4c6d-b6c5-46588825b313": {
+    "home": "RC Strasbourg Alsace",
+    "away": "OGC Nice",
+    "date": "2026-04-04",
+    "home_goals": 3,
+    "away_goals": 1,
+    "home_scorers": [],
+    "away_scorers": [],
+    "home_assists": [],
+    "away_assists": []
+  },
   "Game:60d674f3-3489-466d-a3f9-2cf1c0e4bf25": {
     "home": "Paris Saint-Germain",
     "away": "Toulouse FC",
@@ -10,11 +43,143 @@
     "home_assists": [],
     "away_assists": []
   },
+  "Game:4f137096-021a-4ae7-bd74-0897cca43a91": {
+    "home": "Atlético de Madrid",
+    "away": "FC Barcelona",
+    "date": "2026-04-04",
+    "home_goals": 1,
+    "away_goals": 2,
+    "home_scorers": [],
+    "away_scorers": [],
+    "home_assists": [],
+    "away_assists": []
+  },
   "Game:eac059a0-18d9-49a4-ae5c-d95a5a9484f4": {
     "home": "Rayo Vallecano",
     "away": "Elche CF",
     "date": "2026-04-03",
     "home_goals": 1,
+    "away_goals": 0,
+    "home_scorers": [],
+    "away_scorers": [],
+    "home_assists": [],
+    "away_assists": []
+  },
+  "Game:dc009793-c0ee-4888-bdfe-33405db285c3": {
+    "home": "Real Betis",
+    "away": "RCD Espanyol de Barcelona",
+    "date": "2026-04-04",
+    "home_goals": 0,
+    "away_goals": 0,
+    "home_scorers": [],
+    "away_scorers": [],
+    "home_assists": [],
+    "away_assists": []
+  },
+  "Game:aacd5c0b-82e4-47ad-a2fb-adbae8843635": {
+    "home": "Real Sociedad",
+    "away": "Levante UD",
+    "date": "2026-04-04",
+    "home_goals": 2,
+    "away_goals": 0,
+    "home_scorers": [],
+    "away_scorers": [],
+    "home_assists": [],
+    "away_assists": []
+  },
+  "Game:29af38fc-5592-4d8a-bc72-2ae7772a9c9f": {
+    "home": "RCD Mallorca",
+    "away": "Real Madrid",
+    "date": "2026-04-04",
+    "home_goals": 2,
+    "away_goals": 1,
+    "home_scorers": [],
+    "away_scorers": [],
+    "home_assists": [],
+    "away_assists": []
+  },
+  "Game:1eb5726c-fa8c-44a0-abb7-df2a1fdeac90": {
+    "home": "Hamburger SV",
+    "away": "FC Augsburg",
+    "date": "2026-04-04",
+    "home_goals": 1,
+    "away_goals": 1,
+    "home_scorers": [],
+    "away_scorers": [],
+    "home_assists": [],
+    "away_assists": []
+  },
+  "Game:345dc2c7-f4a7-4309-bffd-161152402903": {
+    "home": "Bayer 04 Leverkusen",
+    "away": "VfL Wolfsburg",
+    "date": "2026-04-04",
+    "home_goals": 6,
+    "away_goals": 3,
+    "home_scorers": [],
+    "away_scorers": [],
+    "home_assists": [],
+    "away_assists": []
+  },
+  "Game:1c4ce249-c2d8-4b61-a98b-406b8632a5d6": {
+    "home": "Sport-Club Freiburg",
+    "away": "FC Bayern München",
+    "date": "2026-04-04",
+    "home_goals": 2,
+    "away_goals": 3,
+    "home_scorers": [],
+    "away_scorers": [],
+    "home_assists": [],
+    "away_assists": []
+  },
+  "Game:07ddea17-b1cb-44d3-9d35-32dade6d6333": {
+    "home": "VfB Stuttgart",
+    "away": "Borussia Dortmund",
+    "date": "2026-04-04",
+    "home_goals": 0,
+    "away_goals": 2,
+    "home_scorers": [],
+    "away_scorers": [],
+    "home_assists": [],
+    "away_assists": []
+  },
+  "Game:c9800c7b-c3e9-4d10-8423-63e06fbed794": {
+    "home": "Borussia Mönchengladbach",
+    "away": "1. FC Heidenheim 1846",
+    "date": "2026-04-04",
+    "home_goals": 2,
+    "away_goals": 2,
+    "home_scorers": [],
+    "away_scorers": [],
+    "home_assists": [],
+    "away_assists": []
+  },
+  "Game:a162c553-9326-4d8e-af25-ff67f7f4a5d8": {
+    "home": "TSG Hoffenheim",
+    "away": "1. FSV Mainz 05",
+    "date": "2026-04-04",
+    "home_goals": 1,
+    "away_goals": 2,
+    "home_scorers": [],
+    "away_scorers": [],
+    "home_assists": [],
+    "away_assists": []
+  },
+  "Game:69223ec5-09fd-4356-b842-8bd19d9095dc": {
+    "home": "SV Werder Bremen",
+    "away": "RB Leipzig",
+    "date": "2026-04-04",
+    "home_goals": 1,
+    "away_goals": 2,
+    "home_scorers": [],
+    "away_scorers": [],
+    "home_assists": [],
+    "away_assists": []
+  },
+  "Game:9fa46d88-2f5d-4fbe-bb14-400dc42f9f9b": {
+    "home": "RB Leipzig",
+    "away": "TSG Hoffenheim",
+    "date": "2026-03-20",
+    "home_goals": 5,
     "away_goals": 0,
     "home_scorers": [],
     "away_scorers": [],

@@ -26,7 +26,6 @@ export default function DbTab({ players, teams, fixtures, logos = {}, lang = "fr
   const [pos, setPos] = useState("ALL");
   const [club, setClub] = useState("ALL");
   const [arch, setArch] = useState("ALL");
-  const [minL10, setMinL10] = useState(-1);
   const [selectedDate, setSelectedDate] = useState(null);
   const [sortKey, setSortKey] = useState(fixtures?.player_fixtures ? "dsMatch" : "l2");
   const [sortDir, setSortDir] = useState(-1);
@@ -87,7 +86,7 @@ export default function DbTab({ players, teams, fixtures, logos = {}, lang = "fr
   }, [players, leagues]);
 
   const archetypes = useMemo(() => {
-    const set = new Set(players.map(p => p.archetype).filter(Boolean));
+    const set = new Set(players.map(p => p.archetype).filter(a => a && a !== "?"));
     return [...set].sort();
   }, [players]);
 
@@ -126,8 +125,6 @@ export default function DbTab({ players, teams, fixtures, logos = {}, lang = "fr
     if (club !== "ALL") list = list.filter(p => p.club === club);
     if (pos !== "ALL") list = list.filter(p => p.position === pos);
     if (arch !== "ALL") list = list.filter(p => p.archetype === arch);
-    if (minL10 === 0) list = list.filter(p => !p.l10 || p.l10 === 0);
-    else if (minL10 > 0) list = list.filter(p => (p.l10 || 0) < minL10);
     if (u23Only) list = list.filter(p => (p.age || 0) > 0 && p.age <= 24);
     if (selectedDate) list = list.filter(p => p.matchDate === selectedDate);
     if (maxDs < 100) list = list.filter(p => (p.ds ?? 0) <= maxDs);
@@ -179,7 +176,7 @@ export default function DbTab({ players, teams, fixtures, logos = {}, lang = "fr
       return (va - vb) * sortDir;
     });
     return list;
-  }, [enriched, leagues, club, pos, arch, minL10, u23Only, selectedDate, search, sortKey, sortDir, maxDs, maxL2, maxL5, maxL10s, maxScore, maxTitu, maxAA2, maxAA5, maxAA10, maxAA40, maxL40, maxReg10, maxTitu10, maxCS]);
+  }, [enriched, leagues, club, pos, arch, u23Only, selectedDate, search, sortKey, sortDir, maxDs, maxL2, maxL5, maxL10s, maxScore, maxTitu, maxAA2, maxAA5, maxAA10, maxAA40, maxL40, maxReg10, maxTitu10, maxCS]);
 
   const toggleSort = (key) => {
     if (sortKey === key) setSortDir(d => -d);
@@ -187,15 +184,16 @@ export default function DbTab({ players, teams, fixtures, logos = {}, lang = "fr
   };
 
   // Cycle filter: off → ≤40 → ≤50 → ≤60 → ≤70 → ≤80 → off
-  const CYCLE = [100, 40, 50, 60, 70, 80];
+  const CYCLE    = [100, 10, 20, 30, 40, 50, 60, 70, 80, 90];
+  const CYCLE_AA = [100, 5, 10, 15, 20, 25, 30, 35, 40];
   const FILTER_CFG = {
     l2:                 { val: maxL2,    set: setMaxL2,    color: "#4ADE80" },
-    aa2:                { val: maxAA2,   set: setMaxAA2,   color: "#34D399" },
+    aa2:                { val: maxAA2,   set: setMaxAA2,   color: "#34D399", cycle: CYCLE_AA },
     l5:                 { val: maxL5,    set: setMaxL5,    color: "#4ADE80" },
-    aa5:                { val: maxAA5,   set: setMaxAA5,   color: "#34D399" },
+    aa5:                { val: maxAA5,   set: setMaxAA5,   color: "#34D399", cycle: CYCLE_AA },
     l10:                { val: maxL10s,  set: setMaxL10s,  color: "#4ADE80" },
-    aa10:               { val: maxAA10,  set: setMaxAA10,  color: "#34D399" },
-    aa40:               { val: maxAA40,  set: setMaxAA40,  color: "#34D399" },
+    aa10:               { val: maxAA10,  set: setMaxAA10,  color: "#34D399", cycle: CYCLE_AA },
+    aa40:               { val: maxAA40,  set: setMaxAA40,  color: "#34D399", cycle: CYCLE_AA },
     l40:                { val: maxL40,   set: setMaxL40,   color: "#4ADE80" },
     reg10:              { val: maxReg10, set: setMaxReg10, color: "#60A5FA" },
     titu_pct:           { val: maxTitu10,set: setMaxTitu10,color: "#FBBF24" },
@@ -210,8 +208,9 @@ export default function DbTab({ players, teams, fixtures, logos = {}, lang = "fr
     if (!cfg) return null;
     const isActive = cfg.val < 100;
     const cycle = () => {
-      const idx = CYCLE.indexOf(cfg.val);
-      const next = CYCLE[(idx + 1) % CYCLE.length];
+      const cyc = cfg.cycle || CYCLE;
+      const idx = cyc.indexOf(cfg.val);
+      const next = cyc[(idx + 1) % cyc.length];
       cfg.set(next); setVisibleCount(30);
     };
     return (
@@ -389,62 +388,52 @@ export default function DbTab({ players, teams, fixtures, logos = {}, lang = "fr
           <option value="ALL">{t(lang,"profil")}</option>
           {archetypes.map(a => <option key={a} value={a}>{a}</option>)}
         </select>
-        <select value={minL10} onChange={e => { setMinL10(Number(e.target.value)); setVisibleCount(30); }} style={sel({ flex: "1 1 0", minWidth: 0 })}>
-          <option value={-1}>{t(lang,"l10Cap")}</option>
-          <option value={0}>{t(lang,"l10Zero")}</option>
-          {[30, 40, 50, 55, 60, 65, 70].map(v => (
-            <option key={v} value={v}>L10 &lt; {v}</option>
-          ))}
-        </select>
       </div>
 
       {/* D-Score legend */}
-      <div style={{ marginBottom: 10, padding: "10px 14px", background: "linear-gradient(135deg, rgba(99,102,241,0.06), rgba(192,132,252,0.04))", border: "1px solid rgba(99,102,241,0.1)", borderRadius: 10 }}>
-        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: 6, gap: 8 }}>
-          <div style={{ fontSize: 12, fontWeight: 700, letterSpacing: "0.05em", background: "linear-gradient(90deg, #A5B4FC 0%, #C084FC 25%, #E879F9 50%, #C084FC 75%, #A5B4FC 100%)", backgroundSize: "200% auto", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent", animation: "legendShimmer 4s linear infinite" }}>
+      <div style={{ marginBottom: 10, padding: "8px 14px 8px 14px", background: "linear-gradient(135deg, rgba(99,102,241,0.06), rgba(192,132,252,0.04))", border: "1px solid rgba(99,102,241,0.1)", borderRadius: 10, position: "relative" }}>
+        <div style={{ position: "absolute", top: 7, right: 12, display: "flex", flexDirection: "column", alignItems: "flex-end", gap: 3 }}>
+          <span style={{ fontSize: 9, color: "#F87171", fontWeight: 700, background: "rgba(239,68,68,0.12)", padding: "2px 8px", borderRadius: 20 }}>🚀 BETA GRATUITE</span>
+          <span style={{ fontSize: 8, color: "rgba(255,255,255,0.35)", display: "flex", gap: 5 }}>
+            <span style={{ color: "#A5B4FC" }}>50% {lang==="en"?"foot expertise":"expertise foot"}</span>
+            <span style={{ color: "#4ADE80" }}>20% data</span>
+            <span style={{ color: "#C084FC" }}>20% AI</span>
+            <span style={{ color: "#FBBF24" }}>10% maths</span>
+          </span>
+        </div>
+        {/* Ligne 1 : titre + disclaimer */}
+        <div style={{ display: "flex", alignItems: "center", gap: 8, flexWrap: "nowrap", marginBottom: 4, paddingRight: 180, overflow: "hidden" }}>
+          <div style={{ fontSize: 12, fontWeight: 700, letterSpacing: "0.05em", background: "linear-gradient(90deg, #A5B4FC 0%, #C084FC 25%, #E879F9 50%, #C084FC 75%, #A5B4FC 100%)", backgroundSize: "200% auto", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent", animation: "legendShimmer 4s linear infinite", flexShrink: 0 }}>
             {t(lang, "dscoreLegend")}
           </div>
-          <span className="db-legend-detail" style={{ fontSize: 9, color: "#F87171", fontWeight: 700, background: "rgba(239,68,68,0.12)", padding: "2px 8px", borderRadius: 20, flexShrink: 0 }}>🚀 BETA GRATUITE</span>
+          <span style={{ fontSize: 9, color: "rgba(255,255,255,0.3)", fontStyle: "italic", flexShrink: 0, whiteSpace: "nowrap" }}>{t(lang, "dscoreDisclaimer")}</span>
         </div>
-        <div className="db-legend-detail" style={{ fontSize: 9, color: "rgba(255,255,255,0.3)", marginTop: 3, lineHeight: 1.5, fontStyle: "italic" }}>
-          {t(lang, "dscoreDisclaimer")}
-          <span style={{ color: "rgba(255,255,255,0.15)" }}> | </span>
-          <span style={{ color: "#A5B4FC" }}>50% {lang==="en"?"football expertise":"expertise foot"}</span>
-          <span style={{ color: "rgba(255,255,255,0.12)" }}> · </span>
-          <span style={{ color: "#4ADE80" }}>20% data</span>
-          <span style={{ color: "rgba(255,255,255,0.12)" }}> · </span>
-          <span style={{ color: "#C084FC" }}>20% AI</span>
-          <span style={{ color: "rgba(255,255,255,0.12)" }}> · </span>
-          <span style={{ color: "#FBBF24" }}>10% {lang==="en"?"maths":"maths"}</span>
-          <span style={{ color: "rgba(255,255,255,0.15)" }}> | </span>
-          {t(lang, "factsImprev")}
-        </div>
-        <div className="db-legend-socle" style={{ fontSize: 10, color: "rgba(255,255,255,0.5)", lineHeight: 1.5 }}>
-          {__("Socle (forme L5 + AA + floor + régularité)", "Base (L5 form + AA + floor + consistency)")} <span style={{ color: "rgba(255,255,255,0.2)" }}>›</span> {__("Contexte (adversaire, PPDA, xGA, style de jeu)", "Context (opponent, PPDA, xGA, play style)")} <span style={{ color: "rgba(255,255,255,0.2)" }}>›</span> {__("Momentum (tendance L2, séries)", "Momentum (L2 trend, streaks)")} <span style={{ color: "rgba(255,255,255,0.2)" }}>›</span> {__("Dom/Ext", "H/A")}
-        </div>
-        <div style={{ display: "flex", gap: 14, marginTop: 6, alignItems: "center", fontSize: 10, color: "rgba(255,255,255,0.45)", flexWrap: "wrap" }}>
+        {/* Ligne 2 : socle + légende */}
+        <div style={{ display: "flex", alignItems: "center", gap: 10, flexWrap: "wrap", fontSize: 10, color: "rgba(255,255,255,0.45)" }}>
+          <span style={{ color: "rgba(255,255,255,0.5)" }}>{__("Socle (forme L5 + AA + floor + régularité)", "Base (L5 form + AA + floor + consistency)")} <span style={{ color: "rgba(255,255,255,0.2)" }}>›</span> {__("Contexte (adversaire, PPDA, xGA, style de jeu)", "Context (opponent, PPDA, xGA, play style)")} <span style={{ color: "rgba(255,255,255,0.2)" }}>›</span> {__("Momentum (tendance L2, séries)", "Momentum (L2 trend, streaks)")} <span style={{ color: "rgba(255,255,255,0.2)" }}>›</span> {__("Dom/Ext", "H/A")}</span>
+          <span style={{ color: "rgba(255,255,255,0.2)" }}>·</span>
           <span>{filtered.length === enriched.filter(p => ["GK","DEF","MIL","ATT"].includes(p.position)).length ? `${filtered.length} joueurs` : `${filtered.length} / ${enriched.filter(p => ["GK","DEF","MIL","ATT"].includes(p.position)).length} joueurs`}</span>
           <span style={{ display: "inline-flex", alignItems: "center", gap: 3 }}>
-            <span style={{ display: "inline-block", width: 10, height: 10, borderRadius: 3, background: "linear-gradient(135deg,#4ADE80,#22C55E)", boxShadow: "0 0 6px #4ADE80" }} />
+            <span style={{ display: "inline-block", width: 9, height: 9, borderRadius: 3, background: "linear-gradient(135deg,#4ADE80,#22C55E)", boxShadow: "0 0 6px #4ADE80" }} />
             {__("L2 explosion", "L2 explosion")}
           </span>
           <span>Reg10 = {__("% matchs >60 sur L10", "% matches >60 over L10")}</span>
-          <span className="db-legend-detail">Proj = {__("Score projeté Sorare (humains) — reflète la titularisation prévue. Vert ≥50, Orange ≥35, Rouge <35", "Sorare projected score (human-made) — reflects expected start. Green ≥50, Orange ≥35, Red <35")}</span>
-          <span className="db-legend-detail"><span style={{ color: "#FBBF24" }}>&#9733;</span> Extra GOAT — {__("élite protégée par l'algo quand ça compte", "elite protected by the algo when it matters")}</span>
+          <span><span style={{ color: "#FBBF24" }}>&#9733;</span> Extra GOAT</span>
         </div>
       </div>
 
       {/* Stat columns toggle — Sorare daily missions */}
-      <div style={{ marginBottom: 8 }}>
+      <div style={{ marginBottom: 8, overflowX: "auto", paddingBottom: 2 }}>
+      <div style={{ display: "flex", flexWrap: "nowrap", alignItems: "center", gap: 6, width: "max-content" }}>
       <button onClick={() => setShowStatPanel(v => !v)} style={{
-        marginBottom: showStatPanel ? 6 : 0,
+        flexShrink: 0,
         padding: "3px 10px", borderRadius: 6, fontSize: 10, fontWeight: 700, cursor: "pointer",
         border: "1px solid rgba(255,255,255,0.1)", background: "rgba(255,255,255,0.04)",
         color: "rgba(255,255,255,0.4)", transition: "all 0.15s", display: "flex", alignItems: "center", gap: 4,
       }}>
-        <span style={{ fontSize: 8 }}>{showStatPanel ? "▲" : "▼"}</span> Stats AA
+        <span style={{ fontSize: 8 }}>{showStatPanel ? "◀" : "▶"}</span> Stats AA
       </button>
-      {showStatPanel && <div style={{ overflowX: "auto", paddingBottom: 2 }}><div style={{ display: "flex", flexWrap: "nowrap", gap: 4, alignItems: "center", width: "max-content" }}>
+      {showStatPanel && <div style={{ display: "flex", flexWrap: "nowrap", gap: 4, alignItems: "center" }}>
         {["DEF", "POSS", "PASS", "ATT"].map(cat => {
           const CAT_LABELS = { DEF: "🛡️ DEF", POSS: "🔄 POSS", PASS: "🎯 PASS", ATT: "⚔️ ATT" };
           const CAT_COLORS = { DEF: "#60A5FA", POSS: "#FBBF24", PASS: "#4ADE80", ATT: "#F87171" };
@@ -487,7 +476,8 @@ export default function DbTab({ players, teams, fixtures, logos = {}, lang = "fr
         {statCols.length > 0 && !STAT_DEFS.map(s => s.key).every(k => statCols.includes(k)) && (
           <button onClick={() => setStatCols([])} style={{ padding: "3px 8px", borderRadius: 6, fontSize: 9, cursor: "pointer", border: "1px solid rgba(239,68,68,0.3)", background: "rgba(239,68,68,0.1)", color: "#EF4444" }}>✕ Reset</button>
         )}
-      </div></div>}
+      </div>}
+      </div>
       </div>
       {statCols.length > 0 && (
         <div style={{ fontSize: 11, color: "rgba(255,255,255,0.4)", marginBottom: 6, padding: "4px 8px", lineHeight: 1.5, background: "rgba(255,255,255,0.02)", borderRadius: 6, border: "1px solid rgba(255,255,255,0.06)" }}>
@@ -691,7 +681,7 @@ export default function DbTab({ players, teams, fixtures, logos = {}, lang = "fr
                   <td style={{ textAlign: "center", fontFamily: "DM Mono", fontWeight: 700, fontSize: 14, color: dsColor(p.l10), borderLeft: "1px solid rgba(255,255,255,0.04)" }}>{R(p.l10)}</td>
                   {statCols.length === 0 && <td style={{ textAlign: "center", fontFamily: "DM Mono", fontSize: 10, color: "rgba(255,255,255,0.3)" }}>{R(p.aa10)}</td>}
                   <td style={{ textAlign: "center", fontFamily: "DM Mono", fontSize: 11, color: (p.reg10 ?? p.regularite) >= 80 ? "#4ADE80" : (p.reg10 ?? p.regularite) >= 50 ? "#FBBF24" : "#EF4444" }}>{R(p.reg10 ?? p.regularite)}%</td>
-                  <td style={{ textAlign: "center", fontFamily: "DM Mono", fontSize: 11, color: p.titu_pct >= 80 ? "#4ADE80" : p.titu_pct >= 50 ? "#FBBF24" : "#EF4444" }}>{R(p.titu_pct)}%</td>
+                  <td style={{ textAlign: "center", fontFamily: "DM Mono", fontSize: 11, color: p.titu_pct >= 80 ? "#4ADE80" : p.titu_pct >= 50 ? "#FBBF24" : p.titu_pct > 0 ? "#EF4444" : "rgba(255,255,255,0.2)" }}>{p.titu_pct > 0 ? `${R(p.titu_pct)}%` : "—"}</td>
                   <td style={{ textAlign: "center", fontFamily: "DM Mono", fontWeight: 700, fontSize: 13, color: dsColor(p.l40), borderLeft: "1px solid rgba(255,255,255,0.04)" }}>{R(p.l40)}</td>
                   <td style={{ textAlign: "center", fontFamily: "DM Mono", fontSize: 10, color: "rgba(255,255,255,0.3)" }}>{R(p.aa40)}</td>
                   {hasFixtures && <>

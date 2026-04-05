@@ -142,6 +142,9 @@ export default function App() {
           .ds-lang-btn { padding: 4px 7px !important; font-size: 10px !important; }
           .ds-stellar-icon { display: none !important; }
         }
+        @media(max-width:768px){
+          .bp-opp-name { display: none !important; }
+        }
       `}</style>
       {/* Header */}
       <header style={{
@@ -245,7 +248,7 @@ export default function App() {
       <main style={{ maxWidth: 1400, margin: "0 auto", paddingTop: 8, overflowX: "hidden" }}>
         {tab === "db" && <DbTab players={players} teams={teams} fixtures={fixtures} logos={logos} lang={lang} />}
         {tab === "fight" && <FightTab players={players} teams={teams} fixtures={fixtures} logos={logos} lang={lang} />}
-        {tab === "reco" && <RecoTab players={players} teams={teams} fixtures={fixtures} logos={logos} lang={lang} />}
+        {tab === "reco" && <div style={{ display: "flex", justifyContent: "center" }}><RecoTab players={players} teams={teams} fixtures={fixtures} logos={logos} lang={lang} /></div>}
         {tab === "stellar" && <StellarTab players={players} teams={teams} fixtures={fixtures} logos={logos} matchEvents={matchEvents} onFight={() => setTab("fight")} lang={lang} />}
       </main>
 

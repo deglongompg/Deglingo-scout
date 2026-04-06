@@ -14,7 +14,7 @@ Get a free API key at: https://www.football-data.org/client/register
 import json, sys, os, time
 from urllib.request import Request, urlopen
 from urllib.error import HTTPError
-from datetime import datetime
+from datetime import datetime, timedelta
 
 API_KEY = sys.argv[1] if len(sys.argv) > 1 else os.environ.get("FOOTBALL_DATA_API_KEY", "")
 if not API_KEY:
@@ -31,6 +31,16 @@ COMPETITIONS = {
     "PD":  "Liga",    # La Liga (Primera Division)
     "BL1": "Bundes",  # Bundesliga
 }
+
+# Compétitions européennes (fetch par plage de dates, pas par journée)
+EURO_COMPETITIONS = {
+    "CL":   "UCL",   # Champions League
+    "EL":   "UEL",   # Europa League
+    "ECSL": "UECL",  # Conference League
+}
+
+# Clubs de nos 4 ligues qui jouent en europe (pour filtrer les matchs pertinents)
+# On garde TOUS les matchs — StellarTab filtre ensuite par joueurs dans players.json
 
 # Mapping: football-data.org team names → our teams.json short names
 # Built from actual data - will be auto-completed by fuzzy matching
@@ -259,6 +269,44 @@ def normalize_team(api_name):
             return clean
     return api_name
 
+def fetch_recent_finished(comp_code, our_league, days_back=8):
+    """Fetch recently finished matches (last N days) — pour afficher les résultats dans Stellar."""
+    print(f"\n📅 {our_league} ({comp_code}) — matchs récents terminés...")
+    today = datetime.utcnow().date()
+    date_from = (today - timedelta(days=days_back)).strftime("%Y-%m-%d")
+    date_to   = today.strftime("%Y-%m-%d")
+    data = fetch(f"/competitions/{comp_code}/matches?status=FINISHED&dateFrom={date_from}&dateTo={date_to}")
+    if not data or "matches" not in data:
+        print(f"  ⚠️ Pas de matchs récents")
+        return []
+    matches = data["matches"]
+    if not matches:
+        print(f"  ⚠️ Aucun match terminé dans les {days_back} derniers jours")
+        return []
+    # Garder seulement la/les dernières journées (matchday max = GW terminée)
+    from collections import Counter
+    md_counts = Counter(m["matchday"] for m in matches if m["matchday"])
+    if not md_counts:
+        return []
+    last_md = max(md_counts.keys())
+    md_matches = [m for m in matches if m["matchday"] == last_md]
+    print(f"  ✅ Journée {last_md} terminée — {len(md_matches)} matchs")
+    fixtures = []
+    for m in md_matches:
+        home = normalize_team(m["homeTeam"]["name"])
+        away = normalize_team(m["awayTeam"]["name"])
+        date = m["utcDate"][:10] if m.get("utcDate") else ""
+        kickoff = m["utcDate"][11:16] if m.get("utcDate") and len(m["utcDate"]) >= 16 else ""
+        fixtures.append({
+            "home": home, "away": away, "date": date, "kickoff": kickoff,
+            "matchday": last_md, "league": our_league,
+            "home_api": m["homeTeam"]["name"], "away_api": m["awayTeam"]["name"],
+            "finished": True,
+        })
+        print(f"    {home} vs {away} ({date})")
+    return fixtures
+
+
 def fetch_next_matchday(comp_code, our_league):
     """Fetch next scheduled matchday for a competition."""
     print(f"\n📡 {our_league} ({comp_code})...")
@@ -276,6 +324,9 @@ def fetch_next_matchday(comp_code, our_league):
 
     # Find the nearest COMPLETE matchday (>= 5 matches, skip postponed single games)
     from collections import Counter
+    today_str = datetime.utcnow().date().strftime("%Y-%m-%d")
+    soon_str  = (datetime.utcnow().date() + timedelta(days=3)).strftime("%Y-%m-%d")
+
     md_counts = Counter(m["matchday"] for m in matches if m["matchday"])
     sorted_mds = sorted(md_counts.keys())
     next_md = None
@@ -284,14 +335,28 @@ def fetch_next_matchday(comp_code, our_league):
             next_md = md
             break
     if next_md is None:
-        # Fallback: take the one with most matches
         next_md = max(md_counts, key=md_counts.get) if md_counts else sorted_mds[0]
     md_matches = [m for m in matches if m["matchday"] == next_md]
+
+    # Matchs orphelins : journées incomplètes (< 5 matchs) avec date dans les 3 prochains jours
+    # Ex: dernier match d'une journée qui se joue un lundi décalé
+    orphans = []
+    for md in sorted_mds:
+        if md == next_md:
+            continue
+        if md_counts[md] < 5:
+            for m in matches:
+                if m["matchday"] == md:
+                    mdate = (m.get("utcDate") or "")[:10]
+                    if today_str <= mdate <= soon_str:
+                        orphans.append(m)
+    if orphans:
+        print(f"  + {len(orphans)} match(s) orphelin(s) dans les 3 prochains jours")
 
     print(f"  ✅ Journée {next_md} — {len(md_matches)} matchs")
 
     fixtures = []
-    for m in md_matches:
+    for m in md_matches + orphans:
         home = normalize_team(m["homeTeam"]["name"])
         away = normalize_team(m["awayTeam"]["name"])
         date = m["utcDate"][:10] if m.get("utcDate") else ""
@@ -314,6 +379,49 @@ def fetch_next_matchday(comp_code, our_league):
 
     return fixtures
 
+def fetch_euro_fixtures(comp_code, comp_label, days_ahead=14):
+    """Fetch upcoming European competition matches in the next N days."""
+    print(f"\n🌍 {comp_label} ({comp_code})...")
+    today = datetime.utcnow().date()
+    date_to = today + timedelta(days=days_ahead)
+    date_from_str = today.strftime("%Y-%m-%d")
+    date_to_str = date_to.strftime("%Y-%m-%d")
+
+    data = fetch(f"/competitions/{comp_code}/matches?status=SCHEDULED,TIMED&dateFrom={date_from_str}&dateTo={date_to_str}")
+    if not data or "matches" not in data:
+        print(f"  ⚠️ Pas de matchs trouvés")
+        return []
+
+    matches = data["matches"]
+    if not matches:
+        print(f"  ⚠️ Aucun match programmé dans les {days_ahead} prochains jours")
+        return []
+
+    print(f"  ✅ {len(matches)} matchs trouvés ({date_from_str} → {date_to_str})")
+
+    fixtures = []
+    for m in matches:
+        home = normalize_team(m["homeTeam"]["name"])
+        away = normalize_team(m["awayTeam"]["name"])
+        date = m["utcDate"][:10] if m.get("utcDate") else ""
+        kickoff = m["utcDate"][11:16] if m.get("utcDate") and len(m["utcDate"]) >= 16 else ""
+        stage = m.get("stage", "")
+        fixtures.append({
+            "home": home,
+            "away": away,
+            "date": date,
+            "kickoff": kickoff,
+            "matchday": stage,
+            "league": comp_label,          # "UCL", "UEL", "UECL"
+            "competition": comp_label,     # flag explicite pour StellarTab
+            "home_api": m["homeTeam"]["name"],
+            "away_api": m["awayTeam"]["name"],
+        })
+        print(f"    {home} vs {away} ({date} {kickoff})")
+
+    return fixtures
+
+
 def build_player_fixtures(fixtures, teams, players):
     """
     For each player, find their next fixture and compute:
@@ -321,10 +429,15 @@ def build_player_fixtures(fixtures, teams, players):
     - home/away
     """
     # Build club → fixture mapping
+    # Pour les matchs multiples, on garde le PLUS PROCHE (tri par date+kickoff)
     club_fixture = {}
-    for f in fixtures:
-        club_fixture[f["home"]] = {"opp": f["away"], "isHome": True, "date": f["date"], "matchday": f["matchday"], "kickoff": f.get("kickoff", "")}
-        club_fixture[f["away"]] = {"opp": f["home"], "isHome": False, "date": f["date"], "matchday": f["matchday"], "kickoff": f.get("kickoff", "")}
+    sorted_fixtures = sorted(fixtures, key=lambda x: (x.get("date",""), x.get("kickoff","99:99")))
+    for f in sorted_fixtures:
+        comp = f.get("competition", "")
+        if f["home"] not in club_fixture:
+            club_fixture[f["home"]] = {"opp": f["away"], "isHome": True, "date": f["date"], "matchday": f["matchday"], "kickoff": f.get("kickoff", ""), "competition": comp}
+        if f["away"] not in club_fixture:
+            club_fixture[f["away"]] = {"opp": f["home"], "isHome": False, "date": f["date"], "matchday": f["matchday"], "kickoff": f.get("kickoff", ""), "competition": comp}
 
     # Map player clubs to teams.json names for matching
     team_names = {t["name"] for t in teams}
@@ -376,6 +489,7 @@ def build_player_fixtures(fixtures, teams, players):
                 "date": fx["date"],
                 "matchday": fx["matchday"],
                 "kickoff": fx.get("kickoff", ""),
+                "competition": fx.get("competition", ""),  # "UCL"/"UEL"/"UECL" ou "" si ligue domestique
             }
             # Use BOTH slug (unique) and name (for backward compat) as keys
             result[p["slug"]] = entry
@@ -391,6 +505,31 @@ def build_player_fixtures(fixtures, teams, players):
 
     print(f"\n✅ {matched}/{len(players)} joueurs avec fixture")
     return result
+
+def get_manual_euro_fixtures():
+    """
+    Fixtures UEL / UECL hardcodées manuellement (football-data.org ne les fournit pas).
+    A mettre à jour chaque tour (QF Leg2, Semis, Finale).
+    Kickoffs en UTC. Competition = "UEL" ou "UECL" → calendrier Stellar only, pas de reco.
+    """
+    fixtures = [
+        # ── UEL QF Leg 1 — Jeudi 9 avril 2026 ──────────────────────────────
+        {"home": "Braga",          "away": "Betis",         "date": "2026-04-09", "kickoff": "16:45", "matchday": "QUARTER_FINALS", "league": "UEL", "competition": "UEL", "home_api": "SC Braga",             "away_api": "Real Betis"},
+        {"home": "Freiburg",       "away": "Celta Vigo",    "date": "2026-04-09", "kickoff": "19:00", "matchday": "QUARTER_FINALS", "league": "UEL", "competition": "UEL", "home_api": "SC Freiburg",           "away_api": "RC Celta de Vigo"},
+        {"home": "Bologna",        "away": "Aston Villa",   "date": "2026-04-09", "kickoff": "19:00", "matchday": "QUARTER_FINALS", "league": "UEL", "competition": "UEL", "home_api": "Bologna FC",            "away_api": "Aston Villa FC"},
+        {"home": "Porto",          "away": "Nottm Forest",  "date": "2026-04-09", "kickoff": "19:00", "matchday": "QUARTER_FINALS", "league": "UEL", "competition": "UEL", "home_api": "FC Porto",              "away_api": "Nottingham Forest FC"},
+
+        # ── UECL QF Leg 1 — Jeudi 9 avril 2026 ─────────────────────────────
+        {"home": "Rayo Vallecano", "away": "AEK Athens",    "date": "2026-04-09", "kickoff": "16:45", "matchday": "QUARTER_FINALS", "league": "UECL", "competition": "UECL", "home_api": "Rayo Vallecano",     "away_api": "AEK Athens FC"},
+        {"home": "Shakhtar",       "away": "AZ",             "date": "2026-04-09", "kickoff": "19:00", "matchday": "QUARTER_FINALS", "league": "UECL", "competition": "UECL", "home_api": "Shakhtar Donetsk",  "away_api": "AZ Alkmaar"},
+        {"home": "Mainz",          "away": "Strasbourg",    "date": "2026-04-09", "kickoff": "19:00", "matchday": "QUARTER_FINALS", "league": "UECL", "competition": "UECL", "home_api": "1. FSV Mainz 05",    "away_api": "RC Strasbourg"},
+        {"home": "Crystal Palace", "away": "Fiorentina",    "date": "2026-04-09", "kickoff": "19:00", "matchday": "QUARTER_FINALS", "league": "UECL", "competition": "UECL", "home_api": "Crystal Palace FC",  "away_api": "ACF Fiorentina"},
+    ]
+    print(f"\n📋 Manual euro fixtures: {len(fixtures)} matchs (UEL + UECL QF Leg 1)")
+    for f in fixtures:
+        print(f"  [{f['league']}] {f['home']} vs {f['away']} ({f['date']} {f['kickoff']} UTC)")
+    return fixtures
+
 
 def main():
     script_dir = os.path.dirname(os.path.abspath(__file__))
@@ -408,14 +547,35 @@ def main():
 
     all_fixtures = []
     for comp_code, our_league in COMPETITIONS.items():
+        # Prochaine journée (matchs futurs)
         fixtures = fetch_next_matchday(comp_code, our_league)
         all_fixtures.extend(fixtures)
-        time.sleep(6.5)  # Respect 10 req/min rate limit
+        time.sleep(6.5)
+        # Dernière journée terminée (résultats récents pour Stellar)
+        finished = fetch_recent_finished(comp_code, our_league, days_back=8)
+        # Ne pas doublon : exclure si une date est déjà dans les fixtures à venir
+        upcoming_dates = {f["date"] for f in fixtures}
+        finished = [f for f in finished if f["date"] not in upcoming_dates]
+        all_fixtures.extend(finished)
+        time.sleep(6.5)
+
+    # Competitions europeennes — UCL via API, UEL/UECL hardcodées
+    print("\n--- Competitions europeennes ---")
+    for comp_code, comp_label in EURO_COMPETITIONS.items():
+        euro_fixtures = fetch_euro_fixtures(comp_code, comp_label, days_ahead=14)
+        all_fixtures.extend(euro_fixtures)
+        if euro_fixtures:
+            time.sleep(6.5)
+
+    # UEL + UECL manuelles (football-data.org ne les inclut pas dans le plan gratuit)
+    manual_euro = get_manual_euro_fixtures()
+    all_fixtures.extend(manual_euro)
 
     print(f"\n📋 Total: {len(all_fixtures)} matchs récupérés")
 
-    # Build player → fixture mapping
-    player_fixtures = build_player_fixtures(all_fixtures, teams, players)
+    # Build player → fixture mapping (ligues domestiques uniquement, pas UCL/UEL/UECL)
+    domestic_fixtures = [f for f in all_fixtures if not f.get("competition")]
+    player_fixtures = build_player_fixtures(domestic_fixtures, teams, players)
 
     # Save fixtures.json
     output = {

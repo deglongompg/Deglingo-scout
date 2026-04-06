@@ -1,7 +1,8 @@
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 import { POSITION_COLORS, dsColor, dsBg, isSilver } from "../utils/colors";
 import { dScoreMatch, csProb, findTeam } from "../utils/dscore";
 import { T } from "../utils/i18n";
+import { getDailyLockKey, loadFrozen, saveFrozen } from "../utils/freeze";
 
 const PC = POSITION_COLORS;
 
@@ -12,11 +13,29 @@ const SHORT_NAMES = {
   "Rayo Vallecano": "Rayo", "Atletico Madrid": "Atletico", "Real Sociedad": "R. Sociedad",
   "Athletic Club": "Bilbao", "Paris Saint-Germain": "PSG", "Olympique de Marseille": "OM",
   "Olympique Lyonnais": "OL", "RC Strasbourg Alsace": "Strasbourg", "Stade Brestois 29": "Brest",
+  // Clubs européens
+  "Bayern Munich": "Bayern", "Borussia Dortmund": "Dortmund", "RasenBallsport Leipzig": "RB Leipzig",
+  "Bayer Leverkusen": "Leverkusen", "Inter Milan": "Inter", "AC Milan": "Milan",
+  "Juventus FC": "Juventus", "SSC Napoli": "Napoli", "AS Roma": "Roma",
+  "Benfica": "Benfica", "FC Porto": "Porto", "Sporting CP": "Sporting",
+  "PSV Eindhoven": "PSV", "Ajax": "Ajax", "Feyenoord": "Feyenoord",
+  "Celtic FC": "Celtic", "Rangers FC": "Rangers",
+  "FC Salzburg": "Salzburg", "Shakhtar Donetsk": "Shakhtar",
+  "Club Brugge KV": "Brugge", "Anderlecht": "Anderlecht",
+  "Galatasaray A.Ş.": "Galatasaray", "Besiktas JK": "Besiktas", "Fenerbahce SK": "Fenerbahce",
+  "Bayer 04 Leverkusen": "Leverkusen",
 };
 const sn = (name) => SHORT_NAMES[name] || name;
 
 const DAYS_FR = ["LUN", "MAR", "MER", "JEU", "VEN", "SAM", "DIM"];
 const STELLAR_LEAGUES = ["L1", "PL", "Liga"];
+const EURO_LEAGUES = ["UCL", "UEL", "UECL"];
+// Stats moyennes pour un adversaire européen inconnu (UCL/UEL/UECL)
+const EURO_OPP_FALLBACK = { name: "European Opp", xg_dom: 1.4, xg_ext: 1.2, xga_dom: 1.2, xga_ext: 1.4, ppda_dom: 10, ppda_ext: 10, league: "EUR", cs_pct: 0.25 };
+const LEAGUE_COLOR = {
+  L1: "#4FC3F7", PL: "#B388FF", Liga: "#FF8A80",
+  UCL: "#F59E0B", UEL: "#F97316", UECL: "#4ADE80",
+};
 
 const PALIERS = [
   { pts: 280, reward: "2 000 essence", color: "#94A3B8" },
@@ -26,6 +45,26 @@ const PALIERS = [
   { pts: 440, reward: "100 $", color: "#F59E0B" },
   { pts: 480, reward: "1 000 $", color: "#EF4444" },
 ];
+
+/* ─── Club matching helpers (utilisés dans useMemo ET render) ─── */
+const stripAcc = (s) => s.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+const normClubGlobal = (n) => stripAcc((n || "").replace(/-/g, " ").trim());
+const clubMatchGlobal = (a, b) => {
+  const na = normClubGlobal(a).toLowerCase();
+  const nb = normClubGlobal(b).toLowerCase();
+  if (na === nb) return true;
+  const ALIASES = { "psg": ["paris saint germain", "paris sg"], "marseille": ["olympique de marseille", "om"], "lyon": ["olympique lyonnais", "ol"] };
+  for (const [, syns] of Object.entries(ALIASES)) {
+    if (syns.some(x => na.includes(x) || x.includes(na)) && syns.some(x => nb.includes(x) || x.includes(nb))) return true;
+  }
+  const words = (s) => s.split(/\s+/).filter(w => w.length > 2);
+  const wa = words(na), wb = words(nb);
+  if (wa.length >= 2 && wb.length >= 2) {
+    const common = wa.filter(w => wb.includes(w));
+    if (common.length >= 2) return true;
+  }
+  return na.includes(nb) || nb.includes(na);
+};
 
 /* ─── Timezone Paris — toutes les dates sont en heure de France ─── */
 const TZ = "Europe/Paris";
@@ -162,14 +201,9 @@ function buildStellarTeams(dayPlayers, dateStr) {
     // 4. Assign roles : DEF/MIL/ATT obligatoires → FLEX = restant
     // 5. Cross-match check (pas adversaires dans même match)
 
-    // Cross-match : même match mais équipes différentes (via matchId canonique)
-    const wouldConflict = (p, existing) => {
-      if (!p.matchId) return false;
-      for (const x of existing) {
-        if (x.matchId === p.matchId && x.club !== p.club) return true;
-      }
-      return false;
-    };
+    // Cross-match : désactivé pour Stellar (contrairement à SO5/SO7, on peut mixer
+    // les deux équipes d'un même match — utile notamment pour les jours 1 seul match)
+    const wouldConflict = () => false;
 
     // Best GK (pas cross-match avec pool outfield top)
     const gkSorted = pool.filter(p => p.position === "GK");
@@ -199,6 +233,7 @@ function buildStellarTeams(dayPlayers, dateStr) {
 
     let picks = tryPickOutfield(2);
     if (picks.length < 4) picks = tryPickOutfield(3); // fallback pool réduit
+    if (picks.length < 4) picks = tryPickOutfield(11); // fallback sans limite de club (ex: stack 1 seul match)
     if (picks.length < 4) return null;
 
     // Best GK : pas de cross-match avec les outfield picks
@@ -261,6 +296,23 @@ function buildStellarTeams(dayPlayers, dateStr) {
   // Fallback : essaie avec contrainte, sinon sans (1 seul match dans le créneau = full stack)
   const pickSafe = (pool) => pickTeam(pool) || pickTeam(pool.map(p => ({ ...p, oppName: null })));
 
+  // ── CAS SPÉCIAL : 1 seul match → 2 stacks (un par club) ──────────────────
+  const uniqueMatches = new Set(dayPlayers.map(p => p.matchId).filter(Boolean));
+  if (uniqueMatches.size <= 1) {
+    const clubs = [...new Set(dayPlayers.map(p => p.club))];
+    for (const club of clubs) {
+      const pool = sorted.filter(p => p.club === club);
+      if (pool.length < 5) continue;
+      const t = pickSafe(pool);
+      if (t) teams.push({
+        label: sn(club), icon: "⚽",
+        players: t.players, top10: buildTop10(pool), totalDs: t.totalDs,
+      });
+    }
+    return teams;
+  }
+
+  // ── CAS NORMAL : plusieurs matchs ────────────────────────────────────────
   // ULTIME — top 5 du jour
   const ultime = pickSafe(sorted);
   if (ultime) teams.push({ label: "ULTIME", icon: "★", players: ultime.players, top10: buildTop10(sorted), totalDs: ultime.totalDs });
@@ -458,6 +510,12 @@ export default function StellarTab({ players, teams, fixtures, logos = {}, match
   const [expandedFixture, setExpandedFixture] = useState(null); // { key, side: "home"|"away" }
   const CURRENT_GW_START = "2026-04-03";
 
+  // ── Freeze daily Stellar : figé à 12h00 Paris ──────────────────────────────
+  // dailyLockKey = "YYYY-MM-DD" si Paris >= 12h00, sinon null
+  const dailyLockKey = useMemo(() => getDailyLockKey(), []);
+  const stellarFreezeKey = dailyLockKey ? `stellar_${dailyLockKey}` : null;
+  const frozenDayData   = useMemo(() => (stellarFreezeKey ? loadFrozen(stellarFreezeKey) : null), [stellarFreezeKey]);
+
   const monday = useMemo(() => {
     const m = getMonday(today);
     m.setDate(m.getDate() + weekOffset * 7);
@@ -485,12 +543,12 @@ export default function StellarTab({ players, teams, fixtures, logos = {}, match
     });
   }, [monday]);
 
-  // All fixtures grouped by date (only Stellar leagues)
+  // All fixtures grouped by date (Stellar leagues + European competitions)
   const fixturesByDate = useMemo(() => {
     if (!fixtures?.fixtures) return {};
     const map = {};
     for (const f of fixtures.fixtures) {
-      if (!STELLAR_LEAGUES.includes(f.league)) continue;
+      if (!STELLAR_LEAGUES.includes(f.league) && !EURO_LEAGUES.includes(f.league)) continue;
       if (!map[f.date]) map[f.date] = [];
       map[f.date].push(f);
     }
@@ -502,6 +560,12 @@ export default function StellarTab({ players, teams, fixtures, logos = {}, match
     if (selectedDay === null) return null;
     const day = weekDays[selectedDay];
     const dateStr = isoDate(day);
+
+    // ── Freeze : si aujourd'hui >= 12h00 Paris → utilise les données figées ──
+    if (dailyLockKey && dateStr === dailyLockKey && frozenDayData) {
+      return { ...frozenDayData, frozen: true };
+    }
+
     const dayFixtures = fixturesByDate[dateStr] || [];
     if (!dayFixtures.length) return { fixtures: [], players: [], teams: [] };
 
@@ -513,30 +577,33 @@ export default function StellarTab({ players, teams, fixtures, logos = {}, match
     const pf = fixtures?.player_fixtures || {};
     const dayPlayers = [];
 
+    // Clubs sans cartes Stellar (pas dans le jeu Sorare SO5/SO7)
+    const NO_STELLAR_CLUBS = ["FC Metz"];
+
     for (const p of players) {
       if (!STELLAR_LEAGUES.includes(p.league)) continue;
+      if (NO_STELLAR_CLUBS.some(c => clubMatchGlobal(p.club, c))) continue;
       const fx = pf[p.slug] || pf[p.name];
       if (!fx || fx.date !== dateStr) continue;
 
       const lgTeams = teams.filter(t => t.league === p.league);
-      const opp = lgTeams.find(t => t.name === fx.opp);
-      if (!opp) continue;
+      const oppStats = lgTeams.find(t => t.name === fx.opp);
+      if (!oppStats) continue;
       const pTeam = findTeam(lgTeams, p.club);
-      const ds = dScoreMatch(p, opp, fx.isHome, pTeam);
+      const ds = dScoreMatch(p, oppStats, fx.isHome, pTeam);
       if (ds < 20) continue; // Filter ghosts
       if (p.injured || p.suspended) continue; // Filter injured/suspended
       if (p.sorare_starter_pct != null && p.sorare_starter_pct < 70) continue; // Titu% Sorare < 70%
 
       let csPercent = null;
       if (p.position === "GK") {
-        const oppXg = fx.isHome ? (opp.xg_ext || 1.3) : (opp.xg_dom || 1.3);
+        const oppXg = fx.isHome ? (oppStats.xg_ext || 1.3) : (oppStats.xg_dom || 1.3);
         const defXga = pTeam ? (fx.isHome ? (pTeam.xga_dom || 1.3) : (pTeam.xga_ext || 1.5)) : 1.3;
         csPercent = csProb(defXga, oppXg, p.league);
       }
-      // matchId canonique : on utilise pTeam.name (normalisé) pour éviter les mismatches club/team
-      const matchId = pTeam ? [pTeam.name, opp.name].sort().join("|") : null;
+      const matchId = pTeam ? [pTeam.name, oppStats.name].sort().join("|") : null;
       dayPlayers.push({
-        ...p, ds, oppName: opp.name, oppTeam: opp, playerTeam: pTeam, isHome: fx.isHome,
+        ...p, ds, oppName: oppStats.name, oppTeam: oppStats, playerTeam: pTeam, isHome: fx.isHome,
         kickoff: fx.kickoff || fx.time || "",
         matchDate: dateStr,
         csPercent, matchId,
@@ -565,8 +632,25 @@ export default function StellarTab({ players, teams, fixtures, logos = {}, match
       })
       .sort((a, b) => b.decisive - a.decisive)[0] || null;
 
-    return { fixtures: dayFixtures, players: dayPlayers, teams: stellarTeams, decisivePick };
-  }, [selectedDay, weekDays, fixturesByDate, players, teams, fixtures]);
+    return { fixtures: dayFixtures, players: dayPlayers, teams: stellarTeams, decisivePick, frozen: false };
+  }, [selectedDay, weekDays, fixturesByDate, players, teams, fixtures, dailyLockKey, frozenDayData]);
+
+  // ── Sauvegarder dans localStorage quand le freeze est actif et pas encore figé ──
+  useEffect(() => {
+    if (!stellarFreezeKey || frozenDayData) return; // déjà figé ou pas encore l'heure
+    if (!dayData || dayData.frozen) return;
+    if (selectedDay === null) return;
+    const day = weekDays[selectedDay];
+    const dateStr = isoDate(day);
+    if (dateStr !== dailyLockKey) return; // seulement aujourd'hui
+    if (!dayData.teams?.length && !dayData.players?.length) return; // rien à figer
+    saveFrozen(stellarFreezeKey, {
+      fixtures: dayData.fixtures,
+      players: dayData.players,
+      teams: dayData.teams,
+      decisivePick: dayData.decisivePick,
+    });
+  }, [stellarFreezeKey, frozenDayData, dayData, selectedDay, weekDays, dailyLockKey]);
 
   // Auto-select first day with matches
   useMemo(() => {
@@ -586,8 +670,9 @@ export default function StellarTab({ players, teams, fixtures, logos = {}, match
       {/* Vignette bords — position absolute, scroll avec le contenu */}
       <div style={{ position: "fixed", inset: 0, zIndex: 0, pointerEvents: "none", boxShadow: "inset 0 0 100px rgba(1,0,6,0.5)" }} />
 
-      {/* ═══ LIGNE UNIQUE : STELLAR + EXPLICATIONS + PALIERS ═══ */}
-      <div className="st-info-row" style={{ display: "flex", alignItems: "stretch", padding: "16px 0 12px", gap: 10 }}>
+      {/* ═══ LIGNE UNIQUE : STELLAR + PALIERS + CTA + MES CARTES ═══ */}
+      <div className="st-info-row" style={{ display: "flex", alignItems: "stretch", padding: "4px 0 10px", gap: 10 }}>
+
         {/* Titre STELLAR — gauche */}
         <div className="st-info-bloc-title" style={{ flexShrink: 0, background: "rgba(8,4,25,0.60)", backdropFilter: "blur(10px)", borderRadius: 12, padding: "8px 14px", border: "1px solid rgba(196,181,253,0.12)", display: "flex", flexDirection: "column", justifyContent: "center" }}>
           <div style={{ display: "flex", flexDirection: "column", gap: 0 }}>
@@ -601,11 +686,9 @@ export default function StellarTab({ players, teams, fixtures, logos = {}, match
               <img src="/Stellar.png" alt="" style={{ width: 42, height: 42, objectFit: "contain", mixBlendMode: "screen", animation: "holoShift 3s linear infinite", flexShrink: 0 }} />
             </div>
           </div>
-          <div style={{ fontSize: 13, fontWeight: 800, color: "#fff", letterSpacing: "0.05em", marginTop: 6, textTransform: "uppercase" }}>Free 2 Play</div>
-          <div style={{ fontSize: 10, color: "rgba(255,255,255,0.55)", marginTop: 2 }}>{S.stellarSubtitle}</div>
         </div>
 
-        {/* Mini CTA — mobile only, à droite du bloc STELLAR */}
+        {/* Mini CTA — mobile only */}
         <a href="http://sorare.pxf.io/Deglingo" target="_blank" rel="noopener noreferrer"
           className="st-cta-mobile"
           style={{
@@ -626,88 +709,84 @@ export default function StellarTab({ players, teams, fixtures, logos = {}, match
           </div>
         </a>
 
-        {/* Blocs explicatifs — centre */}
-        <div className="st-info-bloc-expl" style={{ flex: 1, background: "rgba(8,4,25,0.65)", backdropFilter: "blur(10px)", borderRadius: 10, padding: "8px 12px", border: "1px solid rgba(196,181,253,0.15)", display: "flex", gap: 8, alignItems: "flex-start" }}>
-          <span style={{ fontSize: 14, flexShrink: 0, marginTop: 1 }}>★</span>
+        {/* Paliers — avec titre ÉQUIPES PAR CRÉNEAU */}
+        <div className="st-info-bloc-paliers" style={{ flexShrink: 0, display: "flex", flexDirection: "column", justifyContent: "center", gap: 6, background: "rgba(8,4,25,0.60)", backdropFilter: "blur(10px)", borderRadius: 12, padding: "8px 10px", border: "1px solid rgba(196,181,253,0.12)" }}>
           <div>
-            <div style={{ fontSize: 9.5, color: "rgba(255,255,255,0.75)", lineHeight: 1.5, fontStyle: "italic", marginBottom: 6 }}>
-              {lang === "fr"
-                ? <><span style={{ color: "#C4B5FD", fontWeight: 700, fontStyle: "normal" }}>Bienvenue</span> sur le Sorare Stellar Scout — j'ai développé un <span style={{ color: "#A78BFA", fontWeight: 700, fontStyle: "normal" }}>algo propriétaire</span> basé sur l'indicateur <span style={{ color: "#facc15", fontWeight: 800, fontStyle: "normal", letterSpacing: "0.05em" }}>⚡ D-SCORE</span> pour optimiser le choix journalier de tes équipes.</>
-                : <><span style={{ color: "#C4B5FD", fontWeight: 700, fontStyle: "normal" }}>Welcome</span> to the Sorare Stellar Scout — I built a <span style={{ color: "#A78BFA", fontWeight: 700, fontStyle: "normal" }}>proprietary algorithm</span> based on the <span style={{ color: "#facc15", fontWeight: 800, fontStyle: "normal", letterSpacing: "0.05em" }}>⚡ D-SCORE</span> indicator to optimize your daily team selection.</>}
-            </div>
-            <div style={{ borderTop: "1px solid rgba(196,181,253,0.1)", paddingTop: 5 }}>
-              <div style={{ fontSize: 10, fontWeight: 800, color: "#C4B5FD", marginBottom: 2 }}>{S.stellarUltimeTitle}</div>
-              <div style={{ fontSize: 9.5, color: "rgba(255,255,255,0.45)", lineHeight: 1.4 }}>
-                {S.stellarUltimeDesc}
-              </div>
-            </div>
-          </div>
-        </div>
-        <div className="st-info-bloc-expl" style={{ flex: 1, background: "rgba(8,4,25,0.65)", backdropFilter: "blur(10px)", borderRadius: 10, padding: "8px 12px", border: "1px solid rgba(196,181,253,0.15)", display: "flex", gap: 8, alignItems: "flex-start" }}>
-          <span style={{ fontSize: 14, flexShrink: 0, marginTop: 1 }}>⏰</span>
-          <div>
-            <div style={{ fontSize: 10, fontWeight: 800, color: "#C4B5FD", marginBottom: 2 }}>{S.stellarCreneauTitle}</div>
-            <div style={{ fontSize: 9.5, color: "rgba(255,255,255,0.55)", lineHeight: 1.4 }}>
+            <div style={{ fontSize: 9, fontWeight: 800, color: "#C4B5FD", marginBottom: 2 }}>⏰ {S.stellarCreneauTitle}</div>
+            <div style={{ fontSize: 8.5, color: "rgba(255,255,255,0.45)", lineHeight: 1.4 }}>
               {S.stellarCreneauDesc} <span style={{ color: "#A78BFA", fontWeight: 700 }}>{S.stellarCreneauDesc2}</span>{S.stellarCreneauDesc3}
             </div>
-            <div style={{ marginTop: 6, borderTop: "1px solid rgba(196,181,253,0.1)", paddingTop: 5 }}>
-              <div style={{ fontSize: 9, fontWeight: 800, color: "#A78BFA", marginBottom: 2 }}>⚡ DECISIVE PICKER</div>
-              <div style={{ fontSize: 9, color: "rgba(255,255,255,0.45)", lineHeight: 1.4 }}>
-                {lang === "fr"
-                  ? "1 joueur recommandé par jour — le plus susceptible de faire une action décisive. Calculé sur G+A/match × forme récente (L5) × faiblesse défensive adverse (xGA)."
-                  : "1 recommended player per day — most likely to make a decisive action. Based on G+A/match × recent form (L5) × opponent defensive weakness (xGA)."}
+          </div>
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(6, 1fr)", gap: 5 }}>
+            {PALIERS.map((p, i) => (
+              <div key={i} style={{ background: `${p.color}18`, border: `1px solid ${p.color}40`, borderRadius: 6, padding: "4px 6px", textAlign: "center" }}>
+                <div style={{ fontSize: 12, fontWeight: 800, color: p.color, fontFamily: "'DM Mono',monospace" }}>{p.pts}</div>
+                <div style={{ fontSize: 7, color: "rgba(255,255,255,0.55)", whiteSpace: "nowrap" }}>{p.reward}</div>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* CTA Ouvrir mes packs */}
+        <a href="http://sorare.pxf.io/Deglingo" target="_blank" rel="noopener noreferrer"
+          className="st-cta-banner"
+          style={{
+            flex: 1, display: "flex", alignItems: "center", justifyContent: "space-between",
+            background: "linear-gradient(135deg, rgba(139,92,246,0.12), rgba(109,40,217,0.08))",
+            border: "1px solid rgba(167,139,250,0.35)", borderRadius: 12,
+            padding: "10px 16px", textDecoration: "none",
+            boxShadow: "0 0 18px rgba(139,92,246,0.12)", transition: "all 0.2s",
+          }}
+          onMouseEnter={e => { e.currentTarget.style.boxShadow = "0 0 28px rgba(139,92,246,0.28)"; e.currentTarget.style.borderColor = "rgba(167,139,250,0.6)"; }}
+          onMouseLeave={e => { e.currentTarget.style.boxShadow = "0 0 18px rgba(139,92,246,0.12)"; e.currentTarget.style.borderColor = "rgba(167,139,250,0.35)"; }}
+        >
+          <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+            <span style={{ fontSize: 18 }}>🎁</span>
+            <div>
+              <div style={{ fontSize: 11, fontWeight: 800, color: "#C4B5FD", letterSpacing: "0.03em" }}>
+                {lang === "fr" ? "Viens ouvrir tes premiers packs gratuitement" : "Open your first card packs for free"}
+              </div>
+              <div style={{ fontSize: 9, color: "rgba(255,255,255,0.5)", marginTop: 1 }}>
+                {lang === "fr" ? "Sorare Stellar est 100% gratuit — joue dès ce soir" : "Sorare Stellar is 100% free — play tonight"}
               </div>
             </div>
           </div>
-        </div>
+          <div style={{
+            fontSize: 10, fontWeight: 800, color: "#fff", whiteSpace: "nowrap",
+            background: "linear-gradient(135deg, #8B5CF6, #6D28D9)", borderRadius: 8,
+            padding: "6px 12px", boxShadow: "0 0 10px rgba(139,92,246,0.4)", flexShrink: 0, marginLeft: 8,
+          }}>
+            {lang === "fr" ? "Ouvrir →" : "Open →"}
+          </div>
+        </a>
 
-        {/* Paliers — droite */}
-        <div className="st-info-bloc-paliers" style={{ flexShrink: 0, display: "flex", gap: 5, flexWrap: "wrap", justifyContent: "flex-end", alignContent: "center", background: "rgba(8,4,25,0.60)", backdropFilter: "blur(10px)", borderRadius: 12, padding: "8px 10px", border: "1px solid rgba(196,181,253,0.12)" }}>
-          {PALIERS.map((p, i) => (
-            <div key={i} style={{ background: `${p.color}18`, border: `1px solid ${p.color}40`, borderRadius: 6, padding: "3px 8px", textAlign: "center" }}>
-              <div style={{ fontSize: 11, fontWeight: 800, color: p.color, fontFamily: "'DM Mono',monospace" }}>{p.pts}</div>
-              <div style={{ fontSize: 7, color: "rgba(255,255,255,0.55)" }}>{p.reward}</div>
-            </div>
-          ))}
-        </div>
-      </div>
-
-      {/* ═══ CTA AFFILIATION ═══ */}
-      <a
-        href="http://sorare.pxf.io/Deglingo"
-        target="_blank"
-        rel="noopener noreferrer"
-        className="st-cta-banner"
-        style={{
-          display: "flex", alignItems: "center", justifyContent: "space-between",
-          background: "linear-gradient(135deg, rgba(139,92,246,0.12), rgba(109,40,217,0.08))",
-          border: "1px solid rgba(167,139,250,0.35)", borderRadius: 10,
-          padding: "10px 16px", marginBottom: 10, textDecoration: "none",
-          boxShadow: "0 0 18px rgba(139,92,246,0.12)",
-          transition: "all 0.2s",
-        }}
-        onMouseEnter={e => { e.currentTarget.style.boxShadow = "0 0 28px rgba(139,92,246,0.28)"; e.currentTarget.style.borderColor = "rgba(167,139,250,0.6)"; }}
-        onMouseLeave={e => { e.currentTarget.style.boxShadow = "0 0 18px rgba(139,92,246,0.12)"; e.currentTarget.style.borderColor = "rgba(167,139,250,0.35)"; }}
-      >
-        <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
-          <span style={{ fontSize: 18 }}>🎁</span>
-          <div>
-            <div style={{ fontSize: 12, fontWeight: 800, color: "#C4B5FD", letterSpacing: "0.03em" }}>
-              {lang === "fr" ? "Viens ouvrir tes premiers packs de cartes gratuitement" : "Open your first card packs for free"}
-            </div>
-            <div style={{ fontSize: 10, color: "rgba(255,255,255,0.5)", marginTop: 1 }}>
-              {lang === "fr" ? "Sorare Stellar est 100% gratuit — inscris-toi et joue dès ce soir" : "Sorare Stellar is 100% free — sign up and play tonight"}
+        {/* Mes Cartes — Coming Soon */}
+        <div className="st-cta-banner" style={{
+          flex: 1, display: "flex", alignItems: "center", justifyContent: "space-between",
+          background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.08)",
+          borderRadius: 12, padding: "10px 16px", opacity: 0.5, cursor: "not-allowed",
+        }}>
+          <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+            <div style={{ width: 28, height: 28, borderRadius: 8, background: "rgba(196,181,253,0.08)", border: "1px solid rgba(196,181,253,0.15)", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 14, flexShrink: 0 }}>🃏</div>
+            <div>
+              <div style={{ fontSize: 11, fontWeight: 800, color: "rgba(255,255,255,0.55)", letterSpacing: "0.03em" }}>
+                {lang === "fr" ? "Joue avec TES cartes Sorare" : "Play with YOUR Sorare cards"}
+              </div>
+              <div style={{ fontSize: 9, color: "rgba(255,255,255,0.3)", marginTop: 1 }}>
+                {lang === "fr" ? "Connecte ton compte — algo optimisé sur ta collection" : "Connect your account — algo built on your collection"}
+              </div>
             </div>
           </div>
+          <div style={{
+            fontSize: 9, fontWeight: 800, color: "rgba(255,255,255,0.4)", whiteSpace: "nowrap",
+            background: "rgba(255,255,255,0.06)", border: "1px solid rgba(255,255,255,0.1)",
+            borderRadius: 8, padding: "6px 12px", flexShrink: 0, marginLeft: 8,
+          }}>
+            {lang === "fr" ? "Bientôt" : "Soon"}
+          </div>
         </div>
-        <div style={{
-          fontSize: 11, fontWeight: 800, color: "#fff", whiteSpace: "nowrap",
-          background: "linear-gradient(135deg, #8B5CF6, #6D28D9)", borderRadius: 8,
-          padding: "6px 14px", boxShadow: "0 0 10px rgba(139,92,246,0.4)", flexShrink: 0,
-        }}>
-          {lang === "fr" ? "Ouvrir mes packs →" : "Open my packs →"}
-        </div>
-      </a>
+
+      </div>
 
       {/* ═══ CALENDRIER + bouton semaine suivante ═══ */}
       <div className="st-calendar-wrap" style={{ display: "grid", gridTemplateColumns: "auto repeat(7, 1fr) auto", gap: 6, marginBottom: 24, alignItems: "stretch" }}>
@@ -770,9 +849,14 @@ export default function StellarTab({ players, teams, fixtures, logos = {}, match
 
             {/* Titre du jour */}
             <div style={{ marginBottom: 8 }}>
-              <h2 style={{ fontSize: 16, fontWeight: 800, color: "#fff", margin: 0, display: "flex", alignItems: "center", gap: 8 }}>
+              <h2 style={{ fontSize: 16, fontWeight: 800, color: "#fff", margin: 0, display: "flex", alignItems: "center", gap: 8, flexWrap: "wrap" }}>
                 <span style={{ color: "#C4B5FD" }}>{weekDays[selectedDay].toLocaleDateString(S.stellarDateLocale, { timeZone: TZ, weekday: "long", day: "numeric", month: "long" }).toUpperCase()}</span>
-                <span style={{ fontSize: 11, color: "rgba(255,255,255,0.3)", fontWeight: 500 }}>— {dayData.fixtures.length} {dayData.fixtures.length > 1 ? S.stellarMatches : S.stellarMatch}</span>
+                {dayData.frozen && (
+                  <div style={{ display: "inline-flex", alignItems: "center", gap: 4, padding: "3px 8px", borderRadius: 6, background: "rgba(196,181,253,0.08)", border: "1px solid rgba(196,181,253,0.18)" }}>
+                    <span style={{ fontSize: 11 }}>🔒</span>
+                    <span style={{ fontSize: 9, fontWeight: 700, color: "#A78BFA" }}>Picks figés à 12h00 Paris</span>
+                  </div>
+                )}
               </h2>
               <div style={{ fontSize: 9, color: "rgba(255,255,255,0.35)", fontWeight: 600, letterSpacing: "0.08em", marginTop: 2 }}>{lang === "fr" ? "HEURE PARIS" : "PARIS TIME"}</div>
             </div>
@@ -820,7 +904,7 @@ export default function StellarTab({ players, teams, fixtures, logos = {}, match
                     <div key={gi} style={{ display: "flex", flexDirection: "column", gap: 2 }}>
                       <div className="st-match-group-time-label" style={{ fontSize: 10, fontWeight: 900, color: "#fff", fontFamily: "'DM Mono',monospace", paddingLeft: 2 }}>{g.time}</div>
                       {g.fixtures.map((f, i) => {
-                        const lgColor = f.league === "L1" ? "#4FC3F7" : f.league === "PL" ? "#B388FF" : "#FF8A80";
+                        const lgColor = LEAGUE_COLOR[f.league] || "#FF8A80";
                         const findScore = (name) => {
                           const direct = clubScores[normClub(name)];
                           if (direct != null) return direct;
@@ -921,7 +1005,7 @@ export default function StellarTab({ players, teams, fixtures, logos = {}, match
               const dp = dayData.decisivePick;
               const parisTime = utcToParisTime(dp.kickoff, dp.matchDate);
               const gaR = dp.ga_per_match?.toFixed(2) || "0.00";
-              const lgColor = dp.league === "L1" ? "#4FC3F7" : dp.league === "PL" ? "#B388FF" : "#FF8A80";
+              const lgColor = LEAGUE_COLOR[dp.league] || "#FF8A80";
               const pc = PC[dp.position];
               const dpPlayed = dp.last_so5_date && dp.last_so5_date >= CURRENT_GW_START && dp.last_so5_score != null;
               const dpWon = dpPlayed && dp.last_so5_score >= 60;
@@ -934,13 +1018,18 @@ export default function StellarTab({ players, teams, fixtures, logos = {}, match
                 <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 10, background: dpPlayed ? `linear-gradient(135deg, rgba(6,2,20,0.9), ${dpRealColor}18)` : "linear-gradient(135deg, rgba(6,2,20,0.9), rgba(15,5,40,0.85))", border: dpPlayed ? `1px solid ${dpRealColor}50` : "1px solid rgba(196,181,253,0.2)", borderRadius: 10, padding: "8px 14px", backdropFilter: "blur(12px)", boxShadow: dpPlayed ? `0 0 16px ${dpRealColor}30` : "0 0 16px rgba(139,92,246,0.1)" }}>
                   <div style={{ flexShrink: 0, fontSize: 18 }}>{dpWon ? "✅" : dpPlayed ? "❌" : "⚡"}</div>
                   <div style={{ flex: 1, minWidth: 0 }}>
-                    <div style={{ fontSize: 8, fontWeight: 800, color: dpPlayed ? dpRealColor : "#A78BFA", letterSpacing: "0.1em", marginBottom: 3 }}>
+                    <div style={{ fontSize: 8, fontWeight: 800, color: dpPlayed ? dpRealColor : "#A78BFA", letterSpacing: "0.1em", marginBottom: 1 }}>
                       {dpWon
                         ? (lang === "fr" ? "DECISIVE PICKER — +2 000 ESSENCE !" : "DECISIVE PICKER — +2,000 ESSENCE!")
                         : dpPlayed
                         ? (lang === "fr" ? "DECISIVE PICKER — 0 ESSENCE" : "DECISIVE PICKER — 0 ESSENCE")
                         : (lang === "fr" ? "DECISIVE PICKER — 2 000 ESSENCE" : "DECISIVE PICKER — 2,000 ESSENCE")}
                     </div>
+                    {!dpPlayed && <div style={{ fontSize: 7.5, color: "rgba(255,255,255,0.35)", lineHeight: 1.3, marginBottom: 3 }}>
+                      {lang === "fr"
+                        ? "Le plus susceptible de faire une action décisive — G+A/match × forme (L5) × faiblesse adverse (xGA)"
+                        : "Most likely to make a decisive action — G+A/match × form (L5) × opponent weakness (xGA)"}
+                    </div>}
                     <div style={{ display: "flex", alignItems: "center", gap: 6, flexWrap: "wrap" }}>
                       {logos[dp.club] && <img src={`/data/logos/${logos[dp.club]}`} alt="" style={{ width: 16, height: 16, objectFit: "contain" }} />}
                       <span style={{ fontSize: 13, fontWeight: 900, color: "#fff" }}>{dp.name}</span>
@@ -987,6 +1076,7 @@ export default function StellarTab({ players, teams, fixtures, logos = {}, match
               <div style={{ fontSize: 13 }}>{S.stellarNoTeams}</div>
             </div>
           ) : (
+            <>
             <div className="st-teams-grid" style={{ display: "grid", gridTemplateColumns: "repeat(2, 1fr)", gap: 12 }}>
             {dayData.teams.map((team, ti) => {
               const isUltime = team.label === "ULTIME";
@@ -1075,6 +1165,7 @@ export default function StellarTab({ players, teams, fixtures, logos = {}, match
               );
             })}
             </div>
+            </>
           )}
           {/* ── TOP 10 — 4 colonnes dans la colonne droite ── */}
           {dayData.teams.length > 0 && (

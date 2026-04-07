@@ -760,7 +760,7 @@ export default function StellarTab({ players, teams, fixtures, logos = {}, match
   };
 
   // ── Mon Équipe — page cachée, accessible via bouton ──────────────────────────
-  const [showMyTeam, setShowMyTeam] = useState(false);
+  const [showMyTeam, setShowMyTeam] = useState(true); // TEST LOCAL — remettre false avant deploy
   const [selectedSlot, setSelectedSlot] = useState(null); // slot actif pour filtrer la liste
 
   // ── Sauvegarde équipes — jusqu'à 4 par jour ───────────────────────────────
@@ -1101,7 +1101,7 @@ export default function StellarTab({ players, teams, fixtures, logos = {}, match
 
         {/* Bouton CRÉER MON ÉQUIPE — masqué temporairement (WIP) */}
         {/* HIDDEN_MYTEAM_START */}
-        {false && <button onClick={() => setShowMyTeam(v => !v)}
+        {true && <button onClick={() => setShowMyTeam(v => !v)}
           className="st-cta-banner"
           style={{
             flexShrink: 0, display: "flex", alignItems: "center", justifyContent: "space-between", gap: 12,

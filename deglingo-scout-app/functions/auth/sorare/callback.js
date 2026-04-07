@@ -1,63 +1,82 @@
 /**
- * Cloudflare Pages Function — OAuth Sorare callback
- * Route: /auth/sorare/callback
+ * Cloudflare Pages Function — OAuth callback Sorare
+ * Reçoit le code d'autorisation, échange contre un access_token,
+ * stocke dans un cookie httpOnly Secure (jamais exposé au JS frontend).
  *
- * Variables d'environnement à configurer dans Cloudflare Pages :
- *   SORARE_CLIENT_ID     = NPuOENu-LuafKXV1spf6PZpWJbUodzfULnRtntnNP_U
- *   SORARE_CLIENT_SECRET = (le secret, jamais dans le code)
+ * Variables d'environnement Cloudflare requises :
+ *   SORARE_CLIENT_ID     — UID public (peut être en clair)
+ *   SORARE_CLIENT_SECRET — Secret (jamais dans le code !)
  */
+
+const APP_URL      = "https://scout.deglingosorare.com";
+const CALLBACK_URL = `${APP_URL}/auth/sorare/callback`;
+const TOKEN_URL    = "https://api.sorare.com/oauth/token";
 
 export async function onRequestGet(context) {
   const { request, env } = context;
-  const url = new URL(request.url);
-  const code = url.searchParams.get("code");
+  const url   = new URL(request.url);
+  const code  = url.searchParams.get("code");
+  const state = url.searchParams.get("state") || "";
   const error = url.searchParams.get("error");
 
-  // Erreur côté Sorare (user a refusé, etc.)
+  // Erreur renvoyée par Sorare (refus utilisateur, etc.)
   if (error || !code) {
-    return Response.redirect(`${url.origin}/?sorare_error=${error || "no_code"}`, 302);
+    return redirect(`${APP_URL}/#sorare_error=${encodeURIComponent(error || "no_code")}&state=${state}`);
   }
 
-  const CLIENT_ID = env.SORARE_CLIENT_ID;
-  const CLIENT_SECRET = env.SORARE_CLIENT_SECRET;
-  const REDIRECT_URI = `${url.origin}/auth/sorare/callback`;
-
-  // Echange code → access_token
+  // Échange code → access_token (client_secret reste côté serveur)
   let tokenData;
   try {
-    const resp = await fetch("https://sorare.com/oauth/token", {
-      method: "POST",
-      headers: { "Content-Type": "application/x-www-form-urlencoded" },
+    const res = await fetch(TOKEN_URL, {
+      method:  "POST",
+      headers: {
+        "Content-Type": "application/x-www-form-urlencoded",
+        "Accept":        "application/json",
+      },
       body: new URLSearchParams({
-        grant_type: "authorization_code",
+        grant_type:    "authorization_code",
         code,
-        redirect_uri: REDIRECT_URI,
-        client_id: CLIENT_ID,
-        client_secret: CLIENT_SECRET,
+        redirect_uri:  CALLBACK_URL,
+        client_id:     env.SORARE_CLIENT_ID,
+        client_secret: env.SORARE_CLIENT_SECRET,
       }),
     });
 
-    if (!resp.ok) {
-      const text = await resp.text();
-      console.error("Sorare token error:", resp.status, text);
-      return Response.redirect(`${url.origin}/?sorare_error=token_failed`, 302);
+    if (!res.ok) {
+      const body = await res.text();
+      console.error("Sorare token error:", res.status, body);
+      return redirect(`${APP_URL}/#sorare_error=token_failed&state=${state}`);
     }
 
-    tokenData = await resp.json();
-  } catch (e) {
-    console.error("Fetch error:", e);
-    return Response.redirect(`${url.origin}/?sorare_error=fetch_failed`, 302);
+    tokenData = await res.json();
+  } catch (err) {
+    console.error("Sorare token exception:", err);
+    return redirect(`${APP_URL}/#sorare_error=exception&state=${state}`);
   }
 
-  const accessToken = tokenData.access_token;
-  if (!accessToken) {
-    return Response.redirect(`${url.origin}/?sorare_error=no_token`, 302);
+  const { access_token } = tokenData;
+  if (!access_token) {
+    return redirect(`${APP_URL}/#sorare_error=no_token&state=${state}`);
   }
 
-  // Redirige vers l'app avec le token dans le hash (jamais dans l'URL query = pas loggué)
-  // Le frontend lit window.location.hash et le stocke en localStorage
-  return Response.redirect(
-    `${url.origin}/?sorare_token=${encodeURIComponent(accessToken)}#stellar`,
-    302
-  );
+  // Token stocké dans un cookie httpOnly Secure — inaccessible au JS
+  // Max-Age : 23h (les tokens Sorare expirent généralement dans les 24h)
+  return new Response(null, {
+    status: 302,
+    headers: {
+      "Location":   `${APP_URL}/#sorare_authed=1&state=${state}`,
+      "Set-Cookie": [
+        `sorare_token=${access_token}`,
+        "HttpOnly",
+        "Secure",
+        "SameSite=Strict",
+        "Path=/",
+        "Max-Age=82800",
+      ].join("; "),
+    },
+  });
+}
+
+function redirect(url) {
+  return new Response(null, { status: 302, headers: { "Location": url } });
 }

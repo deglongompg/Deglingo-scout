@@ -1101,7 +1101,7 @@ export default function StellarTab({ players, teams, fixtures, logos = {}, match
 
         {/* Bouton CRÉER MON ÉQUIPE — masqué temporairement (WIP) */}
         {/* HIDDEN_MYTEAM_START */}
-        <button onClick={() => setShowMyTeam(v => !v)}
+        {false && <button onClick={() => setShowMyTeam(v => !v)}
           className="st-cta-banner"
           style={{
             flexShrink: 0, display: "flex", alignItems: "center", justifyContent: "space-between", gap: 12,
@@ -1128,7 +1128,7 @@ export default function StellarTab({ players, teams, fixtures, logos = {}, match
           }}>
             {showMyTeam ? t(lang,"myTeamBtnBadgeClose") : t(lang,"myTeamBtnBadge")}
           </div>
-        </button>
+        </button>}
 
       </div>
 

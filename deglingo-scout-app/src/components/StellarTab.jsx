@@ -1,7 +1,7 @@
 import { useState, useMemo, useEffect } from "react";
 import { POSITION_COLORS, dsColor, dsBg, isSilver } from "../utils/colors";
 import { dScoreMatch, csProb, findTeam } from "../utils/dscore";
-import { T } from "../utils/i18n";
+import { T, t } from "../utils/i18n";
 import { getDailyLockKey, loadFrozen, saveFrozen } from "../utils/freeze";
 
 const PC = POSITION_COLORS;
@@ -17,7 +17,7 @@ const SHORT_NAMES = {
   "Bayern Munich": "Bayern", "Borussia Dortmund": "Dortmund", "RasenBallsport Leipzig": "RB Leipzig",
   "Bayer Leverkusen": "Leverkusen", "Inter Milan": "Inter", "AC Milan": "Milan",
   "Juventus FC": "Juventus", "SSC Napoli": "Napoli", "AS Roma": "Roma",
-  "Benfica": "Benfica", "FC Porto": "Porto", "Sporting CP": "Sporting",
+  "Benfica": "Benfica", "FC Porto": "Porto", "Sporting CP": "Sporting", "Sporting Clube de Portugal": "Sporting",
   "PSV Eindhoven": "PSV", "Ajax": "Ajax", "Feyenoord": "Feyenoord",
   "Celtic FC": "Celtic", "Rangers FC": "Rangers",
   "FC Salzburg": "Salzburg", "Shakhtar Donetsk": "Shakhtar",
@@ -45,6 +45,18 @@ const PALIERS = [
   { pts: 440, reward: "100 $", color: "#F59E0B" },
   { pts: 480, reward: "1 000 $", color: "#EF4444" },
 ];
+
+/* ─── Éditions Stellar Nights — bonus score officiels (blog Sorare 2026) ─── */
+const EDITIONS = [
+  { id: "base",     label: "Base",    bonus: 0,  color: "#64748B" },
+  { id: "shiny",    label: "Shiny",   bonus: 5,  color: "#93C5FD" },
+  { id: "shiny_m",  label: "Maillot", bonus: 20, color: "#34D399" },
+  { id: "shiny_ms", label: "Meteor",  bonus: 25, color: "#10B981" },
+  { id: "holo",     label: "Holo",    bonus: 10, color: "#C4B5FD" },
+  { id: "legend",   label: "Legend.", bonus: 30, color: "#FBBF24" },
+  { id: "legend_s", label: "Signed",  bonus: 40, color: "#F97316" },
+];
+const getEdition = (id) => EDITIONS.find(e => e.id === id) || EDITIONS[0];
 
 /* ─── Club matching helpers (utilisés dans useMemo ET render) ─── */
 const stripAcc = (s) => s.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
@@ -372,7 +384,7 @@ function Top10Column({ team, logos, dateStr, lang }) {
                     <span style={{ fontSize: 8, color: "rgba(255,255,255,0.4)" }}>D-Score</span>
                     <span style={{ fontSize: 9, fontWeight: 800, color: "#C4B5FD", fontFamily: "'DM Mono',monospace" }}>{p.ds}</span>
                     {p.proj != null && <><span style={{ fontSize: 8, color: "rgba(255,255,255,0.4)" }}>Proj</span><span style={{ fontSize: 9, fontWeight: 700, color: p.proj >= 50 ? "#4ADE80" : p.proj >= 35 ? "#F59E0B" : "#EF4444" }}>{p.proj}</span></>}
-                    {p.position === "GK" && p.csPercent != null && (
+                    {["GK","DEF"].includes(p.position) && p.csPercent != null && (
                       <>
                         <span style={{ fontSize: 8, color: "rgba(255,255,255,0.4)" }}>CS%</span>
                         <span style={{ fontSize: 9, fontWeight: 700, color: p.csPercent >= 40 ? "#4ADE80" : p.csPercent >= 25 ? "#F59E0B" : "#EF4444", fontFamily: "'DM Mono',monospace" }}>{p.csPercent}%</span>
@@ -390,14 +402,16 @@ function Top10Column({ team, logos, dateStr, lang }) {
 }
 
 /* ─── Player Mini Card (compact for Stellar) ─── */
-function StellarCard({ player, logos, size = "md", isValidated = false, gwStart = "" }) {
+function StellarCard({ player, logos, size = "md", isValidated = false, gwStart = "", edition = null, onEditionChange = null }) {
   const pc = PC[player.position];
   const sm = size === "sm";
   const W = sm ? 78 : 96;
   const H = sm ? 108 : 130;
 
   const hasPlayed = player.last_so5_date && gwStart && player.last_so5_date >= gwStart && player.last_so5_score != null;
-  const displayScore = isValidated && hasPlayed ? Math.round(player.last_so5_score) : player.ds;
+  const edBonus = edition?.bonus || 0;
+  const adjDs = Math.round((player.ds || 0) * (1 + edBonus / 100));
+  const displayScore = isValidated && hasPlayed ? Math.round(player.last_so5_score) : adjDs;
   const scoreColor = isValidated && hasPlayed
     ? (player.last_so5_score >= 75 ? "#4ADE80" : player.last_so5_score >= 60 ? "#A3E635" : player.last_so5_score >= 50 ? "#FBBF24" : player.last_so5_score >= 40 ? "#FB923C" : "#EF4444")
     : null; // null = garde le dsBg habituel
@@ -489,6 +503,80 @@ function StellarCard({ player, logos, size = "md", isValidated = false, gwStart 
       </div>
         );
       })()}
+
+      {/* ── Sélecteur édition Stellar ── */}
+      {onEditionChange && (
+        <div style={{ marginTop: 4 }}>
+          {/* Ligne 1 : Base / Shiny / Holo / Legend */}
+          <div style={{ display: "flex", gap: 2, justifyContent: "center" }}>
+            {[
+              { id: "base",   label: "—",   color: "#64748B" },
+              { id: "shiny",  label: "S+5", color: "#93C5FD" },
+              { id: "holo",   label: "H+10",color: "#C4B5FD" },
+              { id: "legend", label: "L+30",color: "#FBBF24" },
+            ].map(e => {
+              const sel = (edition?.id || "base") === e.id
+                || (e.id === "shiny" && ["shiny_m","shiny_ms"].includes(edition?.id))
+                || (e.id === "legend" && edition?.id === "legend_s");
+              return (
+                <div key={e.id} onClick={() => onEditionChange(e.id)}
+                  style={{
+                    fontSize: 6, fontWeight: 800, padding: "2px 3px", borderRadius: 3, cursor: "pointer",
+                    background: sel ? `${e.color}25` : "rgba(255,255,255,0.03)",
+                    border: `1px solid ${sel ? e.color + "80" : "rgba(255,255,255,0.08)"}`,
+                    color: sel ? e.color : "rgba(255,255,255,0.25)",
+                    transition: "all 0.15s", userSelect: "none",
+                  }}
+                >{e.label}</div>
+              );
+            })}
+          </div>
+          {/* Ligne 2 : variantes Shiny et Legend */}
+          {(["shiny","shiny_m","shiny_ms"].includes(edition?.id)) && (
+            <div style={{ display: "flex", gap: 2, justifyContent: "center", marginTop: 2 }}>
+              {[
+                { id: "shiny",    label: "+5",  color: "#93C5FD" },
+                { id: "shiny_m",  label: "+20", color: "#34D399" },
+                { id: "shiny_ms", label: "+25", color: "#10B981" },
+              ].map(e => (
+                <div key={e.id} onClick={() => onEditionChange(e.id)}
+                  style={{
+                    fontSize: 6, fontWeight: 800, padding: "2px 4px", borderRadius: 3, cursor: "pointer",
+                    background: edition?.id === e.id ? `${e.color}25` : "rgba(255,255,255,0.03)",
+                    border: `1px solid ${edition?.id === e.id ? e.color + "80" : "rgba(255,255,255,0.08)"}`,
+                    color: edition?.id === e.id ? e.color : "rgba(255,255,255,0.3)",
+                    transition: "all 0.15s", userSelect: "none",
+                  }}
+                >{e.label}</div>
+              ))}
+            </div>
+          )}
+          {(["legend","legend_s"].includes(edition?.id)) && (
+            <div style={{ display: "flex", gap: 2, justifyContent: "center", marginTop: 2 }}>
+              {[
+                { id: "legend",   label: "+30", color: "#FBBF24" },
+                { id: "legend_s", label: "+40", color: "#F97316" },
+              ].map(e => (
+                <div key={e.id} onClick={() => onEditionChange(e.id)}
+                  style={{
+                    fontSize: 6, fontWeight: 800, padding: "2px 4px", borderRadius: 3, cursor: "pointer",
+                    background: edition?.id === e.id ? `${e.color}25` : "rgba(255,255,255,0.03)",
+                    border: `1px solid ${edition?.id === e.id ? e.color + "80" : "rgba(255,255,255,0.08)"}`,
+                    color: edition?.id === e.id ? e.color : "rgba(255,255,255,0.3)",
+                    transition: "all 0.15s", userSelect: "none",
+                  }}
+                >{e.label}</div>
+              ))}
+            </div>
+          )}
+          {/* Badge bonus actif */}
+          {edBonus > 0 && (
+            <div style={{ textAlign: "center", marginTop: 2, fontSize: 7, fontWeight: 900, color: edition?.color || "#C4B5FD", fontFamily: "'DM Mono',monospace" }}>
+              ×{(1 + edBonus/100).toFixed(2)} → {adjDs}
+            </div>
+          )}
+        </div>
+      )}
     </div>
   );
 }
@@ -508,6 +596,237 @@ export default function StellarTab({ players, teams, fixtures, logos = {}, match
     return (d.getDay() + 6) % 7; // JS: 0=Dim → on convertit en Lun=0
   });
   const [expandedFixture, setExpandedFixture] = useState(null); // { key, side: "home"|"away" }
+  const [leftCollapsed, setLeftCollapsed] = useState(false);
+
+  // ── OAuth Sorare — cartes réelles de l'utilisateur ───────────────────────
+  const [sorareConnected, setSorareConnected] = useState(false);
+  const [sorareCards, setSorareCards] = useState([]); // { playerSlug, rarity, pictureUrl, cardSlug }
+  const [sorareUser, setSorareUser] = useState(null);
+  const [sorareLoading, setSorareLoading] = useState(false);
+
+  // Map playerSlug → meilleure carte (rarity order: limited > rare > super_rare > unique)
+  const RARITY_ORDER = { unique: 4, super_rare: 3, rare: 2, limited: 1, common: 0 };
+  const sorareCardMap = useMemo(() => {
+    const map = {};
+    for (const c of sorareCards) {
+      const slug = c.playerSlug;
+      if (!map[slug] || (RARITY_ORDER[c.rarity] || 0) > (RARITY_ORDER[map[slug].rarity] || 0)) {
+        map[slug] = c;
+      }
+    }
+    return map;
+  }, [sorareCards]);
+
+  // Vérifie l'auth au montage + gère le retour OAuth (hash fragment)
+  useEffect(() => {
+    const hash = window.location.hash;
+
+    // Retour depuis OAuth Sorare
+    if (hash.includes("sorare_authed=1")) {
+      // Vérification anti-CSRF : le state doit correspondre
+      const hashParams = new URLSearchParams(hash.replace(/^#/, ""));
+      const returnedState = hashParams.get("state") || "";
+      const savedState = sessionStorage.getItem("sorare_oauth_state") || "";
+      sessionStorage.removeItem("sorare_oauth_state");
+      // Nettoyer l'URL immédiatement (sécurité)
+      window.history.replaceState(null, "", window.location.pathname + window.location.search);
+      if (returnedState && returnedState !== savedState) {
+        console.warn("Sorare OAuth: state mismatch — possible CSRF, ignoring");
+        return;
+      }
+      // Charger les cartes
+      fetchSorareCards();
+      return;
+    }
+
+    if (hash.includes("sorare_error=")) {
+      window.history.replaceState(null, "", window.location.pathname + window.location.search);
+      return;
+    }
+
+    // Vérifier silencieusement si déjà connecté (cookie valide)
+    fetchSorareCards(true);
+  }, []);
+
+  const fetchSorareCards = async (silent = false) => {
+    if (!silent) setSorareLoading(true);
+    try {
+      const res = await fetch("/api/sorare/cards", { credentials: "same-origin" });
+      if (res.status === 401) { setSorareConnected(false); setSorareCards([]); return; }
+      if (!res.ok) { setSorareConnected(false); return; }
+      const data = await res.json();
+      const user = data?.data?.currentUser;
+      if (!user) { setSorareConnected(false); return; }
+      setSorareUser({ slug: user.slug, nickname: user.nickname });
+      const cards = (user.footballCards?.nodes || []).map(c => ({
+        cardSlug:   c.slug,
+        playerSlug: c.player?.slug,
+        playerName: c.player?.displayName,
+        position:   c.player?.position,
+        rarity:     c.rarity,
+        pictureUrl: c.pictureUrl,
+        season:     c.season?.startYear,
+      })).filter(c => c.playerSlug);
+      setSorareCards(cards);
+      setSorareConnected(true);
+    } catch { setSorareConnected(false); }
+    finally { if (!silent) setSorareLoading(false); }
+  };
+
+  const connectSorare = () => {
+    // Générer un state aléatoire anti-CSRF
+    const state = crypto.randomUUID ? crypto.randomUUID() : Math.random().toString(36).slice(2);
+    sessionStorage.setItem("sorare_oauth_state", state);
+    const params = new URLSearchParams({
+      client_id:     "NPuOENu-LuafKXV1spf6PZpWJbUodzfULnRtntnNP_U",
+      redirect_uri:  "https://scout.deglingosorare.com/auth/sorare/callback",
+      response_type: "code",
+      state,
+    });
+    window.location.href = `https://sorare.com/oauth/authorize?${params}`;
+  };
+
+  const disconnectSorare = () => {
+    window.location.href = "/auth/sorare/logout";
+  };
+
+  // ── Mon Équipe Stellaire — 5 slots positionnels ───────────────────────────
+  const TEAM_SLOTS = ["GK", "DEF", "MIL", "ATT", "FLEX"];
+  const [myPicks, setMyPicks] = useState({ GK: null, DEF: null, MIL: null, FLEX: null, ATT: null });
+  const resetTeam = () => setMyPicks({ GK: null, DEF: null, MIL: null, FLEX: null, ATT: null });
+  const removeFromTeam = (slot) => setMyPicks(prev => ({ ...prev, [slot]: null }));
+  const addToTeam = (player) => {
+    setMyPicks(prev => {
+      const pos = player.position;
+      // Si un slot est sélectionné et compatible → on y met le joueur
+      if (selectedSlot) {
+        if (selectedSlot === "FLEX" && pos !== "GK") return { ...prev, FLEX: player };
+        if (selectedSlot === pos) return { ...prev, [pos]: player };
+      }
+      // 1. slot naturel libre ?
+      if (prev[pos] === null) return { ...prev, [pos]: player };
+      // 2. FLEX libre ?
+      if (prev.FLEX === null && pos !== "GK") return { ...prev, FLEX: player };
+      // 3. replace le slot naturel
+      return { ...prev, [pos]: player };
+    });
+    setSelectedSlot(null); // reset filtre après sélection
+  };
+  const isInTeam = (p) => {
+    const id = p.slug || p.name;
+    if (Object.values(myPicks).some(pp => pp && (pp.slug || pp.name) === id)) return true;
+    return savedTeams.some(t => Object.values(t.picks).some(pp => pp && (pp.slug || pp.name) === id));
+  };
+  const savedTeamLabel = (p) => {
+    const id = p.slug || p.name;
+    const t = savedTeams.find(t => Object.values(t.picks).some(pp => pp && (pp.slug || pp.name) === id));
+    return t ? t.label : null;
+  };
+  const generateMagicTeam = () => {
+    // Exclure les joueurs déjà utilisés (saved teams + myPicks)
+    const usedIds = new Set([
+      ...savedTeams.flatMap(t => Object.values(t.picks).filter(Boolean).map(pp => pp.slug || pp.name)),
+      ...Object.values(myPicks).filter(Boolean).map(pp => pp.slug || pp.name),
+    ]);
+    const pool = (dayData?.players || [])
+      .filter(p => !usedIds.has(p.slug || p.name))
+      .map(p => ({ ...p, ds: getAdjDs(p) }))
+      .sort((a, b) => b.ds - a.ds);
+    if (pool.length < 5) return;
+
+    // Conflit : ATT/MIL dont le club = adversaire d'un GK ou DEF déjà choisi (et vice-versa)
+    const hasConflict = (player, picks) => {
+      const picked = Object.values(picks).filter(Boolean);
+      if (["ATT","MIL"].includes(player.position))
+        return picked.some(pp => ["GK","DEF"].includes(pp.position) && pp.oppName === player.club);
+      if (["GK","DEF"].includes(player.position))
+        return picked.some(pp => ["ATT","MIL"].includes(pp.position) && player.oppName === pp.club);
+      return false;
+    };
+
+    // Greedy : meilleur D-Score sans conflit (fallback avec conflit si nécessaire)
+    const newPicks = { GK: null, DEF: null, MIL: null, ATT: null, FLEX: null };
+    const taken = new Set();
+    for (const pos of ["GK","DEF","MIL","ATT"]) {
+      const candidates = pool.filter(p => p.position === pos && !taken.has(p.slug || p.name));
+      const best = candidates.find(p => !hasConflict(p, newPicks)) || candidates[0];
+      if (best) { newPicks[pos] = best; taken.add(best.slug || best.name); }
+    }
+    // FLEX : meilleur outfield restant sans conflit
+    const flexCandidates = pool.filter(p => p.position !== "GK" && !taken.has(p.slug || p.name));
+    const flex = flexCandidates.find(p => !hasConflict(p, newPicks)) || flexCandidates[0];
+    if (flex) newPicks.FLEX = flex;
+    setMyPicks(newPicks);
+  };
+
+  // ── Mon Équipe — page cachée, accessible via bouton ──────────────────────────
+  const [showMyTeam, setShowMyTeam] = useState(false);
+  const [selectedSlot, setSelectedSlot] = useState(null); // slot actif pour filtrer la liste
+
+  // ── Sauvegarde équipes — jusqu'à 4 par jour ───────────────────────────────
+  const savedTeamsKey = (dateStr) => `stellar_saved_teams_${dateStr}`;
+  const [savedTeams, setSavedTeams] = useState([]);
+
+  const saveCurrentTeam = (picks, editions, score) => {
+    const dateStr = isoDate(weekDays[selectedDay]);
+    const key = savedTeamsKey(dateStr);
+    const existing = (() => { try { return JSON.parse(localStorage.getItem(key) || "[]"); } catch { return []; } })();
+    if (existing.length >= 4) return;
+    const newTeam = {
+      id: Date.now(),
+      savedAt: new Date().toLocaleTimeString("fr-FR", { hour:"2-digit", minute:"2-digit" }),
+      picks,
+      editions: { ...editions },
+      score,
+      label: `Équipe ${existing.length + 1}`,
+    };
+    const updated = [...existing, newTeam];
+    localStorage.setItem(key, JSON.stringify(updated));
+    setSavedTeams(updated);
+    resetTeam();
+  };
+
+  const loadSavedTeam = (team) => {
+    setMyPicks({ ...team.picks });
+    setCardEditions(prev => {
+      const next = { ...prev, ...team.editions };
+      localStorage.setItem("stellar_card_editions", JSON.stringify(next));
+      return next;
+    });
+  };
+
+  const deleteSavedTeam = (id) => {
+    const dateStr = isoDate(weekDays[selectedDay]);
+    const key = savedTeamsKey(dateStr);
+    const updated = savedTeams.filter(t => t.id !== id).map((t, i) => ({ ...t, label: `Équipe ${i + 1}` }));
+    localStorage.setItem(key, JSON.stringify(updated));
+    setSavedTeams(updated);
+  };
+
+  // ── Tri du tableau joueurs du jour ──────────────────────────────────────────
+  const [teamSort, setTeamSort] = useState("ds");
+
+  // ── Éditions cartes — stockées par slug dans localStorage ──────────────────
+  const [cardEditions, setCardEditions] = useState(() => {
+    try { return JSON.parse(localStorage.getItem("stellar_card_editions") || "{}"); } catch { return {}; }
+  });
+  const setCardEdition = (slug, editionId) => {
+    setCardEditions(prev => {
+      const next = { ...prev, [slug]: editionId };
+      localStorage.setItem("stellar_card_editions", JSON.stringify(next));
+      return next;
+    });
+  };
+  // Score ajusté par édition + capitaine ×1.5
+  const getAdjDs = (p) => {
+    const ed = getEdition(cardEditions[p.slug || p.name] || "base");
+    return Math.round((p.ds || 0) * (1 + ed.bonus / 100));
+  };
+  const getAdjTotalDs = (teamPlayers) =>
+    Math.round(teamPlayers.reduce((sum, p) => {
+      const adj = getAdjDs(p);
+      return sum + (p.isCaptain ? adj * 1.5 : adj);
+    }, 0));
   const CURRENT_GW_START = "2026-04-03";
 
   // ── Freeze daily Stellar : figé à 12h00 Paris ──────────────────────────────
@@ -542,6 +861,26 @@ export default function StellarTab({ players, teams, fixtures, logos = {}, match
       return d;
     });
   }, [monday]);
+
+  // Recharge les équipes sauvegardées quand le jour change + charge Équipe 1 par défaut
+  useEffect(() => {
+    if (selectedDay === null || !weekDays[selectedDay]) return;
+    const dateStr = isoDate(weekDays[selectedDay]);
+    let teams = [];
+    try { teams = JSON.parse(localStorage.getItem(savedTeamsKey(dateStr)) || "[]"); } catch { teams = []; }
+    setSavedTeams(teams);
+    // Charger Équipe 1 automatiquement si elle existe
+    if (teams.length > 0) {
+      setMyPicks({ ...teams[0].picks });
+      setCardEditions(prev => {
+        const next = { ...prev, ...teams[0].editions };
+        localStorage.setItem("stellar_card_editions", JSON.stringify(next));
+        return next;
+      });
+    } else {
+      setMyPicks({ GK: null, DEF: null, MIL: null, FLEX: null, ATT: null });
+    }
+  }, [selectedDay, weekDays]);
 
   // All fixtures grouped by date (Stellar leagues + European competitions)
   const fixturesByDate = useMemo(() => {
@@ -596,7 +935,7 @@ export default function StellarTab({ players, teams, fixtures, logos = {}, match
       if (p.sorare_starter_pct != null && p.sorare_starter_pct < 70) continue; // Titu% Sorare < 70%
 
       let csPercent = null;
-      if (p.position === "GK") {
+      if (["GK", "DEF"].includes(p.position)) {
         const oppXg = fx.isHome ? (oppStats.xg_ext || 1.3) : (oppStats.xg_dom || 1.3);
         const defXga = pTeam ? (fx.isHome ? (pTeam.xga_dom || 1.3) : (pTeam.xga_ext || 1.5)) : 1.3;
         csPercent = csProb(defXga, oppXg, p.league);
@@ -760,31 +1099,36 @@ export default function StellarTab({ players, teams, fixtures, logos = {}, match
           </div>
         </a>
 
-        {/* Mes Cartes — Coming Soon */}
-        <div className="st-cta-banner" style={{
-          flex: 1, display: "flex", alignItems: "center", justifyContent: "space-between",
-          background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.08)",
-          borderRadius: 12, padding: "10px 16px", opacity: 0.5, cursor: "not-allowed",
-        }}>
-          <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
-            <div style={{ width: 28, height: 28, borderRadius: 8, background: "rgba(196,181,253,0.08)", border: "1px solid rgba(196,181,253,0.15)", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 14, flexShrink: 0 }}>🃏</div>
-            <div>
-              <div style={{ fontSize: 11, fontWeight: 800, color: "rgba(255,255,255,0.55)", letterSpacing: "0.03em" }}>
-                {lang === "fr" ? "Joue avec TES cartes Sorare" : "Play with YOUR Sorare cards"}
+        {/* Bouton CRÉER MON ÉQUIPE — masqué temporairement (WIP) */}
+        {/* HIDDEN_MYTEAM_START */}
+        <button onClick={() => setShowMyTeam(v => !v)}
+          className="st-cta-banner"
+          style={{
+            flexShrink: 0, display: "flex", alignItems: "center", justifyContent: "space-between", gap: 12,
+            background: showMyTeam ? "rgba(196,181,253,0.10)" : "rgba(10,6,30,0.75)",
+            border: showMyTeam ? "1px solid rgba(196,181,253,0.45)" : "1px solid rgba(255,255,255,0.10)",
+            borderRadius: 12, padding: "10px 14px", cursor: "pointer", fontFamily: "Outfit",
+            backdropFilter: "blur(10px)", transition: "all 0.2s", minWidth: 0,
+          }}>
+          <div style={{ display: "flex", alignItems: "center", gap: 10, minWidth: 0 }}>
+            <div style={{ width: 30, height: 30, borderRadius: 8, background: "rgba(196,181,253,0.12)", border: "1px solid rgba(196,181,253,0.2)", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 16, flexShrink: 0 }}>🃏</div>
+            <div style={{ minWidth: 0 }}>
+              <div style={{ fontSize: 11, fontWeight: 800, color: "#fff", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>
+                {showMyTeam ? t(lang,"myTeamBtnClose") : t(lang,"myTeamBtnOpen")}
               </div>
-              <div style={{ fontSize: 9, color: "rgba(255,255,255,0.3)", marginTop: 1 }}>
-                {lang === "fr" ? "Connecte ton compte — algo optimisé sur ta collection" : "Connect your account — algo built on your collection"}
+              <div style={{ fontSize: 9, color: "rgba(255,255,255,0.4)", marginTop: 1, whiteSpace: "nowrap" }}>
+                {showMyTeam ? t(lang,"myTeamBtnCloseSub") : t(lang,"myTeamBtnSub")}
               </div>
             </div>
           </div>
           <div style={{
-            fontSize: 9, fontWeight: 800, color: "rgba(255,255,255,0.4)", whiteSpace: "nowrap",
-            background: "rgba(255,255,255,0.06)", border: "1px solid rgba(255,255,255,0.1)",
-            borderRadius: 8, padding: "6px 12px", flexShrink: 0, marginLeft: 8,
+            fontSize: 10, fontWeight: 800, color: showMyTeam ? "#C4B5FD" : "#fff", whiteSpace: "nowrap", flexShrink: 0,
+            background: showMyTeam ? "rgba(196,181,253,0.15)" : "linear-gradient(135deg, #7C3AED, #5B21B6)",
+            borderRadius: 8, padding: "5px 12px", border: showMyTeam ? "1px solid rgba(196,181,253,0.3)" : "none",
           }}>
-            {lang === "fr" ? "Bientôt" : "Soon"}
+            {showMyTeam ? t(lang,"myTeamBtnBadgeClose") : t(lang,"myTeamBtnBadge")}
           </div>
-        </div>
+        </button>
 
       </div>
 
@@ -845,24 +1189,30 @@ export default function StellarTab({ players, teams, fixtures, logos = {}, match
           <div className="st-main-layout" style={{ display: "flex", gap: 16, alignItems: "flex-start" }}>
 
           {/* Colonne gauche — Date + Matchs */}
-          <div style={{ flexShrink: 0 }}>
+          <div style={{ flexShrink: 0, transition: "all 0.25s" }}>
 
             {/* Titre du jour */}
             <div style={{ marginBottom: 8 }}>
               <h2 style={{ fontSize: 16, fontWeight: 800, color: "#fff", margin: 0, display: "flex", alignItems: "center", gap: 8, flexWrap: "wrap" }}>
-                <span style={{ color: "#C4B5FD" }}>{weekDays[selectedDay].toLocaleDateString(S.stellarDateLocale, { timeZone: TZ, weekday: "long", day: "numeric", month: "long" }).toUpperCase()}</span>
-                {dayData.frozen && (
+                {!leftCollapsed && <span style={{ color: "#C4B5FD" }}>{weekDays[selectedDay].toLocaleDateString(S.stellarDateLocale, { timeZone: TZ, weekday: "long", day: "numeric", month: "long" }).toUpperCase()}</span>}
+                {!leftCollapsed && dayData.frozen && (
                   <div style={{ display: "inline-flex", alignItems: "center", gap: 4, padding: "3px 8px", borderRadius: 6, background: "rgba(196,181,253,0.08)", border: "1px solid rgba(196,181,253,0.18)" }}>
                     <span style={{ fontSize: 11 }}>🔒</span>
                     <span style={{ fontSize: 9, fontWeight: 700, color: "#A78BFA" }}>Picks figés à 12h00 Paris</span>
                   </div>
                 )}
+                {/* Bouton collapse colonne gauche */}
+                <button onClick={() => setLeftCollapsed(v => !v)}
+                  title={leftCollapsed ? "Afficher les matchs" : "Réduire"}
+                  style={{ marginLeft: "auto", flexShrink: 0, width: 22, height: 22, borderRadius: 6, background: "rgba(196,181,253,0.08)", border: "1px solid rgba(196,181,253,0.18)", color: "#A78BFA", cursor: "pointer", fontSize: 11, fontWeight: 900, display: "flex", alignItems: "center", justifyContent: "center", fontFamily: "Outfit" }}>
+                  {leftCollapsed ? "▶" : "◀"}
+                </button>
               </h2>
-              <div style={{ fontSize: 9, color: "rgba(255,255,255,0.35)", fontWeight: 600, letterSpacing: "0.08em", marginTop: 2 }}>{lang === "fr" ? "HEURE PARIS" : "PARIS TIME"}</div>
+              {!leftCollapsed && <div style={{ fontSize: 9, color: "rgba(255,255,255,0.35)", fontWeight: 600, letterSpacing: "0.08em", marginTop: 2 }}>{lang === "fr" ? "HEURE PARIS" : "PARIS TIME"}</div>}
             </div>
 
             {/* Match list — groupé par créneau horaire, trié chrono heure France */}
-            {(() => {
+            {!leftCollapsed && (() => {
               // Build club→score map from players who already played this GW
               // Normalise les noms (ex: "Paris Saint-Germain" → "Paris Saint Germain")
               const stripAcc = (s) => s.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
@@ -1000,6 +1350,424 @@ export default function StellarTab({ players, teams, fixtures, logos = {}, match
           {/* Colonne droite — Decisive Pick + Teams 2×2 */}
           <div style={{ flex: 1, minWidth: 0 }}>
 
+          {/* ══ MON ÉQUIPE STELLAIRE — masqué temporairement (WIP) ══ */}
+          {showMyTeam && (() => {
+            const pickedPlayers = TEAM_SLOTS.map(s => myPicks[s]).filter(Boolean);
+            const filledCount = pickedPlayers.length;
+            // Score total ajusté + bonus capitaine (highest ds)
+            const scores = pickedPlayers.map(p => getAdjDs(p));
+            const capDs = scores.length === 5 ? Math.max(...scores) : 0;
+            const totalAdj = Math.round(scores.reduce((s, v) => s + v, 0) + capDs * 0.5);
+            const palier = PALIERS.filter(p => totalAdj >= p.pts).pop();
+            const dayPool = [...(dayData?.players || [])].sort((a, b) => getAdjDs(b) - getAdjDs(a));
+            const POS_SLOT_COLORS = { GK: "#4FC3F7", DEF: "#818CF8", MIL: "#C084FC", FLEX: "#A78BFA", ATT: "#F87171" };
+
+            return (
+              <div style={{ borderRadius: 14, background: "rgba(6,3,20,0.95)", border: "1px solid rgba(196,181,253,0.18)", overflow: "hidden", backdropFilter: "blur(16px)", display: "flex", flexDirection: "column", height: "calc(100vh - 280px)" }}>
+
+                {/* ── Header ── */}
+                <div style={{ padding: "9px 14px", borderBottom: "1px solid rgba(255,255,255,0.06)", display: "flex", alignItems: "center", justifyContent: "space-between", gap: 8 }}>
+                  <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+                    <img src="/Stellar.png" alt="" style={{ width: 18, height: 18, objectFit: "contain" }} />
+                    <div>
+                      <div style={{ fontSize: 11, fontWeight: 900, color: "#C4B5FD", letterSpacing: "0.05em" }}>{t(lang,"myTeamTitle")}</div>
+                      <div style={{ fontSize: 8, color: "rgba(255,255,255,0.35)", marginTop: 1 }}>
+                        {filledCount < 5 ? S.myTeamSelect(5 - filledCount) : `Score : ${totalAdj} pts${palier ? ` · ${palier.reward}` : ""}`}
+                      </div>
+                    </div>
+                  </div>
+                  <div style={{ display: "flex", gap: 6, alignItems: "center" }}>
+                    {/* Bouton Connect/Disconnect Sorare */}
+                    {sorareConnected ? (
+                      <button onClick={disconnectSorare} title={`Connecté : ${sorareUser?.nickname || sorareUser?.slug || "Sorare"}`} style={{
+                        display: "flex", alignItems: "center", gap: 5,
+                        padding: "6px 10px", borderRadius: 8, border: "1px solid rgba(74,222,128,0.4)",
+                        background: "rgba(74,222,128,0.08)", color: "#4ADE80",
+                        fontSize: 9, fontWeight: 800, cursor: "pointer", fontFamily: "Outfit",
+                      }}>
+                        <span style={{ fontSize: 10 }}>✓</span> {sorareUser?.nickname || "Sorare"}
+                      </button>
+                    ) : (
+                      <button onClick={connectSorare} disabled={sorareLoading} style={{
+                        display: "flex", alignItems: "center", gap: 5,
+                        padding: "6px 10px", borderRadius: 8, border: "1px solid rgba(196,181,253,0.35)",
+                        background: "rgba(196,181,253,0.08)", color: "#C4B5FD",
+                        fontSize: 9, fontWeight: 800, cursor: sorareLoading ? "wait" : "pointer", fontFamily: "Outfit",
+                        opacity: sorareLoading ? 0.6 : 1,
+                      }}>
+                        {sorareLoading ? "..." : "🔗 Mes cartes"}
+                      </button>
+                    )}
+                    {/* Bouton magique */}
+                    <button onClick={generateMagicTeam} style={{
+                      display: "flex", alignItems: "center", gap: 5,
+                      padding: "6px 12px", borderRadius: 8, border: "none", cursor: "pointer", fontFamily: "Outfit",
+                      background: "linear-gradient(135deg,#7C3AED,#8B5CF6,#A78BFA)",
+                      color: "#fff", fontSize: 10, fontWeight: 800,
+                      boxShadow: "0 0 14px rgba(139,92,246,0.5)",
+                    }}>
+                      <span style={{ fontSize: 12 }}>⚡</span> {t(lang,"myTeamAlgo")}
+                    </button>
+                    {filledCount > 0 && (<>
+                      <button onClick={() => saveCurrentTeam(myPicks, cardEditions, totalAdj)}
+                        disabled={savedTeams.length >= 4}
+                        style={{ padding: "6px 12px", borderRadius: 8, border: "1px solid rgba(74,222,128,0.3)", background: savedTeams.length >= 4 ? "rgba(255,255,255,0.03)" : "rgba(74,222,128,0.08)", color: savedTeams.length >= 4 ? "rgba(255,255,255,0.2)" : "#4ADE80", fontSize: 10, fontWeight: 800, cursor: savedTeams.length >= 4 ? "not-allowed" : "pointer", fontFamily: "Outfit" }}>
+                        {savedTeams.length >= 4 ? "4/4 max" : t(lang,"myTeamSave")}
+                      </button>
+                      <button onClick={resetTeam} style={{ padding: "6px 10px", borderRadius: 8, border: "1px solid rgba(255,255,255,0.1)", background: "rgba(255,255,255,0.05)", color: "rgba(255,255,255,0.4)", fontSize: 10, fontWeight: 700, cursor: "pointer", fontFamily: "Outfit" }}>Reset</button>
+                    </>)}
+                  </div>
+                </div>
+
+                {/* ── Corps : PITCH gauche + DATABASE droite ── */}
+                <div style={{ display: "flex", flex: 1, minHeight: 0 }}>
+
+                  {/* ══ COLONNE GAUCHE : Sélection équipe ══ */}
+                  <div style={{ width: 427, flexShrink: 0, display: "flex", flexDirection: "column", borderRight: "1px solid rgba(255,255,255,0.06)", background: "rgba(0,0,0,0.15)" }}>
+
+                    {/* Score total — visible uniquement quand équipe complète */}
+                    {filledCount === 5 && (
+                      <div style={{ padding: "6px 14px", borderBottom: "1px solid rgba(255,255,255,0.05)", display: "flex", alignItems: "center", justifyContent: "space-between" }}>
+                        <div style={{ fontSize: 8, color: "rgba(255,255,255,0.35)", fontWeight: 600, letterSpacing: "0.08em" }}>SCORE PROJ.</div>
+                        <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+                          {palier && <div style={{ fontSize: 8, fontWeight: 700, color: palier.color }}>→ {palier.reward}</div>}
+                          <div style={{ fontSize: 22, fontWeight: 900, color: palier ? palier.color : "#C4B5FD", fontFamily: "'DM Mono',monospace", lineHeight: 1 }}>{totalAdj}</div>
+                        </div>
+                      </div>
+                    )}
+
+                    {/* ── 5 CARTES STELLAIRES — layout 2 + 3 (style Sorare) ── */}
+                    <div style={{ padding: "6px 8px 6px", flex: "0 0 auto", display: "flex", flexDirection: "column", gap: 5 }}>
+                      {/* ── Rendu d'un slot carte (mutualisé ATT/FLEX et DEF/GK/MIL) ── */}
+                      {[["ATT","FLEX"], ["DEF","GK","MIL"]].map((row, rowIdx) => (
+                        <div key={rowIdx} style={{ display: "flex", gap: 5, flex: "0 0 auto", justifyContent: rowIdx === 0 ? "center" : undefined, alignItems: "flex-start" }}>
+                          {row.map(slot => {
+                            const p = myPicks[slot];
+                            const sc = POS_SLOT_COLORS[slot];
+                            const adjDs = p ? getAdjDs(p) : 0;
+                            const isCap = p && scores.length === 5 && adjDs === capDs;
+                            const isActive = selectedSlot === slot;
+                            // Vraie carte Sorare si connecté
+                            const sorareCard = p ? sorareCardMap[p.slug] : null;
+                            const dsColor2 = adjDs >= 80 ? "#4ADE80" : adjDs >= 65 ? "#C4B5FD" : adjDs >= 50 ? "#FBBF24" : "#F87171";
+                            return (
+                              <div key={slot} onClick={() => setSelectedSlot(isActive ? null : slot)}
+                                style={{
+                                  borderRadius: 10, cursor: "pointer", overflow: "hidden",
+                                  background: sorareCard ? "transparent"
+                                    : p ? `linear-gradient(160deg, #0d0826 0%, ${sc}30 60%, #0a0620 100%)`
+                                    : isActive ? `${sc}18` : "rgba(255,255,255,0.025)",
+                                  border: `1.5px solid ${isActive ? sc + "CC" : p ? sc + "55" : "rgba(255,255,255,0.08)"}`,
+                                  boxShadow: isActive ? `0 0 16px ${sc}60` : p ? `0 0 10px ${sc}25` : "none",
+                                  transition: "all 0.18s",
+                                  display: "flex", flexDirection: "column", alignItems: "center",
+                                  gap: sorareCard ? 0 : (rowIdx === 0 ? 5 : 4),
+                                  padding: sorareCard ? 0 : (rowIdx === 0 ? "10px 8px" : "8px 6px"),
+                                  position: "relative", width: 137, height: 190, flexShrink: 0,
+                                }}>
+
+                                {/* ── Vraie carte Sorare ── */}
+                                {sorareCard ? (
+                                  <>
+                                    <img src={sorareCard.pictureUrl} alt={p.name}
+                                      style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover", borderRadius: 9 }} />
+                                    {/* Overlay gradient bas pour lisibilité */}
+                                    <div style={{ position: "absolute", bottom: 0, left: 0, right: 0, height: 60, background: "linear-gradient(transparent, rgba(0,0,0,0.85))", borderRadius: "0 0 9px 9px" }} />
+                                    {/* Badge slot */}
+                                    <span style={{ position: "absolute", top: 6, left: 6, fontSize: 6, fontWeight: 900, color: "#fff", background: sc, borderRadius: 4, padding: "2px 5px", zIndex: 2 }}>{slot}</span>
+                                    {/* Capitaine */}
+                                    {isCap && <div style={{ position: "absolute", top: 5, right: 5, width: 16, height: 16, borderRadius: "50%", background: "#C4B5FD", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 8, fontWeight: 900, color: "#0C0C2D", zIndex: 2 }}>C</div>}
+                                    {/* D-Score + nom en bas */}
+                                    <div style={{ position: "absolute", bottom: 6, left: 0, right: 0, display: "flex", flexDirection: "column", alignItems: "center", gap: 1, zIndex: 2 }}>
+                                      <div style={{ fontSize: rowIdx === 0 ? 20 : 16, fontWeight: 900, color: dsColor2, fontFamily: "'DM Mono',monospace", lineHeight: 1 }}>{adjDs}</div>
+                                      <div style={{ fontSize: 9, fontWeight: 700, color: "#fff", textAlign: "center", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis", width: "90%" }}>{p.name.split(" ").pop()}</div>
+                                    </div>
+                                    {/* Rareté badge */}
+                                    <div style={{ position: "absolute", bottom: 5, right: 5, fontSize: 6, fontWeight: 800, color: sorareCard.rarity === "unique" ? "#F59E0B" : sorareCard.rarity === "super_rare" ? "#C084FC" : sorareCard.rarity === "rare" ? "#60A5FA" : "#94A3B8", zIndex: 2 }}>
+                                      {sorareCard.rarity === "unique" ? "U" : sorareCard.rarity === "super_rare" ? "SR" : sorareCard.rarity === "rare" ? "R" : "L"}
+                                    </div>
+                                    <button onClick={e => { e.stopPropagation(); removeFromTeam(slot); }}
+                                      style={{ position: "absolute", top: 5, right: isCap ? 26 : 5, background: "rgba(0,0,0,0.5)", border: "none", color: "rgba(255,255,255,0.6)", cursor: "pointer", fontSize: 11, lineHeight: 1, padding: "2px 5px", borderRadius: 4, zIndex: 2 }}>×</button>
+                                  </>
+                                ) : p ? (
+                                  /* ── Slot rempli sans carte Sorare ── */
+                                  <>
+                                    <span style={{ fontSize: rowIdx === 0 ? 7 : 6, fontWeight: 900, color: "#fff", background: sc, borderRadius: 4, padding: "2px 6px", letterSpacing: "0.05em" }}>{slot}</span>
+                                    {isCap && <div style={{ position: "absolute", top: rowIdx === 0 ? 6 : 5, right: rowIdx === 0 ? 6 : 5, width: rowIdx === 0 ? 16 : 14, height: rowIdx === 0 ? 16 : 14, borderRadius: "50%", background: "#C4B5FD", display: "flex", alignItems: "center", justifyContent: "center", fontSize: rowIdx === 0 ? 8 : 7, fontWeight: 900, color: "#0C0C2D" }}>C</div>}
+                                    {logos[p.club] && <img src={`/data/logos/${logos[p.club]}`} alt="" style={{ width: rowIdx === 0 ? 32 : 26, height: rowIdx === 0 ? 32 : 26, objectFit: "contain" }} />}
+                                    <div style={{ fontSize: rowIdx === 0 ? 11 : 9, fontWeight: 800, color: "#fff", textAlign: "center", lineHeight: 1.2, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap", width: "100%" }}>{p.name.split(" ").pop()}</div>
+                                    <div style={{ fontSize: rowIdx === 0 ? 18 : 15, fontWeight: 900, color: dsColor2, fontFamily: "'DM Mono',monospace", lineHeight: 1 }}>{adjDs}</div>
+                                    <button onClick={e => { e.stopPropagation(); removeFromTeam(slot); }}
+                                      style={{ position: "absolute", bottom: rowIdx === 0 ? 4 : 3, right: rowIdx === 0 ? 4 : 3, background: "rgba(255,255,255,0.06)", border: "none", color: "rgba(255,255,255,0.3)", cursor: "pointer", fontSize: rowIdx === 0 ? 12 : 11, lineHeight: 1, padding: "2px 5px", borderRadius: 4 }}>×</button>
+                                  </>
+                                ) : (
+                                  /* ── Slot vide ── */
+                                  <>
+                                    <span style={{ fontSize: rowIdx === 0 ? 7 : 6, fontWeight: 900, color: "#fff", background: sc, borderRadius: 4, padding: "2px 6px", letterSpacing: "0.05em" }}>{slot}</span>
+                                    <div style={{ flex: 1, display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", gap: rowIdx === 0 ? 4 : 3 }}>
+                                      <div style={{ fontSize: rowIdx === 0 ? 22 : 18, opacity: 0.15, color: sc }}>+</div>
+                                      <div style={{ fontSize: rowIdx === 0 ? 7 : 6, color: "rgba(255,255,255,0.2)", fontStyle: "italic", textAlign: "center" }}>{isActive ? t(lang,"myTeamClickPlayer") : t(lang,"myTeamEmpty")}</div>
+                                    </div>
+                                  </>
+                                )}
+                              </div>
+                            );
+                          })}
+                        </div>
+                      ))}
+                    </div>
+
+                    {/* ── 4 SLOTS SAUVEGARDE ── */}
+                    <div style={{ display: "flex", flexDirection: "column", gap: 5, padding: "8px 10px", borderTop: "1px solid rgba(255,255,255,0.05)" }}>
+                      {[0,1,2,3].map(i => {
+                        const st = savedTeams[i];
+                        const POS_ORDER = ["GK","DEF","MIL","ATT","FLEX"];
+                        return st ? (
+                          <div key={st.id} style={{ borderRadius: 7, background: "rgba(74,222,128,0.06)", border: "1px solid rgba(74,222,128,0.18)", padding: "5px 8px", display: "flex", alignItems: "center", gap: 6 }}>
+                            <span style={{ fontSize: 8, fontWeight: 800, color: "#4ADE80", flexShrink: 0 }}>{st.label}</span>
+                            <div style={{ flex: 1, minWidth: 0 }}>
+                              <div style={{ fontSize: 7, color: "rgba(255,255,255,0.45)", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
+                                {POS_ORDER.map(s => st.picks[s]?.name?.split(" ").pop()).filter(Boolean).join(" · ")}
+                              </div>
+                            </div>
+                            <span style={{ fontSize: 9, fontWeight: 900, color: "#C4B5FD", fontFamily: "'DM Mono',monospace", flexShrink: 0 }}>{st.score}</span>
+                            <button onClick={() => loadSavedTeam(st)} style={{ fontSize: 7, fontWeight: 700, padding: "2px 6px", borderRadius: 4, border: "1px solid rgba(196,181,253,0.3)", background: "rgba(196,181,253,0.08)", color: "#C4B5FD", cursor: "pointer", fontFamily: "Outfit", flexShrink: 0 }}>{S.myTeamLoad}</button>
+                            <button onClick={() => deleteSavedTeam(st.id)} style={{ fontSize: 8, fontWeight: 700, padding: "2px 5px", borderRadius: 4, border: "1px solid rgba(255,255,255,0.08)", background: "rgba(255,255,255,0.03)", color: "rgba(255,255,255,0.3)", cursor: "pointer", fontFamily: "Outfit", flexShrink: 0 }}>×</button>
+                          </div>
+                        ) : (
+                          <div key={i} style={{ borderRadius: 7, background: "rgba(255,255,255,0.015)", border: "1px dashed rgba(255,255,255,0.06)", padding: "5px 8px", display: "flex", alignItems: "center", justifyContent: "center" }}>
+                            <span style={{ fontSize: 7, color: "rgba(255,255,255,0.12)", fontStyle: "italic" }}>{S.myTeamSlotEmpty(i+1)}</span>
+                          </div>
+                        );
+                      })}
+                    </div>
+                  </div>
+
+                  {/* ══ COLONNE DROITE : Base de données joueurs ══ */}
+                  <div style={{ flex: 2, minWidth: 0, display: "flex", flexDirection: "column", overflow: "hidden" }}>
+
+                  {/* ── TABLEAU JOUEURS — style Database enrichi ── */}
+                  {(() => {
+                    const R = v => v != null ? Math.round(v) : "—";
+                    const dc = v => v == null ? "rgba(255,255,255,0.2)" : v >= 80 ? "#4ADE80" : v >= 65 ? "#A3E635" : v >= 50 ? "#FBBF24" : v >= 35 ? "#FB923C" : "#EF4444";
+                    const aac = v => v == null ? "rgba(255,255,255,0.2)" : "rgba(196,181,253,0.8)";
+                    const tituC = v => v >= 80 ? "#4ADE80" : v >= 50 ? "#FBBF24" : v > 0 ? "#EF4444" : "rgba(255,255,255,0.2)";
+                    const pctC = v => v == null ? "rgba(255,255,255,0.2)" : v >= 40 ? "#4ADE80" : v >= 25 ? "#FCD34D" : v >= 15 ? "#FB923C" : "#EF4444";
+                    // Win/Draw/Loss via Poisson (xG dom/ext des équipes)
+                    const poisPMF = (λ, k) => { let f=1; for(let i=1;i<=k;i++) f*=i; return Math.exp(-λ)*Math.pow(λ,k)/f; };
+                    const getMatchProbs = (p) => {
+                      const pt = findTeam(teams, p.club);
+                      const ot = findTeam(teams, p.oppName);
+                      if (!pt || !ot) return null;
+                      const λp = p.isHome ? (pt.xg_dom||1.3) : (pt.xg_ext||1.1);
+                      const λo = p.isHome ? (ot.xg_ext||1.1) : (ot.xg_dom||1.3);
+                      let w=0, d=0, l=0;
+                      for (let i=0; i<=7; i++) for (let j=0; j<=7; j++) {
+                        const pr = poisPMF(λp,i)*poisPMF(λo,j);
+                        if (i>j) w+=pr; else if (i===j) d+=pr; else l+=pr;
+                      }
+                      return { win:Math.round(w*100), draw:Math.round(d*100), loss:Math.round(l*100) };
+                    };
+                    const getWinPct = (p) => getMatchProbs(p)?.win ?? null;
+                    const [sortCol, setSortCol] = [teamSort, setTeamSort];
+                    // Filtre par slot sélectionné
+                    const slotFilter = selectedSlot
+                      ? selectedSlot === "FLEX"
+                        ? dayPool.filter(p => ["DEF","MIL","ATT"].includes(p.position))
+                        : dayPool.filter(p => p.position === selectedSlot)
+                      : dayPool;
+                    const sortedPool = [...slotFilter].sort((a, b) => {
+                      if (sortCol === "ds")   return getAdjDs(b) - getAdjDs(a);
+                      if (sortCol === "win")  return (getWinPct(b)||0) - (getWinPct(a)||0);
+                      if (sortCol === "cs")   return (b.csPercent||0) - (a.csPercent||0);
+                      if (sortCol === "dom")  return (b.avg_dom||0) - (a.avg_dom||0);
+                      if (sortCol === "ext")  return (b.avg_ext||0) - (a.avg_ext||0);
+                      if (sortCol === "l2")   return (b.l2||0) - (a.l2||0);
+                      if (sortCol === "aa2")  return (b.aa2||0) - (a.aa2||0);
+                      if (sortCol === "l5")   return (b.l5||0) - (a.l5||0);
+                      if (sortCol === "aa5")  return (b.aa5||0) - (a.aa5||0);
+                      if (sortCol === "l10")  return (b.l10||0) - (a.l10||0);
+                      if (sortCol === "aa10") return (b.aa10||0) - (a.aa10||0);
+                      if (sortCol === "l40")  return (b.l40||0) - (a.l40||0);
+                      if (sortCol === "aa40") return (b.aa40||0) - (a.aa40||0);
+                      if (sortCol === "ga")   return ((b.goals||0)+(b.assists||0)) - ((a.goals||0)+(a.assists||0));
+                      if (sortCol === "titu_s") return (b.sorare_starter_pct||0) - (a.sorare_starter_pct||0);
+                      if (sortCol === "titu") return (b.titu_pct||0) - (a.titu_pct||0);
+                      if (sortCol === "reg")  return (b.reg10||0) - (a.reg10||0);
+                      return getAdjDs(b) - getAdjDs(a);
+                    });
+                    // Colonnes header : [col, label, title]
+                    const COLS = [
+                      ["ds","D-Score","D-Score Deglingo"],
+                      ["opp", S.myTeamColAdv, S.myTeamTitleAdv],
+                      ["titu_s", S.myTeamColTituS, S.myTeamTitleTituS],
+                      ["cs", S.myTeamColCS, S.myTeamTitleCS],
+                      ["adv", S.myTeamColWin, S.myTeamTitleWin],
+                      ["l2","L2", S.myTeamTitleL2],["aa2","AA2", S.myTeamTitleAA2],
+                      ["l5","L5", S.myTeamTitleL5],["aa5","AA5", S.myTeamTitleAA5],
+                      ["l10","L10", S.myTeamTitleL10],
+                      ["dom", S.myTeamColDOM, S.myTeamTitleDOM],
+                      ["ext", S.myTeamColEXT, S.myTeamTitleEXT],
+                      ["aa10","AA10", S.myTeamTitleAA10],
+                      ["titu", S.myTeamColTitu10, S.myTeamTitleTitu10],
+                      ["reg", S.myTeamColReg, S.myTeamTitleReg],
+                      ["l40","L40", S.myTeamTitleL40],["aa40","AA40", S.myTeamTitleAA40],
+                      ["ga", S.myTeamColGA, S.myTeamTitleGA],
+                    ];
+                    const thS = (col) => ({ fontSize: 8, fontWeight: 800, color: sortCol===col?"#C084FC":"rgba(255,255,255,0.3)", cursor:"pointer", userSelect:"none", whiteSpace:"nowrap", textAlign:"center", padding:"0 4px" });
+                    // Grid: +btn | pos+logo | nom | D-Score | L2 AA2 L5 AA5 | L10 DOM EXT AA10 Titu10 Reg10 L40 AA40 G+A
+                    const GRID = "28px 36px 80px 52px 80px 36px 36px 90px 30px 28px 30px 28px 46px 32px 32px 28px 30px 28px 30px 30px 44px";
+                    return (
+                      <div style={{ flex: 1, display: "flex", flexDirection: "column", minWidth: 0, overflowX: "auto" }}>
+                        {/* Header */}
+                        <div style={{ display: "grid", gridTemplateColumns: GRID, alignItems: "center", gap: 2, padding: "3px 8px 3px", borderBottom: "1px solid rgba(255,255,255,0.07)", background: "rgba(0,0,0,0.4)", position: "sticky", top: 0, zIndex: 2, minWidth: "max-content" }}>
+                          <span />
+                          <span style={{ fontSize: 7, color: "rgba(255,255,255,0.3)", fontWeight: 700 }}>Pos</span>
+                          <span style={{ fontSize: 7, color: "rgba(255,255,255,0.3)", fontWeight: 700 }}>Joueur</span>
+                          {COLS.map(([col, label, title]) => {
+                            const grp = ["l10","dom","ext","aa10","titu","reg"].includes(col);
+                            return (
+                              <span key={col} title={title} onClick={() => setSortCol(col)} style={{
+                                ...thS(col),
+                                background: grp ? "rgba(196,181,253,0.07)" : undefined,
+                                borderRadius: col==="l10" ? "4px 0 0 4px" : col==="reg" ? "0 4px 4px 0" : undefined,
+                                boxShadow: col==="l10" ? "-1px 0 0 0 rgba(196,181,253,0.2)" : undefined,
+                              }}>
+                                {label}{sortCol===col?" ↓":""}
+                              </span>
+                            );
+                          })}
+                        </div>
+                        {/* Rows — 15 lignes, flex: 1 chacune = hauteur exacte = panel gauche */}
+                        <div style={{ overflowY: "auto", flex: 1, minHeight: 0 }}>
+                          <div style={{ minWidth: "max-content" }}>
+                          {sortedPool.map(p => {
+                            const slug = p.slug || p.name;
+                            const ed = getEdition(cardEditions[slug] || "base");
+                            const adjDs = getAdjDs(p);
+                            const inTeam = isInTeam(p);
+                            const pc = PC[p.position];
+                            const opp = logos[p.oppName];
+                            const parisTime = p.kickoff && p.matchDate ? utcToParisTime(p.kickoff, p.matchDate) : "";
+                            const ga = (p.goals||0) + (p.assists||0);
+                            return (
+                              <div key={slug}
+                                onClick={() => !inTeam && addToTeam(p)}
+                                style={{ display: "grid", gridTemplateColumns: GRID, alignItems: "center", gap: 2, padding: "4px 8px", borderBottom: "1px solid rgba(255,255,255,0.03)", background: inTeam ? "rgba(196,181,253,0.07)" : "transparent", transition: "background 0.12s", cursor: inTeam ? "default" : "pointer", minWidth: "max-content" }}
+                                onMouseEnter={e => { if (!inTeam) e.currentTarget.style.background = "rgba(255,255,255,0.04)"; }}
+                                onMouseLeave={e => { e.currentTarget.style.background = inTeam ? "rgba(196,181,253,0.07)" : "transparent"; }}
+                              >
+                                {/* + / ✓ / E1 E2 */}
+                                {(() => {
+                                  const stLabel = !Object.values(myPicks).some(pp => pp && (pp.slug||pp.name)===(p.slug||p.name)) && savedTeamLabel(p);
+                                  const shortLabel = stLabel ? stLabel.replace("Équipe ","E") : null;
+                                  return (
+                                    <div onClick={e => { e.stopPropagation(); if (!inTeam) addToTeam(p); }} style={{ width: 20, height: 20, borderRadius: 5, border: `1px solid ${inTeam?(shortLabel?"rgba(251,191,36,0.4)":"#C4B5FD40"):"rgba(255,255,255,0.15)"}`, display:"flex", alignItems:"center", justifyContent:"center", cursor: inTeam?"default":"pointer", color: inTeam?(shortLabel?"#FBBF24":"#C4B5FD"):"rgba(255,255,255,0.5)", fontSize: shortLabel?7:13, fontWeight:700, flexShrink:0 }}>
+                                      {shortLabel || (inTeam ? "✓" : "+")}
+                                    </div>
+                                  );
+                                })()}
+                                {/* Pos + logo */}
+                                <div style={{ display:"flex", alignItems:"center", gap:3 }}>
+                                  <span style={{ fontSize:6, fontWeight:900, background:pc, color:"#fff", borderRadius:2, padding:"1px 4px", flexShrink:0 }}>{p.position}</span>
+                                  {logos[p.club] && <img src={`/data/logos/${logos[p.club]}`} alt="" style={{ width:14, height:14, objectFit:"contain", flexShrink:0 }} />}
+                                </div>
+                                {/* Nom + club */}
+                                <div style={{ minWidth:0 }}>
+                                  <div style={{ fontSize:10, fontWeight: inTeam?700:500, color: inTeam?"#C4B5FD":"#fff", overflow:"hidden", textOverflow:"ellipsis", whiteSpace:"nowrap", lineHeight:1.2 }}>{p.name.split(" ").pop()}</div>
+                                  <div style={{ fontSize:6, color:"rgba(255,255,255,0.3)", overflow:"hidden", textOverflow:"ellipsis", whiteSpace:"nowrap", lineHeight:1.2 }}>{sn(p.club)}</div>
+                                </div>
+                                {/* D-Score — en tête de gondole */}
+                                <div style={{ textAlign:"center" }}>
+                                  <span style={{ display:"inline-block", padding:"3px 7px", borderRadius:8, fontFamily:"'DM Mono',monospace", fontSize:14, fontWeight:700, color: isSilver(adjDs)?"#1a1a2e":"#fff", background: isSilver(adjDs)?"linear-gradient(90deg,#C0C0C0,#A8E8D0,#B0C4E8,#D4B0E8,#E0D0E8,#fff,#D4B0E8,#B0C4E8,#A8E8D0,#C0C0C0)":dsBg(adjDs), backgroundSize: isSilver(adjDs)?"200% 100%":"auto", animation: isSilver(adjDs)?"silverShine 3s linear infinite":"none", boxShadow: isSilver(adjDs)?"0 0 10px rgba(255,255,255,0.4)": `0 0 8px ${dsColor(adjDs)}30` }}>
+                                    {adjDs}
+                                  </span>
+                                </div>
+                                {/* Adv. — même format Database */}
+                                <div style={{ overflow:"hidden" }}>
+                                  {p.oppName ? (
+                                    <div style={{ display:"flex", alignItems:"center", gap:3 }}>
+                                      <span style={{ fontSize:11, flexShrink:0, lineHeight:1 }}>{p.isHome ? "🏠" : "✈️"}</span>
+                                      {opp && <img src={`/data/logos/${opp}`} alt="" style={{ width:14, height:14, objectFit:"contain", flexShrink:0 }} />}
+                                      <span style={{ fontSize:10, color:"rgba(255,255,255,0.55)", whiteSpace:"nowrap", overflow:"hidden", textOverflow:"ellipsis" }}>{sn(p.oppName)}</span>
+                                    </div>
+                                  ) : (
+                                    <span style={{ color:"rgba(255,255,255,0.15)" }}>—</span>
+                                  )}
+                                </div>
+                                {/* Titu% Sorare */}
+                                <span style={{ fontFamily:"'DM Mono',monospace", fontSize:11, textAlign:"center", fontWeight:700, color: p.sorare_starter_pct >= 80 ? "#4ADE80" : p.sorare_starter_pct >= 60 ? "#FBBF24" : p.sorare_starter_pct != null ? "#F87171" : "rgba(255,255,255,0.2)" }}>
+                                  {p.sorare_starter_pct != null ? `${p.sorare_starter_pct}%` : "—"}
+                                </span>
+                                {/* CS% */}
+                                <span style={{ fontFamily:"'DM Mono',monospace", fontSize:11, fontWeight:600, textAlign:"center", color:pctC(p.csPercent) }}>{p.csPercent!=null?`${p.csPercent}%`:"—"}</span>
+                                {/* Match box Win% : Dom vs Ext */}
+                                {(() => {
+                                  const probs = getMatchProbs(p);
+                                  const homeLogo = p.isHome ? logos[p.club] : opp;
+                                  const awayLogo = p.isHome ? opp : logos[p.club];
+                                  const homeWin = p.isHome ? probs?.win : probs?.loss;
+                                  const awayWin = p.isHome ? probs?.loss : probs?.win;
+                                  const pctC2 = v => v >= 50 ? "#4ADE80" : v >= 35 ? "#FBBF24" : "#F87171";
+                                  return (
+                                    <div style={{ borderRadius:5, border:"1px solid rgba(255,255,255,0.07)", background:"rgba(0,0,0,0.25)", padding:"2px 4px", display:"flex", flexDirection:"column", gap:2 }}>
+                                      <div style={{ display:"flex", alignItems:"center", justifyContent:"space-between", gap:2 }}>
+                                        {homeLogo ? <img src={`/data/logos/${homeLogo}`} alt="" style={{ width:13, height:13, objectFit:"contain" }} /> : <span style={{width:13}}/>}
+                                        {parisTime && <span style={{ fontSize:9, color:"#A78BFA", fontFamily:"'DM Mono',monospace", fontWeight:800 }}>{parisTime}</span>}
+                                        {awayLogo ? <img src={`/data/logos/${awayLogo}`} alt="" style={{ width:13, height:13, objectFit:"contain" }} /> : <span style={{width:13}}/>}
+                                      </div>
+                                      {probs && (
+                                        <div style={{ display:"flex", justifyContent:"space-between" }}>
+                                          <span style={{ fontSize:8, fontWeight:700, color: p.isHome ? pctC2(homeWin) : "rgba(255,255,255,0.55)", fontFamily:"'DM Mono',monospace" }}>{homeWin}%</span>
+                                          <span style={{ fontSize:8, fontWeight:700, color:"rgba(255,255,255,0.55)", fontFamily:"'DM Mono',monospace" }}>{probs.draw}%</span>
+                                          <span style={{ fontSize:8, fontWeight:700, color: p.isHome ? "rgba(255,255,255,0.55)" : pctC2(awayWin), fontFamily:"'DM Mono',monospace" }}>{awayWin}%</span>
+                                        </div>
+                                      )}
+                                    </div>
+                                  );
+                                })()}
+                                <span style={{ fontFamily:"'DM Mono',monospace", fontSize:11, color:dc(p.l2), textAlign:"center" }}>{R(p.l2)}</span>
+                                <span style={{ fontFamily:"'DM Mono',monospace", fontSize:10, color:aac(p.aa2), textAlign:"center" }}>{R(p.aa2)}</span>
+                                <span style={{ fontFamily:"'DM Mono',monospace", fontSize:11, color:dc(p.l5), textAlign:"center" }}>{R(p.l5)}</span>
+                                <span style={{ fontFamily:"'DM Mono',monospace", fontSize:10, color:aac(p.aa5), textAlign:"center" }}>{R(p.aa5)}</span>
+                                {/* L10 — badge */}
+                                <div style={{ textAlign:"center", boxShadow:"-1px 0 0 0 rgba(196,181,253,0.12)" }}>
+                                  {p.l10 != null
+                                    ? <span style={{ display:"inline-block", padding:"2px 6px", borderRadius:6, fontFamily:"'DM Mono',monospace", fontSize:12, fontWeight:700, color: dc(p.l10), background:`${dc(p.l10)}22`, border:`1px solid ${dc(p.l10)}55` }}>{R(p.l10)}</span>
+                                    : <span style={{ color:"rgba(255,255,255,0.2)" }}>—</span>}
+                                </div>
+                                {/* DOM */}<span style={{ fontFamily:"'DM Mono',monospace", fontSize:11, fontWeight:700, textAlign:"center", color: p.avg_dom != null ? dsColor(p.avg_dom) : "rgba(255,255,255,0.2)" }}>{p.avg_dom != null ? R(p.avg_dom) : "—"}</span>
+                                {/* EXT */}<span style={{ fontFamily:"'DM Mono',monospace", fontSize:11, fontWeight:700, textAlign:"center", color: p.avg_ext != null ? dsColor(p.avg_ext) : "rgba(255,255,255,0.2)" }}>{p.avg_ext != null ? R(p.avg_ext) : "—"}</span>
+                                {/* AA10 */}<span style={{ fontFamily:"'DM Mono',monospace", fontSize:10, color:aac(p.aa10), textAlign:"center" }}>{R(p.aa10)}</span>
+                                {/* Titu10 */}
+                                <span style={{ fontFamily:"'DM Mono',monospace", fontSize:9, textAlign:"center", color:tituC(p.titu_pct) }}>
+                                  {p.titu_pct > 0 ? `${R(p.titu_pct)}%` : "—"}
+                                </span>
+                                {/* Regu10 */}
+                                <span style={{ fontFamily:"'DM Mono',monospace", fontSize:9, textAlign:"center", color:tituC(p.reg10), borderRight:"1px solid rgba(196,181,253,0.18)", paddingRight:3 }}>
+                                  {p.reg10 != null ? `${R(p.reg10)}%` : "—"}
+                                </span>
+                                {/* L40 */}<span style={{ fontFamily:"'DM Mono',monospace", fontSize:11, color:dc(p.l40), textAlign:"center" }}>{R(p.l40)}</span>
+                                {/* AA40 */}<span style={{ fontFamily:"'DM Mono',monospace", fontSize:10, color:aac(p.aa40), textAlign:"center" }}>{R(p.aa40)}</span>
+                                {/* G+A */}
+                                <span style={{ fontFamily:"'DM Mono',monospace", fontSize:8, textAlign:"center" }}>
+                                  {ga > 0 ? <>{p.goals>0&&<span style={{color:"#4ADE80",fontWeight:700}}>{p.goals}G</span>}{p.goals>0&&p.assists>0&&" "}{p.assists>0&&<span style={{color:"#FBBF24",fontWeight:600}}>{p.assists}A</span>}</> : <span style={{color:"rgba(255,255,255,0.12)"}}>—</span>}
+                                </span>
+                              </div>
+                            );
+                          })}
+                          </div>
+                        </div>
+                      </div>
+                    );
+                  })()}
+
+                  </div>
+                </div>
+              </div>
+            );
+          })()}
+
             {/* ─── DECISIVE PICK — pleine largeur colonne droite ─── */}
             {dayData.decisivePick && (() => {
               const dp = dayData.decisivePick;
@@ -1080,7 +1848,7 @@ export default function StellarTab({ players, teams, fixtures, logos = {}, match
             <div className="st-teams-grid" style={{ display: "grid", gridTemplateColumns: "repeat(2, 1fr)", gap: 12 }}>
             {dayData.teams.map((team, ti) => {
               const isUltime = team.label === "ULTIME";
-              const totalScore = team.players.reduce((sum, p) => sum + (p.isCaptain ? Math.round(p.ds * 1.5) : p.ds), 0);
+              const totalScore = getAdjTotalDs(team.players);
               const palier = PALIERS.filter(p => totalScore >= p.pts).pop();
               // Score réel : remplace ds par last_so5_score si le joueur a joué cette GW
               const hasRealData = team.players.some(p => p.last_so5_date && p.last_so5_date >= CURRENT_GW_START && p.last_so5_score != null);
@@ -1157,7 +1925,10 @@ export default function StellarTab({ players, teams, fixtures, logos = {}, match
                   </div>
                   <div className="st-team-players" style={{ display: "flex", justifyContent: "center", gap: 4, flexWrap: "nowrap" }}>
                     {team.players.map((p, pi) => (
-                      <StellarCard key={pi} player={p} logos={logos} size="sm" isValidated={isValidated} gwStart={CURRENT_GW_START} />
+                      <StellarCard key={pi} player={p} logos={logos} size="sm" isValidated={isValidated} gwStart={CURRENT_GW_START}
+                        edition={getEdition(cardEditions[p.slug || p.name] || "base")}
+                        onEditionChange={(id) => setCardEdition(p.slug || p.name, id)}
+                      />
                     ))}
                   </div>
 

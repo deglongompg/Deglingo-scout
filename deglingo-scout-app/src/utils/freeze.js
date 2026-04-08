@@ -1,27 +1,42 @@
 // ── Freeze helpers — verrouille les recommandations à des horaires fixes ──
 
-/** Paris time (UTC+2 — simplifié, suffisant pour l10/GW) */
+/** Paris time (UTC+2 — simplifié, suffisant pour GW) */
 export function getParisNow() {
   return new Date(Date.now() + 2 * 60 * 60 * 1000);
 }
 
 /**
- * Retourne la clé de verrou GW en cours :
- * le dernier Vendredi OU Mardi à 16h00 Paris écoulé.
- * Format : "2026-04-04T16:00"
+ * Retourne la clé de verrou GW en cours.
+ *
+ * Fenêtre de gel : Vendredi 16h → Mardi 16h (même semaine + 4 jours).
+ * - Si maintenant est dans cette fenêtre → picks gelés (retourne la clé du Vendredi)
+ * - Sinon (Mardi 16h → Vendredi 16h suivant) → picks live (retourne null)
+ *
+ * Format clé : "2026-04-11T16:00"
  */
 export function getGwLockKey() {
   const now = getParisNow();
+
+  // Cherche le dernier Vendredi à 16h (7 jours max)
   for (let daysBack = 0; daysBack <= 7; daysBack++) {
-    const d = new Date(now);
-    d.setDate(d.getDate() - daysBack);
-    d.setHours(16, 0, 0, 0);
-    const wd = d.getDay(); // 0=Sun 1=Mon 2=Tue 3=Wed 4=Thu 5=Fri 6=Sat
-    if (wd === 5 || wd === 2) { // Vendredi ou Mardi
-      if (d <= now) {
-        const ymd = d.toISOString().slice(0, 10);
-        return `${ymd}T16:00`;
-      }
+    const fri = new Date(now);
+    fri.setDate(fri.getDate() - daysBack);
+    fri.setHours(16, 0, 0, 0);
+
+    if (fri.getDay() !== 5) continue; // pas un vendredi
+    if (fri > now) continue;          // pas encore passé
+
+    // Mardi suivant = Vendredi + 4 jours, 16h
+    const unlock = new Date(fri);
+    unlock.setDate(unlock.getDate() + 4);
+    unlock.setHours(16, 0, 0, 0);
+
+    // Sommes-nous dans la fenêtre [Vendredi 16h → Mardi 16h] ?
+    if (now < unlock) {
+      return fri.toISOString().slice(0, 10) + "T16:00";
+    } else {
+      // Le Mardi de unlock est déjà passé → picks live
+      return null;
     }
   }
   return null;

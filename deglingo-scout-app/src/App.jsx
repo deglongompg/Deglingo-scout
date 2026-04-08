@@ -3,6 +3,7 @@ import DbTab from "./components/DbTab";
 import FightTab from "./components/FightTab";
 import RecoTab from "./components/RecoTab";
 import StellarTab from "./components/StellarTab";
+import LandingPage from "./components/LandingPage";
 import { t } from "./utils/i18n";
 
 const TABS = [
@@ -13,6 +14,11 @@ const TABS = [
 ];
 
 export default function App() {
+  const [showLanding, setShowLanding] = useState(() => {
+    // Skip landing if direct tab URL param
+    const p = new URLSearchParams(window.location.search).get("tab");
+    return !["db","fight","reco","stellar"].includes(p);
+  });
   const [tab, setTab] = useState(() => {
     const p = new URLSearchParams(window.location.search).get("tab");
     return ["db","fight","reco","stellar"].includes(p) ? p : "db";
@@ -57,6 +63,10 @@ export default function App() {
       minHeight: "100vh", display: "flex", alignItems: "center", justifyContent: "center",
       background: "#04040F", color: "#EF4444", fontFamily: "Outfit",
     }}>Erreur: {error}</div>
+  );
+
+  if (showLanding) return (
+    <LandingPage players={players} onEnter={() => setShowLanding(false)} />
   );
 
   const silverShinyStyle = {

@@ -15,7 +15,8 @@ py fetch_all_players.py ALL --fresh
 echo.
 echo [2/6] FIXTURES CALENDRIER (~30 sec)...
 echo -----------------------------------------
-py fetch_fixtures.py
+for /f "tokens=1,2 delims==" %%a in (.env) do if "%%a"=="FOOTBALL_DATA_API_KEY" set FOOTBALL_DATA_API_KEY=%%b
+py fetch_fixtures.py %FOOTBALL_DATA_API_KEY%
 
 echo.
 echo [3/6] STATUT BLESSES / SUSPENDUS / PROJ (~5 min)...

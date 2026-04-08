@@ -298,7 +298,9 @@ function PlayerCard({ player, isSelected, onClick, logos = {}, badge, isCaptain,
   const pc = PC[player.position];
   const conf = player.ds >= 75 ? 5 : player.ds >= 60 ? 4 : player.ds >= 50 ? 3 : player.ds >= 40 ? 2 : player.ds >= 30 ? 1 : 0;
 
-  const hasPlayed = gwStart && player.last_so5_date && player.last_so5_date >= gwStart && player.last_so5_score != null;
+  // hasPlayed : vrai seulement si le dernier SO5 est >= la date du match GW de ce joueur
+  const refDate = player.matchDate || gwStart;
+  const hasPlayed = refDate && player.last_so5_date && player.last_so5_date >= refDate && player.last_so5_score != null;
   const realScore = hasPlayed ? Math.round(player.last_so5_score) : null;
   const realColor = hasPlayed ? (player.last_so5_score >= 75 ? "#4ADE80" : player.last_so5_score >= 60 ? "#A3E635" : player.last_so5_score >= 50 ? "#FBBF24" : player.last_so5_score >= 40 ? "#FB923C" : "#EF4444") : null;
 
@@ -622,19 +624,21 @@ export default function RecoTab({ players, teams, fixtures, logos = {}, lang = "
     const lgTeams = teams.filter(t => t.league === league);
     if (!lgTeams.length) return [];
     const pf = fixtures?.player_fixtures || {};
+    const todayStr = new Date().toISOString().split("T")[0];
+    const maxDateStr = new Date(Date.now() + 10 * 86400000).toISOString().split("T")[0];
     return lgPlayers.map(p => {
       if (p.injured || p.suspended) return null;
       const tituMin = gambling ? 40 : 70;
       if (p.sorare_starter_pct != null && p.sorare_starter_pct < tituMin) return null;
       const fx = pf[p.slug] || pf[p.name];
-      if (!fx) return null;
+      if (!fx || !fx.date || fx.date < todayStr || fx.date > maxDateStr) return null;
       const opp = lgTeams.find(t => t.name === fx.opp);
       if (!opp) return null;
       const pTeam = findTeam(lgTeams, p.club);
       const ds = dScoreMatch(p, opp, fx.isHome, pTeam);
       // matchId canonique : pTeam.name (normalisé via lgTeams) évite les mismatches "Toulouse" vs "Toulouse FC"
       const matchId = pTeam ? [pTeam.name, opp.name].sort().join("|") : null;
-      return { ...p, ds, oppName: opp.name, oppTeam: opp, playerTeam: pTeam, isHome: fx.isHome, matchId };
+      return { ...p, ds, oppName: opp.name, oppTeam: opp, playerTeam: pTeam, isHome: fx.isHome, matchId, matchDate: fx.date };
     }).filter(Boolean).sort((a, b) => {
       // GK en dernier — optimiser les joueurs de champ d'abord
       if (a.position === "GK" && b.position !== "GK") return 1;
@@ -771,8 +775,16 @@ export default function RecoTab({ players, teams, fixtures, logos = {}, lang = "
     }
   }, [isGwLocked, bpKey, frozenPicks, computedPicks]);
 
-  // Picks finaux : figés si GW démarrée, sinon live
-  const picks = frozenPicks || computedPicks;
+  // Valider les picks gelés : si un joueur n'a plus de match valide (fixtures MAJ), recalculer
+  const validatedFrozen = useMemo(() => {
+    if (!frozenPicks) return null;
+    const validSlugs = new Set(allScored.map(p => p.slug));
+    const isStale = frozenPicks.some(p => p.slug && !validSlugs.has(p.slug));
+    return isStale ? null : frozenPicks;
+  }, [frozenPicks, allScored]);
+
+  // Picks finaux : figés si GW démarrée (et valides), sinon live
+  const picks = validatedFrozen || computedPicks;
 
   const lg = LG_META[league];
   const flex = (mode === "so5" || mode === "stack") ? picks.filter(p => p.isFlex) : [];
@@ -795,8 +807,6 @@ export default function RecoTab({ players, teams, fixtures, logos = {}, lang = "
   const modeInfo = MODES.find(m => m.id === mode);
   const stackClub = mode === "stack" && picks.length > 0 ? picks[0].club : null;
 
-  const CURRENT_GW_START = "2026-04-03";
-
   // Score total équipe : tous ×1.1 (+10%) + capitaine ×1.5 (soit ×1.6 total pour cap)
   const teamTotalDs = picks.length > 0 ? (() => {
     const scores = picks.map(p => p.ds || 0);
@@ -806,10 +816,11 @@ export default function RecoTab({ players, teams, fixtures, logos = {}, lang = "
   })() : null;
 
   // Score réel : remplace ds par last_so5_score pour joueurs ayant joué cette GW
-  const hasRealData = picks.some(p => p.last_so5_date && p.last_so5_date >= CURRENT_GW_START && p.last_so5_score != null);
+  // Référence : matchDate du joueur (évite les faux positifs de coupes/UCL entre deux GW)
+  const hasRealData = picks.some(p => p.matchDate && p.last_so5_date && p.last_so5_date >= p.matchDate && p.last_so5_score != null);
   const teamRealDs = hasRealData && picks.length > 0 ? (() => {
     const getRealScore = p => {
-      const played = p.last_so5_date && p.last_so5_date >= CURRENT_GW_START && p.last_so5_score != null;
+      const played = p.matchDate && p.last_so5_date && p.last_so5_date >= p.matchDate && p.last_so5_score != null;
       return played ? p.last_so5_score : (p.ds || 0);
     };
     const scores = picks.map(getRealScore);
@@ -956,46 +967,46 @@ export default function RecoTab({ players, teams, fixtures, logos = {}, lang = "
           /* SO7: classic 1-2-2-2 formation */
           <div style={{ position: "relative", zIndex: 2, display: "flex", flexDirection: "column", gap: "18px", alignItems: "center" }}>
             <div style={{ display: "flex", justifyContent: "center", gap: "80px" }}>
-              {att.map((p, i) => <PlayerCard key={i} player={p} isSelected={sel === `ATT${i}`} onClick={() => setSel(sel === `ATT${i}` ? null : `ATT${i}`)} logos={logos} isCaptain={p.isCaptain} gwStart={CURRENT_GW_START} />)}
+              {att.map((p, i) => <PlayerCard key={i} player={p} isSelected={sel === `ATT${i}`} onClick={() => setSel(sel === `ATT${i}` ? null : `ATT${i}`)} logos={logos} isCaptain={p.isCaptain} />)}
             </div>
             <div style={{ width: "100%", display: "flex", justifyContent: "space-between", padding: "0 25px" }}>
-              {mil.map((p, i) => <PlayerCard key={i} player={p} isSelected={sel === `MIL${i}`} onClick={() => setSel(sel === `MIL${i}` ? null : `MIL${i}`)} logos={logos} isCaptain={p.isCaptain} gwStart={CURRENT_GW_START} />)}
+              {mil.map((p, i) => <PlayerCard key={i} player={p} isSelected={sel === `MIL${i}`} onClick={() => setSel(sel === `MIL${i}` ? null : `MIL${i}`)} logos={logos} isCaptain={p.isCaptain} />)}
             </div>
             <div style={{ width: "100%", display: "flex", justifyContent: "space-between", padding: "0 10px" }}>
-              {def.map((p, i) => <PlayerCard key={i} player={p} isSelected={sel === `DEF${i}`} onClick={() => setSel(sel === `DEF${i}` ? null : `DEF${i}`)} logos={logos} isCaptain={p.isCaptain} gwStart={CURRENT_GW_START} />)}
+              {def.map((p, i) => <PlayerCard key={i} player={p} isSelected={sel === `DEF${i}`} onClick={() => setSel(sel === `DEF${i}` ? null : `DEF${i}`)} logos={logos} isCaptain={p.isCaptain} />)}
             </div>
             <div style={{ display: "flex", justifyContent: "center", marginTop: "-150px" }}>
-              {gk.map((p, i) => <PlayerCard key={i} player={p} isSelected={sel === `GK${i}`} onClick={() => setSel(sel === `GK${i}` ? null : `GK${i}`)} logos={logos} isCaptain={p.isCaptain} gwStart={CURRENT_GW_START} />)}
+              {gk.map((p, i) => <PlayerCard key={i} player={p} isSelected={sel === `GK${i}`} onClick={() => setSel(sel === `GK${i}` ? null : `GK${i}`)} logos={logos} isCaptain={p.isCaptain} />)}
             </div>
           </div>
         ) : mode === "so5" ? (
           /* SO5: Sorare layout — top: ATT + EX, bottom: DEF + GK + MIL */
           <div style={{ position: "relative", zIndex: 2, display: "flex", flexDirection: "column", gap: "24px", alignItems: "center", padding: "10px 0" }}>
             <div style={{ display: "flex", justifyContent: "center", gap: "40px" }}>
-              {att.map((p, i) => <PlayerCard key={i} player={p} isSelected={sel === `ATT${i}`} onClick={() => setSel(sel === `ATT${i}` ? null : `ATT${i}`)} logos={logos} isCaptain={p.isCaptain} gwStart={CURRENT_GW_START} />)}
-              {flex.map((p, i) => <PlayerCard key={i} player={p} isSelected={sel === `FLEX${i}`} onClick={() => setSel(sel === `FLEX${i}` ? null : `FLEX${i}`)} logos={logos} badge="EX" isCaptain={p.isCaptain} gwStart={CURRENT_GW_START} />)}
+              {att.map((p, i) => <PlayerCard key={i} player={p} isSelected={sel === `ATT${i}`} onClick={() => setSel(sel === `ATT${i}` ? null : `ATT${i}`)} logos={logos} isCaptain={p.isCaptain} />)}
+              {flex.map((p, i) => <PlayerCard key={i} player={p} isSelected={sel === `FLEX${i}`} onClick={() => setSel(sel === `FLEX${i}` ? null : `FLEX${i}`)} logos={logos} badge="EX" isCaptain={p.isCaptain} />)}
             </div>
             <div style={{ display: "flex", justifyContent: "center", gap: "20px", alignItems: "flex-start" }}>
-              {def.map((p, i) => <PlayerCard key={i} player={p} isSelected={sel === `DEF${i}`} onClick={() => setSel(sel === `DEF${i}` ? null : `DEF${i}`)} logos={logos} isCaptain={p.isCaptain} gwStart={CURRENT_GW_START} />)}
+              {def.map((p, i) => <PlayerCard key={i} player={p} isSelected={sel === `DEF${i}`} onClick={() => setSel(sel === `DEF${i}` ? null : `DEF${i}`)} logos={logos} isCaptain={p.isCaptain} />)}
               <div style={{ marginTop: "50px" }}>
-                {gk.map((p, i) => <PlayerCard key={i} player={p} isSelected={sel === `GK${i}`} onClick={() => setSel(sel === `GK${i}` ? null : `GK${i}`)} logos={logos} isCaptain={p.isCaptain} gwStart={CURRENT_GW_START} />)}
+                {gk.map((p, i) => <PlayerCard key={i} player={p} isSelected={sel === `GK${i}`} onClick={() => setSel(sel === `GK${i}` ? null : `GK${i}`)} logos={logos} isCaptain={p.isCaptain} />)}
               </div>
-              {mil.slice(0, 1).map((p, i) => <PlayerCard key={i} player={p} isSelected={sel === `MIL${i}`} onClick={() => setSel(sel === `MIL${i}` ? null : `MIL${i}`)} logos={logos} isCaptain={p.isCaptain} gwStart={CURRENT_GW_START} />)}
+              {mil.slice(0, 1).map((p, i) => <PlayerCard key={i} player={p} isSelected={sel === `MIL${i}`} onClick={() => setSel(sel === `MIL${i}` ? null : `MIL${i}`)} logos={logos} isCaptain={p.isCaptain} />)}
             </div>
           </div>
         ) : (
           /* Stack: same layout as SO5 — ATT + EX top, DEF + GK↓ + MIL bottom */
           <div style={{ position: "relative", zIndex: 2, display: "flex", flexDirection: "column", gap: "24px", alignItems: "center", padding: "10px 0" }}>
             <div style={{ display: "flex", justifyContent: "center", gap: "40px" }}>
-              {att.map((p, i) => <PlayerCard key={i} player={p} isSelected={sel === `ATT${i}`} onClick={() => setSel(sel === `ATT${i}` ? null : `ATT${i}`)} logos={logos} isCaptain={p.isCaptain} gwStart={CURRENT_GW_START} />)}
-              {flex.map((p, i) => <PlayerCard key={i} player={p} isSelected={sel === `FLEX${i}`} onClick={() => setSel(sel === `FLEX${i}` ? null : `FLEX${i}`)} logos={logos} badge="EX" isCaptain={p.isCaptain} gwStart={CURRENT_GW_START} />)}
+              {att.map((p, i) => <PlayerCard key={i} player={p} isSelected={sel === `ATT${i}`} onClick={() => setSel(sel === `ATT${i}` ? null : `ATT${i}`)} logos={logos} isCaptain={p.isCaptain} />)}
+              {flex.map((p, i) => <PlayerCard key={i} player={p} isSelected={sel === `FLEX${i}`} onClick={() => setSel(sel === `FLEX${i}` ? null : `FLEX${i}`)} logos={logos} badge="EX" isCaptain={p.isCaptain} />)}
             </div>
             <div style={{ display: "flex", justifyContent: "center", gap: "20px", alignItems: "flex-start" }}>
-              {def.map((p, i) => <PlayerCard key={i} player={p} isSelected={sel === `DEF${i}`} onClick={() => setSel(sel === `DEF${i}` ? null : `DEF${i}`)} logos={logos} isCaptain={p.isCaptain} gwStart={CURRENT_GW_START} />)}
+              {def.map((p, i) => <PlayerCard key={i} player={p} isSelected={sel === `DEF${i}`} onClick={() => setSel(sel === `DEF${i}` ? null : `DEF${i}`)} logos={logos} isCaptain={p.isCaptain} />)}
               <div style={{ marginTop: "50px" }}>
-                {gk.map((p, i) => <PlayerCard key={i} player={p} isSelected={sel === `GK${i}`} onClick={() => setSel(sel === `GK${i}` ? null : `GK${i}`)} logos={logos} isCaptain={p.isCaptain} gwStart={CURRENT_GW_START} />)}
+                {gk.map((p, i) => <PlayerCard key={i} player={p} isSelected={sel === `GK${i}`} onClick={() => setSel(sel === `GK${i}` ? null : `GK${i}`)} logos={logos} isCaptain={p.isCaptain} />)}
               </div>
-              {mil.slice(0, 1).map((p, i) => <PlayerCard key={i} player={p} isSelected={sel === `MIL${i}`} onClick={() => setSel(sel === `MIL${i}` ? null : `MIL${i}`)} logos={logos} isCaptain={p.isCaptain} gwStart={CURRENT_GW_START} />)}
+              {mil.slice(0, 1).map((p, i) => <PlayerCard key={i} player={p} isSelected={sel === `MIL${i}`} onClick={() => setSel(sel === `MIL${i}` ? null : `MIL${i}`)} logos={logos} isCaptain={p.isCaptain} />)}
             </div>
           </div>
         )}

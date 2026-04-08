@@ -21,7 +21,7 @@ export async function onRequestGet(context) {
 
   // Erreur renvoyée par Sorare (refus utilisateur, etc.)
   if (error || !code) {
-    return redirect(`${APP_URL}/#sorare_error=${encodeURIComponent(error || "no_code")}&state=${state}`);
+    return redirect(`${APP_URL}/?tab=stellar#sorare_error=${encodeURIComponent(error || "no_code")}&state=${state}`);
   }
 
   // Échange code → access_token (client_secret reste côté serveur)
@@ -45,18 +45,18 @@ export async function onRequestGet(context) {
     if (!res.ok) {
       const body = await res.text();
       console.error("Sorare token error:", res.status, body);
-      return redirect(`${APP_URL}/#sorare_error=token_failed&state=${state}`);
+      return redirect(`${APP_URL}/?tab=stellar#sorare_error=token_failed&state=${state}`);
     }
 
     tokenData = await res.json();
   } catch (err) {
     console.error("Sorare token exception:", err);
-    return redirect(`${APP_URL}/#sorare_error=exception&state=${state}`);
+    return redirect(`${APP_URL}/?tab=stellar#sorare_error=exception&state=${state}`);
   }
 
   const { access_token } = tokenData;
   if (!access_token) {
-    return redirect(`${APP_URL}/#sorare_error=no_token&state=${state}`);
+    return redirect(`${APP_URL}/?tab=stellar#sorare_error=no_token&state=${state}`);
   }
 
   // Token stocké dans un cookie httpOnly Secure — inaccessible au JS
@@ -64,7 +64,7 @@ export async function onRequestGet(context) {
   return new Response(null, {
     status: 302,
     headers: {
-      "Location":   `${APP_URL}/#sorare_authed=1&state=${state}`,
+      "Location":   `${APP_URL}/?tab=stellar#sorare_authed=1&state=${state}`,
       "Set-Cookie": [
         `sorare_token=${access_token}`,
         "HttpOnly",

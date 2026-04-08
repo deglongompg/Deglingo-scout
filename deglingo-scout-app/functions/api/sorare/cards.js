@@ -11,18 +11,15 @@ const CARDS_QUERY = `
     currentUser {
       slug
       nickname
-      footballCards(first: 500) {
+      cards(first: 500) {
         nodes {
           slug
-          player {
-            slug
-            displayName
-            position
-          }
-          rarity
-          pictureUrl(derivative: "tinified_card_png")
-          season {
-            startYear
+          rarityTyped
+          ... on Card {
+            player {
+              slug
+              displayName
+            }
           }
         }
       }
@@ -51,34 +48,35 @@ export async function onRequestGet(context) {
         "Content-Type":  "application/json",
         "Accept":        "application/json",
         "Authorization": `Bearer ${token}`,
+        "User-Agent":    "Deglingo-Scout/1.0",
       },
       body: JSON.stringify({ query: CARDS_QUERY }),
     });
 
-    if (res.status === 401) {
-      return new Response(JSON.stringify({ error: "token_expired" }), {
-        status: 401,
-        headers: {
-          "Content-Type": "application/json",
-          "Set-Cookie": "sorare_token=; HttpOnly; Secure; SameSite=Strict; Path=/; Max-Age=0; Expires=Thu, 01 Jan 1970 00:00:00 GMT",
-        },
-      });
+    const statusCode = res.status;
+    const rawBody = await res.text().catch(() => "");
+
+    // DEBUG : toujours 200 pour éviter que Cloudflare mange nos erreurs
+    if (statusCode === 401) {
+      return json({ ok: false, error: "token_expired", debug_status: 401 }, 200);
     }
 
     if (!res.ok) {
-      return json({ error: "sorare_api_error", status: res.status }, 502);
+      return json({ ok: false, error: "sorare_api_error", debug_status: statusCode, body: rawBody.slice(0, 1000) }, 200);
     }
 
-    const data = await res.json();
+    let data;
+    try { data = JSON.parse(rawBody); }
+    catch (e) { return json({ ok: false, error: "json_parse_error", raw: rawBody.slice(0, 500) }, 200); }
 
     if (data.errors?.length) {
-      return json({ error: "graphql_error", details: data.errors }, 502);
+      return json({ ok: false, error: "graphql_error", details: data.errors }, 200);
     }
 
-    return json(data, 200);
+    return json({ ok: true, ...data }, 200);
 
   } catch (err) {
-    return json({ error: "fetch_error" }, 500);
+    return json({ ok: false, error: "fetch_exception", message: String(err) }, 200);
   }
 }
 

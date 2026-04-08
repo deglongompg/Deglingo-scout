@@ -20,7 +20,7 @@ const CARDS_QUERY = `
             position
           }
           rarity
-          pictureUrl(derivative: "tinified_card_png")
+          pictureUrl
           season {
             startYear
           }

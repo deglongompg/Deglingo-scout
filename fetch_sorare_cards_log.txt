@@ -1,0 +1,1074 @@
+Deglingo Scout — fetch_sorare_cards
+   2528 joueurs | Saison 2025
+   Deja mappes : 0
+   A traiter   : 2528
+  OK  Melvin Zinga -> melvin-zinga
+  NOK Ousmane Camara (L5=52.5) -> tried: ['ousmane-camara', 'camara', 'ousmane']
+  OK  Lanroy Machine -> lanroy-machine
+  OK  Louis Mouton -> louis-mouton
+  OK  Branco van den Boomen -> branco-van-den-boomen
+  OK  Pierrick Capelle -> pierrick-capelle
+  NOK Hervé Koffi (L5=57.6) -> tried: ['herve-koffi', 'koffi', 'herve']
+  OK  Marius Louãr -> marius-louar
+  OK  Prosper Peter -> prosper-peter
+  OK  Jacques Ekomié -> jacques-ekomie
+  OK  Marius Courcoul -> marius-courcoul
+  OK  Lillian Rao-Lisoa -> lillian-rao-lisoa
+  OK  Haris Belkebla -> haris-belkebla
+  OK  Carlens Arcus -> carlens-arcus
+  OK  Goduine Koyalipou -> goduine-koyalipou
+  OK  Florent Hanin -> florent-hanin
+  OK  Abdoulaye Bamba -> abdoulaye-bamba
+  OK  Jordan Lefort -> jordan-lefort
+  OK  Théo De Percin -> theo-de-percin
+  OK  Fredrik Oppegård -> fredrik-oppegard
+  OK  Sékou Mara -> sekou-mara
+  OK  Elisha Owusu -> elisha-owusu
+  NOK Danny Namaso (L5=53.5) -> tried: ['danny-namaso', 'namaso', 'danny']
+  OK  Tom Negrel -> tom-negrel
+  OK  Lassine Sinayoko -> lassine-sinayoko
+  OK  Donovan Léon -> donovan-leon
+  OK  Nathan Buayi-Kiala -> nathan-buayi-kiala
+  OK  Lamine Sy -> lamine-sy
+  OK  Lasso Coulibaly -> lasso-coulibaly
+  OK  Sinaly Diomande -> sinaly-diomande
+  OK  Clément Akpa -> clement-akpa
+  OK  Marvin Senaya -> marvin-senaya
+  OK  Telli Siwe -> telli-siwe
+  NOK Bryan Okoh (L5=66.3) -> tried: ['bryan-okoh', 'okoh', 'bryan']
+  OK  Romain Faivre -> romain-faivre
+  OK  Gideon Mensah -> gideon-mensah
+  OK  Oussama El Azzouzi -> oussama-el-azzouzi
+  OK  Josué Casimir -> josue-casimir
+  OK  Kévin Danois -> kevin-danois
+  OK  Rémy Labeau-Lascary -> remy-labeau-lascary
+  OK  Hugo Magnetti -> hugo-magnetti
+  OK  Lucas Tousart -> lucas-tousart
+  OK  Bradley Locko -> bradley-locko
+  OK  Grégoire Coudert -> gregoire-coudert
+  OK  Hamidou Makalou -> hamidou-makalou
+  OK  Brendan Chardonnet -> brendan-chardonnet
+  OK  Noah Jauny -> noah-jauny
+  OK  Daouda Guindo -> daouda-guindo
+  OK  Pathé Mboup -> pathe-mboup
+  OK  Soumaïla Coulibaly -> soumaila-coulibaly
+  OK  Romain Del Castillo -> romain-del-castillo
+  OK  Joris Chotard -> joris-chotard
+  OK  Kenny Lala -> kenny-lala
+  OK  Kamory Doumbia -> kamory-doumbia
+  OK  Michel Diaz -> michel-diaz
+  OK  Ludovic Ajorque -> ludovic-ajorque
+  OK  Yassine Kechta -> yassine-kechta
+  OK  Lucas Gourna-Douath -> lucas-gourna-douath
+  OK  Yanis Zouaoui -> yanis-zouaoui
+  OK  Arouna Sangante -> arouna-sangante
+  OK  Fodé Doucouré -> fode-doucoure
+  OK  Sofiane Boufal -> sofiane-boufal
+  OK  Simon Ebonog -> simon-ebonog
+  OK  Mory Diaw -> mory-diaw
+  OK  Stephan Zagadou -> stephan-zagadou
+  OK  Loïc Nego -> loic-nego
+  NOK Lionel Mpasi (L5=55.1) -> tried: ['lionel-mpasi', 'mpasi', 'lionel']
+  OK  Timothee Pembele -> timothee-pembele
+  OK  Ayumu Seko -> ayumu-seko
+  OK  Godson Kyeremeh -> godson-kyeremeh
+  OK  Issa Soumaré -> issa-soumare
+  OK  Gautier Lloris -> gautier-lloris
+  OK  Kenny Quetant -> kenny-quetant
+  OK  Florian Sotoca -> florian-sotoca
+  OK  Robin Risser -> robin-risser
+  OK  Fodé Sylla -> fode-sylla
+  OK  Allan Saint-Maximin -> allan-saint-maximin
+  OK  Anthony Bermont -> anthony-bermont
+  OK  Andrija Bulatović -> andrija-bulatovic
+  OK  Mathieu Gorgelin -> mathieu-gorgelin
+  OK  Matthieu Udol -> matthieu-udol
+  OK  Adrien Thomasson -> adrien-thomasson
+  NOK Kyllian Antonio (L5=65.4) -> tried: ['kyllian-antonio', 'antonio', 'kyllian']
+  OK  Nidal Čelik -> nidal-celik
+  OK  Jonathan Gradit -> jonathan-gradit
+  OK  Wesley Saïd -> wesley-said
+  NOK Saud Abdulhamid (L5=55.9) -> tried: ['saud-abdulhamid', 'abdulhamid', 'saud']
+  OK  Samson Baidoo -> samson-baidoo
+  OK  Odsonne Edouard -> odsonne-edouard
+  OK  Pierre-Ismaëlo Ganiou -> pierre-ismaelo-ganiou
+  OK  Rayan Fofana -> rayan-fofana
+  OK  Florian Thauvin -> florian-thauvin
+  OK  Arthur Masuaku -> arthur-masuaku
+  OK  Régis Gurtner -> regis-gurtner
+  OK  Mamadou Sangaré -> mamadou-sangare
+  OK  Malang Sarr -> malang-sarr
+  OK  Ruben Aguilar -> ruben-aguilar
+  OK  Amadou Haïdara -> amadou-haidara
+  OK  Marc-Aurèle Caillard -> marc-aurele-caillard
+  OK  Aïssa Mandi -> aissa-mandi
+  OK  Benjamin André -> benjamin-andre
+  OK  Berke Özer -> berke-ozer
+  OK  Nabil Bentaleb -> nabil-bentaleb
+  OK  Arnaud Bodart -> arnaud-bodart
+  OK  Olivier Giroud -> olivier-giroud
+  OK  Thomas Meunier -> thomas-meunier
+  OK  Gaëtan Perrin -> gaetan-perrin
+  OK  Osame Sahraoui -> osame-sahraoui
+  NOK Chancel Mbemba (L5=57.8) -> tried: ['chancel-mbemba', 'mbemba', 'chancel']
+  OK  Noah Edjouma -> noah-edjouma
+  OK  Ngal'ayel Mukau -> ngal-ayel-mukau
+  OK  Ayyoub Bouaddi -> ayyoub-bouaddi
+  NOK Matias Fernandez-Pardo (L5=56.8) -> tried: ['matias-fernandez-pardo', 'fernandez-pardo', 'matias']
+  OK  Calvin Verdonk -> calvin-verdonk
+  NOK Alexsandro (L5=61.1) -> tried: ['alexsandro']
+  OK  Nathan Ngoy -> nathan-ngoy
+  OK  Romain Perraud -> romain-perraud
+  >> Sauvegarde 200/2528 (7%) | OK=107 NOK=93
+  NOK Bamba Dieng (L5=54.0) -> tried: ['bamba-dieng', 'dieng', 'bamba']
+  OK  Benjamin Leroy -> benjamin-leroy
+  OK  Panos Katseris -> panos-katseris
+  OK  Bandiougou Fadiga -> bandiougou-fadiga
+  OK  Abdoulaye Faye -> abdoulaye-faye
+  OK  Sambou Soumano -> sambou-soumano
+  OK  Montassar Talbi -> montassar-talbi
+  OK  Trevan Sanusi -> trevan-sanusi
+  OK  Théo Le Bris -> theo-le-bris
+  OK  Pablo Pagis -> pablo-pagis
+  OK  Jérémy Hatchi -> jeremy-hatchi
+  OK  Bingourou Kamara -> bingourou-kamara
+  OK  Noah Cadiou -> noah-cadiou
+  OK  Nathaniel Adjei -> nathaniel-adjei
+  OK  Jean-Victor Makengo -> jean-victor-makengo
+  OK  Laurent Abergel -> laurent-abergel
+  NOK Arsène Kouassi (L5=54.3) -> tried: ['arsene-kouassi', 'kouassi', 'arsene']
+  NOK Koffi Kouao (L5=54.3) -> tried: ['koffi-kouao', 'kouao', 'koffi']
+  OK  Lucas Michal -> lucas-michal
+  NOK Sadibou Sané (L5=54.3) -> tried: ['sadibou-sane', 'sane', 'sadibou']
+  NOK Maxime Colin (L5=51.0) -> tried: ['maxime-colin', 'colin', 'maxime']
+  NOK Giorgi Tsitaishvili (L5=53.3) -> tried: ['giorgi-tsitaishvili', 'tsitaishvili', 'giorgi']
+  NOK Pape Sy (L5=85.3) -> tried: ['pape-sy', 'sy', 'pape']
+  NOK Denis Zakaria (L5=53.4) -> tried: ['denis-zakaria', 'zakaria', 'denis']
+  OK  Lukáš Hradecky -> lukas-hradecky
+  NOK Lamine Camara (L5=62.7) -> tried: ['lamine-camara', 'camara', 'lamine']
+  OK  Jordan Teze -> jordan-teze
+  OK  Krépin Diatta -> krepin-diatta
+  OK  Maghnes Akliouche -> maghnes-akliouche
+  OK  Aladji Bamba -> aladji-bamba
+  OK  Wout Faes -> wout-faes
+  OK  Takumi Minamino -> takumi-minamino
+  OK  Philipp Köhn -> philipp-kohn
+  OK  Eric Dier -> eric-dier
+  OK  Folarin Balogun -> folarin-balogun
+  OK  Paul Pogba -> paul-pogba
+  OK  Yann Lienard -> yann-lienard
+  OK  Christian Mawissa Elebi -> christian-mawissa-elebi
+  NOK Stanis Idumbo (L5=63.5) -> tried: ['stanis-idumbo', 'idumbo', 'stanis']
+  OK  Thilo Kehrer -> thilo-kehrer
+  OK  Aleksandr Golovin -> aleksandr-golovin
+  OK  Simon Adingra -> simon-adingra
+  OK  Kassoum Ouattara -> kassoum-ouattara
+  OK  Ibrahima Sissoko -> ibrahima-sissoko
+  OK  Fabien Centonze -> fabien-centonze
+  OK  Francis Coquelin -> francis-coquelin
+  OK  Tylel Tati -> tylel-tati
+  OK  Mohamed Kaba -> mohamed-kaba
+  NOK Chidozie Awaziem (L5=50.9) -> tried: ['chidozie-awaziem', 'awaziem', 'chidozie']
+  OK  Sékou Doucouré -> sekou-doucoure
+  OK  Rémy Cabella -> remy-cabella
+  OK  Anthony Lopes -> anthony-lopes
+  OK  Bahmed Deuff -> bahmed-deuff
+  OK  Uroš Radaković -> uros-radakovic
+  OK  Frédéric Guilbert -> frederic-guilbert
+  OK  Matthis Abline -> matthis-abline
+  OK  Louis Leroux -> louis-leroux
+  OK  Youssef El-Arabi -> youssef-el-arabi
+  OK  Amady Camara -> amady-camara
+  NOK Ali Youssef (L5=59.4) -> tried: ['ali-youssef', 'youssef', 'ali']
+  OK  Alexis Mirbach -> alexis-mirbach
+  OK  Gabin Bernardeau -> gabin-bernardeau
+  OK  Charles Vanhoutte -> charles-vanhoutte
+  OK  Jonathan Clauss -> jonathan-clauss
+  OK  Moïse Bombito -> moise-bombito
+  OK  Youssouf Ndayishimiye -> youssouf-ndayishimiye
+  OK  Melvin Bard -> melvin-bard
+  OK  Sofiane Diop -> sofiane-diop
+  OK  Kojo Peprah Oppong -> kojo-peprah-oppong
+  OK  Antoine Mendy -> antoine-mendy
+  OK  Yehvann Diouf -> yehvann-diouf
+  OK  Isak Jansson -> isak-jansson
+  OK  Morgan Sanson -> morgan-sanson
+  OK  Ali Abdi -> ali-abdi
+  OK  Maxime Dupé -> maxime-dupe
+  OK  Endrick -> endrick-felipe-moreira-de-sousa
+  OK  Tyler Morton -> tyler-morton
+  OK  Lassine Diarra -> lassine-diarra
+  OK  Noham Kamara -> noham-kamara
+  OK  Ruben Kluivert -> ruben-kluivert
+  OK  Islamdine Halifa -> islamdine-halifa
+  OK  Rémy Descamps -> remy-descamps
+  OK  Orel Mangala -> orel-mangala
+  OK  Khalis Merah -> khalis-merah
+  OK  Ainsley Maitland-Niles -> ainsley-maitland-niles
+  OK  Pavel Šulc -> pavel-sulc
+  OK  Moussa Niakhaté -> moussa-niakhate
+  >> Sauvegarde 400/2528 (15%) | OK=182 NOK=218
+  OK  Adam Karabec -> adam-karabec
+  OK  Dominik Greif -> dominik-greif
+  OK  Hans Hateboer -> hans-hateboer
+  OK  Rachid Ghezzal -> rachid-ghezzal
+  OK  Corentin Tolisso -> corentin-tolisso
+  OK  Tanner Tessmann -> tanner-tessmann
+  NOK Afonso Moreira (L5=55.7) -> tried: ['afonso-moreira', 'moreira', 'afonso']
+  OK  Amine Gouiri -> amine-gouiri
+  NOK Igor Paixão (L5=62.1) -> tried: ['igor-paixao', 'paixao', 'igor']
+  OK  Jelle Van Neck -> jelle-van-neck
+  OK  Mason Greenwood -> mason-greenwood
+  OK  Bilal Nadir -> bilal-nadir
+  OK  Pierre-Emerick Aubameyang -> pierre-emerick-aubameyang
+  OK  Jeffrey de Lange -> jeffrey-de-lange
+  OK  Himad Abdelli -> himad-abdelli
+  OK  Timothy Weah -> timothy-weah
+  NOK Pierre-Emile Højbjerg (L5=54.5) -> tried: ['pierre-emile-h-jbjerg', 'h-jbjerg', 'pierre-emile']
+  OK  Benjamin Pavard -> benjamin-pavard
+  OK  Gerónimo Rulli -> geronimo-rulli
+  NOK Nayef Aguerd (L5=51.6) -> tried: ['nayef-aguerd', 'aguerd', 'nayef']
+  OK  Arthur Vermeeren -> arthur-vermeeren
+  OK  Geoffrey Kondogbia -> geoffrey-kondogbia
+  OK  Kang-In Lee -> kang-in-lee
+  NOK Matvey Safonov (L5=57.1) -> tried: ['matvej-safonov']
+  OK  Vitinha -> vitor-machado-ferreira
+  OK  Warren Zaïre-Emery -> warren-zaire-emery
+  OK  Désiré Doué -> desire-doue
+  OK  Lucas Chevalier -> lucas-chevalier
+  NOK Lucas Hernández (L5=83.9) -> tried: ['lucas-hernandez', 'hernandez', 'lucas']
+  OK  Achraf Hakimi -> achraf-hakimi-mouh
+  OK  Ibrahim Mbaye -> ibrahim-mbaye
+  NOK Nuno Mendes (L5=64.9) -> tried: ['nuno-alexandre-tavares-mendes']
+  OK  Illia Zabarnyi -> illia-zabarnyi
+  OK  Marquinhos -> marcos-aoas-correa
+  OK  Ousmane Dembélé -> ousmane-dembele
+  OK  Khvicha Kvaratskhelia -> khvicha-kvaratskhelia
+  OK  Bradley Barcola -> bradley-barcola
+  OK  Senny Mayulu -> senny-mayulu
+  NOK Gonçalo Ramos (L5=50.5) -> tried: ['goncalo-ramos', 'ramos', 'goncalo']
+  NOK Willian Pacho (L5=53.1) -> tried: ['willian-pacho', 'pacho', 'willian']
+  OK  Rudy Matondo -> rudy-matondo
+  OK  Sofiane Alakouch -> sofiane-alakouch
+  OK  Tuomas Ollila -> tuomas-ollila
+  OK  Alimami Gory -> alimami-gory
+  OK  Ciro Immobile -> ciro-immobile
+  OK  Ilan Kebbal -> ilan-kebbal
+  OK  Timothée Kolodziejczak -> timothee-kolodziejczak
+  OK  Rémy Riou -> remy-riou
+  OK  Luca Koleosho -> luca-koleosho
+  OK  Kevin Trapp -> kevin-trapp
+  OK  Pierre-Yves Hamel -> pierre-yves-hamel
+  OK  Vincent Marchetti -> vincent-marchetti
+  OK  Mathieu Cafaro -> mathieu-cafaro
+  OK  Hamari Traoré -> hamari-traore
+  OK  Jean-Philippe Krasso -> jean-philippe-krasso
+  OK  Pierre Lees-Melou -> pierre-lees-melou
+  OK  Diego Coppola -> diego-coppola
+  OK  Moustapha Mbow -> moustapha-mbow
+  OK  Thibault De Smet -> thibault-de-smet
+  OK  Nhoa Sangui -> nhoa-sangui
+  OK  Obed Nkambadio -> obed-nkambadio
+  OK  Willem Geubbels -> willem-geubbels
+  OK  Maxime Lopez -> maxime-lopez
+  OK  Adama Camara -> adama-camara
+  OK  Samir Chergui -> samir-chergui
+  NOK Marshall Munetsi (L5=53.7) -> tried: ['marshall-munetsi', 'munetsi', 'marshall']
+  OK  Lilian Brassier -> lilian-brassier
+  OK  Brice Samba -> brice-samba
+  NOK Aboubakar Nagida (L5=60.0) -> tried: ['aboubakar-nagida', 'nagida', 'aboubakar']
+  OK  Arnaud Nordin -> arnaud-nordin
+  OK  Ludovic Blas -> ludovic-blas
+  OK  Jeremy Jacquet -> jeremy-jacquet
+  OK  Sebastian Szymański -> sebastian-szymanski
+  OK  Quentin Merlin -> quentin-merlin
+  NOK Przemysław Frankowski (L5=54.4) -> tried: ['przemys-aw-frankowski', 'frankowski', 'przemys-aw']
+  OK  Abdelhamid Aït Boudlal -> abdelhamid-ait-boudlal
+  OK  Esteban Lepaul -> esteban-lepaul
+  OK  Mahdi Camara -> mahdi-camara
+  OK  Valentin Rongier -> valentin-rongier
+  OK  Anthony Rouault -> anthony-rouault
+  OK  Alidu Seidu -> alidu-seidu
+  OK  Glen Kamara -> glen-kamara
+  OK  Stefan Bajic -> stefan-bajic
+  OK  Junior Mwanga -> junior-mwanga
+  OK  Joaquín Panichelli -> joaquin-panichelli
+  OK  Samir El Mourabet -> samir-el-mourabet
+  OK  Karl-Johan Johnsson -> karl-johan-johnsson
+  OK  Julio Enciso -> julio-enciso
+  OK  Maximillian Oyedele -> maximillian-oyedele
+  OK  Emanuel Emegha -> emanuel-emegha
+  OK  Guela Doué -> guela-doue
+  OK  Mathis Amougou -> mathis-amougou
+  OK  Samuel Amo-Ameyaw -> samuel-amo-ameyaw
+  OK  Ishé Samuels-Smith -> ishe-samuels-smith
+  OK  Mike Penders -> mike-penders
+  OK  Sebastian Nanasi -> sebastian-nanasi
+  OK  David Datro Fofana -> david-datro-fofana
+  OK  Ben Chilwell -> ben-chilwell
+  OK  Aarón Anselmino -> aaron-anselmino
+  OK  Andrew Omobamidele -> andrew-omobamidele
+  OK  Gessime Yassine -> gessime-yassine
+  OK  Valentín Barco -> valentin-barco
+  NOK Pape Diop (L5=65.3) -> tried: ['pape-diop', 'diop', 'pape']
+  OK  Yann Gboho -> yann-gboho
+  NOK Aron Dønnum (L5=50.7) -> tried: ['aron-d-nnum', 'd-nnum', 'aron']
+  OK  Djibril Sidibé -> djibril-sidibe
+  OK  Mark McKenzie -> mark-mckenzie
+  OK  Frank Magri -> frank-magri
+  OK  Guillaume Restes -> guillaume-restes
+  OK  Dayann Méthalie -> dayann-methalie
+  NOK Cristian Cásseres Jr. (L5=56.4) -> tried: ['cristian-casseres-jr', 'cristian-jr', 'jr', 'cristian']
+  >> Sauvegarde 600/2528 (23%) | OK=278 NOK=322
+  OK  Jacen Russell-Rowe -> jacen-russell-rowe
+  OK  Alexis Vossah -> alexis-vossah
+  OK  Mário Sauer -> mario-sauer
+  OK  Charlie Cresswell -> charlie-cresswell
+  OK  Warren Kamanzi -> warren-kamanzi
+  OK  Abu Francis -> abu-francis
+  OK  Rasmus Nicolaisen -> rasmus-nicolaisen
+  OK  Rafik Messali -> rafik-messali
+  OK  Veljko Milosavljević -> veljko-milosavljevic
+  OK  David Brooks -> david-brooks
+  OK  Lewis Cook -> lewis-cook
+  OK  Marcos Senesi -> marcos-senesi
+  OK  Alex Scott -> alex-scott
+  OK  Christos Mandas -> christos-mandas
+  OK  Tyler Adams -> tyler-adams
+  OK  James Hill -> james-hill
+  OK  Enes Ünal -> enes-unal
+  OK  Fraser Forster -> fraser-forster
+  OK  Matai Akinmboni -> matai-akinmboni
+  OK  Amine Adli -> amine-adli
+  OK  Justin Kluivert -> justin-kluivert
+  OK  Alex Tóth -> alex-toth
+  OK  Adrien Truffert -> adrien-truffert
+  OK  Ben Doak -> ben-doak
+  OK  Eli Junior Kroupi -> eli-junior-kroupi
+  NOK Đorđe Petrović (L5=62.4) -> tried: ['or-e-petrovic', 'petrovic', 'or-e']
+  OK  Bafodé Diakité -> bafode-diakite
+  OK  Marcus Tavernier -> marcus-tavernier
+  OK  Leandro Trossard -> leandro-trossard
+  NOK Piero Hincapié (L5=60.0) -> tried: ['piero-hincapie', 'hincapie', 'piero']
+  NOK Martin Ødegaard (L5=57.3) -> tried: ['martin-degaard', 'degaard', 'martin']
+  NOK Bukayo Saka (L5=59.7) -> tried: ['bukayo-ayoyinka-saka']
+  OK  Declan Rice -> declan-rice
+  OK  Kai Havertz -> kai-havertz
+  NOK Gabriel Magalhães (L5=83.3) -> tried: ['gabriel-magalhaes', 'magalhaes', 'gabriel']
+  OK  Viktor Gyökeres -> viktor-gyokeres
+  NOK Max Dowman (L5=72.0) -> tried: ['max-dowman', 'dowman', 'max']
+  OK  Riccardo Calafiori -> riccardo-calafiori
+  OK  Eberechi Eze -> eberechi-eze
+  OK  Ben White -> ben-white
+  NOK Cristhian Mosquera (L5=61.2) -> tried: ['cristhian-mosquera', 'mosquera', 'cristhian']
+  OK  William Saliba -> william-saliba
+  NOK Jurriën Timber (L5=60.0) -> tried: ['jurrien-timber', 'timber', 'jurrien']
+  OK  Boubacar Kamara -> boubacar-kamara
+  OK  Morgan Rogers -> morgan-rogers
+  OK  Matty Cash -> matty-cash
+  OK  Jadon Sancho -> jadon-sancho
+  OK  Lucas Digne -> lucas-digne
+  OK  Ross Barkley -> ross-barkley
+  OK  Emiliano Buendía -> emiliano-buendia
+  NOK Pau Torres (L5=58.7) -> tried: ['pau-torres', 'torres', 'pau']
+  OK  Marco Bizot -> marco-bizot
+  OK  John McGinn -> john-mcginn
+  OK  Ian Maatsen -> ian-maatsen
+  OK  Ollie Watkins -> ollie-watkins
+  OK  Tyrone Mings -> tyrone-mings
+  NOK Ezri Konsa (L5=52.4) -> tried: ['ezri-konsa', 'konsa', 'ezri']
+  OK  Youri Tielemans -> youri-tielemans
+  OK  Keane Lewis-Potter -> keane-lewis-potter
+  OK  Caoimhin Kelleher -> caoimhin-kelleher
+  OK  Aaron Hickey -> aaron-hickey
+  OK  Kevin Schade -> kevin-schade
+  OK  Vitaly Janelt -> vitaly-janelt
+  NOK Dango Ouattara (L5=59.0) -> tried: ['dango-ouattara', 'ouattara', 'dango']
+  OK  Mathias Jensen -> mathias-jensen
+  OK  Sepp van den Berg -> sepp-van-den-berg
+  OK  Rico Henry -> rico-henry
+  OK  Ethan Pinnock -> ethan-pinnock
+  OK  Antoni-Djibu Milambo -> antoni-djibu-milambo
+  OK  Romelle Donovan -> romelle-donovan
+  OK  Reiss Nelson -> reiss-nelson
+  NOK Thiago (L5=50.5) -> tried: ['thiago']
+  OK  Ellery Balcombe -> ellery-balcombe
+  OK  Mikkel Damsgaard -> mikkel-damsgaard
+  OK  Fábio Carvalho -> fabio-carvalho
+  OK  Jack Hinshelwood -> jack-hinshelwood
+  OK  Georginio Rutter -> georginio-rutter
+  OK  Joël Veltman -> joel-veltman
+  OK  Lewis Dunk -> lewis-dunk
+  OK  Kaoru Mitoma -> kaoru-mitoma
+  OK  Mats Wieffer -> mats-wieffer
+  OK  Jason Steele -> jason-steele
+  OK  Stefanos Tzimas -> stefanos-tzimas
+  OK  Thomas McGill -> thomas-mcgill
+  OK  Bart Verbruggen -> bart-verbruggen
+  NOK Diego Gómez (L5=57.5) -> tried: ['diego-gomez', 'gomez', 'diego']
+  NOK Danny Welbeck (L5=60.4) -> tried: ['danny-welbeck', 'welbeck', 'danny']
+  OK  Maxim De Cuyper -> maxim-de-cuyper
+  OK  Pascal Gross -> pascal-gross
+  OK  Yankuba Minteh -> yankuba-minteh
+  OK  Jan Paul Van Hecke -> jan-paul-van-hecke
+  OK  Adam Webster -> adam-webster
+  OK  Olivier Boscagli -> olivier-boscagli
+  OK  Václav Hladký -> vaclav-hladky
+  OK  Maxime Esteve -> maxime-esteve
+  OK  Loum Tchaouna -> loum-tchaouna
+  OK  Jaidon Anthony -> jaidon-anthony
+  OK  Lyle Foster -> lyle-foster
+  OK  Connor Roberts -> connor-roberts
+  OK  Jacob Bruun Larsen -> jacob-bruun-larsen
+  OK  Marcus Edwards -> marcus-edwards
+  OK  Quilindschy Hartman -> quilindschy-hartman
+  OK  Josh Cullen -> josh-cullen
+  >> Sauvegarde 800/2528 (31%) | OK=367 NOK=433
+  OK  Hannibal Mejbri -> hannibal-mejbri
+  OK  Martin Dúbravka -> martin-dubravka
+  OK  Zian Flemming -> zian-flemming
+  OK  Armando Broja -> armando-broja
+  OK  James Ward-Prowse -> james-ward-prowse
+  OK  Axel Tuanzebe -> axel-tuanzebe
+  OK  Kyle Walker -> kyle-walker
+  OK  Hjalmar Ekdal -> hjalmar-ekdal
+  OK  Ashley Barnes -> ashley-barnes
+  OK  Mykhailo Mudryk -> mykhailo-mudryk
+  OK  Filip Jörgensen -> filip-jorgensen
+  OK  Roméo Lavia -> romeo-lavia
+  OK  Liam Delap -> liam-delap
+  OK  Gabriel Slonina -> gabriel-slonina
+  OK  Mamadou Sarr -> mamadou-sarr
+  OK  Levi Colwill -> levi-colwill
+  OK  Cole Palmer -> cole-palmer
+  OK  Jorrel Hato -> jorrel-hato
+  OK  Reece James -> reece-james
+  NOK Enzo Fernández (L5=51.8) -> tried: ['enzo-fernandez', 'fernandez', 'enzo']
+  OK  Wesley Fofana -> wesley-fofana
+  NOK João Pedro (L5=54.4) -> tried: ['joao-pedro', 'pedro', 'joao']
+  OK  Trevoh Chalobah -> trevoh-chalobah
+  OK  Malo Gusto -> malo-gusto
+  OK  Rio Cardines -> rio-cardines
+  OK  Brennan Johnson -> brennan-johnson
+  OK  Jean-Philippe Mateta -> jean-philippe-mateta
+  NOK Walter Benítez (L5=72.3) -> tried: ['walter-benitez', 'benitez', 'walter']
+  OK  Maxence Lacroix -> maxence-lacroix
+  OK  Will Hughes -> will-hughes
+  OK  Jaydee Canvot -> jaydee-canvot
+  NOK Daniel Muñoz (L5=51.5) -> tried: ['daniel-munoz', 'munoz', 'daniel']
+  OK  Evann Guessand -> evann-guessand
+  OK  Ismaïla Sarr -> ismaila-sarr
+  OK  Adam Wharton -> adam-wharton
+  OK  Chris Richards -> chris-richards
+  OK  Caleb Kporha -> caleb-kporha
+  OK  Remi Matthews -> remi-matthews
+  OK  Kaden Rodney -> kaden-rodney
+  NOK Jefferson Lerma (L5=52.1) -> tried: ['jefferson-lerma', 'lerma', 'jefferson']
+  OK  Dean Henderson -> dean-henderson
+  OK  Daichi Kamada -> daichi-kamada
+  OK  Tyrick Mitchell -> tyrick-mitchell
+  OK  Borna Sosa -> borna-sosa
+  OK  Justin Devenny -> justin-devenny
+  OK  Jack Grealish -> jack-grealish
+  OK  Nathan Patterson -> nathan-patterson
+  OK  Merlin Röhl -> merlin-rohl
+  OK  Dwight McNeil -> dwight-mcneil
+  NOK Beto (L5=53.2) -> tried: ['beto']
+  OK  Mark Travers -> mark-travers
+  OK  Jarrad Branthwaite -> jarrad-branthwaite
+  OK  Kiernan Dewsbury-Hall -> kiernan-dewsbury-hall
+  OK  Harrison Armstrong -> harrison-armstrong
+  OK  Jordan Pickford -> jordan-pickford
+  OK  Thomas King -> thomas-king
+  OK  Idrissa Gana Gueye -> idrissa-gana-gueye
+  OK  Vitalii Mykolenko -> vitalii-mykolenko
+  OK  Seamus Coleman -> seamus-coleman
+  OK  James Garner -> james-garner
+  OK  Carlos Alcaraz -> carlos-alcaraz
+  OK  Tyrique George -> tyrique-george
+  OK  Michael Keane -> michael-keane
+  OK  James Tarkowski -> james-tarkowski
+  OK  Iliman Ndiaye -> iliman-ndiaye
+  OK  Timothy Castagne -> timothy-castagne
+  OK  Oscar Bobb -> oscar-bobb
+  OK  Issa Diop -> issa-diop
+  OK  Harry Wilson -> harry-wilson
+  NOK Raúl Jiménez (L5=54.3) -> tried: ['raul-jimenez', 'jimenez', 'raul']
+  NOK Calvin Bassey (L5=52.7) -> tried: ['calvin-bassey', 'bassey', 'calvin']
+  OK  Saša Lukić -> sasa-lukic
+  OK  Tom Cairney -> tom-cairney
+  OK  Bernd Leno -> bernd-leno
+  OK  Emile Smith Rowe -> emile-smith-rowe
+  OK  Kenny Tete -> kenny-tete
+  NOK Jorge Cuenca (L5=53.2) -> tried: ['jorge-cuenca', 'cuenca', 'jorge']
+  OK  Alex Iwobi -> alex-iwobi
+  OK  Antonee Robinson -> antonee-robinson
+  OK  Joachim Andersen -> joachim-andersen
+  OK  Sander Berge -> sander-berge
+  OK  Benjamin Lecomte -> benjamin-lecomte
+  OK  Alexander Borto -> alexander-borto
+  OK  Harrison Reed -> harrison-reed
+  OK  Ao Tanaka -> ao-tanaka
+  OK  Jayden Bogle -> jayden-bogle
+  OK  Anton Stach -> anton-stach
+  OK  Lukas Nmecha -> lukas-nmecha
+  OK  Sebastiaan Bornauw -> sebastiaan-bornauw
+  OK  Brenden Aaronson -> brenden-aaronson
+  OK  Pascal Struijk -> pascal-struijk
+  OK  Ethan Ampadu -> ethan-ampadu
+  OK  Karl Darlow -> karl-darlow
+  OK  Sam Byram -> sam-byram
+  OK  Jaka Bijol -> jaka-bijol
+  OK  James Justin -> james-justin
+  OK  Joël Piroe -> joel-piroe
+  OK  Charles Crew -> charles-crew
+  OK  Dominic Calvert-Lewin -> dominic-calvert-lewin
+  OK  Noah Okafor -> noah-okafor
+  OK  Gabriel Gudmundsson -> gabriel-gudmundsson
+  OK  Sean Longstaff -> sean-longstaff
+  OK  Illan Meslier -> illan-meslier
+  OK  Alexis Mac Allister -> alexis-mac-allister
+  OK  Rio Ngumoha -> rio-ngumoha
+  OK  Virgil van Dijk -> virgil-van-dijk
+  OK  Ibrahima Konaté -> ibrahima-konate
+  OK  Joe Gomez -> joe-gomez
+  OK  Treymaurice Nyoni -> treymaurice-nyoni
+  OK  Wataru Endō -> wataru-endo
+  NOK Mohamed Salah (L5=51.4) -> tried: ['mohamed-salah']
+  OK  Giovanni Leoni -> giovanni-leoni
+  OK  James McConnell -> james-mcconnell
+  OK  Calvin Ramsay -> calvin-ramsay
+  >> Sauvegarde 1000/2528 (39%) | OK=471 NOK=529
+  OK  Hugo Ekitike -> hugo-ekitike
+  OK  Jeremie Frimpong -> jeremie-frimpong
+  OK  Rhys Williams -> rhys-williams
+  NOK Alisson Becker (L5=56.4) -> tried: ['alisson-becker', 'becker', 'alisson']
+  OK  Federico Chiesa -> federico-chiesa
+  OK  Milos Kerkez -> milos-kerkez
+  OK  Florian Wirtz -> florian-wirtz
+  OK  Ryan Gravenberch -> ryan-gravenberch
+  OK  Ármin Pécsi -> armin-pecsi
+  OK  Giorgi Mamardashvili -> giorgi-mamardashvili
+  OK  Alexander Isak -> alexander-isak
+  OK  Dominik Szoboszlai -> dominik-szoboszlai
+  OK  Marc Guéhi -> marc-guehi
+  NOK Rodrigo (L5=66.2) -> tried: ['rodrigo']
+  NOK Rayan Cherki (L5=54.2) -> tried: ['rayan-cherki', 'cherki', 'rayan']
+  OK  Max Alleyne -> max-alleyne
+  OK  Nico O'Reilly -> nico-o-reilly
+  OK  Antoine Semenyo -> antoine-semenyo
+  OK  Mateo Kovačić -> mateo-kovacic
+  OK  Marcus Bettinelli -> marcus-bettinelli
+  NOK Erling Haaland (L5=56.6) -> tried: ['erling-braut-haaland']
+  OK  Omar Marmoush -> omar-marmoush
+  OK  Gianluigi Donnarumma -> gianluigi-donnarumma
+  OK  Bernardo Silva -> bernardo-mota-veiga-de-carvalho-e-silva
+  OK  Joško Gvardiol -> josko-gvardiol
+  OK  Rayan Aït Nouri -> rayan-ait-nouri
+  OK  Rico Lewis -> rico-lewis
+  NOK Rúben Dias (L5=60.0) -> tried: ['ruben-dias', 'dias', 'ruben']
+  OK  Tijjani Reijnders -> tijjani-reijnders
+  OK  Jeremy Doku -> jeremy-doku
+  OK  Nathan Aké -> nathan-ake
+  OK  John Stones -> john-stones
+  OK  James Trafford -> james-trafford
+  OK  Noussair Mazraoui -> noussair-mazraoui
+  OK  Bruno Fernandes -> bruno-miguel-borges-fernandes
+  OK  Lisandro Martínez -> lisandro-martinez
+  OK  Ayden Heaven -> ayden-heaven
+  OK  Tyrell Malacia -> tyrell-malacia
+  OK  Tyler Fredricson -> tyler-fredricson
+  OK  Benjamin Šeško -> benjamin-sesko
+  OK  Kobbie Mainoo -> kobbie-mainoo
+  OK  Luke Shaw -> luke-shaw
+  OK  Joshua Zirkzee -> joshua-zirkzee
+  OK  Leny Yoro -> leny-yoro
+  OK  Casemiro -> carlos-henrique-casimiro
+  OK  Bryan Mbeumo -> bryan-mbeumo
+  OK  Matthijs de Ligt -> matthijs-de-ligt
+  OK  Mason Mount -> mason-mount
+  NOK Patrick Dorgu (L5=78.7) -> tried: ['patrick-dorgu', 'dorgu', 'patrick']
+  NOK Matheus Cunha (L5=65.4) -> tried: ['matheus-cunha', 'cunha', 'matheus']
+  OK  Harry Maguire -> harry-maguire
+  OK  Senne Lammens -> senne-lammens
+  OK  Nick Pope -> nick-pope
+  OK  Sandro Tonali -> sandro-tonali
+  OK  Anthony Elanga -> anthony-elanga
+  NOK Bruno Guimarães (L5=68.6) -> tried: ['bruno-guimaraes', 'guimaraes', 'bruno']
+  OK  Kieran Trippier -> kieran-trippier
+  OK  Alex Murphy -> alex-murphy
+  OK  Anthony Gordon -> anthony-gordon
+  OK  Lewis Miley -> lewis-miley
+  OK  Aaron Ramsdale -> aaron-ramsdale
+  OK  Nick Woltemade -> nick-woltemade
+  OK  Jacob Murphy -> jacob-murphy
+  OK  Jacob Ramsey -> jacob-ramsey
+  OK  Emil Krafth -> emil-krafth
+  OK  Sven Botman -> sven-botman
+  OK  Mark Gillespie -> mark-gillespie
+  OK  Yoane Wissa -> yoane-wissa
+  OK  Dan Burn -> dan-burn
+  NOK Morato (L5=68.7) -> tried: ['morato']
+  OK  Matz Sels -> matz-sels
+  OK  Nicolás Domínguez -> nicolas-dominguez
+  OK  Dilane Bakwa -> dilane-bakwa
+  OK  Callum Hudson-Odoi -> callum-hudson-odoi
+  NOK Elliot Anderson (L5=61.0) -> tried: ['elliot-anderson', 'anderson', 'elliot']
+  OK  Stefan Ortega Moreno -> stefan-ortega-moreno
+  OK  Luca Netz -> luca-netz
+  NOK Igor Jesus (L5=52.5) -> tried: ['igor-jesus', 'jesus', 'igor']
+  OK  Nikola Milenković -> nikola-milenkovic
+  OK  James McAtee -> james-mcatee
+  OK  Dan Ndoye -> dan-ndoye
+  OK  Zach Abbott -> zach-abbott
+  OK  Neco Williams -> neco-williams
+  OK  Ibrahim Sangaré -> ibrahim-sangare
+  OK  Morgan Gibbs-White -> morgan-gibbs-white
+  OK  Nicolò Savona -> nicolo-savona
+  NOK Murillo (L5=51.6) -> tried: ['murillo']
+  OK  Angus Gunn -> angus-gunn
+  NOK Cristian Romero (L5=56.8) -> tried: ['cristian-romero', 'romero', 'cristian']
+  OK  Xavi Simons -> xavi-simons
+  OK  Brandon Austin -> brandon-austin
+  OK  Kevin Danso -> kevin-danso
+  OK  Mathys Tel -> mathys-tel
+  OK  Pape Matar Sarr -> pape-matar-sarr
+  OK  Dominic Solanke -> dominic-solanke
+  OK  Dejan Kulusevski -> dejan-kulusevski
+  OK  Yves Bissouma -> yves-bissouma
+  OK  Wilson Odobert -> wilson-odobert
+  OK  Mohammed Kudus -> mohammed-kudus
+  OK  Antonín Kinský -> antonin-kinsky
+  OK  Guglielmo Vicario -> guglielmo-vicario
+  OK  Randal Kolo Muani -> randal-kolo-muani
+  OK  Archie Gray -> archie-gray
+  OK  James Maddison -> james-maddison
+  OK  Conor Gallagher -> conor-gallagher
+  OK  Djed Spence -> djed-spence
+  OK  Lucas Bergvall -> lucas-bergvall
+  OK  Richarlison -> richarlison-de-andrade
+  OK  Konstantinos Mavropanos -> konstantinos-mavropanos
+  OK  Axel Disasi -> axel-disasi
+  OK  Jarrod Bowen -> jarrod-bowen
+  >> Sauvegarde 1200/2528 (47%) | OK=569 NOK=631
+  OK  Mads Hermansen -> mads-hermansen
+  OK  Freddie Potts -> freddie-potts
+  OK  Soungoutou Magassa -> soungoutou-magassa
+  OK  Aaron Wan-Bissaka -> aaron-wan-bissaka
+  OK  Callum Wilson -> callum-wilson
+  OK  Alphonse Aréola -> alphonse-areola
+  OK  Jean-Clair Todibo -> jean-clair-todibo
+  OK  Crysencio Summerville -> crysencio-summerville
+  OK  Tomáš Souček -> tomas-soucek
+  OK  Oliver Scarles -> oliver-scarles
+  NOK El Diouf (L5=53.7) -> tried: ['el-diouf', 'diouf', 'el']
+  OK  Mohamadou Kanté -> mohamadou-kante
+  OK  Kyle Walker-Peters -> kyle-walker-peters
+  OK  Lewis Orford -> lewis-orford
+  OK  Hugo Bueno -> hugo-bueno
+  NOK André (L5=54.9) -> tried: ['andre']
+  OK  Sam Johnstone -> sam-johnstone
+  OK  Jackson Tchatchoua -> jackson-tchatchoua
+  NOK Yerson Mosquera (L5=57.0) -> tried: ['yerson-mosquera', 'mosquera', 'yerson']
+  NOK João Gomes (L5=60.6) -> tried: ['joao-gomes', 'gomes', 'joao']
+  OK  Daniel Bentley -> daniel-bentley
+  NOK Thomas Edozie (L5=63.4) -> tried: ['thomas-edozie', 'edozie', 'thomas']
+  OK  Adam Armstrong -> adam-armstrong
+  OK  Angel Gomes -> angel-gomes
+  OK  Ladislav Krejčí -> ladislav-krejci
+  NOK SANTIAGO (L5=51.8) -> tried: ['santiago']
+  OK  Matt Doherty -> matt-doherty
+  NOK Toti (L5=69.6) -> tried: ['toti']
+  NOK Yuri (L5=69.0) -> tried: ['yuri']
+  OK  Aymeric Laporte -> aymeric-laporte
+  NOK Dani Vivian (L5=50.6) -> tried: ['dani-vivian', 'vivian', 'dani']
+  NOK Álex Berenguer (L5=51.2) -> tried: ['alex-berenguer', 'berenguer', 'alex']
+  OK  Ademola Lookman -> ademola-lookman
+  NOK Álex Baena (L5=53.9) -> tried: ['alex-baena', 'baena', 'alex']
+  OK  Matteo Ruggeri -> matteo-ruggeri
+  NOK Marc Pubill (L5=60.3) -> tried: ['marc-pubill', 'pubill', 'marc']
+  OK  Dávid Hancko -> david-hancko
+  OK  Jan Oblak -> jan-oblak
+  NOK Juan Musso (L5=55.0) -> tried: ['juan-musso', 'musso', 'juan']
+  OK  Antoine Griezmann -> antoine-griezmann
+  NOK Nahuel Molina (L5=58.5) -> tried: ['nahuel-molina', 'molina', 'nahuel']
+  NOK Nicolás González (L5=54.1) -> tried: ['nicolas-gonzalez', 'gonzalez', 'nicolas']
+  NOK Koke (L5=51.9) -> tried: ['koke']
+  NOK José María Giménez (L5=55.1) -> tried: ['jose-maria-gimenez', 'jose-gimenez', 'gimenez', 'jose']
+  OK  Julián Álvarez -> julian-alvarez
+  OK  Clément Lenglet -> clement-lenglet
+  OK  Thiago Almada -> thiago-almada
+  OK  Giuliano Simeone -> giuliano-simeone
+  OK  Wojciech Szczęsny -> wojciech-szczesny
+  OK  Marcus Rashford -> marcus-rashford
+  NOK Gerard Martín (L5=53.7) -> tried: ['gerard-martin', 'martin', 'gerard']
+  OK  Robert Lewandowski -> robert-lewandowski
+  OK  Jules Koundé -> jules-kounde
+  OK  Ferran Torres -> ferran-torres-garcia
+  OK  Dani Olmo -> daniel-olmo-carvajal
+  OK  Pedri -> pedro-gonzalez-lopez
+  NOK Fermín (L5=60.5) -> tried: ['fermin']
+  NOK Pau Cubarsí (L5=58.0) -> tried: ['pau-cubarsi', 'cubarsi', 'pau']
+  NOK João Cancelo (L5=72.7) -> tried: ['joao-cancelo', 'cancelo', 'joao']
+  OK  Frenkie de Jong -> frenkie-de-jong
+  NOK Marc Bernal (L5=53.9) -> tried: ['marc-bernal', 'bernal', 'marc']
+  OK  Roony Bardghji -> roony-bardghji
+  NOK Eric García (L5=78.5) -> tried: ['eric-garcia', 'garcia', 'eric']
+  OK  Gavi -> pablo-martin-paez-gavira
+  NOK Joan García (L5=75.0) -> tried: ['joan-garcia', 'garcia', 'joan']
+  OK  Raphinha -> raphael-dias-belloli
+  OK  Lamine Yamal -> lamine-yamal-nasraoui-ebana
+  NOK Iago Aspas (L5=50.7) -> tried: ['iago-aspas', 'aspas', 'iago']
+  OK  Joseph Aidoo -> joseph-aidoo
+  NOK Óscar Mingueza (L5=50.1) -> tried: ['oscar-mingueza', 'mingueza', 'oscar']
+  NOK Marcos Alonso (L5=56.4) -> tried: ['marcos-alonso', 'alonso', 'marcos']
+  OK  Williot Swedberg -> williot-swedberg
+  NOK Ferran Jutglà (L5=62.5) -> tried: ['ferran-jutgla', 'jutgla', 'ferran']
+  NOK Javi Rodríguez (L5=53.5) -> tried: ['javi-rodriguez', 'rodriguez', 'javi']
+  OK  Carl Starfelt -> carl-starfelt
+  NOK Hugo Álvarez (L5=50.4) -> tried: ['hugo-alvarez', 'alvarez', 'hugo']
+  >> Sauvegarde 1400/2528 (55%) | OK=615 NOK=785
+  OK  Mihailo Ristić -> mihailo-ristic
+  OK  Hugo Sotelo -> hugo-sotelo
+  NOK Álvaro García (L5=56.1) -> tried: ['alvaro-garcia', 'garcia', 'alvaro']
+  NOK Toni Martínez (L5=58.2) -> tried: ['toni-martinez', 'martinez', 'toni']
+  OK  Ville Koski -> ville-koski
+  OK  Nahuel Tenaglia -> nahuel-tenaglia
+  OK  Léo Pétrot -> leo-petrot
+  OK  Grady Diangana -> grady-diangana
+  NOK Febas (L5=51.8) -> tried: ['febas']
+  NOK Germán Valera (L5=60.3) -> tried: ['german-valera', 'valera', 'german']
+  NOK Alex Sánchez (L5=60.0) -> tried: ['alex-sanchez', 'sanchez', 'alex']
+  NOK David Affengruber (L5=67.3) -> tried: ['david-affengruber', 'affengruber', 'david']
+  OK  Cyril Ngonge -> cyril-ngonge
+  OK  Tyrhys Dolan -> tyrhys-dolan
+  OK  Omar El Hilali -> omar-el-hilali
+  OK  Marko Dmitrović -> marko-dmitrovic
+  OK  Charles Pickel -> charles-pickel
+  OK  Clemens Riedel -> clemens-riedel
+  NOK Edu Expósito (L5=58.6) -> tried: ['edu-exposito', 'exposito', 'edu']
+  OK  Jiří Letáček -> jiri-letacek
+  OK  Veljko Birmančević -> veljko-birmancevic
+  NOK Juan Iglesias (L5=55.7) -> tried: ['juan-iglesias', 'iglesias', 'juan']
+  NOK David Soria (L5=55.3) -> tried: ['david-soria', 'soria', 'david']
+  NOK Domingos Duarte (L5=53.7) -> tried: ['domingos-duarte', 'duarte', 'domingos']
+  NOK Zaid Romero (L5=53.8) -> tried: ['zaid-romero', 'romero', 'zaid']
+  OK  Alberto Risco -> alberto-risco
+  NOK Martín Satriano (L5=54.3) -> tried: ['martin-satriano', 'satriano', 'martin']
+  OK  Daley Blind -> daley-blind
+  OK  Vladyslav Vanat -> vladyslav-vanat
+  OK  Axel Witsel -> axel-witsel
+  OK  Viktor Tsygankov -> viktor-tsygankov
+  OK  Vladyslav Krapyvtsov -> vladyslav-krapyvtsov
+  OK  Azzedine Ounahi -> azzedine-ounahi
+  OK  Donny van de Beek -> donny-van-de-beek
+  NOK Arnau Martínez (L5=55.9) -> tried: ['arnau-martinez', 'martinez', 'arnau']
+  NOK Paulo Gazzaniga (L5=53.7) -> tried: ['paulo-gazzaniga', 'gazzaniga', 'paulo']
+  NOK Hugo Rincón (L5=56.6) -> tried: ['hugo-rincon', 'rincon', 'hugo']
+  OK  Thomas Lemar -> thomas-lemar
+  NOK P. Martínez (L5=50.3) -> tried: ['p-martinez', 'martinez', 'p']
+  OK  Kervin Arriaga -> kervin-arriaga
+  NOK Matías Moreno (L5=52.8) -> tried: ['matias-moreno', 'moreno', 'matias']
+  OK  Ugo Raghouber -> ugo-raghouber
+  OK  Jeremy Toljan -> jeremy-toljan
+  >> Sauvegarde 1600/2528 (63%) | OK=641 NOK=959
+  NOK Unai Elgezabal (L5=60.0) -> tried: ['unai-elgezabal', 'elgezabal', 'unai']
+  NOK I.Romero (L5=51.0) -> tried: ['i-romero']
+  NOK Carlos Espí (L5=64.3) -> tried: ['carlos-espi', 'espi', 'carlos']
+  OK  Mathew Ryan -> mathew-ryan
+  NOK Dela (L5=57.6) -> tried: ['dela']
+  OK  Tai Abed -> tai-abed
+  OK  Marash Kumbulla -> marash-kumbulla
+  NOK Pablo Maffeo (L5=59.5) -> tried: ['pablo-maffeo', 'maffeo', 'pablo']
+  OK  Lucas Bergström -> lucas-bergstrom
+  OK  Martin Valjent -> martin-valjent
+  OK  Takuma Asano -> takuma-asano
+  NOK Pablo Torre (L5=50.1) -> tried: ['pablo-torre', 'torre', 'pablo']
+  OK  Vedat Muriqi -> vedat-muriqi
+  OK  Dimitrios Stamatakis -> dimitrios-stamatakis
+  NOK Boyomo (L5=50.8) -> tried: ['boyomo']
+  NOK Budimir (L5=57.3) -> tried: ['budimir']
+  OK  Valentin Rosier -> valentin-rosier
+  NOK Kike Barja (L5=51.6) -> tried: ['kike-barja', 'barja', 'kike']
+  NOK Víctor Muñoz (L5=53.5) -> tried: ['victor-munoz', 'munoz', 'victor']
+  NOK Luiz Felipe (L5=50.3) -> tried: ['luiz-felipe', 'felipe', 'luiz']
+  NOK Álvaro García (L5=56.1) -> tried: ['alvaro-garcia', 'garcia', 'alvaro']
+  OK  Jozhua Vertrouwd -> jozhua-vertrouwd
+  OK  Florian Lejeune -> florian-lejeune
+  OK  Abdul Mumin -> abdul-mumin
+  NOK Alfonso Espino (L5=53.5) -> tried: ['alfonso-espino', 'espino', 'alfonso']
+  NOK De Frutos (L5=51.9) -> tried: ['de-frutos', 'frutos', 'de']
+  OK  Pathé Ciss -> pathe-ciss
+  OK  Nobel Mendy -> nobel-mendy
+  NOK Pablo Fornals (L5=54.3) -> tried: ['pablo-fornals', 'fornals', 'pablo']
+  NOK Pau López (L5=72.5) -> tried: ['pau-lopez', 'lopez', 'pau']
+  NOK Aitor Ruibal (L5=50.2) -> tried: ['aitor-ruibal', 'ruibal', 'aitor']
+  NOK Bellerín (L5=59.3) -> tried: ['bellerin']
+  NOK Chimy Ávila (L5=54.2) -> tried: ['chimy-avila', 'avila', 'chimy']
+  OK  Giovani Lo Celso -> giovani-lo-celso
+  OK  Cédric Bakambu -> cedric-bakambu
+  OK  Sofyan Amrabat -> sofyan-amrabat
+  NOK Federico Valverde (L5=66.6) -> tried: ['federico-valverde', 'valverde', 'federico']
+  OK  Franco Mastantuono -> franco-mastantuono
+  NOK Fran García (L5=61.6) -> tried: ['fran-garcia', 'garcia', 'fran']
+  OK  Andriy Lunin -> andriy-lunin
+  OK  Jude Bellingham -> jude-bellingham
+  OK  Eduardo Camavinga -> eduardo-camavinga
+  OK  Trent Alexander-Arnold -> trent-alexander-arnold
+  NOK Vinícius Júnior (L5=59.4) -> tried: ['vinicius-junior', 'junior', 'vinicius']
+  NOK Daniel Yáñez (L5=71.0) -> tried: ['daniel-yanez', 'yanez', 'daniel']
+  NOK Álvaro Carreras (L5=58.6) -> tried: ['alvaro-carreras', 'carreras', 'alvaro']
+  NOK Ferland Mendy (L5=77.7) -> tried: ['ferland-sinna-mendy']
+  NOK Dean Huijsen (L5=51.5) -> tried: ['dean-huijsen', 'huijsen', 'dean']
+  OK  Arda Güler -> arda-guler
+  OK  Thibaut Courtois -> thibaut-courtois
+  OK  Antonio Rüdiger -> antonio-rudiger
+  OK  Aurélien Tchouaméni -> aurelien-tchouameni
+  OK  Nicolás Fonseca -> nicolas-fonseca
+  >> Sauvegarde 1800/2528 (71%) | OK=668 NOK=1132
+  OK  Luka Ilić -> luka-ilic
+  OK  Santiago Colombatto -> santiago-colombatto
+  NOK Federico Viñas (L5=51.6) -> tried: ['federico-vinas', 'vinas', 'federico']
+  OK  Haissem Hassan -> haissem-hassan
+  OK  Ilyas Chaira -> ilyas-chaira
+  OK  Leander Dendoncker -> leander-dendoncker
+  NOK Sergio Gómez (L5=51.3) -> tried: ['sergio-gomez', 'gomez', 'sergio']
+  NOK Gonçalo Guedes (L5=53.4) -> tried: ['goncalo-guedes', 'guedes', 'goncalo']
+  OK  Luka Sučić -> luka-sucic
+  NOK Carlos Soler (L5=61.7) -> tried: ['carlos-soler', 'soler', 'carlos']
+  OK  Duje Ćaleta-Car -> duje-caleta-car
+  NOK Jon Martín (L5=56.9) -> tried: ['jon-martin', 'martin', 'jon']
+  OK  Arsen Zakharyan -> arsen-zakharyan
+  OK  Adnan Januzaj -> adnan-januzaj
+  OK  Djibril Sow -> djibril-sow
+  OK  Ruben Vargas -> ruben-vargas
+  OK  Lucien Agoumé -> lucien-agoume
+  OK  Nemanja Gudelj -> nemanja-gudelj
+  NOK Oso (L5=54.5) -> tried: ['oso']
+  NOK César Azpilicueta (L5=54.1) -> tried: ['cesar-azpilicueta', 'azpilicueta', 'cesar']
+  OK  Neal Maupay -> neal-maupay
+  OK  Chidera Ejuke -> chidera-ejuke
+  NOK Kike Salas (L5=52.1) -> tried: ['kike-salas', 'salas', 'kike']
+  OK  Batista Mendy -> batista-mendy
+  NOK Peque Fernández (L5=50.1) -> tried: ['peque-fernandez', 'fernandez', 'peque']
+  OK  Baptiste Santamaría -> baptiste-santamaria
+  OK  Largie Ramazani -> largie-ramazani
+  OK  Lucas Beltrán -> lucas-beltran
+  NOK Eray Cömert (L5=65.7) -> tried: ['eray-comert', 'comert', 'eray']
+  OK  Dimitri Foulquier -> dimitri-foulquier
+  OK  Filip Ugrinic -> filip-ugrinic
+  OK  Stole Dimitrievski -> stole-dimitrievski
+  OK  Renzo Saravia -> renzo-saravia
+  NOK Javi Guerra (L5=53.0) -> tried: ['javi-guerra', 'guerra', 'javi']
+  NOK Sadiq (L5=53.0) -> tried: ['sadiq']
+  OK  Guido Rodríguez -> guido-rodriguez
+  OK  Mouctar Diakhaby -> mouctar-diakhaby
+  NOK Santiago Mouriño (L5=55.4) -> tried: ['santiago-mourino', 'mourino', 'santiago']
+  NOK Gerard Moreno (L5=54.0) -> tried: ['gerard-moreno', 'moreno', 'gerard']
+  OK  Pape Gueye -> pape-gueye
+  NOK Santi Comesaña (L5=67.7) -> tried: ['santi-comesana', 'comesana', 'santi']
+  OK  Georges Mikautadze -> georges-mikautadze
+  NOK Pau Navarro (L5=63.4) -> tried: ['pau-navarro', 'navarro', 'pau']
+  OK  Logan Costa -> logan-costa
+  OK  Nicolas Pépé -> nicolas-pepe
+  OK  Tajon Buchanan -> tajon-buchanan
+  OK  Tani Oluwaseyi -> tani-oluwaseyi
+  HTTP 429: Too Many Requests
+  HTTP 429: Too Many Requests
+  HTTP 429: Too Many Requests
+  NOK Fabian Rieder (L5=53.3) -> tried: ['fabian-rieder', 'rieder', 'fabian']
+  NOK Alexis Claude-Maurice (L5=54.4) -> tried: ['alexis-claude-maurice', 'claude-maurice', 'alexis']
+  NOK Keven Schlotterbeck (L5=57.7) -> tried: ['keven-schlotterbeck', 'schlotterbeck', 'keven']
+  >> Sauvegarde 2000/2528 (79%) | OK=699 NOK=1301
+  HTTP 429: Too Many Requests
+  HTTP 429: Too Many Requests
+  HTTP 429: Too Many Requests
+  NOK Christian Kofane (L5=54.7) -> tried: ['christian-kofane', 'kofane', 'christian']
+  HTTP 429: Too Many Requests
+  HTTP 429: Too Many Requests
+  HTTP 429: Too Many Requests
+  NOK Jarell Quansah (L5=52.7) -> tried: ['jarell-quansah', 'quansah', 'jarell']
+  NOK Alejandro Grimaldo (L5=59.7) -> tried: ['alejandro-grimaldo', 'grimaldo', 'alejandro']
+  NOK Janis Blaswich (L5=51.4) -> tried: ['janis-blaswich', 'blaswich', 'janis']
+  NOK Arthur (L5=50.9) -> tried: ['arthur']
+  NOK Aleix García (L5=59.7) -> tried: ['aleix-garcia', 'garcia', 'aleix']
+  HTTP 429: Too Many Requests
+  HTTP 429: Too Many Requests
+  HTTP 429: Too Many Requests
+  HTTP 429: Too Many Requests
+  NOK Patrik Schick (L5=53.6) -> tried: ['patrik-schick', 'schick', 'patrik']
+  NOK Montrell Culbreath (L5=50.8) -> tried: ['montrell-culbreath', 'culbreath', 'montrell']
+  NOK Minjae Kim  (L5=50.4) -> tried: ['minjae-kim', 'kim', 'minjae']
+  NOK Harry Kane (L5=74.9) -> tried: ['harry-edward-kane']
+  NOK Aleksandar Pavlović (L5=55.7) -> tried: ['aleksandar-pavlovic', 'pavlovic', 'aleksandar']
+  HTTP 429: Too Many Requests
+  HTTP 429: Too Many Requests
+  HTTP 429: Too Many Requests
+  NOK Serge Gnabry (L5=67.0) -> tried: ['serge-david-gnabry']
+  NOK Alphonso Davies (L5=55.2) -> tried: ['alphonso-boyle-davies']
+  NOK Konrad Laimer (L5=59.4) -> tried: ['konrad-laimer', 'laimer', 'konrad']
+  NOK Lennart Karl (L5=51.0) -> tried: ['lennart-karl', 'karl', 'lennart']
+  NOK Dayot Upamecano (L5=65.1) -> tried: ['dayot-upamecano']
+  NOK Jamal Musiala (L5=51.4) -> tried: ['jamal-musiala']
+  NOK Luis Díaz (L5=53.4) -> tried: ['luis-diaz', 'diaz', 'luis']
+  NOK Joshua Kimmich (L5=71.5) -> tried: ['joshua-walter-kimmich']
+  NOK Josip Stanišić (L5=71.6) -> tried: ['josip-stanisic', 'stanisic', 'josip']
+  NOK Jonathan Tah (L5=56.0) -> tried: ['jonathan-tah', 'tah', 'jonathan']
+  HTTP 429: Too Many Requests
+  HTTP 429: Too Many Requests
+  HTTP 429: Too Many Requests
+  NOK Michael Olise (L5=74.1) -> tried: ['michael-olise', 'olise', 'michael']
+  NOK Emre Can (L5=62.2) -> tried: ['emre-can', 'can', 'emre']
+  NOK Marcel Sabitzer (L5=50.7) -> tried: ['marcel-sabitzer', 'sabitzer', 'marcel']
+  HTTP 429: Too Many Requests
+  HTTP 429: Too Many Requests
+  HTTP 429: Too Many Requests
+  NOK Nico Schlotterbeck (L5=57.9) -> tried: ['nico-schlotterbeck', 'schlotterbeck', 'nico']
+  NOK Ramy Bensebaini (L5=59.8) -> tried: ['ramy-bensebaini', 'bensebaini', 'ramy']
+  NOK Julian Ryerson (L5=61.8) -> tried: ['julian-ryerson', 'ryerson', 'julian']
+  HTTP 429: Too Many Requests
+  HTTP 429: Too Many Requests
+  HTTP 429: Too Many Requests
+  HTTP 429: Too Many Requests
+  NOK Kevin Diks (L5=53.7) -> tried: ['kevin-diks', 'diks', 'kevin']
+  NOK Yannik Engelhardt (L5=50.3) -> tried: ['yannik-engelhardt', 'engelhardt', 'yannik']
+  NOK Philipp Sander (L5=60.6) -> tried: ['philipp-sander', 'sander', 'philipp']
+  NOK Nico Elvedi (L5=51.7) -> tried: ['nico-elvedi', 'elvedi', 'nico']
+  HTTP 429: Too Many Requests
+  HTTP 429: Too Many Requests
+  HTTP 429: Too Many Requests
+  NOK Michael Zetterer (L5=63.0) -> tried: ['michael-zetterer', 'zetterer', 'michael']
+  NOK Nnamdi Collins (L5=62.6) -> tried: ['nnamdi-collins', 'collins', 'nnamdi']
+  NOK Nathaniel Brown (L5=55.5) -> tried: ['nathaniel-brown', 'brown', 'nathaniel']
+  HTTP 429: Too Many Requests
+  HTTP 429: Too Many Requests
+  HTTP 429: Too Many Requests
+  NOK Jean-Mattéo Bahoya (L5=62.7) -> tried: ['jean-matteo-bahoya', 'bahoya', 'jean-matteo']
+  NOK Aurèle Amenda (L5=66.6) -> tried: ['aurele-amenda', 'amenda', 'aurele']
+  NOK Arnaud Kalimuendo (L5=53.4) -> tried: ['arnaud-kalimuendo', 'kalimuendo', 'arnaud']
+  NOK Robin Koch (L5=70.4) -> tried: ['robin-koch', 'koch', 'robin']
+  HTTP 429: Too Many Requests
+  HTTP 429: Too Many Requests
+  HTTP 429: Too Many Requests
+  NOK Philipp Lienhart (L5=54.7) -> tried: ['philipp-lienhart', 'lienhart', 'philipp']
+  NOK Matthias Ginter (L5=58.1) -> tried: ['matthias-ginter', 'ginter', 'matthias']
+  NOK Christian Günter (L5=50.2) -> tried: ['christian-gunter', 'gunter', 'christian']
+  >> Sauvegarde 2200/2528 (87%) | OK=699 NOK=1501
+  HTTP 429: Too Many Requests
+  HTTP 429: Too Many Requests
+  HTTP 429: Too Many Requests
+  NOK Hennes Behrens (L5=56.7) -> tried: ['hennes-behrens', 'behrens', 'hennes']
+  HTTP 429: Too Many Requests
+  HTTP 429: Too Many Requests
+  HTTP 429: Too Many Requests
+  HTTP 429: Too Many Requests
+  HTTP 429: Too Many Requests
+  HTTP 429: Too Many Requests
+  NOK Andrej Kramarić (L5=53.3) -> tried: ['andrej-kramaric', 'kramaric', 'andrej']
+  NOK Bazoumana Touré (L5=50.1) -> tried: ['bazoumana-toure', 'toure', 'bazoumana']
+  NOK Alexander Prass (L5=50.5) -> tried: ['alexander-prass', 'prass', 'alexander']
+  NOK Leon Avdullahu (L5=51.7) -> tried: ['leon-avdullahu', 'avdullahu', 'leon']
+  NOK Albian Hajdari (L5=52.1) -> tried: ['albian-hajdari', 'hajdari', 'albian']
+  HTTP 429: Too Many Requests
+  HTTP 429: Too Many Requests
+  HTTP 429: Too Many Requests
+  NOK Ozan Kabak (L5=51.9) -> tried: ['ozan-kabak', 'kabak', 'ozan']
+  NOK Alessio Castro-Montes (L5=56.2) -> tried: ['alessio-castro-montes', 'castro-montes', 'alessio']
+  HTTP 429: Too Many Requests
+  HTTP 429: Too Many Requests
+  HTTP 429: Too Many Requests
+  HTTP 429: Too Many Requests
+  NOK Ragnar Ache (L5=50.7) -> tried: ['ragnar-ache', 'ache', 'ragnar']
+  NOK Said El Mala (L5=52.3) -> tried: ['said-el-mala', 'said-mala', 'mala', 'said']
+  NOK Jakub Kamiński (L5=60.3) -> tried: ['jakub-kaminski', 'kaminski', 'jakub']
+  NOK Eric Martel (L5=52.3) -> tried: ['eric-martel', 'martel', 'eric']
+  HTTP 429: Too Many Requests
+  HTTP 429: Too Many Requests
+  HTTP 429: Too Many Requests
+  HTTP 429: Too Many Requests
+  NOK Danny da Costa (L5=54.4) -> tried: ['danny-da-costa', 'danny-costa', 'costa', 'danny']
+  NOK Kaishu Sano (L5=52.6) -> tried: ['kaishu-sano', 'sano', 'kaishu']
+  NOK Stefan Bell (L5=51.8) -> tried: ['stefan-bell', 'bell', 'stefan']
+  HTTP 429: Too Many Requests
+  HTTP 429: Too Many Requests
+  HTTP 429: Too Many Requests
+  NOK Nadiem Amiri (L5=71.1) -> tried: ['nadiem-amiri', 'amiri', 'nadiem']
+  NOK Stefan Posch (L5=54.0) -> tried: ['stefan-posch', 'posch', 'stefan']
+  NOK Sheraldo Becker (L5=58.5) -> tried: ['sheraldo-becker', 'becker', 'sheraldo']
+  NOK Paul Nebel (L5=69.1) -> tried: ['paul-nebel', 'nebel', 'paul']
+  NOK David Raum (L5=70.1) -> tried: ['david-raum', 'raum', 'david']
+  NOK Maarten Vandevoordt (L5=50.8) -> tried: ['maarten-vandevoordt', 'vandevoordt', 'maarten']
+  HTTP 429: Too Many Requests
+  HTTP 429: Too Many Requests
+  HTTP 429: Too Many Requests
+  NOK Nicolas Seiwald (L5=51.1) -> tried: ['nicolas-seiwald', 'seiwald', 'nicolas']
+  NOK Ridle Baku (L5=53.8) -> tried: ['ridle-baku', 'baku', 'ridle']
+  NOK Willi Orbán (L5=56.4) -> tried: ['willi-orban', 'orban', 'willi']
+  NOK Brajan Gruda (L5=52.2) -> tried: ['brajan-gruda', 'gruda', 'brajan']
+  HTTP 429: Too Many Requests
+  HTTP 429: Too Many Requests
+  HTTP 429: Too Many Requests
+  HTTP 429: Too Many Requests
+  NOK Castello Lukeba (L5=57.0) -> tried: ['castello-lukeba', 'lukeba', 'castello']
+  NOK El Chadaille Bitshiabu (L5=68.7) -> tried: ['el-chadaille-bitshiabu', 'el-bitshiabu', 'bitshiabu', 'el']
+  NOK Yan Diomande (L5=72.1) -> tried: ['yan-diomande', 'diomande', 'yan']
+  NOK Tomoya Ando (L5=56.3) -> tried: ['tomoya-ando', 'ando', 'tomoya']
+  NOK Manolis Saliakas (L5=63.5) -> tried: ['manolis-saliakas', 'saliakas', 'manolis']
+  NOK Hauke Wahl (L5=64.3) -> tried: ['hauke-wahl', 'wahl', 'hauke']
+  NOK Nikola Vasilj (L5=51.9) -> tried: ['nikola-vasilj', 'vasilj', 'nikola']
+  HTTP 429: Too Many Requests
+  HTTP 429: Too Many Requests
+  HTTP 429: Too Many Requests
+  HTTP 429: Too Many Requests
+  NOK Eric Smith (L5=52.1) -> tried: ['eric-smith', 'smith', 'eric']
+  NOK Adam Dźwigała (L5=54.4) -> tried: ['adam-dzwiga-a', 'dzwiga-a', 'adam']
+  NOK Danel Sinani (L5=53.7) -> tried: ['danel-sinani', 'sinani', 'danel']
+  >> Sauvegarde 2400/2528 (94%) | OK=699 NOK=1701
+  HTTP 429: Too Many Requests
+  HTTP 429: Too Many Requests
+  HTTP 429: Too Many Requests
+  NOK Luca Jaquez (L5=60.9) -> tried: ['luca-jaquez', 'jaquez', 'luca']
+  NOK Angelo Stiller (L5=62.8) -> tried: ['angelo-stiller', 'stiller', 'angelo']
+  NOK Alexander Nübel (L5=54.2) -> tried: ['alexander-nubel', 'nubel', 'alexander']
+  NOK Deniz Undav (L5=75.8) -> tried: ['deniz-undav', 'undav', 'deniz']
+  NOK Chris Führich (L5=62.2) -> tried: ['chris-fuhrich', 'fuhrich', 'chris']
+  NOK Nikolas Nartey (L5=56.1) -> tried: ['nikolas-nartey', 'nartey', 'nikolas']
+  HTTP 429: Too Many Requests
+  HTTP 429: Too Many Requests
+  HTTP 429: Too Many Requests
+  NOK Tiago Tomás (L5=52.2) -> tried: ['tiago-tomas', 'tomas', 'tiago']
+  NOK Jamie Leweling (L5=57.4) -> tried: ['jamie-leweling', 'leweling', 'jamie']
+  NOK Ermedin Demirović (L5=50.1) -> tried: ['ermedin-demirovic', 'demirovic', 'ermedin']
+  NOK Maximilian Mittelstädt (L5=59.5) -> tried: ['maximilian-mittelstadt', 'mittelstadt', 'maximilian']
+  NOK Matheo Raab (L5=86.8) -> tried: ['matheo-raab', 'raab', 'matheo']
+  HTTP 429: Too Many Requests
+  HTTP 429: Too Many Requests
+  HTTP 429: Too Many Requests
+  NOK Josip Juranovic (L5=53.3) -> tried: ['josip-juranovic', 'juranovic', 'josip']
+  NOK Leopold Querfeld (L5=52.2) -> tried: ['leopold-querfeld', 'querfeld', 'leopold']
+  HTTP 429: Too Many Requests
+  HTTP 429: Too Many Requests
+  HTTP 429: Too Many Requests
+  NOK Olivier Deman (L5=54.6) -> tried: ['olivier-deman', 'deman', 'olivier']
+  NOK Marco Friedl (L5=52.7) -> tried: ['marco-friedl', 'friedl', 'marco']
+  HTTP 429: Too Many Requests
+  HTTP 429: Too Many Requests
+  HTTP 429: Too Many Requests
+  NOK Leonardo Bittencourt (L5=50.9) -> tried: ['leonardo-bittencourt', 'bittencourt', 'leonardo']
+  NOK Cameron Puertas (L5=56.9) -> tried: ['cameron-puertas', 'puertas', 'cameron']
+  NOK Romano Schmid (L5=51.1) -> tried: ['romano-schmid', 'schmid', 'romano']
+  NOK Mick Schmetgens (L5=55.2) -> tried: ['mick-schmetgens', 'schmetgens', 'mick']
+  NOK Denis Vavro (L5=50.9) -> tried: ['denis-vavro', 'vavro', 'denis']
+  HTTP 429: Too Many Requests
+  HTTP 429: Too Many Requests
+  HTTP 429: Too Many Requests
+  NOK Maximilian Arnold (L5=50.5) -> tried: ['maximilian-arnold', 'arnold', 'maximilian']
+  HTTP 429: Too Many Requests
+  HTTP 429: Too Many Requests
+  HTTP 429: Too Many Requests
+  NOK Christian Eriksen (L5=59.3) -> tried: ['christian-eriksen', 'eriksen', 'christian']
+
+Done!
+   Trouves    : 699 / 2528
+   Non trouves: 1829
+   Total avec carte: 699

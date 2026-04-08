@@ -11,9 +11,10 @@ py fetch_prices.py ALL
 py merge_data.py
 cd deglingo-scout-app
 call npm run build
+npx wrangler pages deploy dist --project-name=deglingo-sorare --branch=deglingo-sorare --commit-dirty=true
 cd ..
 echo.
 echo ============================================
-echo  DONE ! Prix mis a jour + build OK
+echo  DONE ! Prix mis a jour + deploye !
 echo ============================================
 pause

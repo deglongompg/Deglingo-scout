@@ -15,6 +15,7 @@ import json, sys, os, time
 from urllib.request import Request, urlopen
 from urllib.error import HTTPError
 from datetime import datetime, timedelta
+sys.stdout.reconfigure(errors="replace")
 
 API_KEY = sys.argv[1] if len(sys.argv) > 1 else os.environ.get("FOOTBALL_DATA_API_KEY", "")
 if not API_KEY:
@@ -574,7 +575,12 @@ def main():
     print(f"\n📋 Total: {len(all_fixtures)} matchs récupérés")
 
     # Build player → fixture mapping (ligues domestiques uniquement, pas UCL/UEL/UECL)
-    domestic_fixtures = [f for f in all_fixtures if not f.get("competition")]
+    # IMPORTANT : exclure les matchs terminés (passés) pour ne mapper que les prochains matchs
+    today_str = datetime.utcnow().date().strftime("%Y-%m-%d")
+    domestic_fixtures = [
+        f for f in all_fixtures
+        if not f.get("competition") and not f.get("finished") and f.get("date", "") >= today_str
+    ]
     player_fixtures = build_player_fixtures(domestic_fixtures, teams, players)
 
     # Save fixtures.json
@@ -585,9 +591,10 @@ def main():
         "player_fixtures": player_fixtures,
     }
 
-    # Group matchdays by league
+    # Group matchdays by league — uniquement les matchs à venir (pas les terminés)
     for f in all_fixtures:
-        output["matchdays"][f["league"]] = f["matchday"]
+        if not f.get("finished"):
+            output["matchdays"][f["league"]] = f["matchday"]
 
     out_path = os.path.join(data_dir, "fixtures.json")
     with open(out_path, "w", encoding="utf-8") as f:

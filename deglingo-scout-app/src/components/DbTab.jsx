@@ -102,10 +102,16 @@ export default function DbTab({ players, teams, fixtures, logos = {}, lang = "fr
 
   const enriched = useMemo(() => {
     const pf = fixtures?.player_fixtures || {};
+    // Fenêtre GW : adversaire affiché seulement si le match est dans les 10 prochains jours
+    const todayStr = new Date().toISOString().split("T")[0];
+    const maxDateStr = new Date(Date.now() + 10 * 86400000).toISOString().split("T")[0];
     return players.map(p => {
       const fx = pf[p.slug] || pf[p.name];
       const base = { ...p, reg10: p.reg10 ?? p.regularite, ds10: p.ds10 ?? p.ds_rate, ga_season: (p.goals || 0) + (p.assists || 0) };
-      if (!fx) return { ...base, dsMatch: null, oppName: null, isHome: null, matchday: null, csPercent: null, matchDate: null };
+      // Pas de fixture ou match hors fenêtre GW (ex: reporté au 13 mai) → pas d'adversaire
+      if (!fx || !fx.date || fx.date < todayStr || fx.date > maxDateStr) {
+        return { ...base, dsMatch: null, oppName: null, isHome: null, matchday: null, csPercent: null, matchDate: null };
+      }
       const oppTeam = findTeam(teams, fx.opp);
       const playerTeam = findTeam(teams, p.club);
       const ds = oppTeam ? dScoreMatch(p, oppTeam, fx.isHome, playerTeam) : null;
@@ -254,8 +260,6 @@ export default function DbTab({ players, teams, fixtures, logos = {}, lang = "fr
 
   const R = v => v != null ? Math.round(v) : "—";
 
-  // GW en cours — joueurs ayant joué depuis cette date ont un score réel
-  const CURRENT_GW_START = "2026-04-03";
 
   const SHORT_NAMES = {
     // Fixtures names
@@ -705,7 +709,7 @@ export default function DbTab({ players, teams, fixtures, logos = {}, lang = "fr
                     </td>
                     <td style={{ textAlign: "center", fontFamily: "DM Mono", fontSize: 11, width: 38, maxWidth: 38, padding: "4px 2px" }}>
                       {(() => {
-                        const playedThisGw = p.last_so5_date && p.last_so5_date >= CURRENT_GW_START;
+                        const playedThisGw = p.matchDate && p.last_so5_date && p.last_so5_date >= p.matchDate;
                         const score = p.last_so5_score;
                         if (playedThisGw && score != null) {
                           const sc = score;
@@ -717,7 +721,7 @@ export default function DbTab({ players, teams, fixtures, logos = {}, lang = "fr
                     </td>
                     <td style={{ textAlign: "center", fontFamily: "DM Mono", fontSize: 11, width: 38, maxWidth: 38, padding: "4px 2px" }}>
                       {(() => {
-                        const playedThisGw = p.last_so5_date && p.last_so5_date >= CURRENT_GW_START;
+                        const playedThisGw = p.matchDate && p.last_so5_date && p.last_so5_date >= p.matchDate;
                         if (playedThisGw) {
                           return <span style={{ color: "rgba(255,255,255,0.2)", fontSize: 10 }}>—</span>;
                         }

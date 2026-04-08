@@ -603,6 +603,7 @@ export default function StellarTab({ players, teams, fixtures, logos = {}, match
   const [sorareCards, setSorareCards] = useState([]); // { playerSlug, rarity, pictureUrl, cardSlug }
   const [sorareUser, setSorareUser] = useState(null);
   const [sorareLoading, setSorareLoading] = useState(false);
+  const [myCardsMode, setMyCardsMode] = useState(false); // vue "Mes cartes" uniquement
 
   // Map playerSlug → meilleure carte (rarity order: limited > rare > super_rare > unique)
   const RARITY_ORDER = { unique: 4, super_rare: 3, rare: 2, limited: 1, common: 0 };
@@ -630,8 +631,8 @@ export default function StellarTab({ players, teams, fixtures, logos = {}, match
       sessionStorage.removeItem("sorare_oauth_state");
       // Nettoyer l'URL immédiatement (sécurité)
       window.history.replaceState(null, "", window.location.pathname + window.location.search);
-      if (returnedState && returnedState !== savedState) {
-        console.warn("Sorare OAuth: state mismatch — possible CSRF, ignoring");
+      if (returnedState && savedState && returnedState !== savedState) {
+        console.warn("Sorare OAuth: state mismatch — possible CSRF, ignoring", { returnedState, savedState });
         return;
       }
       // Charger les cartes
@@ -658,14 +659,14 @@ export default function StellarTab({ players, teams, fixtures, logos = {}, match
       const user = data?.data?.currentUser;
       if (!user) { setSorareConnected(false); return; }
       setSorareUser({ slug: user.slug, nickname: user.nickname });
-      const cards = (user.footballCards?.nodes || []).map(c => ({
+      // cards = AnyCardInterface, rarityTyped au lieu de rarity
+      // ... on FootballCard donne player (filtre auto les cartes non-foot)
+      const cards = (user.cards?.nodes || []).map(c => ({
         cardSlug:   c.slug,
-        playerSlug: c.player?.slug,
-        playerName: c.player?.displayName,
-        position:   c.player?.position,
-        rarity:     c.rarity,
-        pictureUrl: c.pictureUrl,
-        season:     c.season?.startYear,
+        playerSlug: c.player?.slug || null,
+        playerName: c.player?.displayName || null,
+        rarity:     (c.rarityTyped || "").toLowerCase().replace(/ /g, "_"),
+        pictureUrl: c.pictureUrl || null,
       })).filter(c => c.playerSlug);
       setSorareCards(cards);
       setSorareConnected(true);
@@ -827,8 +828,6 @@ export default function StellarTab({ players, teams, fixtures, logos = {}, match
       const adj = getAdjDs(p);
       return sum + (p.isCaptain ? adj * 1.5 : adj);
     }, 0));
-  const CURRENT_GW_START = "2026-04-03";
-
   // ── Freeze daily Stellar : figé à 12h00 Paris ──────────────────────────────
   // dailyLockKey = "YYYY-MM-DD" si Paris >= 12h00, sinon null
   const dailyLockKey = useMemo(() => getDailyLockKey(), []);
@@ -840,6 +839,9 @@ export default function StellarTab({ players, teams, fixtures, logos = {}, match
     m.setDate(m.getDate() + weekOffset * 7);
     return m;
   }, [weekOffset]);
+
+  // GW start = lundi de la semaine affichée (dynamique, plus de hardcode)
+  const gwWeekStart = useMemo(() => monday.toISOString().split("T")[0], [monday]);
 
   // Largeur de référence des chips = match avec les 2 noms les plus longs des ligues Stellar
   const chipMinWidth = useMemo(() => {
@@ -916,34 +918,51 @@ export default function StellarTab({ players, teams, fixtures, logos = {}, match
     const pf = fixtures?.player_fixtures || {};
     const dayPlayers = [];
 
+    // Club → fixture map pour fallback (matchs passés ou non mappés dans player_fixtures)
+    const clubFxMap = {};
+    for (const f of dayFixtures) {
+      if (f.home) clubFxMap[f.home] = { opp: f.away, isHome: true, kickoff: f.kickoff || "" };
+      if (f.away) clubFxMap[f.away] = { opp: f.home, isHome: false, kickoff: f.kickoff || "" };
+    }
+
     // Clubs sans cartes Stellar (pas dans le jeu Sorare SO5/SO7)
     const NO_STELLAR_CLUBS = ["FC Metz"];
 
     for (const p of players) {
       if (!STELLAR_LEAGUES.includes(p.league)) continue;
       if (NO_STELLAR_CLUBS.some(c => clubMatchGlobal(p.club, c))) continue;
+
+      // 1) player_fixtures si la date correspond
       const fx = pf[p.slug] || pf[p.name];
-      if (!fx || fx.date !== dateStr) continue;
+      let fxOpp, fxIsHome, fxKickoff;
+      if (fx && fx.date === dateStr) {
+        fxOpp = fx.opp; fxIsHome = fx.isHome; fxKickoff = fx.kickoff || fx.time || "";
+      } else {
+        // 2) Fallback club-based via fixturesByDate (matchs passés ou non mappés)
+        const cf = clubFxMap[p.club] || Object.entries(clubFxMap).find(([k]) => clubMatchGlobal(k, p.club))?.[1];
+        if (!cf) continue;
+        fxOpp = cf.opp; fxIsHome = cf.isHome; fxKickoff = cf.kickoff;
+      }
 
       const lgTeams = teams.filter(t => t.league === p.league);
-      const oppStats = lgTeams.find(t => t.name === fx.opp);
+      const oppStats = lgTeams.find(t => t.name === fxOpp);
       if (!oppStats) continue;
       const pTeam = findTeam(lgTeams, p.club);
-      const ds = dScoreMatch(p, oppStats, fx.isHome, pTeam);
+      const ds = dScoreMatch(p, oppStats, fxIsHome, pTeam);
       if (ds < 20) continue; // Filter ghosts
       if (p.injured || p.suspended) continue; // Filter injured/suspended
       if (p.sorare_starter_pct != null && p.sorare_starter_pct < 70) continue; // Titu% Sorare < 70%
 
       let csPercent = null;
       if (["GK", "DEF"].includes(p.position)) {
-        const oppXg = fx.isHome ? (oppStats.xg_ext || 1.3) : (oppStats.xg_dom || 1.3);
-        const defXga = pTeam ? (fx.isHome ? (pTeam.xga_dom || 1.3) : (pTeam.xga_ext || 1.5)) : 1.3;
+        const oppXg = fxIsHome ? (oppStats.xg_ext || 1.3) : (oppStats.xg_dom || 1.3);
+        const defXga = pTeam ? (fxIsHome ? (pTeam.xga_dom || 1.3) : (pTeam.xga_ext || 1.5)) : 1.3;
         csPercent = csProb(defXga, oppXg, p.league);
       }
       const matchId = pTeam ? [pTeam.name, oppStats.name].sort().join("|") : null;
       dayPlayers.push({
-        ...p, ds, oppName: oppStats.name, oppTeam: oppStats, playerTeam: pTeam, isHome: fx.isHome,
-        kickoff: fx.kickoff || fx.time || "",
+        ...p, ds, oppName: oppStats.name, oppTeam: oppStats, playerTeam: pTeam, isHome: fxIsHome,
+        kickoff: fxKickoff,
         matchDate: dateStr,
         csPercent, matchId,
         proj: p.sorare_proj ?? null,
@@ -973,6 +992,58 @@ export default function StellarTab({ players, teams, fixtures, logos = {}, match
 
     return { fixtures: dayFixtures, players: dayPlayers, teams: stellarTeams, decisivePick, frozen: false };
   }, [selectedDay, weekDays, fixturesByDate, players, teams, fixtures, dailyLockKey, frozenDayData]);
+
+  // Pool "mes cartes" — 4 ligues, sans filtre titu%, double matching (player_fixtures + club)
+  const myCardsDayPlayers = useMemo(() => {
+    if (!sorareCards.length || selectedDay === null || !weekDays[selectedDay]) return { playing: [], notPlaying: [] };
+    const dateStr = isoDate(weekDays[selectedDay]);
+    const cardSlugSet = new Set(sorareCards.map(c => c.playerSlug));
+    const ALL_LEAGUES = ["L1", "PL", "Liga", "Bundes"];
+
+    // Club → fixture pour ce jour (fixturesByDate = source fiable du calendrier)
+    const dayFixtures = fixturesByDate[dateStr] || [];
+    const clubFxMap = {};
+    for (const f of dayFixtures) {
+      if (f.home) clubFxMap[f.home] = { opp: f.away,  isHome: true,  kickoff: f.kickoff || f.time || "" };
+      if (f.away) clubFxMap[f.away] = { opp: f.home,  isHome: false, kickoff: f.kickoff || f.time || "" };
+    }
+
+    const pf = fixtures?.player_fixtures || {};
+    const playing = [], playingSet = new Set();
+
+    for (const p of (players || [])) {
+      const slug = p.slug || p.name;
+      if (!cardSlugSet.has(slug)) continue;
+      if (!ALL_LEAGUES.includes(p.league)) continue;
+
+      // 1) player_fixtures (date précise)
+      const fx = pf[p.slug] || pf[p.name];
+      let oppName, isHome, kickoff;
+      if (fx && fx.date === dateStr) {
+        oppName = fx.opp; isHome = fx.isHome; kickoff = fx.kickoff || fx.time || "";
+      } else {
+        // 2) Fallback club-based (fixturesByDate toujours à jour)
+        const cf = clubFxMap[p.club];
+        if (!cf) continue;
+        oppName = cf.opp; isHome = cf.isHome; kickoff = cf.kickoff;
+      }
+
+      const lgTeams = (teams || []).filter(t => t.league === p.league);
+      const oppStats = lgTeams.find(t => t.name === oppName);
+      const pTeam = findTeam(lgTeams, p.club);
+      const ds = oppStats ? dScoreMatch(p, oppStats, isHome, pTeam) : (p.l10 || 50);
+      playing.push({ ...p, ds, oppName, isHome, kickoff, matchDate: dateStr });
+      playingSet.add(slug);
+    }
+    playing.sort((a, b) => b.ds - a.ds);
+
+    const notPlaying = sorareCards
+      .filter(c => !playingSet.has(c.playerSlug))
+      .filter((c, i, arr) => arr.findIndex(x => x.playerSlug === c.playerSlug) === i)
+      .sort((a, b) => (RARITY_ORDER[b.rarity]||0) - (RARITY_ORDER[a.rarity]||0));
+
+    return { playing, notPlaying };
+  }, [sorareCards, selectedDay, weekDays, players, fixtures, teams, fixturesByDate]);
 
   // ── Sauvegarder dans localStorage quand le freeze est actif et pas encore figé ──
   useEffect(() => {
@@ -1233,7 +1304,7 @@ export default function StellarTab({ players, teams, fixtures, logos = {}, match
               };
               const clubScores = {};
               for (const p of dayData.players || []) {
-                if (p.last_so5_date && p.last_so5_date >= CURRENT_GW_START && p.last_match_home_goals != null) {
+                if (p.last_so5_date && p.last_so5_date >= gwWeekStart && p.last_match_home_goals != null) {
                   const key = normClub(p.club);
                   if (!clubScores[key]) clubScores[key] = { home: p.last_match_home_goals, away: p.last_match_away_goals };
                 }
@@ -1263,7 +1334,9 @@ export default function StellarTab({ players, teams, fixtures, logos = {}, match
                           }
                           return null;
                         };
-                        const sc = findScore(f.home) ?? findScore(f.away) ?? null;
+                        // Score réel uniquement si le match est déjà joué (date passée)
+                        const todayStrFx = new Date().toISOString().split("T")[0];
+                        const sc = (f.date < todayStrFx) ? (findScore(f.home) ?? findScore(f.away) ?? null) : null;
                         const scoreStr = sc != null ? `${sc.home}-${sc.away}` : null;
 
                         // Trouver les events de ce match dans matchEvents
@@ -1288,7 +1361,7 @@ export default function StellarTab({ players, teams, fixtures, logos = {}, match
                         const isOpen = isOpenHome || isOpenAway;
                         const activeSide = isOpenHome ? "home" : isOpenAway ? "away" : null;
                         const playersOf = (club) => [...(players || [])].filter(p =>
-                          p.last_so5_date && p.last_so5_date >= CURRENT_GW_START &&
+                          p.last_so5_date && p.last_so5_date >= gwWeekStart &&
                           p.last_so5_score != null && p.last_so5_score > 0 &&
                           clubMatch(p.club, club)
                         ).sort((a, b) => b.last_so5_score - a.last_so5_score);
@@ -1546,6 +1619,14 @@ export default function StellarTab({ players, teams, fixtures, logos = {}, match
                   {/* ══ COLONNE DROITE : Base de données joueurs ══ */}
                   <div style={{ flex: 2, minWidth: 0, display: "flex", flexDirection: "column", overflow: "hidden" }}>
 
+                  {/* ── TOGGLE Tous / Mes cartes (visible uniquement si connecté Sorare) ── */}
+                  {sorareConnected && (
+                    <div style={{ display: "flex", alignItems: "center", gap: 4, padding: "4px 10px", borderBottom: "1px solid rgba(255,255,255,0.07)", background: "rgba(0,0,0,0.3)", flexShrink: 0 }}>
+                      <button onClick={() => setMyCardsMode(false)} style={{ fontSize: 8, fontWeight: 700, padding: "3px 9px", borderRadius: 6, border: `1px solid ${!myCardsMode ? "rgba(196,181,253,0.5)" : "rgba(255,255,255,0.1)"}`, background: !myCardsMode ? "rgba(196,181,253,0.15)" : "transparent", color: !myCardsMode ? "#C4B5FD" : "rgba(255,255,255,0.35)", cursor: "pointer", fontFamily: "Outfit", transition: "all 0.15s" }}>Tous les joueurs</button>
+                      <button onClick={() => setMyCardsMode(true)} style={{ fontSize: 8, fontWeight: 700, padding: "3px 9px", borderRadius: 6, border: `1px solid ${myCardsMode ? "rgba(74,222,128,0.5)" : "rgba(255,255,255,0.1)"}`, background: myCardsMode ? "rgba(74,222,128,0.12)" : "transparent", color: myCardsMode ? "#4ADE80" : "rgba(255,255,255,0.35)", cursor: "pointer", fontFamily: "Outfit", transition: "all 0.15s" }}>Mes cartes · {myCardsDayPlayers.playing.length} ce soir</button>
+                    </div>
+                  )}
+
                   {/* ── TABLEAU JOUEURS — style Database enrichi ── */}
                   {(() => {
                     const R = v => v != null ? Math.round(v) : "—";
@@ -1576,7 +1657,33 @@ export default function StellarTab({ players, teams, fixtures, logos = {}, match
                         ? dayPool.filter(p => ["DEF","MIL","ATT"].includes(p.position))
                         : dayPool.filter(p => p.position === selectedSlot)
                       : dayPool;
-                    const sortedPool = [...slotFilter].sort((a, b) => {
+                    // Filtre "Mes cartes" : une ligne par carte possédée (2x Yamal → 2 lignes)
+                    // Utilise myCardsDayPlayers.playing (bypass filtre titu%) comme base
+                    const visiblePool = (myCardsMode && sorareConnected)
+                      ? (() => {
+                          const playingToday = myCardsDayPlayers.playing;
+                          const expanded = [];
+                          const addedCardSlugs = new Set();
+                          for (const p of playingToday) {
+                            const slug = p.slug || p.name;
+                            // Toutes les cartes de ce joueur
+                            const playerCards = sorareCards.filter(c => c.playerSlug === slug);
+                            if (!playerCards.length) continue;
+                            // Filtre slot actif si sélectionné
+                            if (selectedSlot) {
+                              if (selectedSlot === "FLEX" && !["DEF","MIL","ATT"].includes(p.position)) continue;
+                              if (selectedSlot !== "FLEX" && p.position !== selectedSlot) continue;
+                            }
+                            for (const card of playerCards) {
+                              if (addedCardSlugs.has(card.cardSlug)) continue;
+                              addedCardSlugs.add(card.cardSlug);
+                              expanded.push({ ...p, _cardSlug: card.cardSlug, _cardRarity: card.rarity });
+                            }
+                          }
+                          return expanded;
+                        })()
+                      : slotFilter;
+                    const sortedPool = [...visiblePool].sort((a, b) => {
                       if (sortCol === "ds")   return getAdjDs(b) - getAdjDs(a);
                       if (sortCol === "win")  return (getWinPct(b)||0) - (getWinPct(a)||0);
                       if (sortCol === "cs")   return (b.csPercent||0) - (a.csPercent||0);
@@ -1617,6 +1724,11 @@ export default function StellarTab({ players, teams, fixtures, logos = {}, match
                     const thS = (col) => ({ fontSize: 8, fontWeight: 800, color: sortCol===col?"#C084FC":"rgba(255,255,255,0.3)", cursor:"pointer", userSelect:"none", whiteSpace:"nowrap", textAlign:"center", padding:"0 4px" });
                     // Grid: +btn | pos+logo | nom | D-Score | L2 AA2 L5 AA5 | L10 DOM EXT AA10 Titu10 Reg10 L40 AA40 G+A
                     const GRID = "28px 36px 80px 52px 80px 36px 36px 90px 30px 28px 30px 28px 46px 32px 32px 28px 30px 28px 30px 30px 44px";
+
+                    // ── Badges rareté pour cartes possédées ────────────────
+                    const RARITY_COLORS = { unique: "#FFD700", super_rare: "#E040FB", rare: "#42A5F5", limited: "#FF9800", common: "rgba(255,255,255,0.3)" };
+                    const RARITY_LABELS = { unique: "U", super_rare: "SR", rare: "R", limited: "L", common: "C" };
+
                     return (
                       <div style={{ flex: 1, display: "flex", flexDirection: "column", minWidth: 0, overflowX: "auto" }}>
                         {/* Header */}
@@ -1643,19 +1755,25 @@ export default function StellarTab({ players, teams, fixtures, logos = {}, match
                           <div style={{ minWidth: "max-content" }}>
                           {sortedPool.map(p => {
                             const slug = p.slug || p.name;
+                            const rowKey = p._cardSlug || slug;
                             const ed = getEdition(cardEditions[slug] || "base");
                             const adjDs = getAdjDs(p);
                             const inTeam = isInTeam(p);
+                            // Badge rareté : priorité à la carte spécifique (_cardRarity), sinon meilleure carte possédée
+                            const ownedCard = sorareCardMap[slug];
+                            const ownedRarity = p._cardRarity || ownedCard?.rarity || null;
+                            const rarityColor = ownedRarity ? (RARITY_COLORS[ownedRarity] || null) : null;
+                            const rarityLabel = ownedRarity ? (RARITY_LABELS[ownedRarity] || null) : null;
                             const pc = PC[p.position];
                             const opp = logos[p.oppName];
                             const parisTime = p.kickoff && p.matchDate ? utcToParisTime(p.kickoff, p.matchDate) : "";
                             const ga = (p.goals||0) + (p.assists||0);
                             return (
-                              <div key={slug}
+                              <div key={rowKey}
                                 onClick={() => !inTeam && addToTeam(p)}
-                                style={{ display: "grid", gridTemplateColumns: GRID, alignItems: "center", gap: 2, padding: "4px 8px", borderBottom: "1px solid rgba(255,255,255,0.03)", background: inTeam ? "rgba(196,181,253,0.07)" : "transparent", transition: "background 0.12s", cursor: inTeam ? "default" : "pointer", minWidth: "max-content" }}
+                                style={{ display: "grid", gridTemplateColumns: GRID, alignItems: "center", gap: 2, padding: "4px 8px", borderBottom: "1px solid rgba(255,255,255,0.03)", background: inTeam ? "rgba(196,181,253,0.07)" : rarityColor ? `rgba(${rarityColor === "#FFD700" ? "255,215,0" : rarityColor === "#E040FB" ? "224,64,251" : rarityColor === "#42A5F5" ? "66,165,245" : "255,152,0"},0.04)` : "transparent", transition: "background 0.12s", cursor: inTeam ? "default" : "pointer", minWidth: "max-content", borderLeft: rarityColor ? `2px solid ${rarityColor}` : "2px solid transparent" }}
                                 onMouseEnter={e => { if (!inTeam) e.currentTarget.style.background = "rgba(255,255,255,0.04)"; }}
-                                onMouseLeave={e => { e.currentTarget.style.background = inTeam ? "rgba(196,181,253,0.07)" : "transparent"; }}
+                                onMouseLeave={e => { e.currentTarget.style.background = inTeam ? "rgba(196,181,253,0.07)" : rarityColor ? `rgba(${rarityColor === "#FFD700" ? "255,215,0" : rarityColor === "#E040FB" ? "224,64,251" : rarityColor === "#42A5F5" ? "66,165,245" : "255,152,0"},0.04)` : "transparent"; }}
                               >
                                 {/* + / ✓ / E1 E2 */}
                                 {(() => {
@@ -1672,9 +1790,12 @@ export default function StellarTab({ players, teams, fixtures, logos = {}, match
                                   <span style={{ fontSize:6, fontWeight:900, background:pc, color:"#fff", borderRadius:2, padding:"1px 4px", flexShrink:0 }}>{p.position}</span>
                                   {logos[p.club] && <img src={`/data/logos/${logos[p.club]}`} alt="" style={{ width:14, height:14, objectFit:"contain", flexShrink:0 }} />}
                                 </div>
-                                {/* Nom + club */}
+                                {/* Nom + club + badge rareté */}
                                 <div style={{ minWidth:0 }}>
-                                  <div style={{ fontSize:10, fontWeight: inTeam?700:500, color: inTeam?"#C4B5FD":"#fff", overflow:"hidden", textOverflow:"ellipsis", whiteSpace:"nowrap", lineHeight:1.2 }}>{p.name.split(" ").pop()}</div>
+                                  <div style={{ display:"flex", alignItems:"center", gap:3 }}>
+                                    <div style={{ fontSize:10, fontWeight: inTeam?700:500, color: inTeam?"#C4B5FD":"#fff", overflow:"hidden", textOverflow:"ellipsis", whiteSpace:"nowrap", lineHeight:1.2, minWidth:0 }}>{p.name.split(" ").pop()}</div>
+                                    {rarityLabel && <span style={{ fontSize:6, fontWeight:900, color:"#000", background:rarityColor, borderRadius:2, padding:"0 3px", lineHeight:"11px", flexShrink:0 }}>{rarityLabel}</span>}
+                                  </div>
                                   <div style={{ fontSize:6, color:"rgba(255,255,255,0.3)", overflow:"hidden", textOverflow:"ellipsis", whiteSpace:"nowrap", lineHeight:1.2 }}>{sn(p.club)}</div>
                                 </div>
                                 {/* D-Score — en tête de gondole */}
@@ -1775,7 +1896,7 @@ export default function StellarTab({ players, teams, fixtures, logos = {}, match
               const gaR = dp.ga_per_match?.toFixed(2) || "0.00";
               const lgColor = LEAGUE_COLOR[dp.league] || "#FF8A80";
               const pc = PC[dp.position];
-              const dpPlayed = dp.last_so5_date && dp.last_so5_date >= CURRENT_GW_START && dp.last_so5_score != null;
+              const dpPlayed = dp.last_so5_date && dp.last_so5_date >= gwWeekStart && dp.last_so5_score != null;
               const dpWon = dpPlayed && dp.last_so5_score >= 60;
               const dpRealScore = dpPlayed ? Math.round(dp.last_so5_score) : null;
               const dpRealColor = dpPlayed ? (dp.last_so5_score >= 75 ? "#4ADE80" : dp.last_so5_score >= 60 ? "#A3E635" : dp.last_so5_score >= 50 ? "#FBBF24" : dp.last_so5_score >= 40 ? "#FB923C" : "#EF4444") : null;
@@ -1851,10 +1972,10 @@ export default function StellarTab({ players, teams, fixtures, logos = {}, match
               const totalScore = getAdjTotalDs(team.players);
               const palier = PALIERS.filter(p => totalScore >= p.pts).pop();
               // Score réel : remplace ds par last_so5_score si le joueur a joué cette GW
-              const hasRealData = team.players.some(p => p.last_so5_date && p.last_so5_date >= CURRENT_GW_START && p.last_so5_score != null);
+              const hasRealData = team.players.some(p => p.last_so5_date && p.last_so5_date >= gwWeekStart && p.last_so5_score != null);
               const isValidated = hasRealData; // automatique dès que des scores réels existent
               const realScore = Math.round(team.players.reduce((sum, p) => {
-                const played = p.last_so5_date && p.last_so5_date >= CURRENT_GW_START;
+                const played = p.last_so5_date && p.last_so5_date >= gwWeekStart;
                 const sc = played && p.last_so5_score != null ? p.last_so5_score : p.ds;
                 return sum + (p.isCaptain ? sc * 1.5 : sc);
               }, 0));
@@ -1925,7 +2046,7 @@ export default function StellarTab({ players, teams, fixtures, logos = {}, match
                   </div>
                   <div className="st-team-players" style={{ display: "flex", justifyContent: "center", gap: 4, flexWrap: "nowrap" }}>
                     {team.players.map((p, pi) => (
-                      <StellarCard key={pi} player={p} logos={logos} size="sm" isValidated={isValidated} gwStart={CURRENT_GW_START}
+                      <StellarCard key={pi} player={p} logos={logos} size="sm" isValidated={isValidated} gwStart={gwWeekStart}
                         edition={getEdition(cardEditions[p.slug || p.name] || "base")}
                         onEditionChange={(id) => setCardEdition(p.slug || p.name, id)}
                       />

@@ -2,13 +2,13 @@
 cls
 echo ======================================================
 echo   DEGLINGO SCOUT - MAJ DAILY
-echo   Scores matchs de la veille + Build app
+echo   Scores + Titu% + Build + Deploy
 echo ======================================================
 echo.
 
 cd /d "%~dp0"
 
-echo [1/3] Fetch scores matchs joues...
+echo [1/4] Fetch scores matchs joues...
 echo ------------------------------------------------------
 py fetch_gw_scores.py
 if errorlevel 1 (
@@ -18,10 +18,30 @@ if errorlevel 1 (
     exit /b 1
 )
 echo.
-echo [1/3] OK - Scores fetches !
+echo [1/4] OK - Scores fetches !
 echo.
 
-echo [2/3] Build React app...
+echo [2/4] Fetch statut blesses / titu%% Sorare (~5 min)...
+echo ------------------------------------------------------
+py fetch_player_status.py
+if errorlevel 1 (
+    echo.
+    echo ERREUR - fetch_player_status.py a echoue !
+    pause
+    exit /b 1
+)
+py merge_data.py
+if errorlevel 1 (
+    echo.
+    echo ERREUR - merge_data.py a echoue !
+    pause
+    exit /b 1
+)
+echo.
+echo [2/4] OK - Statut + Titu%% mis a jour !
+echo.
+
+echo [3/4] Build React app...
 echo ------------------------------------------------------
 cd deglingo-scout-app
 call npm run build
@@ -34,27 +54,27 @@ if errorlevel 1 (
 )
 cd ..
 echo.
-echo [2/3] OK - Build termine !
+echo [3/4] OK - Build termine !
 echo.
 
-echo [3/3] Copie dist vers scout-dist...
+echo [4/4] Deploy Cloudflare Pages...
 echo ------------------------------------------------------
-xcopy /E /Y /Q deglingo-scout-app\dist\* scout-dist\
+cd deglingo-scout-app
+npx wrangler pages deploy dist --project-name=deglingo-sorare --branch=deglingo-sorare --commit-dirty=true
 if errorlevel 1 (
     echo.
-    echo ERREUR - Copie dist echouee !
+    echo ERREUR - Deploy Cloudflare echoue !
+    cd ..
     pause
     exit /b 1
 )
+cd ..
 echo.
-echo [3/3] OK - scout-dist pret !
+echo [4/4] OK - Deploy termine !
 echo.
 
 echo ======================================================
-echo   TOUT EST PRET - Lance le deploy :
-echo.
-echo   npx wrangler pages deploy scout-dist
-echo       --project-name=deglingo-sorare
+echo   TOUT EST PRET - Scores + Titu%% + Deploy OK !
 echo ======================================================
 echo.
 pause

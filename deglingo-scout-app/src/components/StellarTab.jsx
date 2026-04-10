@@ -2137,16 +2137,21 @@ export default function StellarTab({ players, teams, fixtures, logos = {}, match
           </div>{/* fin colonne droite */}
           </div>{/* fin layout flex */}
 
-          {/* ── RECAP EQUIPES SAUVEGARDEES ── */}
+          {/* ── RECAP EQUIPES SAUVEGARDEES — calé à droite (pas dans la colonne calendrier) ── */}
           {savedTeams.length > 0 && (
-            <div style={{ marginTop: 16 }}>
+            <div style={{ marginTop: 16, marginLeft: "auto", width: "calc(100% - 300px)" }}>
               <div style={{ fontSize: 10, fontWeight: 800, color: "rgba(196,181,253,0.5)", letterSpacing: "0.12em", textTransform: "uppercase", marginBottom: 8 }}>
                 {lang === "fr" ? "MES EQUIPES SAUVEGARDEES" : "MY SAVED TEAMS"}
               </div>
-              <div style={{ display: "grid", gridTemplateColumns: `repeat(${Math.min(savedTeams.length, 4)}, 1fr)`, gap: 10 }}>
+              <div style={{ display: "grid", gridTemplateColumns: "repeat(2, 1fr)", gap: 10 }}>
                 {savedTeams.map((st, si) => {
                   const POS_ORDER = ["GK","DEF","MIL","ATT","FLEX"];
-                  const palSt = PALIERS.filter(p => st.score >= p.pts).pop();
+                  // Score dynamique selon Bonus ON/OFF
+                  const stPlayers = POS_ORDER.map(s => st.picks[s]).filter(Boolean);
+                  const stScores = stPlayers.map(p => getAdjDs(p));
+                  const stCapDs = stScores.length === 5 ? Math.max(...stScores) : 0;
+                  const stTotalAdj = Math.round(stScores.reduce((s, v) => s + v, 0) + stCapDs * 0.5);
+                  const palSt = PALIERS.filter(p => stTotalAdj >= p.pts).pop();
                   return (
                     <div key={st.id} style={{ borderRadius: 12, background: "rgba(15,8,40,0.7)", border: "1px solid rgba(74,222,128,0.15)", padding: "10px 12px", backdropFilter: "blur(6px)" }}>
                       <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 8 }}>
@@ -2159,38 +2164,52 @@ export default function StellarTab({ players, teams, fixtures, logos = {}, match
                             background: palSt?.silver ? "linear-gradient(90deg,#C0C0C0,#A8E8D0,#B0C4E8,#D4B0E8,#fff,#D4B0E8,#B0C4E8,#A8E8D0,#C0C0C0)" : "none",
                             backgroundSize: "200% 100%", WebkitBackgroundClip: palSt?.silver ? "text" : "unset", WebkitTextFillColor: palSt?.silver ? "transparent" : "unset",
                             animation: palSt?.silver ? "silverShine 3s linear infinite" : "none",
-                          }}>{st.score}</span>
+                          }}>{stTotalAdj}</span>
                         </div>
                       </div>
-                      <div style={{ display: "flex", justifyContent: "center", gap: 6 }}>
+                      <div style={{ display: "flex", justifyContent: "center", gap: 8 }}>
                         {POS_ORDER.map(slot => {
                           const p = st.picks[slot];
                           if (!p) return null;
                           const pc = PC[p.position];
                           const clubLogo = logos[p.club];
+                          const oppLogo = logos[p.oppName];
                           const ownedCard = sorareCardMap[p.slug || p.name];
+                          const adjDs = getAdjDs(p);
+                          const parisTime = p.kickoff && p.matchDate ? utcToParisTime(p.kickoff, p.matchDate) : "";
                           return (
-                            <div key={slot} style={{ textAlign: "center", width: 56 }}>
-                              <div style={{ width: 52, height: 68, borderRadius: 7, overflow: "hidden", margin: "0 auto", position: "relative",
+                            <div key={slot} style={{ textAlign: "center", flex: 1, minWidth: 0 }}>
+                              <div style={{ width: "100%", maxWidth: 80, aspectRatio: "3/4", borderRadius: 8, overflow: "hidden", margin: "0 auto", position: "relative",
                                 background: ownedCard ? "transparent" : `linear-gradient(155deg, rgba(8,4,28,0.9), ${pc}25)`,
                                 border: ownedCard ? "none" : `1px solid ${pc}30`,
                               }}>
                                 {ownedCard ? (
                                   <img src={ownedCard.pictureUrl} alt="" style={{ width: "100%", height: "100%", objectFit: "contain" }} />
                                 ) : (
-                                  <div style={{ display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", height: "100%", gap: 2 }}>
-                                    {clubLogo && <img src={`/data/logos/${clubLogo}`} alt="" style={{ width: 18, height: 18, objectFit: "contain" }} />}
-                                    <span style={{ fontSize: 7, fontWeight: 800, color: pc }}>{slot}</span>
+                                  <div style={{ display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", height: "100%", gap: 3 }}>
+                                    {clubLogo && <img src={`/data/logos/${clubLogo}`} alt="" style={{ width: 22, height: 22, objectFit: "contain" }} />}
+                                    <span style={{ fontSize: 8, fontWeight: 800, color: pc }}>{slot}</span>
                                   </div>
                                 )}
                                 {p.sorare_starter_pct != null && (
-                                  <span style={{ position: "absolute", top: 2, right: 2, fontSize: 6, fontWeight: 700, padding: "1px 3px", borderRadius: 3, color: "#fff",
+                                  <span style={{ position: "absolute", top: 2, right: 2, fontSize: 7, fontWeight: 700, padding: "1px 4px", borderRadius: 3, color: "#fff",
                                     background: p.sorare_starter_pct >= 70 ? "rgba(22,101,52,0.9)" : p.sorare_starter_pct >= 50 ? "rgba(133,77,14,0.9)" : "rgba(153,27,27,0.9)",
                                   }}>{p.sorare_starter_pct}%</span>
                                 )}
+                                {ownedCard && ownedCard.totalBonus > 0 && (
+                                  <span style={{ position: "absolute", bottom: 2, left: 2, fontSize: 7, fontWeight: 900, padding: "1px 4px", borderRadius: 3, color: "#fff", background: "rgba(22,101,52,0.9)" }}>+{ownedCard.totalBonus}%</span>
+                                )}
                               </div>
-                              <div style={{ fontSize: 8, fontWeight: 700, color: "#fff", marginTop: 2, whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>{p.name.split(" ").pop()}</div>
-                              <div style={{ fontSize: 10, fontWeight: 800, color: dsColor(getAdjDs(p)), fontFamily: "'DM Mono',monospace" }}>{getAdjDs(p)}</div>
+                              <div style={{ fontSize: 9, fontWeight: 700, color: "#fff", marginTop: 3, whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>{p.name.split(" ").pop()}</div>
+                              <div style={{ fontSize: 12, fontWeight: 800, color: dsColor(adjDs), fontFamily: "'DM Mono',monospace" }}>{adjDs}</div>
+                              {p.oppName && (
+                                <div style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: 2, marginTop: 2 }}>
+                                  <span style={{ fontSize: 8 }}>{p.isHome ? "🏠" : "✈️"}</span>
+                                  {oppLogo && <img src={`/data/logos/${oppLogo}`} alt="" style={{ width: 10, height: 10, objectFit: "contain" }} />}
+                                  <span style={{ fontSize: 7, color: "rgba(255,255,255,0.45)", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>{sn(p.oppName)}</span>
+                                </div>
+                              )}
+                              {parisTime && <div style={{ fontSize: 8, fontWeight: 800, color: "#A78BFA", fontFamily: "'DM Mono',monospace", marginTop: 1 }}>{parisTime}</div>}
                             </div>
                           );
                         })}

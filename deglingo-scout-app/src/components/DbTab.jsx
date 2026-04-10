@@ -145,7 +145,7 @@ export default function DbTab({ players, teams, fixtures, logos = {}, lang = "fr
     if (maxAA40 < 100) list = list.filter(p => (p.aa40 ?? 0) <= maxAA40);
     if (maxL40 < 100) list = list.filter(p => (p.l40 ?? 0) <= maxL40);
     if (maxReg10 < 100) list = list.filter(p => (p.reg10 ?? 0) <= maxReg10);
-    if (maxTitu10 < 100) list = list.filter(p => (p.titu_pct ?? 0) <= maxTitu10);
+    if (maxTitu10 < 100) list = list.filter(p => (p.titu_pct ?? 0) >= maxTitu10);
     if (maxCS < 100) list = list.filter(p => (p.csPercent ?? 0) <= maxCS);
     if (search) {
       const q = search.toLowerCase();
@@ -343,7 +343,7 @@ export default function DbTab({ players, teams, fixtures, logos = {}, lang = "fr
           style={{ ...sel({ flex: "1 1 140px", minWidth: 120 }) }}
         />
         <div style={{ display: "flex", alignItems: "center", gap: 3, flexShrink: 0 }}>
-          {[["ALL", null], ["L1", "fr"], ["PL", "gb-eng"], ["Liga", "es"], ["Bundes", "de"]].map(([k, fc]) => {
+          {[["ALL", null], ["L1", "fr"], ["PL", "gb-eng"], ["Liga", "es"], ["Bundes", "de"], ["MLS", "us"]].map(([k, fc]) => {
             const isAll = k === "ALL";
             const active = isAll ? leagues.size === 0 : leagues.has(k);
             const toggle = () => {
@@ -543,6 +543,8 @@ export default function DbTab({ players, teams, fixtures, logos = {}, lang = "fr
               {statCols.length === 0 && <th style={thStyle("aa5")} onClick={() => toggleSort("aa5")}>AA5{arrow("aa5")}</th>}
               <th style={{ ...thStyle("l10"), borderLeft: "1px solid rgba(255,255,255,0.06)" }} onClick={() => toggleSort("l10")}>L10{arrow("l10")}</th>
               {statCols.length === 0 && <th style={thStyle("aa10")} onClick={() => toggleSort("aa10")}>AA10{arrow("aa10")}</th>}
+              <th style={thStyle("avg_dom")} onClick={() => toggleSort("avg_dom")}>DOM{arrow("avg_dom")}</th>
+              <th style={thStyle("avg_ext")} onClick={() => toggleSort("avg_ext")}>EXT{arrow("avg_ext")}</th>
               <th style={thStyle("reg10")} onClick={() => toggleSort("reg10")}>Reg10{arrow("reg10")}</th>
               <th style={thStyle("titu_pct")} onClick={() => toggleSort("titu_pct")}>{__("Titu10","Start10")}{arrow("titu_pct")}</th>
               <th style={{ ...thStyle("l40"), borderLeft: "1px solid rgba(255,255,255,0.06)" }} onClick={() => toggleSort("l40")}>L40{arrow("l40")}</th>
@@ -684,6 +686,8 @@ export default function DbTab({ players, teams, fixtures, logos = {}, lang = "fr
                   {statCols.length === 0 && <td style={{ textAlign: "center", fontFamily: "DM Mono", fontSize: 10, color: "rgba(255,255,255,0.3)" }}>{R(p.aa5)}</td>}
                   <td style={{ textAlign: "center", fontFamily: "DM Mono", fontWeight: 700, fontSize: 14, color: dsColor(p.l10), borderLeft: "1px solid rgba(255,255,255,0.04)" }}>{R(p.l10)}</td>
                   {statCols.length === 0 && <td style={{ textAlign: "center", fontFamily: "DM Mono", fontSize: 10, color: "rgba(255,255,255,0.3)" }}>{R(p.aa10)}</td>}
+                  <td style={{ textAlign: "center", fontFamily: "DM Mono", fontSize: 11, fontWeight: 700, color: p.avg_dom != null ? dsColor(p.avg_dom) : "rgba(255,255,255,0.2)" }}>{p.avg_dom != null ? R(p.avg_dom) : "—"}</td>
+                  <td style={{ textAlign: "center", fontFamily: "DM Mono", fontSize: 11, fontWeight: 700, color: p.avg_ext != null ? dsColor(p.avg_ext) : "rgba(255,255,255,0.2)" }}>{p.avg_ext != null ? R(p.avg_ext) : "—"}</td>
                   <td style={{ textAlign: "center", fontFamily: "DM Mono", fontSize: 11, color: (p.reg10 ?? p.regularite) >= 80 ? "#4ADE80" : (p.reg10 ?? p.regularite) >= 50 ? "#FBBF24" : "#EF4444" }}>{R(p.reg10 ?? p.regularite)}%</td>
                   <td style={{ textAlign: "center", fontFamily: "DM Mono", fontSize: 11, color: p.titu_pct >= 80 ? "#4ADE80" : p.titu_pct >= 50 ? "#FBBF24" : p.titu_pct > 0 ? "#EF4444" : "rgba(255,255,255,0.2)" }}>{p.titu_pct > 0 ? `${R(p.titu_pct)}%` : "—"}</td>
                   <td style={{ textAlign: "center", fontFamily: "DM Mono", fontWeight: 700, fontSize: 13, color: dsColor(p.l40), borderLeft: "1px solid rgba(255,255,255,0.04)" }}>{R(p.l40)}</td>

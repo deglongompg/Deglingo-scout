@@ -13,7 +13,7 @@ const SHOWCASE_CARDS = [
     name: "Lamine Yamal", pos: "ATT",
     // Stellar Nights common (468e803d — 2/50, fond galaxy violet confirmé visuellement)
     stellar: "https://assets.sorare.com/cardsamplepicture/468e803d-7580-4a1e-a7a6-dae371e8cf1d/picture/tinified-38989f6f9e634eec76cc25acaba03084.png",
-    pro:     "https://assets.sorare.com/card/db274e40-b9f8-41d7-b804-9cd70113546b/picture/tinified-5b9a1cc2905c9667880ddffdf5ee176e.png",
+    pro:     "https://assets.sorare.com/card/16db3f08-f9e4-40b5-ba74-da2620d8ef8f/picture/tinified-dcc4912c32f04c442a3035d03953b3b3.png",
   },
   {
     name: "Kylian Mbappé", pos: "ATT",
@@ -322,7 +322,7 @@ const T = {
   },
 };
 
-export default function LandingPage({ players, onEnter }) {
+export default function LandingPage({ players, onEnter, onNavigate }) {
   const [cardMode, setCardMode] = useState("stellar"); // "stellar" | "pro"
   const [lang, setLang] = useState("fr");
 
@@ -392,34 +392,6 @@ export default function LandingPage({ players, onEnter }) {
         <div style={{ textAlign: "center", padding: "4px 24px 2px", maxWidth: 640 }}>
 
           {/* Badges PRO + STELLAR — hover switche les cartes */}
-          <div style={{ display: "flex", gap: 10, justifyContent: "center", marginBottom: 10, flexWrap: "wrap" }}>
-            <div
-              onMouseEnter={() => setCardMode("pro")}
-              onMouseLeave={() => setCardMode("stellar")}
-              style={{
-                display: "inline-flex", alignItems: "center", gap: 7, cursor: "default",
-                background: cardMode === "pro" ? "rgba(99,102,241,0.22)" : "rgba(99,102,241,0.12)",
-                border: `1px solid ${cardMode === "pro" ? "rgba(99,102,241,0.6)" : "rgba(99,102,241,0.3)"}`,
-                borderRadius: 20, padding: "6px 14px", transition: "all 0.3s",
-                boxShadow: cardMode === "pro" ? "0 0 16px rgba(99,102,241,0.3)" : "none",
-              }}>
-              <span style={{ fontSize: 13 }}>⚽</span>
-              <span style={{ fontSize: 11, fontWeight: 700, color: "#A5B4FC", letterSpacing: 1, textTransform: "uppercase" }}>Sorare Pro</span>
-            </div>
-            <div
-              onMouseEnter={() => setCardMode("stellar")}
-              onMouseLeave={() => setCardMode("stellar")}
-              style={{
-                display: "inline-flex", alignItems: "center", gap: 7, cursor: "default",
-                background: cardMode === "stellar" ? "rgba(139,92,246,0.22)" : "rgba(139,92,246,0.12)",
-                border: `1px solid ${cardMode === "stellar" ? "rgba(139,92,246,0.6)" : "rgba(139,92,246,0.25)"}`,
-                borderRadius: 20, padding: "6px 14px", transition: "all 0.3s",
-                boxShadow: cardMode === "stellar" ? "0 0 16px rgba(139,92,246,0.3)" : "none",
-              }}>
-              <img src="/Stellar.png" alt="Stellar" style={{ width: 16, height: 16, objectFit: "contain", filter: "drop-shadow(0 0 6px rgba(196,181,253,0.8))" }} />
-              <span style={{ fontSize: 11, fontWeight: 700, color: "#C4B5FD", letterSpacing: 1, textTransform: "uppercase" }}>Sorare Stellar</span>
-            </div>
-          </div>
 
           <h1 style={{
             fontSize: "clamp(24px, 5vw, 42px)", fontWeight: 900, lineHeight: 1.05,
@@ -439,43 +411,27 @@ export default function LandingPage({ players, onEnter }) {
             {T[lang].sub2}
           </p>
 
-          {/* CTAs */}
-          <div style={{ display: "flex", gap: 12, justifyContent: "center", flexWrap: "wrap" }}>
-            <button
-              onClick={onEnter}
-              style={{
-                padding: "13px 28px", borderRadius: 24, fontSize: 14, fontWeight: 800,
-                fontFamily: "Outfit", cursor: "pointer", border: "none",
-                background: "linear-gradient(135deg,#7C3AED,#8B5CF6,#A78BFA)",
-                color: "#fff", letterSpacing: "0.02em",
-                boxShadow: "0 8px 32px rgba(124,58,237,0.5)",
-                transition: "transform 0.2s, box-shadow 0.2s",
-              }}
-              onMouseEnter={e => { e.currentTarget.style.transform = "translateY(-2px)"; e.currentTarget.style.boxShadow = "0 12px 40px rgba(124,58,237,0.7)"; }}
-              onMouseLeave={e => { e.currentTarget.style.transform = ""; e.currentTarget.style.boxShadow = "0 8px 32px rgba(124,58,237,0.5)"; }}
-            >
-              {T[lang].cta1}
-            </button>
-
-            <button
-              disabled
-              title="Connexion Sorare — Bientôt disponible"
-              style={{
-                padding: "13px 28px", borderRadius: 24, fontSize: 14, fontWeight: 800,
-                fontFamily: "Outfit", cursor: "not-allowed", opacity: 0.4,
-                background: "rgba(255,255,255,0.06)", border: "1px solid rgba(255,255,255,0.12)",
-                color: "rgba(255,255,255,0.7)", letterSpacing: "0.02em",
-                display: "flex", alignItems: "center", gap: 8,
-              }}
-            >
-              <img src="/Stellar.png" alt="" style={{ width: 16, height: 16, objectFit: "contain" }} />
-              {T[lang].cta2}
-            </button>
-          </div>
         </div>
 
         {/* Spacer flexible entre hero et cartes */}
         <div style={{ flex: "1 1 0", minHeight: 4, maxHeight: 20 }} />
+
+        {/* CTAs au-dessus des cartes */}
+        <div style={{ display: "flex", gap: 12, justifyContent: "center", marginBottom: 12 }}>
+          <button onClick={() => onNavigate ? onNavigate("db") : onEnter()}
+            style={{ padding: "10px 24px", borderRadius: 20, fontSize: 13, fontWeight: 800, fontFamily: "Outfit", cursor: "pointer", border: "none", background: cardMode === "pro" ? "linear-gradient(135deg,#6366F1,#818CF8)" : "linear-gradient(135deg,#7C3AED,#8B5CF6,#A78BFA)", color: "#fff", boxShadow: cardMode === "pro" ? "0 6px 28px rgba(99,102,241,0.6)" : "0 6px 24px rgba(124,58,237,0.5)", transition: "all 0.3s", display: "flex", alignItems: "center", gap: 6, transform: cardMode === "pro" ? "translateY(-2px) scale(1.03)" : "" }}
+            onMouseEnter={() => setCardMode("pro")}
+            onMouseLeave={() => setCardMode("stellar")}>
+            Sorare Pro →
+          </button>
+          <button onClick={() => onNavigate ? onNavigate("stellar") : onEnter()}
+            style={{ padding: "10px 24px", borderRadius: 20, fontSize: 13, fontWeight: 800, fontFamily: "Outfit", cursor: "pointer", background: cardMode === "stellar" ? "rgba(139,92,246,0.2)" : "rgba(255,255,255,0.06)", border: `1px solid ${cardMode === "stellar" ? "rgba(139,92,246,0.5)" : "rgba(255,255,255,0.18)"}`, color: cardMode === "stellar" ? "#C4B5FD" : "rgba(255,255,255,0.85)", boxShadow: cardMode === "stellar" ? "0 6px 24px rgba(139,92,246,0.4)" : "none", transition: "all 0.3s", display: "flex", alignItems: "center", gap: 6, transform: cardMode === "stellar" ? "translateY(-2px) scale(1.03)" : "" }}
+            onMouseEnter={() => setCardMode("stellar")}
+            onMouseLeave={() => setCardMode("stellar")}>
+            <img src="/Stellar.png" alt="" style={{ width: 14, height: 14, objectFit: "contain" }} />
+            Sorare Stellar →
+          </button>
+        </div>
 
         {/* Cards showcase */}
         <div style={{

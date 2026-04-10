@@ -55,6 +55,13 @@ def fetch_status(slug):
     odds      = (p.get("nextClassicFixturePlayingStatusOdds") or {})
     bp        = odds.get("starterOddsBasisPoints")
     starter_pct = min(round(bp / 100), 90) if bp is not None else None
+    # Titu% >= 10% → joueur de retour, ignorer le flag blessé/suspendu
+    if starter_pct is not None and starter_pct >= 10:
+        injured = False
+        suspended = False
+    # Blessé/suspendu sans titu% élevé → forcer à 0
+    elif (injured or suspended) and starter_pct is not None:
+        starter_pct = 0
     return {
         "injured":          injured,
         "suspended":        suspended,

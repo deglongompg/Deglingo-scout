@@ -9,20 +9,32 @@ import { t } from "./utils/i18n";
 const TABS = [
   { id: "db", label: "Database", icon: "📊" },
   { id: "reco", label: "Best Pick", icon: "⚽" },
+  { id: "pro", label: "Sorare Pro", icon: "⚙️", disabled: true },
   { id: "stellar", label: "Sorare Stellar", icon: "✨" },
   { id: "fight", label: "Fight", icon: "🥊" },
 ];
 
 export default function App() {
   const [showLanding, setShowLanding] = useState(() => {
-    // Skip landing if direct tab URL param
+    // Skip landing if direct tab URL param or hash
     const p = new URLSearchParams(window.location.search).get("tab");
-    return !["db","fight","reco","stellar"].includes(p);
+    const h = window.location.hash.replace("#", "");
+    return !["db","fight","reco","stellar"].includes(p) && !["db","fight","reco","stellar"].includes(h);
   });
   const [tab, setTab] = useState(() => {
     const p = new URLSearchParams(window.location.search).get("tab");
-    return ["db","fight","reco","stellar"].includes(p) ? p : "db";
+    const h = window.location.hash.replace("#", "");
+    const valid = ["db","fight","reco","stellar"];
+    return valid.includes(p) ? p : valid.includes(h) ? h : "db";
   });
+  // Sync hash avec l'onglet actif (persist au refresh)
+  // Ne pas écraser si le hash contient un token OAuth Sorare
+  useEffect(() => {
+    const h = window.location.hash;
+    if (h.includes("sorare_token=") || h.includes("sorare_error=") || h.includes("sorare_authed=")) return;
+    if (!showLanding) window.location.hash = tab;
+  }, [tab, showLanding]);
+
   const [lang, setLang] = useState("fr");
   const [players, setPlayers] = useState(null);
   const [teams, setTeams] = useState(null);
@@ -66,7 +78,7 @@ export default function App() {
   );
 
   if (showLanding) return (
-    <LandingPage players={players} onEnter={() => setShowLanding(false)} />
+    <LandingPage players={players} onEnter={() => setShowLanding(false)} onNavigate={(t) => { setTab(t); setShowLanding(false); window.location.hash = t === "db" ? "db" : "stellar"; }} />
   );
 
   const silverShinyStyle = {
@@ -164,7 +176,7 @@ export default function App() {
       }}>
         <div className="ds-header-inner" style={{
           display: "grid", gridTemplateColumns: "1fr auto 1fr", alignItems: "center",
-          maxWidth: 1400, margin: "0 auto", width: "100%",
+          maxWidth: 1800, margin: "0 auto", width: "100%",
         }}>
           {/* Logo gauche */}
           <div style={{ display: "flex", alignItems: "center", gap: 4 }}>
@@ -182,12 +194,15 @@ export default function App() {
             {TABS.map(tab2 => (
               <button
                 key={tab2.id}
-                onClick={() => setTab(tab2.id)}
+                onClick={() => !tab2.disabled && setTab(tab2.id)}
+                disabled={tab2.disabled}
                 style={{
                   padding: "6px 14px", borderRadius: 10, fontSize: 12, fontWeight: 600,
                   border: "none", fontFamily: "Outfit", position: "relative",
-                  cursor: "pointer", display: "inline-flex", alignItems: "center", gap: 4,
+                  cursor: tab2.disabled ? "not-allowed" : "pointer",
+                  display: "inline-flex", alignItems: "center", gap: 4,
                   whiteSpace: "nowrap", flexShrink: 0,
+                  opacity: tab2.disabled ? 0.35 : 1,
                   background: tab === tab2.id ? "rgba(99,102,241,0.12)" : "transparent",
                   outline: tab === tab2.id ? "1px solid rgba(99,102,241,0.3)" : "none",
                   transition: "all 0.2s",
@@ -209,7 +224,7 @@ export default function App() {
                 {tab2.id === "stellar"
                   ? <img className="ds-stellar-icon" src="/Stellar.png" alt="" style={{ width: 16, height: 16, objectFit: "contain", mixBlendMode: "screen", animation: "holoShift 3s linear infinite", flexShrink: 0 }} />
                   : <>{tab2.icon}{" "}</>
-                }{tab2.label}
+                }{tab2.label}{tab2.disabled && <span style={{ fontSize: 7, color: "rgba(255,255,255,0.3)", marginLeft: 2 }}>soon</span>}
               </button>
             ))}
           </div>
@@ -255,7 +270,7 @@ export default function App() {
       </header>
 
       {/* Content */}
-      <main style={{ maxWidth: 1400, margin: "0 auto", paddingTop: 8, overflowX: "hidden" }}>
+      <main style={{ maxWidth: 1800, margin: "0 auto", paddingTop: 8, overflowX: "hidden" }}>
         {tab === "db" && <DbTab players={players} teams={teams} fixtures={fixtures} logos={logos} lang={lang} />}
         {tab === "fight" && <FightTab players={players} teams={teams} fixtures={fixtures} logos={logos} lang={lang} />}
         {tab === "reco" && <div style={{ display: "flex", justifyContent: "center" }}><RecoTab players={players} teams={teams} fixtures={fixtures} logos={logos} lang={lang} /></div>}

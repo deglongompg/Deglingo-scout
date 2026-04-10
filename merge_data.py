@@ -26,6 +26,7 @@ LEAGUES = {
     "deglingo_premier_league_final.json": "PL",
     "deglingo_la_liga_final.json": "Liga",
     "deglingo_bundesliga_final.json": "Bundes",
+    "deglingo_mls_final.json": "MLS",
 }
 
 POS_MAP = {

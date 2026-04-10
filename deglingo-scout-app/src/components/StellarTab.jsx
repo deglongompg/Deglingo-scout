@@ -43,7 +43,7 @@ const PALIERS = [
   { pts: 360, reward: "10 gems", color: "#A78BFA" },
   { pts: 400, reward: "30 gems", color: "#C084FC" },
   { pts: 440, reward: "100 $", color: "#F59E0B" },
-  { pts: 480, reward: "1 000 $", color: "#EF4444" },
+  { pts: 480, reward: "1 000 $", color: "silver", silver: true },
 ];
 
 /* ─── Éditions Stellar Nights — bonus score officiels (blog Sorare 2026) ─── */
@@ -57,6 +57,24 @@ const EDITIONS = [
   { id: "legend_s", label: "Signed",  bonus: 40, color: "#F97316" },
 ];
 const getEdition = (id) => EDITIONS.find(e => e.id === id) || EDITIONS[0];
+
+/* ─── Mapping cardEditionName Sorare → bonus édition % ─── */
+const EDITION_BONUS = {
+  stellar_standard_base: 0,
+  stellar_shiny_base: 5,
+  stellar_holo_base: 10,
+  stellar_shiny_jersey_number: 20,
+  stellar_shiny_meteor_striker: 25,
+  stellar_full_art_base: 30,
+};
+const EDITION_LABELS = {
+  stellar_standard_base: "Base",
+  stellar_shiny_base: "Shiny",
+  stellar_holo_base: "Holo",
+  stellar_shiny_jersey_number: "Maillot",
+  stellar_shiny_meteor_striker: "Meteor",
+  stellar_full_art_base: "Full Art",
+};
 
 /* ─── Club matching helpers (utilisés dans useMemo ET render) ─── */
 const stripAcc = (s) => s.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
@@ -137,6 +155,8 @@ const starsKeyframes = `
 @keyframes starPulseBig { 0%,100%{opacity:0.4;transform:scale(0.9);box-shadow:0 0 3px 1px rgba(255,255,255,0.5)} 50%{opacity:1;transform:scale(1.5);box-shadow:0 0 8px 4px rgba(255,255,255,0.9), 0 0 18px 8px rgba(196,181,253,0.5)} }
 @keyframes nebulaPulse { 0%,100%{opacity:0.1} 50%{opacity:0.2} }
 @keyframes silverShine { 0%{background-position:0% 50%} 100%{background-position:200% 50%} }
+@keyframes spin { 0%{transform:rotate(0deg)} 100%{transform:rotate(360deg)} }
+@keyframes loadBar { 0%{transform:translateX(-100%)} 50%{transform:translateX(60%)} 100%{transform:translateX(200%)} }
 @media(max-width:768px){
   .st-root { padding: 0 8px 40px !important; }
   .st-info-row { flex-direction: row !important; flex-wrap: nowrap !important; gap: 6px !important; padding: 8px 0 8px !important; align-items: stretch !important; }
@@ -470,27 +490,33 @@ function StellarCard({ player, logos, size = "md", isValidated = false, gwStart 
         {/* Club logo */}
         {logos[player.club] && <img src={`/data/logos/${logos[player.club]}`} alt="" style={{ width: sm ? 18 : 22, height: sm ? 18 : 22, objectFit: "contain", marginTop: 2, zIndex: 1 }} />}
 
+        {/* Titu% pancarte — badge coloré en haut droite sous capitaine */}
+        {player.sorare_starter_pct != null && (
+          <div style={{
+            position: "absolute", top: player.isCaptain ? 22 : 2, right: 4, zIndex: 2,
+            fontSize: 7, fontWeight: 800, fontFamily: "'Outfit',sans-serif",
+            padding: "1px 4px", borderRadius: 3,
+            background: player.sorare_starter_pct >= 70 ? "rgba(74,222,128,0.85)" : player.sorare_starter_pct >= 50 ? "rgba(251,191,36,0.85)" : "rgba(239,68,68,0.85)",
+            color: "#fff",
+          }}>{player.sorare_starter_pct}%</div>
+        )}
+
       </div>
 
-      {/* Opponent + heure */}
-      {(() => {
-        const hg = player.last_match_home_goals;
-        const ag = player.last_match_away_goals;
-        const matchResult = hasPlayed && hg != null && ag != null
-          ? (player.isHome ? `${hg}-${ag}` : `${ag}-${hg}`)
-          : null;
-        const matchResultColor = matchResult
-          ? (player.isHome ? (hg > ag ? "#4ADE80" : hg === ag ? "#FBBF24" : "#EF4444")
-                           : (ag > hg ? "#4ADE80" : ag === hg ? "#FBBF24" : "#EF4444"))
-          : null;
-        return (
+      {/* Opponent + heure — pas de IIFE, variables calculées en amont */}
       <div style={{ marginTop: 4, display: "flex", flexDirection: "column", alignItems: "center", gap: 2 }}>
         <div style={{ display: "inline-flex", alignItems: "center", gap: 2, fontSize: 7, color: "rgba(255,255,255,0.45)", background: "rgba(0,0,0,0.4)", padding: "2px 5px", borderRadius: 3, maxWidth: "100%", overflow: "hidden" }}>
           <span style={{ fontSize: 9, flexShrink: 0 }}>{player.isHome ? "🏠" : "✈️"}</span>
           {logos[player.oppName] && <img src={`/data/logos/${logos[player.oppName]}`} alt="" style={{ width: 10, height: 10, objectFit: "contain", flexShrink: 0 }} />}
           <span className="bp-opp-name" style={{ fontWeight: 600, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap", minWidth: 0 }}>{sn(player.oppName)}</span>
-          {matchResult ? (
-            <span style={{ fontSize: 7, fontWeight: 800, fontFamily: "'DM Mono',monospace", color: matchResultColor, marginLeft: 2, flexShrink: 0, whiteSpace: "nowrap" }}>{matchResult}</span>
+          {hasPlayed && player.last_match_home_goals != null ? (
+            <span style={{ fontSize: 7, fontWeight: 800, fontFamily: "'DM Mono',monospace", marginLeft: 2, flexShrink: 0, whiteSpace: "nowrap",
+              color: player.isHome
+                ? (player.last_match_home_goals > player.last_match_away_goals ? "#4ADE80" : player.last_match_home_goals === player.last_match_away_goals ? "#FBBF24" : "#EF4444")
+                : (player.last_match_away_goals > player.last_match_home_goals ? "#4ADE80" : player.last_match_away_goals === player.last_match_home_goals ? "#FBBF24" : "#EF4444")
+            }}>
+              {player.isHome ? `${player.last_match_home_goals}-${player.last_match_away_goals}` : `${player.last_match_away_goals}-${player.last_match_home_goals}`}
+            </span>
           ) : player.sorare_starter_pct != null && (
             <span style={{ fontSize: 7, fontWeight: 800, fontFamily: "'DM Mono',monospace", color: player.sorare_starter_pct >= 80 ? "#4ADE80" : "#FBBF24", marginLeft: 2, flexShrink: 0, whiteSpace: "nowrap" }}>{player.sorare_starter_pct}%</span>
           )}
@@ -501,8 +527,6 @@ function StellarCard({ player, logos, size = "md", isValidated = false, gwStart 
           </div>
         )}
       </div>
-        );
-      })()}
 
       {/* ── Sélecteur édition Stellar ── */}
       {onEditionChange && (
@@ -600,43 +624,51 @@ export default function StellarTab({ players, teams, fixtures, logos = {}, match
 
   // ── OAuth Sorare — cartes réelles de l'utilisateur ───────────────────────
   const [sorareConnected, setSorareConnected] = useState(false);
-  const [sorareCards, setSorareCards] = useState([]); // { playerSlug, rarity, pictureUrl, cardSlug }
+  const [sorareCards, setSorareCards] = useState([]); // { playerSlug, rarity, pictureUrl, cardSlug, cardEditionName, power }
   const [sorareUser, setSorareUser] = useState(null);
   const [sorareLoading, setSorareLoading] = useState(false);
+  const [sorareLoadProgress, setSorareLoadProgress] = useState(0); // 0-100 loading bar
   const [myCardsMode, setMyCardsMode] = useState(false); // vue "Mes cartes" uniquement
+  const [bonusEnabled, setBonusEnabled] = useState(false); // Toggle bonus ON/OFF (OFF par défaut)
 
-  // Map playerSlug → meilleure carte (rarity order: limited > rare > super_rare > unique)
+  // Map playerSlug → meilleure carte Stellar (rarity order: limited > rare > super_rare > unique)
   const RARITY_ORDER = { unique: 4, super_rare: 3, rare: 2, limited: 1, common: 0 };
   const sorareCardMap = useMemo(() => {
     const map = {};
     for (const c of sorareCards) {
+      if (!c.isStellar) continue; // Exclure Winter, classic, halloween, ice_breaker, blueprint, rookie
       const slug = c.playerSlug;
-      if (!map[slug] || (RARITY_ORDER[c.rarity] || 0) > (RARITY_ORDER[map[slug].rarity] || 0)) {
+      if (!map[slug] || (c.totalBonus || 0) > (map[slug].totalBonus || 0)) {
         map[slug] = c;
       }
     }
     return map;
   }, [sorareCards]);
 
+  // Nombre de cartes Stellar possédées
+  const stellarCardCount = useMemo(() => sorareCards.filter(c => c.isStellar).length, [sorareCards]);
+
   // Vérifie l'auth au montage + gère le retour OAuth (hash fragment)
   useEffect(() => {
     const hash = window.location.hash;
 
-    // Retour depuis OAuth Sorare
-    if (hash.includes("sorare_authed=1")) {
-      // Vérification anti-CSRF : le state doit correspondre
+    // Retour depuis OAuth Sorare — token dans le hash
+    if (hash.includes("sorare_token=")) {
       const hashParams = new URLSearchParams(hash.replace(/^#/, ""));
+      const token = hashParams.get("sorare_token");
       const returnedState = hashParams.get("state") || "";
       const savedState = sessionStorage.getItem("sorare_oauth_state") || "";
       sessionStorage.removeItem("sorare_oauth_state");
-      // Nettoyer l'URL immédiatement (sécurité)
+      // Nettoyer l'URL immédiatement (sécurité — token ne doit pas rester dans l'URL)
       window.history.replaceState(null, "", window.location.pathname + window.location.search);
       if (returnedState && savedState && returnedState !== savedState) {
         console.warn("Sorare OAuth: state mismatch — possible CSRF, ignoring", { returnedState, savedState });
         return;
       }
-      // Charger les cartes
-      fetchSorareCards();
+      if (token) {
+        localStorage.setItem("sorare_access_token", token);
+        fetchSorareCards(token);
+      }
       return;
     }
 
@@ -645,37 +677,63 @@ export default function StellarTab({ players, teams, fixtures, logos = {}, match
       return;
     }
 
-    // Vérifier silencieusement si déjà connecté (cookie valide)
-    fetchSorareCards(true);
+    // Vérifier silencieusement si déjà connecté (token dans localStorage)
+    const savedToken = localStorage.getItem("sorare_access_token");
+    if (savedToken) fetchSorareCards(savedToken, true);
   }, []);
 
-  const fetchSorareCards = async (silent = false) => {
-    if (!silent) setSorareLoading(true);
+  const fetchSorareCards = async (token, silent = false) => {
+    if (!token) return;
+    if (!silent) { setSorareLoading(true); setSorareLoadProgress(5); }
     try {
-      const res = await fetch("/api/sorare/cards", { credentials: "same-origin" });
-      if (res.status === 401) { setSorareConnected(false); setSorareCards([]); return; }
+      const res = await fetch("/api/sorare/cards", {
+        headers: { "Authorization": `Bearer ${token}` },
+      });
+      if (!silent) setSorareLoadProgress(40);
+      if (res.status === 401) {
+        localStorage.removeItem("sorare_access_token");
+        setSorareConnected(false); setSorareCards([]);
+        return;
+      }
       if (!res.ok) { setSorareConnected(false); return; }
       const data = await res.json();
+      if (!silent) setSorareLoadProgress(70);
       const user = data?.data?.currentUser;
       if (!user) { setSorareConnected(false); return; }
       setSorareUser({ slug: user.slug, nickname: user.nickname });
-      // cards = AnyCardInterface, rarityTyped au lieu de rarity
-      // ... on FootballCard donne player (filtre auto les cartes non-foot)
-      const cards = (user.cards?.nodes || []).map(c => ({
-        cardSlug:   c.slug,
-        playerSlug: c.player?.slug || null,
-        playerName: c.player?.displayName || null,
-        rarity:     (c.rarityTyped || "").toLowerCase().replace(/ /g, "_"),
-        pictureUrl: c.pictureUrl || null,
-      })).filter(c => c.playerSlug);
+      // cards = AnyCardInterface, rarityTyped + cardEditionName + power
+      const cards = (user.cards?.nodes || []).map(c => {
+        const edName = c.cardEditionName || "";
+        const isStellar = edName.startsWith("stellar_");
+        const editionBonus = EDITION_BONUS[edName] ?? 0;
+        const collectionBonus = c.power != null ? Math.round((c.power - 1) * 100) : 0;
+        return {
+          cardSlug:        c.slug,
+          playerSlug:      c.player?.slug || null,
+          playerName:      c.player?.displayName || null,
+          position:        c.player?.position || null,
+          rarity:          (c.rarityTyped || "").toLowerCase().replace(/ /g, "_"),
+          pictureUrl:      c.pictureUrl || null,
+          cardEditionName: edName,
+          isStellar,
+          editionBonus,
+          collectionBonus,
+          totalBonus:      editionBonus + collectionBonus,
+          power:           c.power,
+        };
+      }).filter(c => c.playerSlug);
+      if (!silent) setSorareLoadProgress(90);
       setSorareCards(cards);
       setSorareConnected(true);
-    } catch { setSorareConnected(false); }
-    finally { if (!silent) setSorareLoading(false); }
+      setMyCardsMode(true); // Auto switch to "Mes cartes" après connexion
+    } catch {
+      setSorareConnected(false);
+    } finally {
+      if (!silent) { setSorareLoadProgress(100); setTimeout(() => setSorareLoading(false), 400); }
+    }
   };
 
   const connectSorare = () => {
-    // Générer un state aléatoire anti-CSRF
     const state = crypto.randomUUID ? crypto.randomUUID() : Math.random().toString(36).slice(2);
     sessionStorage.setItem("sorare_oauth_state", state);
     const params = new URLSearchParams({
@@ -688,7 +746,11 @@ export default function StellarTab({ players, teams, fixtures, logos = {}, match
   };
 
   const disconnectSorare = () => {
-    window.location.href = "/auth/sorare/logout";
+    localStorage.removeItem("sorare_access_token");
+    setSorareConnected(false);
+    setSorareCards([]);
+    setSorareUser(null);
+    setMyCardsMode(false);
   };
 
   // ── Mon Équipe Stellaire — 5 slots positionnels ───────────────────────────
@@ -699,24 +761,40 @@ export default function StellarTab({ players, teams, fixtures, logos = {}, match
   const addToTeam = (player) => {
     setMyPicks(prev => {
       const pos = player.position;
+      let next;
       // Si un slot est sélectionné et compatible → on y met le joueur
       if (selectedSlot) {
-        if (selectedSlot === "FLEX" && pos !== "GK") return { ...prev, FLEX: player };
-        if (selectedSlot === pos) return { ...prev, [pos]: player };
+        if (selectedSlot === "FLEX" && pos !== "GK") next = { ...prev, FLEX: player };
+        else if (selectedSlot === pos) next = { ...prev, [pos]: player };
+        else next = prev;
+      } else {
+        // 1. slot naturel libre ?
+        if (prev[pos] === null) next = { ...prev, [pos]: player };
+        // 2. FLEX libre ?
+        else if (prev.FLEX === null && pos !== "GK") next = { ...prev, FLEX: player };
+        // 3. replace le slot naturel
+        else next = { ...prev, [pos]: player };
       }
-      // 1. slot naturel libre ?
-      if (prev[pos] === null) return { ...prev, [pos]: player };
-      // 2. FLEX libre ?
-      if (prev.FLEX === null && pos !== "GK") return { ...prev, FLEX: player };
-      // 3. replace le slot naturel
-      return { ...prev, [pos]: player };
+      // Auto slot suivant : GK → DEF → MIL → ATT → FLEX
+      const ORDER = ["GK", "DEF", "MIL", "ATT", "FLEX"];
+      const nextEmpty = ORDER.find(s => next[s] === null);
+      setTimeout(() => setSelectedSlot(nextEmpty || null), 0);
+      return next;
     });
-    setSelectedSlot(null); // reset filtre après sélection
   };
   const isInTeam = (p) => {
     const id = p.slug || p.name;
-    if (Object.values(myPicks).some(pp => pp && (pp.slug || pp.name) === id)) return true;
-    return savedTeams.some(t => Object.values(t.picks).some(pp => pp && (pp.slug || pp.name) === id));
+    // Compter combien de fois ce joueur est utilisé (myPicks + savedTeams)
+    let usedCount = Object.values(myPicks).filter(pp => pp && (pp.slug || pp.name) === id).length;
+    usedCount += savedTeams.reduce((sum, t) => sum + Object.values(t.picks).filter(pp => pp && (pp.slug || pp.name) === id).length, 0);
+    if (usedCount === 0) return false;
+    // Compter combien de cartes Stellar de ce joueur on possede
+    const ownedCount = sorareCards.filter(c => c.playerSlug === id && c.isStellar).length;
+    // Si on possede plus de cartes que d'utilisations → encore dispo
+    if (ownedCount > usedCount) return false;
+    // Pas connecte Sorare → fallback ancien comportement (1 seule carte)
+    if (!sorareConnected) return usedCount > 0;
+    return true;
   };
   const savedTeamLabel = (p) => {
     const id = p.slug || p.name;
@@ -729,8 +807,14 @@ export default function StellarTab({ players, teams, fixtures, logos = {}, match
       ...savedTeams.flatMap(t => Object.values(t.picks).filter(Boolean).map(pp => pp.slug || pp.name)),
       ...Object.values(myPicks).filter(Boolean).map(pp => pp.slug || pp.name),
     ]);
-    const pool = (dayData?.players || [])
+    // Quand connecté Sorare : uniquement joueurs dont on possède une carte STELLAR
+    const basePool = (sorareConnected && myCardsDayPlayers.playing.length >= 5)
+      ? myCardsDayPlayers.playing.filter(p => sorareCardMap[p.slug || p.name]) // carte Stellar uniquement
+      : (dayData?.players || []);
+    const pool = basePool
       .filter(p => !usedIds.has(p.slug || p.name))
+      .filter(p => p.oppName) // doit jouer ce jour
+      .filter(p => p.sorare_starter_pct == null || p.sorare_starter_pct >= 70) // titu% >= 70%
       .map(p => ({ ...p, ds: getAdjDs(p) }))
       .sort((a, b) => b.ds - a.ds);
     if (pool.length < 5) return;
@@ -761,7 +845,7 @@ export default function StellarTab({ players, teams, fixtures, logos = {}, match
   };
 
   // ── Mon Équipe — page cachée, accessible via bouton ──────────────────────────
-  const [showMyTeam, setShowMyTeam] = useState(true); // TEST LOCAL — remettre false avant deploy
+  const [showMyTeam, setShowMyTeam] = useState(true); // Builder toujours visible
   const [selectedSlot, setSelectedSlot] = useState(null); // slot actif pour filtrer la liste
 
   // ── Sauvegarde équipes — jusqu'à 4 par jour ───────────────────────────────
@@ -807,6 +891,9 @@ export default function StellarTab({ players, teams, fixtures, logos = {}, match
   // ── Tri du tableau joueurs du jour ──────────────────────────────────────────
   const [teamSort, setTeamSort] = useState("ds");
 
+  // ── Filtres joueurs Stellar ────────────────────────────────────────────────
+  const [hideUsed, setHideUsed] = useState(true);   // masquer les joueurs déjà utilisés (savedTeams)
+
   // ── Éditions cartes — stockées par slug dans localStorage ──────────────────
   const [cardEditions, setCardEditions] = useState(() => {
     try { return JSON.parse(localStorage.getItem("stellar_card_editions") || "{}"); } catch { return {}; }
@@ -818,9 +905,17 @@ export default function StellarTab({ players, teams, fixtures, logos = {}, match
       return next;
     });
   };
-  // Score ajusté par édition + capitaine ×1.5
+  // Score ajusté par édition + collection (totalBonus) quand carte Sorare dispo
   const getAdjDs = (p) => {
-    const ed = getEdition(cardEditions[p.slug || p.name] || "base");
+    if (!bonusEnabled) return Math.round(p.ds || 0);
+    const slug = p.slug || p.name;
+    const ownedCard = sorareCardMap[slug];
+    if (ownedCard && ownedCard.totalBonus > 0) {
+      // Carte Sorare réelle : utilise totalBonus (edition + collection/power)
+      return Math.round((p.ds || 0) * (1 + ownedCard.totalBonus / 100));
+    }
+    // Fallback : édition manuelle
+    const ed = getEdition(cardEditions[slug] || "base");
     return Math.round((p.ds || 0) * (1 + ed.bonus / 100));
   };
   const getAdjTotalDs = (teamPlayers) =>
@@ -971,9 +1066,9 @@ export default function StellarTab({ players, teams, fixtures, logos = {}, match
 
     const stellarTeams = buildStellarTeams(dayPlayers, dateStr);
 
-    // ─── Decisive Pick ───
+    // ─── Decisive Pick Top 3 ───
     const POS_MULT = { ATT: 1.4, MIL: 1.05, DEF: 0.5, GK: 0.1 };
-    const decisivePick = dayPlayers
+    const decisiveAll = dayPlayers
       .filter(p => p.appearances >= 3 && (p.position === "ATT" || p.position === "MIL" || p.position === "DEF"))
       .map(p => {
         const gaRate = p.ga_per_match || 0;
@@ -982,15 +1077,15 @@ export default function StellarTab({ players, teams, fixtures, logos = {}, match
         const oppXga = p.isHome ? (p.oppTeam?.xga_dom || 1.2) : (p.oppTeam?.xga_ext || 1.2);
         const oppFactor = Math.min(1.5, oppXga / 1.2);
         const decisive = gaRate * posMult * formFactor * oppFactor;
-        // Poisson: P(≥1 action décisive) = 1 - e^(-λ), λ = gaRate * oppFactor * 0.5
-        // formFactor intégré légèrement (racine carrée pour atténuer l'impact)
         const formImpact = Math.sqrt(formFactor);
         const pDecisive = Math.min(99, Math.round((1 - Math.exp(-gaRate * oppFactor * formImpact * 0.5)) * 100));
         return { ...p, decisive, pDecisive };
       })
-      .sort((a, b) => b.decisive - a.decisive)[0] || null;
+      .sort((a, b) => b.decisive - a.decisive);
+    const decisivePick = decisiveAll[0] || null;
+    const decisiveTop3 = decisiveAll.slice(0, 3);
 
-    return { fixtures: dayFixtures, players: dayPlayers, teams: stellarTeams, decisivePick, frozen: false };
+    return { fixtures: dayFixtures, players: dayPlayers, teams: stellarTeams, decisivePick, decisiveTop3, frozen: false };
   }, [selectedDay, weekDays, fixturesByDate, players, teams, fixtures, dailyLockKey, frozenDayData]);
 
   // Pool "mes cartes" — 4 ligues, sans filtre titu%, double matching (player_fixtures + club)
@@ -1074,8 +1169,10 @@ export default function StellarTab({ players, teams, fixtures, logos = {}, match
   const weekLabel = `${fmtDate(weekDays[0])} — ${fmtDate(weekDays[6])}`;
 
   return (
-    <div className="st-root" style={{ position: "relative", minHeight: "80vh", padding: "0 16px 40px", zIndex: 1 }}>
+    <div className="st-root" style={{ position: "relative", minHeight: "80vh", padding: "0 16px 40px", zIndex: 1, maxWidth: 1800, margin: "0 auto" }}>
       <style>{starsKeyframes}</style>
+
+{/* Loading popup supprimé ici — il est dans le bloc Mon Equipe (position: relative overlay) */}
 
       {/* Vignette bords — position absolute, scroll avec le contenu */}
       <div style={{ position: "fixed", inset: 0, zIndex: 0, pointerEvents: "none", boxShadow: "inset 0 0 100px rgba(1,0,6,0.5)" }} />
@@ -1170,41 +1267,12 @@ export default function StellarTab({ players, teams, fixtures, logos = {}, match
           </div>
         </a>
 
-        {/* Bouton CRÉER MON ÉQUIPE — masqué temporairement (WIP) */}
-        {/* HIDDEN_MYTEAM_START */}
-        {true && <button onClick={() => setShowMyTeam(v => !v)}
-          className="st-cta-banner"
-          style={{
-            flexShrink: 0, display: "flex", alignItems: "center", justifyContent: "space-between", gap: 12,
-            background: showMyTeam ? "rgba(196,181,253,0.10)" : "rgba(10,6,30,0.75)",
-            border: showMyTeam ? "1px solid rgba(196,181,253,0.45)" : "1px solid rgba(255,255,255,0.10)",
-            borderRadius: 12, padding: "10px 14px", cursor: "pointer", fontFamily: "Outfit",
-            backdropFilter: "blur(10px)", transition: "all 0.2s", minWidth: 0,
-          }}>
-          <div style={{ display: "flex", alignItems: "center", gap: 10, minWidth: 0 }}>
-            <div style={{ width: 30, height: 30, borderRadius: 8, background: "rgba(196,181,253,0.12)", border: "1px solid rgba(196,181,253,0.2)", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 16, flexShrink: 0 }}>🃏</div>
-            <div style={{ minWidth: 0 }}>
-              <div style={{ fontSize: 11, fontWeight: 800, color: "#fff", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>
-                {showMyTeam ? t(lang,"myTeamBtnClose") : t(lang,"myTeamBtnOpen")}
-              </div>
-              <div style={{ fontSize: 9, color: "rgba(255,255,255,0.4)", marginTop: 1, whiteSpace: "nowrap" }}>
-                {showMyTeam ? t(lang,"myTeamBtnCloseSub") : t(lang,"myTeamBtnSub")}
-              </div>
-            </div>
-          </div>
-          <div style={{
-            fontSize: 10, fontWeight: 800, color: showMyTeam ? "#C4B5FD" : "#fff", whiteSpace: "nowrap", flexShrink: 0,
-            background: showMyTeam ? "rgba(196,181,253,0.15)" : "linear-gradient(135deg, #7C3AED, #5B21B6)",
-            borderRadius: 8, padding: "5px 12px", border: showMyTeam ? "1px solid rgba(196,181,253,0.3)" : "none",
-          }}>
-            {showMyTeam ? t(lang,"myTeamBtnBadgeClose") : t(lang,"myTeamBtnBadge")}
-          </div>
-        </button>}
+{/* Bouton CONNECT déplacé dans l'overlay flou du builder */}
 
       </div>
 
       {/* ═══ CALENDRIER + bouton semaine suivante ═══ */}
-      <div className="st-calendar-wrap" style={{ display: "grid", gridTemplateColumns: "auto repeat(7, 1fr) auto", gap: 6, marginBottom: 24, alignItems: "stretch" }}>
+      <div className="st-calendar-wrap" style={{ display: "grid", gridTemplateColumns: "auto repeat(7, 1fr) auto", gap: 4, marginBottom: 14, alignItems: "stretch" }}>
         {/* Bouton semaine précédente */}
         <button onClick={() => { setWeekOffset(w => w - 1); setSelectedDay(null); }}
           style={{ background: "rgba(255,255,255,0.06)", border: "1px solid rgba(255,255,255,0.12)", borderRadius: 10, color: "#C4B5FD", cursor: "pointer", fontSize: 13, fontWeight: 700, fontFamily: "Outfit", display: "flex", alignItems: "center", justifyContent: "center", padding: "0 10px" }}>◀</button>
@@ -1221,7 +1289,7 @@ export default function StellarTab({ players, teams, fixtures, logos = {}, match
                 background: isSelected ? "rgba(120,60,240,0.40)" : hasMatches ? "rgba(15,8,40,0.70)" : "rgba(8,4,25,0.55)",
                 border: isSelected ? "1px solid rgba(196,181,253,0.7)" : isToday ? "1px solid rgba(180,140,255,0.4)" : "1px solid rgba(100,70,200,0.18)",
                 backdropFilter: "blur(10px)",
-                borderRadius: 10, padding: "8px 4px", textAlign: "center",
+                borderRadius: 8, padding: "5px 3px", textAlign: "center",
                 cursor: hasMatches ? "pointer" : "default",
                 opacity: hasMatches ? 1 : 0.4,
                 transition: "all 0.2s",
@@ -1281,6 +1349,57 @@ export default function StellarTab({ players, teams, fixtures, logos = {}, match
               </h2>
               {!leftCollapsed && <div style={{ fontSize: 9, color: "rgba(255,255,255,0.35)", fontWeight: 600, letterSpacing: "0.08em", marginTop: 2 }}>{lang === "fr" ? "HEURE PARIS" : "PARIS TIME"}</div>}
             </div>
+
+            {/* ─── DECISIVE PICK TOP 3 — colonne gauche sous la date ─── */}
+            {!leftCollapsed && dayData.decisiveTop3?.length > 0 && (() => {
+              const RANK_COLORS = ["#FFD700", "#C0C0C0", "#CD7F32"];
+              const dp0 = dayData.decisivePick;
+              const dpPlayed = dp0.last_so5_date && dp0.last_so5_date >= gwWeekStart && dp0.last_so5_score != null;
+              const dpWon = dpPlayed && dp0.last_so5_score >= 60;
+              return (
+                <div style={{ marginBottom: 8, background: "linear-gradient(135deg, rgba(6,2,20,0.9), rgba(15,5,40,0.85))", border: "1px solid rgba(196,181,253,0.2)", borderRadius: 8, padding: "6px 10px" }}>
+                  <div style={{ fontSize: 7, fontWeight: 800, color: dpPlayed ? (dpWon ? "#4ADE80" : "#EF4444") : "#A78BFA", letterSpacing: "0.1em", marginBottom: 4 }}>
+                    {dpWon
+                      ? (lang === "fr" ? "DECISIVE PICKER — +2 000 ESSENCE !" : "DECISIVE PICKER — +2,000 ESSENCE!")
+                      : dpPlayed
+                      ? (lang === "fr" ? "DECISIVE PICKER — 0 ESSENCE" : "DECISIVE PICKER — 0 ESSENCE")
+                      : (lang === "fr" ? "DECISIVE PICKER — 2 000 ESSENCE" : "DECISIVE PICKER — 2,000 ESSENCE")}
+                  </div>
+                  <div style={{ display: "flex", flexDirection: "column", gap: 3 }}>
+                    {dayData.decisiveTop3.map((dp, ri) => {
+                      const rankColor = RANK_COLORS[ri] || "#888";
+                      const pc = PC[dp.position];
+                      const parisTime = utcToParisTime(dp.kickoff, dp.matchDate);
+                      const gaR = dp.ga_per_match?.toFixed(2) || "0.00";
+                      const played = dp.last_so5_date && dp.last_so5_date >= gwWeekStart && dp.last_so5_score != null;
+                      return (
+                        <div key={ri} style={{ display: "flex", alignItems: "center", gap: 6, background: ri === 0 ? "rgba(255,215,0,0.06)" : "rgba(255,255,255,0.02)", border: `1px solid ${rankColor}30`, borderRadius: 6, padding: "4px 8px" }}>
+                          <div style={{ fontSize: 14, fontWeight: 900, color: rankColor, fontFamily: "'DM Mono',monospace", flexShrink: 0, width: 18, textAlign: "center" }}>{ri + 1}</div>
+                          <span style={{ fontSize: 6, fontWeight: 800, background: `linear-gradient(135deg,${pc},${pc}CC)`, borderRadius: 3, padding: "1px 4px", color: "#fff", flexShrink: 0 }}>{dp.position}</span>
+                          {logos[dp.club] && <img src={`/data/logos/${logos[dp.club]}`} alt="" style={{ width: 12, height: 12, objectFit: "contain", flexShrink: 0 }} />}
+                          <div style={{ flex: 1, minWidth: 0 }}>
+                            <div style={{ display: "flex", alignItems: "center", gap: 3 }}>
+                              <span style={{ fontSize: 10, fontWeight: ri === 0 ? 900 : 700, color: "#fff", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>{dp.name}</span>
+                              {dp.sorare_starter_pct != null && (
+                                <span style={{ fontSize: 7, fontWeight: 800, fontFamily: "'DM Mono',monospace", color: dp.sorare_starter_pct >= 80 ? "#4ADE80" : "#FBBF24", flexShrink: 0 }}>{dp.sorare_starter_pct}%</span>
+                              )}
+                            </div>
+                            <div style={{ fontSize: 7, color: "rgba(255,255,255,0.4)" }}>
+                              {dp.isHome ? "🏠" : "✈️"} vs {sn(dp.oppName)}
+                              {parisTime && !played && <span style={{ color: "#A78BFA", marginLeft: 3 }}>{parisTime}</span>}
+                            </div>
+                          </div>
+                          <div style={{ textAlign: "right", flexShrink: 0 }}>
+                            <div style={{ fontSize: 7, color: "rgba(255,255,255,0.4)" }}>G+A <span style={{ color: "#4ADE80", fontWeight: 700 }}>{gaR}</span></div>
+                            <div style={{ fontSize: 8, fontWeight: 800, color: dp.pDecisive >= 50 ? "#4ADE80" : dp.pDecisive >= 30 ? "#F59E0B" : "#C4B5FD", fontFamily: "'DM Mono',monospace" }}>{dp.pDecisive}%</div>
+                          </div>
+                        </div>
+                      );
+                    })}
+                  </div>
+                </div>
+              );
+            })()}
 
             {/* Match list — groupé par créneau horaire, trié chrono heure France */}
             {!leftCollapsed && (() => {
@@ -1436,7 +1555,49 @@ export default function StellarTab({ players, teams, fixtures, logos = {}, match
             const POS_SLOT_COLORS = { GK: "#4FC3F7", DEF: "#818CF8", MIL: "#C084FC", FLEX: "#A78BFA", ATT: "#F87171" };
 
             return (
-              <div style={{ borderRadius: 14, background: "rgba(6,3,20,0.95)", border: "1px solid rgba(196,181,253,0.18)", overflow: "hidden", backdropFilter: "blur(16px)", display: "flex", flexDirection: "column", height: "calc(100vh - 280px)" }}>
+              <div style={{ borderRadius: 14, background: "rgba(6,3,20,0.95)", border: "none", overflow: "hidden", backdropFilter: "blur(16px)", display: "flex", flexDirection: "column", height: "calc(100vh - 280px)", position: "relative" }}>
+
+                {/* ── Loading overlay cartes Sorare ── */}
+                {sorareLoading && (
+                  <div style={{ position: "absolute", inset: 0, zIndex: 20, background: "rgba(6,3,20,0.97)", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", gap: 16, backdropFilter: "blur(12px)", borderRadius: 14 }}>
+                    {/* Logo Stellar anime */}
+                    <img src="/Stellar.png" alt="" style={{ width: 56, height: 56, objectFit: "contain", animation: "holoShift 3s linear infinite", filter: "drop-shadow(0 0 16px rgba(167,139,250,0.5))" }} />
+                    {/* Spinner */}
+                    <div style={{ width: 44, height: 44, border: "3px solid rgba(196,181,253,0.15)", borderTop: "3px solid #C4B5FD", borderRight: "3px solid #A78BFA", borderRadius: "50%", animation: "spin 0.8s linear infinite" }} />
+                    {/* Texte principal */}
+                    <div style={{ fontSize: 15, fontWeight: 800, color: "#fff", fontFamily: "Outfit", textAlign: "center" }}>
+                      {sorareUser?.nickname
+                        ? (lang === "fr" ? `Chargement de ${sorareUser.nickname}...` : `Loading ${sorareUser.nickname}...`)
+                        : (lang === "fr" ? "Connexion a Sorare..." : "Connecting to Sorare...")}
+                    </div>
+                    {/* Sous-texte */}
+                    <div style={{ fontSize: 11, color: "rgba(255,255,255,0.45)", textAlign: "center" }}>
+                      {lang === "fr" ? "Recuperation de tes cartes Stellar" : "Fetching your Stellar cards"}
+                    </div>
+                    {/* Stats cache */}
+                    {sorareCards.length > 0 && (
+                      <div style={{ display: "flex", gap: 12, alignItems: "center" }}>
+                        <div style={{ textAlign: "center" }}>
+                          <div style={{ fontSize: 16, fontWeight: 900, color: "#C4B5FD", fontFamily: "'DM Mono',monospace" }}>{sorareCards.length}</div>
+                          <div style={{ fontSize: 8, color: "rgba(255,255,255,0.35)" }}>{lang === "fr" ? "cartes" : "cards"}</div>
+                        </div>
+                        <div style={{ width: 1, height: 20, background: "rgba(255,255,255,0.1)" }} />
+                        <div style={{ textAlign: "center" }}>
+                          <div style={{ fontSize: 16, fontWeight: 900, color: "#4ADE80", fontFamily: "'DM Mono',monospace" }}>{stellarCardCount}</div>
+                          <div style={{ fontSize: 8, color: "rgba(255,255,255,0.35)" }}>Stellar</div>
+                        </div>
+                      </div>
+                    )}
+                    {/* Barre de progression */}
+                    <div style={{ width: 220, height: 4, borderRadius: 4, background: "rgba(255,255,255,0.08)", overflow: "hidden" }}>
+                      <div style={{ height: "100%", borderRadius: 4, background: "linear-gradient(90deg,#7C3AED,#C4B5FD,#A78BFA)", animation: "loadBar 2.5s ease-in-out infinite", width: "60%" }} />
+                    </div>
+                    {/* Estimation */}
+                    <div style={{ fontSize: 9, color: "rgba(255,255,255,0.25)", letterSpacing: "0.05em" }}>
+                      {lang === "fr" ? "Synchronisation API Sorare (~10 sec)" : "Syncing with Sorare API (~10 sec)"}
+                    </div>
+                  </div>
+                )}
 
                 {/* ── Header ── */}
                 <div style={{ padding: "9px 14px", borderBottom: "1px solid rgba(255,255,255,0.06)", display: "flex", alignItems: "center", justifyContent: "space-between", gap: 8 }}>
@@ -1445,66 +1606,118 @@ export default function StellarTab({ players, teams, fixtures, logos = {}, match
                     <div>
                       <div style={{ fontSize: 11, fontWeight: 900, color: "#C4B5FD", letterSpacing: "0.05em" }}>{t(lang,"myTeamTitle")}</div>
                       <div style={{ fontSize: 8, color: "rgba(255,255,255,0.35)", marginTop: 1 }}>
-                        {filledCount < 5 ? S.myTeamSelect(5 - filledCount) : `Score : ${totalAdj} pts${palier ? ` · ${palier.reward}` : ""}`}
+                        {filledCount < 5 ? S.myTeamSelect(5 - filledCount) : <span style={{ color: palier?.silver ? "#C0C0C0" : palier ? palier.color : "rgba(255,255,255,0.35)" }}>Score : {totalAdj} pts{palier ? ` · ${palier.reward}` : ""}</span>}
                       </div>
                     </div>
                   </div>
                   <div style={{ display: "flex", gap: 6, alignItems: "center" }}>
-                    {/* Bouton Connect/Disconnect Sorare */}
-                    {sorareConnected ? (
+                    {/* Boutons visibles UNIQUEMENT si connecté */}
+                    {sorareConnected && (<>
                       <button onClick={disconnectSorare} title={`Connecté : ${sorareUser?.nickname || sorareUser?.slug || "Sorare"}`} style={{
-                        display: "flex", alignItems: "center", gap: 5,
-                        padding: "6px 10px", borderRadius: 8, border: "1px solid rgba(74,222,128,0.4)",
+                        display: "flex", alignItems: "center", gap: 6,
+                        padding: "6px 12px", borderRadius: 8, border: "1px solid rgba(74,222,128,0.4)",
                         background: "rgba(74,222,128,0.08)", color: "#4ADE80",
                         fontSize: 9, fontWeight: 800, cursor: "pointer", fontFamily: "Outfit",
                       }}>
-                        <span style={{ fontSize: 10 }}>✓</span> {sorareUser?.nickname || "Sorare"}
+                        <div style={{ width: 20, height: 20, borderRadius: "50%", background: "rgba(74,222,128,0.25)", border: "1px solid rgba(74,222,128,0.4)", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 10, fontWeight: 900, color: "#4ADE80", flexShrink: 0 }}>
+                          {(sorareUser?.nickname || "S").charAt(0).toUpperCase()}
+                        </div>
+                        <div style={{ display: "flex", flexDirection: "column", gap: 0 }}>
+                          <span>{sorareUser?.nickname || "Sorare"}</span>
+                          <span style={{ fontSize: 7, color: "rgba(74,222,128,0.6)" }}>{stellarCardCount} Stellar</span>
+                        </div>
                       </button>
-                    ) : (
-                      <button onClick={connectSorare} disabled={sorareLoading} style={{
+                      <button onClick={generateMagicTeam} style={{
                         display: "flex", alignItems: "center", gap: 5,
-                        padding: "6px 10px", borderRadius: 8, border: "1px solid rgba(196,181,253,0.35)",
-                        background: "rgba(196,181,253,0.08)", color: "#C4B5FD",
-                        fontSize: 9, fontWeight: 800, cursor: sorareLoading ? "wait" : "pointer", fontFamily: "Outfit",
-                        opacity: sorareLoading ? 0.6 : 1,
+                        padding: "6px 12px", borderRadius: 8, border: "none", cursor: "pointer", fontFamily: "Outfit",
+                        background: "linear-gradient(135deg,#7C3AED,#8B5CF6,#A78BFA)",
+                        color: "#fff", fontSize: 10, fontWeight: 800,
+                        boxShadow: "0 0 14px rgba(139,92,246,0.5)",
                       }}>
-                        {sorareLoading ? "..." : "🔗 Mes cartes"}
+                        <span style={{ fontSize: 12 }}>⚡</span> {t(lang,"myTeamAlgo")}
                       </button>
-                    )}
-                    {/* Bouton magique */}
-                    <button onClick={generateMagicTeam} style={{
-                      display: "flex", alignItems: "center", gap: 5,
-                      padding: "6px 12px", borderRadius: 8, border: "none", cursor: "pointer", fontFamily: "Outfit",
-                      background: "linear-gradient(135deg,#7C3AED,#8B5CF6,#A78BFA)",
-                      color: "#fff", fontSize: 10, fontWeight: 800,
-                      boxShadow: "0 0 14px rgba(139,92,246,0.5)",
-                    }}>
-                      <span style={{ fontSize: 12 }}>⚡</span> {t(lang,"myTeamAlgo")}
-                    </button>
-                    {filledCount > 0 && (<>
-                      <button onClick={() => saveCurrentTeam(myPicks, cardEditions, totalAdj)}
-                        disabled={savedTeams.length >= 4}
-                        style={{ padding: "6px 12px", borderRadius: 8, border: "1px solid rgba(74,222,128,0.3)", background: savedTeams.length >= 4 ? "rgba(255,255,255,0.03)" : "rgba(74,222,128,0.08)", color: savedTeams.length >= 4 ? "rgba(255,255,255,0.2)" : "#4ADE80", fontSize: 10, fontWeight: 800, cursor: savedTeams.length >= 4 ? "not-allowed" : "pointer", fontFamily: "Outfit" }}>
-                        {savedTeams.length >= 4 ? "4/4 max" : t(lang,"myTeamSave")}
-                      </button>
-                      <button onClick={resetTeam} style={{ padding: "6px 10px", borderRadius: 8, border: "1px solid rgba(255,255,255,0.1)", background: "rgba(255,255,255,0.05)", color: "rgba(255,255,255,0.4)", fontSize: 10, fontWeight: 700, cursor: "pointer", fontFamily: "Outfit" }}>Reset</button>
+{/* Sauvegarder + Reset dans SCORE PROJ uniquement */}
                     </>)}
                   </div>
                 </div>
 
+                {/* ── Overlay FLOU + bouton CONNECTER si pas connecté ── */}
+                {!sorareConnected && (
+                  <div style={{ position: "absolute", inset: 0, zIndex: 10, display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", gap: 12, background: "rgba(6,3,20,0.6)", backdropFilter: "blur(6px)", borderRadius: 14, padding: "20px" }}>
+                    <div style={{ fontSize: 28 }}>🔗</div>
+                    <div style={{ fontSize: 14, fontWeight: 900, color: "#fff", textAlign: "center", fontFamily: "Outfit" }}>
+                      {lang === "fr" ? "Connecte ton compte Sorare" : "Connect your Sorare account"}
+                    </div>
+                    <div style={{ fontSize: 10, color: "rgba(255,255,255,0.5)", textAlign: "center", maxWidth: 280 }}>
+                      {lang === "fr" ? "Compose ton equipe Stellar avec TES cartes et optimise ton score avec l'algo Deglingo" : "Build your Stellar team with YOUR cards and optimize your score with the Deglingo algo"}
+                    </div>
+                    <button onClick={connectSorare} disabled={sorareLoading} style={{
+                      display: "flex", alignItems: "center", gap: 10,
+                      padding: "12px 28px", borderRadius: 12,
+                      border: "none",
+                      background: "linear-gradient(135deg, #EF4444, #DC2626, #B91C1C)",
+                      color: "#fff", fontSize: 15, fontWeight: 900, cursor: sorareLoading ? "wait" : "pointer", fontFamily: "Outfit",
+                      boxShadow: "0 0 30px rgba(239,68,68,0.5), 0 6px 20px rgba(0,0,0,0.4)",
+                      opacity: sorareLoading ? 0.6 : 1,
+                      transition: "all 0.2s", letterSpacing: "0.04em",
+                    }}>
+                      <span style={{ fontSize: 18 }}>🔗</span>
+                      {lang === "fr" ? "CONNECTER SORARE" : "CONNECT SORARE"}
+                    </button>
+                    <div style={{ fontSize: 8, color: "rgba(255,255,255,0.3)" }}>
+                      {lang === "fr" ? "100% gratuit · Tes cartes restent sur Sorare" : "100% free · Your cards stay on Sorare"}
+                    </div>
+                  </div>
+                )}
+
                 {/* ── Corps : PITCH gauche + DATABASE droite ── */}
-                <div style={{ display: "flex", flex: 1, minHeight: 0 }}>
+                <div style={{ display: "flex", flex: 1, minHeight: 0, overflow: "hidden" }}>
 
                   {/* ══ COLONNE GAUCHE : Sélection équipe ══ */}
-                  <div style={{ width: 427, flexShrink: 0, display: "flex", flexDirection: "column", borderRight: "1px solid rgba(255,255,255,0.06)", background: "rgba(0,0,0,0.15)" }}>
+                  <div style={{ width: 370, flexShrink: 0, display: "flex", flexDirection: "column", borderRight: "1px solid rgba(255,255,255,0.06)", background: "rgba(0,0,0,0.15)" }}>
 
                     {/* Score total — visible uniquement quand équipe complète */}
                     {filledCount === 5 && (
                       <div style={{ padding: "6px 14px", borderBottom: "1px solid rgba(255,255,255,0.05)", display: "flex", alignItems: "center", justifyContent: "space-between" }}>
-                        <div style={{ fontSize: 8, color: "rgba(255,255,255,0.35)", fontWeight: 600, letterSpacing: "0.08em" }}>SCORE PROJ.</div>
                         <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-                          {palier && <div style={{ fontSize: 8, fontWeight: 700, color: palier.color }}>→ {palier.reward}</div>}
-                          <div style={{ fontSize: 22, fontWeight: 900, color: palier ? palier.color : "#C4B5FD", fontFamily: "'DM Mono',monospace", lineHeight: 1 }}>{totalAdj}</div>
+                          <div style={{ fontSize: 8, color: "rgba(255,255,255,0.35)", fontWeight: 600, letterSpacing: "0.08em" }}>SCORE PROJ.</div>
+                          {/* Bonus toggle inline */}
+                          <button onClick={() => setBonusEnabled(v => !v)} style={{
+                            fontSize: 7, fontWeight: 800, padding: "2px 6px", borderRadius: 4,
+                            border: `1px solid ${bonusEnabled ? "rgba(74,222,128,0.4)" : "rgba(255,255,255,0.1)"}`,
+                            background: bonusEnabled ? "rgba(74,222,128,0.08)" : "transparent",
+                            color: bonusEnabled ? "#4ADE80" : "rgba(255,255,255,0.25)", cursor: "pointer", fontFamily: "Outfit",
+                          }}>Bonus {bonusEnabled ? "ON" : "OFF"}</button>
+                          {/* Sauvegarder — bouton rouge gradient */}
+                          <button onClick={() => saveCurrentTeam(myPicks, cardEditions, totalAdj)}
+                            disabled={savedTeams.length >= 4}
+                            style={{
+                              fontSize: 8, fontWeight: 800, padding: "3px 10px", borderRadius: 6,
+                              border: "none", cursor: savedTeams.length >= 4 ? "not-allowed" : "pointer",
+                              background: savedTeams.length >= 4 ? "rgba(255,255,255,0.05)" : "linear-gradient(135deg, #EF4444, #DC2626)",
+                              color: savedTeams.length >= 4 ? "rgba(255,255,255,0.2)" : "#fff", fontFamily: "Outfit",
+                              boxShadow: savedTeams.length >= 4 ? "none" : "0 0 8px rgba(239,68,68,0.3)",
+                            }}>
+                            {savedTeams.length >= 4 ? "4/4" : (lang === "fr" ? "Sauvegarder" : "Save")}
+                          </button>
+                          <button onClick={resetTeam} style={{
+                            fontSize: 8, fontWeight: 700, padding: "3px 8px", borderRadius: 6,
+                            border: "1px solid rgba(255,255,255,0.12)", background: "rgba(255,255,255,0.05)",
+                            color: "rgba(255,255,255,0.4)", cursor: "pointer", fontFamily: "Outfit",
+                          }}>Reset</button>
+                        </div>
+                        <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+                          {palier && <div style={{ fontSize: 8, fontWeight: 700, color: palier.silver ? "#C0C0C0" : palier.color }}>→ {palier.reward}</div>}
+                          <div style={{
+                            fontSize: 22, fontWeight: 900, fontFamily: "'DM Mono',monospace", lineHeight: 1, display: "inline-block",
+                            color: palier?.silver ? "#1a1a2e" : (palier ? palier.color : "#C4B5FD"),
+                            background: palier?.silver ? "linear-gradient(90deg,#C0C0C0,#A8E8D0,#B0C4E8,#D4B0E8,#E0D0E8,#fff,#D4B0E8,#B0C4E8,#A8E8D0,#C0C0C0)" : "none",
+                            backgroundSize: palier?.silver ? "200% 100%" : "auto",
+                            animation: palier?.silver ? "silverShine 3s linear infinite" : "none",
+                            padding: palier?.silver ? "4px 10px" : 0,
+                            borderRadius: palier?.silver ? 10 : 0,
+                            boxShadow: palier?.silver ? "0 0 12px rgba(192,192,192,0.5)" : "none",
+                          }}>{totalAdj}</div>
                         </div>
                       </div>
                     )}
@@ -1513,7 +1726,7 @@ export default function StellarTab({ players, teams, fixtures, logos = {}, match
                     <div style={{ padding: "6px 8px 6px", flex: "0 0 auto", display: "flex", flexDirection: "column", gap: 5 }}>
                       {/* ── Rendu d'un slot carte (mutualisé ATT/FLEX et DEF/GK/MIL) ── */}
                       {[["ATT","FLEX"], ["DEF","GK","MIL"]].map((row, rowIdx) => (
-                        <div key={rowIdx} style={{ display: "flex", gap: 5, flex: "0 0 auto", justifyContent: rowIdx === 0 ? "center" : undefined, alignItems: "flex-start" }}>
+                        <div key={rowIdx} style={{ display: "flex", gap: rowIdx === 0 ? 5 : 2, flex: "0 0 auto", justifyContent: "center", alignItems: "flex-start" }}>
                           {row.map(slot => {
                             const p = myPicks[slot];
                             const sc = POS_SLOT_COLORS[slot];
@@ -1530,37 +1743,48 @@ export default function StellarTab({ players, teams, fixtures, logos = {}, match
                                   background: sorareCard ? "transparent"
                                     : p ? `linear-gradient(160deg, #0d0826 0%, ${sc}30 60%, #0a0620 100%)`
                                     : isActive ? `${sc}18` : "rgba(255,255,255,0.025)",
-                                  border: `1.5px solid ${isActive ? sc + "CC" : p ? sc + "55" : "rgba(255,255,255,0.08)"}`,
-                                  boxShadow: isActive ? `0 0 16px ${sc}60` : p ? `0 0 10px ${sc}25` : "none",
+                                  border: sorareCard ? "none" : `1.5px solid ${isActive ? sc + "CC" : p ? sc + "55" : "rgba(255,255,255,0.08)"}`,
+                                  boxShadow: sorareCard ? "none" : (isActive ? `0 0 16px ${sc}60` : p ? `0 0 10px ${sc}25` : "none"),
                                   transition: "all 0.18s",
                                   display: "flex", flexDirection: "column", alignItems: "center",
                                   gap: sorareCard ? 0 : (rowIdx === 0 ? 5 : 4),
                                   padding: sorareCard ? 0 : (rowIdx === 0 ? "10px 8px" : "8px 6px"),
-                                  position: "relative", width: 137, height: 190, flexShrink: 0,
+                                  position: "relative", width: 120, height: 166, flexShrink: 0,
+                                  marginTop: slot === "GK" ? 12 : 0,
                                 }}>
 
                                 {/* ── Vraie carte Sorare ── */}
                                 {sorareCard ? (
                                   <>
                                     <img src={sorareCard.pictureUrl} alt={p.name}
-                                      style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover", borderRadius: 9 }} />
-                                    {/* Overlay gradient bas pour lisibilité */}
-                                    <div style={{ position: "absolute", bottom: 0, left: 0, right: 0, height: 60, background: "linear-gradient(transparent, rgba(0,0,0,0.85))", borderRadius: "0 0 9px 9px" }} />
-                                    {/* Badge slot */}
-                                    <span style={{ position: "absolute", top: 6, left: 6, fontSize: 6, fontWeight: 900, color: "#fff", background: sc, borderRadius: 4, padding: "2px 5px", zIndex: 2 }}>{slot}</span>
-                                    {/* Capitaine */}
-                                    {isCap && <div style={{ position: "absolute", top: 5, right: 5, width: 16, height: 16, borderRadius: "50%", background: "#C4B5FD", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 8, fontWeight: 900, color: "#0C0C2D", zIndex: 2 }}>C</div>}
-                                    {/* D-Score + nom en bas */}
-                                    <div style={{ position: "absolute", bottom: 6, left: 0, right: 0, display: "flex", flexDirection: "column", alignItems: "center", gap: 1, zIndex: 2 }}>
-                                      <div style={{ fontSize: rowIdx === 0 ? 20 : 16, fontWeight: 900, color: dsColor2, fontFamily: "'DM Mono',monospace", lineHeight: 1 }}>{adjDs}</div>
-                                      <div style={{ fontSize: 9, fontWeight: 700, color: "#fff", textAlign: "center", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis", width: "90%" }}>{p.name.split(" ").pop()}</div>
+                                      style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "contain" }} />
+                                    {/* Capitaine — cliquable, toggle */}
+                                    <div onClick={e => { e.stopPropagation(); setMyPicks(prev => {
+                                      // Toggle captain: set isCaptain on this player, remove from others
+                                      const next = {};
+                                      for (const [s, pp] of Object.entries(prev)) {
+                                        if (!pp) { next[s] = null; continue; }
+                                        next[s] = { ...pp, isCaptain: s === slot ? !pp.isCaptain : false };
+                                      }
+                                      return next;
+                                    }); }}
+                                      style={{ position: "absolute", top: 4, right: 24, width: 18, height: 18, borderRadius: "50%", background: isCap ? "#C4B5FD" : "rgba(255,255,255,0.12)", border: isCap ? "none" : "1px solid rgba(255,255,255,0.25)", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 8, fontWeight: 900, color: isCap ? "#0C0C2D" : "rgba(255,255,255,0.5)", cursor: "pointer", zIndex: 2, transition: "all 0.15s" }}>C</div>
+                                    {/* D-Score + totalBonus en bas droite */}
+                                    <div style={{ position: "absolute", bottom: 6, right: 6, zIndex: 2, display: "flex", flexDirection: "column", alignItems: "center", gap: 2 }}>
+                                      {(sorareCard.totalBonus || 0) > 0 && (
+                                        <span style={{ fontSize: 10, fontWeight: 900, color: "#4ADE80", fontFamily: "'DM Mono',monospace", background: "rgba(0,0,0,0.7)", borderRadius: 5, padding: "2px 5px" }}>+{sorareCard.totalBonus}%</span>
+                                      )}
+                                      <span style={{ display: "inline-block", padding: "3px 7px", borderRadius: 8, fontFamily: "'DM Mono',monospace", fontSize: 14, fontWeight: 700, color: isSilver(adjDs) ? "#1a1a2e" : "#fff", background: isSilver(adjDs) ? "linear-gradient(90deg,#C0C0C0,#A8E8D0,#B0C4E8,#D4B0E8,#E0D0E8,#fff,#D4B0E8,#B0C4E8,#A8E8D0,#C0C0C0)" : dsBg(adjDs), backgroundSize: isSilver(adjDs) ? "200% 100%" : "auto", animation: isSilver(adjDs) ? "silverShine 3s linear infinite" : "none", boxShadow: `0 0 8px ${dsColor(adjDs)}50` }}>{adjDs}</span>
                                     </div>
-                                    {/* Rareté badge */}
-                                    <div style={{ position: "absolute", bottom: 5, right: 5, fontSize: 6, fontWeight: 800, color: sorareCard.rarity === "unique" ? "#F59E0B" : sorareCard.rarity === "super_rare" ? "#C084FC" : sorareCard.rarity === "rare" ? "#60A5FA" : "#94A3B8", zIndex: 2 }}>
-                                      {sorareCard.rarity === "unique" ? "U" : sorareCard.rarity === "super_rare" ? "SR" : sorareCard.rarity === "rare" ? "R" : "L"}
+                                    {/* Titu% pancarte — haut droite sous capitaine */}
+                                    <div style={{ position: "absolute", top: 24, right: 4, zIndex: 2 }}>
+                                      <span style={{ fontSize: 9, fontWeight: 600, fontFamily: "Outfit", padding: "2px 5px", borderRadius: 4, letterSpacing: "0.02em", color: "#fff", background: (p.sorare_starter_pct || 0) >= 70 ? "linear-gradient(135deg,#166534,#15803d)" : (p.sorare_starter_pct || 0) >= 50 ? "linear-gradient(135deg,#854d0e,#a16207)" : "linear-gradient(135deg,#991b1b,#b91c1c)", boxShadow: "0 1px 4px rgba(0,0,0,0.5)" }}>
+                                        {p.sorare_starter_pct == null ? "—" : `${p.sorare_starter_pct}%`}
+                                      </span>
                                     </div>
+                                    {/* Bouton x — haut gauche */}
                                     <button onClick={e => { e.stopPropagation(); removeFromTeam(slot); }}
-                                      style={{ position: "absolute", top: 5, right: isCap ? 26 : 5, background: "rgba(0,0,0,0.5)", border: "none", color: "rgba(255,255,255,0.6)", cursor: "pointer", fontSize: 11, lineHeight: 1, padding: "2px 5px", borderRadius: 4, zIndex: 2 }}>×</button>
+                                      style={{ position: "absolute", top: 4, left: 4, background: "rgba(0,0,0,0.5)", border: "none", color: "rgba(255,255,255,0.5)", cursor: "pointer", fontSize: 10, lineHeight: 1, padding: "2px 5px", borderRadius: 4, zIndex: 2 }}>x</button>
                                   </>
                                 ) : p ? (
                                   /* ── Slot rempli sans carte Sorare ── */
@@ -1619,37 +1843,39 @@ export default function StellarTab({ players, teams, fixtures, logos = {}, match
                   {/* ══ COLONNE DROITE : Base de données joueurs ══ */}
                   <div style={{ flex: 2, minWidth: 0, display: "flex", flexDirection: "column", overflow: "hidden" }}>
 
-                  {/* ── TOGGLE Tous / Mes cartes (visible uniquement si connecté Sorare) ── */}
-                  {sorareConnected && (
-                    <div style={{ display: "flex", alignItems: "center", gap: 4, padding: "4px 10px", borderBottom: "1px solid rgba(255,255,255,0.07)", background: "rgba(0,0,0,0.3)", flexShrink: 0 }}>
-                      <button onClick={() => setMyCardsMode(false)} style={{ fontSize: 8, fontWeight: 700, padding: "3px 9px", borderRadius: 6, border: `1px solid ${!myCardsMode ? "rgba(196,181,253,0.5)" : "rgba(255,255,255,0.1)"}`, background: !myCardsMode ? "rgba(196,181,253,0.15)" : "transparent", color: !myCardsMode ? "#C4B5FD" : "rgba(255,255,255,0.35)", cursor: "pointer", fontFamily: "Outfit", transition: "all 0.15s" }}>Tous les joueurs</button>
-                      <button onClick={() => setMyCardsMode(true)} style={{ fontSize: 8, fontWeight: 700, padding: "3px 9px", borderRadius: 6, border: `1px solid ${myCardsMode ? "rgba(74,222,128,0.5)" : "rgba(255,255,255,0.1)"}`, background: myCardsMode ? "rgba(74,222,128,0.12)" : "transparent", color: myCardsMode ? "#4ADE80" : "rgba(255,255,255,0.35)", cursor: "pointer", fontFamily: "Outfit", transition: "all 0.15s" }}>Mes cartes · {myCardsDayPlayers.playing.length} ce soir</button>
-                    </div>
-                  )}
+                  {/* ── TOGGLE Tous / Mes cartes + Dispo + Bonus ── */}
+                  <div style={{ display: "flex", alignItems: "center", gap: 4, padding: "4px 10px", borderBottom: "1px solid rgba(255,255,255,0.07)", background: "rgba(0,0,0,0.3)", flexShrink: 0 }}>
+                    <button onClick={() => setMyCardsMode(false)} style={{ fontSize: 8, fontWeight: 700, padding: "3px 9px", borderRadius: 6, border: `1px solid ${!myCardsMode ? "rgba(196,181,253,0.5)" : "rgba(255,255,255,0.1)"}`, background: !myCardsMode ? "rgba(196,181,253,0.15)" : "transparent", color: !myCardsMode ? "#C4B5FD" : "rgba(255,255,255,0.35)", cursor: "pointer", fontFamily: "Outfit", transition: "all 0.15s" }}>{lang === "fr" ? "Tous les joueurs" : "All players"}</button>
+                    <button onClick={() => setMyCardsMode(true)} style={{ fontSize: 8, fontWeight: 700, padding: "3px 9px", borderRadius: 6, border: `1px solid ${myCardsMode ? "rgba(74,222,128,0.5)" : "rgba(255,255,255,0.1)"}`, background: myCardsMode ? "rgba(74,222,128,0.12)" : "transparent", color: myCardsMode ? "#4ADE80" : "rgba(255,255,255,0.35)", cursor: "pointer", fontFamily: "Outfit", transition: "all 0.15s" }}>{lang === "fr" ? `Mes cartes · ${myCardsDayPlayers.playing.length} ce soir` : `My cards · ${myCardsDayPlayers.playing.length} tonight`}</button>
+                    <button onClick={() => setHideUsed(v => !v)} style={{ fontSize: 7, fontWeight: 700, padding: "3px 8px", borderRadius: 6, border: `1px solid ${hideUsed ? "rgba(251,191,36,0.5)" : "rgba(255,255,255,0.1)"}`, background: hideUsed ? "rgba(251,191,36,0.12)" : "transparent", color: hideUsed ? "#FBBF24" : "rgba(255,255,255,0.3)", cursor: "pointer", fontFamily: "Outfit", transition: "all 0.15s" }}>
+                      {hideUsed ? (lang === "fr" ? "Dispo" : "Avail.") : (lang === "fr" ? "Cacher" : "Hide")}
+                    </button>
+                    <button onClick={() => setBonusEnabled(v => !v)} style={{ fontSize: 7, fontWeight: 700, padding: "3px 8px", borderRadius: 6, border: `1px solid ${bonusEnabled ? "rgba(74,222,128,0.5)" : "rgba(255,255,255,0.1)"}`, background: bonusEnabled ? "rgba(74,222,128,0.12)" : "transparent", color: bonusEnabled ? "#4ADE80" : "rgba(255,255,255,0.3)", cursor: "pointer", fontFamily: "Outfit", transition: "all 0.15s" }}>
+                      {bonusEnabled ? "Bonus ON" : "Bonus OFF"}
+                    </button>
+                  </div>
 
-                  {/* ── TABLEAU JOUEURS — style Database enrichi ── */}
+                  {/* ── LISTE JOUEURS SIMPLIFIEE ── */}
                   {(() => {
                     const R = v => v != null ? Math.round(v) : "—";
                     const dc = v => v == null ? "rgba(255,255,255,0.2)" : v >= 80 ? "#4ADE80" : v >= 65 ? "#A3E635" : v >= 50 ? "#FBBF24" : v >= 35 ? "#FB923C" : "#EF4444";
                     const aac = v => v == null ? "rgba(255,255,255,0.2)" : "rgba(196,181,253,0.8)";
                     const tituC = v => v >= 80 ? "#4ADE80" : v >= 50 ? "#FBBF24" : v > 0 ? "#EF4444" : "rgba(255,255,255,0.2)";
                     const pctC = v => v == null ? "rgba(255,255,255,0.2)" : v >= 40 ? "#4ADE80" : v >= 25 ? "#FCD34D" : v >= 15 ? "#FB923C" : "#EF4444";
-                    // Win/Draw/Loss via Poisson (xG dom/ext des équipes)
-                    const poisPMF = (λ, k) => { let f=1; for(let i=1;i<=k;i++) f*=i; return Math.exp(-λ)*Math.pow(λ,k)/f; };
+                    const poisPMF = (l, k) => { let f=1; for(let i=1;i<=k;i++) f*=i; return Math.exp(-l)*Math.pow(l,k)/f; };
                     const getMatchProbs = (p) => {
                       const pt = findTeam(teams, p.club);
                       const ot = findTeam(teams, p.oppName);
                       if (!pt || !ot) return null;
-                      const λp = p.isHome ? (pt.xg_dom||1.3) : (pt.xg_ext||1.1);
-                      const λo = p.isHome ? (ot.xg_ext||1.1) : (ot.xg_dom||1.3);
+                      const lp = p.isHome ? (pt.xg_dom||1.3) : (pt.xg_ext||1.1);
+                      const lo = p.isHome ? (ot.xg_ext||1.1) : (ot.xg_dom||1.3);
                       let w=0, d=0, l=0;
                       for (let i=0; i<=7; i++) for (let j=0; j<=7; j++) {
-                        const pr = poisPMF(λp,i)*poisPMF(λo,j);
+                        const pr = poisPMF(lp,i)*poisPMF(lo,j);
                         if (i>j) w+=pr; else if (i===j) d+=pr; else l+=pr;
                       }
                       return { win:Math.round(w*100), draw:Math.round(d*100), loss:Math.round(l*100) };
                     };
-                    const getWinPct = (p) => getMatchProbs(p)?.win ?? null;
                     const [sortCol, setSortCol] = [teamSort, setTeamSort];
                     // Filtre par slot sélectionné
                     const slotFilter = selectedSlot
@@ -1657,6 +1883,11 @@ export default function StellarTab({ players, teams, fixtures, logos = {}, match
                         ? dayPool.filter(p => ["DEF","MIL","ATT"].includes(p.position))
                         : dayPool.filter(p => p.position === selectedSlot)
                       : dayPool;
+                    // Filtre hideUsed (Dispo)
+                    const filteredPool = slotFilter.filter(p => {
+                      if (hideUsed && isInTeam(p)) return false;
+                      return true;
+                    });
                     // Filtre "Mes cartes" : une ligne par carte possédée (2x Yamal → 2 lignes)
                     // Utilise myCardsDayPlayers.playing (bypass filtre titu%) comme base
                     const visiblePool = (myCardsMode && sorareConnected)
@@ -1666,26 +1897,28 @@ export default function StellarTab({ players, teams, fixtures, logos = {}, match
                           const addedCardSlugs = new Set();
                           for (const p of playingToday) {
                             const slug = p.slug || p.name;
-                            // Toutes les cartes de ce joueur
-                            const playerCards = sorareCards.filter(c => c.playerSlug === slug);
+                            // Filtre Stellar uniquement
+                            const playerCards = sorareCards.filter(c => c.playerSlug === slug && c.isStellar);
                             if (!playerCards.length) continue;
                             // Filtre slot actif si sélectionné
                             if (selectedSlot) {
                               if (selectedSlot === "FLEX" && !["DEF","MIL","ATT"].includes(p.position)) continue;
                               if (selectedSlot !== "FLEX" && p.position !== selectedSlot) continue;
                             }
+                            // Filtre Dispo
+                            if (hideUsed && isInTeam(p)) continue;
                             for (const card of playerCards) {
                               if (addedCardSlugs.has(card.cardSlug)) continue;
                               addedCardSlugs.add(card.cardSlug);
-                              expanded.push({ ...p, _cardSlug: card.cardSlug, _cardRarity: card.rarity });
+                              expanded.push({ ...p, _cardSlug: card.cardSlug, _cardRarity: card.rarity, _cardEdition: card.cardEditionName, _cardTotalBonus: card.totalBonus });
                             }
                           }
                           return expanded;
                         })()
-                      : slotFilter;
+                      : filteredPool;
                     const sortedPool = [...visiblePool].sort((a, b) => {
                       if (sortCol === "ds")   return getAdjDs(b) - getAdjDs(a);
-                      if (sortCol === "win")  return (getWinPct(b)||0) - (getWinPct(a)||0);
+                      if (sortCol === "win")  return 0; // Poisson removed
                       if (sortCol === "cs")   return (b.csPercent||0) - (a.csPercent||0);
                       if (sortCol === "dom")  return (b.avg_dom||0) - (a.avg_dom||0);
                       if (sortCol === "ext")  return (b.avg_ext||0) - (a.avg_ext||0);
@@ -1723,11 +1956,11 @@ export default function StellarTab({ players, teams, fixtures, logos = {}, match
                     ];
                     const thS = (col) => ({ fontSize: 8, fontWeight: 800, color: sortCol===col?"#C084FC":"rgba(255,255,255,0.3)", cursor:"pointer", userSelect:"none", whiteSpace:"nowrap", textAlign:"center", padding:"0 4px" });
                     // Grid: +btn | pos+logo | nom | D-Score | L2 AA2 L5 AA5 | L10 DOM EXT AA10 Titu10 Reg10 L40 AA40 G+A
-                    const GRID = "28px 36px 80px 52px 80px 36px 36px 90px 30px 28px 30px 28px 46px 32px 32px 28px 30px 28px 30px 30px 44px";
+                    const GRID = "28px 70px 80px 52px 80px 36px 36px 90px 30px 28px 30px 28px 46px 32px 32px 28px 30px 28px 30px 30px 44px";
 
                     // ── Badges rareté pour cartes possédées ────────────────
                     const RARITY_COLORS = { unique: "#FFD700", super_rare: "#E040FB", rare: "#42A5F5", limited: "#FF9800", common: "rgba(255,255,255,0.3)" };
-                    const RARITY_LABELS = { unique: "U", super_rare: "SR", rare: "R", limited: "L", common: "C" };
+                    const RARITY_LABELS = { unique: "U", super_rare: "SR", rare: "R", limited: "L" };
 
                     return (
                       <div style={{ flex: 1, display: "flex", flexDirection: "column", minWidth: 0, overflowX: "auto" }}>
@@ -1785,9 +2018,14 @@ export default function StellarTab({ players, teams, fixtures, logos = {}, match
                                     </div>
                                   );
                                 })()}
-                                {/* Pos + logo */}
+                                {/* [POS][+X%] + logo — badge colles */}
                                 <div style={{ display:"flex", alignItems:"center", gap:3 }}>
-                                  <span style={{ fontSize:6, fontWeight:900, background:pc, color:"#fff", borderRadius:2, padding:"1px 4px", flexShrink:0 }}>{p.position}</span>
+                                  <div style={{ display:"flex", alignItems:"center", gap:0, flexShrink:0 }}>
+                                    <span style={{ fontSize:7, fontWeight:900, background:pc, color:"#fff", borderRadius: ownedCard?.totalBonus > 0 ? "3px 0 0 3px" : 3, padding:"2px 4px", lineHeight:1 }}>{p.position}</span>
+                                    {ownedCard && ownedCard.totalBonus > 0 && (
+                                      <span style={{ fontSize:7, fontWeight:900, background:"linear-gradient(135deg,#166534,#15803d)", color:"#fff", borderRadius:"0 3px 3px 0", padding:"2px 4px", lineHeight:1, whiteSpace:"nowrap" }}>+{ownedCard.totalBonus}%</span>
+                                    )}
+                                  </div>
                                   {logos[p.club] && <img src={`/data/logos/${logos[p.club]}`} alt="" style={{ width:14, height:14, objectFit:"contain", flexShrink:0 }} />}
                                 </div>
                                 {/* Nom + club + badge rareté */}
@@ -1796,7 +2034,7 @@ export default function StellarTab({ players, teams, fixtures, logos = {}, match
                                     <div style={{ fontSize:10, fontWeight: inTeam?700:500, color: inTeam?"#C4B5FD":"#fff", overflow:"hidden", textOverflow:"ellipsis", whiteSpace:"nowrap", lineHeight:1.2, minWidth:0 }}>{p.name.split(" ").pop()}</div>
                                     {rarityLabel && <span style={{ fontSize:6, fontWeight:900, color:"#000", background:rarityColor, borderRadius:2, padding:"0 3px", lineHeight:"11px", flexShrink:0 }}>{rarityLabel}</span>}
                                   </div>
-                                  <div style={{ fontSize:6, color:"rgba(255,255,255,0.3)", overflow:"hidden", textOverflow:"ellipsis", whiteSpace:"nowrap", lineHeight:1.2 }}>{sn(p.club)}</div>
+{/* Nom club retiré — logo seul dans la colonne Pos */}
                                 </div>
                                 {/* D-Score — en tête de gondole */}
                                 <div style={{ textAlign:"center" }}>
@@ -1816,10 +2054,16 @@ export default function StellarTab({ players, teams, fixtures, logos = {}, match
                                     <span style={{ color:"rgba(255,255,255,0.15)" }}>—</span>
                                   )}
                                 </div>
-                                {/* Titu% Sorare */}
-                                <span style={{ fontFamily:"'DM Mono',monospace", fontSize:11, textAlign:"center", fontWeight:700, color: p.sorare_starter_pct >= 80 ? "#4ADE80" : p.sorare_starter_pct >= 60 ? "#FBBF24" : p.sorare_starter_pct != null ? "#F87171" : "rgba(255,255,255,0.2)" }}>
-                                  {p.sorare_starter_pct != null ? `${p.sorare_starter_pct}%` : "—"}
-                                </span>
+                                {/* Titu% Sorare — pancarte gradient comme sur les cartes */}
+                                <div style={{ textAlign:"center" }}>
+                                  <span style={{
+                                    fontSize: 10, fontWeight: 600, fontFamily: "Outfit", padding: "2px 6px", borderRadius: 4, letterSpacing: "0.02em", color: "#fff",
+                                    background: (p.sorare_starter_pct || 0) >= 70 ? "linear-gradient(135deg,#166534,#15803d)" : (p.sorare_starter_pct || 0) >= 50 ? "linear-gradient(135deg,#854d0e,#a16207)" : p.sorare_starter_pct == null ? "rgba(255,255,255,0.06)" : "linear-gradient(135deg,#991b1b,#b91c1c)",
+                                    boxShadow: "0 1px 4px rgba(0,0,0,0.5)",
+                                  }}>
+                                    {p.sorare_starter_pct == null ? "—" : `${p.sorare_starter_pct}%`}
+                                  </span>
+                                </div>
                                 {/* CS% */}
                                 <span style={{ fontFamily:"'DM Mono',monospace", fontSize:11, fontWeight:600, textAlign:"center", color:pctC(p.csPercent) }}>{p.csPercent!=null?`${p.csPercent}%`:"—"}</span>
                                 {/* Match box Win% : Dom vs Ext */}
@@ -1889,195 +2133,74 @@ export default function StellarTab({ players, teams, fixtures, logos = {}, match
             );
           })()}
 
-            {/* ─── DECISIVE PICK — pleine largeur colonne droite ─── */}
-            {dayData.decisivePick && (() => {
-              const dp = dayData.decisivePick;
-              const parisTime = utcToParisTime(dp.kickoff, dp.matchDate);
-              const gaR = dp.ga_per_match?.toFixed(2) || "0.00";
-              const lgColor = LEAGUE_COLOR[dp.league] || "#FF8A80";
-              const pc = PC[dp.position];
-              const dpPlayed = dp.last_so5_date && dp.last_so5_date >= gwWeekStart && dp.last_so5_score != null;
-              const dpWon = dpPlayed && dp.last_so5_score >= 60;
-              const dpRealScore = dpPlayed ? Math.round(dp.last_so5_score) : null;
-              const dpRealColor = dpPlayed ? (dp.last_so5_score >= 75 ? "#4ADE80" : dp.last_so5_score >= 60 ? "#A3E635" : dp.last_so5_score >= 50 ? "#FBBF24" : dp.last_so5_score >= 40 ? "#FB923C" : "#EF4444") : null;
-              const hg = dp.last_match_home_goals;
-              const ag = dp.last_match_away_goals;
-              const dpMatchResult = dpPlayed && hg != null ? (dp.isHome ? `${hg}-${ag}` : `${ag}-${hg}`) : null;
-              return (
-                <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 10, background: dpPlayed ? `linear-gradient(135deg, rgba(6,2,20,0.9), ${dpRealColor}18)` : "linear-gradient(135deg, rgba(6,2,20,0.9), rgba(15,5,40,0.85))", border: dpPlayed ? `1px solid ${dpRealColor}50` : "1px solid rgba(196,181,253,0.2)", borderRadius: 10, padding: "8px 14px", backdropFilter: "blur(12px)", boxShadow: dpPlayed ? `0 0 16px ${dpRealColor}30` : "0 0 16px rgba(139,92,246,0.1)" }}>
-                  <div style={{ flexShrink: 0, fontSize: 18 }}>{dpWon ? "✅" : dpPlayed ? "❌" : "⚡"}</div>
-                  <div style={{ flex: 1, minWidth: 0 }}>
-                    <div style={{ fontSize: 8, fontWeight: 800, color: dpPlayed ? dpRealColor : "#A78BFA", letterSpacing: "0.1em", marginBottom: 1 }}>
-                      {dpWon
-                        ? (lang === "fr" ? "DECISIVE PICKER — +2 000 ESSENCE !" : "DECISIVE PICKER — +2,000 ESSENCE!")
-                        : dpPlayed
-                        ? (lang === "fr" ? "DECISIVE PICKER — 0 ESSENCE" : "DECISIVE PICKER — 0 ESSENCE")
-                        : (lang === "fr" ? "DECISIVE PICKER — 2 000 ESSENCE" : "DECISIVE PICKER — 2,000 ESSENCE")}
-                    </div>
-                    {!dpPlayed && <div style={{ fontSize: 7.5, color: "rgba(255,255,255,0.35)", lineHeight: 1.3, marginBottom: 3 }}>
-                      {lang === "fr"
-                        ? "Le plus susceptible de faire une action décisive — G+A/match × forme (L5) × faiblesse adverse (xGA)"
-                        : "Most likely to make a decisive action — G+A/match × form (L5) × opponent weakness (xGA)"}
-                    </div>}
-                    <div style={{ display: "flex", alignItems: "center", gap: 6, flexWrap: "wrap" }}>
-                      {logos[dp.club] && <img src={`/data/logos/${logos[dp.club]}`} alt="" style={{ width: 16, height: 16, objectFit: "contain" }} />}
-                      <span style={{ fontSize: 13, fontWeight: 900, color: "#fff" }}>{dp.name}</span>
-                      <span style={{ fontSize: 8, fontWeight: 800, background: `linear-gradient(135deg,${pc},${pc}CC)`, borderRadius: 3, padding: "1px 5px", color: "#fff" }}>{dp.position}</span>
-                      <span style={{ fontSize: 8, fontWeight: 700, color: lgColor }}>{dp.league}</span>
-                      <span style={{ fontSize: 8, color: "rgba(255,255,255,0.45)" }}>vs <span style={{ color: "#fff", fontWeight: 600 }}>{sn(dp.oppName)}</span>{dpMatchResult && <span style={{ color: dpRealColor, fontWeight: 700 }}> {dpMatchResult}</span>}</span>
-                      {!dpPlayed && parisTime && <span style={{ fontSize: 8, color: "#C4B5FD", fontWeight: 700 }}>⏰ {parisTime}</span>}
-                      <span style={{ fontSize: 8, color: "rgba(255,255,255,0.45)" }}>G+A/match <span style={{ color: "#4ADE80", fontWeight: 700 }}>{gaR}</span></span>
-                      <span style={{ fontSize: 8, color: "rgba(255,255,255,0.45)" }}>L5 <span style={{ color: dp.l5 >= 60 ? "#4ADE80" : dp.l5 >= 40 ? "#F59E0B" : "#EF4444", fontWeight: 700 }}>{dp.l5 ?? "—"}</span></span>
-                      {!dpPlayed && <span style={{ fontSize: 8, color: "rgba(255,255,255,0.45)" }}>D-Score <span style={{ color: "#C4B5FD", fontWeight: 700 }}>{dp.ds}</span></span>}
-                    </div>
-                  </div>
-                  <div style={{ flexShrink: 0, textAlign: "center", background: dpPlayed ? `${dpRealColor}22` : "rgba(139,92,246,0.15)", border: dpPlayed ? `1px solid ${dpRealColor}60` : "1px solid rgba(167,139,250,0.3)", borderRadius: 8, padding: "6px 12px" }}>
-                    {dpWon ? (
-                      <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-                        <img src="/essence.png" alt="essence" style={{ width: 44, height: 44, objectFit: "contain", filter: `drop-shadow(0 0 8px #A855F7)` }} />
-                        <div>
-                          <div style={{ fontSize: 22, fontWeight: 900, color: "#E9D5FF", fontFamily: "'DM Mono',monospace", lineHeight: 1 }}>+2 000</div>
-                          <div style={{ fontSize: 10, fontWeight: 800, color: "#A855F7", letterSpacing: "0.05em" }}>ESSENCE</div>
-                        </div>
-                      </div>
-                    ) : dpPlayed ? (
-                      <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-                        <img src="/essence.png" alt="essence" style={{ width: 44, height: 44, objectFit: "contain", filter: "grayscale(1) opacity(0.4)" }} />
-                        <div>
-                          <div style={{ fontSize: 22, fontWeight: 900, color: "#6B7280", fontFamily: "'DM Mono',monospace", lineHeight: 1 }}>0</div>
-                          <div style={{ fontSize: 10, fontWeight: 800, color: "#6B7280", letterSpacing: "0.05em" }}>ESSENCE</div>
-                        </div>
-                      </div>
-                    ) : (
-                      <>
-                        <div style={{ fontSize: 18, fontWeight: 900, color: dp.pDecisive >= 50 ? "#4ADE80" : dp.pDecisive >= 30 ? "#F59E0B" : "#C4B5FD", fontFamily: "'DM Mono',monospace", lineHeight: 1 }}>{dp.pDecisive}%</div>
-                        <div style={{ fontSize: 7, color: "rgba(255,255,255,0.4)", marginTop: 2 }}>CHANCE</div>
-                      </>
-                    )}
-                  </div>
-                </div>
-              );
-            })()}
-
-          {dayData.teams.length === 0 ? (
-            <div style={{ textAlign: "center", padding: "40px 0", color: "rgba(255,255,255,0.2)" }}>
-              <div style={{ fontSize: 32, marginBottom: 8 }}>🔭</div>
-              <div style={{ fontSize: 13 }}>{S.stellarNoTeams}</div>
-            </div>
-          ) : (
-            <>
-            <div className="st-teams-grid" style={{ display: "grid", gridTemplateColumns: "repeat(2, 1fr)", gap: 12 }}>
-            {dayData.teams.map((team, ti) => {
-              const isUltime = team.label === "ULTIME";
-              const totalScore = getAdjTotalDs(team.players);
-              const palier = PALIERS.filter(p => totalScore >= p.pts).pop();
-              // Score réel : remplace ds par last_so5_score si le joueur a joué cette GW
-              const hasRealData = team.players.some(p => p.last_so5_date && p.last_so5_date >= gwWeekStart && p.last_so5_score != null);
-              const isValidated = hasRealData; // automatique dès que des scores réels existent
-              const realScore = Math.round(team.players.reduce((sum, p) => {
-                const played = p.last_so5_date && p.last_so5_date >= gwWeekStart;
-                const sc = played && p.last_so5_score != null ? p.last_so5_score : p.ds;
-                return sum + (p.isCaptain ? sc * 1.5 : sc);
-              }, 0));
-              const realPalier = PALIERS.filter(p => realScore >= p.pts).pop();
-              const realPalierIdx = realPalier ? PALIERS.indexOf(realPalier) + 1 : null;
-
-              return (
-                <div key={ti} className="st-team-card" style={{
-                  borderRadius: 14, padding: "12px",
-                  background: isUltime
-                    ? "linear-gradient(135deg, rgba(220,210,255,0.14) 0%, rgba(140,80,240,0.10) 25%, rgba(180,140,255,0.08) 50%, rgba(100,80,220,0.10) 75%, rgba(220,210,255,0.14) 100%)"
-                    : "rgba(20,10,50,0.45)",
-                  border: isUltime ? "1px solid rgba(196,181,253,0.5)" : "1px solid rgba(140,100,255,0.12)",
-                  boxShadow: isUltime ? "0 0 50px rgba(160,80,255,0.18), 0 0 25px rgba(180,120,255,0.12), inset 0 1px 0 rgba(255,255,255,0.15), inset 0 -1px 0 rgba(196,181,253,0.08)" : "0 4px 20px rgba(0,0,0,0.4)",
-                  backdropFilter: "blur(8px)",
-                }}>
-                  <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 10 }}>
-                    <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-                      <span style={{ fontSize: 18 }}>{team.icon}</span>
-                      <div>
-                        <div style={{ fontSize: 13, fontWeight: 800, color: isUltime ? "#C4B5FD" : "#fff", letterSpacing: "0.05em" }}>
-                          {isUltime ? S.stellarUltimeLabel : S.stellarTeamLabel(team.label)}
-                        </div>
-                        <div style={{ fontSize: 9, color: "rgba(255,255,255,0.3)" }}>{isUltime ? S.stellarTop5 : S.stellarTeamFrom(team.label)}
-                        </div>
-                        {team.totalDs > 0 && <div style={{ fontSize: 9, fontWeight: 800, color: "#A78BFA", fontFamily: "'DM Mono',monospace", marginTop: 1 }}>⚡ Score : {team.totalDs}</div>}
-                      </div>
-                    </div>
-                    <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-                      {/* Infos à gauche du score */}
-                      <div className="st-card-bonus-info" style={{ textAlign: "right" }}>
-                        <div style={{ fontSize: 7, color: "rgba(255,255,255,0.25)", fontStyle: "italic" }}>{S.stellarBonusCard}</div>
-                        <div style={{ fontSize: 7, color: "rgba(255,255,255,0.2)" }}>{S.stellarProjScore}</div>
-                        {isValidated && hasRealData
-                          ? realPalier && <div style={{ fontSize: 7, color: realPalier.color, fontWeight: 600 }}>→ {realPalier.reward}</div>
-                          : palier && <div style={{ fontSize: 7, color: palier.color, fontWeight: 600 }}>→ {palier.reward}</div>
-                        }
-                      </div>
-                      {/* Score + palier réel */}
-                      <div style={{ textAlign: "right", display: "flex", flexDirection: "column", alignItems: "flex-end", gap: 3 }}>
-                        <div style={{ fontSize: 8, fontWeight: 700, color: "rgba(196,181,253,0.6)", letterSpacing: "0.12em", textTransform: "uppercase" }}>{S.stellarScore}</div>
-                        {isValidated ? (
-                          <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
-                            <span style={{ fontFamily: "'DM Mono',monospace", fontSize: 14, fontWeight: 700, color: "rgba(255,255,255,0.25)", textDecoration: "line-through" }}>{totalScore}</span>
-                            <span style={{ fontFamily: "'DM Mono',monospace", fontSize: 22, fontWeight: 900, color: realPalier ? realPalier.color : "#4ADE80", textShadow: `0 0 12px ${realPalier ? realPalier.color : "#4ADE80"}66` }}>{realScore}</span>
-                          </div>
-                        ) : (
-                          <div style={{ fontFamily: "'DM Mono',monospace", fontSize: 20, fontWeight: 800, color: palier ? palier.color : "#fff" }}>{totalScore}</div>
-                        )}
-                        {/* Palier atteint */}
-                        {isValidated && (
-                          <div style={{
-                            display: "flex", alignItems: "center", gap: 4, padding: "3px 8px",
-                            borderRadius: 20, background: realPalier ? `${realPalier.color}22` : "rgba(255,255,255,0.06)",
-                            border: `1px solid ${realPalier ? realPalier.color + "66" : "rgba(255,255,255,0.1)"}`,
-                          }}>
-                            <svg width="10" height="10" viewBox="0 0 14 14" fill="none">
-                              <circle cx="7" cy="7" r="6.5" stroke={realPalier ? realPalier.color : "#4ADE80"} strokeWidth="1.5"/>
-                              <path d="M4 7l2.2 2.2L10 4.5" stroke={realPalier ? realPalier.color : "#4ADE80"} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                            </svg>
-                            <span style={{ fontSize: 9, fontWeight: 800, color: realPalier ? realPalier.color : "rgba(255,255,255,0.3)", whiteSpace: "nowrap" }}>
-                              {realPalierIdx ? `Palier ${realPalierIdx}` : "Hors palier"}
-                            </span>
-                          </div>
-                        )}
-                      </div>
-                    </div>
-                  </div>
-                  <div className="st-team-players" style={{ display: "flex", justifyContent: "center", gap: 4, flexWrap: "nowrap" }}>
-                    {team.players.map((p, pi) => (
-                      <StellarCard key={pi} player={p} logos={logos} size="sm" isValidated={isValidated} gwStart={gwWeekStart}
-                        edition={getEdition(cardEditions[p.slug || p.name] || "base")}
-                        onEditionChange={(id) => setCardEdition(p.slug || p.name, id)}
-                      />
-                    ))}
-                  </div>
-
-                </div>
-              );
-            })}
-            </div>
-            </>
-          )}
-          {/* ── TOP 10 — 4 colonnes dans la colonne droite ── */}
-          {dayData.teams.length > 0 && (
-            <div style={{ marginTop: 16 }}>
-              <div style={{ marginBottom: 8 }}>
-                <div style={{ fontSize: 10, fontWeight: 800, color: "rgba(196,181,253,0.5)", letterSpacing: "0.15em", textTransform: "uppercase", marginBottom: 3 }}>{S.stellarTop10Title}</div>
-              </div>
-              <div className="st-top10-grid" style={{ display: "grid", gridTemplateColumns: `repeat(${dayData.teams.length}, 1fr)`, gap: 8 }}>
-                {dayData.teams.map((team, ti) => (
-                  <Top10Column key={ti} team={team} logos={logos} dateStr={isoDate(weekDays[selectedDay])} lang={lang} />
-                ))}
-              </div>
-              <div style={{ marginTop: 10, fontSize: 10, color: "rgba(255,255,255,0.38)", fontStyle: "italic", lineHeight: 1.4, textAlign: "center" }}>
-                {S.stellarTop10Hint}{" "}
-                <span style={{ color: "rgba(252,165,165,0.8)", fontWeight: 700, fontStyle: "normal" }}>{S.stellarTop10Fight}</span>
-              </div>
-            </div>
-          )}
+          {/* Decisive Pick déplacé dans la colonne gauche */}
           </div>{/* fin colonne droite */}
           </div>{/* fin layout flex */}
+
+          {/* ── RECAP EQUIPES SAUVEGARDEES ── */}
+          {savedTeams.length > 0 && (
+            <div style={{ marginTop: 16 }}>
+              <div style={{ fontSize: 10, fontWeight: 800, color: "rgba(196,181,253,0.5)", letterSpacing: "0.12em", textTransform: "uppercase", marginBottom: 8 }}>
+                {lang === "fr" ? "MES EQUIPES SAUVEGARDEES" : "MY SAVED TEAMS"}
+              </div>
+              <div style={{ display: "grid", gridTemplateColumns: `repeat(${Math.min(savedTeams.length, 4)}, 1fr)`, gap: 10 }}>
+                {savedTeams.map((st, si) => {
+                  const POS_ORDER = ["GK","DEF","MIL","ATT","FLEX"];
+                  const palSt = PALIERS.filter(p => st.score >= p.pts).pop();
+                  return (
+                    <div key={st.id} style={{ borderRadius: 12, background: "rgba(15,8,40,0.7)", border: "1px solid rgba(74,222,128,0.15)", padding: "10px 12px", backdropFilter: "blur(6px)" }}>
+                      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 8 }}>
+                        <span style={{ fontSize: 11, fontWeight: 900, color: "#4ADE80" }}>{st.label}</span>
+                        <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
+                          {palSt && <span style={{ fontSize: 8, color: palSt.silver ? "#C0C0C0" : palSt.color, fontWeight: 700 }}>{palSt.reward}</span>}
+                          <span style={{
+                            fontSize: 18, fontWeight: 900, fontFamily: "'DM Mono',monospace",
+                            color: palSt?.silver ? "#1a1a2e" : (palSt ? palSt.color : "#C4B5FD"),
+                            background: palSt?.silver ? "linear-gradient(90deg,#C0C0C0,#A8E8D0,#B0C4E8,#D4B0E8,#fff,#D4B0E8,#B0C4E8,#A8E8D0,#C0C0C0)" : "none",
+                            backgroundSize: "200% 100%", WebkitBackgroundClip: palSt?.silver ? "text" : "unset", WebkitTextFillColor: palSt?.silver ? "transparent" : "unset",
+                            animation: palSt?.silver ? "silverShine 3s linear infinite" : "none",
+                          }}>{st.score}</span>
+                        </div>
+                      </div>
+                      <div style={{ display: "flex", justifyContent: "center", gap: 6 }}>
+                        {POS_ORDER.map(slot => {
+                          const p = st.picks[slot];
+                          if (!p) return null;
+                          const pc = PC[p.position];
+                          const clubLogo = logos[p.club];
+                          const ownedCard = sorareCardMap[p.slug || p.name];
+                          return (
+                            <div key={slot} style={{ textAlign: "center", width: 56 }}>
+                              <div style={{ width: 52, height: 68, borderRadius: 7, overflow: "hidden", margin: "0 auto", position: "relative",
+                                background: ownedCard ? "transparent" : `linear-gradient(155deg, rgba(8,4,28,0.9), ${pc}25)`,
+                                border: ownedCard ? "none" : `1px solid ${pc}30`,
+                              }}>
+                                {ownedCard ? (
+                                  <img src={ownedCard.pictureUrl} alt="" style={{ width: "100%", height: "100%", objectFit: "contain" }} />
+                                ) : (
+                                  <div style={{ display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", height: "100%", gap: 2 }}>
+                                    {clubLogo && <img src={`/data/logos/${clubLogo}`} alt="" style={{ width: 18, height: 18, objectFit: "contain" }} />}
+                                    <span style={{ fontSize: 7, fontWeight: 800, color: pc }}>{slot}</span>
+                                  </div>
+                                )}
+                                {p.sorare_starter_pct != null && (
+                                  <span style={{ position: "absolute", top: 2, right: 2, fontSize: 6, fontWeight: 700, padding: "1px 3px", borderRadius: 3, color: "#fff",
+                                    background: p.sorare_starter_pct >= 70 ? "rgba(22,101,52,0.9)" : p.sorare_starter_pct >= 50 ? "rgba(133,77,14,0.9)" : "rgba(153,27,27,0.9)",
+                                  }}>{p.sorare_starter_pct}%</span>
+                                )}
+                              </div>
+                              <div style={{ fontSize: 8, fontWeight: 700, color: "#fff", marginTop: 2, whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>{p.name.split(" ").pop()}</div>
+                              <div style={{ fontSize: 10, fontWeight: 800, color: dsColor(getAdjDs(p)), fontFamily: "'DM Mono',monospace" }}>{getAdjDs(p)}</div>
+                            </div>
+                          );
+                        })}
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+          )}
 
           {/* ── BOUTON FIGHT ── */}
           <div style={{ marginTop: 24, textAlign: "center" }}>

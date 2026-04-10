@@ -514,6 +514,10 @@ def get_manual_euro_fixtures():
     Kickoffs en UTC. Competition = "UEL" ou "UECL" → calendrier Stellar only, pas de reco.
     """
     fixtures = [
+        # ── UCL QF Leg 1 — Mardi 7 avril 2026 (terminés) ────────────────────
+        {"home": "Sporting",       "away": "Arsenal",       "date": "2026-04-07", "kickoff": "19:00", "matchday": "QUARTER_FINALS", "league": "UCL", "competition": "UCL", "home_api": "Sporting CP",           "away_api": "Arsenal FC",            "score_home": 0, "score_away": 1},
+        {"home": "Real Madrid",    "away": "Bayern",        "date": "2026-04-07", "kickoff": "19:00", "matchday": "QUARTER_FINALS", "league": "UCL", "competition": "UCL", "home_api": "Real Madrid CF",        "away_api": "FC Bayern München",     "score_home": 1, "score_away": 2},
+
         # ── UEL QF Leg 1 — Jeudi 9 avril 2026 ──────────────────────────────
         {"home": "Braga",          "away": "Betis",         "date": "2026-04-09", "kickoff": "16:45", "matchday": "QUARTER_FINALS", "league": "UEL", "competition": "UEL", "home_api": "SC Braga",             "away_api": "Real Betis"},
         {"home": "Freiburg",       "away": "Celta Vigo",    "date": "2026-04-09", "kickoff": "19:00", "matchday": "QUARTER_FINALS", "league": "UEL", "competition": "UEL", "home_api": "SC Freiburg",           "away_api": "RC Celta de Vigo"},
@@ -529,6 +533,57 @@ def get_manual_euro_fixtures():
     print(f"\n📋 Manual euro fixtures: {len(fixtures)} matchs (UEL + UECL QF Leg 1)")
     for f in fixtures:
         print(f"  [{f['league']}] {f['home']} vs {f['away']} ({f['date']} {f['kickoff']} UTC)")
+    return fixtures
+
+
+def fetch_mls_fixtures():
+    """Fetch MLS fixtures from Sorare API (club by club, upcomingGames)."""
+    import urllib.request
+    SORARE_URL = "https://api.sorare.com/federation/graphql"
+    sorare_key = os.environ.get("SORARE_API_KEY", "")
+    headers_s = {"Content-Type": "application/json"}
+    if sorare_key:
+        headers_s["APIKEY"] = sorare_key
+
+    def sorare_gql(query):
+        req = urllib.request.Request(SORARE_URL, data=json.dumps({"query": query}).encode(), headers=headers_s)
+        with urllib.request.urlopen(req, timeout=30) as r:
+            return json.loads(r.read())
+
+    print("\n--- MLS (via Sorare API) ---")
+    # 1. Get all MLS clubs
+    d = sorare_gql('{football{competition(slug:"mlspa"){clubs{nodes{name slug}}}}}')
+    clubs = d.get("data", {}).get("football", {}).get("competition", {}).get("clubs", {}).get("nodes", [])
+    print(f"  {len(clubs)} clubs MLS")
+
+    seen = set()  # avoid duplicate matches
+    fixtures = []
+    for i, club in enumerate(clubs):
+        try:
+            d2 = sorare_gql(f'{{football{{club(slug:"{club["slug"]}"){{name upcomingGames(first:5){{id date homeTeam{{name}} awayTeam{{name}}}}}}}}}}')
+            games = d2.get("data", {}).get("football", {}).get("club", {}).get("upcomingGames", [])
+            for g in games:
+                date = (g.get("date") or "")[:10]
+                home = g.get("homeTeam", {}).get("name", "")
+                away = g.get("awayTeam", {}).get("name", "")
+                key = f"{date}_{home}_{away}"
+                if key in seen or not home or not away:
+                    continue
+                seen.add(key)
+                # Extraire heure UTC depuis la date ISO
+                kickoff = (g.get("date") or "")[11:16] or ""
+                fixtures.append({
+                    "home": home, "away": away, "date": date,
+                    "kickoff": kickoff, "matchday": "MLS",
+                    "league": "MLS", "home_api": home, "away_api": away,
+                })
+            if (i + 1) % 10 == 0:
+                print(f"  [{i+1}/{len(clubs)}] {len(fixtures)} matchs trouvés...")
+        except Exception as e:
+            print(f"  ⚠️ Erreur {club['name']}: {e}")
+        time.sleep(0.15)
+
+    print(f"  ✅ {len(fixtures)} matchs MLS trouvés")
     return fixtures
 
 
@@ -571,6 +626,13 @@ def main():
     # UEL + UECL manuelles (football-data.org ne les inclut pas dans le plan gratuit)
     manual_euro = get_manual_euro_fixtures()
     all_fixtures.extend(manual_euro)
+
+    # MLS via Sorare API
+    try:
+        mls_fixtures = fetch_mls_fixtures()
+        all_fixtures.extend(mls_fixtures)
+    except Exception as e:
+        print(f"⚠️ MLS fixtures skipped: {e}")
 
     print(f"\n📋 Total: {len(all_fixtures)} matchs récupérés")
 

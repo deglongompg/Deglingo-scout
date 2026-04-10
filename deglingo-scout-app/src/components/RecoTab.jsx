@@ -34,6 +34,7 @@ const LG_META = {
   PL:     { name: "Premier League",  flagCode: "gb-eng", accent: "#B388FF" },
   Liga:   { name: "La Liga",         flagCode: "es",     accent: "#FF8A80" },
   Bundes: { name: "Bundesliga",      flagCode: "de",     accent: "#FFD180" },
+  MLS:    { name: "MLS",             flagCode: "us",     accent: "#66BB6A" },
 };
 
 function getTags(p) {
@@ -838,14 +839,16 @@ export default function RecoTab({ players, teams, fixtures, logos = {}, lang = "
       {/* League tabs */}
       <div style={{ display: "flex", gap: "4px", marginBottom: "14px" }}>
         {Object.entries(LG_META).map(([k, v]) => (
-          <button key={k} onClick={() => { setLeague(k); setSel(null); setStackIdx(0); }} style={{
-            flex: 1, padding: "7px 2px", borderRadius: "8px", border: "none", cursor: "pointer",
+          <button key={k} onClick={() => { if (!v.disabled) { setLeague(k); setSel(null); setStackIdx(0); } }} disabled={v.disabled} style={{
+            flex: 1, padding: "7px 2px", borderRadius: "8px", border: "none",
+            cursor: v.disabled ? "not-allowed" : "pointer",
             background: league === k ? "rgba(255,255,255,0.07)" : "rgba(255,255,255,0.015)",
-            color: league === k ? "#fff" : "rgba(255,255,255,0.22)", fontSize: "11px",
-            fontWeight: league === k ? 700 : 500, fontFamily: "Outfit",
+            color: v.disabled ? "rgba(255,255,255,0.12)" : (league === k ? "#fff" : "rgba(255,255,255,0.22)"),
+            fontSize: "11px", fontWeight: league === k ? 700 : 500, fontFamily: "Outfit",
             outline: league === k ? `1px solid ${v.accent}40` : "none", transition: "all 0.2s",
+            opacity: v.disabled ? 0.4 : 1,
           }}>
-            <img src={`https://flagcdn.com/w40/${v.flagCode}.png`} alt={v.flagCode} width={16} height={12} style={{ borderRadius: 2, objectFit: "cover" }} /><br /><span style={{ fontSize: "8px" }}>{v.name.length > 10 ? v.name.split(" ")[0] : v.name}</span>
+            <img src={`https://flagcdn.com/w40/${v.flagCode}.png`} alt={v.flagCode} width={16} height={12} style={{ borderRadius: 2, objectFit: "cover", filter: v.disabled ? "grayscale(1)" : "none" }} /><br /><span style={{ fontSize: "8px" }}>{v.name}{v.disabled ? " (soon)" : ""}</span>
           </button>
         ))}
       </div>

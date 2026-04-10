@@ -8,7 +8,7 @@ Usage:
   python3 fetch_all_players.py Liga        # La Liga
   python3 fetch_all_players.py Bundes      # Bundesliga
   python3 fetch_all_players.py L1          # Ligue 1
-  python3 fetch_all_players.py ALL         # All 4 leagues
+  python3 fetch_all_players.py ALL         # All 5 leagues (L1+PL+Liga+Bundes+MLS)
   python3 fetch_all_players.py PL --fresh  # Delete existing & start from scratch
 """
 
@@ -43,12 +43,14 @@ LEAGUE_SLUGS = {
     "PL":     "premier-league-gb-eng",
     "Liga":   "laliga-es",
     "Bundes": "bundesliga-de",
+    "MLS":    "mlspa",
 }
 LEAGUE_FILES = {
     "L1":     "deglingo_ligue1_final.json",
     "PL":     "deglingo_premier_league_final.json",
     "Liga":   "deglingo_la_liga_final.json",
     "Bundes": "deglingo_bundesliga_final.json",
+    "MLS":    "deglingo_mls_final.json",
 }
 
 # ─── AA STAT CATEGORIES (for detailedScore profile) ─────────
@@ -196,7 +198,7 @@ Q_DETAIL = """query P($slug: String!) { football { player(slug: $slug) {
 # Championnats uniquement — Streak Ligue only (pas de CL, coupes, sélections)
 VALID_COMPS = {
     "premier-league-gb-eng", "laliga-es", "bundesliga-de",
-    "ligue-1-fr", "serie-a-it",
+    "ligue-1-fr", "serie-a-it", "mlspa",
 }
 
 
@@ -619,7 +621,7 @@ if __name__ == "__main__":
         sys.exit(1)
 
     if target == "ALL":
-        for lg in ["L1", "PL", "Liga", "Bundes"]:
+        for lg in ["L1", "PL", "Liga", "Bundes", "MLS"]:
             scrape_league(lg, fresh=fresh)
             print(f"\n⏸️  Pause 30s avant la prochaine ligue...")
             time.sleep(30)

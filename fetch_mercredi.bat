@@ -8,7 +8,7 @@ echo   DEGLINGO SCOUT -- GROSSE MAJ MERCREDI
 echo =========================================
 echo.
 
-echo [1/6] STATS JOUEURS (4 ligues, ~6 min)...
+echo [1/6] STATS JOUEURS (5 ligues + MLS, ~8 min)...
 echo -----------------------------------------
 py fetch_all_players.py ALL --fresh
 

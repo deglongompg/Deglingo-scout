@@ -205,12 +205,15 @@ export function dScoreMatch(player, opp, isHome, playerTeam = null) {
 
     const rawGK = socleGK + contexteGK + momentumGK + domBonusGK + goatGK + gkSamplePenalty + gkInactivityPenaltyFinal;
     const minScoreGK = mp >= 5 ? _floor / 100 * 50 : 0;
+    // Floor titulaire Sorare pour GK aussi
+    const gkStarterFloor = starterPct >= 70 ? 35 + Math.min(15, Math.round((p.aa10 || p.aa5 || 0) * 0.3) + Math.round(contexteGK * 0.2)) : 0;
+    const minGK = Math.max(minScoreGK, gkStarterFloor);
     // Un GK ne peut pas dépasser son ceiling historique (meilleur match récent)
     const ceilGK = p.ceiling || 100;
     // GK qui a perdu sa place (DNP 2 derniers matchs) → score plafonné à 42
-    // Il ne jouera très probablement pas → D-Score élevé serait trompeur pour Sorare
-    const gkLostSpotCap = gkLostSpot ? 35 : ceilGK;
-    return Math.round(Math.max(minScoreGK, Math.min(gkLostSpotCap, rawGK)));
+    // Mais si Sorare le projette titulaire >= 70%, on ne plafonne pas
+    const gkLostSpotCap = (gkLostSpot && starterPct < 70) ? 35 : ceilGK;
+    return Math.round(Math.max(minGK, Math.min(gkLostSpotCap, rawGK)));
   }
 
   // ─── OUTFIELD PLAYERS ───

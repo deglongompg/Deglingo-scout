@@ -826,7 +826,14 @@ export default function StellarTab({ players, teams, fixtures, logos = {}, match
       .filter(p => p.sorare_starter_pct == null || p.sorare_starter_pct >= 70) // titu% >= 70%
       // Filtre par matchs selectionnes dans la colonne gauche
       .filter(p => selectedMatchFilters.length === 0 || selectedMatchFilters.some(m => clubMatchGlobal(p.club, m.home) || clubMatchGlobal(p.club, m.away)))
-      .map(p => ({ ...p, ds: getAdjDs(p) }))
+      .map(p => {
+        // Algo Magique trie TOUJOURS avec bonus (meme si Bonus OFF dans l'affichage)
+        const slug = p.slug || p.name;
+        const ownedCard = sorareCardMap[slug];
+        const bonus = ownedCard && ownedCard.totalBonus > 0 ? ownedCard.totalBonus : 0;
+        const adjDs = Math.round((p.ds || 0) * (1 + bonus / 100));
+        return { ...p, ds: adjDs };
+      })
       .sort((a, b) => b.ds - a.ds);
     if (pool.length < 5) return;
 

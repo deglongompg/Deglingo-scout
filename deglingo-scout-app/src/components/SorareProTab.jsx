@@ -127,6 +127,7 @@ export default function SorareProTab({ players, teams, fixtures, logos = {}, mat
   const [sorareCards, setSorareCards] = useState([]);
   const [sorareUser, setSorareUser] = useState(null);
   const [sorareLoading, setSorareLoading] = useState(false);
+  const [loadingProgress, setLoadingProgress] = useState({ scanned: 0, found: 0 });
   const [myCardsMode, setMyCardsMode] = useState(false);
 
   useEffect(() => {
@@ -151,12 +152,50 @@ export default function SorareProTab({ players, teams, fixtures, logos = {}, mat
   }, []);
 
   // Pro-specific: paginated fetch client-side to get ALL Limited/Rare cards
-  // Does NOT use /api/sorare/cards (which has server-side pagination limits)
-  // Instead uses rawq to paginate directly from the frontend
+  // Paginates in background — shows cards progressively as they are found
+  // Uses localStorage cache to avoid re-paginating on every page load
+  const parseCard = (c) => {
+    const edName = c.cardEditionName || "";
+    const r = (c.rarityTyped || "").toLowerCase().replace(/ /g, "_");
+    return {
+      cardSlug: c.slug, playerSlug: c.player?.slug || null, playerName: c.player?.displayName || null,
+      position: c.player?.position || null, rarity: r, pictureUrl: c.pictureUrl || null,
+      cardEditionName: edName, isStellar: false,
+      isLimited: r === "limited", isRare: r === "rare",
+      isClassic: (() => { const m = c.slug?.match(/-(\d{4})-/); return m ? parseInt(m[1]) < 2025 : false; })(),
+      power: c.power,
+    };
+  };
+  const isLR = (c) => { const r = (c.rarityTyped || "").toLowerCase(); return r === "limited" || r === "rare"; };
+
   const fetchCards = async (token, silent = false) => {
     if (!token) return;
     if (!silent) setSorareLoading(true);
     try {
+      // Check localStorage cache first (valid for 1 hour)
+      const cacheKey = "pro_cards_cache";
+      const cacheTimeKey = "pro_cards_cache_time";
+      const cached = localStorage.getItem(cacheKey);
+      const cachedTime = parseInt(localStorage.getItem(cacheTimeKey) || "0");
+      if (cached && Date.now() - cachedTime < 3600000) {
+        try {
+          const cachedCards = JSON.parse(cached);
+          if (cachedCards.length > 0) {
+            // Get user info from a quick call
+            const uRes = await fetch(`/api/sorare/cards?rawq=${encodeURIComponent("{currentUser{slug nickname}}")}`, { headers: { "Authorization": `Bearer ${token}` } });
+            if (uRes.status === 401) { localStorage.removeItem("sorare_access_token"); setSorareConnected(false); setSorareCards([]); return; }
+            const uData = await uRes.json();
+            const u = uData?.data?.currentUser;
+            if (u) setSorareUser({ slug: u.slug, nickname: u.nickname });
+            setSorareCards(cachedCards);
+            setSorareConnected(true);
+            setMyCardsMode(true);
+            if (!silent) setTimeout(() => setSorareLoading(false), 300);
+            return;
+          }
+        } catch { /* cache corrupt, re-fetch */ }
+      }
+
       // First page — also gets user info
       const firstQ = encodeURIComponent(`{currentUser{slug nickname cards(first:50,sport:FOOTBALL){nodes{slug name rarityTyped pictureUrl power cardEditionName ... on Card{player{slug displayName position}}}pageInfo{hasNextPage endCursor}}}}`);
       const res = await fetch(`/api/sorare/cards?rawq=${firstQ}`, { headers: { "Authorization": `Bearer ${token}` } });
@@ -167,44 +206,43 @@ export default function SorareProTab({ players, teams, fixtures, logos = {}, mat
       if (!user) { setSorareConnected(false); return; }
       setSorareUser({ slug: user.slug, nickname: user.nickname });
 
-      // Collect all cards via client-side pagination
-      let allNodes = [...(user.cards?.nodes || [])];
+      // Show whatever LR cards we find immediately
+      let scanned = user.cards?.nodes?.length || 0;
+      let allLR = (user.cards?.nodes || []).filter(isLR).map(parseCard).filter(c => c.playerSlug);
+      setSorareCards(allLR);
+      setSorareConnected(true);
+      setMyCardsMode(true);
+      setLoadingProgress({ scanned, found: allLR.length });
+
+      // Continue pagination in background (up to 200 pages = 10000 cards)
       let cursor = user.cards?.pageInfo?.endCursor;
       let hasNext = user.cards?.pageInfo?.hasNextPage;
-      for (let i = 0; i < 60 && hasNext && cursor; i++) {
+      for (let i = 0; i < 200 && hasNext && cursor; i++) {
         const pageQ = `query($a:String!){currentUser{cards(first:50,sport:FOOTBALL,after:$a){nodes{slug name rarityTyped pictureUrl power cardEditionName ... on Card{player{slug displayName position}}}pageInfo{hasNextPage endCursor}}}}`;
         const pr = await fetch(`/api/sorare/cards?rawq=${encodeURIComponent(pageQ)}&vars=${encodeURIComponent(JSON.stringify({a:cursor}))}`, { headers: { "Authorization": `Bearer ${token}` } });
         if (!pr.ok) break;
         const pd = await pr.json();
         if (pd.errors || !pd.data?.currentUser?.cards?.nodes?.length) break;
-        allNodes = allNodes.concat(pd.data.currentUser.cards.nodes);
+        const nodes = pd.data.currentUser.cards.nodes;
+        scanned += nodes.length;
+        const newLR = nodes.filter(isLR).map(parseCard).filter(c => c.playerSlug);
+        if (newLR.length > 0) {
+          allLR = [...allLR, ...newLR];
+          setSorareCards([...allLR]);
+        }
+        setLoadingProgress({ scanned, found: allLR.length });
         hasNext = pd.data.currentUser.cards.pageInfo?.hasNextPage;
         cursor = pd.data.currentUser.cards.pageInfo?.endCursor;
       }
+      setLoadingProgress({ scanned: 0, found: 0 });
 
-      // Filter: keep Limited + Rare only (Pro doesn't need Stellar/Common)
-      const cards = allNodes
-        .filter(c => {
-          const r = (c.rarityTyped || "").toLowerCase();
-          return r === "limited" || r === "rare";
-        })
-        .map(c => {
-          const edName = c.cardEditionName || "";
-          const r = (c.rarityTyped || "").toLowerCase().replace(/ /g, "_");
-          return {
-            cardSlug: c.slug, playerSlug: c.player?.slug || null, playerName: c.player?.displayName || null,
-            position: c.player?.position || null, rarity: r, pictureUrl: c.pictureUrl || null,
-            cardEditionName: edName, isStellar: false,
-            isLimited: r === "limited", isRare: r === "rare",
-            isClassic: false, // TODO: need seasonYear from API
-            power: c.power,
-          };
-        }).filter(c => c.playerSlug);
-      setSorareCards(cards);
-      setSorareConnected(true);
-      setMyCardsMode(true);
+      // Cache the final result
+      try {
+        localStorage.setItem(cacheKey, JSON.stringify(allLR));
+        localStorage.setItem(cacheTimeKey, String(Date.now()));
+      } catch { /* localStorage full, ignore */ }
+
     } catch { setSorareConnected(false); }
-    finally { if (!silent) setTimeout(() => setSorareLoading(false), 400); }
   };
 
   const connectSorare = () => {
@@ -250,6 +288,17 @@ export default function SorareProTab({ players, teams, fixtures, logos = {}, mat
 
   const addToTeam = (player) => {
     setMyPicks(prev => {
+      // Classic enforcement: max 1 off-season card per team
+      const playerCard = proCardMap[player.slug || player.name];
+      if (playerCard?.isClassic) {
+        const classicCount = Object.values(prev).filter(pp => {
+          if (!pp) return false;
+          const c = proCardMap[pp.slug || pp.name];
+          return c?.isClassic;
+        }).length;
+        if (classicCount >= 1) return prev; // refuse — already 1 Classic
+      }
+
       const pos = player.position;
       let next;
       if (selectedSlot) {
@@ -383,11 +432,25 @@ export default function SorareProTab({ players, teams, fixtures, logos = {}, mat
 
     const newPicks = { GK: null, DEF: null, MIL: null, ATT: null, FLEX: null };
     const taken = new Set();
+    let classicUsed = false;
     for (const pos of ["GK", "DEF", "MIL", "ATT"]) {
-      const best = pool.find(p => p.position === pos && !taken.has(p.slug || p.name));
-      if (best) { newPicks[pos] = best; taken.add(best.slug || best.name); }
+      const best = pool.find(p => {
+        if (p.position !== pos || taken.has(p.slug || p.name)) return false;
+        const card = proCardMap[p.slug || p.name];
+        if (card?.isClassic && classicUsed) return false; // max 1 Classic
+        return true;
+      });
+      if (best) {
+        newPicks[pos] = best; taken.add(best.slug || best.name);
+        if (proCardMap[best.slug || best.name]?.isClassic) classicUsed = true;
+      }
     }
-    const flex = pool.find(p => p.position !== "GK" && !taken.has(p.slug || p.name));
+    const flex = pool.find(p => {
+      if (p.position === "GK" || taken.has(p.slug || p.name)) return false;
+      const card = proCardMap[p.slug || p.name];
+      if (card?.isClassic && classicUsed) return false;
+      return true;
+    });
     if (flex) newPicks.FLEX = flex;
     setMyPicks(newPicks);
   };
@@ -575,14 +638,22 @@ export default function SorareProTab({ players, teams, fixtures, logos = {}, mat
         <div style={{ flex: 1, minWidth: 0 }}>
           <div style={{ borderRadius: 14, background: "rgba(6,3,20,0.95)", border: "none", overflow: "hidden", display: "flex", flexDirection: "column", height: "calc(100vh - 300px)", position: "relative" }}>
 
-            {/* Loading overlay */}
+            {/* Loading overlay — first connection */}
             {sorareLoading && (
               <div style={{ position: "absolute", inset: 0, zIndex: 20, background: "rgba(6,3,20,0.97)", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", gap: 14, backdropFilter: "blur(12px)", borderRadius: 14 }}>
                 <div style={{ width: 36, height: 36, border: "3px solid rgba(255,255,255,0.1)", borderTop: `3px solid ${rarityColor}`, borderRadius: "50%", animation: "spin 0.8s linear infinite" }} />
-                <div style={{ fontSize: 13, fontWeight: 700, color: rarityColor }}>{sorareUser?.nickname ? `${sorareUser.nickname}...` : "Sorare..."}</div>
-                <div style={{ width: 180, height: 4, borderRadius: 4, background: "rgba(255,255,255,0.08)", overflow: "hidden" }}>
-                  <div style={{ height: "100%", borderRadius: 4, background: rarityBg, animation: "loadBar 2.5s ease-in-out infinite", width: "60%" }} />
+                <div style={{ fontSize: 15, fontWeight: 800, color: rarityColor }}>{sorareUser?.nickname || "Sorare"}</div>
+                <div style={{ fontSize: 11, color: "rgba(255,255,255,0.5)" }}>
+                  {loadingProgress.scanned > 0
+                    ? `Scan de tes cartes... ${loadingProgress.scanned} scannees · ${loadingProgress.found} Limited/Rare`
+                    : "Connexion a Sorare..."}
                 </div>
+                <div style={{ width: 220, height: 6, borderRadius: 4, background: "rgba(255,255,255,0.08)", overflow: "hidden" }}>
+                  <div style={{ height: "100%", borderRadius: 4, background: rarityBg, transition: "width 0.3s", width: loadingProgress.scanned > 0 ? `${Math.min(100, (loadingProgress.scanned / 4500) * 100)}%` : "10%" }} />
+                </div>
+                {loadingProgress.scanned > 0 && (
+                  <div style={{ fontSize: 9, color: "rgba(255,255,255,0.25)" }}>~{Math.round((4500 - loadingProgress.scanned) / 50 * 0.8)}s restantes</div>
+                )}
               </div>
             )}
 
@@ -612,7 +683,7 @@ export default function SorareProTab({ players, teams, fixtures, logos = {}, mat
               <div style={{ display: "flex", gap: 6, alignItems: "center" }}>
                 {sorareConnected && (
                   <button onClick={disconnectSorare} style={{ display: "flex", alignItems: "center", gap: 4, padding: "4px 8px", borderRadius: 6, border: "1px solid rgba(74,222,128,0.4)", background: "rgba(74,222,128,0.08)", color: "#4ADE80", fontSize: 8, fontWeight: 800, cursor: "pointer", fontFamily: "Outfit" }}>
-                    {sorareUser?.nickname || "Sorare"} · {proCardCount} cards
+                    {sorareUser?.nickname || "Sorare"} · {proCardCount} cards{loadingProgress.scanned > 0 ? ` (${loadingProgress.scanned}...)` : ""}
                   </button>
                 )}
                 <button onClick={generateMagicTeam} style={{ padding: "5px 10px", borderRadius: 6, border: "none", cursor: "pointer", fontFamily: "Outfit", background: rarityBg, color: "#fff", fontSize: 9, fontWeight: 800 }}>

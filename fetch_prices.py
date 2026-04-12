@@ -33,6 +33,7 @@ LEAGUE_FILES = {
     "PL":     "deglingo_premier_league_final.json",
     "Liga":   "deglingo_la_liga_final.json",
     "Bundes": "deglingo_bundesliga_final.json",
+    "MLS":    "deglingo_mls_final.json",
 }
 
 def gql(query, variables=None):

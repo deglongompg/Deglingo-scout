@@ -78,15 +78,17 @@ export function dScoreMatch(player, opp, isHome, playerTeam = null) {
   // Si L5=0 ET L10=0 ET Titu=0% → le joueur n'a pas joué, on ne prédit rien
   const hasRecentData = _l5 > 0 || (p.l10 || 0) > 0;
   const tituPct = p.titu_pct || 0;
-  if (!hasRecentData && tituPct === 0) {
-    // Score minimal basé uniquement sur le contexte adversaire (pour ne pas afficher 0)
-    // mais plafonné à 15 max — ce joueur ne devrait jamais être recommandé
+  const starterPct = p.sorare_starter_pct || 0; // projection Sorare (source officielle)
+  if (!hasRecentData && tituPct === 0 && starterPct < 70) {
+    // Score minimal — sauf si Sorare le projette titulaire (>= 70%)
     return Math.min(15, Math.round((p.ga_per_match || 0) * 20));
   }
 
   // ─── INACTIVITY PENALTY: joueur qui ne joue presque plus ───
   // Titu < 20% sur L10 = rotation/blessé → forte pénalité
-  const inactivityPenalty = tituPct >= 50 ? 0 : tituPct >= 30 ? -8 : tituPct >= 10 ? -18 : tituPct > 0 ? -28 : -35;
+  // Mais si sorare_starter_pct >= 70%, le joueur est annoncé titulaire → pas de pénalité
+  const effectiveTitu = Math.max(tituPct, starterPct);
+  const inactivityPenalty = effectiveTitu >= 50 ? 0 : effectiveTitu >= 30 ? -8 : effectiveTitu >= 10 ? -18 : effectiveTitu > 0 ? -28 : -35;
 
   // ─── SAMPLE SIZE PENALTY: évite les Pinnock (1 match = 92 → faux GOAT) ───
   const mp = p.matchs_played || p.last_5?.filter(s => s > 0)?.length || 0;
@@ -398,7 +400,13 @@ export function dScoreMatch(player, opp, isHome, playerTeam = null) {
   const extraGoatFloor = isExtraGoat(p) && isInjuryReturn
     ? 67 + Math.max(0, momentum) + Math.max(0, domBonus) + dominationBonus + Math.round(contexte * 0.35)
     : 0;
-  const minScore = Math.min(100, Math.max(qualityFloor, extraGoatFloor));
+  // Floor titulaire Sorare : si annoncé >= 70% titu, floor = 35 + bonus contexte
+  // Le contexte (adversaire, AA historique) bonifie le floor pour les joueurs avec du vecu
+  const _starterPct = p.sorare_starter_pct || 0;
+  const starterFloor = _starterPct >= 70
+    ? 35 + Math.min(15, Math.round((p.aa10 || p.aa5 || 0) * 0.3) + Math.round(contexte * 0.2))
+    : 0;
+  const minScore = Math.min(100, Math.max(qualityFloor, extraGoatFloor, starterFloor));
 
   return Math.round(Math.max(minScore, Math.min(100, rawWithBonus)));
 }

@@ -102,14 +102,16 @@ export default function DbTab({ players, teams, fixtures, logos = {}, lang = "fr
 
   const enriched = useMemo(() => {
     const pf = fixtures?.player_fixtures || {};
-    // Fenêtre GW : adversaire affiché seulement si le match est dans les 10 prochains jours
+    // Fenêtre GW : adversaire affiché si match dans les 3 derniers jours OU 10 prochains jours
+    // → le D-Score reste visible jusqu'à la fin de la GW (Mardi 16h)
     const todayStr = new Date().toISOString().split("T")[0];
+    const minDateStr = new Date(Date.now() - 3 * 86400000).toISOString().split("T")[0]; // 3 jours en arriere
     const maxDateStr = new Date(Date.now() + 10 * 86400000).toISOString().split("T")[0];
     return players.map(p => {
       const fx = pf[p.slug] || pf[p.name];
       const base = { ...p, reg10: p.reg10 ?? p.regularite, ds10: p.ds10 ?? p.ds_rate, ga_season: (p.goals || 0) + (p.assists || 0) };
-      // Pas de fixture ou match hors fenêtre GW (ex: reporté au 13 mai) → pas d'adversaire
-      if (!fx || !fx.date || fx.date < todayStr || fx.date > maxDateStr) {
+      // Pas de fixture ou match hors fenêtre GW
+      if (!fx || !fx.date || fx.date < minDateStr || fx.date > maxDateStr) {
         return { ...base, dsMatch: null, oppName: null, isHome: null, matchday: null, csPercent: null, matchDate: null };
       }
       const oppTeam = findTeam(teams, fx.opp);

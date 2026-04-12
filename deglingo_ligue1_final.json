@@ -7968,7 +7968,7 @@
     "avg_successful_dribble": 0.0,
     "avg_pen_area_entries": 0.0,
     "avg_was_fouled": 0.0,
-    "price_limited": null,
+    "price_limited": 1.0,
     "price_rare": null
   },
   {

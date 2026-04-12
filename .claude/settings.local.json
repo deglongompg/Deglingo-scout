@@ -252,7 +252,28 @@
       "Bash(tasklist /FI \"IMAGENAME eq py.exe\")",
       "Bash(tasklist /FI \"WINDOWTITLE eq Fetch Prices*\")",
       "Bash(wmic process:*)",
-      "Bash(py merge_data.py)"
+      "Bash(py merge_data.py)",
+      "Bash(ls \"/c/Users/Dekstop/Desktop/Deglingo Scout/Deglingo Scout/\"*.bat)",
+      "Bash(node -e ':*)",
+      "Bash(python -c \"import json; d=json.load\\(open\\('deglingo-scout-app/public/data/players.json','r',encoding='utf-8'\\)\\); g=[p for p in d if 'Greenwood' in p.get\\('name',''\\)]; print\\([\\(p['name'],p.get\\('sorare_starter_pct'\\),p.get\\('titu_pct'\\),p.get\\('league'\\)\\) for p in g]\\)\")",
+      "Bash(node -e \"const d=require\\('./deglingo-scout-app/public/data/players.json'\\); const g=d.filter\\(p=>p.name?.includes\\('Greenwood'\\)\\); g.forEach\\(p=>console.log\\(p.name,'|titu:',p.titu_pct,'|sorare_starter:',p.sorare_starter_pct,'|league:',p.league\\)\\)\")",
+      "Bash(node -e \"const d=require\\('./player_status.json'\\); const g=Object.entries\\(d\\).filter\\(\\([k,v]\\)=>k.includes\\('greenwood'\\)\\); g.forEach\\(\\([k,v]\\)=>console.log\\(k,'|',JSON.stringify\\(v\\)\\)\\)\")",
+      "Bash(node -e \"const d=require\\('./deglingo-scout-app/public/data/players.json'\\); const names=['Greenwood','Brassier','Balerdi','Medina','Kehrer','Pavard','Mbappé']; names.forEach\\(n=>{const p=d.find\\(x=>x.name?.includes\\(n\\)\\); if\\(p\\) console.log\\(p.name,'|starter:',p.sorare_starter_pct,'|proj:',p.sorare_proj\\)}\\)\")",
+      "Bash(node -e \"const d=require\\('./player_status.json'\\); ['mason-greenwood','benjamin-pavard','lilian-brassier','leonardo-balerdi'].forEach\\(s=>{const v=d[s]; if\\(v\\) console.log\\(s,'|',JSON.stringify\\(v\\)\\)}\\)\")",
+      "Bash(node -e \"fetch\\('https://deglingo-scout.damien-gheza.workers.dev/data/players.json'\\).then\\(r=>r.json\\(\\)\\).then\\(d=>{const names=['Greenwood','Brassier','Pavard','Mbappé','Güler'];names.forEach\\(n=>{const p=d.find\\(x=>x.name?.includes\\(n\\)&&x.league==='L1'\\);if\\(p\\)console.log\\(p.name,'|starter:',p.sorare_starter_pct\\)}\\)}\\)\")",
+      "Bash(node -e \"const fs=require\\('fs'\\); const s=fs.readFileSync\\('src/components/StellarTab.jsx','utf8'\\); let d=0; for\\(let i=0;i<s.length;i++\\){if\\(s[i]==='{'\\)d++;if\\(s[i]==='}'\\)d--;} console.log\\('Bracket balance:',d\\)\")",
+      "Bash(node -e \"const t=require\\('./deglingo-scout-app/public/data/teams.json'\\); const mls=t.filter\\(x=>x.league==='MLS'\\); console.log\\(mls.length+' MLS teams'\\); if\\(mls.length\\)console.log\\(mls[0]\\)\")",
+      "Bash(node -e \"const t=require\\('./teams_data.json'\\); console.log\\(t.length+' teams'\\); const leagues=[...new Set\\(t.map\\(x=>x.league\\)\\)]; console.log\\('Leagues:',leagues\\); const ex=t[0]; console.log\\('Example:',Object.keys\\(ex\\)\\)\")",
+      "Bash(node -e \"const d=require\\('C:/Users/Dekstop/Downloads/league-chemp.json'\\); console.log\\(typeof d, Array.isArray\\(d\\) ? d.length : Object.keys\\(d\\).slice\\(0,5\\)\\); if\\(Array.isArray\\(d\\)\\) console.log\\(d[0]\\); else console.log\\(JSON.stringify\\(d\\).slice\\(0,300\\)\\)\")",
+      "Bash(node -e \"const d=require\\('./deglingo-scout-app/public/data/players.json'\\); const p=d.find\\(x=>x.name?.includes\\('Messi'\\)\\); console.log\\('avg_dom:',p?.avg_dom,'avg_ext:',p?.avg_ext,'dom_matches:',p?.dom_matches,'ext_matches:',p?.ext_matches\\)\")",
+      "WebFetch(domain:footystats.org)",
+      "WebFetch(domain:fbref.com)",
+      "WebFetch(domain:xgscore.io)",
+      "WebFetch(domain:theanalyst.com)",
+      "Bash(dir \"C:\\\\Users\\\\Dekstop\\\\Desktop\\\\Deglingo Scout\\\\Deglingo Scout\\\\deglingo-scout-app\\\\dist\\\\assets\")",
+      "Bash(grep -ioE 'eric.garcia.{0,1500}' players.json)",
+      "Bash(grep -ioE 'eric.garcia.{0,2000}' players.json)",
+      "Bash(py -c:*)"
     ]
   }
 }

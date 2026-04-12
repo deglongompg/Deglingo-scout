@@ -15486,8 +15486,8 @@
     "matchs_played": 0,
     "matchs_total": 9,
     "last_date": "",
-    "price_limited": null,
-    "price_rare": null
+    "price_limited": 0.6,
+    "price_rare": 12.95
   },
   {
     "name": "Oscar Højlund",

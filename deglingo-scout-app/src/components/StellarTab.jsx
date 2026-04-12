@@ -27,7 +27,7 @@ const SHORT_NAMES = {
 };
 const sn = (name) => SHORT_NAMES[name] || name;
 
-const DAYS_FR = ["LUN", "MAR", "MER", "JEU", "VEN", "SAM", "DIM"];
+const DAYS_FR = ["MER", "JEU", "VEN", "SAM", "DIM", "LUN", "MAR"];
 const STELLAR_LEAGUES = ["L1", "PL", "Liga"];
 const EURO_LEAGUES = ["UCL", "UEL", "UECL"];
 // Stats moyennes pour un adversaire européen inconnu (UCL/UEL/UECL)
@@ -120,12 +120,13 @@ function getParisDayOfWeek(d) {
   return new Date(d.toLocaleString("en-US", { timeZone: TZ })).getDay();
 }
 
-// Lundi de la semaine contenant d (en heure de Paris)
-function getMonday(d) {
+// Mercredi de la semaine Stellar contenant d (Mer→Mar, en heure de Paris)
+function getWednesday(d) {
   const parisDateStr = toParisDateStr(d);
-  const dt = new Date(parisDateStr + "T12:00:00"); // midi UTC = safe, pas de décalage de date
-  const day = dt.getDay(); // 0=dim
-  const diff = day === 0 ? -6 : 1 - day;
+  const dt = new Date(parisDateStr + "T12:00:00"); // midi UTC = safe
+  const day = dt.getDay(); // 0=dim, 3=mer
+  // Mer=3 → 0, Jeu=4 → -1, Ven=5 → -2, Sam=6 → -3, Dim=0 → -4, Lun=1 → -5, Mar=2 → -6
+  const diff = day >= 3 ? 3 - day : 3 - day - 7;
   dt.setDate(dt.getDate() + diff);
   return dt;
 }
@@ -612,14 +613,22 @@ export default function StellarTab({ players, teams, fixtures, logos = {}, match
   const S = T[lang] ?? T.fr;
   // ⚠️ Toujours en heure de Paris — peu importe le timezone du navigateur
   const todayStr = getParisTodayStr(); // "2026-04-03"
-  const today = new Date(todayStr + "T12:00:00"); // objet Date safe pour getMonday
+  const today = new Date(todayStr + "T12:00:00"); // objet Date safe pour getWednesday
   const [weekOffset, setWeekOffset] = useState(0);
-  // Défaut = jour courant (0=Lun … 6=Dim)
-  const [selectedDay, setSelectedDay] = useState(() => {
+  // Multi-selection : array d'indices de jours (max 4), triee
+  const [selectedDays, setSelectedDays] = useState(() => {
     const d = new Date(getParisTodayStr() + "T12:00:00");
-    return (d.getDay() + 6) % 7; // JS: 0=Dim → on convertit en Lun=0
+    const day = d.getDay(); // 0=dim, 3=mer
+    // Mer=0, Jeu=1, Ven=2, Sam=3, Dim=4, Lun=5, Mar=6
+    const idx = day >= 3 ? day - 3 : day + 4;
+    return [idx];
   });
+  // Helper : key stable pour useMemo deps
+  const selectedDaysKey = selectedDays.join(",");
+  // Premier jour selectionne (pour titre, sauvegarde, etc.)
+  const selectedDay = selectedDays.length > 0 ? Math.min(...selectedDays) : null;
   const [expandedFixture, setExpandedFixture] = useState(null); // { key, side: "home"|"away" }
+  const [selectedMatchFilters, setSelectedMatchFilters] = useState([]); // [{ home, away }, ...] — filtre joueurs par matchs
   const [leftCollapsed, setLeftCollapsed] = useState(false);
 
   // ── OAuth Sorare — cartes réelles de l'utilisateur ───────────────────────
@@ -815,6 +824,8 @@ export default function StellarTab({ players, teams, fixtures, logos = {}, match
       .filter(p => !usedIds.has(p.slug || p.name))
       .filter(p => p.oppName) // doit jouer ce jour
       .filter(p => p.sorare_starter_pct == null || p.sorare_starter_pct >= 70) // titu% >= 70%
+      // Filtre par matchs selectionnes dans la colonne gauche
+      .filter(p => selectedMatchFilters.length === 0 || selectedMatchFilters.some(m => clubMatchGlobal(p.club, m.home) || clubMatchGlobal(p.club, m.away)))
       .map(p => ({ ...p, ds: getAdjDs(p) }))
       .sort((a, b) => b.ds - a.ds);
     if (pool.length < 5) return;
@@ -853,7 +864,9 @@ export default function StellarTab({ players, teams, fixtures, logos = {}, match
   const [savedTeams, setSavedTeams] = useState([]);
 
   const saveCurrentTeam = (picks, editions, score) => {
-    const dateStr = isoDate(weekDays[selectedDay]);
+    // Cle = 1er jour avec match parmi les jours selectionnes
+    const firstMatchDay = selectedDays.find(i => (fixturesByDate[isoDate(weekDays[i])] || []).length > 0);
+    const dateStr = firstMatchDay != null ? isoDate(weekDays[firstMatchDay]) : isoDate(weekDays[[...selectedDays][0]] || new Date());
     const key = savedTeamsKey(dateStr);
     const existing = (() => { try { return JSON.parse(localStorage.getItem(key) || "[]"); } catch { return []; } })();
     if (existing.length >= 4) return;
@@ -881,7 +894,8 @@ export default function StellarTab({ players, teams, fixtures, logos = {}, match
   };
 
   const deleteSavedTeam = (id) => {
-    const dateStr = isoDate(weekDays[selectedDay]);
+    const firstMatchDay = selectedDays.find(i => (fixturesByDate[isoDate(weekDays[i])] || []).length > 0);
+    const dateStr = firstMatchDay != null ? isoDate(weekDays[firstMatchDay]) : isoDate(new Date());
     const key = savedTeamsKey(dateStr);
     const updated = savedTeams.filter(t => t.id !== id).map((t, i) => ({ ...t, label: `Équipe ${i + 1}` }));
     localStorage.setItem(key, JSON.stringify(updated));
@@ -893,6 +907,7 @@ export default function StellarTab({ players, teams, fixtures, logos = {}, match
 
   // ── Filtres joueurs Stellar ────────────────────────────────────────────────
   const [hideUsed, setHideUsed] = useState(true);   // masquer les joueurs déjà utilisés (savedTeams)
+  const [filterTitu, setFilterTitu] = useState(0);   // 0 = tous, 30/50/70/90 = seuil titu%
 
   // ── Éditions cartes — stockées par slug dans localStorage ──────────────────
   const [cardEditions, setCardEditions] = useState(() => {
@@ -929,14 +944,14 @@ export default function StellarTab({ players, teams, fixtures, logos = {}, match
   const stellarFreezeKey = dailyLockKey ? `stellar_${dailyLockKey}` : null;
   const frozenDayData   = useMemo(() => (stellarFreezeKey ? loadFrozen(stellarFreezeKey) : null), [stellarFreezeKey]);
 
-  const monday = useMemo(() => {
-    const m = getMonday(today);
-    m.setDate(m.getDate() + weekOffset * 7);
-    return m;
+  const wednesday = useMemo(() => {
+    const w = getWednesday(today);
+    w.setDate(w.getDate() + weekOffset * 7);
+    return w;
   }, [weekOffset]);
 
-  // GW start = lundi de la semaine affichée (dynamique, plus de hardcode)
-  const gwWeekStart = useMemo(() => monday.toISOString().split("T")[0], [monday]);
+  // GW start = mercredi de la semaine affichée
+  const gwWeekStart = useMemo(() => wednesday.toISOString().split("T")[0], [wednesday]);
 
   // Largeur de référence des chips = match avec les 2 noms les plus longs des ligues Stellar
   const chipMinWidth = useMemo(() => {
@@ -950,19 +965,36 @@ export default function StellarTab({ players, teams, fixtures, logos = {}, match
     return Math.round((l1 + l2) * 6.5 + 110);
   }, [teams]);
 
-  // Build 7 days of the week
+  // Build 7 days of the week (Mer→Mar)
   const weekDays = useMemo(() => {
     return Array.from({ length: 7 }, (_, i) => {
-      const d = new Date(monday);
+      const d = new Date(wednesday);
       d.setDate(d.getDate() + i);
       return d;
     });
-  }, [monday]);
+  }, [wednesday]);
 
-  // Recharge les équipes sauvegardées quand le jour change + charge Équipe 1 par défaut
+  // All fixtures grouped by date (Stellar leagues + European competitions)
+  const fixturesByDate = useMemo(() => {
+    if (!fixtures?.fixtures) return {};
+    const map = {};
+    for (const f of fixtures.fixtures) {
+      if (!STELLAR_LEAGUES.includes(f.league) && !EURO_LEAGUES.includes(f.league)) continue;
+      if (!map[f.date]) map[f.date] = [];
+      map[f.date].push(f);
+    }
+    return map;
+  }, [fixtures]);
+
+  // Reset filtre matchs quand la selection de jours change
+  useEffect(() => { setSelectedMatchFilters([]); }, [selectedDaysKey]);
+
+  // Recharge les équipes sauvegardées quand la selection change + charge Équipe 1 par défaut
   useEffect(() => {
-    if (selectedDay === null || !weekDays[selectedDay]) return;
-    const dateStr = isoDate(weekDays[selectedDay]);
+    if (selectedDays.length === 0) return;
+    const firstMatchDay = selectedDays.find(i => (fixturesByDate[isoDate(weekDays[i])] || []).length > 0);
+    if (firstMatchDay == null) return;
+    const dateStr = isoDate(weekDays[firstMatchDay]);
     let teams = [];
     try { teams = JSON.parse(localStorage.getItem(savedTeamsKey(dateStr)) || "[]"); } catch { teams = []; }
     setSavedTeams(teams);
@@ -977,99 +1009,85 @@ export default function StellarTab({ players, teams, fixtures, logos = {}, match
     } else {
       setMyPicks({ GK: null, DEF: null, MIL: null, FLEX: null, ATT: null });
     }
-  }, [selectedDay, weekDays]);
+  }, [selectedDaysKey, weekDays, fixturesByDate]);
 
-  // All fixtures grouped by date (Stellar leagues + European competitions)
-  const fixturesByDate = useMemo(() => {
-    if (!fixtures?.fixtures) return {};
-    const map = {};
-    for (const f of fixtures.fixtures) {
-      if (!STELLAR_LEAGUES.includes(f.league) && !EURO_LEAGUES.includes(f.league)) continue;
-      if (!map[f.date]) map[f.date] = [];
-      map[f.date].push(f);
-    }
-    return map;
-  }, [fixtures]);
-
-  // Scored players for selected day
+  // Scored players for selected days (multi-day merge)
   const dayData = useMemo(() => {
-    if (selectedDay === null) return null;
-    const day = weekDays[selectedDay];
-    const dateStr = isoDate(day);
+    if (selectedDays.length === 0) return null;
+    const selectedIndices = selectedDays;
 
-    // ── Freeze : si aujourd'hui >= 12h00 Paris → utilise les données figées ──
-    if (dailyLockKey && dateStr === dailyLockKey && frozenDayData) {
-      return { ...frozenDayData, frozen: true };
-    }
-
-    const dayFixtures = fixturesByDate[dateStr] || [];
-    if (!dayFixtures.length) return { fixtures: [], players: [], teams: [] };
-
-    // Find all clubs playing this day
-    const clubsPlaying = new Set();
-    for (const f of dayFixtures) { clubsPlaying.add(f.home); clubsPlaying.add(f.away); }
-
-    // Score players from those clubs (L1 + PL + Liga only)
+    const allFixtures = [];
+    const allPlayers = [];
+    const seenSlugs = new Set();
     const pf = fixtures?.player_fixtures || {};
-    const dayPlayers = [];
-
-    // Club → fixture map pour fallback (matchs passés ou non mappés dans player_fixtures)
-    const clubFxMap = {};
-    for (const f of dayFixtures) {
-      if (f.home) clubFxMap[f.home] = { opp: f.away, isHome: true, kickoff: f.kickoff || "" };
-      if (f.away) clubFxMap[f.away] = { opp: f.home, isHome: false, kickoff: f.kickoff || "" };
-    }
-
-    // Clubs sans cartes Stellar (pas dans le jeu Sorare SO5/SO7)
     const NO_STELLAR_CLUBS = ["FC Metz"];
 
-    for (const p of players) {
-      if (!STELLAR_LEAGUES.includes(p.league)) continue;
-      if (NO_STELLAR_CLUBS.some(c => clubMatchGlobal(p.club, c))) continue;
+    for (const dayIdx of selectedIndices) {
+      const day = weekDays[dayIdx];
+      if (!day) continue;
+      const dateStr = isoDate(day);
 
-      // 1) player_fixtures si la date correspond
-      const fx = pf[p.slug] || pf[p.name];
-      let fxOpp, fxIsHome, fxKickoff;
-      if (fx && fx.date === dateStr) {
-        fxOpp = fx.opp; fxIsHome = fx.isHome; fxKickoff = fx.kickoff || fx.time || "";
-      } else {
-        // 2) Fallback club-based via fixturesByDate (matchs passés ou non mappés)
-        const cf = clubFxMap[p.club] || Object.entries(clubFxMap).find(([k]) => clubMatchGlobal(k, p.club))?.[1];
-        if (!cf) continue;
-        fxOpp = cf.opp; fxIsHome = cf.isHome; fxKickoff = cf.kickoff;
+      // Freeze check (single day only)
+      if (selectedIndices.length === 1 && dailyLockKey && dateStr === dailyLockKey && frozenDayData) {
+        return { ...frozenDayData, frozen: true };
       }
 
-      const lgTeams = teams.filter(t => t.league === p.league);
-      const oppStats = lgTeams.find(t => t.name === fxOpp);
-      if (!oppStats) continue;
-      const pTeam = findTeam(lgTeams, p.club);
-      const ds = dScoreMatch(p, oppStats, fxIsHome, pTeam);
-      if (ds < 20) continue; // Filter ghosts
-      if (p.injured || p.suspended) continue; // Filter injured/suspended
-      if (p.sorare_starter_pct != null && p.sorare_starter_pct < 70) continue; // Titu% Sorare < 70%
+      const dayFixtures = fixturesByDate[dateStr] || [];
+      allFixtures.push(...dayFixtures);
+      if (!dayFixtures.length) continue;
 
-      let csPercent = null;
-      if (["GK", "DEF"].includes(p.position)) {
-        const oppXg = fxIsHome ? (oppStats.xg_ext || 1.3) : (oppStats.xg_dom || 1.3);
-        const defXga = pTeam ? (fxIsHome ? (pTeam.xga_dom || 1.3) : (pTeam.xga_ext || 1.5)) : 1.3;
-        csPercent = csProb(defXga, oppXg, p.league);
+      const clubFxMap = {};
+      for (const f of dayFixtures) {
+        if (f.home) clubFxMap[f.home] = { opp: f.away, isHome: true, kickoff: f.kickoff || "" };
+        if (f.away) clubFxMap[f.away] = { opp: f.home, isHome: false, kickoff: f.kickoff || "" };
       }
-      const matchId = pTeam ? [pTeam.name, oppStats.name].sort().join("|") : null;
-      dayPlayers.push({
-        ...p, ds, oppName: oppStats.name, oppTeam: oppStats, playerTeam: pTeam, isHome: fxIsHome,
-        kickoff: fxKickoff,
-        matchDate: dateStr,
-        csPercent, matchId,
-        proj: p.sorare_proj ?? null,
-      });
+
+      for (const p of players) {
+        if (!STELLAR_LEAGUES.includes(p.league)) continue;
+        if (NO_STELLAR_CLUBS.some(c => clubMatchGlobal(p.club, c))) continue;
+        const slug = p.slug || p.name;
+        if (seenSlugs.has(slug)) continue; // deja dans le pool (1er jour = priorite)
+
+        const fx = pf[slug] || pf[p.name];
+        let fxOpp, fxIsHome, fxKickoff;
+        if (fx && fx.date === dateStr) {
+          fxOpp = fx.opp; fxIsHome = fx.isHome; fxKickoff = fx.kickoff || fx.time || "";
+        } else {
+          const cf = clubFxMap[p.club] || Object.entries(clubFxMap).find(([k]) => clubMatchGlobal(k, p.club))?.[1];
+          if (!cf) continue;
+          fxOpp = cf.opp; fxIsHome = cf.isHome; fxKickoff = cf.kickoff;
+        }
+
+        const lgTeams = teams.filter(t => t.league === p.league);
+        const oppStats = lgTeams.find(t => t.name === fxOpp);
+        if (!oppStats) continue;
+        const pTeam = findTeam(lgTeams, p.club);
+        const ds = dScoreMatch(p, oppStats, fxIsHome, pTeam);
+        if (ds < 20) continue;
+        if (p.injured || p.suspended) continue;
+        if (p.sorare_starter_pct != null && p.sorare_starter_pct < 70) continue;
+
+        let csPercent = null;
+        if (["GK", "DEF"].includes(p.position)) {
+          const oppXg = fxIsHome ? (oppStats.xg_ext || 1.3) : (oppStats.xg_dom || 1.3);
+          const defXga = pTeam ? (fxIsHome ? (pTeam.xga_dom || 1.3) : (pTeam.xga_ext || 1.5)) : 1.3;
+          csPercent = csProb(defXga, oppXg, p.league);
+        }
+        const matchId = pTeam ? [pTeam.name, oppStats.name].sort().join("|") : null;
+        allPlayers.push({
+          ...p, ds, oppName: oppStats.name, oppTeam: oppStats, playerTeam: pTeam, isHome: fxIsHome,
+          kickoff: fxKickoff, matchDate: dateStr, csPercent, matchId, proj: p.sorare_proj ?? null,
+        });
+        seenSlugs.add(slug);
+      }
     }
 
-    const stellarTeams = buildStellarTeams(dayPlayers, dateStr);
+    if (!allFixtures.length && !allPlayers.length) return { fixtures: [], players: [], teams: [], decisiveTop3: [] };
 
-    // ─── Decisive Pick Top 3 ───
+    // Decisive Pick Top 3 on merged pool
     const POS_MULT = { ATT: 1.4, MIL: 1.05, DEF: 0.5, GK: 0.1 };
-    const decisiveAll = dayPlayers
-      .filter(p => p.appearances >= 3 && (p.position === "ATT" || p.position === "MIL" || p.position === "DEF"))
+    const decisiveAll = allPlayers
+      .filter(p => p.appearances >= 3 && ["ATT","MIL","DEF"].includes(p.position))
       .map(p => {
         const gaRate = p.ga_per_match || 0;
         const posMult = POS_MULT[p.position] || 1;
@@ -1085,22 +1103,24 @@ export default function StellarTab({ players, teams, fixtures, logos = {}, match
     const decisivePick = decisiveAll[0] || null;
     const decisiveTop3 = decisiveAll.slice(0, 3);
 
-    return { fixtures: dayFixtures, players: dayPlayers, teams: stellarTeams, decisivePick, decisiveTop3, frozen: false };
-  }, [selectedDay, weekDays, fixturesByDate, players, teams, fixtures, dailyLockKey, frozenDayData]);
+    return { fixtures: allFixtures, players: allPlayers, teams: [], decisivePick, decisiveTop3, frozen: false };
+  }, [selectedDaysKey, weekDays, fixturesByDate, players, teams, fixtures, dailyLockKey, frozenDayData]);
 
   // Pool "mes cartes" — 4 ligues, sans filtre titu%, double matching (player_fixtures + club)
   const myCardsDayPlayers = useMemo(() => {
-    if (!sorareCards.length || selectedDay === null || !weekDays[selectedDay]) return { playing: [], notPlaying: [] };
-    const dateStr = isoDate(weekDays[selectedDay]);
+    if (!sorareCards.length || selectedDays.length === 0) return { playing: [], notPlaying: [] };
     const cardSlugSet = new Set(sorareCards.map(c => c.playerSlug));
     const ALL_LEAGUES = ["L1", "PL", "Liga", "Bundes"];
 
-    // Club → fixture pour ce jour (fixturesByDate = source fiable du calendrier)
-    const dayFixtures = fixturesByDate[dateStr] || [];
+    // Club → fixture pour tous les jours selectionnes
     const clubFxMap = {};
-    for (const f of dayFixtures) {
-      if (f.home) clubFxMap[f.home] = { opp: f.away,  isHome: true,  kickoff: f.kickoff || f.time || "" };
-      if (f.away) clubFxMap[f.away] = { opp: f.home,  isHome: false, kickoff: f.kickoff || f.time || "" };
+    for (const dayIdx of selectedDays) {
+      const dateStr = isoDate(weekDays[dayIdx]);
+      const dayFixtures = fixturesByDate[dateStr] || [];
+      for (const f of dayFixtures) {
+        if (f.home && !clubFxMap[f.home]) clubFxMap[f.home] = { opp: f.away, isHome: true, kickoff: f.kickoff || f.time || "", date: dateStr };
+        if (f.away && !clubFxMap[f.away]) clubFxMap[f.away] = { opp: f.home, isHome: false, kickoff: f.kickoff || f.time || "", date: dateStr };
+      }
     }
 
     const pf = fixtures?.player_fixtures || {};
@@ -1111,23 +1131,30 @@ export default function StellarTab({ players, teams, fixtures, logos = {}, match
       if (!cardSlugSet.has(slug)) continue;
       if (!ALL_LEAGUES.includes(p.league)) continue;
 
-      // 1) player_fixtures (date précise)
+      // 1) player_fixtures (check si date dans un des jours selectionnes)
+      const selectedDateStrs = new Set([...selectedDays].map(di => isoDate(weekDays[di])));
       const fx = pf[p.slug] || pf[p.name];
-      let oppName, isHome, kickoff;
-      if (fx && fx.date === dateStr) {
-        oppName = fx.opp; isHome = fx.isHome; kickoff = fx.kickoff || fx.time || "";
+      let oppName, isHome, kickoff, matchDate;
+      if (fx && selectedDateStrs.has(fx.date)) {
+        oppName = fx.opp; isHome = fx.isHome; kickoff = fx.kickoff || fx.time || ""; matchDate = fx.date;
       } else {
-        // 2) Fallback club-based (fixturesByDate toujours à jour)
+        // 2) Fallback club-based
         const cf = clubFxMap[p.club];
         if (!cf) continue;
-        oppName = cf.opp; isHome = cf.isHome; kickoff = cf.kickoff;
+        oppName = cf.opp; isHome = cf.isHome; kickoff = cf.kickoff; matchDate = cf.date;
       }
 
       const lgTeams = (teams || []).filter(t => t.league === p.league);
       const oppStats = lgTeams.find(t => t.name === oppName);
       const pTeam = findTeam(lgTeams, p.club);
       const ds = oppStats ? dScoreMatch(p, oppStats, isHome, pTeam) : (p.l10 || 50);
-      playing.push({ ...p, ds, oppName, isHome, kickoff, matchDate: dateStr });
+      let csPercent = null;
+      if (["GK", "DEF"].includes(p.position) && oppStats) {
+        const oppXg = isHome ? (oppStats.xg_ext || 1.3) : (oppStats.xg_dom || 1.3);
+        const defXga = pTeam ? (isHome ? (pTeam.xga_dom || 1.3) : (pTeam.xga_ext || 1.5)) : 1.3;
+        csPercent = csProb(defXga, oppXg, p.league);
+      }
+      playing.push({ ...p, ds, oppName, isHome, kickoff, matchDate, csPercent });
       playingSet.add(slug);
     }
     playing.sort((a, b) => b.ds - a.ds);
@@ -1138,31 +1165,33 @@ export default function StellarTab({ players, teams, fixtures, logos = {}, match
       .sort((a, b) => (RARITY_ORDER[b.rarity]||0) - (RARITY_ORDER[a.rarity]||0));
 
     return { playing, notPlaying };
-  }, [sorareCards, selectedDay, weekDays, players, fixtures, teams, fixturesByDate]);
+  }, [sorareCards, selectedDaysKey, weekDays, players, fixtures, teams, fixturesByDate]);
 
   // ── Sauvegarder dans localStorage quand le freeze est actif et pas encore figé ──
   useEffect(() => {
     if (!stellarFreezeKey || frozenDayData) return; // déjà figé ou pas encore l'heure
     if (!dayData || dayData.frozen) return;
-    if (selectedDay === null) return;
-    const day = weekDays[selectedDay];
+    if (selectedDays.length === 0) return;
+    const firstIdx = Math.min(...selectedDays);
+    const day = weekDays[firstIdx];
+    if (!day) return;
     const dateStr = isoDate(day);
-    if (dateStr !== dailyLockKey) return; // seulement aujourd'hui
-    if (!dayData.teams?.length && !dayData.players?.length) return; // rien à figer
+    if (dateStr !== dailyLockKey) return;
+    if (!dayData.players?.length) return;
     saveFrozen(stellarFreezeKey, {
       fixtures: dayData.fixtures,
       players: dayData.players,
-      teams: dayData.teams,
+      teams: dayData.teams || [],
       decisivePick: dayData.decisivePick,
     });
-  }, [stellarFreezeKey, frozenDayData, dayData, selectedDay, weekDays, dailyLockKey]);
+  }, [stellarFreezeKey, frozenDayData, dayData, selectedDaysKey, weekDays, dailyLockKey]);
 
-  // Auto-select first day with matches
-  useMemo(() => {
-    if (selectedDay !== null) return;
+  // Auto-select first day with matches (si aucun jour selectionne)
+  useEffect(() => {
+    if (selectedDays.length > 0) return;
     for (let i = 0; i < 7; i++) {
       const dateStr = isoDate(weekDays[i]);
-      if (fixturesByDate[dateStr]?.length) { setSelectedDay(i); return; }
+      if (fixturesByDate[dateStr]?.length) { setSelectedDays([i]); return; }
     }
   }, [weekDays, fixturesByDate]);
 
@@ -1274,17 +1303,31 @@ export default function StellarTab({ players, teams, fixtures, logos = {}, match
       {/* ═══ CALENDRIER + bouton semaine suivante ═══ */}
       <div className="st-calendar-wrap" style={{ display: "grid", gridTemplateColumns: "auto repeat(7, 1fr) auto", gap: 4, marginBottom: 14, alignItems: "stretch" }}>
         {/* Bouton semaine précédente */}
-        <button onClick={() => { setWeekOffset(w => w - 1); setSelectedDay(null); }}
+        <button onClick={() => { setWeekOffset(w => w - 1); setSelectedDays([]); }}
           style={{ background: "rgba(255,255,255,0.06)", border: "1px solid rgba(255,255,255,0.12)", borderRadius: 10, color: "#C4B5FD", cursor: "pointer", fontSize: 13, fontWeight: 700, fontFamily: "Outfit", display: "flex", alignItems: "center", justifyContent: "center", padding: "0 10px" }}>◀</button>
         {weekDays.map((day, i) => {
           const dateStr = isoDate(day);
           const dayFixtures = fixturesByDate[dateStr] || [];
           const hasMatches = dayFixtures.length > 0;
-          const isSelected = selectedDay === i;
+          const isSelected = selectedDays.includes(i);
           const isToday = dateStr === isoDate(today);
 
           return (
-            <div key={i} className="st-cal-day" onClick={() => hasMatches && setSelectedDay(i)}
+            <div key={i} className="st-cal-day"
+              onClick={() => {
+                if (!hasMatches) return;
+                // Clic simple = ajoute ce jour (max 4), ctrl = retire
+                setSelectedDays(prev => {
+                  if (prev.includes(i)) return prev.filter(x => x !== i);
+                  if (prev.length >= 4) return prev;
+                  return [...prev, i].sort((a, b) => a - b);
+                });
+              }}
+              onDoubleClick={() => {
+                if (!hasMatches) return;
+                // Double clic = selectionne ce jour UNIQUEMENT
+                setSelectedDays([i]);
+              }}
               style={{
                 background: isSelected ? "rgba(120,60,240,0.40)" : hasMatches ? "rgba(15,8,40,0.70)" : "rgba(8,4,25,0.55)",
                 border: isSelected ? "1px solid rgba(196,181,253,0.7)" : isToday ? "1px solid rgba(180,140,255,0.4)" : "1px solid rgba(100,70,200,0.18)",
@@ -1317,12 +1360,15 @@ export default function StellarTab({ players, teams, fixtures, logos = {}, match
           );
         })}
         {/* Bouton semaine suivante */}
-        <button onClick={() => { setWeekOffset(w => w + 1); setSelectedDay(null); }}
+        <button onClick={() => { setWeekOffset(w => w + 1); setSelectedDays([]); }}
           style={{ background: "rgba(255,255,255,0.06)", border: "1px solid rgba(255,255,255,0.12)", borderRadius: 10, color: "#C4B5FD", cursor: "pointer", fontSize: 13, fontWeight: 700, fontFamily: "Outfit", display: "flex", alignItems: "center", justifyContent: "center", padding: "0 10px" }}>▶</button>
+      </div>
+      <div style={{ textAlign: "center", fontSize: 8, color: "rgba(255,255,255,0.2)", marginTop: -8, marginBottom: 10 }}>
+        {lang === "fr" ? "Clic = ajouter un jour · Double-clic = jour unique · Max 4 jours · Clic sur un match = filtrer" : "Click = add day · Double-click = single day · Max 4 days · Click a match = filter"}
       </div>
 
       {/* ═══ SELECTED DAY CONTENT ═══ */}
-      {selectedDay !== null && dayData && (
+      {selectedDays.length > 0 && dayData && (
         <div>
           {/* Layout principal : colonne gauche (date + matchs) | colonne droite (decisive + teams) */}
           <div className="st-main-layout" style={{ display: "flex", gap: 16, alignItems: "flex-start" }}>
@@ -1333,13 +1379,8 @@ export default function StellarTab({ players, teams, fixtures, logos = {}, match
             {/* Titre du jour */}
             <div style={{ marginBottom: 8 }}>
               <h2 style={{ fontSize: 16, fontWeight: 800, color: "#fff", margin: 0, display: "flex", alignItems: "center", gap: 8, flexWrap: "wrap" }}>
-                {!leftCollapsed && <span style={{ color: "#C4B5FD" }}>{weekDays[selectedDay].toLocaleDateString(S.stellarDateLocale, { timeZone: TZ, weekday: "long", day: "numeric", month: "long" }).toUpperCase()}</span>}
-                {!leftCollapsed && dayData.frozen && (
-                  <div style={{ display: "inline-flex", alignItems: "center", gap: 4, padding: "3px 8px", borderRadius: 6, background: "rgba(196,181,253,0.08)", border: "1px solid rgba(196,181,253,0.18)" }}>
-                    <span style={{ fontSize: 11 }}>🔒</span>
-                    <span style={{ fontSize: 9, fontWeight: 700, color: "#A78BFA" }}>Picks figés à 12h00 Paris</span>
-                  </div>
-                )}
+                {!leftCollapsed && <span style={{ color: "#C4B5FD" }}>{selectedDays.map(i => weekDays[i]?.toLocaleDateString(S.stellarDateLocale, { timeZone: TZ, weekday: "short", day: "numeric", month: "short" })).join(" · ").toUpperCase()}</span>}
+{/* Badge freeze supprime — plus de picks auto dans Stellar */}
                 {/* Bouton collapse colonne gauche */}
                 <button onClick={() => setLeftCollapsed(v => !v)}
                   title={leftCollapsed ? "Afficher les matchs" : "Réduire"}
@@ -1348,6 +1389,7 @@ export default function StellarTab({ players, teams, fixtures, logos = {}, match
                 </button>
               </h2>
               {!leftCollapsed && <div style={{ fontSize: 9, color: "rgba(255,255,255,0.35)", fontWeight: 600, letterSpacing: "0.08em", marginTop: 2 }}>{lang === "fr" ? "HEURE PARIS" : "PARIS TIME"}</div>}
+              {!leftCollapsed && <div style={{ fontSize: 9, color: "#fff", fontWeight: 700, marginTop: 3 }}>{lang === "fr" ? "Clic sur un match = filtrer la base" : "Click a match = filter the list"}</div>}
             </div>
 
             {/* ─── DECISIVE PICK TOP 3 — colonne gauche sous la date ─── */}
@@ -1429,18 +1471,41 @@ export default function StellarTab({ players, teams, fixtures, logos = {}, match
                 }
               }
 
-              const sorted = [...dayData.fixtures].sort((a, b) => (a.kickoff || "99:99").localeCompare(b.kickoff || "99:99"));
-              // Grouper par créneau horaire
-              const groups = [];
+              const sorted = [...dayData.fixtures].sort((a, b) => (a.date || "").localeCompare(b.date || "") || (a.kickoff || "99:99").localeCompare(b.kickoff || "99:99"));
+              // Grouper par DATE puis par créneau horaire
+              const dateGroups = [];
               for (const f of sorted) {
-                const parisTime = utcToParisTime(f.kickoff, f.date) || "TBD";
-                const last = groups[groups.length - 1];
-                if (last && last.time === parisTime) last.fixtures.push(f);
-                else groups.push({ time: parisTime, fixtures: [f] });
+                const lastDate = dateGroups[dateGroups.length - 1];
+                if (!lastDate || lastDate.date !== f.date) {
+                  dateGroups.push({ date: f.date, fixtures: [f] });
+                } else {
+                  lastDate.fixtures.push(f);
+                }
               }
               return (
-                <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
-                  {groups.map((g, gi) => (
+                <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
+                  {dateGroups.map((dg, dgi) => {
+                    // Sous-grouper par heure
+                    const groups = [];
+                    for (const f of dg.fixtures) {
+                      const parisTime = utcToParisTime(f.kickoff, f.date) || "TBD";
+                      const last = groups[groups.length - 1];
+                      if (last && last.time === parisTime) last.fixtures.push(f);
+                      else groups.push({ time: parisTime, fixtures: [f] });
+                    }
+                    // Label date en francais
+                    const dateObj = new Date(dg.date + "T12:00:00");
+                    const dateLabel = dateObj.toLocaleDateString(S.stellarDateLocale, { timeZone: TZ, weekday: "long", day: "numeric", month: "short" }).toUpperCase();
+                    return (
+                    <div key={dgi}>
+                      {/* Separateur date — visible si multi-jours */}
+                      {selectedDays.length > 1 && (
+                        <div style={{ padding: "4px 0 3px", marginBottom: 4, borderBottom: "1px solid rgba(196,181,253,0.15)" }}>
+                          <span style={{ fontSize: 9, fontWeight: 800, color: "#C4B5FD", letterSpacing: "0.06em" }}>{dateLabel}</span>
+                        </div>
+                      )}
+                      <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
+                      {groups.map((g, gi) => (
                     <div key={gi} style={{ display: "flex", flexDirection: "column", gap: 2 }}>
                       <div className="st-match-group-time-label" style={{ fontSize: 10, fontWeight: 900, color: "#fff", fontFamily: "'DM Mono',monospace", paddingLeft: 2 }}>{g.time}</div>
                       {g.fixtures.map((f, i) => {
@@ -1495,7 +1560,16 @@ export default function StellarTab({ players, teams, fixtures, logos = {}, match
                         return (
                           <div key={i} style={{ display: "flex", flexDirection: "column", gap: 0 }}>
                             {/* Chip cliquable */}
-                            <div className="st-match-chip" style={{ display: "grid", gridTemplateColumns: "38px 28px 16px 1fr 34px 1fr 16px", alignItems: "center", columnGap: 6, padding: "4px 8px", background: isOpen ? "rgba(50,20,100,0.6)" : "rgba(30,10,70,0.45)", border: `1px solid ${isOpen ? "rgba(196,181,253,0.3)" : "rgba(140,100,255,0.12)"}`, borderRadius: isOpen ? "6px 6px 0 0" : 6, backdropFilter: "blur(6px)" }}>
+                            <div className="st-match-chip" onClick={() => {
+                              setSelectedMatchFilters(prev => {
+                                const exists = prev.some(m => m.home === f.home && m.away === f.away);
+                                if (exists) return prev.filter(m => !(m.home === f.home && m.away === f.away));
+                                return [...prev, { home: f.home, away: f.away }];
+                              });
+                            }} style={{ display: "grid", gridTemplateColumns: "38px 28px 16px 1fr 34px 1fr 16px", alignItems: "center", columnGap: 6, padding: "4px 8px", cursor: "pointer",
+                              background: selectedMatchFilters.some(m => m.home === f.home && m.away === f.away) ? "rgba(139,92,246,0.35)" : isOpen ? "rgba(50,20,100,0.6)" : "rgba(30,10,70,0.45)",
+                              border: `1px solid ${selectedMatchFilters.some(m => m.home === f.home && m.away === f.away) ? "rgba(167,139,250,0.6)" : isOpen ? "rgba(196,181,253,0.3)" : "rgba(140,100,255,0.12)"}`,
+                              borderRadius: isOpen ? "6px 6px 0 0" : 6, backdropFilter: "blur(6px)", transition: "all 0.15s" }}>
                               <span className="st-match-time-inline" style={{ visibility: "hidden", fontSize: 8, fontWeight: 900, color: "#A78BFA", fontFamily: "'DM Mono',monospace", flexShrink: 0 }}>{g.time}</span>
                               <span style={{ fontSize: 8, fontWeight: 800, color: lgColor, minWidth: 22 }}>{f.league}</span>
                               <img src={logos[f.home] ? `/data/logos/${logos[f.home]}` : ""} alt="" style={{ width: 14, height: 14, objectFit: "contain", visibility: logos[f.home] ? "visible" : "hidden" }} />
@@ -1534,6 +1608,10 @@ export default function StellarTab({ players, teams, fixtures, logos = {}, match
                       })}
                     </div>
                   ))}
+                      </div>
+                    </div>
+                    );
+                  })}
                 </div>
               );
             })()}
@@ -1843,16 +1921,25 @@ export default function StellarTab({ players, teams, fixtures, logos = {}, match
                   {/* ══ COLONNE DROITE : Base de données joueurs ══ */}
                   <div style={{ flex: 2, minWidth: 0, display: "flex", flexDirection: "column", overflow: "hidden" }}>
 
-                  {/* ── TOGGLE Tous / Mes cartes + Dispo + Bonus ── */}
+                  {/* ── Filtres : Dispo - Mes Cartes - Bonus - Titu% ── */}
                   <div style={{ display: "flex", alignItems: "center", gap: 4, padding: "4px 10px", borderBottom: "1px solid rgba(255,255,255,0.07)", background: "rgba(0,0,0,0.3)", flexShrink: 0 }}>
-                    <button onClick={() => setMyCardsMode(false)} style={{ fontSize: 8, fontWeight: 700, padding: "3px 9px", borderRadius: 6, border: `1px solid ${!myCardsMode ? "rgba(196,181,253,0.5)" : "rgba(255,255,255,0.1)"}`, background: !myCardsMode ? "rgba(196,181,253,0.15)" : "transparent", color: !myCardsMode ? "#C4B5FD" : "rgba(255,255,255,0.35)", cursor: "pointer", fontFamily: "Outfit", transition: "all 0.15s" }}>{lang === "fr" ? "Tous les joueurs" : "All players"}</button>
-                    <button onClick={() => setMyCardsMode(true)} style={{ fontSize: 8, fontWeight: 700, padding: "3px 9px", borderRadius: 6, border: `1px solid ${myCardsMode ? "rgba(74,222,128,0.5)" : "rgba(255,255,255,0.1)"}`, background: myCardsMode ? "rgba(74,222,128,0.12)" : "transparent", color: myCardsMode ? "#4ADE80" : "rgba(255,255,255,0.35)", cursor: "pointer", fontFamily: "Outfit", transition: "all 0.15s" }}>{lang === "fr" ? `Mes cartes · ${myCardsDayPlayers.playing.length} ce soir` : `My cards · ${myCardsDayPlayers.playing.length} tonight`}</button>
                     <button onClick={() => setHideUsed(v => !v)} style={{ fontSize: 7, fontWeight: 700, padding: "3px 8px", borderRadius: 6, border: `1px solid ${hideUsed ? "rgba(251,191,36,0.5)" : "rgba(255,255,255,0.1)"}`, background: hideUsed ? "rgba(251,191,36,0.12)" : "transparent", color: hideUsed ? "#FBBF24" : "rgba(255,255,255,0.3)", cursor: "pointer", fontFamily: "Outfit", transition: "all 0.15s" }}>
                       {hideUsed ? (lang === "fr" ? "Dispo" : "Avail.") : (lang === "fr" ? "Cacher" : "Hide")}
                     </button>
+                    <button onClick={() => setMyCardsMode(true)} style={{ fontSize: 8, fontWeight: 700, padding: "3px 9px", borderRadius: 6, border: `1px solid ${myCardsMode ? "rgba(74,222,128,0.5)" : "rgba(255,255,255,0.1)"}`, background: myCardsMode ? "rgba(74,222,128,0.12)" : "transparent", color: myCardsMode ? "#4ADE80" : "rgba(255,255,255,0.35)", cursor: "pointer", fontFamily: "Outfit", transition: "all 0.15s" }}>{lang === "fr" ? `Mes cartes · ${myCardsDayPlayers.playing.length} ce soir` : `My cards · ${myCardsDayPlayers.playing.length} tonight`}</button>
                     <button onClick={() => setBonusEnabled(v => !v)} style={{ fontSize: 7, fontWeight: 700, padding: "3px 8px", borderRadius: 6, border: `1px solid ${bonusEnabled ? "rgba(74,222,128,0.5)" : "rgba(255,255,255,0.1)"}`, background: bonusEnabled ? "rgba(74,222,128,0.12)" : "transparent", color: bonusEnabled ? "#4ADE80" : "rgba(255,255,255,0.3)", cursor: "pointer", fontFamily: "Outfit", transition: "all 0.15s" }}>
                       {bonusEnabled ? "Bonus ON" : "Bonus OFF"}
                     </button>
+                    {/* Slider Titu% */}
+                    <div style={{ display: "flex", alignItems: "center", gap: 4 }}>
+                      <span style={{ fontSize: 7, fontWeight: 700, color: filterTitu ? "#4ADE80" : "rgba(255,255,255,0.3)", fontFamily: "Outfit", whiteSpace: "nowrap" }}>
+                        {filterTitu ? `Titu \u2265${filterTitu}%` : "Titu%"}
+                      </span>
+                      <input type="range" min={0} max={90} step={10} value={filterTitu}
+                        onChange={e => setFilterTitu(Number(e.target.value))}
+                        style={{ width: 70, height: 4, accentColor: "#4ADE80", cursor: "pointer" }}
+                      />
+                    </div>
                   </div>
 
                   {/* ── LISTE JOUEURS SIMPLIFIEE ── */}
@@ -1883,9 +1970,13 @@ export default function StellarTab({ players, teams, fixtures, logos = {}, match
                         ? dayPool.filter(p => ["DEF","MIL","ATT"].includes(p.position))
                         : dayPool.filter(p => p.position === selectedSlot)
                       : dayPool;
-                    // Filtre hideUsed (Dispo)
+                    // Filtre hideUsed (Dispo) + matchs + titu%
                     const filteredPool = slotFilter.filter(p => {
                       if (hideUsed && isInTeam(p)) return false;
+                      if (filterTitu && (p.sorare_starter_pct == null || p.sorare_starter_pct < filterTitu)) return false;
+                      if (selectedMatchFilters.length > 0) {
+                        if (!selectedMatchFilters.some(m => clubMatchGlobal(p.club, m.home) || clubMatchGlobal(p.club, m.away))) return false;
+                      }
                       return true;
                     });
                     // Filtre "Mes cartes" : une ligne par carte possédée (2x Yamal → 2 lignes)
@@ -1905,8 +1996,12 @@ export default function StellarTab({ players, teams, fixtures, logos = {}, match
                               if (selectedSlot === "FLEX" && !["DEF","MIL","ATT"].includes(p.position)) continue;
                               if (selectedSlot !== "FLEX" && p.position !== selectedSlot) continue;
                             }
-                            // Filtre Dispo
+                            // Filtre Dispo + titu% + matchs
                             if (hideUsed && isInTeam(p)) continue;
+                            if (filterTitu && (p.sorare_starter_pct == null || p.sorare_starter_pct < filterTitu)) continue;
+                            if (selectedMatchFilters.length > 0) {
+                              if (!selectedMatchFilters.some(m => clubMatchGlobal(p.club, m.home) || clubMatchGlobal(p.club, m.away))) continue;
+                            }
                             for (const card of playerCards) {
                               if (addedCardSlugs.has(card.cardSlug)) continue;
                               addedCardSlugs.add(card.cardSlug);
@@ -2245,7 +2340,7 @@ export default function StellarTab({ players, teams, fixtures, logos = {}, match
       )}
 
       {/* No day selected */}
-      {selectedDay === null && (
+      {selectedDays.length === 0 && (
         <div style={{ textAlign: "center", padding: "50px 0", color: "rgba(255,255,255,0.2)" }}>
           <div style={{ fontSize: 40, marginBottom: 8 }}>✨</div>
           <div style={{ fontSize: 14 }}>{S.stellarSelectDay}</div>

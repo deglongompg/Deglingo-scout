@@ -57,6 +57,50 @@ export function getDailyLockKey() {
   return null;
 }
 
+/**
+ * Sorare Pro — détecte la GW en cours (2 GW par semaine).
+ * GW1 : Vendredi 16h → Mardi 16h
+ * GW2 : Mardi 16h → Vendredi 16h
+ *
+ * Retourne { gwKey, gwStart, gwEnd, gwNumber, startDateStr, endDateStr } ou null.
+ */
+export function getProGwInfo() {
+  const now = getParisNow();
+
+  // Cherche le dernier Vendredi ou Mardi à 16h (7 jours max)
+  for (let daysBack = 0; daysBack <= 7; daysBack++) {
+    const candidate = new Date(now);
+    candidate.setDate(candidate.getDate() - daysBack);
+    candidate.setHours(16, 0, 0, 0);
+
+    const dayOfWeek = candidate.getDay(); // 0=dim, 2=mar, 5=ven
+    if (dayOfWeek !== 5 && dayOfWeek !== 2) continue;
+    if (candidate > now) continue;
+
+    // Calcul de la fin de la GW
+    const gwEnd = new Date(candidate);
+    if (dayOfWeek === 5) {
+      // GW1 : Vendredi 16h → Mardi 16h (+4 jours)
+      gwEnd.setDate(gwEnd.getDate() + 4);
+    } else {
+      // GW2 : Mardi 16h → Vendredi 16h (+3 jours)
+      gwEnd.setDate(gwEnd.getDate() + 3);
+    }
+    gwEnd.setHours(16, 0, 0, 0);
+
+    if (now >= gwEnd) continue; // cette fenêtre est finie
+
+    const gwNumber = dayOfWeek === 5 ? 1 : 2;
+    const gwKey = `pro_${candidate.toISOString().slice(0, 10)}_gw${gwNumber}`;
+    // Dates pour filtrer les fixtures (jour du début → jour de fin)
+    const startDateStr = candidate.toISOString().slice(0, 10);
+    const endDateStr = gwEnd.toISOString().slice(0, 10);
+
+    return { gwKey, gwStart: candidate, gwEnd, gwNumber, startDateStr, endDateStr };
+  }
+  return null;
+}
+
 /** Lit depuis localStorage, retourne null si absent ou erreur */
 export function loadFrozen(key) {
   try {

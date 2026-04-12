@@ -3,6 +3,7 @@ import DbTab from "./components/DbTab";
 import FightTab from "./components/FightTab";
 import RecoTab from "./components/RecoTab";
 import StellarTab from "./components/StellarTab";
+import SorareProTab from "./components/SorareProTab";
 import LandingPage from "./components/LandingPage";
 import { t } from "./utils/i18n";
 
@@ -275,6 +276,7 @@ export default function App() {
         {tab === "fight" && <FightTab players={players} teams={teams} fixtures={fixtures} logos={logos} lang={lang} />}
         {tab === "reco" && <div style={{ display: "flex", justifyContent: "center" }}><RecoTab players={players} teams={teams} fixtures={fixtures} logos={logos} lang={lang} /></div>}
         {tab === "stellar" && <StellarTab players={players} teams={teams} fixtures={fixtures} logos={logos} matchEvents={matchEvents} onFight={() => setTab("fight")} lang={lang} />}
+        {tab === "pro" && <SorareProTab players={players} teams={teams} fixtures={fixtures} logos={logos} matchEvents={matchEvents} lang={lang} />}
       </main>
 
       {/* Footer */}

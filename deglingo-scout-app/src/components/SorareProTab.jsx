@@ -103,6 +103,7 @@ export default function SorareProTab({ players, teams, fixtures, logos = {}, mat
   // ── GW Info ──
   const gwInfo = useMemo(() => getProGwInfo(), []);
   const [countdown, setCountdown] = useState("");
+  const [teamSort, setTeamSort] = useState("ds");
   useEffect(() => {
     if (!gwInfo) return;
     const tick = () => {

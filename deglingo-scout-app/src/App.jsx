@@ -10,23 +10,26 @@ import { t } from "./utils/i18n";
 const TABS = [
   { id: "db", label: "Database", icon: "📊" },
   { id: "reco", label: "Best Pick", icon: "⚽" },
-  { id: "pro", label: "Sorare Pro", icon: "⚙️", disabled: true },
+  { id: "pro", label: "Sorare Pro", icon: "⚙️" },
   { id: "stellar", label: "Sorare Stellar", icon: "✨" },
   { id: "fight", label: "Fight", icon: "🥊" },
 ];
 
 export default function App() {
   const [showLanding, setShowLanding] = useState(() => {
-    // Skip landing if direct tab URL param or hash
+    // Skip landing if direct tab URL param, hash, or OAuth return
     const p = new URLSearchParams(window.location.search).get("tab");
     const h = window.location.hash.replace("#", "");
-    return !["db","fight","reco","stellar"].includes(p) && !["db","fight","reco","stellar"].includes(h);
+    const rt = sessionStorage.getItem("sorare_return_tab");
+    return !["db","fight","reco","stellar","pro"].includes(p) && !["db","fight","reco","stellar","pro"].includes(h) && !rt;
   });
   const [tab, setTab] = useState(() => {
     const p = new URLSearchParams(window.location.search).get("tab");
     const h = window.location.hash.replace("#", "");
-    const valid = ["db","fight","reco","stellar"];
-    return valid.includes(p) ? p : valid.includes(h) ? h : "db";
+    const rt = sessionStorage.getItem("sorare_return_tab");
+    if (rt) sessionStorage.removeItem("sorare_return_tab");
+    const valid = ["db","fight","reco","stellar","pro"];
+    return valid.includes(rt) ? rt : valid.includes(p) ? p : valid.includes(h) ? h : "db";
   });
   // Sync hash avec l'onglet actif (persist au refresh)
   // Ne pas écraser si le hash contient un token OAuth Sorare

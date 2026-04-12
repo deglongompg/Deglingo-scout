@@ -308,12 +308,15 @@ def fetch_recent_finished(comp_code, our_league, days_back=8):
     return fixtures
 
 
-def fetch_next_matchday(comp_code, our_league):
-    """Fetch next scheduled matchday for a competition."""
-    print(f"\n📡 {our_league} ({comp_code})...")
+def fetch_upcoming_fixtures(comp_code, our_league, days_ahead=21):
+    """Fetch ALL upcoming fixtures for the next N days (multi-matchday for Sorare Pro)."""
+    print(f"\n📡 {our_league} ({comp_code}) — {days_ahead} prochains jours...")
 
-    # Get matches with status SCHEDULED or TIMED
-    data = fetch(f"/competitions/{comp_code}/matches?status=SCHEDULED,TIMED")
+    today = datetime.utcnow().date()
+    date_from = today.strftime("%Y-%m-%d")
+    date_to = (today + timedelta(days=days_ahead)).strftime("%Y-%m-%d")
+
+    data = fetch(f"/competitions/{comp_code}/matches?status=SCHEDULED,TIMED&dateFrom={date_from}&dateTo={date_to}")
     if not data or "matches" not in data:
         print(f"  ⚠️ Pas de matchs trouvés")
         return []
@@ -323,60 +326,29 @@ def fetch_next_matchday(comp_code, our_league):
         print(f"  ⚠️ Aucun match programmé")
         return []
 
-    # Find the nearest COMPLETE matchday (>= 5 matches, skip postponed single games)
     from collections import Counter
-    today_str = datetime.utcnow().date().strftime("%Y-%m-%d")
-    soon_str  = (datetime.utcnow().date() + timedelta(days=3)).strftime("%Y-%m-%d")
-
     md_counts = Counter(m["matchday"] for m in matches if m["matchday"])
-    sorted_mds = sorted(md_counts.keys())
-    next_md = None
-    for md in sorted_mds:
-        if md_counts[md] >= 5:
-            next_md = md
-            break
-    if next_md is None:
-        next_md = max(md_counts, key=md_counts.get) if md_counts else sorted_mds[0]
-    md_matches = [m for m in matches if m["matchday"] == next_md]
-
-    # Matchs orphelins : journées incomplètes (< 5 matchs) avec date dans les 3 prochains jours
-    # Ex: dernier match d'une journée qui se joue un lundi décalé
-    orphans = []
-    for md in sorted_mds:
-        if md == next_md:
-            continue
-        if md_counts[md] < 5:
-            for m in matches:
-                if m["matchday"] == md:
-                    mdate = (m.get("utcDate") or "")[:10]
-                    if today_str <= mdate <= soon_str:
-                        orphans.append(m)
-    if orphans:
-        print(f"  + {len(orphans)} match(s) orphelin(s) dans les 3 prochains jours")
-
-    print(f"  ✅ Journée {next_md} — {len(md_matches)} matchs")
+    print(f"  ✅ {len(matches)} matchs sur {len(md_counts)} journée(s) ({date_from} → {date_to})")
+    for md in sorted(md_counts.keys()):
+        print(f"      J{md}: {md_counts[md]} matchs")
 
     fixtures = []
-    for m in md_matches + orphans:
+    for m in matches:
         home = normalize_team(m["homeTeam"]["name"])
         away = normalize_team(m["awayTeam"]["name"])
         date = m["utcDate"][:10] if m.get("utcDate") else ""
-        # Extract kickoff time (HH:MM UTC) for Stellar time slots
-        kickoff = ""
-        if m.get("utcDate") and len(m["utcDate"]) >= 16:
-            kickoff = m["utcDate"][11:16]  # "HH:MM" UTC
+        kickoff = m["utcDate"][11:16] if m.get("utcDate") and len(m["utcDate"]) >= 16 else ""
 
         fixtures.append({
             "home": home,
             "away": away,
             "date": date,
             "kickoff": kickoff,
-            "matchday": next_md,
+            "matchday": m.get("matchday", ""),
             "league": our_league,
             "home_api": m["homeTeam"]["name"],
             "away_api": m["awayTeam"]["name"],
         })
-        print(f"    {home} vs {away} ({date} {kickoff})")
 
     return fixtures
 
@@ -603,8 +575,8 @@ def main():
 
     all_fixtures = []
     for comp_code, our_league in COMPETITIONS.items():
-        # Prochaine journée (matchs futurs)
-        fixtures = fetch_next_matchday(comp_code, our_league)
+        # Toutes les journées des 21 prochains jours (multi-GW pour Sorare Pro)
+        fixtures = fetch_upcoming_fixtures(comp_code, our_league, days_ahead=21)
         all_fixtures.extend(fixtures)
         time.sleep(6.5)
         # Dernière journée terminée (résultats récents pour Stellar)

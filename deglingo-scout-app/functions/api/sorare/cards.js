@@ -4,8 +4,8 @@
  * La function fait l'appel GraphQL à Sorare côté serveur (pas de CORS).
  */
 const GQL = "https://api.sorare.com/graphql";
-const Q = `{ currentUser { slug nickname cards(first: 50, sport: FOOTBALL) { nodes { slug name rarityTyped pictureUrl power cardEditionName ... on Card { player { slug displayName position } season { startYear } } } pageInfo { hasNextPage endCursor } } } }`;
-const QP = `query($a:String!){ currentUser { cards(first:50, sport:FOOTBALL, after:$a) { nodes { slug name rarityTyped pictureUrl power cardEditionName ... on Card { player { slug displayName position } season { startYear } } } pageInfo { hasNextPage endCursor } } } }`;
+const Q = `{ currentUser { slug nickname cards(first: 50, sport: FOOTBALL) { nodes { slug name rarityTyped pictureUrl power cardEditionName ... on Card { player { slug displayName position } } } pageInfo { hasNextPage endCursor } } } }`;
+const QP = `query($a:String!){ currentUser { cards(first:50, sport:FOOTBALL, after:$a) { nodes { slug name rarityTyped pictureUrl power cardEditionName ... on Card { player { slug displayName position } } } pageInfo { hasNextPage endCursor } } } }`;
 
 async function gql(token, query, variables) {
   const r = await fetch(GQL, {
@@ -17,7 +17,6 @@ async function gql(token, query, variables) {
 }
 
 export async function onRequestGet({ request }) {
-  // Token depuis le header Authorization (envoyé par le frontend)
   const auth = request.headers.get("Authorization") || "";
   const token = auth.replace(/^Bearer\s+/i, "").trim();
   if (!token) {
@@ -26,8 +25,9 @@ export async function onRequestGet({ request }) {
     });
   }
 
-  // Test mode: /api/sorare/cards?test=field1,field2,field3
   const url = new URL(request.url);
+
+  // Test mode
   const testFields = url.searchParams.get("test");
   if (testFields) {
     const q = `{currentUser{cards(first:1,sport:FOOTBALL){nodes{slug rarityTyped ... on Card{player{slug displayName} ${testFields}}}}}}`;
@@ -35,7 +35,7 @@ export async function onRequestGet({ request }) {
     return new Response(JSON.stringify(r), { status: 200, headers: { "Content-Type": "application/json", "Access-Control-Allow-Origin": "*" } });
   }
 
-  // Raw query mode: /api/sorare/cards?rawq=<query>
+  // Raw query mode
   const rawq = url.searchParams.get("rawq");
   if (rawq) {
     const r = await gql(token, rawq);
@@ -56,20 +56,43 @@ export async function onRequestGet({ request }) {
       });
     }
 
-    // Pagination
+    // Pagination — collect ALL cards, filter after
     let allCards = [...(user.cards?.nodes || [])];
     let cursor = user.cards?.pageInfo?.endCursor;
     let hasNext = user.cards?.pageInfo?.hasNextPage;
+    // Track useful cards found — stop early once we have enough non-common
+    let usefulCount = 0;
+    for (const c of allCards) {
+      const r = (c.rarityTyped || "").toLowerCase();
+      const ed = (c.cardEditionName || "").toLowerCase();
+      if (r === "limited" || r === "rare" || r === "super_rare" || r === "unique" || ed.startsWith("stellar_")) usefulCount++;
+    }
+
     for (let i = 0; i < 39 && hasNext && cursor; i++) {
       const dn = await gql(token, QP, { a: cursor });
       if (dn.errors || !dn.data?.currentUser?.cards?.nodes?.length) break;
-      allCards = allCards.concat(dn.data.currentUser.cards.nodes);
+      const nodes = dn.data.currentUser.cards.nodes;
+      allCards = allCards.concat(nodes);
+      for (const c of nodes) {
+        const r = (c.rarityTyped || "").toLowerCase();
+        const ed = (c.cardEditionName || "").toLowerCase();
+        if (r === "limited" || r === "rare" || r === "super_rare" || r === "unique" || ed.startsWith("stellar_")) usefulCount++;
+      }
       hasNext = dn.data.currentUser.cards.pageInfo?.hasNextPage;
       cursor = dn.data.currentUser.cards.pageInfo?.endCursor;
     }
 
+    // Filter: keep limited, rare, super_rare, unique + stellar editions
+    const filtered = allCards.filter(c => {
+      const r = (c.rarityTyped || "").toLowerCase();
+      const ed = (c.cardEditionName || "").toLowerCase();
+      if (r === "limited" || r === "rare" || r === "super_rare" || r === "unique") return true;
+      if (ed.startsWith("stellar_")) return true;
+      return false;
+    });
+
     return new Response(JSON.stringify({
-      data: { currentUser: { slug: user.slug, nickname: user.nickname, cards: { nodes: allCards } } }
+      data: { currentUser: { slug: user.slug, nickname: user.nickname, cards: { nodes: filtered } } }
     }), {
       status: 200, headers: { "Content-Type": "application/json", "Access-Control-Allow-Origin": "*" },
     });

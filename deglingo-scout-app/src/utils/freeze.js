@@ -101,6 +101,35 @@ export function getProGwInfo() {
   return null;
 }
 
+/**
+ * Sorare Pro — retourne les N prochaines GW (y compris la GW en cours).
+ * Chaque GW = { gwKey, gwStart, gwEnd, gwNumber, startDateStr, endDateStr, label }
+ */
+export function getProGwList(count = 5) {
+  const current = getProGwInfo();
+  if (!current) return [];
+  const list = [current];
+  let cursor = new Date(current.gwEnd);
+  for (let i = 1; i < count; i++) {
+    // La GW suivante commence exactement quand la precedente finit
+    const gwStart = new Date(cursor);
+    const dayOfWeek = gwStart.getDay(); // 0=dim, 2=mar, 5=ven
+    // Si on est a un Mardi 16h → prochaine fin = Vendredi 16h (+3j)
+    // Si on est a un Vendredi 16h → prochaine fin = Mardi 16h (+4j)
+    const daysToAdd = dayOfWeek === 2 ? 3 : dayOfWeek === 5 ? 4 : 3; // fallback 3
+    const gwEnd = new Date(gwStart);
+    gwEnd.setDate(gwEnd.getDate() + daysToAdd);
+    gwEnd.setHours(16, 0, 0, 0);
+    const gwNumber = dayOfWeek === 5 ? 1 : 2;
+    const gwKey = `pro_${gwStart.toISOString().slice(0, 10)}_gw${gwNumber}`;
+    const startDateStr = gwStart.toISOString().slice(0, 10);
+    const endDateStr = gwEnd.toISOString().slice(0, 10);
+    list.push({ gwKey, gwStart, gwEnd, gwNumber, startDateStr, endDateStr });
+    cursor = gwEnd;
+  }
+  return list;
+}
+
 /** Lit depuis localStorage, retourne null si absent ou erreur */
 export function loadFrozen(key) {
   try {

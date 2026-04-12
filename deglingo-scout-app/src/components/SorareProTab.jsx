@@ -2,7 +2,7 @@ import { useState, useMemo, useEffect } from "react";
 import { POSITION_COLORS, LEAGUE_COLORS, LEAGUE_FLAG_CODES, LEAGUE_NAMES, dsColor, dsBg, isSilver } from "../utils/colors";
 import { dScoreMatch, csProb, findTeam } from "../utils/dscore";
 import { T, t } from "../utils/i18n";
-import { getProGwInfo, loadFrozen, saveFrozen } from "../utils/freeze";
+import { getProGwInfo, getProGwList, loadFrozen, saveFrozen } from "../utils/freeze";
 
 const PC = POSITION_COLORS;
 const PRO_LEAGUES = ["L1", "PL", "Liga", "Bundes", "MLS"];
@@ -100,8 +100,10 @@ export default function SorareProTab({ players, teams, fixtures, logos = {}, mat
   const [filterTitu, setFilterTitu] = useState(0);
   const [selectedMatchFilters, setSelectedMatchFilters] = useState([]);
 
-  // ── GW Info ──
-  const gwInfo = useMemo(() => getProGwInfo(), []);
+  // ── GW Info — 5 prochaines GW ──
+  const gwList = useMemo(() => getProGwList(5), []);
+  const [selectedGwIdx, setSelectedGwIdx] = useState(0);
+  const gwInfo = gwList[selectedGwIdx] || null;
   const [countdown, setCountdown] = useState("");
   const [teamSort, setTeamSort] = useState("ds");
   useEffect(() => {
@@ -391,9 +393,11 @@ export default function SorareProTab({ players, teams, fixtures, logos = {}, mat
 
       {/* ═══ HEADER : Titre + League selector + Rarity toggle ═══ */}
       <div style={{ display: "flex", alignItems: "center", gap: 12, padding: "8px 0 12px", flexWrap: "wrap" }}>
-        <div>
-          <div style={{ fontSize: 12, fontWeight: 800, color: "rgba(255,255,255,0.5)", letterSpacing: "0.15em" }}>SORARE</div>
-          <h1 style={{ fontSize: 22, fontWeight: 900, margin: 0, background: rarityBg, WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent", backgroundClip: "text" }}>PRO</h1>
+        <div style={{ display: "flex", alignItems: "center", gap: 6, flexShrink: 0 }}>
+          <span style={{ fontSize: 14, fontWeight: 800, color: "rgba(255,255,255,0.5)", letterSpacing: "0.12em" }}>SORARE</span>
+          <span style={{ display: "inline-flex", alignItems: "center", justifyContent: "center", padding: "3px 10px", borderRadius: 5, background: rarityBg, boxShadow: `0 0 10px ${rarityColor}40` }}>
+            <span style={{ fontSize: 14, fontWeight: 900, color: "#fff", letterSpacing: "0.06em" }}>PRO</span>
+          </span>
         </div>
         {/* League buttons */}
         <div style={{ display: "flex", gap: 4 }}>
@@ -422,18 +426,10 @@ export default function SorareProTab({ players, teams, fixtures, logos = {}, mat
             </button>
           ))}
         </div>
-        {/* GW info + countdown */}
-        {gwInfo && (
-          <div style={{ marginLeft: "auto", display: "flex", alignItems: "center", gap: 8 }}>
-            <div style={{ fontSize: 9, color: "rgba(255,255,255,0.4)" }}>{t(lang, "proGwLabel")} {gwInfo.gwNumber}</div>
-            <div style={{ fontSize: 14, fontWeight: 900, color: rarityColor, fontFamily: "'DM Mono',monospace" }}>{countdown}</div>
-          </div>
-        )}
-      </div>
-
-      {/* ═══ HOT STREAK PALIERS ═══ */}
-      <div style={{ display: "flex", gap: 6, padding: "6px 0 12px", alignItems: "center" }}>
-        <span style={{ fontSize: 8, fontWeight: 800, color: "#EF4444", letterSpacing: "0.1em" }}>HOT STREAK</span>
+        {/* Separateur */}
+        <span style={{ width: 1, height: 18, background: "rgba(255,255,255,0.12)", flexShrink: 0, marginLeft: 4, marginRight: 4 }} />
+        {/* Hot Streak paliers — meme ligne */}
+        <span style={{ fontSize: 8, fontWeight: 800, color: "#EF4444", letterSpacing: "0.08em", flexShrink: 0 }}>HOT STREAK</span>
         {paliers.map((p, i) => {
           const reached = totalScore >= p.pts;
           return (
@@ -448,6 +444,37 @@ export default function SorareProTab({ players, teams, fixtures, logos = {}, mat
           <div style={{ fontSize: 11, fontWeight: 800, color: totalScore >= GRAND_PRIX.pts ? "#C0C0C0" : "rgba(255,255,255,0.2)", fontFamily: "'DM Mono',monospace" }}>{GRAND_PRIX.pts}</div>
           <div style={{ fontSize: 6, color: "rgba(255,255,255,0.15)" }}>GP</div>
         </div>
+        {/* GW selector + countdown — fin de ligne */}
+        {gwList.length > 0 && (
+          <div style={{ marginLeft: "auto", display: "flex", alignItems: "center", gap: 4, flexShrink: 0 }}>
+            {gwList.map((gw, i) => {
+              const isActive = selectedGwIdx === i;
+              const isCurrent = i === 0;
+              const startD = gw.gwStart.getDate();
+              const endD = gw.gwEnd.getDate();
+              const month = gw.gwStart.toLocaleDateString(lang === "fr" ? "fr-FR" : "en-US", { month: "short" }).toUpperCase().replace(".", "");
+              return (
+                <button key={i} onClick={() => setSelectedGwIdx(i)} style={{
+                  padding: "3px 8px", borderRadius: 6, cursor: "pointer", fontFamily: "Outfit", border: "none",
+                  background: isActive ? `${rarityColor}30` : "rgba(255,255,255,0.04)",
+                  outline: isActive ? `2px solid ${rarityColor}` : "none",
+                  transition: "all 0.15s",
+                }}>
+                  <div style={{ fontSize: 7, fontWeight: 800, color: isActive ? rarityColor : "rgba(255,255,255,0.35)" }}>
+                    {isCurrent ? "LIVE" : `GW+${i}`}
+                  </div>
+                  <div style={{ fontSize: 10, fontWeight: 700, color: isActive ? "#fff" : "rgba(255,255,255,0.4)", fontFamily: "'DM Mono',monospace" }}>
+                    {startD}-{endD}
+                  </div>
+                  <div style={{ fontSize: 6, color: "rgba(255,255,255,0.25)" }}>{month}</div>
+                </button>
+              );
+            })}
+            {selectedGwIdx === 0 && (
+              <span style={{ fontSize: 12, fontWeight: 900, color: rarityColor, fontFamily: "'DM Mono',monospace", marginLeft: 4 }}>{countdown}</span>
+            )}
+          </div>
+        )}
       </div>
 
       {/* ═══ MAIN LAYOUT : Left (matches) + Right (builder + players) ═══ */}

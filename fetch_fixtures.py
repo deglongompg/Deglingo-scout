@@ -609,11 +609,28 @@ def main():
     print(f"\n📋 Total: {len(all_fixtures)} matchs récupérés")
 
     # Build player → fixture mapping (ligues domestiques uniquement, pas UCL/UEL/UECL)
-    # IMPORTANT : exclure les matchs terminés (passés) pour ne mapper que les prochains matchs
-    today_str = datetime.utcnow().date().strftime("%Y-%m-%d")
+    # Inclure les matchs de la GW en cours (depuis le dernier Ven ou Mar 16h Paris)
+    # pour que la Database affiche le Score GW + adversaire de cette GW
+    from datetime import timezone
+    now_utc = datetime.now(timezone.utc)
+    # GW start = dernier Vendredi ou Mardi a 14h UTC (= 16h Paris)
+    weekday = now_utc.weekday()  # 0=Mon ... 6=Sun
+    # Days since last Tue(1) or Fri(4) at 14:00 UTC
+    candidates = []
+    for target_wd in [1, 4]:  # Tuesday, Friday
+        diff = (weekday - target_wd) % 7
+        candidate = now_utc - timedelta(days=diff)
+        candidate = candidate.replace(hour=14, minute=0, second=0, microsecond=0)
+        if candidate > now_utc:
+            candidate -= timedelta(days=7)
+        candidates.append(candidate)
+    gw_start = max(candidates)
+    gw_start_str = gw_start.strftime("%Y-%m-%d")
+    print(f"\n📅 GW start: {gw_start_str} (pour player_fixtures)")
+
     domestic_fixtures = [
         f for f in all_fixtures
-        if not f.get("competition") and not f.get("finished") and f.get("date", "") >= today_str
+        if not f.get("competition") and f.get("date", "") >= gw_start_str
     ]
     player_fixtures = build_player_fixtures(domestic_fixtures, teams, players)
 

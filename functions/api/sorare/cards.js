@@ -35,10 +35,11 @@ export async function onRequestGet({ request }) {
     return new Response(JSON.stringify(r), { status: 200, headers: { "Content-Type": "application/json", "Access-Control-Allow-Origin": "*" } });
   }
 
-  // Raw query mode: /api/sorare/cards?rawq=<query>
+  // Raw query mode (with optional variables): /api/sorare/cards?rawq=<query>&vars=<json>
   const rawq = url.searchParams.get("rawq");
   if (rawq) {
-    const r = await gql(token, rawq);
+    const vars = url.searchParams.get("vars");
+    const r = await gql(token, rawq, vars ? JSON.parse(vars) : undefined);
     return new Response(JSON.stringify(r), { status: 200, headers: { "Content-Type": "application/json", "Access-Control-Allow-Origin": "*" } });
   }
 

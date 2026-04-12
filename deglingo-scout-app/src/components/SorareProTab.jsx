@@ -150,30 +150,56 @@ export default function SorareProTab({ players, teams, fixtures, logos = {}, mat
     if (savedToken) fetchCards(savedToken, true);
   }, []);
 
+  // Pro-specific: paginated fetch client-side to get ALL Limited/Rare cards
+  // Does NOT use /api/sorare/cards (which has server-side pagination limits)
+  // Instead uses rawq to paginate directly from the frontend
   const fetchCards = async (token, silent = false) => {
     if (!token) return;
     if (!silent) setSorareLoading(true);
     try {
-      const res = await fetch("/api/sorare/cards", { headers: { "Authorization": `Bearer ${token}` } });
+      // First page — also gets user info
+      const firstQ = encodeURIComponent(`{currentUser{slug nickname cards(first:50,sport:FOOTBALL){nodes{slug name rarityTyped pictureUrl power cardEditionName ... on Card{player{slug displayName position}}}pageInfo{hasNextPage endCursor}}}}`);
+      const res = await fetch(`/api/sorare/cards?rawq=${firstQ}`, { headers: { "Authorization": `Bearer ${token}` } });
       if (res.status === 401) { localStorage.removeItem("sorare_access_token"); setSorareConnected(false); setSorareCards([]); return; }
       if (!res.ok) { setSorareConnected(false); return; }
       const data = await res.json();
       const user = data?.data?.currentUser;
       if (!user) { setSorareConnected(false); return; }
       setSorareUser({ slug: user.slug, nickname: user.nickname });
-      const cards = (user.cards?.nodes || []).map(c => {
-        const edName = c.cardEditionName || "";
-        const r = (c.rarityTyped || "").toLowerCase().replace(/ /g, "_");
-        return {
-          cardSlug: c.slug, playerSlug: c.player?.slug || null, playerName: c.player?.displayName || null,
-          position: c.player?.position || null, rarity: r, pictureUrl: c.pictureUrl || null,
-          cardEditionName: edName, isStellar: edName.startsWith("stellar_"),
-          isLimited: r === "limited", isRare: r === "rare",
-          seasonStartYear: c.seasonYear || c.season?.startYear || null,
-          isClassic: (c.seasonYear || c.season?.startYear) != null && (c.seasonYear || c.season?.startYear) < 2025,
-          power: c.power,
-        };
-      }).filter(c => c.playerSlug);
+
+      // Collect all cards via client-side pagination
+      let allNodes = [...(user.cards?.nodes || [])];
+      let cursor = user.cards?.pageInfo?.endCursor;
+      let hasNext = user.cards?.pageInfo?.hasNextPage;
+      for (let i = 0; i < 60 && hasNext && cursor; i++) {
+        const pageQ = `query($a:String!){currentUser{cards(first:50,sport:FOOTBALL,after:$a){nodes{slug name rarityTyped pictureUrl power cardEditionName ... on Card{player{slug displayName position}}}pageInfo{hasNextPage endCursor}}}}`;
+        const pr = await fetch(`/api/sorare/cards?rawq=${encodeURIComponent(pageQ)}&vars=${encodeURIComponent(JSON.stringify({a:cursor}))}`, { headers: { "Authorization": `Bearer ${token}` } });
+        if (!pr.ok) break;
+        const pd = await pr.json();
+        if (pd.errors || !pd.data?.currentUser?.cards?.nodes?.length) break;
+        allNodes = allNodes.concat(pd.data.currentUser.cards.nodes);
+        hasNext = pd.data.currentUser.cards.pageInfo?.hasNextPage;
+        cursor = pd.data.currentUser.cards.pageInfo?.endCursor;
+      }
+
+      // Filter: keep Limited + Rare only (Pro doesn't need Stellar/Common)
+      const cards = allNodes
+        .filter(c => {
+          const r = (c.rarityTyped || "").toLowerCase();
+          return r === "limited" || r === "rare";
+        })
+        .map(c => {
+          const edName = c.cardEditionName || "";
+          const r = (c.rarityTyped || "").toLowerCase().replace(/ /g, "_");
+          return {
+            cardSlug: c.slug, playerSlug: c.player?.slug || null, playerName: c.player?.displayName || null,
+            position: c.player?.position || null, rarity: r, pictureUrl: c.pictureUrl || null,
+            cardEditionName: edName, isStellar: false,
+            isLimited: r === "limited", isRare: r === "rare",
+            isClassic: false, // TODO: need seasonYear from API
+            power: c.power,
+          };
+        }).filter(c => c.playerSlug);
       setSorareCards(cards);
       setSorareConnected(true);
       setMyCardsMode(true);

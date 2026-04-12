@@ -100,6 +100,7 @@ export default function SorareProTab({ players, teams, fixtures, logos = {}, mat
   const [filterTitu, setFilterTitu] = useState(0);
   const [selectedMatchFilters, setSelectedMatchFilters] = useState([]);
   const [includeRare, setIncludeRare] = useState(true);
+  const [bonusEnabled, setBonusEnabled] = useState(true);
 
   // ── GW Info — 5 prochaines GW ──
   const gwList = useMemo(() => getProGwList(5), []);
@@ -162,7 +163,7 @@ export default function SorareProTab({ players, teams, fixtures, logos = {}, mat
       position: c.player?.position || null, rarity: r, pictureUrl: c.pictureUrl || null,
       cardEditionName: edName, isStellar: false,
       isLimited: r === "limited", isRare: r === "rare",
-      isClassic: (() => { const m = c.slug?.match(/-(\d{4})-/); return m ? parseInt(m[1]) < 2025 : false; })(),
+      isClassic: (() => { const m = c.slug?.match(/-(\d{4})-(?:limited|rare)-/); return m ? parseInt(m[1]) < 2025 : false; })(),
       power: c.power,
     };
   };
@@ -259,7 +260,16 @@ export default function SorareProTab({ players, teams, fixtures, logos = {}, mat
 
   const disconnectSorare = () => {
     localStorage.removeItem("sorare_access_token");
+    localStorage.removeItem("pro_cards_cache");
+    localStorage.removeItem("pro_cards_cache_time");
     setSorareConnected(false); setSorareCards([]); setSorareUser(null); setMyCardsMode(false);
+  };
+
+  const refreshCards = () => {
+    localStorage.removeItem("pro_cards_cache");
+    localStorage.removeItem("pro_cards_cache_time");
+    const token = localStorage.getItem("sorare_access_token");
+    if (token) fetchCards(token);
   };
 
   // ── Card maps — Limited/Rare par rarity selectionnee ──
@@ -280,6 +290,22 @@ export default function SorareProTab({ players, teams, fixtures, logos = {}, mat
   const proCardCount = useMemo(() => {
     return sorareCards.filter(c => !c.isStellar && (c.isLimited || c.isRare)).length;
   }, [sorareCards]);
+
+  // ── Bonus power — D-Score ajusté ──
+  const getAdjDs = (p) => {
+    const slug = p.slug || p.name;
+    const card = proCardMap[slug];
+    const bonus = card?.power ? (card.power - 1) * 100 : 0; // power 1.05 = +5%
+    if (!bonusEnabled || bonus <= 0) return Math.round(p.ds || 0);
+    return Math.round((p.ds || 0) * card.power);
+  };
+  // Algo Magique: toujours avec bonus (meme si toggle OFF)
+  const getAlgoDs = (p) => {
+    const slug = p.slug || p.name;
+    const card = proCardMap[slug];
+    if (!card?.power || card.power <= 1) return Math.round(p.ds || 0);
+    return Math.round((p.ds || 0) * card.power);
+  };
 
   // ── Team builder ──
   const [myPicks, setMyPicks] = useState({ GK: null, DEF: null, MIL: null, ATT: null, FLEX: null });
@@ -342,15 +368,12 @@ export default function SorareProTab({ players, teams, fixtures, logos = {}, mat
     if (!savedTeamsKey) return;
     const existing = savedTeams;
     if (existing.length >= maxSaved) return;
-    const pickedPlayers = TEAM_SLOTS.map(s => myPicks[s]).filter(Boolean);
-    const scores = pickedPlayers.map(p => p.ds || 0);
-    const capDs = scores.length === 5 ? Math.max(...scores) : 0;
-    const totalScore = Math.round(scores.reduce((s, v) => s + v, 0) + capDs * 0.5);
-    const newTeam = { id: Date.now(), picks: { ...myPicks }, score: totalScore, label: `Equipe ${existing.length + 1}` };
+    const newTeam = { id: Date.now(), picks: { ...myPicks }, score: totalScore, captain: captainSlot, label: `Equipe ${existing.length + 1}` };
     const updated = [...existing, newTeam];
     localStorage.setItem(savedTeamsKey, JSON.stringify(updated));
     setSavedTeams(updated);
     resetTeam();
+    setCaptainSlot(null);
   };
 
   const deleteSavedTeam = (id) => {
@@ -427,7 +450,9 @@ export default function SorareProTab({ players, teams, fixtures, logos = {}, mat
       .filter(p => !usedIds.has(p.slug || p.name))
       .filter(p => !sorareConnected || proCardMap[p.slug || p.name])
       .filter(p => p.sorare_starter_pct == null || p.sorare_starter_pct >= 70)
-      .filter(p => selectedMatchFilters.length === 0 || selectedMatchFilters.some(m => clubMatch(p.club, m.home) || clubMatch(p.club, m.away)));
+      .filter(p => selectedMatchFilters.length === 0 || selectedMatchFilters.some(m => clubMatch(p.club, m.home) || clubMatch(p.club, m.away)))
+      .map(p => ({ ...p, ds: getAlgoDs(p) }))
+      .sort((a, b) => b.ds - a.ds);
     if (pool.length < 5) return;
 
     const newPicks = { GK: null, DEF: null, MIL: null, ATT: null, FLEX: null };
@@ -455,11 +480,17 @@ export default function SorareProTab({ players, teams, fixtures, logos = {}, mat
     setMyPicks(newPicks);
   };
 
-  // ── Score calculation ──
+  // ── Captain (modifiable) ──
+  const [captainSlot, setCaptainSlot] = useState(null); // null = auto (highest DS)
+
+  // ── Score calculation — with bonus ──
   const pickedPlayers = TEAM_SLOTS.map(s => myPicks[s]).filter(Boolean);
   const filledCount = pickedPlayers.length;
-  const scores = pickedPlayers.map(p => p.ds || 0);
-  const capDs = scores.length === 5 ? Math.max(...scores) : 0;
+  const scores = pickedPlayers.map(p => getAdjDs(p));
+  // Captain: user-selected or auto (highest score)
+  const autoCaptainIdx = scores.length === 5 ? scores.indexOf(Math.max(...scores)) : -1;
+  const captainPlayer = captainSlot && myPicks[captainSlot] ? myPicks[captainSlot] : (autoCaptainIdx >= 0 ? pickedPlayers[autoCaptainIdx] : null);
+  const capDs = captainPlayer ? getAdjDs(captainPlayer) : 0;
   const totalScore = Math.round(scores.reduce((s, v) => s + v, 0) + capDs * 0.5);
   const paliers = getPaliers(league, rarity);
   const palier = paliers.filter(p => totalScore >= p.pts).pop();
@@ -681,11 +712,12 @@ export default function SorareProTab({ players, teams, fixtures, logos = {}, mat
                 </div>
               </div>
               <div style={{ display: "flex", gap: 6, alignItems: "center" }}>
-                {sorareConnected && (
+                {sorareConnected && (<>
                   <button onClick={disconnectSorare} style={{ display: "flex", alignItems: "center", gap: 4, padding: "4px 8px", borderRadius: 6, border: "1px solid rgba(74,222,128,0.4)", background: "rgba(74,222,128,0.08)", color: "#4ADE80", fontSize: 8, fontWeight: 800, cursor: "pointer", fontFamily: "Outfit" }}>
                     {sorareUser?.nickname || "Sorare"} · {proCardCount} cards{loadingProgress.scanned > 0 ? ` (${loadingProgress.scanned}...)` : ""}
                   </button>
-                )}
+                  <button onClick={refreshCards} title="Refresh cartes (nouvelle carte achetee ?)" style={{ padding: "4px 6px", borderRadius: 6, border: "1px solid rgba(255,255,255,0.1)", background: "rgba(255,255,255,0.04)", color: "rgba(255,255,255,0.4)", fontSize: 10, cursor: "pointer" }}>↻</button>
+                </>)}
                 <button onClick={generateMagicTeam} style={{ padding: "5px 10px", borderRadius: 6, border: "none", cursor: "pointer", fontFamily: "Outfit", background: rarityBg, color: "#fff", fontSize: 9, fontWeight: 800 }}>
                   {t(lang, "proAlgo")}
                 </button>
@@ -723,21 +755,28 @@ export default function SorareProTab({ players, teams, fixtures, logos = {}, mat
                         const sc = POS_SLOT_COLORS[slot];
                         const isActive = selectedSlot === slot;
                         const card = p ? proCardMap[p.slug] : null;
-                        const dsVal = p ? (p.ds || 0) : 0;
+                        const dsVal = p ? getAdjDs(p) : 0;
                         const dsCol = dsVal >= 80 ? "#4ADE80" : dsVal >= 65 ? "#C4B5FD" : dsVal >= 50 ? "#FBBF24" : "#F87171";
+                        const isCaptain = p && captainPlayer && (p.slug || p.name) === (captainPlayer.slug || captainPlayer.name);
+                        const bonusPct = card?.power ? Math.round((card.power - 1) * 100) : 0;
                         return (
                           <div key={slot} onClick={() => setSelectedSlot(isActive ? null : slot)} style={{
                             borderRadius: 10, cursor: "pointer", overflow: "hidden",
                             background: card ? "transparent" : p ? `linear-gradient(160deg, #0d0826, ${sc}30)` : isActive ? `${sc}18` : "rgba(255,255,255,0.025)",
-                            border: card ? "none" : `1.5px solid ${isActive ? sc + "CC" : p ? sc + "55" : "rgba(255,255,255,0.08)"}`,
+                            border: card ? "none" : isCaptain ? `2px solid #FBBF24` : `1.5px solid ${isActive ? sc + "CC" : p ? sc + "55" : "rgba(255,255,255,0.08)"}`,
                             display: "flex", flexDirection: "column", alignItems: "center", gap: 4,
                             padding: card ? 0 : "8px 6px", position: "relative", width: 120, height: 166, flexShrink: 0,
                             marginTop: slot === "GK" ? 12 : 0,
                           }}>
+                            {/* Captain badge — click to toggle */}
+                            {p && filledCount === 5 && (
+                              <button onClick={e => { e.stopPropagation(); setCaptainSlot(captainSlot === slot ? null : slot); }} style={{ position: "absolute", top: card ? 4 : 2, right: card ? 4 : 2, zIndex: 3, width: 18, height: 18, borderRadius: "50%", border: isCaptain ? "2px solid #FBBF24" : "1px solid rgba(255,255,255,0.2)", background: isCaptain ? "#FBBF24" : "rgba(0,0,0,0.5)", color: isCaptain ? "#000" : "rgba(255,255,255,0.4)", fontSize: 9, fontWeight: 900, cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", padding: 0 }}>C</button>
+                            )}
                             {card ? (
                               <>
                                 <img src={card.pictureUrl} alt="" style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "contain" }} />
                                 {card.isClassic && <span style={{ position: "absolute", top: 4, left: 4, fontSize: 6, fontWeight: 900, color: "#fff", background: "rgba(139,92,246,0.8)", borderRadius: 3, padding: "1px 4px", zIndex: 2 }}>CLASSIC</span>}
+                                {bonusPct > 0 && <span style={{ position: "absolute", bottom: 26, left: 4, fontSize: 7, fontWeight: 900, color: "#fff", background: "rgba(22,101,52,0.9)", borderRadius: 3, padding: "1px 4px", zIndex: 2 }}>+{bonusPct}%</span>}
                                 <div style={{ position: "absolute", bottom: 6, right: 6, zIndex: 2 }}>
                                   <span style={{ display: "inline-block", padding: "3px 7px", borderRadius: 8, fontFamily: "'DM Mono',monospace", fontSize: 14, fontWeight: 700, color: "#fff", background: dsBg(dsVal), boxShadow: `0 0 8px ${dsColor(dsVal)}50` }}>{dsVal}</span>
                                 </div>
@@ -808,6 +847,11 @@ export default function SorareProTab({ players, teams, fixtures, logos = {}, mat
                   {sorareConnected && rarity === "limited" && (
                     <button onClick={() => setIncludeRare(v => !v)} style={{ fontSize: 7, fontWeight: 700, padding: "3px 8px", borderRadius: 6, border: `1px solid ${includeRare ? "#EF444480" : "rgba(255,255,255,0.1)"}`, background: includeRare ? "rgba(239,68,68,0.12)" : "transparent", color: includeRare ? "#EF4444" : "rgba(255,255,255,0.3)", cursor: "pointer", fontFamily: "Outfit" }}>
                       + Rare
+                    </button>
+                  )}
+                  {sorareConnected && (
+                    <button onClick={() => setBonusEnabled(v => !v)} style={{ fontSize: 7, fontWeight: 700, padding: "3px 8px", borderRadius: 6, border: `1px solid ${bonusEnabled ? "rgba(74,222,128,0.5)" : "rgba(255,255,255,0.1)"}`, background: bonusEnabled ? "rgba(74,222,128,0.12)" : "transparent", color: bonusEnabled ? "#4ADE80" : "rgba(255,255,255,0.3)", cursor: "pointer", fontFamily: "Outfit" }}>
+                      Bonus {bonusEnabled ? "ON" : "OFF"}
                     </button>
                   )}
                   <div style={{ display: "flex", alignItems: "center", gap: 4 }}>

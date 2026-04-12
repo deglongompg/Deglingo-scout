@@ -105,9 +105,21 @@ export function getProGwInfo() {
  * Sorare Pro — retourne les N prochaines GW (y compris la GW en cours).
  * Chaque GW = { gwKey, gwStart, gwEnd, gwNumber, startDateStr, endDateStr, label }
  */
+// GW69 = 10 avr 2026 (gameWeek interne 673, offset 604)
+// Epoch de reference : GW69 commence le 10 avril 2026 a 14h UTC
+const GW_EPOCH_DATE = new Date("2026-04-10T14:00:00Z");
+const GW_EPOCH_NUMBER = 69;
+
 export function getProGwList(count = 5) {
   const current = getProGwInfo();
   if (!current) return [];
+  // Calculer le numero GW affiche pour la GW actuelle
+  // Chaque GW dure 3-4 jours, on compte le nombre de GW depuis l'epoch
+  const msSinceEpoch = current.gwStart.getTime() - GW_EPOCH_DATE.getTime();
+  const avgGwDuration = 3.5 * 24 * 60 * 60 * 1000; // ~3.5 jours en moyenne
+  const gwOffset = Math.round(msSinceEpoch / avgGwDuration);
+  const currentGwNumber = GW_EPOCH_NUMBER + gwOffset;
+  current.displayNumber = currentGwNumber;
   const list = [current];
   let cursor = new Date(current.gwEnd);
   for (let i = 1; i < count; i++) {
@@ -124,7 +136,7 @@ export function getProGwList(count = 5) {
     const gwKey = `pro_${gwStart.toISOString().slice(0, 10)}_gw${gwNumber}`;
     const startDateStr = gwStart.toISOString().slice(0, 10);
     const endDateStr = gwEnd.toISOString().slice(0, 10);
-    list.push({ gwKey, gwStart, gwEnd, gwNumber, startDateStr, endDateStr });
+    list.push({ gwKey, gwStart, gwEnd, gwNumber, startDateStr, endDateStr, displayNumber: currentGwNumber + i });
     cursor = gwEnd;
   }
   return list;

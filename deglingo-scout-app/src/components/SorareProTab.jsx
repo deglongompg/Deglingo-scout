@@ -461,7 +461,7 @@ export default function SorareProTab({ players, teams, fixtures, logos = {}, mat
                   transition: "all 0.15s",
                 }}>
                   <div style={{ fontSize: 7, fontWeight: 800, color: isActive ? rarityColor : "rgba(255,255,255,0.35)" }}>
-                    {isCurrent ? "LIVE" : `GW+${i}`}
+                    GW{gw.displayNumber || "?"}{isCurrent ? " LIVE" : ""}
                   </div>
                   <div style={{ fontSize: 10, fontWeight: 700, color: isActive ? "#fff" : "rgba(255,255,255,0.4)", fontFamily: "'DM Mono',monospace" }}>
                     {startD}-{endD}

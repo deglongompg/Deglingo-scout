@@ -962,7 +962,7 @@ export default function SorareProTab({ players, teams, fixtures, logos = {}, mat
                               </div>
                               {/* D-Score */}
                               <div style={{ textAlign: "center" }}>
-                                <span style={{ display: "inline-block", padding: "3px 7px", borderRadius: 8, fontFamily: "'DM Mono',monospace", fontSize: 14, fontWeight: 700, color: isSilver(p.ds) ? "#1a1a2e" : "#fff", background: isSilver(p.ds) ? "linear-gradient(90deg,#C0C0C0,#A8E8D0,#B0C4E8,#D4B0E8,#fff,#D4B0E8,#B0C4E8,#A8E8D0,#C0C0C0)" : dsBg(p.ds), backgroundSize: isSilver(p.ds) ? "200% 100%" : "auto", animation: isSilver(p.ds) ? "proShine 3s linear infinite" : "none" }}>{p.ds}</span>
+                                {(() => { const adj = getAdjDs(p); return <span style={{ display: "inline-block", padding: "3px 7px", borderRadius: 8, fontFamily: "'DM Mono',monospace", fontSize: 14, fontWeight: 700, color: isSilver(adj) ? "#1a1a2e" : "#fff", background: isSilver(adj) ? "linear-gradient(90deg,#C0C0C0,#A8E8D0,#B0C4E8,#D4B0E8,#fff,#D4B0E8,#B0C4E8,#A8E8D0,#C0C0C0)" : dsBg(adj), backgroundSize: isSilver(adj) ? "200% 100%" : "auto", animation: isSilver(adj) ? "proShine 3s linear infinite" : "none" }}>{adj}</span>; })()}
                               </div>
                               {/* Adv */}
                               <div style={{ overflow: "hidden" }}>
@@ -1049,8 +1049,10 @@ export default function SorareProTab({ players, teams, fixtures, logos = {}, mat
           <div style={{ display: "grid", gridTemplateColumns: "repeat(2, 1fr)", gap: 12 }}>
             {savedTeams.map((st) => {
               const stPlayers = TEAM_SLOTS.map(s => st.picks[s]).filter(Boolean);
-              const stScores = stPlayers.map(p => p.ds || 0);
-              const stCapDs = stScores.length === 5 ? Math.max(...stScores) : 0;
+              const stScores = stPlayers.map(p => getAdjDs(p));
+              // Captain: saved or auto (highest)
+              const stCaptain = st.captain && st.picks[st.captain] ? st.picks[st.captain] : (stScores.length === 5 ? stPlayers[stScores.indexOf(Math.max(...stScores))] : null);
+              const stCapDs = stCaptain ? getAdjDs(stCaptain) : 0;
               const stTotal = Math.round(stScores.reduce((s, v) => s + v, 0) + stCapDs * 0.5);
               const palSt = paliers.filter(p => stTotal >= p.pts).pop();
               return (
@@ -1074,7 +1076,7 @@ export default function SorareProTab({ players, teams, fixtures, logos = {}, mat
                       const clubLogo = logos[p.club];
                       const oppLogo = logos[p.oppName];
                       const ownedCard = proCardMap[p.slug || p.name];
-                      const dsVal = p.ds || 0;
+                      const dsVal = getAdjDs(p);
                       const parisTime = p.kickoff && p.matchDate ? utcToParisTime(p.kickoff, p.matchDate) : "";
                       const dateLabel = p.matchDate ? new Date(p.matchDate + "T12:00:00").toLocaleDateString(lang === "fr" ? "fr-FR" : "en-US", { timeZone: TZ, weekday: "short", day: "numeric" }).toUpperCase() : "";
                       return (

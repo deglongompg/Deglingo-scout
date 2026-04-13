@@ -504,14 +504,24 @@ export default function SorareProTab({ players, teams, fixtures, logos = {}, mat
       return false;
     };
 
-    for (const pos of ["GK", "DEF", "MIL", "ATT"]) {
-      const best = pool.find(p => p.position === pos && !taken.has(p.slug || p.name) && canAdd(p) && !hasConflict(p))
-        || pool.find(p => p.position === pos && !taken.has(p.slug || p.name) && canAdd(p)); // fallback sans conflit
-      if (best) { newPicks[pos] = best; markAdded(best); }
+    // Greedy par score decroissant — meilleurs joueurs places en premier
+    for (const p of pool) {
+      if (taken.has(p.slug || p.name)) continue;
+      if (!canAdd(p)) continue;
+      const pos = p.position;
+      if (newPicks[pos] === null && !hasConflict(p)) { newPicks[pos] = p; markAdded(p); }
+      else if (pos !== "GK" && newPicks.FLEX === null && !hasConflict(p)) { newPicks.FLEX = p; markAdded(p); }
+      if (Object.values(newPicks).filter(Boolean).length >= 5) break;
     }
-    const flex = pool.find(p => p.position !== "GK" && !taken.has(p.slug || p.name) && canAdd(p) && !hasConflict(p))
-      || pool.find(p => p.position !== "GK" && !taken.has(p.slug || p.name) && canAdd(p));
-    if (flex) { newPicks.FLEX = flex; markAdded(flex); }
+    // Fallback: slots vides → remplir sans check conflit
+    for (const p of pool) {
+      if (taken.has(p.slug || p.name)) continue;
+      if (!canAdd(p)) continue;
+      const pos = p.position;
+      if (newPicks[pos] === null) { newPicks[pos] = p; markAdded(p); }
+      else if (pos !== "GK" && newPicks.FLEX === null) { newPicks.FLEX = p; markAdded(p); }
+      if (Object.values(newPicks).filter(Boolean).length >= 5) break;
+    }
     setMyPicks(newPicks);
   };
 

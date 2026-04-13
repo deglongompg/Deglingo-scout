@@ -847,18 +847,33 @@ export default function StellarTab({ players, teams, fixtures, logos = {}, match
       return false;
     };
 
-    // Greedy : meilleur D-Score sans conflit (fallback avec conflit si nécessaire)
+    // Greedy par score decroissant — les meilleurs joueurs sont places en premier
+    // Le conflit est evite en sacrifiant les joueurs les moins bien classes
     const newPicks = { GK: null, DEF: null, MIL: null, ATT: null, FLEX: null };
     const taken = new Set();
-    for (const pos of ["GK","DEF","MIL","ATT"]) {
-      const candidates = pool.filter(p => p.position === pos && !taken.has(p.slug || p.name));
-      const best = candidates.find(p => !hasConflict(p, newPicks)) || candidates[0];
-      if (best) { newPicks[pos] = best; taken.add(best.slug || best.name); }
+    // Pool deja trie par ds desc — on place chaque joueur dans son slot naturel ou FLEX
+    for (const p of pool) {
+      if (taken.has(p.slug || p.name)) continue;
+      const pos = p.position;
+      // Essayer le slot naturel
+      if (newPicks[pos] === null) {
+        if (!hasConflict(p, newPicks)) { newPicks[pos] = p; taken.add(p.slug || p.name); continue; }
+      }
+      // Essayer FLEX (sauf GK)
+      if (pos !== "GK" && newPicks.FLEX === null) {
+        if (!hasConflict(p, newPicks)) { newPicks.FLEX = p; taken.add(p.slug || p.name); continue; }
+      }
+      // Si tous les slots essayes sont pris, continuer
+      if (Object.values(newPicks).filter(Boolean).length >= 5) break;
     }
-    // FLEX : meilleur outfield restant sans conflit
-    const flexCandidates = pool.filter(p => p.position !== "GK" && !taken.has(p.slug || p.name));
-    const flex = flexCandidates.find(p => !hasConflict(p, newPicks)) || flexCandidates[0];
-    if (flex) newPicks.FLEX = flex;
+    // Fallback: si des slots sont vides (conflit partout), remplir sans check conflit
+    for (const p of pool) {
+      if (taken.has(p.slug || p.name)) continue;
+      const pos = p.position;
+      if (newPicks[pos] === null) { newPicks[pos] = p; taken.add(p.slug || p.name); }
+      else if (pos !== "GK" && newPicks.FLEX === null) { newPicks.FLEX = p; taken.add(p.slug || p.name); }
+      if (Object.values(newPicks).filter(Boolean).length >= 5) break;
+    }
     setMyPicks(newPicks);
   };
 

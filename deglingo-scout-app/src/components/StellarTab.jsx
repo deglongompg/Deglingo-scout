@@ -841,9 +841,9 @@ export default function StellarTab({ players, teams, fixtures, logos = {}, match
     const hasConflict = (player, picks) => {
       const picked = Object.values(picks).filter(Boolean);
       if (["ATT","MIL"].includes(player.position))
-        return picked.some(pp => ["GK","DEF"].includes(pp.position) && pp.oppName === player.club);
+        return picked.some(pp => ["GK","DEF"].includes(pp.position) && clubMatchGlobal(pp.oppName, player.club));
       if (["GK","DEF"].includes(player.position))
-        return picked.some(pp => ["ATT","MIL"].includes(pp.position) && player.oppName === pp.club);
+        return picked.some(pp => ["ATT","MIL"].includes(pp.position) && clubMatchGlobal(player.oppName, pp.club));
       return false;
     };
 

@@ -494,11 +494,23 @@ export default function SorareProTab({ players, teams, fixtures, logos = {}, mat
       if (proCardMap[p.slug || p.name]?.isClassic) classicUsed = true;
     };
 
+    // Conflit anti-meta : GK/DEF vs ATT/MIL adverse (les buts de l'ATT penalisent le GK/DEF)
+    const hasConflict = (player) => {
+      const picked = Object.values(newPicks).filter(Boolean);
+      if (["ATT", "MIL"].includes(player.position))
+        return picked.some(pp => ["GK", "DEF"].includes(pp.position) && clubMatch(pp.oppName, player.club));
+      if (["GK", "DEF"].includes(player.position))
+        return picked.some(pp => ["ATT", "MIL"].includes(pp.position) && clubMatch(player.oppName, pp.club));
+      return false;
+    };
+
     for (const pos of ["GK", "DEF", "MIL", "ATT"]) {
-      const best = pool.find(p => p.position === pos && !taken.has(p.slug || p.name) && canAdd(p));
+      const best = pool.find(p => p.position === pos && !taken.has(p.slug || p.name) && canAdd(p) && !hasConflict(p))
+        || pool.find(p => p.position === pos && !taken.has(p.slug || p.name) && canAdd(p)); // fallback sans conflit
       if (best) { newPicks[pos] = best; markAdded(best); }
     }
-    const flex = pool.find(p => p.position !== "GK" && !taken.has(p.slug || p.name) && canAdd(p));
+    const flex = pool.find(p => p.position !== "GK" && !taken.has(p.slug || p.name) && canAdd(p) && !hasConflict(p))
+      || pool.find(p => p.position !== "GK" && !taken.has(p.slug || p.name) && canAdd(p));
     if (flex) { newPicks.FLEX = flex; markAdded(flex); }
     setMyPicks(newPicks);
   };

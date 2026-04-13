@@ -847,11 +847,15 @@ export default function StellarTab({ players, teams, fixtures, logos = {}, match
       return false;
     };
 
-    // Greedy par score decroissant — les meilleurs joueurs sont places en premier
-    // Le conflit est evite en sacrifiant les joueurs les moins bien classes
+    // GK rare : si 1 seul GK titu >= 70%, le placer en premier (contrainte forte)
     const newPicks = { GK: null, DEF: null, MIL: null, ATT: null, FLEX: null };
     const taken = new Set();
-    // Pool deja trie par ds desc — on place chaque joueur dans son slot naturel ou FLEX
+    const viableGKs = pool.filter(p => p.position === "GK" && (p.sorare_starter_pct == null || p.sorare_starter_pct >= 70));
+    if (viableGKs.length <= 2 && viableGKs.length > 0) {
+      const gk = viableGKs[0]; // meilleur GK viable
+      newPicks.GK = gk; taken.add(gk.slug || gk.name);
+    }
+    // Greedy par score decroissant — les meilleurs joueurs sont places en premier
     for (const p of pool) {
       if (taken.has(p.slug || p.name)) continue;
       const pos = p.position;

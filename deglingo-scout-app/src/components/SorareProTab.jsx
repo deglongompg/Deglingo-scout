@@ -504,6 +504,12 @@ export default function SorareProTab({ players, teams, fixtures, logos = {}, mat
       return false;
     };
 
+    // GK rare : si 1-2 GK titu >= 70%, placer le meilleur en premier
+    const viableGKs = pool.filter(p => p.position === "GK" && (p.sorare_starter_pct == null || p.sorare_starter_pct >= 70));
+    if (viableGKs.length <= 2 && viableGKs.length > 0) {
+      const gk = viableGKs[0];
+      if (canAdd(gk)) { newPicks.GK = gk; markAdded(gk); }
+    }
     // Greedy par score decroissant — meilleurs joueurs places en premier
     for (const p of pool) {
       if (taken.has(p.slug || p.name)) continue;

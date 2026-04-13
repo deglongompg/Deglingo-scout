@@ -667,7 +667,7 @@ export default function SorareProTab({ players, teams, fixtures, logos = {}, mat
 
         {/* ── Right column: Builder + Player list ── */}
         <div style={{ flex: 1, minWidth: 0 }}>
-          <div style={{ borderRadius: 14, background: "rgba(6,3,20,0.95)", border: "none", overflow: "hidden", display: "flex", flexDirection: "column", height: "calc(100vh - 300px)", position: "relative" }}>
+          <div style={{ borderRadius: 14, background: "rgba(6,3,20,0.95)", border: "none", overflow: "hidden", display: "flex", flexDirection: "column", height: "calc(100vh - 180px)", position: "relative" }}>
 
             {/* Loading overlay — first connection */}
             {sorareLoading && (
@@ -962,7 +962,7 @@ export default function SorareProTab({ players, teams, fixtures, logos = {}, mat
                               </div>
                               {/* D-Score */}
                               <div style={{ textAlign: "center" }}>
-                                {(() => { const adj = getAdjDs(p); return <span style={{ display: "inline-block", padding: "3px 7px", borderRadius: 8, fontFamily: "'DM Mono',monospace", fontSize: 14, fontWeight: 700, color: isSilver(adj) ? "#1a1a2e" : "#fff", background: isSilver(adj) ? "linear-gradient(90deg,#C0C0C0,#A8E8D0,#B0C4E8,#D4B0E8,#fff,#D4B0E8,#B0C4E8,#A8E8D0,#C0C0C0)" : dsBg(adj), backgroundSize: isSilver(adj) ? "200% 100%" : "auto", animation: isSilver(adj) ? "proShine 3s linear infinite" : "none" }}>{adj}</span>; })()}
+                                <span style={{ display: "inline-block", padding: "3px 7px", borderRadius: 8, fontFamily: "'DM Mono',monospace", fontSize: 14, fontWeight: 700, color: isSilver(getAdjDs(p)) ? "#1a1a2e" : "#fff", background: isSilver(getAdjDs(p)) ? "linear-gradient(90deg,#C0C0C0,#A8E8D0,#B0C4E8,#D4B0E8,#fff,#D4B0E8,#B0C4E8,#A8E8D0,#C0C0C0)" : dsBg(getAdjDs(p)), backgroundSize: isSilver(getAdjDs(p)) ? "200% 100%" : "auto", animation: isSilver(getAdjDs(p)) ? "proShine 3s linear infinite" : "none" }}>{getAdjDs(p)}</span>
                               </div>
                               {/* Adv */}
                               <div style={{ overflow: "hidden" }}>

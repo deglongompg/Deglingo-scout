@@ -213,7 +213,9 @@ export function dScoreMatch(player, opp, isHome, playerTeam = null) {
     // GK qui a perdu sa place (DNP 2 derniers matchs) → score plafonné à 42
     // Mais si Sorare le projette titulaire >= 70%, on ne plafonne pas
     const gkLostSpotCap = (gkLostSpot && starterPct < 70) ? 35 : ceilGK;
-    return Math.round(Math.max(minGK, Math.min(gkLostSpotCap, rawGK)));
+    const clampedGK = Math.max(minGK, Math.min(gkLostSpotCap, rawGK));
+    const compressedGK = clampedGK <= 55 ? clampedGK : 55 + (clampedGK - 55) * 0.65;
+    return Math.round(compressedGK);
   }
 
   // ─── OUTFIELD PLAYERS ───
@@ -359,11 +361,11 @@ export function dScoreMatch(player, opp, isHome, playerTeam = null) {
     const gs3_raw = (p.ga_per_match || 0) / 0.25;
     const gs4_raw = aa25 > _aa5 ? (aa25 - _aa5) / 2 : 0;
     if (pos === "ATT") {
-      goatSeasonBonus = Math.min(12, gs1_raw) + Math.min(5, gs2_raw) + Math.min(4, gs3_raw) + Math.min(3, gs4_raw);
+      goatSeasonBonus = Math.min(7, gs1_raw) + Math.min(3, gs2_raw) + Math.min(2, gs3_raw) + Math.min(2, gs4_raw);
     } else if (pos === "MIL") {
-      goatSeasonBonus = Math.min(8, gs1_raw) + Math.min(3, gs2_raw) + Math.min(4, gs3_raw) + Math.min(3, gs4_raw);
+      goatSeasonBonus = Math.min(5, gs1_raw) + Math.min(2, gs2_raw) + Math.min(2, gs3_raw) + Math.min(1, gs4_raw);
     } else if (pos === "DEF") {
-      goatSeasonBonus = Math.min(4, gs1_raw) + Math.min(2, gs2_raw) + Math.min(2, gs4_raw);
+      goatSeasonBonus = Math.min(3, gs1_raw) + Math.min(1, gs2_raw) + Math.min(1, gs4_raw);
     }
     // GK: goatSeasonBonus = 0
   }
@@ -380,7 +382,7 @@ export function dScoreMatch(player, opp, isHome, playerTeam = null) {
 
   // Extra GOAT bonus — +8 pts flat, sauf si score brut déjà > 85
   const rawBase = socle + contexte + momentum + domBonus + pivotMalus + dominationBonus + goatSeasonBonus + samplePenalty + inactivityPenalty + recencyPenalty;
-  const extraGoatBonus = isExtraGoat(p) && rawBase <= 85 ? 8 : 0;
+  const extraGoatBonus = isExtraGoat(p) && rawBase <= 85 ? 6 : 0;
   const raw = rawBase + extraGoatBonus;
   // ─── DECISIVE BONUS — ATT / MIL / DEF uniquement ───────────────────────────
   // Un joueur avec fort ratio G+A peut passer de 35 à 60+ en cas d'action décisive.
@@ -392,7 +394,7 @@ export function dScoreMatch(player, opp, isHome, playerTeam = null) {
   const cfBonus = Math.max(0, Math.min(1, ((oppXgBonus || 1.3) - 0.8) / 1.2));
   const dampening = Math.max(0, 1 - (raw - 45) / 40);
   const decisiveBonus = p.position !== "GK"
-    ? Math.min(25, (p.ga_per_match || 0) * 45 * cfBonus * dampening)
+    ? Math.min(18, (p.ga_per_match || 0) * 45 * cfBonus * dampening)
     : 0;
   const rawWithBonus = raw + decisiveBonus;
 
@@ -411,5 +413,10 @@ export function dScoreMatch(player, opp, isHome, playerTeam = null) {
     : 0;
   const minScore = Math.min(100, Math.max(qualityFloor, extraGoatFloor, starterFloor));
 
-  return Math.round(Math.max(minScore, Math.min(100, rawWithBonus)));
+  // Compression des hauts D-Score — régression vers la moyenne
+  // Au-dessus de 55, chaque point supplémentaire vaut 0.65 au lieu de 1
+  // Corrige la surestimation systématique des top players
+  const clamped = Math.max(minScore, Math.min(100, rawWithBonus));
+  const compressed = clamped <= 55 ? clamped : 55 + (clamped - 55) * 0.65;
+  return Math.round(compressed);
 }

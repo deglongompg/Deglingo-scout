@@ -292,12 +292,27 @@ export default function SorareProTab({ players, teams, fixtures, logos = {}, mat
   }, [sorareCards]);
 
   // ── Bonus power — D-Score ajusté ──
+  // getAdjDs : score avec power (pour affichage dans le tableau et les cartes)
   const getAdjDs = (p) => {
     const slug = p.slug || p.name;
     const card = proCardMap[slug];
-    const bonus = card?.power ? (card.power - 1) * 100 : 0; // power 1.05 = +5%
-    if (!bonusEnabled || bonus <= 0) return Math.round(p.ds || 0);
+    if (!bonusEnabled || !card?.power || card.power <= 1) return Math.round(p.ds || 0);
     return Math.round((p.ds || 0) * card.power);
+  };
+  // getFullScore : score final d'un joueur (avec power + capitaine si applicable)
+  // C'est la formule Sorare Pro : base × captain_mult × power
+  const getFullScore = (p, isCap) => {
+    const slug = p.slug || p.name;
+    const card = proCardMap[slug];
+    const base = p.ds || 0;
+    const capMult = isCap ? 1.5 : 1;
+    const power = (bonusEnabled && card?.power && card.power > 1) ? card.power : 1;
+    return base * capMult * power;
+  };
+  // getPowerPct : bonus % de la carte (pour affichage badge)
+  const getPowerPct = (p) => {
+    const card = proCardMap[p.slug || p.name];
+    return card?.power ? Math.round((card.power - 1) * 100) : 0;
   };
   // Algo Magique: toujours avec bonus (meme si toggle OFF)
   const getAlgoDs = (p) => {
@@ -458,40 +473,63 @@ export default function SorareProTab({ players, teams, fixtures, logos = {}, mat
     const newPicks = { GK: null, DEF: null, MIL: null, ATT: null, FLEX: null };
     const taken = new Set();
     let classicUsed = false;
-    for (const pos of ["GK", "DEF", "MIL", "ATT"]) {
-      const best = pool.find(p => {
-        if (p.position !== pos || taken.has(p.slug || p.name)) return false;
-        const card = proCardMap[p.slug || p.name];
-        if (card?.isClassic && classicUsed) return false; // max 1 Classic
-        return true;
-      });
-      if (best) {
-        newPicks[pos] = best; taken.add(best.slug || best.name);
-        if (proCardMap[best.slug || best.name]?.isClassic) classicUsed = true;
-      }
-    }
-    const flex = pool.find(p => {
-      if (p.position === "GK" || taken.has(p.slug || p.name)) return false;
+    const clubCount = {};
+    let totalL10 = 0;
+
+    const canAdd = (p) => {
       const card = proCardMap[p.slug || p.name];
       if (card?.isClassic && classicUsed) return false;
+      // Multi-club: max 2 par club
+      if ((clubCount[p.club] || 0) >= 2) return false;
+      // Cap260: somme L10 < 260
+      if (totalL10 + (p.l10 || 0) >= 260) return false;
       return true;
-    });
-    if (flex) newPicks.FLEX = flex;
+    };
+    const markAdded = (p) => {
+      taken.add(p.slug || p.name);
+      clubCount[p.club] = (clubCount[p.club] || 0) + 1;
+      totalL10 += (p.l10 || 0);
+      if (proCardMap[p.slug || p.name]?.isClassic) classicUsed = true;
+    };
+
+    for (const pos of ["GK", "DEF", "MIL", "ATT"]) {
+      const best = pool.find(p => p.position === pos && !taken.has(p.slug || p.name) && canAdd(p));
+      if (best) { newPicks[pos] = best; markAdded(best); }
+    }
+    const flex = pool.find(p => p.position !== "GK" && !taken.has(p.slug || p.name) && canAdd(p));
+    if (flex) { newPicks.FLEX = flex; markAdded(flex); }
     setMyPicks(newPicks);
   };
 
   // ── Captain (modifiable) ──
   const [captainSlot, setCaptainSlot] = useState(null); // null = auto (highest DS)
 
-  // ── Score calculation — with bonus ──
+  // ── Score calculation — Sorare Pro formula ──
+  // Score = sum( ds × power × (1.5 if captain) ) × (1 + compo_bonus%)
   const pickedPlayers = TEAM_SLOTS.map(s => myPicks[s]).filter(Boolean);
   const filledCount = pickedPlayers.length;
-  const scores = pickedPlayers.map(p => getAdjDs(p));
-  // Captain: user-selected or auto (highest score)
-  const autoCaptainIdx = scores.length === 5 ? scores.indexOf(Math.max(...scores)) : -1;
+  // Captain: user-selected or auto (highest adjusted DS)
+  const adjScores = pickedPlayers.map(p => getAdjDs(p));
+  const autoCaptainIdx = adjScores.length === 5 ? adjScores.indexOf(Math.max(...adjScores)) : -1;
   const captainPlayer = captainSlot && myPicks[captainSlot] ? myPicks[captainSlot] : (autoCaptainIdx >= 0 ? pickedPlayers[autoCaptainIdx] : null);
-  const capDs = captainPlayer ? getAdjDs(captainPlayer) : 0;
-  const totalScore = Math.round(scores.reduce((s, v) => s + v, 0) + capDs * 0.5);
+  const captainId = captainPlayer ? (captainPlayer.slug || captainPlayer.name) : null;
+
+  // Full scores: each player × power × captain_mult
+  const fullScores = pickedPlayers.map(p => {
+    const isCap = captainId && (p.slug || p.name) === captainId;
+    return getFullScore(p, isCap);
+  });
+
+  // Bonus de composition
+  const clubCounts = {};
+  pickedPlayers.forEach(p => { clubCounts[p.club] = (clubCounts[p.club] || 0) + 1; });
+  const isMultiClub = filledCount === 5 && Object.values(clubCounts).every(c => c <= 2);
+  const sumL10 = pickedPlayers.reduce((s, p) => s + (p.l10 || 0), 0);
+  const isCap260 = filledCount === 5 && sumL10 < 260;
+  const compoBonusPct = (isMultiClub ? 2 : 0) + (isCap260 ? 4 : 0);
+
+  const rawTotal = fullScores.reduce((s, v) => s + v, 0);
+  const totalScore = Math.round(rawTotal * (1 + compoBonusPct / 100));
   const paliers = getPaliers(league, rarity);
   const palier = paliers.filter(p => totalScore >= p.pts).pop();
 
@@ -739,8 +777,11 @@ export default function SorareProTab({ players, teams, fixtures, logos = {}, mat
                       </button>
                       <button onClick={resetTeam} style={{ fontSize: 7, fontWeight: 700, padding: "2px 6px", borderRadius: 4, border: "1px solid rgba(255,255,255,0.1)", background: "rgba(255,255,255,0.05)", color: "rgba(255,255,255,0.4)", cursor: "pointer", fontFamily: "Outfit" }}>{t(lang, "proReset")}</button>
                     </div>
-                    <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
+                    <div style={{ display: "flex", alignItems: "center", gap: 4 }}>
+                      <span style={{ fontSize: 7, fontWeight: 800, padding: "2px 5px", borderRadius: 4, border: `1px solid ${isMultiClub ? "rgba(74,222,128,0.5)" : "rgba(255,255,255,0.1)"}`, background: isMultiClub ? "rgba(74,222,128,0.15)" : "transparent", color: isMultiClub ? "#4ADE80" : "rgba(255,255,255,0.2)" }}>MC +2%</span>
+                      <span style={{ fontSize: 7, fontWeight: 800, padding: "2px 5px", borderRadius: 4, border: `1px solid ${isCap260 ? "rgba(139,92,246,0.5)" : "rgba(255,255,255,0.1)"}`, background: isCap260 ? "rgba(139,92,246,0.15)" : "transparent", color: isCap260 ? "#A78BFA" : "rgba(255,255,255,0.2)" }}>CAP +4%</span>
                       {palier && <span style={{ fontSize: 8, fontWeight: 700, color: palier.color }}>{palier.reward}</span>}
+                      {compoBonusPct > 0 && <span style={{ fontSize: 9, fontWeight: 700, color: "#4ADE80" }}>+{compoBonusPct}%</span>}
                       <span style={{ fontSize: 20, fontWeight: 900, fontFamily: "'DM Mono',monospace", color: palier ? palier.color : rarityColor }}>{totalScore}</span>
                     </div>
                   </div>
@@ -1049,11 +1090,18 @@ export default function SorareProTab({ players, teams, fixtures, logos = {}, mat
           <div style={{ display: "grid", gridTemplateColumns: "repeat(2, 1fr)", gap: 12 }}>
             {savedTeams.map((st) => {
               const stPlayers = TEAM_SLOTS.map(s => st.picks[s]).filter(Boolean);
-              const stScores = stPlayers.map(p => getAdjDs(p));
-              // Captain: saved or auto (highest)
-              const stCaptain = st.captain && st.picks[st.captain] ? st.picks[st.captain] : (stScores.length === 5 ? stPlayers[stScores.indexOf(Math.max(...stScores))] : null);
-              const stCapDs = stCaptain ? getAdjDs(stCaptain) : 0;
-              const stTotal = Math.round(stScores.reduce((s, v) => s + v, 0) + stCapDs * 0.5);
+              const stAdjScores = stPlayers.map(p => getAdjDs(p));
+              const stCaptain = st.captain && st.picks[st.captain] ? st.picks[st.captain] : (stAdjScores.length === 5 ? stPlayers[stAdjScores.indexOf(Math.max(...stAdjScores))] : null);
+              const stCaptainId = stCaptain ? (stCaptain.slug || stCaptain.name) : null;
+              const stFullScores = stPlayers.map(p => getFullScore(p, stCaptainId && (p.slug || p.name) === stCaptainId));
+              // Bonus compo recap
+              const stClubCounts = {};
+              stPlayers.forEach(p => { stClubCounts[p.club] = (stClubCounts[p.club] || 0) + 1; });
+              const stMultiClub = stPlayers.length === 5 && Object.values(stClubCounts).every(c => c <= 2);
+              const stSumL10 = stPlayers.reduce((s, p) => s + (p.l10 || 0), 0);
+              const stCap260 = stPlayers.length === 5 && stSumL10 < 260;
+              const stCompoPct = (stMultiClub ? 2 : 0) + (stCap260 ? 4 : 0);
+              const stTotal = Math.round(stFullScores.reduce((s, v) => s + v, 0) * (1 + stCompoPct / 100));
               const palSt = paliers.filter(p => stTotal >= p.pts).pop();
               return (
                 <div key={st.id} style={{ borderRadius: 12, background: "rgba(15,8,40,0.7)", border: `1px solid ${rarityColor}20`, padding: "10px 12px", backdropFilter: "blur(6px)" }}>
@@ -1063,7 +1111,9 @@ export default function SorareProTab({ players, teams, fixtures, logos = {}, mat
                       <button onClick={() => loadSavedTeam(st)} style={{ fontSize: 7, fontWeight: 700, padding: "2px 6px", borderRadius: 4, border: `1px solid ${rarityColor}40`, background: `${rarityColor}10`, color: rarityColor, cursor: "pointer", fontFamily: "Outfit" }}>Charger</button>
                       <button onClick={() => deleteSavedTeam(st.id)} style={{ fontSize: 8, padding: "2px 5px", borderRadius: 4, border: "1px solid rgba(255,255,255,0.08)", background: "rgba(255,255,255,0.03)", color: "rgba(255,255,255,0.3)", cursor: "pointer" }}>x</button>
                     </div>
-                    <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
+                    <div style={{ display: "flex", alignItems: "center", gap: 4 }}>
+                      {stMultiClub && <span style={{ fontSize: 6, fontWeight: 800, padding: "1px 4px", borderRadius: 3, background: "rgba(74,222,128,0.15)", color: "#4ADE80" }}>MC</span>}
+                      {stCap260 && <span style={{ fontSize: 6, fontWeight: 800, padding: "1px 4px", borderRadius: 3, background: "rgba(139,92,246,0.15)", color: "#A78BFA" }}>CAP</span>}
                       {palSt && <span style={{ fontSize: 8, color: palSt.color, fontWeight: 700 }}>{palSt.reward}</span>}
                       <span style={{ fontSize: 18, fontWeight: 900, fontFamily: "'DM Mono',monospace", color: palSt ? palSt.color : rarityColor }}>{stTotal}</span>
                     </div>

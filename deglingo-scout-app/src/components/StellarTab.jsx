@@ -811,17 +811,32 @@ export default function StellarTab({ players, teams, fixtures, logos = {}, match
     return t ? t.label : null;
   };
   const generateMagicTeam = () => {
-    // Exclure les joueurs déjà utilisés (saved teams + myPicks)
-    const usedIds = new Set([
-      ...savedTeams.flatMap(t => Object.values(t.picks).filter(Boolean).map(pp => pp.slug || pp.name)),
-      ...Object.values(myPicks).filter(Boolean).map(pp => pp.slug || pp.name),
-    ]);
+    // Compter combien de fois chaque joueur est utilise (saved teams + myPicks)
+    const usedCounts = {};
+    savedTeams.forEach(t => Object.values(t.picks).filter(Boolean).forEach(pp => {
+      const id = pp.slug || pp.name;
+      usedCounts[id] = (usedCounts[id] || 0) + 1;
+    }));
+    Object.values(myPicks).filter(Boolean).forEach(pp => {
+      const id = pp.slug || pp.name;
+      usedCounts[id] = (usedCounts[id] || 0) + 1;
+    });
     // Quand connecté Sorare : uniquement joueurs dont on possède une carte STELLAR
     const basePool = (sorareConnected && myCardsDayPlayers.playing.length >= 5)
       ? myCardsDayPlayers.playing.filter(p => sorareCardMap[p.slug || p.name]) // carte Stellar uniquement
       : (dayData?.players || []);
     const pool = basePool
-      .filter(p => !usedIds.has(p.slug || p.name))
+      .filter(p => {
+        const id = p.slug || p.name;
+        const used = usedCounts[id] || 0;
+        if (used === 0) return true;
+        // Si connecté, vérifier le nombre de cartes possédées
+        if (sorareConnected) {
+          const owned = sorareCards.filter(c => c.playerSlug === id && c.isStellar).length;
+          return owned > used;
+        }
+        return false;
+      })
       .filter(p => p.oppName) // doit jouer ce jour
       .filter(p => p.sorare_starter_pct == null || p.sorare_starter_pct >= 70) // titu% >= 70%
       // Filtre par matchs selectionnes dans la colonne gauche

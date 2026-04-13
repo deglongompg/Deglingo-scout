@@ -20,19 +20,19 @@ export const LEAGUE_FLAG_CODES = { L1: "fr", PL: "gb-eng", Liga: "es", Bundes: "
 export const LEAGUE_NAMES    = { L1: "Ligue 1", PL: "Premier League", Liga: "La Liga", Bundes: "Bundesliga", MLS: "MLS" };
 
 export function dsColor(d) {
-  return d >= 85 ? "#E8E8E8" : d >= 75 ? "#06D6A0" : d >= 60 ? "#2EC4B6" : d >= 50 ? "#E9C46A" : d >= 40 ? "#F4A261" : "#E76F51";
+  return d >= 75 ? "#E8E8E8" : d >= 65 ? "#06D6A0" : d >= 55 ? "#2EC4B6" : d >= 45 ? "#E9C46A" : d >= 35 ? "#F4A261" : "#E76F51";
 }
 
 export function dsBg(d) {
-  return d >= 85 ? "linear-gradient(135deg,#C0C0C0,#A8E8D0,#B0C4E8,#D4B0E8,#E0D0E8,#C0C0C0)"
-       : d >= 75 ? "linear-gradient(135deg,#06D6A0,#049A73)"
-       : d >= 60 ? "linear-gradient(135deg,#2EC4B6,#1A8A7F)"
-       : d >= 50 ? "linear-gradient(135deg,#E9C46A,#C9A227)"
-       : d >= 40 ? "linear-gradient(135deg,#F4A261,#D4782E)"
+  return d >= 75 ? "linear-gradient(135deg,#C0C0C0,#A8E8D0,#B0C4E8,#D4B0E8,#E0D0E8,#C0C0C0)"
+       : d >= 65 ? "linear-gradient(135deg,#06D6A0,#049A73)"
+       : d >= 55 ? "linear-gradient(135deg,#2EC4B6,#1A8A7F)"
+       : d >= 45 ? "linear-gradient(135deg,#E9C46A,#C9A227)"
+       : d >= 35 ? "linear-gradient(135deg,#F4A261,#D4782E)"
        :           "linear-gradient(135deg,#E76F51,#C44B33)";
 }
 
-export function isSilver(d) { return d >= 85; }
+export function isSilver(d) { return d >= 75; }
 
 export function getArchetypeColor(archetype) {
   if (!archetype) return "#6B7280";

@@ -1771,6 +1771,12 @@ export default function StellarTab({ players, teams, fixtures, logos = {}, match
                   {/* ══ COLONNE GAUCHE : Sélection équipe ══ */}
                   <div style={{ width: 370, flexShrink: 0, display: "flex", flexDirection: "column", borderRight: "1px solid rgba(255,255,255,0.06)", background: "rgba(0,0,0,0.15)" }}>
 
+                    {/* Reset — visible dès qu'un joueur est sélectionné */}
+                    {filledCount > 0 && filledCount < 5 && (
+                      <div style={{ padding: "4px 14px", borderBottom: "1px solid rgba(255,255,255,0.05)", display: "flex", justifyContent: "flex-end" }}>
+                        <button onClick={resetTeam} style={{ fontSize: 8, fontWeight: 700, padding: "3px 8px", borderRadius: 6, border: "1px solid rgba(255,255,255,0.12)", background: "rgba(255,255,255,0.05)", color: "rgba(255,255,255,0.4)", cursor: "pointer", fontFamily: "Outfit" }}>Reset</button>
+                      </div>
+                    )}
                     {/* Score total — visible uniquement quand équipe complète */}
                     {filledCount === 5 && (
                       <div style={{ padding: "6px 14px", borderBottom: "1px solid rgba(255,255,255,0.05)", display: "flex", alignItems: "center", justifyContent: "space-between" }}>

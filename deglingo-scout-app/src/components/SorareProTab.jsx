@@ -97,6 +97,7 @@ export default function SorareProTab({ players, teams, fixtures, logos = {}, mat
   const [rarity, setRarity] = useState("limited");
   const [selectedSlot, setSelectedSlot] = useState(null);
   const [hideUsed, setHideUsed] = useState(true);
+  const [leftCollapsed, setLeftCollapsed] = useState(false);
   const [filterTitu, setFilterTitu] = useState(0);
   const [selectedMatchFilters, setSelectedMatchFilters] = useState([]);
   const [includeRare, setIncludeRare] = useState(true);
@@ -405,8 +406,17 @@ export default function SorareProTab({ players, teams, fixtures, logos = {}, mat
   // ── GW fixtures for selected league ──
   const gwMatches = useMemo(() => {
     if (!gwInfo || !fixtures?.fixtures) return [];
-    return fixtures.fixtures.filter(f => f.league === league && f.date >= gwInfo.startDateStr && f.date <= gwInfo.endDateStr)
-      .sort((a, b) => (a.date + (a.kickoff || "99:99")).localeCompare(b.date + (b.kickoff || "99:99")));
+    // GW boundary = 14:00 UTC (16h Paris). Matchs du jour frontiere :
+    // kickoff >= 14:00 UTC = GW suivante, kickoff < 14:00 UTC = GW actuelle
+    return fixtures.fixtures.filter(f => {
+      if (f.league !== league) return false;
+      if (f.date < gwInfo.startDateStr || f.date > gwInfo.endDateStr) return false;
+      // Jour de debut GW : exclure les matchs avant 14:00 UTC (ils sont dans la GW precedente)
+      if (f.date === gwInfo.startDateStr && f.kickoff && f.kickoff < "14:00") return false;
+      // Jour de fin GW : exclure les matchs apres 14:00 UTC (ils sont dans la GW suivante)
+      if (f.date === gwInfo.endDateStr && f.kickoff && f.kickoff >= "14:00") return false;
+      return true;
+    }).sort((a, b) => (a.date + (a.kickoff || "99:99")).localeCompare(b.date + (b.kickoff || "99:99")));
   }, [gwInfo, fixtures, league]);
 
   // ── Player scoring for selected league + GW ──
@@ -466,7 +476,7 @@ export default function SorareProTab({ players, teams, fixtures, logos = {}, mat
     const pool = gwPlayers
       .filter(p => !usedIds.has(p.slug || p.name))
       .filter(p => !sorareConnected || proCardMap[p.slug || p.name])
-      .filter(p => p.sorare_starter_pct == null || p.sorare_starter_pct >= 70)
+      .filter(p => selectedGwIdx > 0 || p.sorare_starter_pct == null || p.sorare_starter_pct >= 70)
       .filter(p => selectedMatchFilters.length === 0 || selectedMatchFilters.some(m => clubMatch(p.club, m.home) || clubMatch(p.club, m.away)))
       .map(p => ({ ...p, ds: getAlgoDs(p) }))
       .sort((a, b) => b.ds - a.ds);
@@ -570,7 +580,7 @@ export default function SorareProTab({ players, teams, fixtures, logos = {}, mat
       pool = selectedSlot === "FLEX" ? pool.filter(p => ["DEF","MIL","ATT"].includes(p.position)) : pool.filter(p => p.position === selectedSlot);
     }
     if (hideUsed) pool = pool.filter(p => !isInTeam(p));
-    if (filterTitu) pool = pool.filter(p => p.sorare_starter_pct != null && p.sorare_starter_pct >= filterTitu);
+    if (filterTitu && selectedGwIdx === 0) pool = pool.filter(p => p.sorare_starter_pct != null && p.sorare_starter_pct >= filterTitu);
     if (selectedMatchFilters.length > 0) {
       pool = pool.filter(p => selectedMatchFilters.some(m => clubMatch(p.club, m.home) || clubMatch(p.club, m.away)));
     }
@@ -684,7 +694,9 @@ export default function SorareProTab({ players, teams, fixtures, logos = {}, mat
       <div style={{ display: "flex", gap: 16, alignItems: "flex-start" }}>
 
         {/* ── Left column: Decisive Pick + Matches ── */}
-        <div style={{ width: 280, flexShrink: 0 }}>
+        <div style={{ width: leftCollapsed ? 30 : 280, flexShrink: 0, transition: "width 0.2s", position: "relative" }}>
+          <button onClick={() => setLeftCollapsed(v => !v)} style={{ position: "absolute", top: 0, right: -12, zIndex: 5, width: 24, height: 24, borderRadius: "50%", border: "1px solid rgba(255,255,255,0.15)", background: "rgba(6,3,20,0.9)", color: "rgba(255,255,255,0.5)", fontSize: 11, cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center" }}>{leftCollapsed ? "▶" : "◀"}</button>
+          {leftCollapsed ? null : (<>
           {/* GW Matches */}
           <div style={{ fontSize: 9, fontWeight: 700, color: "#fff", marginBottom: 4 }}>{t(lang, "proMatchClick")}</div>
           {gwMatches.length === 0 ? (
@@ -731,6 +743,7 @@ export default function SorareProTab({ players, teams, fixtures, logos = {}, mat
               </div>
             );
           })()}
+          </>)}
         </div>
 
         {/* ── Right column: Builder + Player list ── */}
@@ -773,8 +786,16 @@ export default function SorareProTab({ players, teams, fixtures, logos = {}, mat
 
             {/* Header */}
             <div style={{ padding: "8px 14px", borderBottom: "1px solid rgba(255,255,255,0.06)", display: "flex", alignItems: "center", justifyContent: "space-between", gap: 8 }}>
-              <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-                <div style={{ fontSize: 11, fontWeight: 900, color: rarityColor, letterSpacing: "0.05em" }}>{t(lang, "proMyTeamTitle")}</div>
+              <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
+                <button onClick={() => setAlgoMultiClub(v => !v)} style={{ fontSize: 7, fontWeight: 800, padding: "3px 6px", borderRadius: 5, border: `1px solid ${algoMultiClub ? "rgba(74,222,128,0.5)" : "rgba(255,255,255,0.1)"}`, background: algoMultiClub ? "rgba(74,222,128,0.12)" : "transparent", color: algoMultiClub ? "#4ADE80" : "rgba(255,255,255,0.3)", cursor: "pointer", fontFamily: "Outfit" }}>
+                  MC +2%
+                </button>
+                <button onClick={() => setAlgoCap260(v => !v)} style={{ fontSize: 7, fontWeight: 800, padding: "3px 6px", borderRadius: 5, border: `1px solid ${algoCap260 ? "rgba(139,92,246,0.5)" : "rgba(255,255,255,0.1)"}`, background: algoCap260 ? "rgba(139,92,246,0.12)" : "transparent", color: algoCap260 ? "#A78BFA" : "rgba(255,255,255,0.3)", cursor: "pointer", fontFamily: "Outfit" }}>
+                  CAP +4%
+                </button>
+                <button onClick={generateMagicTeam} style={{ padding: "5px 10px", borderRadius: 6, border: "none", cursor: "pointer", fontFamily: "Outfit", background: rarityBg, color: "#fff", fontSize: 9, fontWeight: 800 }}>
+                  {t(lang, "proAlgo")}
+                </button>
                 <div style={{ fontSize: 8, color: "rgba(255,255,255,0.35)" }}>
                   {filledCount < 5 ? S.proMyTeamSelect(5 - filledCount) : `Score : ${totalScore} pts${palier ? ` · ${palier.reward}` : ""}`}
                 </div>
@@ -786,15 +807,6 @@ export default function SorareProTab({ players, teams, fixtures, logos = {}, mat
                   </button>
                   <button onClick={refreshCards} title="Refresh cartes (nouvelle carte achetee ?)" style={{ padding: "4px 6px", borderRadius: 6, border: "1px solid rgba(255,255,255,0.1)", background: "rgba(255,255,255,0.04)", color: "rgba(255,255,255,0.4)", fontSize: 10, cursor: "pointer" }}>↻</button>
                 </>)}
-                <button onClick={() => setAlgoMultiClub(v => !v)} style={{ fontSize: 7, fontWeight: 800, padding: "3px 6px", borderRadius: 5, border: `1px solid ${algoMultiClub ? "rgba(74,222,128,0.5)" : "rgba(255,255,255,0.1)"}`, background: algoMultiClub ? "rgba(74,222,128,0.12)" : "transparent", color: algoMultiClub ? "#4ADE80" : "rgba(255,255,255,0.3)", cursor: "pointer", fontFamily: "Outfit" }}>
-                  MC +2%
-                </button>
-                <button onClick={() => setAlgoCap260(v => !v)} style={{ fontSize: 7, fontWeight: 800, padding: "3px 6px", borderRadius: 5, border: `1px solid ${algoCap260 ? "rgba(139,92,246,0.5)" : "rgba(255,255,255,0.1)"}`, background: algoCap260 ? "rgba(139,92,246,0.12)" : "transparent", color: algoCap260 ? "#A78BFA" : "rgba(255,255,255,0.3)", cursor: "pointer", fontFamily: "Outfit" }}>
-                  CAP +4%
-                </button>
-                <button onClick={generateMagicTeam} style={{ padding: "5px 10px", borderRadius: 6, border: "none", cursor: "pointer", fontFamily: "Outfit", background: rarityBg, color: "#fff", fontSize: 9, fontWeight: 800 }}>
-                  {t(lang, "proAlgo")}
-                </button>
               </div>
             </div>
 
@@ -853,11 +865,11 @@ export default function SorareProTab({ players, teams, fixtures, logos = {}, mat
                               <>
                                 <img src={card.pictureUrl} alt="" style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "contain" }} />
                                 {card.isClassic && <span style={{ position: "absolute", top: 4, left: 4, fontSize: 6, fontWeight: 900, color: "#fff", background: "rgba(139,92,246,0.8)", borderRadius: 3, padding: "1px 4px", zIndex: 2 }}>CLASSIC</span>}
-                                {bonusPct > 0 && <span style={{ position: "absolute", bottom: 26, left: 4, fontSize: 7, fontWeight: 900, color: "#fff", background: "rgba(22,101,52,0.9)", borderRadius: 3, padding: "1px 4px", zIndex: 2 }}>+{bonusPct}%</span>}
-                                <div style={{ position: "absolute", bottom: 6, right: 6, zIndex: 2 }}>
+                                <div style={{ position: "absolute", bottom: 6, right: 6, zIndex: 2, display: "flex", flexDirection: "column", alignItems: "flex-end", gap: 2 }}>
+                                  {bonusPct > 0 && <span style={{ fontSize: 7, fontWeight: 900, color: "#4ADE80", background: "rgba(0,0,0,0.6)", borderRadius: 3, padding: "1px 4px" }}>+{bonusPct}%</span>}
                                   <span style={{ display: "inline-block", padding: "3px 7px", borderRadius: 8, fontFamily: "'DM Mono',monospace", fontSize: 14, fontWeight: 700, color: "#fff", background: dsBg(dsVal), boxShadow: `0 0 8px ${dsColor(dsVal)}50` }}>{dsVal}</span>
                                 </div>
-                                {p.sorare_starter_pct != null && (
+                                {selectedGwIdx === 0 && p.sorare_starter_pct != null && (
                                   <span style={{ position: "absolute", top: 22, right: 4, fontSize: 8, fontWeight: 700, padding: "1px 4px", borderRadius: 3, color: "#fff", background: p.sorare_starter_pct >= 70 ? "rgba(22,101,52,0.9)" : p.sorare_starter_pct >= 50 ? "rgba(133,77,14,0.9)" : "rgba(153,27,27,0.9)", zIndex: 2 }}>{p.sorare_starter_pct}%</span>
                                 )}
                                 <button onClick={e => { e.stopPropagation(); removeFromTeam(slot); }} style={{ position: "absolute", top: 4, left: card.isClassic ? 40 : 4, background: "rgba(0,0,0,0.5)", border: "none", color: "rgba(255,255,255,0.5)", cursor: "pointer", fontSize: 10, padding: "2px 5px", borderRadius: 4, zIndex: 2 }}>x</button>
@@ -933,10 +945,17 @@ export default function SorareProTab({ players, teams, fixtures, logos = {}, mat
                   )}
                   <div style={{ display: "flex", alignItems: "center", gap: 4 }}>
                     <span style={{ fontSize: 7, fontWeight: 700, color: filterTitu ? "#4ADE80" : "rgba(255,255,255,0.3)", fontFamily: "Outfit" }}>
-                      {filterTitu ? `Titu \u2265${filterTitu}%` : "Titu%"}
+                      Titu {filterTitu > 0 ? `≥${filterTitu}%` : "All"}
                     </span>
-                    <input type="range" min={0} max={90} step={10} value={filterTitu} onChange={e => setFilterTitu(Number(e.target.value))}
-                      style={{ width: 60, height: 4, accentColor: "#4ADE80", cursor: "pointer" }} />
+                    <div style={{ position: "relative", width: 100 }}>
+                      <input type="range" min={0} max={90} step={10} value={filterTitu} onChange={e => setFilterTitu(Number(e.target.value))}
+                        style={{ width: 100, height: 4, accentColor: "#4ADE80", cursor: "pointer" }} />
+                      <div style={{ display: "flex", justifyContent: "space-between", width: 100, marginTop: -2 }}>
+                        {[0,10,20,30,40,50,60,70,80,90].map(v => (
+                          <span key={v} style={{ fontSize: 5, color: filterTitu === v ? "#4ADE80" : "rgba(255,255,255,0.15)", fontFamily: "'DM Mono',monospace", cursor: "pointer" }} onClick={() => setFilterTitu(v)}>{v}</span>
+                        ))}
+                      </div>
+                    </div>
                   </div>
                 </div>
 
@@ -1028,14 +1047,18 @@ export default function SorareProTab({ players, teams, fixtures, logos = {}, mat
                               <div style={{ width: 20, height: 20, borderRadius: 5, border: `1px solid ${inTeam ? `${rarityColor}40` : "rgba(255,255,255,0.15)"}`, display: "flex", alignItems: "center", justifyContent: "center", color: inTeam ? rarityColor : "rgba(255,255,255,0.5)", fontSize: 13, fontWeight: 700 }}>
                                 {inTeam ? "✓" : "+"}
                               </div>
-                              {/* Pos + logo */}
+                              {/* Pos + bonus + classic + logo */}
                               <div style={{ display: "flex", alignItems: "center", gap: 3 }}>
-                                <span style={{ fontSize: 7, fontWeight: 900, background: pc, color: "#fff", borderRadius: 3, padding: "2px 4px", flexShrink: 0 }}>{p.position}</span>
+                                <div style={{ display: "inline-flex", borderRadius: 3, overflow: "hidden", flexShrink: 0 }}>
+                                  <span style={{ fontSize: 7, fontWeight: 900, background: pc, color: "#fff", padding: "2px 4px" }}>{p.position}</span>
+                                  {ownedCard && getPowerPct(p) > 0 && <span style={{ fontSize: 7, fontWeight: 900, background: "#166534", color: "#4ADE80", padding: "2px 4px" }}>+{getPowerPct(p)}%</span>}
+                                </div>
                                 {logos[p.club] && <img src={`/data/logos/${logos[p.club]}`} alt="" style={{ width: 14, height: 14, objectFit: "contain", flexShrink: 0 }} />}
                               </div>
-                              {/* Name */}
-                              <div style={{ minWidth: 0 }}>
-                                <div style={{ fontSize: 10, fontWeight: inTeam ? 700 : 500, color: inTeam ? rarityColor : "#fff", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{p.name.split(" ").pop()}</div>
+                              {/* Name + OFF badge */}
+                              <div style={{ minWidth: 0, display: "flex", alignItems: "center", gap: 3 }}>
+                                <span style={{ fontSize: 10, fontWeight: inTeam ? 700 : 500, color: inTeam ? rarityColor : "#fff", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{p.name.split(" ").pop()}</span>
+                                {ownedCard && ownedCard.isClassic && <span style={{ fontSize: 6, fontWeight: 900, background: "#5B21B6", color: "#C4B5FD", borderRadius: 2, padding: "1px 3px", flexShrink: 0 }}>OFF</span>}
                               </div>
                               {/* D-Score */}
                               <div style={{ textAlign: "center" }}>
@@ -1051,11 +1074,15 @@ export default function SorareProTab({ players, teams, fixtures, logos = {}, mat
                                   </div>
                                 ) : <span style={{ color: "rgba(255,255,255,0.15)" }}>—</span>}
                               </div>
-                              {/* Titu% Sorare */}
+                              {/* Titu% Sorare — masque pour GW futures (pas encore publie) */}
                               <div style={{ textAlign: "center" }}>
-                                <span style={{ fontSize: 10, fontWeight: 600, fontFamily: "Outfit", padding: "2px 5px", borderRadius: 3, color: "#fff",
-                                  background: (p.sorare_starter_pct||0) >= 70 ? "linear-gradient(135deg,#166534,#15803d)" : (p.sorare_starter_pct||0) >= 50 ? "linear-gradient(135deg,#854d0e,#a16207)" : p.sorare_starter_pct == null ? "rgba(255,255,255,0.06)" : "linear-gradient(135deg,#991b1b,#b91c1c)",
-                                }}>{p.sorare_starter_pct == null ? "—" : `${p.sorare_starter_pct}%`}</span>
+                                {selectedGwIdx === 0 ? (
+                                  <span style={{ fontSize: 10, fontWeight: 600, fontFamily: "Outfit", padding: "2px 5px", borderRadius: 3, color: "#fff",
+                                    background: (p.sorare_starter_pct||0) >= 70 ? "linear-gradient(135deg,#166534,#15803d)" : (p.sorare_starter_pct||0) >= 50 ? "linear-gradient(135deg,#854d0e,#a16207)" : p.sorare_starter_pct == null ? "rgba(255,255,255,0.06)" : "linear-gradient(135deg,#991b1b,#b91c1c)",
+                                  }}>{p.sorare_starter_pct == null ? "—" : `${p.sorare_starter_pct}%`}</span>
+                                ) : (
+                                  <span style={{ fontSize: 8, color: "rgba(255,255,255,0.15)" }}>—</span>
+                                )}
                               </div>
                               {/* CS% */}
                               <span style={{ fontFamily: "'DM Mono',monospace", fontSize: 11, fontWeight: 600, textAlign: "center", color: pctC(p.csPercent) }}>{p.csPercent != null ? `${p.csPercent}%` : "—"}</span>

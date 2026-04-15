@@ -1021,7 +1021,7 @@ export default function SorareProTab({ players, teams, fixtures, logos = {}, mat
                 )}
 
                 {/* 5 card slots */}
-                <div style={{ padding: "6px 8px", flex: "0 0 auto", display: "flex", flexDirection: "column", gap: 4, alignItems: "center" }}>
+                <div style={{ padding: isMobile ? "6px 12px" : "6px 8px", flex: "0 0 auto", display: "flex", flexDirection: "column", gap: 4, alignItems: "center", width: "100%", boxSizing: "border-box" }}>
                   {[["ATT", "FLEX"], ["DEF", "GK", "MIL"]].map((row, rowIdx) => (
                     <div key={rowIdx} style={{ display: "flex", gap: isMobile ? 3 : 6, justifyContent: "center", alignItems: "flex-start" }}>
                       {row.map(slot => {
@@ -1033,18 +1033,23 @@ export default function SorareProTab({ players, teams, fixtures, logos = {}, mat
                         const dsCol = dsVal >= 80 ? "#4ADE80" : dsVal >= 65 ? "#C4B5FD" : dsVal >= 50 ? "#FBBF24" : "#F87171";
                         const isCaptain = p && captainPlayer && (p.slug || p.name) === (captainPlayer.slug || captainPlayer.name);
                         const bonusPct = bonusEnabled && card?.power ? Math.round((card.power - 1) * 100) : 0;
+                        const oppLogo = p ? logos[p.oppName] : null;
+                        const playerClubLogo = p ? logos[p.club] : null;
+                        const parisTime = p?.kickoff && p?.matchDate ? utcToParisTime(p.kickoff, p.matchDate) : "";
+                        const dateLabel = p?.matchDate ? new Date(p.matchDate + "T12:00:00").toLocaleDateString(lang === "fr" ? "fr-FR" : "en-US", { timeZone: TZ, weekday: "short", day: "numeric" }).toUpperCase() : "";
                         return (
-                          <div key={slot} className="pro-card-slot" onClick={() => setSelectedSlot(isActive ? null : slot)} style={{
+                          <div key={slot} style={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
+                          <div className="pro-card-slot" onClick={() => setSelectedSlot(isActive ? null : slot)} style={{
                             borderRadius: 10, cursor: "pointer", overflow: "hidden",
                             background: card ? "transparent" : p ? `linear-gradient(160deg, #0d0826, ${sc}30)` : isActive ? `${sc}18` : "rgba(255,255,255,0.025)",
                             border: card ? "none" : isCaptain ? `2px solid #FBBF24` : `1.5px solid ${isActive ? sc + "CC" : p ? sc + "55" : "rgba(255,255,255,0.08)"}`,
                             display: "flex", flexDirection: "column", alignItems: "center", gap: 4,
-                            padding: card ? 0 : "8px 6px", position: "relative", width: isMobile ? 70 : 120, height: isMobile ? 93 : 166, flexShrink: 0,
+                            padding: card ? 0 : "6px 4px", position: "relative", width: isMobile ? 65 : (card || p) ? 120 : 105, height: isMobile ? 87 : (card || p) ? 166 : 140, flexShrink: 0,
                             marginTop: slot === "GK" && !isMobile ? 12 : 0,
                           }}>
                             {/* Captain badge — click to toggle */}
                             {p && filledCount === 5 && (
-                              <button onClick={e => { e.stopPropagation(); setCaptainSlot(captainSlot === slot ? null : slot); }} style={{ position: "absolute", top: card ? 4 : 2, right: card ? 4 : 2, zIndex: 3, width: 18, height: 18, borderRadius: "50%", border: isCaptain ? "2px solid #FBBF24" : "1px solid rgba(255,255,255,0.2)", background: isCaptain ? "#FBBF24" : "rgba(0,0,0,0.5)", color: isCaptain ? "#000" : "rgba(255,255,255,0.4)", fontSize: 9, fontWeight: 900, cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", padding: 0 }}>C</button>
+                              <button onClick={e => { e.stopPropagation(); setCaptainSlot(captainSlot === slot ? null : slot); }} style={{ position: "absolute", top: card ? 4 : 2, right: card ? 20 : 2, zIndex: 3, width: 18, height: 18, borderRadius: "50%", border: isCaptain ? "2px solid #FBBF24" : "1px solid rgba(255,255,255,0.2)", background: isCaptain ? "#FBBF24" : "rgba(0,0,0,0.5)", color: isCaptain ? "#000" : "rgba(255,255,255,0.4)", fontSize: 9, fontWeight: 900, cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", padding: 0 }}>C</button>
                             )}
                             {card ? (
                               <>
@@ -1076,6 +1081,19 @@ export default function SorareProTab({ players, teams, fixtures, logos = {}, mat
                                 </div>
                               </>
                             )}
+                          </div>
+                          {p && (
+                            <div style={{ marginTop: 3, padding: "3px 8px", borderRadius: 6, background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.08)", textAlign: "center" }}>
+                              <div style={{ fontSize: 7, fontWeight: 700, color: "#fff", fontFamily: "'DM Mono',monospace" }}>
+                                {dateLabel.replace(".", "")} - {parisTime}
+                              </div>
+                              <div style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: 4, marginTop: 2 }}>
+                                {playerClubLogo && <img src={`/data/logos/${playerClubLogo}`} alt="" style={{ width: 14, height: 14, objectFit: "contain" }} />}
+                                <span style={{ fontSize: 7, fontWeight: 700, color: "rgba(255,255,255,0.25)" }}>vs</span>
+                                {oppLogo && <img src={`/data/logos/${oppLogo}`} alt="" style={{ width: 14, height: 14, objectFit: "contain" }} />}
+                              </div>
+                            </div>
+                          )}
                           </div>
                         );
                       })}
@@ -1370,85 +1388,86 @@ export default function SorareProTab({ players, teams, fixtures, logos = {}, mat
                 const pc = PC[p.position];
                 const ownedCard = getCard(p);
                 const oppLogo = logos[p.oppName];
+                const playerClubLogo = logos[p.club];
                 const isCap = stCaptainId && (p.slug || p.name) === stCaptainId;
-                const playerScore = Math.round(getFullScore(p, isCap));
+                const playerScore = Math.round(getFullScore(p, false));
                 const bonusPct = getPowerPct(p);
                 const parisTime = p.kickoff && p.matchDate ? utcToParisTime(p.kickoff, p.matchDate) : "";
-                const dateLabel = p.matchDate ? new Date(p.matchDate + "T12:00:00").toLocaleDateString(lang === "fr" ? "fr-FR" : "en-US", { timeZone: TZ, weekday: "short", day: "numeric" }).toUpperCase() : "";
+                const dateLabel = p.matchDate ? new Date(p.matchDate + "T12:00:00").toLocaleDateString(lang === "fr" ? "fr-FR" : "en-US", { timeZone: TZ, weekday: "short", day: "numeric" }).toUpperCase().replace(".", "") : "";
+                const matchDt = p.matchDate && p.kickoff ? new Date(`${p.matchDate}T${p.kickoff}:00Z`) : null;
+                const hasRealScore = matchDt ? matchDt.getTime() + 2 * 3600000 < Date.now() : false;
                 return (
-                  <div key={slot} style={{ textAlign: "center", flex: 1, minWidth: 0, maxWidth: 90 }}>
+                  <div key={slot} style={{ display: "flex", flexDirection: "column", alignItems: "center", flex: 1, minWidth: 0, maxWidth: 120 }}>
                     <div style={{ width: "100%", aspectRatio: "3/4", borderRadius: 6, overflow: "hidden", margin: "0 auto", position: "relative",
                       background: ownedCard ? "transparent" : `linear-gradient(155deg, rgba(8,4,28,0.9), ${pc}25)`,
-                      border: isCap ? "2px solid #FBBF24" : ownedCard ? "none" : `1px solid ${pc}30`,
+                      border: ownedCard ? "none" : `1px solid ${pc}30`,
                     }}>
                       {ownedCard ? (
                         <img src={ownedCard.pictureUrl} alt="" style={{ width: "100%", height: "100%", objectFit: "contain" }} />
                       ) : (
                         <div style={{ display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", height: "100%", gap: 2 }}>
-                          {logos[p.club] && <img src={`/data/logos/${logos[p.club]}`} alt="" style={{ width: 16, height: 16, objectFit: "contain" }} />}
+                          {playerClubLogo && <img src={`/data/logos/${playerClubLogo}`} alt="" style={{ width: 16, height: 16, objectFit: "contain" }} />}
                           <span style={{ fontSize: 6, fontWeight: 800, color: pc }}>{slot}</span>
                         </div>
                       )}
-                      {isCap && <span style={{ position: "absolute", top: 2, right: 2, width: 12, height: 12, borderRadius: "50%", background: "#FBBF24", color: "#000", fontSize: 7, fontWeight: 900, display: "flex", alignItems: "center", justifyContent: "center", zIndex: 2 }}>C</span>}
-                      {p.sorare_starter_pct != null && (
-                        <span style={{ position: "absolute", top: isCap ? 16 : 2, right: 2, fontSize: 5, fontWeight: 700, padding: "1px 2px", borderRadius: 2, color: "#fff", zIndex: 2,
-                          background: p.sorare_starter_pct >= 70 ? "rgba(22,101,52,0.9)" : p.sorare_starter_pct >= 50 ? "rgba(133,77,14,0.9)" : "rgba(153,27,27,0.9)",
-                        }}>{p.sorare_starter_pct}%</span>
-                      )}
-                      {bonusPct > 0 && <span style={{ position: "absolute", bottom: 2, left: 2, fontSize: 5, fontWeight: 900, color: "#fff", background: "rgba(22,101,52,0.9)", borderRadius: 2, padding: "0px 2px", zIndex: 2 }}>+{bonusPct}%</span>}
-                      {ownedCard && ownedCard.isClassic && <span style={{ position: "absolute", top: 2, left: 2, fontSize: 4, fontWeight: 900, color: "#fff", background: "rgba(139,92,246,0.8)", borderRadius: 2, padding: "0px 2px", zIndex: 2 }}>CLASSIC</span>}
+                      {isCap && <span style={{ position: "absolute", top: 2, right: 12, width: 12, height: 12, borderRadius: "50%", background: "#FBBF24", color: "#000", fontSize: 7, fontWeight: 900, display: "flex", alignItems: "center", justifyContent: "center", zIndex: 2 }}>C</span>}
+                      {bonusPct > 0 && <span style={{ position: "absolute", bottom: 34, right: 4, fontSize: 8, fontWeight: 900, color: "#4ADE80", background: "rgba(0,0,0,0.7)", borderRadius: 3, padding: "1px 4px", zIndex: 3 }}>+{bonusPct}%</span>}
+                      {ownedCard?.isClassic && <span style={{ position: "absolute", top: 2, left: 2, fontSize: 4, fontWeight: 900, color: "#fff", background: "rgba(139,92,246,0.8)", borderRadius: 2, padding: "0px 2px", zIndex: 2 }}>CLASSIC</span>}
+                      {/* D-Score — inside card, bottom right */}
+                      <div style={{ position: "absolute", bottom: 0, right: 8, zIndex: 2,
+                        width: 32, height: 32, borderRadius: "50%",
+                        display: "flex", alignItems: "center", justifyContent: "center",
+                        fontFamily: "'DM Mono',monospace", fontSize: 13, fontWeight: 900,
+                        color: hasRealScore ? "#fff" : dsColor(playerScore),
+                        background: hasRealScore ? dsBg(playerScore) : "rgba(0,0,0,0.6)",
+                        border: hasRealScore ? "none" : `1px dashed ${dsColor(playerScore)}60`,
+                        boxShadow: hasRealScore ? `0 0 8px ${dsColor(playerScore)}50` : `0 0 6px ${dsColor(playerScore)}30`,
+                      }}>{playerScore}</div>
                     </div>
-                    <div style={{ fontSize: 7, fontWeight: 700, color: "#fff", marginTop: 1, whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>{p.name.split(" ").pop()}</div>
-                    <div style={{ fontSize: 11, fontWeight: 900, color: dsColor(playerScore), fontFamily: "'DM Mono',monospace" }}>{playerScore}</div>
-                    <div style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: 1, marginTop: 1 }}>
-                      <span style={{ fontSize: 6 }}>{p.isHome ? "🏠" : "✈️"}</span>
-                      {oppLogo && <img src={`/data/logos/${oppLogo}`} alt="" style={{ width: 7, height: 7, objectFit: "contain" }} />}
-                      <span style={{ fontSize: 5, color: "rgba(255,255,255,0.4)" }}>{sn(p.oppName)}</span>
-                    </div>
-                    {(parisTime || dateLabel) && (
-                      <div style={{ fontSize: 5, fontWeight: 700, color: "#A78BFA", fontFamily: "'DM Mono',monospace" }}>
-                        {dateLabel} {parisTime}
+                    {/* Match info box */}
+                    <div style={{ marginTop: 3, padding: "3px 8px", borderRadius: 6, background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.06)", textAlign: "center" }}>
+                      <div style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: 4 }}>
+                        {playerClubLogo && <img src={`/data/logos/${playerClubLogo}`} alt="" style={{ width: 14, height: 14, objectFit: "contain" }} />}
+                        <span style={{ fontSize: 7, color: "rgba(255,255,255,0.25)" }}>vs</span>
+                        {oppLogo && <img src={`/data/logos/${oppLogo}`} alt="" style={{ width: 14, height: 14, objectFit: "contain" }} />}
                       </div>
-                    )}
+                      <div style={{ fontSize: 7, fontWeight: 700, color: "#fff", fontFamily: "'DM Mono',monospace", marginTop: 1 }}>
+                        {dateLabel} - {parisTime}
+                      </div>
+                    </div>
                   </div>
                 );
               };
 
               return (
-                <div key={st.id} style={{ borderRadius: 10, background: "linear-gradient(160deg, rgba(10,5,30,0.95), rgba(20,10,50,0.9))", border: `1px solid ${rarityColor}25`, padding: "6px 6px", backdropFilter: "blur(8px)" }}>
+                <div key={st.id} style={{ borderRadius: 12, background: "linear-gradient(160deg, rgba(10,5,30,0.95), rgba(20,10,50,0.9))", border: `1px solid ${rarityColor}25`, padding: "10px 10px", backdropFilter: "blur(8px)" }}>
                   {/* Header */}
-                  <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 4 }}>
-                    <div style={{ display: "flex", alignItems: "center", gap: 4 }}>
-                      <span style={{ fontSize: 10, fontWeight: 900, color: rarityColor }}>{st.label}</span>
-                      <button onClick={() => loadSavedTeam(st)} style={{ fontSize: 6, fontWeight: 700, padding: "1px 4px", borderRadius: 3, border: `1px solid ${rarityColor}40`, background: `${rarityColor}10`, color: rarityColor, cursor: "pointer", fontFamily: "Outfit" }}>Charger</button>
-                      <button onClick={() => deleteSavedTeam(st.id)} style={{ fontSize: 7, padding: "1px 4px", borderRadius: 3, border: "1px solid rgba(255,255,255,0.08)", background: "rgba(255,255,255,0.03)", color: "rgba(255,255,255,0.3)", cursor: "pointer" }}>x</button>
+                  <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 8 }}>
+                    <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
+                      <span style={{ fontSize: 12, fontWeight: 900, color: rarityColor }}>{st.label}</span>
+                      <button onClick={() => loadSavedTeam(st)} style={{ fontSize: 7, fontWeight: 700, padding: "2px 6px", borderRadius: 4, border: `1px solid ${rarityColor}40`, background: `${rarityColor}10`, color: rarityColor, cursor: "pointer", fontFamily: "Outfit" }}>Charger</button>
+                      <button onClick={() => deleteSavedTeam(st.id)} style={{ fontSize: 8, padding: "2px 5px", borderRadius: 4, border: "1px solid rgba(255,255,255,0.08)", background: "rgba(255,255,255,0.03)", color: "rgba(255,255,255,0.3)", cursor: "pointer" }}>x</button>
                     </div>
                     <div style={{ display: "flex", alignItems: "center", gap: 3 }}>
-                      {stMultiClub && <span style={{ fontSize: 5, fontWeight: 800, padding: "1px 3px", borderRadius: 3, border: "1px solid rgba(74,222,128,0.5)", color: "#4ADE80", background: "rgba(74,222,128,0.1)" }}>MC</span>}
-                      {stCap260 && <span style={{ fontSize: 5, fontWeight: 800, padding: "1px 3px", borderRadius: 3, border: "1px solid rgba(139,92,246,0.5)", color: "#A78BFA", background: "rgba(139,92,246,0.1)" }}>CAP</span>}
-                      {stCompoPct > 0 && <span style={{ fontSize: 7, fontWeight: 700, color: "#4ADE80" }}>+{stCompoPct}%</span>}
-                      {palSt && <span style={{ fontSize: 7, color: palSt.color, fontWeight: 700 }}>{palSt.reward}</span>}
-                      <span style={{ fontSize: 16, fontWeight: 900, fontFamily: "'DM Mono',monospace", color: palSt ? palSt.color : rarityColor }}>{stTotal}</span>
+                      {stMultiClub && <span style={{ fontSize: 7, fontWeight: 800, padding: "2px 4px", borderRadius: 3, border: "1px solid rgba(74,222,128,0.5)", color: "#4ADE80", background: "rgba(74,222,128,0.1)" }}>MC</span>}
+                      {stCap260 && <span style={{ fontSize: 7, fontWeight: 800, padding: "2px 4px", borderRadius: 3, border: "1px solid rgba(139,92,246,0.5)", color: "#A78BFA", background: "rgba(139,92,246,0.1)" }}>CAP</span>}
+                      {stCompoPct > 0 && <span style={{ fontSize: 9, fontWeight: 700, color: "#4ADE80" }}>+{stCompoPct}%</span>}
+                      {palSt && <span style={{ fontSize: 9, color: palSt.color, fontWeight: 700 }}>{palSt.reward}</span>}
+                      <span style={{ fontSize: 22, fontWeight: 900, fontFamily: "'DM Mono',monospace", color: palSt ? palSt.color : rarityColor }}>{stTotal}</span>
                     </div>
                   </div>
                   {/* Pitch layout : ATT+FLEX en haut, DEF+GK+MIL en bas */}
-                  <div style={{ display: "flex", flexDirection: "column", gap: 2, alignItems: "center" }}>
-                    <div style={{ display: "flex", gap: 3, justifyContent: "center", width: "100%" }}>
+                  <div style={{ display: "flex", flexDirection: "column", gap: 6, alignItems: "center" }}>
+                    <div style={{ display: "flex", gap: 6, justifyContent: "center", width: "100%" }}>
                       {renderCard("ATT")}
                       {renderCard("FLEX")}
                     </div>
-                    <div style={{ display: "flex", gap: 3, justifyContent: "center", width: "100%" }}>
+                    <div style={{ display: "flex", gap: 6, justifyContent: "center", width: "100%" }}>
                       {renderCard("DEF")}
                       {renderCard("GK")}
                       {renderCard("MIL")}
                     </div>
                   </div>
-                  {/* Bonus summary */}
-                  {stBonusPts > 0 && (
-                    <div style={{ textAlign: "center", marginTop: 4, fontSize: 6, color: "rgba(255,255,255,0.3)" }}>
-                      Bonus: +{stBonusPts} pts · L10: {stSumL10}
-                    </div>
-                  )}
                 </div>
               );
             })}

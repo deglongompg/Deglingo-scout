@@ -533,7 +533,9 @@ export default function SorareProTab({ players, teams, fixtures, logos = {}, mat
     };
 
     // Conflit anti-meta : GK/DEF vs ATT/MIL adverse (les buts de l'ATT penalisent le GK/DEF)
+    // Conflit anti-meta desactive quand filtre match actif (stack = meme match, pas de conflit)
     const hasConflict = (player) => {
+      if (selectedMatchFilters.length > 0) return false;
       const picked = Object.values(newPicks).filter(Boolean);
       if (["ATT", "MIL"].includes(player.position))
         return picked.some(pp => ["GK", "DEF"].includes(pp.position) && clubMatch(pp.oppName, player.club));

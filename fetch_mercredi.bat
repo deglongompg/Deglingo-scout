@@ -19,9 +19,9 @@ for /f "tokens=1,2 delims==" %%a in (.env) do if "%%a"=="FOOTBALL_DATA_API_KEY" 
 py fetch_fixtures.py %FOOTBALL_DATA_API_KEY%
 
 echo.
-echo [3/6] STATUT BLESSES / SUSPENDUS / PROJ (~5 min)...
+echo [3/7] STATUT BLESSES / SUSPENDUS (sans titu%%, publie jeudi)...
 echo -----------------------------------------
-py fetch_player_status.py
+py fetch_player_status.py --no-titu
 
 echo.
 echo [4/6] MERGE DONNEES...

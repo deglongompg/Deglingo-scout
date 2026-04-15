@@ -13,6 +13,7 @@ Workflow vendredi :
 """
 import requests, json, os, time, sys
 sys.stdout.reconfigure(errors="replace")
+NO_TITU = "--no-titu" in sys.argv  # Mercredi: pas de titu% (pas encore publie)
 from dotenv import load_dotenv
 
 load_dotenv()
@@ -66,7 +67,7 @@ def fetch_status(slug):
         "injured":          injured,
         "suspended":        suspended,
         "sorare_proj":      round(proj, 1) if proj is not None else None,
-        "sorare_starter_pct": starter_pct,
+        "sorare_starter_pct": None if NO_TITU else starter_pct,
     }
 
 

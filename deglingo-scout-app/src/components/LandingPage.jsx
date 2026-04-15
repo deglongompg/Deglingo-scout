@@ -418,7 +418,7 @@ export default function LandingPage({ players, onEnter, onNavigate }) {
 
         {/* CTAs au-dessus des cartes */}
         <div style={{ display: "flex", gap: 12, justifyContent: "center", marginBottom: 12 }}>
-          <button onClick={() => onNavigate ? onNavigate("db") : onEnter()}
+          <button onClick={() => onNavigate ? onNavigate("pro") : onEnter()}
             style={{ padding: "10px 24px", borderRadius: 20, fontSize: 13, fontWeight: 800, fontFamily: "Outfit", cursor: "pointer", border: "none", background: cardMode === "pro" ? "linear-gradient(135deg,#6366F1,#818CF8)" : "linear-gradient(135deg,#7C3AED,#8B5CF6,#A78BFA)", color: "#fff", boxShadow: cardMode === "pro" ? "0 6px 28px rgba(99,102,241,0.6)" : "0 6px 24px rgba(124,58,237,0.5)", transition: "all 0.3s", display: "flex", alignItems: "center", gap: 6, transform: cardMode === "pro" ? "translateY(-2px) scale(1.03)" : "" }}
             onMouseEnter={() => setCardMode("pro")}
             onMouseLeave={() => setCardMode("stellar")}>

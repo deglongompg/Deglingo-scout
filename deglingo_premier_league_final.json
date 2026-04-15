@@ -23839,8 +23839,8 @@
     "avg_adjusted_total_att_assist": 0.0,
     "avg_blocked_scoring_attempt": 0.0,
     "avg_big_chance_created": 0.0,
-    "price_limited": null,
-    "price_rare": null
+    "price_limited": 0.57,
+    "price_rare": 3.01
   },
   {
     "name": "Adam Wharton",
@@ -23940,8 +23940,8 @@
     "avg_adjusted_total_att_assist": 0.25,
     "avg_blocked_scoring_attempt": 0.0,
     "avg_big_chance_created": 0.5,
-    "price_limited": null,
-    "price_rare": null
+    "price_limited": 3.89,
+    "price_rare": 37.8
   },
   {
     "name": "Jørgen Larsen",
@@ -24041,8 +24041,8 @@
     "avg_adjusted_total_att_assist": 0.25,
     "avg_blocked_scoring_attempt": 0.0,
     "avg_big_chance_created": 0.0,
-    "price_limited": null,
-    "price_rare": null
+    "price_limited": 3.75,
+    "price_rare": 8.0
   },
   {
     "name": "Chris Richards",
@@ -24142,8 +24142,8 @@
     "avg_adjusted_total_att_assist": 0.75,
     "avg_blocked_scoring_attempt": 0.0,
     "avg_big_chance_created": 0.0,
-    "price_limited": null,
-    "price_rare": null
+    "price_limited": 3.31,
+    "price_rare": 20.0
   },
   {
     "name": "Caleb Kporha",
@@ -24211,8 +24211,8 @@
     "matchs_played": 0,
     "matchs_total": 5,
     "last_date": "",
-    "price_limited": null,
-    "price_rare": null
+    "price_limited": 0.57,
+    "price_rare": 3.99
   },
   {
     "name": "George King",
@@ -24418,8 +24418,8 @@
     "matchs_played": 0,
     "matchs_total": 5,
     "last_date": "",
-    "price_limited": null,
-    "price_rare": null
+    "price_limited": 0.54,
+    "price_rare": 7.25
   },
   {
     "name": "Kaden Rodney",
@@ -24487,7 +24487,7 @@
     "matchs_played": 0,
     "matchs_total": 5,
     "last_date": "",
-    "price_limited": null,
+    "price_limited": 0.41,
     "price_rare": null
   },
   {
@@ -24716,8 +24716,8 @@
     "avg_adjusted_total_att_assist": 0.0,
     "avg_blocked_scoring_attempt": 0.0,
     "avg_big_chance_created": 0.0,
-    "price_limited": null,
-    "price_rare": null
+    "price_limited": 0.94,
+    "price_rare": 5.1
   },
   {
     "name": "Yeremy Pino",
@@ -24815,8 +24815,8 @@
     "avg_adjusted_total_att_assist": 0.67,
     "avg_blocked_scoring_attempt": 0.0,
     "avg_big_chance_created": 0.67,
-    "price_limited": null,
-    "price_rare": null
+    "price_limited": 1.99,
+    "price_rare": 28.02
   },
   {
     "name": "Dean Henderson",
@@ -24914,8 +24914,8 @@
     "avg_adjusted_total_att_assist": 0.0,
     "avg_blocked_scoring_attempt": 0.0,
     "avg_big_chance_created": 0.0,
-    "price_limited": null,
-    "price_rare": null
+    "price_limited": 11.5,
+    "price_rare": 59.0
   },
   {
     "name": "Daichi Kamada",
@@ -25015,8 +25015,8 @@
     "avg_adjusted_total_att_assist": 0.5,
     "avg_blocked_scoring_attempt": 0.0,
     "avg_big_chance_created": 0.0,
-    "price_limited": null,
-    "price_rare": null
+    "price_limited": 3.2,
+    "price_rare": 12.0
   },
   {
     "name": "Dean Benamar",
@@ -25188,8 +25188,8 @@
     "avg_adjusted_total_att_assist": 0.6,
     "avg_blocked_scoring_attempt": 0.0,
     "avg_big_chance_created": 0.4,
-    "price_limited": null,
-    "price_rare": null
+    "price_limited": 2.2,
+    "price_rare": 17.8
   },
   {
     "name": "Cheick Doucouré",
@@ -25257,8 +25257,8 @@
     "matchs_played": 0,
     "matchs_total": 5,
     "last_date": "",
-    "price_limited": null,
-    "price_rare": null
+    "price_limited": 0.7,
+    "price_rare": 3.78
   },
   {
     "name": "Borna Sosa",
@@ -25353,8 +25353,8 @@
     "avg_adjusted_total_att_assist": 0.0,
     "avg_blocked_scoring_attempt": 0.0,
     "avg_big_chance_created": 0.0,
-    "price_limited": null,
-    "price_rare": null
+    "price_limited": 0.55,
+    "price_rare": 3.99
   },
   {
     "name": "Joél Drakes-Thomas",
@@ -25559,8 +25559,8 @@
     "matchs_played": 0,
     "matchs_total": 4,
     "last_date": "",
-    "price_limited": null,
-    "price_rare": null
+    "price_limited": 0.55,
+    "price_rare": 7.35
   },
   {
     "name": "David Moyes",
@@ -25691,7 +25691,7 @@
     "matchs_played": 0,
     "matchs_total": 10,
     "last_date": "",
-    "price_limited": null,
+    "price_limited": 0.56,
     "price_rare": null
   },
   {
@@ -25760,7 +25760,7 @@
     "matchs_played": 0,
     "matchs_total": 10,
     "last_date": "",
-    "price_limited": null,
+    "price_limited": 1.8,
     "price_rare": null
   },
   {
@@ -25898,8 +25898,8 @@
     "matchs_played": 0,
     "matchs_total": 8,
     "last_date": "",
-    "price_limited": null,
-    "price_rare": null
+    "price_limited": 1.2,
+    "price_rare": 4.0
   },
   {
     "name": "Tyler-Jay Dibling",
@@ -25998,7 +25998,7 @@
     "avg_adjusted_total_att_assist": 0.33,
     "avg_blocked_scoring_attempt": 0.0,
     "avg_big_chance_created": 0.0,
-    "price_limited": null,
+    "price_limited": 1.08,
     "price_rare": null
   },
   {
@@ -26096,8 +26096,8 @@
     "avg_adjusted_total_att_assist": 0.0,
     "avg_blocked_scoring_attempt": 0.0,
     "avg_big_chance_created": 0.0,
-    "price_limited": null,
-    "price_rare": null
+    "price_limited": 0.57,
+    "price_rare": 3.5
   },
   {
     "name": "Dwight McNeil",
@@ -26202,7 +26202,7 @@
     "avg_adjusted_total_att_assist": 0.67,
     "avg_blocked_scoring_attempt": 0.0,
     "avg_big_chance_created": 0.0,
-    "price_limited": null,
+    "price_limited": 0.72,
     "price_rare": null
   },
   {
@@ -26316,8 +26316,8 @@
     "avg_adjusted_total_att_assist": 0.5,
     "avg_blocked_scoring_attempt": 0.0,
     "avg_big_chance_created": 0.0,
-    "price_limited": null,
-    "price_rare": null
+    "price_limited": 1.07,
+    "price_rare": 5.3
   },
   {
     "name": "Mark Travers",
@@ -26385,7 +26385,7 @@
     "matchs_played": 0,
     "matchs_total": 8,
     "last_date": "",
-    "price_limited": null,
+    "price_limited": 0.9,
     "price_rare": null
   },
   {
@@ -26497,7 +26497,7 @@
     "avg_adjusted_total_att_assist": 0.22,
     "avg_blocked_scoring_attempt": 0.0,
     "avg_big_chance_created": 0.0,
-    "price_limited": null,
+    "price_limited": 1.45,
     "price_rare": null
   },
   {
@@ -26635,8 +26635,8 @@
     "matchs_played": 0,
     "matchs_total": 10,
     "last_date": "",
-    "price_limited": null,
-    "price_rare": null
+    "price_limited": 0.54,
+    "price_rare": 4.86
   },
   {
     "name": "Kiernan Dewsbury-Hall",
@@ -26749,7 +26749,7 @@
     "avg_adjusted_total_att_assist": 0.8,
     "avg_blocked_scoring_attempt": 0.0,
     "avg_big_chance_created": 0.3,
-    "price_limited": null,
+    "price_limited": 3.65,
     "price_rare": null
   },
   {
@@ -26857,7 +26857,7 @@
     "avg_adjusted_total_att_assist": 0.29,
     "avg_blocked_scoring_attempt": 0.0,
     "avg_big_chance_created": 0.0,
-    "price_limited": null,
+    "price_limited": 1.19,
     "price_rare": null
   },
   {
@@ -26967,8 +26967,8 @@
     "avg_adjusted_total_att_assist": 0.0,
     "avg_blocked_scoring_attempt": 0.0,
     "avg_big_chance_created": 0.0,
-    "price_limited": null,
-    "price_rare": null
+    "price_limited": 28.0,
+    "price_rare": 179.0
   },
   {
     "name": "Braiden Graham",
@@ -27174,8 +27174,8 @@
     "matchs_played": 0,
     "matchs_total": 8,
     "last_date": "",
-    "price_limited": null,
-    "price_rare": null
+    "price_limited": 0.49,
+    "price_rare": 11.09
   },
   {
     "name": "Idrissa Gana Gueye",
@@ -27284,8 +27284,8 @@
     "avg_adjusted_total_att_assist": 0.5,
     "avg_blocked_scoring_attempt": 0.0,
     "avg_big_chance_created": 0.12,
-    "price_limited": null,
-    "price_rare": null
+    "price_limited": 2.16,
+    "price_rare": 19.99
   },
   {
     "name": "Vitalii Mykolenko",
@@ -27392,8 +27392,8 @@
     "avg_adjusted_total_att_assist": 0.86,
     "avg_blocked_scoring_attempt": 0.0,
     "avg_big_chance_created": 0.0,
-    "price_limited": null,
-    "price_rare": null
+    "price_limited": 1.0,
+    "price_rare": 7.02
   },
   {
     "name": "Seamus Coleman",
@@ -27461,7 +27461,7 @@
     "matchs_played": 0,
     "matchs_total": 8,
     "last_date": "",
-    "price_limited": null,
+    "price_limited": 0.57,
     "price_rare": null
   },
   {
@@ -27571,8 +27571,8 @@
     "avg_adjusted_total_att_assist": 1.75,
     "avg_blocked_scoring_attempt": 0.0,
     "avg_big_chance_created": 0.38,
-    "price_limited": null,
-    "price_rare": null
+    "price_limited": 15.0,
+    "price_rare": 66.0
   },
   {
     "name": "Carlos Alcaraz",
@@ -27667,7 +27667,7 @@
     "avg_adjusted_total_att_assist": 0.0,
     "avg_blocked_scoring_attempt": 0.0,
     "avg_big_chance_created": 0.0,
-    "price_limited": null,
+    "price_limited": 0.89,
     "price_rare": null
   },
   {
@@ -27781,8 +27781,8 @@
     "avg_adjusted_total_att_assist": 0.4,
     "avg_blocked_scoring_attempt": 0.0,
     "avg_big_chance_created": 0.2,
-    "price_limited": null,
-    "price_rare": null
+    "price_limited": 0.75,
+    "price_rare": 4.99
   },
   {
     "name": "Jake O'Brien",
@@ -27889,7 +27889,7 @@
     "avg_adjusted_total_att_assist": 0.29,
     "avg_blocked_scoring_attempt": 0.0,
     "avg_big_chance_created": 0.0,
-    "price_limited": null,
+    "price_limited": 0.68,
     "price_rare": null
   },
   {
@@ -27997,8 +27997,8 @@
     "avg_adjusted_total_att_assist": 0.14,
     "avg_blocked_scoring_attempt": 0.0,
     "avg_big_chance_created": 0.0,
-    "price_limited": null,
-    "price_rare": null
+    "price_limited": 0.54,
+    "price_rare": 4.47
   },
   {
     "name": "Tyrique George",
@@ -28103,8 +28103,8 @@
     "avg_adjusted_total_att_assist": 0.0,
     "avg_blocked_scoring_attempt": 0.0,
     "avg_big_chance_created": 0.0,
-    "price_limited": null,
-    "price_rare": null
+    "price_limited": 0.94,
+    "price_rare": 3.96
   },
   {
     "name": "Michael Keane",
@@ -28213,7 +28213,7 @@
     "avg_adjusted_total_att_assist": 0.0,
     "avg_blocked_scoring_attempt": 0.0,
     "avg_big_chance_created": 0.0,
-    "price_limited": null,
+    "price_limited": 0.88,
     "price_rare": null
   },
   {
@@ -28325,8 +28325,8 @@
     "avg_adjusted_total_att_assist": 0.11,
     "avg_blocked_scoring_attempt": 0.0,
     "avg_big_chance_created": 0.0,
-    "price_limited": null,
-    "price_rare": null
+    "price_limited": 6.0,
+    "price_rare": 22.0
   },
   {
     "name": "Iliman Ndiaye",
@@ -28435,8 +28435,8 @@
     "avg_adjusted_total_att_assist": 1.0,
     "avg_blocked_scoring_attempt": 0.0,
     "avg_big_chance_created": 0.25,
-    "price_limited": null,
-    "price_rare": null
+    "price_limited": 4.32,
+    "price_rare": 20.05
   },
   {
     "name": "Timothy Castagne",
@@ -28539,8 +28539,8 @@
     "avg_adjusted_total_att_assist": 1.2,
     "avg_blocked_scoring_attempt": 0.0,
     "avg_big_chance_created": 0.2,
-    "price_limited": null,
-    "price_rare": null
+    "price_limited": 0.56,
+    "price_rare": 3.98
   },
   {
     "name": "Oscar Bobb",
@@ -28649,7 +28649,7 @@
     "avg_adjusted_total_att_assist": 0.88,
     "avg_blocked_scoring_attempt": 0.0,
     "avg_big_chance_created": 0.12,
-    "price_limited": null,
+    "price_limited": 3.7,
     "price_rare": null
   },
   {
@@ -28826,8 +28826,8 @@
     "avg_adjusted_total_att_assist": 0.43,
     "avg_blocked_scoring_attempt": 0.0,
     "avg_big_chance_created": 0.0,
-    "price_limited": null,
-    "price_rare": null
+    "price_limited": 1.9,
+    "price_rare": 4.32
   },
   {
     "name": "Issa Diop",
@@ -28924,8 +28924,8 @@
     "avg_adjusted_total_att_assist": 0.0,
     "avg_blocked_scoring_attempt": 0.0,
     "avg_big_chance_created": 0.0,
-    "price_limited": null,
-    "price_rare": null
+    "price_limited": 1.0,
+    "price_rare": 2.0
   },
   {
     "name": "Harry Wilson",
@@ -29032,7 +29032,7 @@
     "avg_adjusted_total_att_assist": 0.86,
     "avg_blocked_scoring_attempt": 0.0,
     "avg_big_chance_created": 0.57,
-    "price_limited": null,
+    "price_limited": 4.86,
     "price_rare": null
   },
   {
@@ -29142,8 +29142,8 @@
     "avg_adjusted_total_att_assist": 0.5,
     "avg_blocked_scoring_attempt": 0.0,
     "avg_big_chance_created": 0.0,
-    "price_limited": null,
-    "price_rare": null
+    "price_limited": 1.75,
+    "price_rare": 8.82
   },
   {
     "name": "Rodrigo Muniz",
@@ -29252,8 +29252,8 @@
     "avg_adjusted_total_att_assist": 0.5,
     "avg_blocked_scoring_attempt": 0.0,
     "avg_big_chance_created": 0.0,
-    "price_limited": null,
-    "price_rare": null
+    "price_limited": 0.56,
+    "price_rare": 5.8
   },
   {
     "name": "Calvin Bassey",
@@ -29362,8 +29362,8 @@
     "avg_adjusted_total_att_assist": 0.25,
     "avg_blocked_scoring_attempt": 0.0,
     "avg_big_chance_created": 0.0,
-    "price_limited": null,
-    "price_rare": null
+    "price_limited": 0.9,
+    "price_rare": 8.1
   },
   {
     "name": "Saša Lukić",
@@ -29460,8 +29460,8 @@
     "avg_adjusted_total_att_assist": 1.0,
     "avg_blocked_scoring_attempt": 0.0,
     "avg_big_chance_created": 0.0,
-    "price_limited": null,
-    "price_rare": null
+    "price_limited": 0.38,
+    "price_rare": 2.0
   },
   {
     "name": "Marco Silva",
@@ -29592,8 +29592,8 @@
     "matchs_played": 0,
     "matchs_total": 10,
     "last_date": "",
-    "price_limited": null,
-    "price_rare": null
+    "price_limited": 1.46,
+    "price_rare": 8.28
   },
   {
     "name": "Tom Cairney",
@@ -29698,7 +29698,7 @@
     "avg_adjusted_total_att_assist": 0.17,
     "avg_blocked_scoring_attempt": 0.0,
     "avg_big_chance_created": 0.0,
-    "price_limited": null,
+    "price_limited": 0.57,
     "price_rare": null
   },
   {
@@ -29812,8 +29812,8 @@
     "avg_adjusted_total_att_assist": 0.0,
     "avg_blocked_scoring_attempt": 0.0,
     "avg_big_chance_created": 0.0,
-    "price_limited": null,
-    "price_rare": null
+    "price_limited": 7.05,
+    "price_rare": 27.9
   },
   {
     "name": "Emile Smith Rowe",
@@ -29924,8 +29924,8 @@
     "avg_adjusted_total_att_assist": 0.56,
     "avg_blocked_scoring_attempt": 0.0,
     "avg_big_chance_created": 0.11,
-    "price_limited": null,
-    "price_rare": null
+    "price_limited": 0.56,
+    "price_rare": 3.24
   },
   {
     "name": "Kenny Tete",
@@ -30030,8 +30030,8 @@
     "avg_adjusted_total_att_assist": 0.67,
     "avg_blocked_scoring_attempt": 0.0,
     "avg_big_chance_created": 0.0,
-    "price_limited": null,
-    "price_rare": null
+    "price_limited": 0.56,
+    "price_rare": 3.0
   },
   {
     "name": "Samuel Amissah",
@@ -30207,7 +30207,7 @@
     "avg_adjusted_total_att_assist": 1.0,
     "avg_blocked_scoring_attempt": 0.0,
     "avg_big_chance_created": 0.14,
-    "price_limited": null,
+    "price_limited": 0.8,
     "price_rare": null
   },
   {
@@ -30380,8 +30380,8 @@
     "avg_adjusted_total_att_assist": 0.4,
     "avg_blocked_scoring_attempt": 0.0,
     "avg_big_chance_created": 0.2,
-    "price_limited": null,
-    "price_rare": null
+    "price_limited": 0.56,
+    "price_rare": 4.0
   },
   {
     "name": "Ryan Sessegnon",
@@ -30494,8 +30494,8 @@
     "avg_adjusted_total_att_assist": 0.4,
     "avg_blocked_scoring_attempt": 0.0,
     "avg_big_chance_created": 0.1,
-    "price_limited": null,
-    "price_rare": null
+    "price_limited": 0.54,
+    "price_rare": 4.5
   },
   {
     "name": "Alex Iwobi",
@@ -30604,8 +30604,8 @@
     "avg_adjusted_total_att_assist": 1.62,
     "avg_blocked_scoring_attempt": 0.0,
     "avg_big_chance_created": 0.25,
-    "price_limited": null,
-    "price_rare": null
+    "price_limited": 5.0,
+    "price_rare": 20.0
   },
   {
     "name": "Antonee Robinson",
@@ -30706,8 +30706,8 @@
     "avg_adjusted_total_att_assist": 1.25,
     "avg_blocked_scoring_attempt": 0.0,
     "avg_big_chance_created": 0.0,
-    "price_limited": null,
-    "price_rare": null
+    "price_limited": 1.1,
+    "price_rare": 7.82
   },
   {
     "name": "Joachim Andersen",
@@ -30812,8 +30812,8 @@
     "avg_adjusted_total_att_assist": 0.17,
     "avg_blocked_scoring_attempt": 0.0,
     "avg_big_chance_created": 0.0,
-    "price_limited": null,
-    "price_rare": null
+    "price_limited": 1.26,
+    "price_rare": 6.98
   },
   {
     "name": "Sander Berge",
@@ -30922,8 +30922,8 @@
     "avg_adjusted_total_att_assist": 0.25,
     "avg_blocked_scoring_attempt": 0.0,
     "avg_big_chance_created": 0.0,
-    "price_limited": null,
-    "price_rare": null
+    "price_limited": 1.58,
+    "price_rare": 5.94
   },
   {
     "name": "Benjamin Lecomte",
@@ -30991,7 +30991,7 @@
     "matchs_played": 0,
     "matchs_total": 10,
     "last_date": "",
-    "price_limited": null,
+    "price_limited": 0.56,
     "price_rare": null
   },
   {
@@ -31095,7 +31095,7 @@
     "avg_adjusted_total_att_assist": 0.6,
     "avg_blocked_scoring_attempt": 0.0,
     "avg_big_chance_created": 0.0,
-    "price_limited": null,
+    "price_limited": 1.7,
     "price_rare": null
   },
   {
@@ -31164,8 +31164,8 @@
     "matchs_played": 0,
     "matchs_total": 10,
     "last_date": "",
-    "price_limited": null,
-    "price_rare": null
+    "price_limited": 0.54,
+    "price_rare": 4.84
   },
   {
     "name": "Harrison Reed",
@@ -31262,8 +31262,8 @@
     "avg_adjusted_total_att_assist": 0.5,
     "avg_blocked_scoring_attempt": 0.0,
     "avg_big_chance_created": 0.0,
-    "price_limited": null,
-    "price_rare": null
+    "price_limited": 0.38,
+    "price_rare": 3.6
   },
   {
     "name": "Ao Tanaka",
@@ -31360,7 +31360,7 @@
     "avg_adjusted_total_att_assist": 2.0,
     "avg_blocked_scoring_attempt": 0.0,
     "avg_big_chance_created": 0.0,
-    "price_limited": null,
+    "price_limited": 0.7,
     "price_rare": null
   },
   {
@@ -31462,8 +31462,8 @@
     "avg_adjusted_total_att_assist": 0.0,
     "avg_blocked_scoring_attempt": 0.0,
     "avg_big_chance_created": 0.0,
-    "price_limited": null,
-    "price_rare": null
+    "price_limited": 0.8,
+    "price_rare": 4.86
   },
   {
     "name": "Jayden Bogle",
@@ -31576,7 +31576,7 @@
     "avg_adjusted_total_att_assist": 0.9,
     "avg_blocked_scoring_attempt": 0.0,
     "avg_big_chance_created": 0.4,
-    "price_limited": null,
+    "price_limited": 0.55,
     "price_rare": null
   },
   {
@@ -31645,8 +31645,8 @@
     "matchs_played": 0,
     "matchs_total": 10,
     "last_date": "",
-    "price_limited": null,
-    "price_rare": null
+    "price_limited": 1.0,
+    "price_rare": 3.24
   },
   {
     "name": "Anton Stach",
@@ -31749,8 +31749,8 @@
     "avg_adjusted_total_att_assist": 2.8,
     "avg_blocked_scoring_attempt": 0.0,
     "avg_big_chance_created": 0.4,
-    "price_limited": null,
-    "price_rare": null
+    "price_limited": 1.62,
+    "price_rare": 25.0
   },
   {
     "name": "Lukas Nmecha",
@@ -31855,8 +31855,8 @@
     "avg_adjusted_total_att_assist": 0.5,
     "avg_blocked_scoring_attempt": 0.0,
     "avg_big_chance_created": 0.17,
-    "price_limited": null,
-    "price_rare": null
+    "price_limited": 0.54,
+    "price_rare": 3.0
   },
   {
     "name": "Sebastiaan Bornauw",
@@ -31955,7 +31955,7 @@
     "avg_adjusted_total_att_assist": 0.0,
     "avg_blocked_scoring_attempt": 0.0,
     "avg_big_chance_created": 0.0,
-    "price_limited": null,
+    "price_limited": 1.2,
     "price_rare": null
   },
   {
@@ -32065,8 +32065,8 @@
     "avg_adjusted_total_att_assist": 0.62,
     "avg_blocked_scoring_attempt": 0.0,
     "avg_big_chance_created": 0.12,
-    "price_limited": null,
-    "price_rare": null
+    "price_limited": 0.72,
+    "price_rare": 3.8
   },
   {
     "name": "Pascal Struijk",
@@ -32177,8 +32177,8 @@
     "avg_adjusted_total_att_assist": 0.33,
     "avg_blocked_scoring_attempt": 0.0,
     "avg_big_chance_created": 0.0,
-    "price_limited": null,
-    "price_rare": null
+    "price_limited": 0.54,
+    "price_rare": 9.99
   },
   {
     "name": "Lucas Perri",
@@ -32246,8 +32246,8 @@
     "matchs_played": 0,
     "matchs_total": 10,
     "last_date": "",
-    "price_limited": null,
-    "price_rare": null
+    "price_limited": 1.9,
+    "price_rare": 13.32
   },
   {
     "name": "Ethan Ampadu",
@@ -32356,8 +32356,8 @@
     "avg_adjusted_total_att_assist": 0.88,
     "avg_blocked_scoring_attempt": 0.0,
     "avg_big_chance_created": 0.0,
-    "price_limited": null,
-    "price_rare": null
+    "price_limited": 4.7,
+    "price_rare": 20.0
   },
   {
     "name": "Karl Darlow",
@@ -32466,8 +32466,8 @@
     "avg_adjusted_total_att_assist": 0.0,
     "avg_blocked_scoring_attempt": 0.0,
     "avg_big_chance_created": 0.0,
-    "price_limited": null,
-    "price_rare": null
+    "price_limited": 15.0,
+    "price_rare": 38.16
   },
   {
     "name": "Sam Byram",
@@ -32535,7 +32535,7 @@
     "matchs_played": 0,
     "matchs_total": 10,
     "last_date": "",
-    "price_limited": null,
+    "price_limited": 0.38,
     "price_rare": null
   },
   {
@@ -32643,8 +32643,8 @@
     "avg_adjusted_total_att_assist": 0.14,
     "avg_blocked_scoring_attempt": 0.0,
     "avg_big_chance_created": 0.0,
-    "price_limited": null,
-    "price_rare": null
+    "price_limited": 0.99,
+    "price_rare": 8.82
   },
   {
     "name": "James Justin",
@@ -32757,8 +32757,8 @@
     "avg_adjusted_total_att_assist": 0.7,
     "avg_blocked_scoring_attempt": 0.0,
     "avg_big_chance_created": 0.3,
-    "price_limited": null,
-    "price_rare": null
+    "price_limited": 0.99,
+    "price_rare": 4.91
   },
   {
     "name": "Ilia Gruev",
@@ -32869,8 +32869,8 @@
     "avg_adjusted_total_att_assist": 0.44,
     "avg_blocked_scoring_attempt": 0.0,
     "avg_big_chance_created": 0.22,
-    "price_limited": null,
-    "price_rare": null
+    "price_limited": 0.5,
+    "price_rare": 4.93
   },
   {
     "name": "Joël Piroe",
@@ -32969,8 +32969,8 @@
     "avg_adjusted_total_att_assist": 0.33,
     "avg_blocked_scoring_attempt": 0.0,
     "avg_big_chance_created": 0.0,
-    "price_limited": null,
-    "price_rare": null
+    "price_limited": 0.74,
+    "price_rare": 3.42
   },
   {
     "name": "Charles Crew",
@@ -33146,8 +33146,8 @@
     "avg_adjusted_total_att_assist": 0.57,
     "avg_blocked_scoring_attempt": 0.0,
     "avg_big_chance_created": 0.0,
-    "price_limited": null,
-    "price_rare": null
+    "price_limited": 2.3,
+    "price_rare": 4.95
   },
   {
     "name": "Facundo Buonanotte",
@@ -33244,7 +33244,7 @@
     "avg_adjusted_total_att_assist": 0.0,
     "avg_blocked_scoring_attempt": 0.0,
     "avg_big_chance_created": 0.0,
-    "price_limited": null,
+    "price_limited": 0.94,
     "price_rare": null
   },
   {
@@ -33346,8 +33346,8 @@
     "avg_adjusted_total_att_assist": 0.0,
     "avg_blocked_scoring_attempt": 0.0,
     "avg_big_chance_created": 0.0,
-    "price_limited": null,
-    "price_rare": null
+    "price_limited": 1.62,
+    "price_rare": 8.79
   },
   {
     "name": "Joseph Rodon",
@@ -33454,8 +33454,8 @@
     "avg_adjusted_total_att_assist": 0.14,
     "avg_blocked_scoring_attempt": 0.0,
     "avg_big_chance_created": 0.0,
-    "price_limited": null,
-    "price_rare": null
+    "price_limited": 0.9,
+    "price_rare": 5.11
   },
   {
     "name": "Alexander Cairns",
@@ -33523,8 +33523,8 @@
     "matchs_played": 0,
     "matchs_total": 10,
     "last_date": "",
-    "price_limited": null,
-    "price_rare": null
+    "price_limited": 0.4,
+    "price_rare": 2.0
   },
   {
     "name": "Gabriel Gudmundsson",
@@ -33631,8 +33631,8 @@
     "avg_adjusted_total_att_assist": 0.29,
     "avg_blocked_scoring_attempt": 0.0,
     "avg_big_chance_created": 0.14,
-    "price_limited": null,
-    "price_rare": null
+    "price_limited": 0.9,
+    "price_rare": 3.35
   },
   {
     "name": "Sean Longstaff",
@@ -33737,7 +33737,7 @@
     "avg_adjusted_total_att_assist": 0.33,
     "avg_blocked_scoring_attempt": 0.0,
     "avg_big_chance_created": 0.0,
-    "price_limited": null,
+    "price_limited": 0.39,
     "price_rare": null
   },
   {
@@ -33869,8 +33869,8 @@
     "matchs_played": 0,
     "matchs_total": 10,
     "last_date": "",
-    "price_limited": null,
-    "price_rare": null
+    "price_limited": 3.29,
+    "price_rare": 18.36
   },
   {
     "name": "Dan James",
@@ -33973,8 +33973,8 @@
     "avg_adjusted_total_att_assist": 0.2,
     "avg_blocked_scoring_attempt": 0.0,
     "avg_big_chance_created": 0.0,
-    "price_limited": null,
-    "price_rare": null
+    "price_limited": 0.54,
+    "price_rare": 8.99
   },
   {
     "name": "Alexis Mac Allister",
@@ -34071,8 +34071,8 @@
     "avg_adjusted_total_att_assist": 1.33,
     "avg_blocked_scoring_attempt": 0.0,
     "avg_big_chance_created": 0.0,
-    "price_limited": null,
-    "price_rare": null
+    "price_limited": 6.3,
+    "price_rare": 36.62
   },
   {
     "name": "Rio Ngumoha",
@@ -34177,8 +34177,8 @@
     "avg_adjusted_total_att_assist": 1.0,
     "avg_blocked_scoring_attempt": 0.0,
     "avg_big_chance_created": 0.5,
-    "price_limited": null,
-    "price_rare": null
+    "price_limited": 12.0,
+    "price_rare": 48.0
   },
   {
     "name": "Virgil van Dijk",
@@ -34278,7 +34278,7 @@
     "avg_adjusted_total_att_assist": 0.5,
     "avg_blocked_scoring_attempt": 0.0,
     "avg_big_chance_created": 0.0,
-    "price_limited": null,
+    "price_limited": 25.74,
     "price_rare": null
   },
   {
@@ -34377,7 +34377,7 @@
     "avg_adjusted_total_att_assist": 0.0,
     "avg_blocked_scoring_attempt": 0.0,
     "avg_big_chance_created": 0.0,
-    "price_limited": null,
+    "price_limited": 6.84,
     "price_rare": null
   },
   {
@@ -34481,8 +34481,8 @@
     "avg_adjusted_total_att_assist": 0.2,
     "avg_blocked_scoring_attempt": 0.0,
     "avg_big_chance_created": 0.2,
-    "price_limited": null,
-    "price_rare": null
+    "price_limited": 0.71,
+    "price_rare": 5.5
   },
   {
     "name": "Frederick Woodman",
@@ -34550,7 +34550,7 @@
     "matchs_played": 0,
     "matchs_total": 6,
     "last_date": "",
-    "price_limited": null,
+    "price_limited": 1.09,
     "price_rare": null
   },
   {
@@ -34718,8 +34718,8 @@
     "avg_adjusted_total_att_assist": 0.0,
     "avg_blocked_scoring_attempt": 0.0,
     "avg_big_chance_created": 0.0,
-    "price_limited": null,
-    "price_rare": null
+    "price_limited": 1.25,
+    "price_rare": 12.28
   },
   {
     "name": "Cody Gakpo",
@@ -34819,8 +34819,8 @@
     "avg_adjusted_total_att_assist": 0.5,
     "avg_blocked_scoring_attempt": 0.0,
     "avg_big_chance_created": 0.0,
-    "price_limited": null,
-    "price_rare": null
+    "price_limited": 7.74,
+    "price_rare": 58.95
   },
   {
     "name": "Kornel Miściur",
@@ -34957,8 +34957,8 @@
     "matchs_played": 0,
     "matchs_total": 6,
     "last_date": "",
-    "price_limited": null,
-    "price_rare": null
+    "price_limited": 0.86,
+    "price_rare": 7.38
   },
   {
     "name": "Wataru Endō",
@@ -35026,8 +35026,8 @@
     "matchs_played": 0,
     "matchs_total": 6,
     "last_date": "",
-    "price_limited": null,
-    "price_rare": null
+    "price_limited": 0.69,
+    "price_rare": 46.8
   },
   {
     "name": "Carter Pinnington",
@@ -35199,8 +35199,8 @@
     "avg_adjusted_total_att_assist": 1.0,
     "avg_blocked_scoring_attempt": 0.0,
     "avg_big_chance_created": 0.2,
-    "price_limited": null,
-    "price_rare": null
+    "price_limited": 9.99,
+    "price_rare": 54.99
   },
   {
     "name": "Keyrol Figueroa",
@@ -35372,7 +35372,7 @@
     "avg_adjusted_total_att_assist": 0.2,
     "avg_blocked_scoring_attempt": 0.0,
     "avg_big_chance_created": 0.0,
-    "price_limited": null,
+    "price_limited": 0.99,
     "price_rare": null
   },
   {
@@ -35441,8 +35441,8 @@
     "matchs_played": 0,
     "matchs_total": 6,
     "last_date": "",
-    "price_limited": null,
-    "price_rare": null
+    "price_limited": 4.09,
+    "price_rare": 80.0
   },
   {
     "name": "James McConnell",
@@ -35504,8 +35504,8 @@
     "matchs_played": 0,
     "matchs_total": 0,
     "last_date": "",
-    "price_limited": null,
-    "price_rare": null
+    "price_limited": 0.59,
+    "price_rare": 3.8
   },
   {
     "name": "Calvin Ramsay",
@@ -35672,8 +35672,8 @@
     "avg_adjusted_total_att_assist": 1.0,
     "avg_blocked_scoring_attempt": 0.0,
     "avg_big_chance_created": 0.33,
-    "price_limited": null,
-    "price_rare": null
+    "price_limited": 10.26,
+    "price_rare": 72.5
   },
   {
     "name": "Jayden Danns",
@@ -35842,7 +35842,7 @@
     "avg_adjusted_total_att_assist": 1.25,
     "avg_blocked_scoring_attempt": 0.0,
     "avg_big_chance_created": 0.25,
-    "price_limited": null,
+    "price_limited": 3.45,
     "price_rare": null
   },
   {
@@ -35911,7 +35911,7 @@
     "matchs_played": 0,
     "matchs_total": 6,
     "last_date": "",
-    "price_limited": null,
+    "price_limited": 1.98,
     "price_rare": null
   },
   {
@@ -36012,8 +36012,8 @@
     "avg_adjusted_total_att_assist": 0.5,
     "avg_blocked_scoring_attempt": 0.0,
     "avg_big_chance_created": 0.0,
-    "price_limited": null,
-    "price_rare": null
+    "price_limited": 2.3,
+    "price_rare": 19.15
   },
   {
     "name": "Alisson Becker",
@@ -36114,8 +36114,8 @@
     "avg_adjusted_total_att_assist": 0.0,
     "avg_blocked_scoring_attempt": 0.0,
     "avg_big_chance_created": 0.0,
-    "price_limited": null,
-    "price_rare": null
+    "price_limited": 29.88,
+    "price_rare": 101.0
   },
   {
     "name": "Michael Laffey",
@@ -36285,8 +36285,8 @@
     "avg_adjusted_total_att_assist": 0.25,
     "avg_blocked_scoring_attempt": 0.0,
     "avg_big_chance_created": 0.0,
-    "price_limited": null,
-    "price_rare": null
+    "price_limited": 1.5,
+    "price_rare": 7.92
   },
   {
     "name": "Milos Kerkez",
@@ -36382,8 +36382,8 @@
     "avg_adjusted_total_att_assist": 0.5,
     "avg_blocked_scoring_attempt": 0.0,
     "avg_big_chance_created": 0.0,
-    "price_limited": null,
-    "price_rare": null
+    "price_limited": 3.48,
+    "price_rare": 22.99
   },
   {
     "name": "Amara Nallo",
@@ -36549,8 +36549,8 @@
     "avg_adjusted_total_att_assist": 2.67,
     "avg_blocked_scoring_attempt": 0.0,
     "avg_big_chance_created": 0.33,
-    "price_limited": null,
-    "price_rare": null
+    "price_limited": 33.0,
+    "price_rare": 169.2
   },
   {
     "name": "Wellity Lucky",
@@ -36926,8 +36926,8 @@
     "avg_adjusted_total_att_assist": 0.0,
     "avg_blocked_scoring_attempt": 0.0,
     "avg_big_chance_created": 0.0,
-    "price_limited": null,
-    "price_rare": null
+    "price_limited": 9.54,
+    "price_rare": 68.4
   },
   {
     "name": "Ármin Pécsi",
@@ -36995,8 +36995,8 @@
     "matchs_played": 0,
     "matchs_total": 6,
     "last_date": "",
-    "price_limited": null,
-    "price_rare": null
+    "price_limited": 3.44,
+    "price_rare": 6.0
   },
   {
     "name": "Giorgi Mamardashvili",
@@ -37093,8 +37093,8 @@
     "avg_adjusted_total_att_assist": 0.0,
     "avg_blocked_scoring_attempt": 0.0,
     "avg_big_chance_created": 0.0,
-    "price_limited": null,
-    "price_rare": null
+    "price_limited": 13.5,
+    "price_rare": 69.3
   },
   {
     "name": "Conor Bradley",
@@ -37162,7 +37162,7 @@
     "matchs_played": 0,
     "matchs_total": 6,
     "last_date": "",
-    "price_limited": null,
+    "price_limited": 2.34,
     "price_rare": null
   },
   {
@@ -37258,8 +37258,8 @@
     "avg_adjusted_total_att_assist": 0.0,
     "avg_blocked_scoring_attempt": 0.0,
     "avg_big_chance_created": 0.0,
-    "price_limited": null,
-    "price_rare": null
+    "price_limited": 12.9,
+    "price_rare": 55.26
   },
   {
     "name": "Arend Slot",
@@ -37422,8 +37422,8 @@
     "avg_adjusted_total_att_assist": 2.0,
     "avg_blocked_scoring_attempt": 0.0,
     "avg_big_chance_created": 0.25,
-    "price_limited": null,
-    "price_rare": null
+    "price_limited": 35.0,
+    "price_rare": 350.0
   },
   {
     "name": "Marc Guéhi",
@@ -37528,8 +37528,8 @@
     "avg_adjusted_total_att_assist": 0.83,
     "avg_blocked_scoring_attempt": 0.0,
     "avg_big_chance_created": 0.17,
-    "price_limited": null,
-    "price_rare": null
+    "price_limited": 14.0,
+    "price_rare": 115.0
   },
   {
     "name": "Rodrigo",
@@ -37634,8 +37634,8 @@
     "avg_adjusted_total_att_assist": 1.33,
     "avg_blocked_scoring_attempt": 0.0,
     "avg_big_chance_created": 0.17,
-    "price_limited": null,
-    "price_rare": null
+    "price_limited": 25.0,
+    "price_rare": 180.0
   },
   {
     "name": "Kian Noble",
@@ -37878,7 +37878,7 @@
     "avg_adjusted_total_att_assist": 1.17,
     "avg_blocked_scoring_attempt": 0.0,
     "avg_big_chance_created": 0.5,
-    "price_limited": null,
+    "price_limited": 29.0,
     "price_rare": null
   },
   {
@@ -37947,8 +37947,8 @@
     "matchs_played": 0,
     "matchs_total": 8,
     "last_date": "",
-    "price_limited": null,
-    "price_rare": null
+    "price_limited": 1.4,
+    "price_rare": 7.92
   },
   {
     "name": "Nico O'Reilly",
@@ -38051,8 +38051,8 @@
     "avg_adjusted_total_att_assist": 0.6,
     "avg_blocked_scoring_attempt": 0.0,
     "avg_big_chance_created": 0.0,
-    "price_limited": null,
-    "price_rare": null
+    "price_limited": 7.2,
+    "price_rare": 29.0
   },
   {
     "name": "Antoine Semenyo",
@@ -38157,8 +38157,8 @@
     "avg_adjusted_total_att_assist": 0.83,
     "avg_blocked_scoring_attempt": 0.0,
     "avg_big_chance_created": 0.33,
-    "price_limited": null,
-    "price_rare": null
+    "price_limited": 8.82,
+    "price_rare": 45.9
   },
   {
     "name": "Mateo Kovačić",
@@ -38253,8 +38253,8 @@
     "avg_adjusted_total_att_assist": 0.0,
     "avg_blocked_scoring_attempt": 0.0,
     "avg_big_chance_created": 0.0,
-    "price_limited": null,
-    "price_rare": null
+    "price_limited": 2.25,
+    "price_rare": 36.9
   },
   {
     "name": "Marcus Bettinelli",
@@ -38322,8 +38322,8 @@
     "matchs_played": 0,
     "matchs_total": 8,
     "last_date": "",
-    "price_limited": null,
-    "price_rare": null
+    "price_limited": 1.15,
+    "price_rare": 3.5
   },
   {
     "name": "Nico González",
@@ -38420,8 +38420,8 @@
     "avg_adjusted_total_att_assist": 0.0,
     "avg_blocked_scoring_attempt": 0.0,
     "avg_big_chance_created": 0.0,
-    "price_limited": null,
-    "price_rare": null
+    "price_limited": 1.54,
+    "price_rare": 13.8
   },
   {
     "name": "Erling Haaland",
@@ -38524,8 +38524,8 @@
     "avg_adjusted_total_att_assist": 0.2,
     "avg_blocked_scoring_attempt": 0.0,
     "avg_big_chance_created": 0.2,
-    "price_limited": null,
-    "price_rare": null
+    "price_limited": 52.92,
+    "price_rare": 271.0
   },
   {
     "name": "Omar Marmoush",
@@ -38626,8 +38626,8 @@
     "avg_adjusted_total_att_assist": 0.5,
     "avg_blocked_scoring_attempt": 0.0,
     "avg_big_chance_created": 0.0,
-    "price_limited": null,
-    "price_rare": null
+    "price_limited": 3.35,
+    "price_rare": 35.0
   },
   {
     "name": "Gianluigi Donnarumma",
@@ -38732,7 +38732,7 @@
     "avg_adjusted_total_att_assist": 0.0,
     "avg_blocked_scoring_attempt": 0.0,
     "avg_big_chance_created": 0.0,
-    "price_limited": null,
+    "price_limited": 30.0,
     "price_rare": null
   },
   {
@@ -38911,8 +38911,8 @@
     "avg_adjusted_total_att_assist": 1.75,
     "avg_blocked_scoring_attempt": 0.0,
     "avg_big_chance_created": 0.38,
-    "price_limited": null,
-    "price_rare": null
+    "price_limited": 4.9,
+    "price_rare": 39.23
   },
   {
     "name": "Abdukodir Khusanov",
@@ -39017,8 +39017,8 @@
     "avg_adjusted_total_att_assist": 0.5,
     "avg_blocked_scoring_attempt": 0.0,
     "avg_big_chance_created": 0.0,
-    "price_limited": null,
-    "price_rare": null
+    "price_limited": 7.92,
+    "price_rare": 33.5
   },
   {
     "name": "Tyrone Samba",
@@ -39188,8 +39188,8 @@
     "avg_adjusted_total_att_assist": 0.0,
     "avg_blocked_scoring_attempt": 0.0,
     "avg_big_chance_created": 0.0,
-    "price_limited": null,
-    "price_rare": null
+    "price_limited": 1.0,
+    "price_rare": 7.05
   },
   {
     "name": "Phil Foden",
@@ -39292,7 +39292,7 @@
     "avg_adjusted_total_att_assist": 1.0,
     "avg_blocked_scoring_attempt": 0.0,
     "avg_big_chance_created": 0.2,
-    "price_limited": null,
+    "price_limited": 7.48,
     "price_rare": null
   },
   {
@@ -39361,8 +39361,8 @@
     "matchs_played": 0,
     "matchs_total": 8,
     "last_date": "",
-    "price_limited": null,
-    "price_rare": null
+    "price_limited": 15.0,
+    "price_rare": 65.0
   },
   {
     "name": "Sverre Nypan",
@@ -39430,7 +39430,7 @@
     "matchs_played": 0,
     "matchs_total": 7,
     "last_date": "",
-    "price_limited": null,
+    "price_limited": 2.52,
     "price_rare": null
   },
   {
@@ -39599,8 +39599,8 @@
     "avg_adjusted_total_att_assist": 1.67,
     "avg_blocked_scoring_attempt": 0.0,
     "avg_big_chance_created": 0.17,
-    "price_limited": null,
-    "price_rare": null
+    "price_limited": 4.84,
+    "price_rare": 25.0
   },
   {
     "name": "Rayan Aït Nouri",
@@ -39705,8 +39705,8 @@
     "avg_adjusted_total_att_assist": 0.33,
     "avg_blocked_scoring_attempt": 0.0,
     "avg_big_chance_created": 0.33,
-    "price_limited": null,
-    "price_rare": null
+    "price_limited": 5.2,
+    "price_rare": 43.2
   },
   {
     "name": "Rico Lewis",
@@ -39774,8 +39774,8 @@
     "matchs_played": 0,
     "matchs_total": 8,
     "last_date": "",
-    "price_limited": null,
-    "price_rare": null
+    "price_limited": 1.32,
+    "price_rare": 8.39
   },
   {
     "name": "Rúben Dias",
@@ -39878,8 +39878,8 @@
     "avg_adjusted_total_att_assist": 0.6,
     "avg_blocked_scoring_attempt": 0.0,
     "avg_big_chance_created": 0.0,
-    "price_limited": null,
-    "price_rare": null
+    "price_limited": 9.0,
+    "price_rare": 42.0
   },
   {
     "name": "Tijjani Reijnders",
@@ -39978,8 +39978,8 @@
     "avg_adjusted_total_att_assist": 0.33,
     "avg_blocked_scoring_attempt": 0.0,
     "avg_big_chance_created": 0.0,
-    "price_limited": null,
-    "price_rare": null
+    "price_limited": 4.86,
+    "price_rare": 35.75
   },
   {
     "name": "Ryan McAidoo",
@@ -40147,8 +40147,8 @@
     "avg_adjusted_total_att_assist": 1.33,
     "avg_blocked_scoring_attempt": 0.0,
     "avg_big_chance_created": 0.0,
-    "price_limited": null,
-    "price_rare": null
+    "price_limited": 14.3,
+    "price_rare": 86.22
   },
   {
     "name": "Sávio",
@@ -40247,8 +40247,8 @@
     "avg_adjusted_total_att_assist": 0.0,
     "avg_blocked_scoring_attempt": 0.0,
     "avg_big_chance_created": 0.0,
-    "price_limited": null,
-    "price_rare": null
+    "price_limited": 3.6,
+    "price_rare": 33.68
   },
   {
     "name": "Floyd Samba",
@@ -40481,7 +40481,7 @@
     "avg_adjusted_total_att_assist": 0.0,
     "avg_blocked_scoring_attempt": 0.0,
     "avg_big_chance_created": 0.0,
-    "price_limited": null,
+    "price_limited": 1.5,
     "price_rare": null
   },
   {
@@ -40550,7 +40550,7 @@
     "matchs_played": 0,
     "matchs_total": 6,
     "last_date": "",
-    "price_limited": null,
+    "price_limited": 1.26,
     "price_rare": null
   },
   {
@@ -40619,8 +40619,8 @@
     "matchs_played": 0,
     "matchs_total": 6,
     "last_date": "",
-    "price_limited": null,
-    "price_rare": null
+    "price_limited": 8.1,
+    "price_rare": 150.0
   },
   {
     "name": "Tyler Fletcher",
@@ -40819,8 +40819,8 @@
     "avg_adjusted_total_att_assist": 0.0,
     "avg_blocked_scoring_attempt": 0.0,
     "avg_big_chance_created": 0.0,
-    "price_limited": null,
-    "price_rare": null
+    "price_limited": 1.66,
+    "price_rare": 8.82
   },
   {
     "name": "Shea Lacey",
@@ -40957,8 +40957,8 @@
     "matchs_played": 0,
     "matchs_total": 10,
     "last_date": "",
-    "price_limited": null,
-    "price_rare": null
+    "price_limited": 1.36,
+    "price_rare": 7.2
   },
   {
     "name": "Bruno Fernandes",
@@ -41067,8 +41067,8 @@
     "avg_adjusted_total_att_assist": 4.12,
     "avg_blocked_scoring_attempt": 0.0,
     "avg_big_chance_created": 1.12,
-    "price_limited": null,
-    "price_rare": null
+    "price_limited": 54.0,
+    "price_rare": 405.0
   },
   {
     "name": "Lisandro Martínez",
@@ -41171,7 +41171,7 @@
     "avg_adjusted_total_att_assist": 0.0,
     "avg_blocked_scoring_attempt": 0.0,
     "avg_big_chance_created": 0.0,
-    "price_limited": null,
+    "price_limited": 4.25,
     "price_rare": null
   },
   {
@@ -41271,8 +41271,8 @@
     "avg_adjusted_total_att_assist": 0.0,
     "avg_blocked_scoring_attempt": 0.0,
     "avg_big_chance_created": 0.0,
-    "price_limited": null,
-    "price_rare": null
+    "price_limited": 2.47,
+    "price_rare": 30.0
   },
   {
     "name": "Tyrell Malacia",
@@ -41367,8 +41367,8 @@
     "avg_adjusted_total_att_assist": 0.0,
     "avg_blocked_scoring_attempt": 0.0,
     "avg_big_chance_created": 0.0,
-    "price_limited": null,
-    "price_rare": null
+    "price_limited": 0.62,
+    "price_rare": 5.59
   },
   {
     "name": "Tyler Fredricson",
@@ -41436,8 +41436,8 @@
     "matchs_played": 0,
     "matchs_total": 10,
     "last_date": "",
-    "price_limited": null,
-    "price_rare": null
+    "price_limited": 0.64,
+    "price_rare": 2.16
   },
   {
     "name": "Amad Diallo",
@@ -41544,8 +41544,8 @@
     "avg_adjusted_total_att_assist": 0.86,
     "avg_blocked_scoring_attempt": 0.0,
     "avg_big_chance_created": 0.0,
-    "price_limited": null,
-    "price_rare": null
+    "price_limited": 5.79,
+    "price_rare": 54.95
   },
   {
     "name": "Benjamin Šeško",
@@ -41658,7 +41658,7 @@
     "avg_adjusted_total_att_assist": 0.0,
     "avg_blocked_scoring_attempt": 0.0,
     "avg_big_chance_created": 0.0,
-    "price_limited": null,
+    "price_limited": 5.57,
     "price_rare": null
   },
   {
@@ -41829,8 +41829,8 @@
     "avg_adjusted_total_att_assist": 1.0,
     "avg_blocked_scoring_attempt": 0.0,
     "avg_big_chance_created": 0.0,
-    "price_limited": null,
-    "price_rare": null
+    "price_limited": 4.0,
+    "price_rare": 26.46
   },
   {
     "name": "Altay Bayındır",
@@ -41898,8 +41898,8 @@
     "matchs_played": 0,
     "matchs_total": 8,
     "last_date": "",
-    "price_limited": null,
-    "price_rare": null
+    "price_limited": 2.25,
+    "price_rare": 38.34
   },
   {
     "name": "Luke Shaw",
@@ -42012,8 +42012,8 @@
     "avg_adjusted_total_att_assist": 0.3,
     "avg_blocked_scoring_attempt": 0.0,
     "avg_big_chance_created": 0.0,
-    "price_limited": null,
-    "price_rare": null
+    "price_limited": 0.9,
+    "price_rare": 5.0
   },
   {
     "name": "Joshua Zirkzee",
@@ -42114,8 +42114,8 @@
     "avg_adjusted_total_att_assist": 0.5,
     "avg_blocked_scoring_attempt": 0.0,
     "avg_big_chance_created": 0.0,
-    "price_limited": null,
-    "price_rare": null
+    "price_limited": 1.98,
+    "price_rare": 18.0
   },
   {
     "name": "Leny Yoro",
@@ -42224,8 +42224,8 @@
     "avg_adjusted_total_att_assist": 0.12,
     "avg_blocked_scoring_attempt": 0.0,
     "avg_big_chance_created": 0.0,
-    "price_limited": null,
-    "price_rare": null
+    "price_limited": 3.4,
+    "price_rare": 20.7
   },
   {
     "name": "Casemiro",
@@ -42334,8 +42334,8 @@
     "avg_adjusted_total_att_assist": 1.38,
     "avg_blocked_scoring_attempt": 0.0,
     "avg_big_chance_created": 0.12,
-    "price_limited": null,
-    "price_rare": null
+    "price_limited": 5.4,
+    "price_rare": 20.0
   },
   {
     "name": "Diogo Dalot",
@@ -42444,8 +42444,8 @@
     "avg_adjusted_total_att_assist": 0.75,
     "avg_blocked_scoring_attempt": 0.0,
     "avg_big_chance_created": 0.25,
-    "price_limited": null,
-    "price_rare": null
+    "price_limited": 1.3,
+    "price_rare": 16.2
   },
   {
     "name": "Manuel Ugarte",
@@ -42548,8 +42548,8 @@
     "avg_adjusted_total_att_assist": 0.2,
     "avg_blocked_scoring_attempt": 0.0,
     "avg_big_chance_created": 0.0,
-    "price_limited": null,
-    "price_rare": null
+    "price_limited": 1.62,
+    "price_rare": 7.02
   },
   {
     "name": "Bryan Mbeumo",
@@ -42658,8 +42658,8 @@
     "avg_adjusted_total_att_assist": 1.12,
     "avg_blocked_scoring_attempt": 0.0,
     "avg_big_chance_created": 0.25,
-    "price_limited": null,
-    "price_rare": null
+    "price_limited": 10.0,
+    "price_rare": 57.0
   },
   {
     "name": "Godwill Kukonki",
@@ -42934,8 +42934,8 @@
     "matchs_played": 0,
     "matchs_total": 10,
     "last_date": "",
-    "price_limited": null,
-    "price_rare": null
+    "price_limited": 3.3,
+    "price_rare": 11.5
   },
   {
     "name": "Mason Mount",
@@ -43030,8 +43030,8 @@
     "avg_adjusted_total_att_assist": 0.0,
     "avg_blocked_scoring_attempt": 0.0,
     "avg_big_chance_created": 0.0,
-    "price_limited": null,
-    "price_rare": null
+    "price_limited": 0.73,
+    "price_rare": 13.0
   },
   {
     "name": "Patrick Dorgu",
@@ -43126,8 +43126,8 @@
     "avg_adjusted_total_att_assist": 0.0,
     "avg_blocked_scoring_attempt": 0.0,
     "avg_big_chance_created": 0.0,
-    "price_limited": null,
-    "price_rare": null
+    "price_limited": 7.83,
+    "price_rare": 35.0
   },
   {
     "name": "Chidozie Obi",
@@ -43195,8 +43195,8 @@
     "matchs_played": 0,
     "matchs_total": 10,
     "last_date": "",
-    "price_limited": null,
-    "price_rare": null
+    "price_limited": 1.8,
+    "price_rare": 7.74
   },
   {
     "name": "Matheus Cunha",
@@ -43305,7 +43305,7 @@
     "avg_adjusted_total_att_assist": 0.75,
     "avg_blocked_scoring_attempt": 0.0,
     "avg_big_chance_created": 0.0,
-    "price_limited": null,
+    "price_limited": 17.99,
     "price_rare": null
   },
   {
@@ -43413,8 +43413,8 @@
     "avg_adjusted_total_att_assist": 0.14,
     "avg_blocked_scoring_attempt": 0.0,
     "avg_big_chance_created": 0.0,
-    "price_limited": null,
-    "price_rare": null
+    "price_limited": 2.3,
+    "price_rare": 12.6
   },
   {
     "name": "Thomas Heaton",
@@ -43482,8 +43482,8 @@
     "matchs_played": 0,
     "matchs_total": 10,
     "last_date": "",
-    "price_limited": null,
-    "price_rare": null
+    "price_limited": 0.49,
+    "price_rare": 2.5
   },
   {
     "name": "Senne Lammens",
@@ -43592,8 +43592,8 @@
     "avg_adjusted_total_att_assist": 0.0,
     "avg_blocked_scoring_attempt": 0.0,
     "avg_big_chance_created": 0.0,
-    "price_limited": null,
-    "price_rare": null
+    "price_limited": 16.9,
+    "price_rare": 90.0
   },
   {
     "name": "Jack Moorhouse",
@@ -43730,7 +43730,7 @@
     "matchs_played": 0,
     "matchs_total": 6,
     "last_date": "",
-    "price_limited": null,
+    "price_limited": 0.54,
     "price_rare": null
   },
   {
@@ -43828,8 +43828,8 @@
     "avg_adjusted_total_att_assist": 0.0,
     "avg_blocked_scoring_attempt": 0.0,
     "avg_big_chance_created": 0.0,
-    "price_limited": null,
-    "price_rare": null
+    "price_limited": 4.34,
+    "price_rare": 15.0
   },
   {
     "name": "Sandro Tonali",
@@ -43928,7 +43928,7 @@
     "avg_adjusted_total_att_assist": 2.0,
     "avg_blocked_scoring_attempt": 0.0,
     "avg_big_chance_created": 0.67,
-    "price_limited": null,
+    "price_limited": 4.4,
     "price_rare": null
   },
   {
@@ -44099,8 +44099,8 @@
     "avg_adjusted_total_att_assist": 0.0,
     "avg_blocked_scoring_attempt": 0.0,
     "avg_big_chance_created": 0.0,
-    "price_limited": null,
-    "price_rare": null
+    "price_limited": 1.5,
+    "price_rare": 15.0
   },
   {
     "name": "Anthony Elanga",
@@ -44203,8 +44203,8 @@
     "avg_adjusted_total_att_assist": 0.4,
     "avg_blocked_scoring_attempt": 0.0,
     "avg_big_chance_created": 0.0,
-    "price_limited": null,
-    "price_rare": null
+    "price_limited": 2.37,
+    "price_rare": 9.54
   },
   {
     "name": "Samuel Alabi",
@@ -44341,7 +44341,7 @@
     "matchs_played": 0,
     "matchs_total": 6,
     "last_date": "",
-    "price_limited": null,
+    "price_limited": 9.8,
     "price_rare": null
   },
   {
@@ -44443,7 +44443,7 @@
     "avg_adjusted_total_att_assist": 1.25,
     "avg_blocked_scoring_attempt": 0.0,
     "avg_big_chance_created": 0.0,
-    "price_limited": null,
+    "price_limited": 1.0,
     "price_rare": null
   },
   {
@@ -44547,7 +44547,7 @@
     "avg_adjusted_total_att_assist": 1.0,
     "avg_blocked_scoring_attempt": 0.0,
     "avg_big_chance_created": 0.0,
-    "price_limited": null,
+    "price_limited": 3.24,
     "price_rare": null
   },
   {
@@ -44616,8 +44616,8 @@
     "matchs_played": 0,
     "matchs_total": 6,
     "last_date": "",
-    "price_limited": null,
-    "price_rare": null
+    "price_limited": 0.6,
+    "price_rare": 3.17
   },
   {
     "name": "Park Seung-Soo",
@@ -44791,8 +44791,8 @@
     "avg_adjusted_total_att_assist": 0.33,
     "avg_blocked_scoring_attempt": 0.0,
     "avg_big_chance_created": 0.0,
-    "price_limited": null,
-    "price_rare": null
+    "price_limited": 1.1,
+    "price_rare": 3.75
   },
   {
     "name": "Anthony Gordon",
@@ -44895,8 +44895,8 @@
     "avg_adjusted_total_att_assist": 0.8,
     "avg_blocked_scoring_attempt": 0.0,
     "avg_big_chance_created": 0.0,
-    "price_limited": null,
-    "price_rare": null
+    "price_limited": 6.06,
+    "price_rare": 40.0
   },
   {
     "name": "Lewis Miley",
@@ -44991,8 +44991,8 @@
     "avg_adjusted_total_att_assist": 0.0,
     "avg_blocked_scoring_attempt": 0.0,
     "avg_big_chance_created": 1.0,
-    "price_limited": null,
-    "price_rare": null
+    "price_limited": 2.94,
+    "price_rare": 19.8
   },
   {
     "name": "Aaron Ramsdale",
@@ -45093,8 +45093,8 @@
     "avg_adjusted_total_att_assist": 0.0,
     "avg_blocked_scoring_attempt": 0.0,
     "avg_big_chance_created": 0.0,
-    "price_limited": null,
-    "price_rare": null
+    "price_limited": 9.0,
+    "price_rare": 57.69
   },
   {
     "name": "Nick Woltemade",
@@ -45195,8 +45195,8 @@
     "avg_adjusted_total_att_assist": 0.25,
     "avg_blocked_scoring_attempt": 0.0,
     "avg_big_chance_created": 0.25,
-    "price_limited": null,
-    "price_rare": null
+    "price_limited": 8.43,
+    "price_rare": 30.84
   },
   {
     "name": "Harvey Barnes",
@@ -45299,8 +45299,8 @@
     "avg_adjusted_total_att_assist": 0.6,
     "avg_blocked_scoring_attempt": 0.0,
     "avg_big_chance_created": 0.0,
-    "price_limited": null,
-    "price_rare": null
+    "price_limited": 1.0,
+    "price_rare": 8.0
   },
   {
     "name": "Jacob Murphy",
@@ -45405,8 +45405,8 @@
     "avg_adjusted_total_att_assist": 0.17,
     "avg_blocked_scoring_attempt": 0.0,
     "avg_big_chance_created": 0.0,
-    "price_limited": null,
-    "price_rare": null
+    "price_limited": 0.56,
+    "price_rare": 4.14
   },
   {
     "name": "John Ruddy",
@@ -45578,8 +45578,8 @@
     "avg_adjusted_total_att_assist": 0.8,
     "avg_blocked_scoring_attempt": 0.0,
     "avg_big_chance_created": 0.2,
-    "price_limited": null,
-    "price_rare": null
+    "price_limited": 1.0,
+    "price_rare": 2.35
   },
   {
     "name": "Jacob Ramsey",
@@ -45684,8 +45684,8 @@
     "avg_adjusted_total_att_assist": 0.83,
     "avg_blocked_scoring_attempt": 0.0,
     "avg_big_chance_created": 0.0,
-    "price_limited": null,
-    "price_rare": null
+    "price_limited": 3.9,
+    "price_rare": 4.48
   },
   {
     "name": "Emil Krafth",
@@ -45753,8 +45753,8 @@
     "matchs_played": 0,
     "matchs_total": 6,
     "last_date": "",
-    "price_limited": null,
-    "price_rare": null
+    "price_limited": 1.29,
+    "price_rare": 4.19
   },
   {
     "name": "Sven Botman",
@@ -45855,8 +45855,8 @@
     "avg_adjusted_total_att_assist": 0.25,
     "avg_blocked_scoring_attempt": 0.0,
     "avg_big_chance_created": 0.0,
-    "price_limited": null,
-    "price_rare": null
+    "price_limited": 1.02,
+    "price_rare": 5.04
   },
   {
     "name": "Adam Harrison",
@@ -46087,8 +46087,8 @@
     "avg_adjusted_total_att_assist": 0.0,
     "avg_blocked_scoring_attempt": 0.0,
     "avg_big_chance_created": 0.0,
-    "price_limited": null,
-    "price_rare": null
+    "price_limited": 2.1,
+    "price_rare": 11.48
   },
   {
     "name": "Aidan Harris",
@@ -46260,8 +46260,8 @@
     "avg_adjusted_total_att_assist": 0.2,
     "avg_blocked_scoring_attempt": 0.0,
     "avg_big_chance_created": 0.0,
-    "price_limited": null,
-    "price_rare": null
+    "price_limited": 3.24,
+    "price_rare": 18.0
   },
   {
     "name": "Mark Gillespie",
@@ -46329,8 +46329,8 @@
     "matchs_played": 0,
     "matchs_total": 6,
     "last_date": "",
-    "price_limited": null,
-    "price_rare": null
+    "price_limited": 0.58,
+    "price_rare": 5.07
   },
   {
     "name": "Yoane Wissa",
@@ -46429,7 +46429,7 @@
     "avg_adjusted_total_att_assist": 0.0,
     "avg_blocked_scoring_attempt": 0.0,
     "avg_big_chance_created": 0.0,
-    "price_limited": null,
+    "price_limited": 1.08,
     "price_rare": null
   },
   {
@@ -46531,8 +46531,8 @@
     "avg_adjusted_total_att_assist": 0.0,
     "avg_blocked_scoring_attempt": 0.0,
     "avg_big_chance_created": 0.0,
-    "price_limited": null,
-    "price_rare": null
+    "price_limited": 0.75,
+    "price_rare": 7.79
   },
   {
     "name": "Leo Shahar",
@@ -46696,7 +46696,7 @@
     "avg_adjusted_total_att_assist": 0.0,
     "avg_blocked_scoring_attempt": 0.0,
     "avg_big_chance_created": 0.0,
-    "price_limited": null,
+    "price_limited": 0.99,
     "price_rare": null
   },
   {
@@ -46800,7 +46800,7 @@
     "avg_adjusted_total_att_assist": 0.0,
     "avg_blocked_scoring_attempt": 0.0,
     "avg_big_chance_created": 0.0,
-    "price_limited": null,
+    "price_limited": 8.0,
     "price_rare": null
   },
   {
@@ -46904,8 +46904,8 @@
     "avg_adjusted_total_att_assist": 0.2,
     "avg_blocked_scoring_attempt": 0.0,
     "avg_big_chance_created": 0.0,
-    "price_limited": null,
-    "price_rare": null
+    "price_limited": 1.1,
+    "price_rare": 3.99
   },
   {
     "name": "Dilane Bakwa",
@@ -47002,8 +47002,8 @@
     "avg_adjusted_total_att_assist": 0.0,
     "avg_blocked_scoring_attempt": 0.0,
     "avg_big_chance_created": 0.0,
-    "price_limited": null,
-    "price_rare": null
+    "price_limited": 1.8,
+    "price_rare": 14.04
   },
   {
     "name": "Aaron Bott",
@@ -47177,7 +47177,7 @@
     "avg_adjusted_total_att_assist": 1.5,
     "avg_blocked_scoring_attempt": 0.0,
     "avg_big_chance_created": 0.17,
-    "price_limited": null,
+    "price_limited": 2.35,
     "price_rare": null
   },
   {
@@ -47281,7 +47281,7 @@
     "avg_adjusted_total_att_assist": 1.6,
     "avg_blocked_scoring_attempt": 0.0,
     "avg_big_chance_created": 0.8,
-    "price_limited": null,
+    "price_limited": 12.24,
     "price_rare": null
   },
   {
@@ -47379,8 +47379,8 @@
     "avg_adjusted_total_att_assist": 0.0,
     "avg_blocked_scoring_attempt": 0.0,
     "avg_big_chance_created": 0.0,
-    "price_limited": null,
-    "price_rare": null
+    "price_limited": 0.56,
+    "price_rare": 4.7
   },
   {
     "name": "Willy-Arnaud Boly",
@@ -47448,7 +47448,7 @@
     "matchs_played": 0,
     "matchs_total": 6,
     "last_date": "",
-    "price_limited": null,
+    "price_limited": 0.38,
     "price_rare": null
   },
   {
@@ -47554,8 +47554,8 @@
     "avg_adjusted_total_att_assist": 0.5,
     "avg_blocked_scoring_attempt": 0.0,
     "avg_big_chance_created": 0.0,
-    "price_limited": null,
-    "price_rare": null
+    "price_limited": 2.0,
+    "price_rare": 11.16
   },
   {
     "name": "Ryan Yates",
@@ -47656,8 +47656,8 @@
     "avg_adjusted_total_att_assist": 0.0,
     "avg_blocked_scoring_attempt": 0.0,
     "avg_big_chance_created": 0.0,
-    "price_limited": null,
-    "price_rare": null
+    "price_limited": 0.51,
+    "price_rare": 3.33
   },
   {
     "name": "Chris Wood ",
@@ -47752,7 +47752,7 @@
     "avg_adjusted_total_att_assist": 0.0,
     "avg_blocked_scoring_attempt": 0.0,
     "avg_big_chance_created": 0.0,
-    "price_limited": null,
+    "price_limited": 0.99,
     "price_rare": null
   },
   {
@@ -47848,8 +47848,8 @@
     "avg_adjusted_total_att_assist": 0.0,
     "avg_blocked_scoring_attempt": 0.0,
     "avg_big_chance_created": 0.0,
-    "price_limited": null,
-    "price_rare": null
+    "price_limited": 5.1,
+    "price_rare": 29.4
   },
   {
     "name": "Vítor Pereira",
@@ -48007,7 +48007,7 @@
     "avg_adjusted_total_att_assist": 0.0,
     "avg_blocked_scoring_attempt": 0.0,
     "avg_big_chance_created": 0.0,
-    "price_limited": null,
+    "price_limited": 0.56,
     "price_rare": null
   },
   {
@@ -48076,8 +48076,8 @@
     "matchs_played": 0,
     "matchs_total": 6,
     "last_date": "",
-    "price_limited": null,
-    "price_rare": null
+    "price_limited": 1.98,
+    "price_rare": 15.0
   },
   {
     "name": "Igor Jesus",
@@ -48182,8 +48182,8 @@
     "avg_adjusted_total_att_assist": 0.5,
     "avg_blocked_scoring_attempt": 0.0,
     "avg_big_chance_created": 0.33,
-    "price_limited": null,
-    "price_rare": null
+    "price_limited": 2.4,
+    "price_rare": 18.0
   },
   {
     "name": "Omari Hutchinson",
@@ -48286,8 +48286,8 @@
     "avg_adjusted_total_att_assist": 0.2,
     "avg_blocked_scoring_attempt": 0.0,
     "avg_big_chance_created": 0.0,
-    "price_limited": null,
-    "price_rare": null
+    "price_limited": 1.59,
+    "price_rare": 9.0
   },
   {
     "name": "Nikola Milenković",
@@ -48387,8 +48387,8 @@
     "avg_adjusted_total_att_assist": 0.0,
     "avg_blocked_scoring_attempt": 0.0,
     "avg_big_chance_created": 0.0,
-    "price_limited": null,
-    "price_rare": null
+    "price_limited": 1.44,
+    "price_rare": 13.0
   },
   {
     "name": "Justin Hanks",
@@ -48553,8 +48553,8 @@
     "avg_adjusted_total_att_assist": 0.0,
     "avg_blocked_scoring_attempt": 0.0,
     "avg_big_chance_created": 0.0,
-    "price_limited": null,
-    "price_rare": null
+    "price_limited": 0.95,
+    "price_rare": 4.97
   },
   {
     "name": "Dan Ndoye",
@@ -48655,8 +48655,8 @@
     "avg_adjusted_total_att_assist": 0.25,
     "avg_blocked_scoring_attempt": 0.0,
     "avg_big_chance_created": 0.0,
-    "price_limited": null,
-    "price_rare": null
+    "price_limited": 2.27,
+    "price_rare": 8.99
   },
   {
     "name": "Zyan Blake",
@@ -48793,7 +48793,7 @@
     "matchs_played": 0,
     "matchs_total": 6,
     "last_date": "",
-    "price_limited": null,
+    "price_limited": 1.2,
     "price_rare": null
   },
   {
@@ -48862,8 +48862,8 @@
     "matchs_played": 0,
     "matchs_total": 6,
     "last_date": "",
-    "price_limited": null,
-    "price_rare": null
+    "price_limited": 0.57,
+    "price_rare": 3.26
   },
   {
     "name": "Neco Williams",
@@ -48966,8 +48966,8 @@
     "avg_adjusted_total_att_assist": 1.0,
     "avg_blocked_scoring_attempt": 0.0,
     "avg_big_chance_created": 0.2,
-    "price_limited": null,
-    "price_rare": null
+    "price_limited": 4.14,
+    "price_rare": 37.34
   },
   {
     "name": "Ibrahim Sangaré",
@@ -49067,8 +49067,8 @@
     "avg_adjusted_total_att_assist": 1.0,
     "avg_blocked_scoring_attempt": 0.0,
     "avg_big_chance_created": 0.0,
-    "price_limited": null,
-    "price_rare": null
+    "price_limited": 0.69,
+    "price_rare": 8.0
   },
   {
     "name": "Morgan Gibbs-White",
@@ -49173,7 +49173,7 @@
     "avg_adjusted_total_att_assist": 1.33,
     "avg_blocked_scoring_attempt": 0.0,
     "avg_big_chance_created": 0.0,
-    "price_limited": null,
+    "price_limited": 4.21,
     "price_rare": null
   },
   {
@@ -49311,8 +49311,8 @@
     "matchs_played": 0,
     "matchs_total": 6,
     "last_date": "",
-    "price_limited": null,
-    "price_rare": null
+    "price_limited": 1.0,
+    "price_rare": 3.78
   },
   {
     "name": "Murillo",
@@ -49417,8 +49417,8 @@
     "avg_adjusted_total_att_assist": 0.33,
     "avg_blocked_scoring_attempt": 0.0,
     "avg_big_chance_created": 0.0,
-    "price_limited": null,
-    "price_rare": null
+    "price_limited": 2.2,
+    "price_rare": 15.75
   },
   {
     "name": "Lorenzo Lucca",
@@ -49615,8 +49615,8 @@
     "avg_adjusted_total_att_assist": 0.0,
     "avg_blocked_scoring_attempt": 0.0,
     "avg_big_chance_created": 0.0,
-    "price_limited": null,
-    "price_rare": null
+    "price_limited": 1.29,
+    "price_rare": 1.29
   },
   {
     "name": "Angus Gunn",
@@ -49684,8 +49684,8 @@
     "matchs_played": 0,
     "matchs_total": 5,
     "last_date": "",
-    "price_limited": null,
-    "price_rare": null
+    "price_limited": 2.88,
+    "price_rare": 17.0
   },
   {
     "name": "Keehan Willows",
@@ -49891,8 +49891,8 @@
     "matchs_played": 0,
     "matchs_total": 10,
     "last_date": "",
-    "price_limited": null,
-    "price_rare": null
+    "price_limited": 0.53,
+    "price_rare": 97.84
   },
   {
     "name": "Chemsdine Talbi",
@@ -49997,8 +49997,8 @@
     "avg_adjusted_total_att_assist": 0.33,
     "avg_blocked_scoring_attempt": 0.0,
     "avg_big_chance_created": 0.0,
-    "price_limited": null,
-    "price_rare": null
+    "price_limited": 1.2,
+    "price_rare": 7.08
   },
   {
     "name": "Abdoullah Ba",
@@ -50066,7 +50066,7 @@
     "matchs_played": 0,
     "matchs_total": 10,
     "last_date": "",
-    "price_limited": null,
+    "price_limited": 0.47,
     "price_rare": null
   },
   {
@@ -50176,8 +50176,8 @@
     "avg_adjusted_total_att_assist": 0.88,
     "avg_blocked_scoring_attempt": 0.0,
     "avg_big_chance_created": 0.12,
-    "price_limited": null,
-    "price_rare": null
+    "price_limited": 0.6,
+    "price_rare": 2.9
   },
   {
     "name": "Trai Hume",
@@ -50286,8 +50286,8 @@
     "avg_adjusted_total_att_assist": 0.5,
     "avg_blocked_scoring_attempt": 0.0,
     "avg_big_chance_created": 0.0,
-    "price_limited": null,
-    "price_rare": null
+    "price_limited": 0.8,
+    "price_rare": 4.09
   },
   {
     "name": "Robin Roefs",
@@ -50394,8 +50394,8 @@
     "avg_adjusted_total_att_assist": 0.0,
     "avg_blocked_scoring_attempt": 0.0,
     "avg_big_chance_created": 0.0,
-    "price_limited": null,
-    "price_rare": null
+    "price_limited": 8.89,
+    "price_rare": 42.0
   },
   {
     "name": "Luke O'Nien",
@@ -50500,7 +50500,7 @@
     "avg_adjusted_total_att_assist": 0.0,
     "avg_blocked_scoring_attempt": 0.0,
     "avg_big_chance_created": 0.0,
-    "price_limited": null,
+    "price_limited": 0.56,
     "price_rare": null
   },
   {
@@ -50596,8 +50596,8 @@
     "avg_adjusted_total_att_assist": 0.0,
     "avg_blocked_scoring_attempt": 0.0,
     "avg_big_chance_created": 0.0,
-    "price_limited": null,
-    "price_rare": null
+    "price_limited": 1.08,
+    "price_rare": 8.21
   },
   {
     "name": "Nordi Mukiele",
@@ -50702,7 +50702,7 @@
     "avg_adjusted_total_att_assist": 0.67,
     "avg_blocked_scoring_attempt": 0.0,
     "avg_big_chance_created": 0.5,
-    "price_limited": null,
+    "price_limited": 1.89,
     "price_rare": null
   },
   {
@@ -50808,8 +50808,8 @@
     "avg_adjusted_total_att_assist": 0.5,
     "avg_blocked_scoring_attempt": 0.0,
     "avg_big_chance_created": 0.0,
-    "price_limited": null,
-    "price_rare": null
+    "price_limited": 4.27,
+    "price_rare": 15.0
   },
   {
     "name": "Ahmed Abdullahi",
@@ -50877,7 +50877,7 @@
     "matchs_played": 0,
     "matchs_total": 10,
     "last_date": "",
-    "price_limited": null,
+    "price_limited": 0.39,
     "price_rare": null
   },
   {
@@ -50975,7 +50975,7 @@
     "avg_adjusted_total_att_assist": 0.0,
     "avg_blocked_scoring_attempt": 0.0,
     "avg_big_chance_created": 0.0,
-    "price_limited": null,
+    "price_limited": 0.54,
     "price_rare": null
   },
   {
@@ -51081,8 +51081,8 @@
     "avg_adjusted_total_att_assist": 0.0,
     "avg_blocked_scoring_attempt": 0.0,
     "avg_big_chance_created": 0.0,
-    "price_limited": null,
-    "price_rare": null
+    "price_limited": 0.74,
+    "price_rare": 4.4
   },
   {
     "name": "Finn Geragusyan",
@@ -51250,8 +51250,8 @@
     "avg_adjusted_total_att_assist": 1.25,
     "avg_blocked_scoring_attempt": 0.0,
     "avg_big_chance_created": 0.25,
-    "price_limited": null,
-    "price_rare": null
+    "price_limited": 1.75,
+    "price_rare": 7.19
   },
   {
     "name": "Eliezer Mayenda",
@@ -51356,8 +51356,8 @@
     "avg_adjusted_total_att_assist": 0.17,
     "avg_blocked_scoring_attempt": 0.0,
     "avg_big_chance_created": 0.0,
-    "price_limited": null,
-    "price_rare": null
+    "price_limited": 0.98,
+    "price_rare": 8.0
   },
   {
     "name": "Régis Le Bris",
@@ -51523,8 +51523,8 @@
     "avg_adjusted_total_att_assist": 0.0,
     "avg_blocked_scoring_attempt": 0.0,
     "avg_big_chance_created": 0.0,
-    "price_limited": null,
-    "price_rare": null
+    "price_limited": 0.56,
+    "price_rare": 2.83
   },
   {
     "name": "Harrison Jones",
@@ -51592,8 +51592,8 @@
     "matchs_played": 0,
     "matchs_total": 10,
     "last_date": "",
-    "price_limited": null,
-    "price_rare": null
+    "price_limited": 0.54,
+    "price_rare": 0.8
   },
   {
     "name": "Habib Diarra",
@@ -51702,8 +51702,8 @@
     "avg_adjusted_total_att_assist": 0.12,
     "avg_blocked_scoring_attempt": 0.0,
     "avg_big_chance_created": 0.0,
-    "price_limited": null,
-    "price_rare": null
+    "price_limited": 1.02,
+    "price_rare": 10.0
   },
   {
     "name": "Jack Whittaker",
@@ -51871,8 +51871,8 @@
     "avg_adjusted_total_att_assist": 0.0,
     "avg_blocked_scoring_attempt": 0.0,
     "avg_big_chance_created": 0.0,
-    "price_limited": null,
-    "price_rare": null
+    "price_limited": 1.8,
+    "price_rare": 14.99
   },
   {
     "name": "Enzo Le Fée",
@@ -51983,8 +51983,8 @@
     "avg_adjusted_total_att_assist": 0.89,
     "avg_blocked_scoring_attempt": 0.0,
     "avg_big_chance_created": 0.44,
-    "price_limited": null,
-    "price_rare": null
+    "price_limited": 2.0,
+    "price_rare": 4.86
   },
   {
     "name": "Jaydon Jones",
@@ -52158,8 +52158,8 @@
     "avg_adjusted_total_att_assist": 0.83,
     "avg_blocked_scoring_attempt": 0.0,
     "avg_big_chance_created": 0.17,
-    "price_limited": null,
-    "price_rare": null
+    "price_limited": 2.5,
+    "price_rare": 7.45
   },
   {
     "name": "Nilson Angulo",
@@ -52262,8 +52262,8 @@
     "avg_adjusted_total_att_assist": 0.4,
     "avg_blocked_scoring_attempt": 0.0,
     "avg_big_chance_created": 0.0,
-    "price_limited": null,
-    "price_rare": null
+    "price_limited": 0.84,
+    "price_rare": 3.37
   },
   {
     "name": "Omar Alderete",
@@ -52372,8 +52372,8 @@
     "avg_adjusted_total_att_assist": 0.38,
     "avg_blocked_scoring_attempt": 0.0,
     "avg_big_chance_created": 0.0,
-    "price_limited": null,
-    "price_rare": null
+    "price_limited": 0.89,
+    "price_rare": 3.24
   },
   {
     "name": "Reinildo",
@@ -52478,8 +52478,8 @@
     "avg_adjusted_total_att_assist": 0.33,
     "avg_blocked_scoring_attempt": 0.0,
     "avg_big_chance_created": 0.0,
-    "price_limited": null,
-    "price_rare": null
+    "price_limited": 0.5,
+    "price_rare": 5.5
   },
   {
     "name": "Jenson Jones",
@@ -52643,8 +52643,8 @@
     "avg_adjusted_total_att_assist": 0.0,
     "avg_blocked_scoring_attempt": 0.0,
     "avg_big_chance_created": 0.0,
-    "price_limited": null,
-    "price_rare": null
+    "price_limited": 0.4,
+    "price_rare": 2.0
   },
   {
     "name": "Lutsharel Geertruida",
@@ -52751,7 +52751,7 @@
     "avg_adjusted_total_att_assist": 0.29,
     "avg_blocked_scoring_attempt": 0.0,
     "avg_big_chance_created": 0.14,
-    "price_limited": null,
+    "price_limited": 0.85,
     "price_rare": null
   },
   {
@@ -52820,7 +52820,7 @@
     "matchs_played": 0,
     "matchs_total": 10,
     "last_date": "",
-    "price_limited": null,
+    "price_limited": 0.46,
     "price_rare": null
   },
   {
@@ -52932,8 +52932,8 @@
     "avg_adjusted_total_att_assist": 0.44,
     "avg_blocked_scoring_attempt": 0.0,
     "avg_big_chance_created": 0.0,
-    "price_limited": null,
-    "price_rare": null
+    "price_limited": 1.26,
+    "price_rare": 3.42
   },
   {
     "name": "Micky van de Ven",
@@ -53036,8 +53036,8 @@
     "avg_adjusted_total_att_assist": 0.0,
     "avg_blocked_scoring_attempt": 0.0,
     "avg_big_chance_created": 0.0,
-    "price_limited": null,
-    "price_rare": null
+    "price_limited": 4.9,
+    "price_rare": 19.44
   },
   {
     "name": "Cristian Romero",
@@ -53133,7 +53133,7 @@
     "avg_adjusted_total_att_assist": 1.0,
     "avg_blocked_scoring_attempt": 0.0,
     "avg_big_chance_created": 0.0,
-    "price_limited": null,
+    "price_limited": 10.62,
     "price_rare": null
   },
   {
@@ -53308,8 +53308,8 @@
     "avg_adjusted_total_att_assist": 0.67,
     "avg_blocked_scoring_attempt": 0.0,
     "avg_big_chance_created": 0.0,
-    "price_limited": null,
-    "price_rare": null
+    "price_limited": 11.34,
+    "price_rare": 53.8
   },
   {
     "name": "João Palhinha",
@@ -53414,8 +53414,8 @@
     "avg_adjusted_total_att_assist": 0.33,
     "avg_blocked_scoring_attempt": 0.0,
     "avg_big_chance_created": 0.0,
-    "price_limited": null,
-    "price_rare": null
+    "price_limited": 1.0,
+    "price_rare": 8.0
   },
   {
     "name": "Lucá Williams-Barnett",
@@ -53552,8 +53552,8 @@
     "matchs_played": 0,
     "matchs_total": 8,
     "last_date": "",
-    "price_limited": null,
-    "price_rare": null
+    "price_limited": 1.0,
+    "price_rare": 9.0
   },
   {
     "name": "Kevin Danso",
@@ -53656,8 +53656,8 @@
     "avg_adjusted_total_att_assist": 0.0,
     "avg_blocked_scoring_attempt": 0.0,
     "avg_big_chance_created": 0.0,
-    "price_limited": null,
-    "price_rare": null
+    "price_limited": 1.7,
+    "price_rare": 6.41
   },
   {
     "name": "Pedro Porro",
@@ -53760,8 +53760,8 @@
     "avg_adjusted_total_att_assist": 1.6,
     "avg_blocked_scoring_attempt": 0.0,
     "avg_big_chance_created": 0.2,
-    "price_limited": null,
-    "price_rare": null
+    "price_limited": 4.07,
+    "price_rare": 17.78
   },
   {
     "name": "Rodrigo Bentancur",
@@ -53829,7 +53829,7 @@
     "matchs_played": 0,
     "matchs_total": 8,
     "last_date": "",
-    "price_limited": null,
+    "price_limited": 1.44,
     "price_rare": null
   },
   {
@@ -53939,8 +53939,8 @@
     "avg_adjusted_total_att_assist": 1.75,
     "avg_blocked_scoring_attempt": 0.0,
     "avg_big_chance_created": 0.12,
-    "price_limited": null,
-    "price_rare": null
+    "price_limited": 2.88,
+    "price_rare": 28.8
   },
   {
     "name": "Rio Kyerematen",
@@ -54177,8 +54177,8 @@
     "avg_adjusted_total_att_assist": 0.0,
     "avg_blocked_scoring_attempt": 0.0,
     "avg_big_chance_created": 0.0,
-    "price_limited": null,
-    "price_rare": null
+    "price_limited": 0.85,
+    "price_rare": 10.0
   },
   {
     "name": "Pape Matar Sarr",
@@ -54283,8 +54283,8 @@
     "avg_adjusted_total_att_assist": 0.33,
     "avg_blocked_scoring_attempt": 0.0,
     "avg_big_chance_created": 0.0,
-    "price_limited": null,
-    "price_rare": null
+    "price_limited": 2.06,
+    "price_rare": 8.46
   },
   {
     "name": "Dominic Solanke",
@@ -54389,8 +54389,8 @@
     "avg_adjusted_total_att_assist": 0.33,
     "avg_blocked_scoring_attempt": 0.0,
     "avg_big_chance_created": 0.0,
-    "price_limited": null,
-    "price_rare": null
+    "price_limited": 2.5,
+    "price_rare": 9.9
   },
   {
     "name": "Tye Hall",
@@ -54527,8 +54527,8 @@
     "matchs_played": 0,
     "matchs_total": 8,
     "last_date": "",
-    "price_limited": null,
-    "price_rare": null
+    "price_limited": 3.59,
+    "price_rare": 12.6
   },
   {
     "name": "Yves Bissouma",
@@ -54631,7 +54631,7 @@
     "avg_adjusted_total_att_assist": 0.0,
     "avg_blocked_scoring_attempt": 0.0,
     "avg_big_chance_created": 0.0,
-    "price_limited": null,
+    "price_limited": 0.48,
     "price_rare": null
   },
   {
@@ -54733,8 +54733,8 @@
     "avg_adjusted_total_att_assist": 0.75,
     "avg_blocked_scoring_attempt": 0.0,
     "avg_big_chance_created": 0.0,
-    "price_limited": null,
-    "price_rare": null
+    "price_limited": 1.39,
+    "price_rare": 3.9
   },
   {
     "name": "James Rowswell",
@@ -54898,8 +54898,8 @@
     "matchs_played": 0,
     "matchs_total": 6,
     "last_date": "",
-    "price_limited": null,
-    "price_rare": null
+    "price_limited": 0.99,
+    "price_rare": 3.52
   },
   {
     "name": "Jun'ai Byfield",
@@ -55065,7 +55065,7 @@
     "avg_adjusted_total_att_assist": 1.0,
     "avg_blocked_scoring_attempt": 0.0,
     "avg_big_chance_created": 0.0,
-    "price_limited": null,
+    "price_limited": 1.9,
     "price_rare": null
   },
   {
@@ -55134,8 +55134,8 @@
     "matchs_played": 0,
     "matchs_total": 8,
     "last_date": "",
-    "price_limited": null,
-    "price_rare": null
+    "price_limited": 0.51,
+    "price_rare": 4.32
   },
   {
     "name": "Tynan Thompson",
@@ -55335,7 +55335,7 @@
     "matchs_played": 0,
     "matchs_total": 8,
     "last_date": "",
-    "price_limited": null,
+    "price_limited": 3.7,
     "price_rare": null
   },
   {
@@ -55431,8 +55431,8 @@
     "avg_adjusted_total_att_assist": 0.0,
     "avg_blocked_scoring_attempt": 0.0,
     "avg_big_chance_created": 0.0,
-    "price_limited": null,
-    "price_rare": null
+    "price_limited": 6.3,
+    "price_rare": 42.84
   },
   {
     "name": "Guglielmo Vicario",
@@ -55539,7 +55539,7 @@
     "avg_adjusted_total_att_assist": 0.14,
     "avg_blocked_scoring_attempt": 0.0,
     "avg_big_chance_created": 0.0,
-    "price_limited": null,
+    "price_limited": 7.7,
     "price_rare": null
   },
   {
@@ -55645,7 +55645,7 @@
     "avg_adjusted_total_att_assist": 0.67,
     "avg_blocked_scoring_attempt": 0.0,
     "avg_big_chance_created": 0.17,
-    "price_limited": null,
+    "price_limited": 2.0,
     "price_rare": null
   },
   {
@@ -55755,8 +55755,8 @@
     "avg_adjusted_total_att_assist": 0.38,
     "avg_blocked_scoring_attempt": 0.0,
     "avg_big_chance_created": 0.38,
-    "price_limited": null,
-    "price_rare": null
+    "price_limited": 2.8,
+    "price_rare": 16.82
   },
   {
     "name": "Destiny Udogie",
@@ -55855,8 +55855,8 @@
     "avg_adjusted_total_att_assist": 1.0,
     "avg_blocked_scoring_attempt": 0.0,
     "avg_big_chance_created": 0.33,
-    "price_limited": null,
-    "price_rare": null
+    "price_limited": 1.59,
+    "price_rare": 8.44
   },
   {
     "name": "James Maddison",
@@ -55924,8 +55924,8 @@
     "matchs_played": 0,
     "matchs_total": 8,
     "last_date": "",
-    "price_limited": null,
-    "price_rare": null
+    "price_limited": 1.98,
+    "price_rare": 21.81
   },
   {
     "name": "Conor Gallagher",
@@ -56032,8 +56032,8 @@
     "avg_adjusted_total_att_assist": 0.71,
     "avg_blocked_scoring_attempt": 0.0,
     "avg_big_chance_created": 0.0,
-    "price_limited": null,
-    "price_rare": null
+    "price_limited": 1.06,
+    "price_rare": 27.0
   },
   {
     "name": "Callum Olusesi",
@@ -56226,8 +56226,8 @@
     "avg_adjusted_total_att_assist": 0.5,
     "avg_blocked_scoring_attempt": 0.0,
     "avg_big_chance_created": 0.0,
-    "price_limited": null,
-    "price_rare": null
+    "price_limited": 1.31,
+    "price_rare": 7.56
   },
   {
     "name": "Lucas Bergvall",
@@ -56324,8 +56324,8 @@
     "avg_adjusted_total_att_assist": 0.0,
     "avg_blocked_scoring_attempt": 0.0,
     "avg_big_chance_created": 0.0,
-    "price_limited": null,
-    "price_rare": null
+    "price_limited": 2.3,
+    "price_rare": 9.5
   },
   {
     "name": "Richarlison",
@@ -56430,8 +56430,8 @@
     "avg_adjusted_total_att_assist": 0.33,
     "avg_blocked_scoring_attempt": 0.0,
     "avg_big_chance_created": 0.0,
-    "price_limited": null,
-    "price_rare": null
+    "price_limited": 2.05,
+    "price_rare": 11.7
   },
   {
     "name": "Taty Castellanos",
@@ -56544,7 +56544,7 @@
     "avg_adjusted_total_att_assist": 0.8,
     "avg_blocked_scoring_attempt": 0.0,
     "avg_big_chance_created": 0.1,
-    "price_limited": null,
+    "price_limited": 1.8,
     "price_rare": null
   },
   {
@@ -56654,8 +56654,8 @@
     "avg_adjusted_total_att_assist": 0.38,
     "avg_blocked_scoring_attempt": 0.0,
     "avg_big_chance_created": 0.0,
-    "price_limited": null,
-    "price_rare": null
+    "price_limited": 2.8,
+    "price_rare": 10.0
   },
   {
     "name": "Axel Disasi",
@@ -56764,8 +56764,8 @@
     "avg_adjusted_total_att_assist": 0.12,
     "avg_blocked_scoring_attempt": 0.0,
     "avg_big_chance_created": 0.0,
-    "price_limited": null,
-    "price_rare": null
+    "price_limited": 1.75,
+    "price_rare": 6.7
   },
   {
     "name": "Jarrod Bowen",
@@ -56874,8 +56874,8 @@
     "avg_adjusted_total_att_assist": 1.5,
     "avg_blocked_scoring_attempt": 0.0,
     "avg_big_chance_created": 0.88,
-    "price_limited": null,
-    "price_rare": null
+    "price_limited": 10.0,
+    "price_rare": 40.0
   },
   {
     "name": "Mads Hermansen",
@@ -56984,8 +56984,8 @@
     "avg_adjusted_total_att_assist": 0.0,
     "avg_blocked_scoring_attempt": 0.0,
     "avg_big_chance_created": 0.0,
-    "price_limited": null,
-    "price_rare": null
+    "price_limited": 9.72,
+    "price_rare": 42.37
   },
   {
     "name": "Freddie Potts",
@@ -57088,8 +57088,8 @@
     "avg_adjusted_total_att_assist": 0.2,
     "avg_blocked_scoring_attempt": 0.0,
     "avg_big_chance_created": 0.0,
-    "price_limited": null,
-    "price_rare": null
+    "price_limited": 0.43,
+    "price_rare": 2.29
   },
   {
     "name": "Adama Traoré",
@@ -57198,7 +57198,7 @@
     "avg_adjusted_total_att_assist": 0.0,
     "avg_blocked_scoring_attempt": 0.0,
     "avg_big_chance_created": 0.0,
-    "price_limited": null,
+    "price_limited": 0.58,
     "price_rare": null
   },
   {
@@ -57306,8 +57306,8 @@
     "avg_adjusted_total_att_assist": 0.14,
     "avg_blocked_scoring_attempt": 0.0,
     "avg_big_chance_created": 0.0,
-    "price_limited": null,
-    "price_rare": null
+    "price_limited": 0.52,
+    "price_rare": 9.54
   },
   {
     "name": "Joshua Ajala",
@@ -57444,8 +57444,8 @@
     "matchs_played": 0,
     "matchs_total": 10,
     "last_date": "",
-    "price_limited": null,
-    "price_rare": null
+    "price_limited": 1.43,
+    "price_rare": 8.28
   },
   {
     "name": "Pablo",
@@ -57550,8 +57550,8 @@
     "avg_adjusted_total_att_assist": 0.67,
     "avg_blocked_scoring_attempt": 0.0,
     "avg_big_chance_created": 0.17,
-    "price_limited": null,
-    "price_rare": null
+    "price_limited": 2.16,
+    "price_rare": 5.76
   },
   {
     "name": "Aaron Wan-Bissaka",
@@ -57660,8 +57660,8 @@
     "avg_adjusted_total_att_assist": 0.25,
     "avg_blocked_scoring_attempt": 0.0,
     "avg_big_chance_created": 0.0,
-    "price_limited": null,
-    "price_rare": null
+    "price_limited": 2.0,
+    "price_rare": 7.82
   },
   {
     "name": "Callum Wilson",
@@ -57770,7 +57770,7 @@
     "avg_adjusted_total_att_assist": 0.38,
     "avg_blocked_scoring_attempt": 0.0,
     "avg_big_chance_created": 0.0,
-    "price_limited": null,
+    "price_limited": 0.57,
     "price_rare": null
   },
   {
@@ -58033,8 +58033,8 @@
     "avg_adjusted_total_att_assist": 0.0,
     "avg_blocked_scoring_attempt": 0.0,
     "avg_big_chance_created": 0.0,
-    "price_limited": null,
-    "price_rare": null
+    "price_limited": 1.45,
+    "price_rare": 7.78
   },
   {
     "name": "Jean-Clair Todibo",
@@ -58133,7 +58133,7 @@
     "avg_adjusted_total_att_assist": 0.0,
     "avg_blocked_scoring_attempt": 0.0,
     "avg_big_chance_created": 0.0,
-    "price_limited": null,
+    "price_limited": 0.95,
     "price_rare": null
   },
   {
@@ -58243,7 +58243,7 @@
     "avg_adjusted_total_att_assist": 1.12,
     "avg_blocked_scoring_attempt": 0.0,
     "avg_big_chance_created": 0.12,
-    "price_limited": null,
+    "price_limited": 3.6,
     "price_rare": null
   },
   {
@@ -58353,8 +58353,8 @@
     "avg_adjusted_total_att_assist": 0.38,
     "avg_blocked_scoring_attempt": 0.0,
     "avg_big_chance_created": 0.0,
-    "price_limited": null,
-    "price_rare": null
+    "price_limited": 1.0,
+    "price_rare": 3.22
   },
   {
     "name": "Łukasz Fabiański",
@@ -58422,8 +58422,8 @@
     "matchs_played": 0,
     "matchs_total": 10,
     "last_date": "",
-    "price_limited": null,
-    "price_rare": null
+    "price_limited": 1.0,
+    "price_rare": 3.44
   },
   {
     "name": "Mateus Fernandes",
@@ -58532,8 +58532,8 @@
     "avg_adjusted_total_att_assist": 0.75,
     "avg_blocked_scoring_attempt": 0.0,
     "avg_big_chance_created": 0.25,
-    "price_limited": null,
-    "price_rare": null
+    "price_limited": 8.1,
+    "price_rare": 30.0
   },
   {
     "name": "Oliver Scarles",
@@ -58634,8 +58634,8 @@
     "avg_adjusted_total_att_assist": 0.25,
     "avg_blocked_scoring_attempt": 0.0,
     "avg_big_chance_created": 0.25,
-    "price_limited": null,
-    "price_rare": null
+    "price_limited": 0.55,
+    "price_rare": 3.06
   },
   {
     "name": "Nuno Espírito Santo",
@@ -58807,7 +58807,7 @@
     "avg_adjusted_total_att_assist": 0.75,
     "avg_blocked_scoring_attempt": 0.0,
     "avg_big_chance_created": 0.38,
-    "price_limited": null,
+    "price_limited": 2.88,
     "price_rare": null
   },
   {
@@ -58905,8 +58905,8 @@
     "avg_adjusted_total_att_assist": 0.0,
     "avg_blocked_scoring_attempt": 0.0,
     "avg_big_chance_created": 0.0,
-    "price_limited": null,
-    "price_rare": null
+    "price_limited": 0.5,
+    "price_rare": 2.8
   },
   {
     "name": "Mohamadou Kanté",
@@ -59009,8 +59009,8 @@
     "avg_adjusted_total_att_assist": 0.0,
     "avg_blocked_scoring_attempt": 0.0,
     "avg_big_chance_created": 0.0,
-    "price_limited": null,
-    "price_rare": null
+    "price_limited": 0.59,
+    "price_rare": 4.32
   },
   {
     "name": "Kyle Walker-Peters",
@@ -59109,8 +59109,8 @@
     "avg_adjusted_total_att_assist": 0.67,
     "avg_blocked_scoring_attempt": 0.0,
     "avg_big_chance_created": 0.33,
-    "price_limited": null,
-    "price_rare": null
+    "price_limited": 0.6,
+    "price_rare": 0.9
   },
   {
     "name": "Keiber Lamadrid",
@@ -59178,8 +59178,8 @@
     "matchs_played": 0,
     "matchs_total": 8,
     "last_date": "",
-    "price_limited": null,
-    "price_rare": null
+    "price_limited": 0.56,
+    "price_rare": 3.33
   },
   {
     "name": "Lewis Orford",
@@ -59247,7 +59247,7 @@
     "matchs_played": 0,
     "matchs_total": 10,
     "last_date": "",
-    "price_limited": null,
+    "price_limited": 1.08,
     "price_rare": null
   },
   {
@@ -59357,8 +59357,8 @@
     "avg_adjusted_total_att_assist": 0.0,
     "avg_blocked_scoring_attempt": 0.0,
     "avg_big_chance_created": 0.0,
-    "price_limited": null,
-    "price_rare": null
+    "price_limited": 6.66,
+    "price_rare": 22.0
   },
   {
     "name": "Hugo Bueno",
@@ -59471,8 +59471,8 @@
     "avg_adjusted_total_att_assist": 1.2,
     "avg_blocked_scoring_attempt": 0.0,
     "avg_big_chance_created": 0.3,
-    "price_limited": null,
-    "price_rare": null
+    "price_limited": 1.05,
+    "price_rare": 4.5
   },
   {
     "name": "André",
@@ -59581,8 +59581,8 @@
     "avg_adjusted_total_att_assist": 0.5,
     "avg_blocked_scoring_attempt": 0.0,
     "avg_big_chance_created": 0.0,
-    "price_limited": null,
-    "price_rare": null
+    "price_limited": 0.9,
+    "price_rare": 4.9
   },
   {
     "name": "Saheed Olagunju",
@@ -59760,8 +59760,8 @@
     "avg_adjusted_total_att_assist": 0.62,
     "avg_blocked_scoring_attempt": 0.0,
     "avg_big_chance_created": 0.0,
-    "price_limited": null,
-    "price_rare": null
+    "price_limited": 0.56,
+    "price_rare": 5.09
   },
   {
     "name": "David Møller Wolfe",
@@ -59860,8 +59860,8 @@
     "avg_adjusted_total_att_assist": 0.0,
     "avg_blocked_scoring_attempt": 0.0,
     "avg_big_chance_created": 0.0,
-    "price_limited": null,
-    "price_rare": null
+    "price_limited": 1.0,
+    "price_rare": 6.3
   },
   {
     "name": "Sam Johnstone",
@@ -59929,8 +59929,8 @@
     "matchs_played": 0,
     "matchs_total": 10,
     "last_date": "",
-    "price_limited": null,
-    "price_rare": null
+    "price_limited": 2.25,
+    "price_rare": 4.15
   },
   {
     "name": "Mateus Mané",
@@ -60043,8 +60043,8 @@
     "avg_adjusted_total_att_assist": 0.9,
     "avg_blocked_scoring_attempt": 0.0,
     "avg_big_chance_created": 0.2,
-    "price_limited": null,
-    "price_rare": null
+    "price_limited": 3.2,
+    "price_rare": 18.79
   },
   {
     "name": "Ethan Sutherland",
@@ -60313,8 +60313,8 @@
     "matchs_played": 0,
     "matchs_total": 10,
     "last_date": "",
-    "price_limited": null,
-    "price_rare": null
+    "price_limited": 0.48,
+    "price_rare": 4.5
   },
   {
     "name": "Rodrigo Gomes",
@@ -60425,8 +60425,8 @@
     "avg_adjusted_total_att_assist": 0.11,
     "avg_blocked_scoring_attempt": 0.0,
     "avg_big_chance_created": 0.0,
-    "price_limited": null,
-    "price_rare": null
+    "price_limited": 0.59,
+    "price_rare": 6.51
   },
   {
     "name": "Jackson Tchatchoua",
@@ -60533,8 +60533,8 @@
     "avg_adjusted_total_att_assist": 1.0,
     "avg_blocked_scoring_attempt": 0.0,
     "avg_big_chance_created": 0.14,
-    "price_limited": null,
-    "price_rare": null
+    "price_limited": 0.9,
+    "price_rare": 9.15
   },
   {
     "name": "Yerson Mosquera",
@@ -60643,7 +60643,7 @@
     "avg_adjusted_total_att_assist": 0.5,
     "avg_blocked_scoring_attempt": 0.0,
     "avg_big_chance_created": 0.0,
-    "price_limited": null,
+    "price_limited": 0.65,
     "price_rare": null
   },
   {
@@ -60741,8 +60741,8 @@
     "avg_adjusted_total_att_assist": 0.0,
     "avg_blocked_scoring_attempt": 0.0,
     "avg_big_chance_created": 0.0,
-    "price_limited": null,
-    "price_rare": null
+    "price_limited": 0.84,
+    "price_rare": 4.34
   },
   {
     "name": "Enso González",
@@ -60810,8 +60810,8 @@
     "matchs_played": 0,
     "matchs_total": 10,
     "last_date": "",
-    "price_limited": null,
-    "price_rare": null
+    "price_limited": 0.54,
+    "price_rare": 3.79
   },
   {
     "name": "Tolu Arokodare ",
@@ -60924,7 +60924,7 @@
     "avg_adjusted_total_att_assist": 0.3,
     "avg_blocked_scoring_attempt": 0.0,
     "avg_big_chance_created": 0.1,
-    "price_limited": null,
+    "price_limited": 1.0,
     "price_rare": null
   },
   {
@@ -61036,8 +61036,8 @@
     "avg_adjusted_total_att_assist": 0.33,
     "avg_blocked_scoring_attempt": 0.0,
     "avg_big_chance_created": 0.11,
-    "price_limited": null,
-    "price_rare": null
+    "price_limited": 2.44,
+    "price_rare": 14.23
   },
   {
     "name": "Jerome Abbey",
@@ -61174,7 +61174,7 @@
     "matchs_played": 0,
     "matchs_total": 10,
     "last_date": "",
-    "price_limited": null,
+    "price_limited": 0.54,
     "price_rare": null
   },
   {
@@ -61382,8 +61382,8 @@
     "avg_adjusted_total_att_assist": 0.38,
     "avg_blocked_scoring_attempt": 0.0,
     "avg_big_chance_created": 0.25,
-    "price_limited": null,
-    "price_rare": null
+    "price_limited": 1.25,
+    "price_rare": 3.19
   },
   {
     "name": "Angel Gomes",
@@ -61492,8 +61492,8 @@
     "avg_adjusted_total_att_assist": 0.5,
     "avg_blocked_scoring_attempt": 0.0,
     "avg_big_chance_created": 0.0,
-    "price_limited": null,
-    "price_rare": null
+    "price_limited": 0.54,
+    "price_rare": 2.6
   },
   {
     "name": "Ladislav Krejčí",
@@ -61600,7 +61600,7 @@
     "avg_adjusted_total_att_assist": 0.14,
     "avg_blocked_scoring_attempt": 0.0,
     "avg_big_chance_created": 0.0,
-    "price_limited": null,
+    "price_limited": 1.08,
     "price_rare": null
   },
   {
@@ -61710,7 +61710,7 @@
     "avg_adjusted_total_att_assist": 0.25,
     "avg_blocked_scoring_attempt": 0.0,
     "avg_big_chance_created": 0.0,
-    "price_limited": null,
+    "price_limited": 1.29,
     "price_rare": null
   },
   {
@@ -61808,8 +61808,8 @@
     "avg_adjusted_total_att_assist": 0.0,
     "avg_blocked_scoring_attempt": 0.0,
     "avg_big_chance_created": 0.0,
-    "price_limited": null,
-    "price_rare": null
+    "price_limited": 0.44,
+    "price_rare": 4.52
   },
   {
     "name": "Pedro Lima",
@@ -61906,7 +61906,7 @@
     "avg_adjusted_total_att_assist": 0.0,
     "avg_blocked_scoring_attempt": 0.0,
     "avg_big_chance_created": 0.0,
-    "price_limited": null,
+    "price_limited": 0.8,
     "price_rare": null
   },
   {
@@ -62002,8 +62002,8 @@
     "avg_adjusted_total_att_assist": 0.0,
     "avg_blocked_scoring_attempt": 0.0,
     "avg_big_chance_created": 0.0,
-    "price_limited": null,
-    "price_rare": null
+    "price_limited": 0.75,
+    "price_rare": 1.71
   },
   {
     "name": "Lucas Rawlings",

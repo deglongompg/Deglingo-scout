@@ -100,7 +100,7 @@ export default function SorareProTab({ players, teams, fixtures, logos = {}, mat
   const [leftCollapsed, setLeftCollapsed] = useState(false);
   const [filterTitu, setFilterTitu] = useState(0);
   const [selectedMatchFilters, setSelectedMatchFilters] = useState([]);
-  const [includeRare, setIncludeRare] = useState(true);
+  const [includeRare, setIncludeRare] = useState(false);
   const [bonusEnabled, setBonusEnabled] = useState(true);
   const [algoMultiClub, setAlgoMultiClub] = useState(true);  // true = respect multi-club (+2%)
   const [algoCap260, setAlgoCap260] = useState(true);        // true = respect cap260 (+4%)
@@ -247,6 +247,7 @@ export default function SorareProTab({ players, teams, fixtures, logos = {}, mat
       } catch { /* localStorage full, ignore */ }
 
     } catch { setSorareConnected(false); }
+    finally { setSorareLoading(false); }
   };
 
   const connectSorare = () => {
@@ -463,7 +464,7 @@ export default function SorareProTab({ players, teams, fixtures, logos = {}, mat
       if (!oppStats) continue;
       const pTeam = findTeam(lgTeams, p.club);
       const ds = dScoreMatch(p, oppStats, fx.isHome, pTeam);
-      if (ds < 20) continue;
+      if (ds <= 0 && !proCardMap[p.slug || p.name]) continue;
 
       let csPercent = null;
       if (["GK", "DEF"].includes(p.position) && oppStats) {

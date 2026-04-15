@@ -542,29 +542,91 @@ export default function SorareProTab({ players, teams, fixtures, logos = {}, mat
       return false;
     };
 
-    // GK rare : si 1-2 GK titu >= 70%, placer le meilleur en premier
-    const viableGKs = pool.filter(p => p.position === "GK" && (p.sorare_starter_pct == null || p.sorare_starter_pct >= 70));
-    if (viableGKs.length <= 2 && viableGKs.length > 0) {
-      const gk = viableGKs[0];
-      if (canAdd(gk)) { newPicks.GK = gk; markAdded(gk); }
+    // ── CAP260 special path: knapsack-style — maximize D-Score with L10 sum < 260 ──
+    if (algoCap260) {
+      // Strategy: pick best captain first (highest D-Score), then fill 4 slots with best D-Score/L10 ratio
+      const capPool = [...pool];
+      // Try each player as potential captain, find best total
+      let bestCombo = null, bestTotal = 0;
+      const SLOTS_ORDER = ["GK", "DEF", "MIL", "ATT", "FLEX"];
+      // Simple approach: sort by D-Score, try greedy with L10 budget
+      // First: pick 1 captain candidate (highest D-Score)
+      const captainCandidates = capPool.slice(0, 8); // top 8 by D-Score
+      for (const cap of captainCandidates) {
+        const combo = { [cap.position]: cap };
+        let usedSlugs = new Set([cap.slug || cap.name]);
+        let usedL10 = cap.l10 || 0;
+        let usedClubs = { [cap.club]: 1 };
+        let classicUsed = proCardMap[cap.slug || cap.name]?.isClassic || false;
+        // Fill remaining 4 slots from pool sorted by D-Score
+        for (const p of capPool) {
+          if (usedSlugs.has(p.slug || p.name)) continue;
+          if (usedL10 + (p.l10 || 0) >= 260) continue;
+          if (algoMultiClub && (usedClubs[p.club] || 0) >= 2) continue;
+          const card = proCardMap[p.slug || p.name];
+          if (card?.isClassic && classicUsed) continue;
+          const pos = p.position;
+          let placed = false;
+          if (!combo[pos]) { combo[pos] = p; placed = true; }
+          else if (pos !== "GK" && !combo.FLEX) { combo.FLEX = p; placed = true; }
+          if (placed) {
+            usedSlugs.add(p.slug || p.name);
+            usedL10 += (p.l10 || 0);
+            usedClubs[p.club] = (usedClubs[p.club] || 0) + 1;
+            if (card?.isClassic) classicUsed = true;
+          }
+          if (Object.keys(combo).length >= 5) break;
+        }
+        if (Object.keys(combo).length >= 5) {
+          const total = Object.values(combo).reduce((s, p) => s + (p._algoDs || p.ds || 0), 0);
+          if (total > bestTotal) { bestTotal = total; bestCombo = { ...combo }; }
+        }
+      }
+      if (bestCombo && Object.keys(bestCombo).length >= 5) {
+        for (const slot of SLOTS_ORDER) {
+          if (bestCombo[slot]) { newPicks[slot] = bestCombo[slot]; markAdded(bestCombo[slot]); }
+        }
+      }
     }
-    // Greedy par score decroissant — meilleurs joueurs places en premier
-    for (const p of pool) {
-      if (taken.has(p.slug || p.name)) continue;
-      if (!canAdd(p)) continue;
-      const pos = p.position;
-      if (newPicks[pos] === null && !hasConflict(p)) { newPicks[pos] = p; markAdded(p); }
-      else if (pos !== "GK" && newPicks.FLEX === null && !hasConflict(p)) { newPicks.FLEX = p; markAdded(p); }
-      if (Object.values(newPicks).filter(Boolean).length >= 5) break;
+
+    // ── Standard path (no CAP or CAP didn't fill) ──
+    if (Object.values(newPicks).filter(Boolean).length < 5) {
+      // GK rare : si 1-2 GK titu >= 70%, placer le meilleur en premier
+      const viableGKs = pool.filter(p => p.position === "GK" && !taken.has(p.slug || p.name) && (p.sorare_starter_pct == null || p.sorare_starter_pct >= 70));
+      if (viableGKs.length <= 2 && viableGKs.length > 0 && !newPicks.GK) {
+        const gk = viableGKs[0];
+        if (canAdd(gk)) { newPicks.GK = gk; markAdded(gk); }
+      }
+      // Greedy par score decroissant
+      for (const p of pool) {
+        if (taken.has(p.slug || p.name)) continue;
+        if (!canAdd(p)) continue;
+        const pos = p.position;
+        if (newPicks[pos] === null && !hasConflict(p)) { newPicks[pos] = p; markAdded(p); }
+        else if (pos !== "GK" && newPicks.FLEX === null && !hasConflict(p)) { newPicks.FLEX = p; markAdded(p); }
+        if (Object.values(newPicks).filter(Boolean).length >= 5) break;
+      }
+      // Fallback: slots vides → remplir sans check conflit
+      for (const p of pool) {
+        if (taken.has(p.slug || p.name)) continue;
+        if (!canAdd(p)) continue;
+        const pos = p.position;
+        if (newPicks[pos] === null) { newPicks[pos] = p; markAdded(p); }
+        else if (pos !== "GK" && newPicks.FLEX === null) { newPicks.FLEX = p; markAdded(p); }
+        if (Object.values(newPicks).filter(Boolean).length >= 5) break;
+      }
     }
-    // Fallback: slots vides → remplir sans check conflit
-    for (const p of pool) {
-      if (taken.has(p.slug || p.name)) continue;
-      if (!canAdd(p)) continue;
-      const pos = p.position;
-      if (newPicks[pos] === null) { newPicks[pos] = p; markAdded(p); }
-      else if (pos !== "GK" && newPicks.FLEX === null) { newPicks.FLEX = p; markAdded(p); }
-      if (Object.values(newPicks).filter(Boolean).length >= 5) break;
+    // Fallback final: encore des slots vides → relacher toutes contraintes
+    if (Object.values(newPicks).filter(Boolean).length < 5) {
+      for (const p of pool) {
+        if (taken.has(p.slug || p.name)) continue;
+        const card = proCardMap[p.slug || p.name];
+        if (card?.isClassic && Object.values(newPicks).filter(pp => pp && proCardMap[pp.slug || pp.name]?.isClassic).length >= 1) continue;
+        const pos = p.position;
+        if (newPicks[pos] === null) { newPicks[pos] = p; markAdded(p); }
+        else if (pos !== "GK" && newPicks.FLEX === null) { newPicks.FLEX = p; markAdded(p); }
+        if (Object.values(newPicks).filter(Boolean).length >= 5) break;
+      }
     }
     setMyPicks(newPicks);
   };
@@ -847,9 +909,9 @@ export default function SorareProTab({ players, teams, fixtures, logos = {}, mat
                 {filledCount > 0 && (
                   <button onClick={resetTeam} style={{ fontSize: 7, fontWeight: 700, padding: "2px 6px", borderRadius: 4, border: "1px solid rgba(255,255,255,0.1)", background: "rgba(255,255,255,0.05)", color: "rgba(255,255,255,0.4)", cursor: "pointer", fontFamily: "Outfit" }}>{t(lang, "proReset")}</button>
                 )}
-                {filledCount === 5 && (
-                  <div style={{ fontSize: 8, color: "rgba(255,255,255,0.35)" }}>
-                    {`Score : ${totalScore} pts${palier ? ` · ${palier.reward}` : ""}`}
+                {filledCount > 0 && (
+                  <div style={{ fontSize: 8, fontWeight: 700, fontFamily: "'DM Mono',monospace", color: filledCount === 5 && sumL10 < 260 ? "#A78BFA" : sumL10 >= 260 ? "#EF4444" : "rgba(255,255,255,0.4)" }}>
+                    L10: {Math.round(sumL10)}/260
                   </div>
                 )}
               </div>

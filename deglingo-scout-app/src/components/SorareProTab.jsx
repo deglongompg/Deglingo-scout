@@ -349,11 +349,11 @@ export default function SorareProTab({ players, teams, fixtures, logos = {}, mat
   const addToTeam = (player) => {
     setMyPicks(prev => {
       // Classic enforcement: max 1 off-season card per team
-      const playerCard = proCardMap[player.slug || player.name];
+      const playerCard = getCard(player);
       if (playerCard?.isClassic) {
         const classicCount = Object.values(prev).filter(pp => {
           if (!pp) return false;
-          const c = proCardMap[pp.slug || pp.name];
+          const c = getCard(pp);
           return c?.isClassic;
         }).length;
         if (classicCount >= 1) return prev; // refuse — already 1 Classic
@@ -476,7 +476,7 @@ export default function SorareProTab({ players, teams, fixtures, logos = {}, mat
       result.push({ ...p, ds, oppName: fx.opp, isHome: fx.isHome, kickoff: fx.kickoff || "", matchDate: fx.date, csPercent });
     }
     return result.sort((a, b) => b.ds - a.ds);
-  }, [gwInfo, players, teams, gwMatches, league]);
+  }, [gwInfo, players, teams, gwMatches, league, proCardMap]);
 
   // ── Decisive Pick Top 3 ──
   const decisiveTop3 = useMemo(() => {
@@ -490,6 +490,7 @@ export default function SorareProTab({ players, teams, fixtures, logos = {}, mat
       ...Object.values(myPicks).filter(Boolean).map(pp => pp.slug || pp.name),
     ]);
     const pool = gwPlayers
+      .filter(p => p.ds >= 20)
       .filter(p => !usedIds.has(p.slug || p.name))
       .filter(p => !sorareConnected || proCardMap[p.slug || p.name])
       .filter(p => selectedGwIdx > 0 || p.sorare_starter_pct == null || p.sorare_starter_pct >= 70)
@@ -875,7 +876,7 @@ export default function SorareProTab({ players, teams, fixtures, logos = {}, mat
                         const p = myPicks[slot];
                         const sc = POS_SLOT_COLORS[slot];
                         const isActive = selectedSlot === slot;
-                        const card = p ? proCardMap[p.slug] : null;
+                        const card = p ? getCard(p) : null;
                         const dsVal = p ? getAdjDs(p) : 0;
                         const dsCol = dsVal >= 80 ? "#4ADE80" : dsVal >= 65 ? "#C4B5FD" : dsVal >= 50 ? "#FBBF24" : "#F87171";
                         const isCaptain = p && captainPlayer && (p.slug || p.name) === (captainPlayer.slug || captainPlayer.name);
@@ -1205,7 +1206,7 @@ export default function SorareProTab({ players, teams, fixtures, logos = {}, mat
                 const p = st.picks[slot];
                 if (!p) return null;
                 const pc = PC[p.position];
-                const ownedCard = proCardMap[p.slug || p.name];
+                const ownedCard = getCard(p);
                 const oppLogo = logos[p.oppName];
                 const isCap = stCaptainId && (p.slug || p.name) === stCaptainId;
                 const playerScore = Math.round(getFullScore(p, isCap));

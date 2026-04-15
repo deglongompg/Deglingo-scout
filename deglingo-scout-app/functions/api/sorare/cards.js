@@ -4,8 +4,8 @@
  * La function fait l'appel GraphQL à Sorare côté serveur (pas de CORS).
  */
 const GQL = "https://api.sorare.com/graphql";
-const Q = `{ currentUser { slug nickname cards(first: 50, sport: FOOTBALL) { nodes { slug name rarityTyped pictureUrl power cardEditionName ... on Card { player { slug displayName position } } } pageInfo { hasNextPage endCursor } } } }`;
-const QP = `query($a:String!){ currentUser { cards(first:50, sport:FOOTBALL, after:$a) { nodes { slug name rarityTyped pictureUrl power cardEditionName ... on Card { player { slug displayName position } } } pageInfo { hasNextPage endCursor } } } }`;
+const Q = `{ currentUser { slug nickname cards(first: 50, sport: FOOTBALL) { nodes { slug name rarityTyped pictureUrl power cardEditionName ... on Card { sealed player { slug displayName position } } } pageInfo { hasNextPage endCursor } } } }`;
+const QP = `query($a:String!){ currentUser { cards(first:50, sport:FOOTBALL, after:$a) { nodes { slug name rarityTyped pictureUrl power cardEditionName ... on Card { sealed player { slug displayName position } } } pageInfo { hasNextPage endCursor } } } }`;
 
 async function gql(token, query, variables) {
   const r = await fetch(GQL, {

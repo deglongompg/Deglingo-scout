@@ -159,6 +159,7 @@ export default function SorareProTab({ players, teams, fixtures, logos = {}, mat
   // Paginates in background — shows cards progressively as they are found
   // Uses localStorage cache to avoid re-paginating on every page load
   const parseCard = (c) => {
+    if (c.sealed || (c.pictureUrl || "").includes("/sealed/")) return null; // cartes scellees = pas jouables
     const edName = c.cardEditionName || "";
     const r = (c.rarityTyped || "").toLowerCase().replace(/ /g, "_");
     return {
@@ -201,7 +202,7 @@ export default function SorareProTab({ players, teams, fixtures, logos = {}, mat
       }
 
       // First page — also gets user info
-      const firstQ = encodeURIComponent(`{currentUser{slug nickname cards(first:50,sport:FOOTBALL){nodes{slug name rarityTyped pictureUrl power cardEditionName ... on Card{player{slug displayName position}}}pageInfo{hasNextPage endCursor}}}}`);
+      const firstQ = encodeURIComponent(`{currentUser{slug nickname cards(first:50,sport:FOOTBALL){nodes{slug name rarityTyped pictureUrl power cardEditionName ... on Card{sealed player{slug displayName position}}}pageInfo{hasNextPage endCursor}}}}`);
       const res = await fetch(`/api/sorare/cards?rawq=${firstQ}`, { headers: { "Authorization": `Bearer ${token}` } });
       if (res.status === 401) { localStorage.removeItem("sorare_access_token"); setSorareConnected(false); setSorareCards([]); return; }
       if (!res.ok) { setSorareConnected(false); return; }
@@ -212,7 +213,7 @@ export default function SorareProTab({ players, teams, fixtures, logos = {}, mat
 
       // Show whatever LR cards we find immediately
       let scanned = user.cards?.nodes?.length || 0;
-      let allLR = (user.cards?.nodes || []).filter(isLR).map(parseCard).filter(c => c.playerSlug);
+      let allLR = (user.cards?.nodes || []).filter(isLR).map(parseCard).filter(c => c && c.playerSlug);
       setSorareCards(allLR);
       setSorareConnected(true);
       setMyCardsMode(true);
@@ -222,14 +223,14 @@ export default function SorareProTab({ players, teams, fixtures, logos = {}, mat
       let cursor = user.cards?.pageInfo?.endCursor;
       let hasNext = user.cards?.pageInfo?.hasNextPage;
       for (let i = 0; i < 200 && hasNext && cursor; i++) {
-        const pageQ = `query($a:String!){currentUser{cards(first:50,sport:FOOTBALL,after:$a){nodes{slug name rarityTyped pictureUrl power cardEditionName ... on Card{player{slug displayName position}}}pageInfo{hasNextPage endCursor}}}}`;
+        const pageQ = `query($a:String!){currentUser{cards(first:50,sport:FOOTBALL,after:$a){nodes{slug name rarityTyped pictureUrl power cardEditionName ... on Card{sealed player{slug displayName position}}}pageInfo{hasNextPage endCursor}}}}`;
         const pr = await fetch(`/api/sorare/cards?rawq=${encodeURIComponent(pageQ)}&vars=${encodeURIComponent(JSON.stringify({a:cursor}))}`, { headers: { "Authorization": `Bearer ${token}` } });
         if (!pr.ok) break;
         const pd = await pr.json();
         if (pd.errors || !pd.data?.currentUser?.cards?.nodes?.length) break;
         const nodes = pd.data.currentUser.cards.nodes;
         scanned += nodes.length;
-        const newLR = nodes.filter(isLR).map(parseCard).filter(c => c.playerSlug);
+        const newLR = nodes.filter(isLR).map(parseCard).filter(c => c && c.playerSlug);
         if (newLR.length > 0) {
           allLR = [...allLR, ...newLR];
           setSorareCards([...allLR]);

@@ -351,6 +351,11 @@ export default function SorareProTab({ players, teams, fixtures, logos = {}, mat
 
   const addToTeam = (player) => {
     setMyPicks(prev => {
+      // Same player enforcement: max 1 instance per team (different cards of same player not allowed)
+      const playerId = player.slug || player.name;
+      const alreadyInTeam = Object.values(prev).some(pp => pp && (pp.slug || pp.name) === playerId);
+      if (alreadyInTeam) return prev;
+
       // Classic enforcement: max 1 off-season card per team
       const playerCard = getCard(player);
       if (playerCard?.isClassic) {

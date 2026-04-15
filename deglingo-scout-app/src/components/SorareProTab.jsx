@@ -84,6 +84,9 @@ const proKeyframes = `
 @keyframes proShine { 0%{background-position:0% 50%} 100%{background-position:200% 50%} }
 @keyframes spin { 0%{transform:rotate(0deg)} 100%{transform:rotate(360deg)} }
 @keyframes loadBar { 0%{transform:translateX(-100%)} 50%{transform:translateX(60%)} 100%{transform:translateX(200%)} }
+.pro-player-list ::-webkit-scrollbar { height: 4px; }
+.pro-player-list ::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.1); border-radius: 4px; }
+.pro-player-list ::-webkit-scrollbar-track { background: transparent; }
 @media(max-width:768px){
   .pro-main-flex { flex-direction: column !important; gap: 8px !important; }
   .pro-left-panel { display: none !important; }
@@ -972,6 +975,15 @@ export default function SorareProTab({ players, teams, fixtures, logos = {}, mat
                     L10: {Math.round(sumL10)}/260
                   </div>
                 )}
+                {isMobile && savedTeams.length > 0 && (
+                  <div style={{ display: "flex", gap: 3 }}>
+                    {savedTeams.map((st, i) => (
+                      <button key={st.id} onClick={() => loadSavedTeam(st)} style={{ fontSize: 7, fontWeight: 800, padding: "3px 6px", borderRadius: 4, border: `1px solid ${rarityColor}40`, background: `${rarityColor}10`, color: rarityColor, cursor: "pointer", fontFamily: "Outfit" }}>
+                        T{i + 1}
+                      </button>
+                    ))}
+                  </div>
+                )}
               </div>
               <div style={{ display: "flex", gap: 6, alignItems: "center" }}>
                 {sorareConnected && (<>
@@ -1071,8 +1083,8 @@ export default function SorareProTab({ players, teams, fixtures, logos = {}, mat
                   ))}
                 </div>
 
-                {/* Saved teams */}
-                <div style={{ display: "flex", flexDirection: "column", gap: 4, padding: "6px 10px", borderTop: "1px solid rgba(255,255,255,0.05)", overflowY: "auto" }}>
+                {/* Saved teams — hidden on mobile (replaced by T1/T2/T3/T4 buttons in header) */}
+                <div style={{ display: isMobile ? "none" : "flex", flexDirection: "column", gap: 4, padding: "6px 10px", borderTop: "1px solid rgba(255,255,255,0.05)", overflowY: "auto", width: "100%" }}>
                   {Array.from({ length: maxSaved }).map((_, i) => {
                     const st = savedTeams[i];
                     return st ? (

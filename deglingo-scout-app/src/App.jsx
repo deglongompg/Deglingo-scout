@@ -9,10 +9,10 @@ import { t } from "./utils/i18n";
 
 const TABS = [
   { id: "db", label: "Database", icon: "📊" },
-  { id: "reco", label: "Best Pick", icon: "⚽" },
   { id: "pro", label: "Sorare Pro", icon: "⚙️" },
   { id: "stellar", label: "Sorare Stellar", icon: "✨" },
   { id: "fight", label: "Fight", icon: "🥊" },
+  { id: "reco", label: "Best Pick", icon: "⚽" },
 ];
 
 export default function App() {

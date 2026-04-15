@@ -290,23 +290,38 @@ export default function SorareProTab({ players, teams, fixtures, logos = {}, mat
     return map;
   }, [sorareCards, rarity, includeRare]);
 
+  // All cards per player (for duplicates display)
+  const proAllCards = useMemo(() => {
+    const map = {};
+    for (const c of sorareCards) {
+      if (c.isStellar) continue;
+      if (rarity === "limited" && !c.isLimited && !(includeRare && c.isRare)) continue;
+      if (rarity === "rare" && !c.isRare) continue;
+      const slug = c.playerSlug;
+      if (!map[slug]) map[slug] = [];
+      map[slug].push(c);
+    }
+    // Sort each player's cards by power desc
+    for (const slug in map) map[slug].sort((a, b) => (b.power || 1) - (a.power || 1));
+    return map;
+  }, [sorareCards, rarity, includeRare]);
+
   const proCardCount = useMemo(() => {
     return sorareCards.filter(c => !c.isStellar && (c.isLimited || c.isRare)).length;
   }, [sorareCards]);
 
   // ── Bonus power — D-Score ajusté ──
+  // getCard : carte specifique du joueur (doublon ou meilleure)
+  const getCard = (p) => p._card || proCardMap[p.slug || p.name];
   // getAdjDs : score avec power (pour affichage dans le tableau et les cartes)
   const getAdjDs = (p) => {
-    const slug = p.slug || p.name;
-    const card = proCardMap[slug];
+    const card = getCard(p);
     if (!bonusEnabled || !card?.power || card.power <= 1) return Math.round(p.ds || 0);
     return Math.round((p.ds || 0) * card.power);
   };
   // getFullScore : score final d'un joueur (avec power + capitaine si applicable)
-  // C'est la formule Sorare Pro : base × captain_mult × power
   const getFullScore = (p, isCap) => {
-    const slug = p.slug || p.name;
-    const card = proCardMap[slug];
+    const card = getCard(p);
     const base = p.ds || 0;
     const capMult = isCap ? 1.5 : 1;
     const power = (bonusEnabled && card?.power && card.power > 1) ? card.power : 1;
@@ -314,7 +329,7 @@ export default function SorareProTab({ players, teams, fixtures, logos = {}, mat
   };
   // getPowerPct : bonus % de la carte (pour affichage badge)
   const getPowerPct = (p) => {
-    const card = proCardMap[p.slug || p.name];
+    const card = getCard(p);
     return card?.power ? Math.round((card.power - 1) * 100) : 0;
   };
   // Algo Magique: toujours avec bonus (meme si toggle OFF)
@@ -587,8 +602,24 @@ export default function SorareProTab({ players, teams, fixtures, logos = {}, mat
     if (myCardsMode && sorareConnected) {
       pool = pool.filter(p => proCardMap[p.slug || p.name]);
     }
+    // Expand duplicates: if a player has multiple cards, create a row per card
+    if (sorareConnected) {
+      const expanded = [];
+      for (const p of pool) {
+        const slug = p.slug || p.name;
+        const cards = proAllCards[slug] || [];
+        if (cards.length <= 1) {
+          expanded.push(p);
+        } else {
+          for (let ci = 0; ci < cards.length; ci++) {
+            expanded.push({ ...p, _cardIdx: ci, _card: cards[ci], _cardKey: `${slug}_${ci}` });
+          }
+        }
+      }
+      return expanded;
+    }
     return pool;
-  }, [gwPlayers, selectedSlot, hideUsed, filterTitu, selectedMatchFilters, myCardsMode, sorareConnected, proCardMap, myPicks, savedTeams]);
+  }, [gwPlayers, selectedSlot, hideUsed, filterTitu, selectedMatchFilters, myCardsMode, sorareConnected, proCardMap, proAllCards, myPicks, savedTeams]);
 
   // Reset match filters on league change
   useEffect(() => { setSelectedMatchFilters([]); }, [league]);
@@ -1031,14 +1062,15 @@ export default function SorareProTab({ players, teams, fixtures, logos = {}, mat
                         <div style={{ minWidth: "max-content" }}>
                         {sortedPool.map(p => {
                           const slug = p.slug || p.name;
+                          const rowKey = p._cardKey || slug;
                           const inTeam = isInTeam(p);
                           const pc = PC[p.position];
                           const opp = logos[p.oppName];
                           const parisTime = p.kickoff && p.matchDate ? utcToParisTime(p.kickoff, p.matchDate) : "";
                           const ga = (p.goals||0) + (p.assists||0);
-                          const ownedCard = proCardMap[slug];
+                          const ownedCard = p._card || proCardMap[slug];
                           return (
-                            <div key={slug} onClick={() => !inTeam && addToTeam(p)}
+                            <div key={rowKey} onClick={() => !inTeam && addToTeam(p)}
                               style={{ display: "grid", gridTemplateColumns: GRID, alignItems: "center", gap: 2, padding: "4px 8px", borderBottom: "1px solid rgba(255,255,255,0.03)", background: inTeam ? `${rarityColor}12` : "transparent", transition: "background 0.12s", cursor: inTeam ? "default" : "pointer", minWidth: "max-content" }}
                               onMouseEnter={e => { if (!inTeam) e.currentTarget.style.background = "rgba(255,255,255,0.04)"; }}
                               onMouseLeave={e => { e.currentTarget.style.background = inTeam ? `${rarityColor}12` : "transparent"; }}

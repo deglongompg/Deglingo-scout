@@ -261,6 +261,7 @@ def fetch(endpoint):
 
 def normalize_team(api_name):
     """Map football-data.org team name to our teams.json name."""
+    if not api_name: return "Unknown"
     if api_name in TEAM_NAME_MAP:
         return TEAM_NAME_MAP[api_name]
     # Fuzzy: try removing common suffixes

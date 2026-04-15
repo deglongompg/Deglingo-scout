@@ -36,13 +36,20 @@ call npm run build
 cd ..
 
 echo.
-echo [6/6] PRIX CARTES (long ~2h, tourne en fond)...
+echo [6/6] DEPLOY CLOUDFLARE...
+echo -----------------------------------------
+cd deglingo-scout-app
+npx wrangler pages deploy dist --project-name=deglingo-sorare --branch=deglingo-sorare --commit-dirty=true
+cd ..
+
+echo.
+echo [7/7] PRIX CARTES (long ~2h, tourne en fond)...
 echo -----------------------------------------
 start "Fetch Prices" py fetch_prices.py ALL --fresh
 
 echo.
 echo =========================================
-echo   TOUT EST PRET -- deploie sur Cloudflare
+echo   TOUT EST PRET -- deploye sur Cloudflare
 echo   (les prix se mettent a jour en fond)
 echo =========================================
 echo.

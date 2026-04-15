@@ -84,6 +84,27 @@ const proKeyframes = `
 @keyframes proShine { 0%{background-position:0% 50%} 100%{background-position:200% 50%} }
 @keyframes spin { 0%{transform:rotate(0deg)} 100%{transform:rotate(360deg)} }
 @keyframes loadBar { 0%{transform:translateX(-100%)} 50%{transform:translateX(60%)} 100%{transform:translateX(200%)} }
+@media(max-width:768px){
+  .pro-main-flex { flex-direction: column !important; gap: 8px !important; }
+  .pro-left-panel { display: none !important; }
+  .pro-right-col { min-width: 0 !important; }
+  .pro-builder-wrap { height: auto !important; max-height: none !important; }
+  .pro-builder-body { flex-direction: column !important; }
+  .pro-pitch { width: 100% !important; max-width: 100% !important; border-right: none !important; border-bottom: 1px solid rgba(255,255,255,0.06) !important; }
+  .pro-pitch > div { align-items: center !important; }
+  .pro-card-slot { width: 80px !important; height: 107px !important; margin-top: 0 !important; }
+  .pro-player-list { max-height: 50vh !important; }
+  .pro-filters-bar { flex-wrap: wrap !important; gap: 3px !important; }
+  .pro-header-row { gap: 6px !important; }
+  .pro-league-btns button { padding: 4px 8px !important; font-size: 9px !important; }
+  .pro-gw-btns { margin-left: 0 !important; }
+  .pro-paliers { display: none !important; }
+  .pro-recap-grid { grid-template-columns: 1fr !important; }
+  .pro-algo-header { flex-wrap: wrap !important; gap: 4px !important; }
+  .pro-table-hide-mobile { display: none !important; }
+  .pro-score-bar { flex-wrap: wrap !important; gap: 4px !important; }
+  .pro-gw-btn { padding: 2px 5px !important; font-size: 8px !important; }
+}
 `;
 
 /* ═══════════════════════════════════════════════════════════════════
@@ -91,6 +112,8 @@ const proKeyframes = `
    ═══════════════════════════════════════════════════════════════════ */
 export default function SorareProTab({ players, teams, fixtures, logos = {}, matchEvents = {}, lang = "fr" }) {
   const S = T[lang] ?? T.fr;
+
+  const isMobile = typeof window !== "undefined" && window.innerWidth <= 768;
 
   // ── UI State ──
   const [league, setLeague] = useState("L1");
@@ -740,11 +763,11 @@ export default function SorareProTab({ players, teams, fixtures, logos = {}, mat
   const rarityBg = rarity === "rare" ? "linear-gradient(135deg, #EF4444, #DC2626)" : "linear-gradient(135deg, #F59E0B, #D97706)";
 
   return (
-    <div style={{ position: "relative", minHeight: "80vh", padding: "0 16px 40px", maxWidth: 1800, margin: "0 auto" }}>
+    <div style={{ position: "relative", minHeight: "80vh", padding: isMobile ? "0 8px 40px" : "0 16px 40px", maxWidth: 1800, margin: "0 auto", overflowX: "hidden" }}>
       <style>{proKeyframes}</style>
 
       {/* ═══ HEADER : Titre + League selector + Rarity toggle ═══ */}
-      <div style={{ display: "flex", alignItems: "center", gap: 12, padding: "8px 0 12px", flexWrap: "wrap" }}>
+      <div className="pro-header-row" style={{ display: "flex", alignItems: "center", gap: 12, padding: "8px 0 12px", flexWrap: "wrap" }}>
         <div style={{ display: "flex", alignItems: "center", gap: 6, flexShrink: 0 }}>
           <span style={{ fontSize: 14, fontWeight: 800, color: "rgba(255,255,255,0.5)", letterSpacing: "0.12em" }}>SORARE</span>
           <span style={{ display: "inline-flex", alignItems: "center", justifyContent: "center", padding: "3px 10px", borderRadius: 5, background: rarityBg, boxShadow: `0 0 10px ${rarityColor}40` }}>
@@ -752,7 +775,7 @@ export default function SorareProTab({ players, teams, fixtures, logos = {}, mat
           </span>
         </div>
         {/* League buttons */}
-        <div style={{ display: "flex", gap: 4 }}>
+        <div className="pro-league-btns" style={{ display: "flex", gap: 4 }}>
           {PRO_LEAGUES.map(lg => (
             <button key={lg} onClick={() => setLeague(lg)} style={{
               padding: "6px 12px", borderRadius: 8, border: league === lg ? `2px solid ${LEAGUE_COLORS[lg]}` : "1px solid rgba(255,255,255,0.1)",
@@ -778,29 +801,29 @@ export default function SorareProTab({ players, teams, fixtures, logos = {}, mat
             </button>
           ))}
         </div>
-        {/* Separateur */}
-        <span style={{ width: 1, height: 18, background: "rgba(255,255,255,0.12)", flexShrink: 0, marginLeft: 4, marginRight: 4 }} />
-        {/* Hot Streak paliers — meme ligne */}
-        <span style={{ fontSize: 8, fontWeight: 800, color: "#EF4444", letterSpacing: "0.08em", flexShrink: 0 }}>HOT STREAK</span>
-        {paliers.map((p, i) => {
-          const reached = totalScore >= p.pts;
-          return (
-            <div key={i} style={{ padding: "4px 8px", borderRadius: 6, textAlign: "center", border: `1px solid ${reached ? p.color + "80" : "rgba(255,255,255,0.08)"}`, background: reached ? `${p.color}18` : "rgba(255,255,255,0.02)" }}>
-              <div style={{ fontSize: 11, fontWeight: 800, color: reached ? p.color : "rgba(255,255,255,0.3)", fontFamily: "'DM Mono',monospace" }}>{p.pts}</div>
-              <div style={{ fontSize: 7, color: reached ? "rgba(255,255,255,0.7)" : "rgba(255,255,255,0.2)" }}>{p.reward}</div>
+        {/* Separateur + Hot Streak paliers */}
+        <div className="pro-paliers" style={{ display: "flex", alignItems: "center", gap: 4 }}>
+          <span style={{ width: 1, height: 18, background: "rgba(255,255,255,0.12)", flexShrink: 0 }} />
+          <span style={{ fontSize: 8, fontWeight: 800, color: "#EF4444", letterSpacing: "0.08em", flexShrink: 0 }}>HOT STREAK</span>
+          {paliers.map((p, i) => {
+            const reached = totalScore >= p.pts;
+            return (
+              <div key={i} style={{ padding: "4px 8px", borderRadius: 6, textAlign: "center", border: `1px solid ${reached ? p.color + "80" : "rgba(255,255,255,0.08)"}`, background: reached ? `${p.color}18` : "rgba(255,255,255,0.02)" }}>
+                <div style={{ fontSize: 11, fontWeight: 800, color: reached ? p.color : "rgba(255,255,255,0.3)", fontFamily: "'DM Mono',monospace" }}>{p.pts}</div>
+                <div style={{ fontSize: 7, color: reached ? "rgba(255,255,255,0.7)" : "rgba(255,255,255,0.2)" }}>{p.reward}</div>
+              </div>
+            );
+          })}
+          {league === "MLS" && (
+            <div style={{ padding: "4px 8px", borderRadius: 6, border: `1px solid ${totalScore >= GRAND_PRIX.pts ? "rgba(192,192,192,0.6)" : "rgba(255,255,255,0.06)"}`, background: totalScore >= GRAND_PRIX.pts ? "rgba(192,192,192,0.1)" : "rgba(255,255,255,0.01)" }}>
+              <div style={{ fontSize: 11, fontWeight: 800, color: totalScore >= GRAND_PRIX.pts ? "#C0C0C0" : "rgba(255,255,255,0.2)", fontFamily: "'DM Mono',monospace" }}>{GRAND_PRIX.pts}</div>
+              <div style={{ fontSize: 6, color: "rgba(255,255,255,0.15)" }}>GP</div>
             </div>
-          );
-        })}
-        {/* Grand Prix — MLS only */}
-        {league === "MLS" && (
-          <div style={{ padding: "4px 8px", borderRadius: 6, border: `1px solid ${totalScore >= GRAND_PRIX.pts ? "rgba(192,192,192,0.6)" : "rgba(255,255,255,0.06)"}`, background: totalScore >= GRAND_PRIX.pts ? "rgba(192,192,192,0.1)" : "rgba(255,255,255,0.01)" }}>
-            <div style={{ fontSize: 11, fontWeight: 800, color: totalScore >= GRAND_PRIX.pts ? "#C0C0C0" : "rgba(255,255,255,0.2)", fontFamily: "'DM Mono',monospace" }}>{GRAND_PRIX.pts}</div>
-            <div style={{ fontSize: 6, color: "rgba(255,255,255,0.15)" }}>GP</div>
-          </div>
-        )}
+          )}
+        </div>
         {/* GW selector + countdown — fin de ligne */}
         {gwList.length > 0 && (
-          <div style={{ marginLeft: "auto", display: "flex", alignItems: "center", gap: 4, flexShrink: 0 }}>
+          <div className="pro-gw-btns" style={{ marginLeft: "auto", display: "flex", alignItems: "center", gap: 4, flexShrink: 0 }}>
             {gwList.map((gw, i) => {
               const isActive = selectedGwIdx === i;
               const isCurrent = i === 0;
@@ -832,10 +855,10 @@ export default function SorareProTab({ players, teams, fixtures, logos = {}, mat
       </div>
 
       {/* ═══ MAIN LAYOUT : Left (matches) + Right (builder + players) ═══ */}
-      <div style={{ display: "flex", gap: 16, alignItems: "flex-start" }}>
+      <div className="pro-main-flex" style={{ display: "flex", gap: 16, alignItems: "flex-start" }}>
 
         {/* ── Left column: Decisive Pick + Matches ── */}
-        <div style={{ width: leftCollapsed ? 30 : 280, flexShrink: 0, transition: "width 0.2s", position: "relative" }}>
+        <div className="pro-left-panel" style={{ width: leftCollapsed ? 30 : 280, flexShrink: 0, transition: "width 0.2s", position: "relative", display: isMobile ? "none" : undefined }}>
           <button onClick={() => setLeftCollapsed(v => !v)} style={{ position: "absolute", top: 0, right: -12, zIndex: 5, width: 24, height: 24, borderRadius: "50%", border: "1px solid rgba(255,255,255,0.15)", background: "rgba(6,3,20,0.9)", color: "rgba(255,255,255,0.5)", fontSize: 11, cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center" }}>{leftCollapsed ? "▶" : "◀"}</button>
           {leftCollapsed ? null : (<>
           {/* GW Matches */}
@@ -888,8 +911,8 @@ export default function SorareProTab({ players, teams, fixtures, logos = {}, mat
         </div>
 
         {/* ── Right column: Builder + Player list ── */}
-        <div style={{ flex: 1, minWidth: 0 }}>
-          <div style={{ borderRadius: 14, background: "rgba(6,3,20,0.95)", border: "none", overflow: "hidden", display: "flex", flexDirection: "column", height: "calc(100vh - 180px)", position: "relative" }}>
+        <div className="pro-right-col" style={{ flex: 1, minWidth: 0, maxWidth: "100%", overflow: "hidden" }}>
+          <div className="pro-builder-wrap" style={{ borderRadius: 14, background: "rgba(6,3,20,0.95)", border: "none", overflow: "hidden", display: "flex", flexDirection: "column", height: isMobile ? "auto" : "calc(100vh - 180px)", minHeight: isMobile ? "60vh" : undefined, position: "relative", maxWidth: "100%" }}>
 
             {/* Loading overlay — first connection */}
             {sorareLoading && (
@@ -926,8 +949,8 @@ export default function SorareProTab({ players, teams, fixtures, logos = {}, mat
             )}
 
             {/* Header */}
-            <div style={{ padding: "8px 14px", borderBottom: "1px solid rgba(255,255,255,0.06)", display: "flex", alignItems: "center", justifyContent: "space-between", gap: 8 }}>
-              <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
+            <div className="pro-algo-header" style={{ padding: "8px 14px", borderBottom: "1px solid rgba(255,255,255,0.06)", display: "flex", alignItems: "center", justifyContent: "space-between", gap: 8 }}>
+              <div style={{ display: "flex", alignItems: "center", gap: 6, flexWrap: "wrap" }}>
                 <button onClick={() => setAlgoMultiClub(v => !v)} style={{ fontSize: 7, fontWeight: 800, padding: "3px 6px", borderRadius: 5, border: `1px solid ${algoMultiClub ? "rgba(74,222,128,0.5)" : "rgba(255,255,255,0.1)"}`, background: algoMultiClub ? "rgba(74,222,128,0.12)" : "transparent", color: algoMultiClub ? "#4ADE80" : "rgba(255,255,255,0.3)", cursor: "pointer", fontFamily: "Outfit" }}>
                   MC +2%
                 </button>
@@ -961,13 +984,13 @@ export default function SorareProTab({ players, teams, fixtures, logos = {}, mat
             </div>
 
             {/* Body: Pitch + Player list */}
-            <div style={{ display: "flex", flex: 1, minHeight: 0, overflow: "hidden" }}>
+            <div className="pro-builder-body" style={{ display: "flex", flexDirection: isMobile ? "column" : "row", flex: 1, minHeight: 0, overflow: isMobile ? "auto" : "hidden", maxWidth: "100%" }}>
 
               {/* Pitch (left) */}
-              <div style={{ width: 370, flexShrink: 0, display: "flex", flexDirection: "column", borderRight: "1px solid rgba(255,255,255,0.06)", background: "rgba(0,0,0,0.15)" }}>
+              <div className="pro-pitch" style={{ width: isMobile ? "100%" : 370, flexShrink: 0, display: "flex", flexDirection: "column", alignItems: "center", borderRight: isMobile ? "none" : "1px solid rgba(255,255,255,0.06)", borderBottom: isMobile ? "1px solid rgba(255,255,255,0.06)" : "none", background: "rgba(0,0,0,0.15)" }}>
                 {/* Score bar */}
                 {filledCount === 5 && (
-                  <div style={{ padding: "6px 14px", borderBottom: "1px solid rgba(255,255,255,0.05)", display: "flex", alignItems: "center", justifyContent: "space-between" }}>
+                  <div className="pro-score-bar" style={{ padding: "6px 14px", borderBottom: "1px solid rgba(255,255,255,0.05)", display: "flex", alignItems: "center", justifyContent: "space-between", width: "100%" }}>
                     <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
                       <div style={{ fontSize: 8, color: "rgba(255,255,255,0.35)", fontWeight: 600 }}>{t(lang, "proScore")}</div>
                       <button onClick={saveCurrentTeam} disabled={savedTeams.length >= maxSaved} style={{ fontSize: 8, fontWeight: 800, padding: "3px 10px", borderRadius: 6, border: "none", cursor: savedTeams.length >= maxSaved ? "not-allowed" : "pointer", background: savedTeams.length >= maxSaved ? "rgba(255,255,255,0.05)" : rarityBg, color: savedTeams.length >= maxSaved ? "rgba(255,255,255,0.2)" : "#fff", fontFamily: "Outfit" }}>
@@ -986,9 +1009,9 @@ export default function SorareProTab({ players, teams, fixtures, logos = {}, mat
                 )}
 
                 {/* 5 card slots */}
-                <div style={{ padding: "6px 8px", flex: "0 0 auto", display: "flex", flexDirection: "column", gap: 4 }}>
+                <div style={{ padding: "6px 8px", flex: "0 0 auto", display: "flex", flexDirection: "column", gap: 4, alignItems: "center" }}>
                   {[["ATT", "FLEX"], ["DEF", "GK", "MIL"]].map((row, rowIdx) => (
-                    <div key={rowIdx} style={{ display: "flex", gap: 6, justifyContent: "center", alignItems: "flex-start" }}>
+                    <div key={rowIdx} style={{ display: "flex", gap: isMobile ? 3 : 6, justifyContent: "center", alignItems: "flex-start" }}>
                       {row.map(slot => {
                         const p = myPicks[slot];
                         const sc = POS_SLOT_COLORS[slot];
@@ -999,13 +1022,13 @@ export default function SorareProTab({ players, teams, fixtures, logos = {}, mat
                         const isCaptain = p && captainPlayer && (p.slug || p.name) === (captainPlayer.slug || captainPlayer.name);
                         const bonusPct = bonusEnabled && card?.power ? Math.round((card.power - 1) * 100) : 0;
                         return (
-                          <div key={slot} onClick={() => setSelectedSlot(isActive ? null : slot)} style={{
+                          <div key={slot} className="pro-card-slot" onClick={() => setSelectedSlot(isActive ? null : slot)} style={{
                             borderRadius: 10, cursor: "pointer", overflow: "hidden",
                             background: card ? "transparent" : p ? `linear-gradient(160deg, #0d0826, ${sc}30)` : isActive ? `${sc}18` : "rgba(255,255,255,0.025)",
                             border: card ? "none" : isCaptain ? `2px solid #FBBF24` : `1.5px solid ${isActive ? sc + "CC" : p ? sc + "55" : "rgba(255,255,255,0.08)"}`,
                             display: "flex", flexDirection: "column", alignItems: "center", gap: 4,
-                            padding: card ? 0 : "8px 6px", position: "relative", width: 120, height: 166, flexShrink: 0,
-                            marginTop: slot === "GK" ? 12 : 0,
+                            padding: card ? 0 : "8px 6px", position: "relative", width: isMobile ? 70 : 120, height: isMobile ? 93 : 166, flexShrink: 0,
+                            marginTop: slot === "GK" && !isMobile ? 12 : 0,
                           }}>
                             {/* Captain badge — click to toggle */}
                             {p && filledCount === 5 && (
@@ -1072,9 +1095,9 @@ export default function SorareProTab({ players, teams, fixtures, logos = {}, mat
               </div>
 
               {/* Player list (right) */}
-              <div style={{ flex: 1, minWidth: 0, display: "flex", flexDirection: "column", overflow: "hidden" }}>
+              <div className="pro-player-list" style={{ flex: 1, minWidth: 0, maxWidth: "100%", display: "flex", flexDirection: "column", overflow: "hidden" }}>
                 {/* Filters */}
-                <div style={{ display: "flex", alignItems: "center", gap: 4, padding: "4px 10px", borderBottom: "1px solid rgba(255,255,255,0.07)", background: "rgba(0,0,0,0.3)", flexShrink: 0 }}>
+                <div className="pro-filters-bar" style={{ display: "flex", alignItems: "center", gap: 4, padding: "4px 10px", borderBottom: "1px solid rgba(255,255,255,0.07)", background: "rgba(0,0,0,0.3)", flexShrink: 0 }}>
                   <button onClick={() => setHideUsed(v => !v)} style={{ fontSize: 7, fontWeight: 700, padding: "3px 8px", borderRadius: 6, border: `1px solid ${hideUsed ? "rgba(251,191,36,0.5)" : "rgba(255,255,255,0.1)"}`, background: hideUsed ? "rgba(251,191,36,0.12)" : "transparent", color: hideUsed ? "#FBBF24" : "rgba(255,255,255,0.3)", cursor: "pointer", fontFamily: "Outfit" }}>
                     {t(lang, "proDispo")}
                   </button>
@@ -1311,7 +1334,7 @@ export default function SorareProTab({ players, teams, fixtures, logos = {}, mat
             {t(lang, "proRecap")}
             <span style={{ fontSize: 9, fontWeight: 600, color: "rgba(255,255,255,0.35)" }}>{savedTeams.length}/{maxSaved} · {LEAGUE_NAMES[league] || league} · {rarity === "rare" ? t(lang, "proRare") : t(lang, "proLimited")} · {gwInfo?.displayNumber ? `GW${gwInfo.displayNumber}` : ""}</span>
           </div>
-          <div style={{ display: "grid", gridTemplateColumns: `repeat(${maxSaved}, 1fr)`, gap: 6 }}>
+          <div className="pro-recap-grid" style={{ display: "grid", gridTemplateColumns: `repeat(${maxSaved}, 1fr)`, gap: 6 }}>
             {savedTeams.map((st) => {
               const stPlayers = TEAM_SLOTS.map(s => st.picks[s]).filter(Boolean);
               const stAdjScores = stPlayers.map(p => getAdjDs(p));

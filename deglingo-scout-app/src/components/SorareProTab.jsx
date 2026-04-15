@@ -503,8 +503,8 @@ export default function SorareProTab({ players, teams, fixtures, logos = {}, mat
       .filter(p => !sorareConnected || proCardMap[p.slug || p.name])
       .filter(p => selectedGwIdx > 0 || p.sorare_starter_pct == null || p.sorare_starter_pct >= 70)
       .filter(p => selectedMatchFilters.length === 0 || selectedMatchFilters.some(m => clubMatch(p.club, m.home) || clubMatch(p.club, m.away)))
-      .map(p => ({ ...p, ds: getAlgoDs(p) }))
-      .sort((a, b) => b.ds - a.ds);
+      .map(p => ({ ...p, _algoDs: getAlgoDs(p) }))
+      .sort((a, b) => b._algoDs - a._algoDs);
     if (pool.length < 5) return;
 
     const newPicks = { GK: null, DEF: null, MIL: null, ATT: null, FLEX: null };
@@ -1214,7 +1214,7 @@ export default function SorareProTab({ players, teams, fixtures, logos = {}, mat
             {t(lang, "proRecap")}
             <span style={{ fontSize: 9, fontWeight: 600, color: "rgba(255,255,255,0.35)" }}>{savedTeams.length}/{maxSaved} · {LEAGUE_NAMES[league] || league} · {rarity === "rare" ? t(lang, "proRare") : t(lang, "proLimited")} · {gwInfo?.displayNumber ? `GW${gwInfo.displayNumber}` : ""}</span>
           </div>
-          <div style={{ display: "grid", gridTemplateColumns: `repeat(${maxSaved}, 1fr)`, gap: 10 }}>
+          <div style={{ display: "grid", gridTemplateColumns: `repeat(${maxSaved}, 1fr)`, gap: 6 }}>
             {savedTeams.map((st) => {
               const stPlayers = TEAM_SLOTS.map(s => st.picks[s]).filter(Boolean);
               const stAdjScores = stPlayers.map(p => getAdjDs(p));
@@ -1244,8 +1244,8 @@ export default function SorareProTab({ players, teams, fixtures, logos = {}, mat
                 const parisTime = p.kickoff && p.matchDate ? utcToParisTime(p.kickoff, p.matchDate) : "";
                 const dateLabel = p.matchDate ? new Date(p.matchDate + "T12:00:00").toLocaleDateString(lang === "fr" ? "fr-FR" : "en-US", { timeZone: TZ, weekday: "short", day: "numeric" }).toUpperCase() : "";
                 return (
-                  <div key={slot} style={{ textAlign: "center", width: 70 }}>
-                    <div style={{ width: 70, height: 94, borderRadius: 6, overflow: "hidden", margin: "0 auto", position: "relative",
+                  <div key={slot} style={{ textAlign: "center", flex: 1, minWidth: 0, maxWidth: 90 }}>
+                    <div style={{ width: "100%", aspectRatio: "3/4", borderRadius: 6, overflow: "hidden", margin: "0 auto", position: "relative",
                       background: ownedCard ? "transparent" : `linear-gradient(155deg, rgba(8,4,28,0.9), ${pc}25)`,
                       border: isCap ? "2px solid #FBBF24" : ownedCard ? "none" : `1px solid ${pc}30`,
                     }}>
@@ -1283,9 +1283,9 @@ export default function SorareProTab({ players, teams, fixtures, logos = {}, mat
               };
 
               return (
-                <div key={st.id} style={{ borderRadius: 10, background: "linear-gradient(160deg, rgba(10,5,30,0.95), rgba(20,10,50,0.9))", border: `1px solid ${rarityColor}25`, padding: "8px 10px", backdropFilter: "blur(8px)" }}>
+                <div key={st.id} style={{ borderRadius: 10, background: "linear-gradient(160deg, rgba(10,5,30,0.95), rgba(20,10,50,0.9))", border: `1px solid ${rarityColor}25`, padding: "6px 6px", backdropFilter: "blur(8px)" }}>
                   {/* Header */}
-                  <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 6 }}>
+                  <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 4 }}>
                     <div style={{ display: "flex", alignItems: "center", gap: 4 }}>
                       <span style={{ fontSize: 10, fontWeight: 900, color: rarityColor }}>{st.label}</span>
                       <button onClick={() => loadSavedTeam(st)} style={{ fontSize: 6, fontWeight: 700, padding: "1px 4px", borderRadius: 3, border: `1px solid ${rarityColor}40`, background: `${rarityColor}10`, color: rarityColor, cursor: "pointer", fontFamily: "Outfit" }}>Charger</button>
@@ -1300,12 +1300,12 @@ export default function SorareProTab({ players, teams, fixtures, logos = {}, mat
                     </div>
                   </div>
                   {/* Pitch layout : ATT+FLEX en haut, DEF+GK+MIL en bas */}
-                  <div style={{ display: "flex", flexDirection: "column", gap: 4, alignItems: "center" }}>
-                    <div style={{ display: "flex", gap: 6, justifyContent: "center" }}>
+                  <div style={{ display: "flex", flexDirection: "column", gap: 2, alignItems: "center" }}>
+                    <div style={{ display: "flex", gap: 3, justifyContent: "center", width: "100%" }}>
                       {renderCard("ATT")}
                       {renderCard("FLEX")}
                     </div>
-                    <div style={{ display: "flex", gap: 6, justifyContent: "center" }}>
+                    <div style={{ display: "flex", gap: 3, justifyContent: "center", width: "100%" }}>
                       {renderCard("DEF")}
                       {renderCard("GK")}
                       {renderCard("MIL")}

@@ -544,6 +544,39 @@ export default function SorareProTab({ players, teams, fixtures, logos = {}, mat
       return false;
     };
 
+    // ── STACK path: 1 match selectionne → 5 joueurs du meme club (meilleur des 2 clubs) ──
+    if (selectedMatchFilters.length === 1) {
+      const match = selectedMatchFilters[0];
+      const clubs = [match.home, match.away];
+      let bestStack = null, bestStackScore = 0;
+      for (const stackClub of clubs) {
+        const clubPool = pool.filter(p => clubMatch(p.club, stackClub));
+        const stack = { GK: null, DEF: null, MIL: null, ATT: null, FLEX: null };
+        const stackTaken = new Set();
+        let stackClassic = false;
+        for (const p of clubPool) {
+          if (stackTaken.has(p.slug || p.name)) continue;
+          const card = proCardMap[p.slug || p.name];
+          if (card?.isClassic && stackClassic) continue;
+          const pos = p.position;
+          if (stack[pos] === null) { stack[pos] = p; stackTaken.add(p.slug || p.name); if (card?.isClassic) stackClassic = true; }
+          else if (pos !== "GK" && stack.FLEX === null) { stack.FLEX = p; stackTaken.add(p.slug || p.name); if (card?.isClassic) stackClassic = true; }
+          if (Object.values(stack).filter(Boolean).length >= 5) break;
+        }
+        if (Object.values(stack).filter(Boolean).length >= 5) {
+          const total = Object.values(stack).filter(Boolean).reduce((s, p) => s + (p._algoDs || p.ds || 0), 0);
+          if (total > bestStackScore) { bestStackScore = total; bestStack = { ...stack }; }
+        }
+      }
+      if (bestStack) {
+        for (const slot of ["GK", "DEF", "MIL", "ATT", "FLEX"]) {
+          if (bestStack[slot]) { newPicks[slot] = bestStack[slot]; markAdded(bestStack[slot]); }
+        }
+        setMyPicks(newPicks);
+        return;
+      }
+    }
+
     // ── CAP260 special path: knapsack-style — maximize D-Score with L10 sum < 260 ──
     if (algoCap260) {
       // Strategy: pick best captain first (highest D-Score), then fill 4 slots with best D-Score/L10 ratio

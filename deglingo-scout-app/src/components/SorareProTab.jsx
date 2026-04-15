@@ -462,7 +462,7 @@ export default function SorareProTab({ players, teams, fixtures, logos = {}, mat
       }
       if (!fx) continue;
 
-      const oppStats = lgTeams.find(t => t.name === fx.opp);
+      const oppStats = lgTeams.find(t => clubMatch(t.name, fx.opp));
       if (!oppStats) continue;
       const pTeam = findTeam(lgTeams, p.club);
       const ds = dScoreMatch(p, oppStats, fx.isHome, pTeam);

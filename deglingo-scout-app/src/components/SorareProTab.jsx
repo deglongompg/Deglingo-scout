@@ -101,9 +101,9 @@ export default function SorareProTab({ players, teams, fixtures, logos = {}, mat
   const [filterTitu, setFilterTitu] = useState(0);
   const [selectedMatchFilters, setSelectedMatchFilters] = useState([]);
   const [includeRare, setIncludeRare] = useState(false);
-  const [bonusEnabled, setBonusEnabled] = useState(true);
-  const [algoMultiClub, setAlgoMultiClub] = useState(true);  // true = respect multi-club (+2%)
-  const [algoCap260, setAlgoCap260] = useState(true);        // true = respect cap260 (+4%)
+  const [bonusEnabled, setBonusEnabled] = useState(false);
+  const [algoMultiClub, setAlgoMultiClub] = useState(false);  // false = off par defaut
+  const [algoCap260, setAlgoCap260] = useState(false);        // false = off par defaut
 
   // ── GW Info — 5 prochaines GW ──
   const gwList = useMemo(() => getProGwList(5), []);
@@ -166,7 +166,7 @@ export default function SorareProTab({ players, teams, fixtures, logos = {}, mat
       position: c.player?.position || null, rarity: r, pictureUrl: c.pictureUrl || null,
       cardEditionName: edName, isStellar: false,
       isLimited: r === "limited", isRare: r === "rare",
-      isClassic: (() => { const m = c.slug?.match(/-(\d{4})-(?:limited|rare)-/); return m ? parseInt(m[1]) < 2025 : false; })(),
+      cardYear: (() => { const matches = [...(c.slug || "").matchAll(/-(\d{4})-/g)]; return matches.length > 0 ? parseInt(matches[matches.length - 1][1]) : null; })(),
       power: c.power,
     };
   };
@@ -276,20 +276,23 @@ export default function SorareProTab({ players, teams, fixtures, logos = {}, mat
     if (token) fetchCards(token);
   };
 
+  // ── Classic threshold — EU saisons croisees (2024-2025 → <2025), MLS annee calendaire (2026 → <2026) ──
+  const classicThreshold = league === "MLS" ? 2026 : 2025;
+  const tagClassic = (c) => ({ ...c, isClassic: c.cardYear != null && c.cardYear < classicThreshold });
+
   // ── Card maps — Limited/Rare par rarity selectionnee ──
   const proCardMap = useMemo(() => {
     const map = {};
     for (const c of sorareCards) {
       if (c.isStellar) continue;
-      // Limited mode: Limited + optionally Rare (higher tier, toggleable)
-      // Rare mode: Rare only
       if (rarity === "limited" && !c.isLimited && !(includeRare && c.isRare)) continue;
       if (rarity === "rare" && !c.isRare) continue;
       const slug = c.playerSlug;
-      if (!map[slug] || (c.power || 1) > (map[slug].power || 1)) map[slug] = c;
+      const tagged = tagClassic(c);
+      if (!map[slug] || (tagged.power || 1) > (map[slug].power || 1)) map[slug] = tagged;
     }
     return map;
-  }, [sorareCards, rarity, includeRare]);
+  }, [sorareCards, rarity, includeRare, classicThreshold]);
 
   // All cards per player (for duplicates display)
   const proAllCards = useMemo(() => {
@@ -300,12 +303,11 @@ export default function SorareProTab({ players, teams, fixtures, logos = {}, mat
       if (rarity === "rare" && !c.isRare) continue;
       const slug = c.playerSlug;
       if (!map[slug]) map[slug] = [];
-      map[slug].push(c);
+      map[slug].push(tagClassic(c));
     }
-    // Sort each player's cards by power desc
     for (const slug in map) map[slug].sort((a, b) => (b.power || 1) - (a.power || 1));
     return map;
-  }, [sorareCards, rarity, includeRare]);
+  }, [sorareCards, rarity, includeRare, classicThreshold]);
 
   const proCardCount = useMemo(() => {
     return sorareCards.filter(c => !c.isStellar && (c.isLimited || c.isRare)).length;
@@ -507,7 +509,11 @@ export default function SorareProTab({ players, teams, fixtures, logos = {}, mat
 
     const canAdd = (p) => {
       const card = proCardMap[p.slug || p.name];
-      if (card?.isClassic && classicUsed) return false;
+      // Classic: count how many classics already in newPicks (bulletproof check)
+      if (card?.isClassic) {
+        const classicCount = Object.values(newPicks).filter(pp => pp && proCardMap[pp.slug || pp.name]?.isClassic).length;
+        if (classicCount >= 1) return false;
+      }
       // Multi-club: max 2 par club (si toggle actif)
       if (algoMultiClub && (clubCount[p.club] || 0) >= 2) return false;
       // Cap260: somme L10 < 260 (si toggle actif)
@@ -518,7 +524,6 @@ export default function SorareProTab({ players, teams, fixtures, logos = {}, mat
       taken.add(p.slug || p.name);
       clubCount[p.club] = (clubCount[p.club] || 0) + 1;
       totalL10 += (p.l10 || 0);
-      if (proCardMap[p.slug || p.name]?.isClassic) classicUsed = true;
     };
 
     // Conflit anti-meta : GK/DEF vs ATT/MIL adverse (les buts de l'ATT penalisent le GK/DEF)
@@ -826,12 +831,21 @@ export default function SorareProTab({ players, teams, fixtures, logos = {}, mat
                 <button onClick={() => setAlgoCap260(v => !v)} style={{ fontSize: 7, fontWeight: 800, padding: "3px 6px", borderRadius: 5, border: `1px solid ${algoCap260 ? "rgba(139,92,246,0.5)" : "rgba(255,255,255,0.1)"}`, background: algoCap260 ? "rgba(139,92,246,0.12)" : "transparent", color: algoCap260 ? "#A78BFA" : "rgba(255,255,255,0.3)", cursor: "pointer", fontFamily: "Outfit" }}>
                   CAP +4%
                 </button>
+                <div style={{ fontSize: 6, color: "rgba(255,255,255,0.45)", lineHeight: 1.3 }}>
+                  <div>MC = max 2/{lang === "fr" ? "club" : "club"} (+2%)</div>
+                  <div>CAP = L10 total &lt; 260 (+4%)</div>
+                </div>
                 <button onClick={generateMagicTeam} style={{ padding: "5px 10px", borderRadius: 6, border: "none", cursor: "pointer", fontFamily: "Outfit", background: rarityBg, color: "#fff", fontSize: 9, fontWeight: 800 }}>
                   {t(lang, "proAlgo")}
                 </button>
-                <div style={{ fontSize: 8, color: "rgba(255,255,255,0.35)" }}>
-                  {filledCount < 5 ? S.proMyTeamSelect(5 - filledCount) : `Score : ${totalScore} pts${palier ? ` · ${palier.reward}` : ""}`}
-                </div>
+                {filledCount > 0 && (
+                  <button onClick={resetTeam} style={{ fontSize: 7, fontWeight: 700, padding: "2px 6px", borderRadius: 4, border: "1px solid rgba(255,255,255,0.1)", background: "rgba(255,255,255,0.05)", color: "rgba(255,255,255,0.4)", cursor: "pointer", fontFamily: "Outfit" }}>{t(lang, "proReset")}</button>
+                )}
+                {filledCount === 5 && (
+                  <div style={{ fontSize: 8, color: "rgba(255,255,255,0.35)" }}>
+                    {`Score : ${totalScore} pts${palier ? ` · ${palier.reward}` : ""}`}
+                  </div>
+                )}
               </div>
               <div style={{ display: "flex", gap: 6, alignItems: "center" }}>
                 {sorareConnected && (<>
@@ -1035,12 +1049,12 @@ export default function SorareProTab({ players, teams, fixtures, logos = {}, mat
                     return (b.ds||0) - (a.ds||0);
                   });
                   const COLS = [
-                    ["ds","D-Score"], ["opp","Adv."], ["titu_s","Titu%"], ["cs","CS%"], ["win","Win%"],
+                    ["ds","D-Score"], ["last5","L5"], ["opp","Adv."], ["titu_s","Titu%"], ["cs","CS%"], ["win","Win%"],
                     ["l2","L2"], ["aa2","AA2"], ["l5","L5"], ["aa5","AA5"],
                     ["l10","L10"], ["dom","DOM"], ["ext","EXT"], ["aa10","AA10"],
                     ["titu","Titu10"], ["reg","Reg10"], ["l40","L40"], ["aa40","AA40"], ["ga","G+A"],
                   ];
-                  const GRID = "28px 70px 80px 52px 80px 36px 36px 90px 30px 28px 30px 28px 46px 32px 32px 28px 30px 28px 30px 30px 44px";
+                  const GRID = "28px 70px 80px 52px 30px 80px 36px 36px 90px 30px 28px 30px 28px 46px 32px 32px 28px 30px 28px 30px 30px 44px";
                   const thS = (col) => ({ fontSize: 8, fontWeight: 800, color: sortCol===col ? rarityColor : "rgba(255,255,255,0.3)", cursor: "pointer", userSelect: "none", whiteSpace: "nowrap", textAlign: "center", padding: "0 4px" });
 
                   return (
@@ -1097,6 +1111,16 @@ export default function SorareProTab({ players, teams, fixtures, logos = {}, mat
                               {/* D-Score */}
                               <div style={{ textAlign: "center" }}>
                                 <span style={{ display: "inline-block", padding: "3px 7px", borderRadius: 8, fontFamily: "'DM Mono',monospace", fontSize: 14, fontWeight: 700, color: isSilver(getAdjDs(p)) ? "#1a1a2e" : "#fff", background: isSilver(getAdjDs(p)) ? "linear-gradient(90deg,#C0C0C0,#A8E8D0,#B0C4E8,#D4B0E8,#fff,#D4B0E8,#B0C4E8,#A8E8D0,#C0C0C0)" : dsBg(getAdjDs(p)), backgroundSize: isSilver(getAdjDs(p)) ? "200% 100%" : "auto", animation: isSilver(getAdjDs(p)) ? "proShine 3s linear infinite" : "none" }}>{getAdjDs(p)}</span>
+                              </div>
+                              {/* Last 5 mini histogram */}
+                              <div style={{ display: "flex", alignItems: "flex-end", justifyContent: "center", gap: 1, height: 20 }}>
+                                {(() => {
+                                  const arr = (p.last_5 || []).slice(-5).reverse();
+                                  const pad = 5 - arr.length;
+                                  return Array.from({ length: 5 }, (_, j) => j < pad ? null : arr[j - pad]).map((v, j) => (
+                                    <div key={j} style={{ width: 3, borderRadius: 1, height: v != null && v > 0 ? Math.max(2, (v / 100) * 20) : v === 0 ? 2 : 0, background: v != null && v > 0 ? dc(v) : v === 0 ? "rgba(239,68,68,0.5)" : "transparent", opacity: v != null && v > 0 ? 0.85 : 0.7 }} />
+                                  ));
+                                })()}
                               </div>
                               {/* Adv */}
                               <div style={{ overflow: "hidden" }}>
@@ -1184,7 +1208,7 @@ export default function SorareProTab({ players, teams, fixtures, logos = {}, mat
             {t(lang, "proRecap")}
             <span style={{ fontSize: 9, fontWeight: 600, color: "rgba(255,255,255,0.35)" }}>{savedTeams.length}/{maxSaved} · {LEAGUE_NAMES[league] || league} · {rarity === "rare" ? t(lang, "proRare") : t(lang, "proLimited")} · {gwInfo?.displayNumber ? `GW${gwInfo.displayNumber}` : ""}</span>
           </div>
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(2, 1fr)", gap: 16 }}>
+          <div style={{ display: "grid", gridTemplateColumns: `repeat(${maxSaved}, 1fr)`, gap: 10 }}>
             {savedTeams.map((st) => {
               const stPlayers = TEAM_SLOTS.map(s => st.picks[s]).filter(Boolean);
               const stAdjScores = stPlayers.map(p => getAdjDs(p));
@@ -1214,37 +1238,37 @@ export default function SorareProTab({ players, teams, fixtures, logos = {}, mat
                 const parisTime = p.kickoff && p.matchDate ? utcToParisTime(p.kickoff, p.matchDate) : "";
                 const dateLabel = p.matchDate ? new Date(p.matchDate + "T12:00:00").toLocaleDateString(lang === "fr" ? "fr-FR" : "en-US", { timeZone: TZ, weekday: "short", day: "numeric" }).toUpperCase() : "";
                 return (
-                  <div key={slot} style={{ textAlign: "center", width: 90 }}>
-                    <div style={{ width: 90, height: 120, borderRadius: 8, overflow: "hidden", margin: "0 auto", position: "relative",
+                  <div key={slot} style={{ textAlign: "center", width: 70 }}>
+                    <div style={{ width: 70, height: 94, borderRadius: 6, overflow: "hidden", margin: "0 auto", position: "relative",
                       background: ownedCard ? "transparent" : `linear-gradient(155deg, rgba(8,4,28,0.9), ${pc}25)`,
                       border: isCap ? "2px solid #FBBF24" : ownedCard ? "none" : `1px solid ${pc}30`,
                     }}>
                       {ownedCard ? (
                         <img src={ownedCard.pictureUrl} alt="" style={{ width: "100%", height: "100%", objectFit: "contain" }} />
                       ) : (
-                        <div style={{ display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", height: "100%", gap: 3 }}>
-                          {logos[p.club] && <img src={`/data/logos/${logos[p.club]}`} alt="" style={{ width: 20, height: 20, objectFit: "contain" }} />}
-                          <span style={{ fontSize: 7, fontWeight: 800, color: pc }}>{slot}</span>
+                        <div style={{ display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", height: "100%", gap: 2 }}>
+                          {logos[p.club] && <img src={`/data/logos/${logos[p.club]}`} alt="" style={{ width: 16, height: 16, objectFit: "contain" }} />}
+                          <span style={{ fontSize: 6, fontWeight: 800, color: pc }}>{slot}</span>
                         </div>
                       )}
-                      {isCap && <span style={{ position: "absolute", top: 2, right: 2, width: 14, height: 14, borderRadius: "50%", background: "#FBBF24", color: "#000", fontSize: 8, fontWeight: 900, display: "flex", alignItems: "center", justifyContent: "center", zIndex: 2 }}>C</span>}
+                      {isCap && <span style={{ position: "absolute", top: 2, right: 2, width: 12, height: 12, borderRadius: "50%", background: "#FBBF24", color: "#000", fontSize: 7, fontWeight: 900, display: "flex", alignItems: "center", justifyContent: "center", zIndex: 2 }}>C</span>}
                       {p.sorare_starter_pct != null && (
-                        <span style={{ position: "absolute", top: isCap ? 18 : 2, right: 2, fontSize: 6, fontWeight: 700, padding: "1px 3px", borderRadius: 3, color: "#fff", zIndex: 2,
+                        <span style={{ position: "absolute", top: isCap ? 16 : 2, right: 2, fontSize: 5, fontWeight: 700, padding: "1px 2px", borderRadius: 2, color: "#fff", zIndex: 2,
                           background: p.sorare_starter_pct >= 70 ? "rgba(22,101,52,0.9)" : p.sorare_starter_pct >= 50 ? "rgba(133,77,14,0.9)" : "rgba(153,27,27,0.9)",
                         }}>{p.sorare_starter_pct}%</span>
                       )}
-                      {bonusPct > 0 && <span style={{ position: "absolute", bottom: 2, left: 2, fontSize: 6, fontWeight: 900, color: "#fff", background: "rgba(22,101,52,0.9)", borderRadius: 3, padding: "1px 3px", zIndex: 2 }}>+{bonusPct}%</span>}
-                      {ownedCard && ownedCard.isClassic && <span style={{ position: "absolute", top: 2, left: 2, fontSize: 5, fontWeight: 900, color: "#fff", background: "rgba(139,92,246,0.8)", borderRadius: 3, padding: "1px 3px", zIndex: 2 }}>CLASSIC</span>}
+                      {bonusPct > 0 && <span style={{ position: "absolute", bottom: 2, left: 2, fontSize: 5, fontWeight: 900, color: "#fff", background: "rgba(22,101,52,0.9)", borderRadius: 2, padding: "0px 2px", zIndex: 2 }}>+{bonusPct}%</span>}
+                      {ownedCard && ownedCard.isClassic && <span style={{ position: "absolute", top: 2, left: 2, fontSize: 4, fontWeight: 900, color: "#fff", background: "rgba(139,92,246,0.8)", borderRadius: 2, padding: "0px 2px", zIndex: 2 }}>CLASSIC</span>}
                     </div>
-                    <div style={{ fontSize: 8, fontWeight: 700, color: "#fff", marginTop: 2, whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>{p.name.split(" ").pop()}</div>
-                    <div style={{ fontSize: 13, fontWeight: 900, color: dsColor(playerScore), fontFamily: "'DM Mono',monospace" }}>{playerScore}</div>
-                    <div style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: 2, marginTop: 1 }}>
-                      <span style={{ fontSize: 7 }}>{p.isHome ? "🏠" : "✈️"}</span>
-                      {oppLogo && <img src={`/data/logos/${oppLogo}`} alt="" style={{ width: 9, height: 9, objectFit: "contain" }} />}
-                      <span style={{ fontSize: 6, color: "rgba(255,255,255,0.4)" }}>{sn(p.oppName)}</span>
+                    <div style={{ fontSize: 7, fontWeight: 700, color: "#fff", marginTop: 1, whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>{p.name.split(" ").pop()}</div>
+                    <div style={{ fontSize: 11, fontWeight: 900, color: dsColor(playerScore), fontFamily: "'DM Mono',monospace" }}>{playerScore}</div>
+                    <div style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: 1, marginTop: 1 }}>
+                      <span style={{ fontSize: 6 }}>{p.isHome ? "🏠" : "✈️"}</span>
+                      {oppLogo && <img src={`/data/logos/${oppLogo}`} alt="" style={{ width: 7, height: 7, objectFit: "contain" }} />}
+                      <span style={{ fontSize: 5, color: "rgba(255,255,255,0.4)" }}>{sn(p.oppName)}</span>
                     </div>
                     {(parisTime || dateLabel) && (
-                      <div style={{ fontSize: 6, fontWeight: 700, color: "#A78BFA", fontFamily: "'DM Mono',monospace" }}>
+                      <div style={{ fontSize: 5, fontWeight: 700, color: "#A78BFA", fontFamily: "'DM Mono',monospace" }}>
                         {dateLabel} {parisTime}
                       </div>
                     )}
@@ -1253,29 +1277,29 @@ export default function SorareProTab({ players, teams, fixtures, logos = {}, mat
               };
 
               return (
-                <div key={st.id} style={{ borderRadius: 14, background: "linear-gradient(160deg, rgba(10,5,30,0.95), rgba(20,10,50,0.9))", border: `1px solid ${rarityColor}25`, padding: "12px 16px", backdropFilter: "blur(8px)" }}>
-                  {/* Header : label + boutons + score */}
-                  <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 10 }}>
-                    <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
-                      <span style={{ fontSize: 12, fontWeight: 900, color: rarityColor }}>{st.label}</span>
-                      <button onClick={() => loadSavedTeam(st)} style={{ fontSize: 7, fontWeight: 700, padding: "2px 6px", borderRadius: 4, border: `1px solid ${rarityColor}40`, background: `${rarityColor}10`, color: rarityColor, cursor: "pointer", fontFamily: "Outfit" }}>Charger</button>
-                      <button onClick={() => deleteSavedTeam(st.id)} style={{ fontSize: 8, padding: "2px 5px", borderRadius: 4, border: "1px solid rgba(255,255,255,0.08)", background: "rgba(255,255,255,0.03)", color: "rgba(255,255,255,0.3)", cursor: "pointer" }}>x</button>
+                <div key={st.id} style={{ borderRadius: 10, background: "linear-gradient(160deg, rgba(10,5,30,0.95), rgba(20,10,50,0.9))", border: `1px solid ${rarityColor}25`, padding: "8px 10px", backdropFilter: "blur(8px)" }}>
+                  {/* Header */}
+                  <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 6 }}>
+                    <div style={{ display: "flex", alignItems: "center", gap: 4 }}>
+                      <span style={{ fontSize: 10, fontWeight: 900, color: rarityColor }}>{st.label}</span>
+                      <button onClick={() => loadSavedTeam(st)} style={{ fontSize: 6, fontWeight: 700, padding: "1px 4px", borderRadius: 3, border: `1px solid ${rarityColor}40`, background: `${rarityColor}10`, color: rarityColor, cursor: "pointer", fontFamily: "Outfit" }}>Charger</button>
+                      <button onClick={() => deleteSavedTeam(st.id)} style={{ fontSize: 7, padding: "1px 4px", borderRadius: 3, border: "1px solid rgba(255,255,255,0.08)", background: "rgba(255,255,255,0.03)", color: "rgba(255,255,255,0.3)", cursor: "pointer" }}>x</button>
                     </div>
-                    <div style={{ display: "flex", alignItems: "center", gap: 5 }}>
-                      <span style={{ fontSize: 7, fontWeight: 800, padding: "2px 5px", borderRadius: 4, border: `1px solid ${stMultiClub ? "rgba(74,222,128,0.5)" : "rgba(255,255,255,0.08)"}`, color: stMultiClub ? "#4ADE80" : "rgba(255,255,255,0.2)", background: stMultiClub ? "rgba(74,222,128,0.1)" : "transparent" }}>MC +2%</span>
-                      <span style={{ fontSize: 7, fontWeight: 800, padding: "2px 5px", borderRadius: 4, border: `1px solid ${stCap260 ? "rgba(139,92,246,0.5)" : "rgba(255,255,255,0.08)"}`, color: stCap260 ? "#A78BFA" : "rgba(255,255,255,0.2)", background: stCap260 ? "rgba(139,92,246,0.1)" : "transparent" }}>CAP +4%</span>
-                      {stCompoPct > 0 && <span style={{ fontSize: 8, fontWeight: 700, color: "#4ADE80" }}>+{stCompoPct}%</span>}
-                      {palSt && <span style={{ fontSize: 9, color: palSt.color, fontWeight: 700 }}>{palSt.reward}</span>}
-                      <span style={{ fontSize: 22, fontWeight: 900, fontFamily: "'DM Mono',monospace", color: palSt ? palSt.color : rarityColor }}>{stTotal}</span>
+                    <div style={{ display: "flex", alignItems: "center", gap: 3 }}>
+                      {stMultiClub && <span style={{ fontSize: 5, fontWeight: 800, padding: "1px 3px", borderRadius: 3, border: "1px solid rgba(74,222,128,0.5)", color: "#4ADE80", background: "rgba(74,222,128,0.1)" }}>MC</span>}
+                      {stCap260 && <span style={{ fontSize: 5, fontWeight: 800, padding: "1px 3px", borderRadius: 3, border: "1px solid rgba(139,92,246,0.5)", color: "#A78BFA", background: "rgba(139,92,246,0.1)" }}>CAP</span>}
+                      {stCompoPct > 0 && <span style={{ fontSize: 7, fontWeight: 700, color: "#4ADE80" }}>+{stCompoPct}%</span>}
+                      {palSt && <span style={{ fontSize: 7, color: palSt.color, fontWeight: 700 }}>{palSt.reward}</span>}
+                      <span style={{ fontSize: 16, fontWeight: 900, fontFamily: "'DM Mono',monospace", color: palSt ? palSt.color : rarityColor }}>{stTotal}</span>
                     </div>
                   </div>
                   {/* Pitch layout : ATT+FLEX en haut, DEF+GK+MIL en bas */}
-                  <div style={{ display: "flex", flexDirection: "column", gap: 8, alignItems: "center" }}>
-                    <div style={{ display: "flex", gap: 12, justifyContent: "center" }}>
+                  <div style={{ display: "flex", flexDirection: "column", gap: 4, alignItems: "center" }}>
+                    <div style={{ display: "flex", gap: 6, justifyContent: "center" }}>
                       {renderCard("ATT")}
                       {renderCard("FLEX")}
                     </div>
-                    <div style={{ display: "flex", gap: 12, justifyContent: "center" }}>
+                    <div style={{ display: "flex", gap: 6, justifyContent: "center" }}>
                       {renderCard("DEF")}
                       {renderCard("GK")}
                       {renderCard("MIL")}
@@ -1283,8 +1307,8 @@ export default function SorareProTab({ players, teams, fixtures, logos = {}, mat
                   </div>
                   {/* Bonus summary */}
                   {stBonusPts > 0 && (
-                    <div style={{ textAlign: "center", marginTop: 6, fontSize: 8, color: "rgba(255,255,255,0.3)" }}>
-                      Bonus cartes: +{stBonusPts} pts · L10 total: {stSumL10}
+                    <div style={{ textAlign: "center", marginTop: 4, fontSize: 6, color: "rgba(255,255,255,0.3)" }}>
+                      Bonus: +{stBonusPts} pts · L10: {stSumL10}
                     </div>
                   )}
                 </div>

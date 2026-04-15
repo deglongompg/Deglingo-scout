@@ -107,7 +107,7 @@ export default function SorareProTab({ players, teams, fixtures, logos = {}, mat
 
   // ── GW Info — 5 prochaines GW ──
   const gwList = useMemo(() => getProGwList(5), []);
-  const [selectedGwIdx, setSelectedGwIdx] = useState(0);
+  const [selectedGwIdx, setSelectedGwIdx] = useState(gwList.length > 1 ? 1 : 0);
   const gwInfo = gwList[selectedGwIdx] || null;
   const [countdown, setCountdown] = useState("");
   const [teamSort, setTeamSort] = useState("ds");

@@ -273,7 +273,11 @@
       "Bash(dir \"C:\\\\Users\\\\Dekstop\\\\Desktop\\\\Deglingo Scout\\\\Deglingo Scout\\\\deglingo-scout-app\\\\dist\\\\assets\")",
       "Bash(grep -ioE 'eric.garcia.{0,1500}' players.json)",
       "Bash(grep -ioE 'eric.garcia.{0,2000}' players.json)",
-      "Bash(py -c:*)"
+      "Bash(py -c:*)",
+      "Bash(python -c ':*)",
+      "WebFetch(domain:stellar-collections.bushrod.fr)",
+      "Bash(node -e \"try{require\\('./src/components/SorareProTab.jsx'\\)}catch\\(e\\){console.log\\(e.message\\)}\")",
+      "Bash(py analyse_dscore.py)"
     ]
   }
 }

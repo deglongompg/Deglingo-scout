@@ -2305,8 +2305,30 @@ export default function StellarTab({ players, teams, fixtures, logos = {}, match
                   const stTotalAdj = Math.round(stScores.reduce((s, v) => s + v, 0) + stCapDs * 0.5);
                   const palSt = PALIERS.filter(p => stTotalAdj >= p.pts).pop();
                   return (
-                    <div key={st.id} style={{ borderRadius: 12, background: "rgba(15,8,40,0.7)", border: "1px solid rgba(74,222,128,0.15)", padding: "10px 12px", backdropFilter: "blur(6px)" }}>
-                      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 8 }}>
+                    <div key={st.id} style={{ position: "relative", borderRadius: 12, background: "rgba(15,8,40,0.7)", border: "1px solid rgba(74,222,128,0.15)", padding: "10px 12px", backdropFilter: "blur(6px)" }}>
+                      {/* Croix de suppression — top-right */}
+                      <button
+                        onClick={() => deleteSavedTeam(st.id)}
+                        title={lang === "fr" ? "Supprimer cette équipe" : "Delete this team"}
+                        style={{
+                          position: "absolute", top: 6, right: 6,
+                          width: 20, height: 20, borderRadius: "50%",
+                          display: "flex", alignItems: "center", justifyContent: "center",
+                          background: "rgba(239,68,68,0.12)",
+                          border: "1px solid rgba(239,68,68,0.3)",
+                          color: "#F87171", cursor: "pointer", padding: 0,
+                          fontSize: 12, fontWeight: 900, fontFamily: "Outfit",
+                          lineHeight: 1, transition: "background 0.15s, border-color 0.15s, color 0.15s",
+                          zIndex: 2,
+                        }}
+                        onMouseEnter={e => { e.currentTarget.style.background = "rgba(239,68,68,0.3)"; e.currentTarget.style.borderColor = "rgba(239,68,68,0.6)"; e.currentTarget.style.color = "#fff"; }}
+                        onMouseLeave={e => { e.currentTarget.style.background = "rgba(239,68,68,0.12)"; e.currentTarget.style.borderColor = "rgba(239,68,68,0.3)"; e.currentTarget.style.color = "#F87171"; }}
+                      >
+                        <svg width="10" height="10" viewBox="0 0 12 12" fill="none" aria-hidden>
+                          <path d="M2.5 2.5l7 7M9.5 2.5l-7 7" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
+                        </svg>
+                      </button>
+                      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 8, paddingRight: 26 }}>
                         <span style={{ fontSize: 11, fontWeight: 900, color: "#4ADE80" }}>{st.label}</span>
                         <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
                           {palSt && <span style={{ fontSize: 8, color: palSt.silver ? "#C0C0C0" : palSt.color, fontWeight: 700 }}>{palSt.reward}</span>}

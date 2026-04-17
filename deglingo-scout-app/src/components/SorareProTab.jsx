@@ -393,6 +393,13 @@ export default function SorareProTab({ players, teams, fixtures, logos = {}, mat
       const alreadyInTeam = Object.values(prev).some(pp => pp && (pp.slug || pp.name) === playerId);
       if (alreadyInTeam) return prev;
 
+      // Same CARD enforcement across saved teams: prevent picking the exact same card already used in a saved team
+      const cardKey = player._cardKey;
+      if (cardKey) {
+        const cardUsedInSaved = savedTeams.some(t => Object.values(t.picks).some(pp => pp && pp._cardKey === cardKey));
+        if (cardUsedInSaved) return prev;
+      }
+
       // Classic enforcement: max 1 off-season card per team
       const playerCard = getCard(player);
       if (playerCard?.isClassic) {
@@ -424,11 +431,23 @@ export default function SorareProTab({ players, teams, fixtures, logos = {}, mat
 
   const isInTeam = (p) => {
     const id = p.slug || p.name;
-    const usedCount = Object.values(myPicks).filter(pp => pp && (pp.slug || pp.name) === id).length
-      + savedTeams.reduce((sum, t) => sum + Object.values(t.picks).filter(pp => pp && (pp.slug || pp.name) === id).length, 0);
-    if (usedCount === 0) return false;
+    const cardKey = p._cardKey;
+
+    // Collect all picks of this player across current + saved teams
+    const allPicks = [];
+    Object.values(myPicks).forEach(pp => { if (pp && (pp.slug || pp.name) === id) allPicks.push(pp); });
+    savedTeams.forEach(t => Object.values(t.picks).forEach(pp => { if (pp && (pp.slug || pp.name) === id) allPicks.push(pp); }));
+
+    if (allPicks.length === 0) return false;
+
+    // Card-level check: if this row is a specific expanded card, check if THAT card (by _cardKey) is already used
+    if (cardKey) {
+      return allPicks.some(pp => pp._cardKey === cardKey);
+    }
+
+    // Player-level check (single-card or legacy): hide if all owned cards are already used elsewhere
     const ownedCount = sorareCards.filter(c => c.playerSlug === id && ((rarity === "limited" && (c.isLimited || (includeRare && c.isRare))) || (rarity === "rare" && c.isRare))).length;
-    if (ownedCount > usedCount) return false;
+    if (ownedCount > allPicks.length) return false;
     return true;
   };
 

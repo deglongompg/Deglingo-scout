@@ -277,15 +277,57 @@ function FeatureBoxes({ players, showcasePlayers, lang = "fr" }) {
 
 const T = {
   fr: {
-    tagline1: "Le Scout qui pense",
-    tagline2: "avec tes cartes",
-    sub1: "Optimisé pour",
-    sub2: "Algo propriétaire · 4 ligues · 2 600+ joueurs · D-Score, AA, Titu%, CS%",
-    cta1: "Accéder au Scout →",
-    cta2: "Connecter avec Sorare",
-    boxDb: "Top Joueurs",
-    boxDbSub: "Classement live D-Score",
-    boxBest: "⚽ Best Pick SO5 / SO7",
+    // Hero
+    heroEyebrow: "Sorare SO7 · Saison 2025-26",
+    heroTitle: "DEGLINGO SCOUT",
+    heroHighlight: "Ton arme secrète sur SORARE",
+    heroSub: "Algo propriétaire · 5 ligues · 3 500+ joueurs",
+    heroSub2: "Pensé pour Manager Débutant (Stellar) et Manager Pro",
+    ctaEnter: "Entrer dans le Scout",
+    ctaDemo: "Voir ce que fait Scout",
+    // Affiliate boxes
+    affDebTag: "MANAGER DÉBUTANT",
+    affDebTitle: "Sorare Stellar",
+    affDebBadge: "100% GRATUIT",
+    affDebLead: "Ouvre ton pack de démarrage et aligne tes premières équipes sans dépenser.",
+    affDebB1: "Pack Stellar offert à l'inscription",
+    affDebB2: "Joue SO7 sans mettre un centime",
+    affDebB3: "Récompenses cartes et essences chaque GW",
+    affDebCta: "Ouvrir mon pack gratuit",
+    affProTag: "MANAGER PRO",
+    affProTitle: "Sorare Pro",
+    affProBadge: "OFFRE EXCLUSIVE",
+    affProLead: "Rejoins les compétitions Pro et reçois 100€ de crédits offerts.",
+    affProB1: "100€ de crédits offerts à l'inscription",
+    affProB2: "Compétitions avec gains en ETH et cartes",
+    affProB3: "Accès Rare, Limited, Super Rare, Unique",
+    affProCta: "Activer mon offre 100€",
+    // Pour qui
+    whoEyebrow: "POUR QUI ?",
+    whoTitle: "Scout t'accompagne dans les deux modes",
+    whoSub: "Débutant ou compétiteur aguerri — Scout transforme tes choix en victoires.",
+    debQ: "Tu débutes sur Stellar ?",
+    debLead: "Scout te donne les bons réflexes dès ta première équipe, sans maîtriser les stats.",
+    debB1: "Stellar Team Builder : aligne tes cartes en un clic",
+    debB2: "Floor titu 35+ : joueurs fiables identifiés",
+    debB3: "D-Score multi-jours (Mer → Mar)",
+    debB4: "Alternatives auto si ton joueur est blessé",
+    debB5: "Connexion Sorare : tes cartes directement dans l'app",
+    debGo: "Ouvrir Sorare Stellar",
+    proQ: "Tu joues Sorare Pro ?",
+    proLead: "Scout te donne l'avantage analytique pour dominer les compétitions payantes.",
+    proB1: "Best Pick SO5/SO7 : picks figés chaque GW",
+    proB2: "Mission du jour : Decisive Picker, Essences, Craft",
+    proB3: "Hot Streaks & Leaderboards par ligue",
+    proB4: "Database D-Score : 3 500+ joueurs, 5 ligues",
+    proB5: "Stats détaillées : Titu%, AA, CS%, xG",
+    proGo: "Ouvrir Sorare Pro",
+    // Final CTA
+    finalTitle: "Prêt à maîtriser Sorare ?",
+    finalSub: "Rejoins les managers qui pensent leurs équipes avec data.",
+    finalCta: "Entrer dans le Scout",
+    // FeatureBoxes (existing)
+    boxBest: "Best Pick SO5 / SO7",
     boxBestSub: "Sorare Pro · picks figés chaque GW",
     boxMission: "Mission du Jour",
     boxMissionSub: "Aide à la décision · Essences + Craft Index",
@@ -299,15 +341,52 @@ const T = {
     mHebdoSub: "Objectifs · Récomp.",
   },
   en: {
-    tagline1: "The Scout that thinks",
-    tagline2: "with your cards",
-    sub1: "Optimized for",
-    sub2: "Proprietary algo · 4 leagues · 2,600+ players · D-Score, AA, Titu%, CS%",
-    cta1: "Open Scout →",
-    cta2: "Connect with Sorare",
-    boxDb: "Top Players",
-    boxDbSub: "Live D-Score ranking",
-    boxBest: "⚽ Best Pick SO5 / SO7",
+    heroEyebrow: "Sorare SO7 · Season 2025-26",
+    heroTitle: "DEGLINGO SCOUT",
+    heroHighlight: "Your secret weapon on SORARE",
+    heroSub: "Proprietary algo · 5 leagues · 3,500+ players",
+    heroSub2: "Built for Beginner Manager (Stellar) and Pro Manager",
+    ctaEnter: "Open Scout",
+    ctaDemo: "See what Scout does",
+    affDebTag: "BEGINNER MANAGER",
+    affDebTitle: "Sorare Stellar",
+    affDebBadge: "100% FREE",
+    affDebLead: "Open your starter pack and play your first squads for free.",
+    affDebB1: "Free Stellar pack on sign-up",
+    affDebB2: "Play SO7 without spending a cent",
+    affDebB3: "Card & essence rewards every GW",
+    affDebCta: "Open my free pack",
+    affProTag: "PRO MANAGER",
+    affProTitle: "Sorare Pro",
+    affProBadge: "EXCLUSIVE OFFER",
+    affProLead: "Join Pro competitions and get 100€ in credits.",
+    affProB1: "100€ in credits on sign-up",
+    affProB2: "Real-money competitions (ETH, cards)",
+    affProB3: "Rare, Limited, Super Rare, Unique access",
+    affProCta: "Activate my 100€ offer",
+    whoEyebrow: "WHO IS IT FOR?",
+    whoTitle: "Scout backs you in both modes",
+    whoSub: "Beginner or seasoned competitor — Scout turns your choices into wins.",
+    debQ: "Starting on Stellar?",
+    debLead: "Scout gives you the right instincts from day one — no stats degree needed.",
+    debB1: "Stellar Team Builder: line up your cards in one click",
+    debB2: "Starter floor 35+: reliable players flagged",
+    debB3: "Multi-day D-Score (Wed → Tue)",
+    debB4: "Auto-alternatives when a player is injured",
+    debB5: "Sorare connect: your cards right in the app",
+    debGo: "Open Sorare Stellar",
+    proQ: "Playing Sorare Pro?",
+    proLead: "Scout gives you the analytical edge to dominate paid competitions.",
+    proB1: "Best Pick SO5/SO7: picks locked each GW",
+    proB2: "Mission of the Day: Decisive Picker, Essences, Craft",
+    proB3: "Hot Streaks & Leaderboards by league",
+    proB4: "D-Score database: 3,500+ players, 5 leagues",
+    proB5: "Detailed stats: Titu%, AA, CS%, xG",
+    proGo: "Open Sorare Pro",
+    finalTitle: "Ready to master Sorare?",
+    finalSub: "Join managers who plan their squads with data.",
+    finalCta: "Open Scout",
+    boxBest: "Best Pick SO5 / SO7",
     boxBestSub: "Sorare Pro · picks locked each GW",
     boxMission: "Mission of the Day",
     boxMissionSub: "Decision support · Essences + Craft Index",
@@ -322,9 +401,57 @@ const T = {
   },
 };
 
+// ---- SVG icons (no emojis — UI/UX rule) ----
+const IconCheck = ({ color = "#4ADE80", size = 14 }) => (
+  <svg width={size} height={size} viewBox="0 0 20 20" fill="none" style={{ display: "block" }} aria-hidden>
+    <path d="M4 10.5l4 4 8-9" stroke={color} strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round" />
+  </svg>
+);
+const IconArrow = ({ color = "currentColor", size = 14 }) => (
+  <svg width={size} height={size} viewBox="0 0 20 20" fill="none" style={{ display: "block" }} aria-hidden>
+    <path d="M4 10h12M12 5l5 5-5 5" stroke={color} strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" />
+  </svg>
+);
+const IconCrown = ({ color = "#FBBF24", size = 22 }) => (
+  <svg width={size} height={size} viewBox="0 0 24 24" fill="none" aria-hidden>
+    <path d="M3 18h18l-1.5-9-5 3.5L12 6l-2.5 6.5L4.5 9 3 18z" fill={color} fillOpacity="0.18" stroke={color} strokeWidth="1.6" strokeLinejoin="round" />
+    <circle cx="3" cy="8" r="1.3" fill={color} />
+    <circle cx="21" cy="8" r="1.3" fill={color} />
+    <circle cx="12" cy="4" r="1.4" fill={color} />
+  </svg>
+);
+const IconSpark = ({ color = "#C4B5FD", size = 22 }) => (
+  <svg width={size} height={size} viewBox="0 0 24 24" fill="none" aria-hidden>
+    <path d="M12 2l1.8 6.2L20 10l-6.2 1.8L12 18l-1.8-6.2L4 10l6.2-1.8L12 2z" fill={color} fillOpacity="0.25" stroke={color} strokeWidth="1.6" strokeLinejoin="round" />
+    <path d="M19 16l.8 2.2 2.2.8-2.2.8L19 22l-.8-2.2L16 19l2.2-.8L19 16z" fill={color} fillOpacity="0.4" />
+  </svg>
+);
+
+// ---- Checkmark bullet row ----
+function Bullet({ text, tone = "violet" }) {
+  const palette = {
+    violet: { ring: "rgba(196,181,253,0.35)", bg: "rgba(139,92,246,0.15)", check: "#C4B5FD" },
+    gold:   { ring: "rgba(251,191,36,0.4)",   bg: "rgba(251,191,36,0.14)", check: "#FBBF24" },
+    green:  { ring: "rgba(74,222,128,0.35)",  bg: "rgba(74,222,128,0.14)", check: "#4ADE80" },
+  }[tone] || { ring: "rgba(255,255,255,0.2)", bg: "rgba(255,255,255,0.06)", check: "#fff" };
+  return (
+    <div style={{ display: "flex", alignItems: "flex-start", gap: 10, padding: "4px 0" }}>
+      <span style={{
+        display: "inline-flex", alignItems: "center", justifyContent: "center",
+        width: 20, height: 20, borderRadius: "50%", flexShrink: 0,
+        background: palette.bg, border: `1px solid ${palette.ring}`, marginTop: 1,
+      }}>
+        <IconCheck color={palette.check} size={12} />
+      </span>
+      <span style={{ fontSize: 13, lineHeight: 1.4, color: "rgba(255,255,255,0.82)", fontWeight: 500 }}>{text}</span>
+    </div>
+  );
+}
+
 export default function LandingPage({ players, onEnter, onNavigate }) {
   const [cardMode, setCardMode] = useState("stellar"); // "stellar" | "pro"
   const [lang, setLang] = useState("fr");
+  const t = T[lang];
 
   const showcasePlayers = useMemo(() => {
     return SHOWCASE_CARDS.map(c => {
@@ -335,9 +462,9 @@ export default function LandingPage({ players, onEnter, onNavigate }) {
 
   return (
     <div style={{
-      height: "100vh", display: "flex", flexDirection: "column",
+      minHeight: "100vh", display: "flex", flexDirection: "column",
       background: "linear-gradient(180deg,#02000c 0%,#07021a 40%,#0a0422 100%)",
-      fontFamily: "'Outfit',sans-serif", overflow: "hidden",
+      fontFamily: "'Outfit',sans-serif",
       position: "relative",
       zoom: 1.25,
     }}>
@@ -346,97 +473,128 @@ export default function LandingPage({ players, onEnter, onNavigate }) {
         position: "absolute", inset: 0, zIndex: 0,
         backgroundImage: "url('/galaxy-bg.jpg')",
         backgroundSize: "cover", backgroundPosition: "center",
-        opacity: 0.25,
+        opacity: 0.22,
       }} />
 
       {/* Gradient overlay */}
       <div style={{
         position: "absolute", inset: 0, zIndex: 1,
-        background: "linear-gradient(180deg,rgba(2,0,12,0.6) 0%,rgba(2,0,12,0.4) 40%,rgba(2,0,12,0.85) 80%,rgba(2,0,12,1) 100%)",
+        background: "linear-gradient(180deg,rgba(2,0,12,0.65) 0%,rgba(2,0,12,0.35) 30%,rgba(7,2,26,0.7) 70%,rgba(2,0,12,0.95) 100%)",
       }} />
 
       {/* Content */}
-      <div style={{ position: "relative", zIndex: 2, flex: 1, display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "flex-start", padding: "2px 0 8px", gap: 0 }}>
+      <div style={{ position: "relative", zIndex: 2, flex: 1, display: "flex", flexDirection: "column", alignItems: "center" }}>
 
-        {/* Header logo */}
-        <div style={{ padding: "4px 24px 0", display: "flex", alignItems: "center", gap: 10, alignSelf: "stretch" }}>
-          <img src="/logo.png" alt="Deglingo Scout" style={{ width: 36, height: 36, objectFit: "contain" }} />
+        {/* ==== HEADER ==== */}
+        <div style={{ padding: "14px 24px 0", display: "flex", alignItems: "center", gap: 12, alignSelf: "stretch", maxWidth: 1200, width: "100%", margin: "0 auto" }}>
+          <img src="/logo.png" alt="Deglingo Scout" style={{ width: 40, height: 40, objectFit: "contain" }} />
           <div style={{ flex: 1 }}>
             <div style={{
-              fontSize: 15, fontWeight: 900, letterSpacing: "-0.5px",
+              fontSize: 17, fontWeight: 900, letterSpacing: "-0.5px",
               background: "linear-gradient(90deg,#C0C0C0,#A8E8D0,#B0C4E8,#D4B0E8,#fff,#D4B0E8,#B0C4E8,#C0C0C0)",
               backgroundSize: "200% 100%",
               WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent", backgroundClip: "text",
               animation: "silverShine 3s linear infinite",
             }}>DEGLINGO SCOUT</div>
-            <div style={{ fontSize: 8, color: "rgba(255,255,255,0.3)", letterSpacing: "2px", textTransform: "uppercase" }}>Sorare Analytics</div>
+            <div style={{ fontSize: 9, color: "rgba(255,255,255,0.35)", letterSpacing: "2px", textTransform: "uppercase" }}>Sorare Analytics</div>
           </div>
           {/* Lang toggle */}
           <button
             onClick={() => setLang(l => l === "fr" ? "en" : "fr")}
             style={{
-              background: "rgba(255,255,255,0.07)", border: "1px solid rgba(255,255,255,0.15)",
-              borderRadius: 8, padding: "3px 10px", cursor: "pointer",
-              fontSize: 10, fontWeight: 800, color: "rgba(255,255,255,0.7)",
+              background: "rgba(255,255,255,0.06)", border: "1px solid rgba(255,255,255,0.15)",
+              borderRadius: 10, padding: "5px 12px", cursor: "pointer",
+              fontSize: 11, fontWeight: 800, color: "rgba(255,255,255,0.75)",
               letterSpacing: 1, fontFamily: "Outfit",
-              display: "flex", alignItems: "center", gap: 5,
-              flexShrink: 0,
+              display: "flex", alignItems: "center", gap: 6,
+              flexShrink: 0, backdropFilter: "blur(10px)",
+              transition: "background 0.2s, border-color 0.2s",
             }}
+            onMouseEnter={e => { e.currentTarget.style.background = "rgba(255,255,255,0.1)"; e.currentTarget.style.borderColor = "rgba(255,255,255,0.25)"; }}
+            onMouseLeave={e => { e.currentTarget.style.background = "rgba(255,255,255,0.06)"; e.currentTarget.style.borderColor = "rgba(255,255,255,0.15)"; }}
           >
-            <img src={`https://flagcdn.com/16x12/${lang === "fr" ? "gb" : "fr"}.png`} alt="" style={{ width: 12, height: 9, borderRadius: 1 }} />
+            <img src={`https://flagcdn.com/16x12/${lang === "fr" ? "gb" : "fr"}.png`} alt="" style={{ width: 14, height: 11, borderRadius: 1 }} />
             {lang === "fr" ? "EN" : "FR"}
           </button>
         </div>
 
-        {/* Hero */}
-        <div style={{ textAlign: "center", padding: "4px 24px 2px", maxWidth: 640 }}>
-
-          {/* Badges PRO + STELLAR — hover switche les cartes */}
-
+        {/* ==== HERO ==== */}
+        <section style={{ textAlign: "center", padding: "30px 24px 18px", maxWidth: 1150 }}>
           <h1 style={{
-            fontSize: "clamp(24px, 5vw, 42px)", fontWeight: 900, lineHeight: 1.05,
-            margin: "0 0 8px", color: "#fff", letterSpacing: "-1px",
+            fontSize: "clamp(22px, 4vw, 40px)", fontWeight: 700, lineHeight: 1.08,
+            margin: "0 0 16px", letterSpacing: "-0.02em",
           }}>
-            {T[lang].tagline1}<br />
+            {/* Brand name — same treatment as header logo (Outfit 900 + silver shine) */}
             <span style={{
+              fontFamily: "'Outfit', sans-serif",
+              fontWeight: 900,
+              letterSpacing: "-0.02em",
+              background: "linear-gradient(90deg,#C0C0C0,#A8E8D0,#B0C4E8,#D4B0E8,#fff,#D4B0E8,#B0C4E8,#C0C0C0)",
+              backgroundSize: "200% 100%",
+              WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent", backgroundClip: "text",
+              animation: "silverShine 3s linear infinite",
+            }}>{t.heroTitle}</span>
+            <br />
+            {/* Tagline punch — Outfit (same family as SORARE ANALYTICS) + violet holo */}
+            <span style={{
+              fontFamily: "'Outfit', sans-serif",
+              fontWeight: 700,
+              letterSpacing: "-0.01em",
               background: "linear-gradient(135deg,#C4B5FD,#A78BFA,#8B5CF6,#C4B5FD)",
               backgroundSize: "200% 100%",
               WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent", backgroundClip: "text",
               animation: "silverShine 4s linear infinite",
-            }}>{T[lang].tagline2}</span>
+            }}>{t.heroHighlight}</span>
           </h1>
 
-          <p style={{ fontSize: 13, color: "rgba(255,255,255,0.55)", lineHeight: 1.5, margin: "0 0 14px" }}>
-            {T[lang].sub1} <strong style={{ color: "rgba(255,255,255,0.8)" }}>Sorare Pro</strong> et <strong style={{ color: "rgba(196,181,253,0.9)" }}>Sorare Stellar</strong><br />
-            {T[lang].sub2}
+          <p style={{ fontSize: 15, color: "rgba(255,255,255,0.7)", lineHeight: 1.55, margin: "0 auto 22px", maxWidth: 580 }}>
+            {t.heroSub}<br />
+            <span style={{ color: "rgba(255,255,255,0.5)" }}>{t.heroSub2}</span>
           </p>
 
-        </div>
+          {/* League chips — 5 ligues couvertes */}
+          <div className="landing-leagues" style={{ display: "flex", gap: 8, justifyContent: "center", flexWrap: "wrap", marginBottom: 24 }}>
+            {[
+              { code: "L1", flag: "fr", color: "#4FC3F7", name: "Ligue 1" },
+              { code: "PL", flag: "gb-eng", color: "#B388FF", name: "Premier League" },
+              { code: "Liga", flag: "es", color: "#FF8A80", name: "La Liga" },
+              { code: "Bundes", flag: "de", color: "#FFD180", name: "Bundesliga" },
+              { code: "MLS", flag: "us", color: "#66BB6A", name: "MLS" },
+            ].map(l => (
+              <div key={l.code} title={l.name} style={{
+                display: "inline-flex", alignItems: "center", gap: 7,
+                padding: "6px 12px", borderRadius: 99,
+                background: "rgba(255,255,255,0.04)",
+                border: `1px solid ${l.color}44`,
+                backdropFilter: "blur(10px)", WebkitBackdropFilter: "blur(10px)",
+                boxShadow: `0 0 16px ${l.color}18`,
+              }}>
+                <img src={`https://flagcdn.com/20x15/${l.flag}.png`} alt={l.name} style={{ width: 16, height: 12, borderRadius: 2, objectFit: "cover", display: "block" }} />
+                <span style={{ fontSize: 11, fontWeight: 700, color: l.color, letterSpacing: "0.02em" }}>{l.name}</span>
+              </div>
+            ))}
+          </div>
 
-        {/* Spacer flexible entre hero et cartes */}
-        <div style={{ flex: "1 1 0", minHeight: 4, maxHeight: 20 }} />
+          {/* Primary holographic CTA — go to Database */}
+          <div style={{ display: "flex", justifyContent: "center" }}>
+            <button onClick={() => onNavigate ? onNavigate("db") : onEnter()} className="scout-cta-holo"
+              style={{
+                padding: "15px 34px", borderRadius: 14, cursor: "pointer",
+                fontSize: 15, fontWeight: 800, fontFamily: "Outfit",
+                color: "#fff", border: "none",
+                display: "inline-flex", alignItems: "center", gap: 10,
+                letterSpacing: "0.02em",
+              }}>
+              <span style={{ position: "relative", zIndex: 2 }}>{t.ctaEnter}</span>
+              <span style={{ position: "relative", zIndex: 2, display: "inline-flex" }}><IconArrow color="#fff" size={16} /></span>
+            </button>
+          </div>
+        </section>
 
-        {/* CTAs au-dessus des cartes */}
-        <div style={{ display: "flex", gap: 12, justifyContent: "center", marginBottom: 12 }}>
-          <button onClick={() => onNavigate ? onNavigate("pro") : onEnter()}
-            style={{ padding: "10px 24px", borderRadius: 20, fontSize: 13, fontWeight: 800, fontFamily: "Outfit", cursor: "pointer", border: "none", background: cardMode === "pro" ? "linear-gradient(135deg,#6366F1,#818CF8)" : "linear-gradient(135deg,#7C3AED,#8B5CF6,#A78BFA)", color: "#fff", boxShadow: cardMode === "pro" ? "0 6px 28px rgba(99,102,241,0.6)" : "0 6px 24px rgba(124,58,237,0.5)", transition: "all 0.3s", display: "flex", alignItems: "center", gap: 6, transform: cardMode === "pro" ? "translateY(-2px) scale(1.03)" : "" }}
-            onMouseEnter={() => setCardMode("pro")}
-            onMouseLeave={() => setCardMode("stellar")}>
-            Sorare Pro →
-          </button>
-          <button onClick={() => onNavigate ? onNavigate("stellar") : onEnter()}
-            style={{ padding: "10px 24px", borderRadius: 20, fontSize: 13, fontWeight: 800, fontFamily: "Outfit", cursor: "pointer", background: cardMode === "stellar" ? "rgba(139,92,246,0.2)" : "rgba(255,255,255,0.06)", border: `1px solid ${cardMode === "stellar" ? "rgba(139,92,246,0.5)" : "rgba(255,255,255,0.18)"}`, color: cardMode === "stellar" ? "#C4B5FD" : "rgba(255,255,255,0.85)", boxShadow: cardMode === "stellar" ? "0 6px 24px rgba(139,92,246,0.4)" : "none", transition: "all 0.3s", display: "flex", alignItems: "center", gap: 6, transform: cardMode === "stellar" ? "translateY(-2px) scale(1.03)" : "" }}
-            onMouseEnter={() => setCardMode("stellar")}
-            onMouseLeave={() => setCardMode("stellar")}>
-            <img src="/Stellar.png" alt="" style={{ width: 14, height: 14, objectFit: "contain" }} />
-            Sorare Stellar →
-          </button>
-        </div>
-
-        {/* Cards showcase */}
-        <div style={{
-          display: "flex", gap: 10, justifyContent: "center",
-          alignItems: "flex-end", padding: "0 24px 0",
+        {/* ==== CARDS SHOWCASE ==== */}
+        <div className="landing-cards" style={{
+          display: "flex", gap: 12, justifyContent: "center",
+          alignItems: "flex-end", padding: "12px 24px 0",
           perspective: 1000,
         }}>
           {showcasePlayers.map((player, idx) => (
@@ -444,21 +602,351 @@ export default function LandingPage({ players, onEnter, onNavigate }) {
           ))}
         </div>
 
-        {/* Spacer flexible entre cartes et boxes */}
-        <div style={{ flex: "1 1 0", minHeight: 4, maxHeight: 16 }} />
+        {/* ==== AFFILIATE BOXES (enriched with bullets) ==== */}
+        <section style={{ width: "100%", padding: "50px 24px 20px" }}>
+          <div className="landing-affi" style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 20, maxWidth: 1080, margin: "0 auto" }}>
 
-        {/* Features — mini previews live */}
-        <FeatureBoxes players={players} showcasePlayers={showcasePlayers} lang={lang} />
+            {/* Box Manager Débutant — Sorare Stellar */}
+            <div onMouseEnter={() => setCardMode("stellar")} style={{
+              position: "relative", overflow: "hidden",
+              borderRadius: 22,
+              background: "linear-gradient(160deg, rgba(139,92,246,0.14), rgba(196,181,253,0.04) 55%, rgba(10,5,30,0.35))",
+              border: "1px solid rgba(196,181,253,0.3)",
+              padding: "26px 26px 22px",
+              display: "flex", flexDirection: "column", gap: 16,
+              backdropFilter: "blur(14px)", WebkitBackdropFilter: "blur(14px)",
+              boxShadow: "0 10px 40px rgba(139,92,246,0.18), inset 0 1px 0 rgba(255,255,255,0.05)",
+            }}>
+              {/* Glow accent */}
+              <div style={{ position: "absolute", top: -60, right: -60, width: 220, height: 220, borderRadius: "50%", background: "radial-gradient(circle, rgba(196,181,253,0.22), transparent 70%)", pointerEvents: "none" }} />
+
+              {/* Header */}
+              <div style={{ display: "flex", alignItems: "center", gap: 12, position: "relative" }}>
+                <img src="/Stellar-logo.png" alt="Sorare Stellar" style={{ width: 44, height: 44, objectFit: "contain", flexShrink: 0, filter: "drop-shadow(0 4px 14px rgba(139,92,246,0.55))" }} />
+                <div style={{ flex: 1, minWidth: 0 }}>
+                  <div style={{ fontSize: 10, fontWeight: 800, color: "#C4B5FD", letterSpacing: "0.14em" }}>{t.affDebTag}</div>
+                  <div style={{ fontSize: 22, fontWeight: 900, color: "#fff", letterSpacing: "-0.5px", lineHeight: 1.1 }}>{t.affDebTitle}</div>
+                </div>
+                <span style={{ fontSize: 10, fontWeight: 900, color: "#4ADE80", background: "rgba(74,222,128,0.12)", border: "1px solid rgba(74,222,128,0.4)", borderRadius: 6, padding: "5px 10px", letterSpacing: "0.06em", flexShrink: 0 }}>{t.affDebBadge}</span>
+              </div>
+
+              {/* Pack + lead */}
+              <div style={{ display: "flex", gap: 16, alignItems: "center", position: "relative" }}>
+                <img src="/stellar-pack.png" alt="Pack Stellar" style={{ width: 104, height: 140, objectFit: "contain", flexShrink: 0, filter: "drop-shadow(0 10px 30px rgba(139,92,246,0.5))" }} />
+                <div style={{ flex: 1, minWidth: 0 }}>
+                  <p style={{ fontSize: 13, color: "rgba(255,255,255,0.78)", lineHeight: 1.5, margin: 0 }}>{t.affDebLead}</p>
+                </div>
+              </div>
+
+              {/* Bullets */}
+              <div style={{ display: "flex", flexDirection: "column", gap: 2, position: "relative" }}>
+                <Bullet tone="violet" text={t.affDebB1} />
+                <Bullet tone="violet" text={t.affDebB2} />
+                <Bullet tone="violet" text={t.affDebB3} />
+              </div>
+
+              {/* CTA */}
+              <a href="http://sorare.pxf.io/Deglingo" target="_blank" rel="noopener noreferrer"
+                style={{
+                  textDecoration: "none", display: "inline-flex", alignItems: "center", justifyContent: "center", gap: 8,
+                  padding: "13px 20px", borderRadius: 11,
+                  background: "linear-gradient(135deg,#7C3AED,#8B5CF6,#A78BFA)",
+                  color: "#fff", fontSize: 14, fontWeight: 800, fontFamily: "Outfit",
+                  boxShadow: "0 8px 26px rgba(124,58,237,0.5), inset 0 1px 0 rgba(255,255,255,0.15)",
+                  transition: "transform 0.2s, box-shadow 0.2s",
+                }}
+                onMouseEnter={e => { e.currentTarget.style.transform = "translateY(-1px)"; e.currentTarget.style.boxShadow = "0 12px 32px rgba(124,58,237,0.7), inset 0 1px 0 rgba(255,255,255,0.2)"; }}
+                onMouseLeave={e => { e.currentTarget.style.transform = ""; e.currentTarget.style.boxShadow = "0 8px 26px rgba(124,58,237,0.5), inset 0 1px 0 rgba(255,255,255,0.15)"; }}>
+                {t.affDebCta}
+                <IconArrow color="#fff" size={14} />
+              </a>
+            </div>
+
+            {/* Box Manager Pro — Sorare Pro */}
+            <div onMouseEnter={() => setCardMode("pro")} onMouseLeave={() => setCardMode("stellar")} style={{
+              position: "relative", overflow: "hidden",
+              borderRadius: 22,
+              background: "linear-gradient(160deg, rgba(251,191,36,0.14), rgba(245,158,11,0.04) 55%, rgba(10,5,30,0.35))",
+              border: "1px solid rgba(251,191,36,0.35)",
+              padding: "26px 26px 22px",
+              display: "flex", flexDirection: "column", gap: 16,
+              backdropFilter: "blur(14px)", WebkitBackdropFilter: "blur(14px)",
+              boxShadow: "0 10px 40px rgba(251,191,36,0.18), inset 0 1px 0 rgba(255,255,255,0.05)",
+            }}>
+              <div style={{ position: "absolute", top: -60, right: -60, width: 220, height: 220, borderRadius: "50%", background: "radial-gradient(circle, rgba(251,191,36,0.22), transparent 70%)", pointerEvents: "none" }} />
+
+              {/* Header */}
+              <div style={{ display: "flex", alignItems: "center", gap: 12, position: "relative" }}>
+                <div style={{ width: 42, height: 42, borderRadius: 12, background: "linear-gradient(135deg, rgba(251,191,36,0.3), rgba(245,158,11,0.15))", border: "1px solid rgba(251,191,36,0.3)", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
+                  <IconCrown color="#FBBF24" size={24} />
+                </div>
+                <div style={{ flex: 1, minWidth: 0 }}>
+                  <div style={{ fontSize: 10, fontWeight: 800, color: "#FBBF24", letterSpacing: "0.14em" }}>{t.affProTag}</div>
+                  <div style={{ fontSize: 22, fontWeight: 900, color: "#fff", letterSpacing: "-0.5px", lineHeight: 1.1 }}>{t.affProTitle}</div>
+                </div>
+                <span style={{ fontSize: 10, fontWeight: 900, color: "#FBBF24", background: "rgba(251,191,36,0.12)", border: "1px solid rgba(251,191,36,0.4)", borderRadius: 6, padding: "5px 10px", letterSpacing: "0.06em", flexShrink: 0 }}>{t.affProBadge}</span>
+              </div>
+
+              {/* Mbappé card + lead */}
+              <div style={{ display: "flex", gap: 16, alignItems: "center", position: "relative" }}>
+                <div style={{ position: "relative", flexShrink: 0 }}>
+                  <img src="/mbappe.png" alt="Sorare Pro Limited card" style={{ width: 104, height: 140, objectFit: "contain", display: "block", filter: "drop-shadow(0 12px 28px rgba(251,191,36,0.45))" }} onError={e => { e.currentTarget.style.display = "none"; }} />
+                  {/* 100€ chip overlay */}
+                  <div style={{ position: "absolute", top: -6, right: -10, background: "linear-gradient(135deg,#F59E0B,#FBBF24)", color: "#0A0530", fontSize: 12, fontWeight: 900, fontFamily: "Outfit", padding: "4px 10px", borderRadius: 20, border: "2px solid rgba(10,5,48,0.6)", boxShadow: "0 4px 14px rgba(251,191,36,0.5)", letterSpacing: "-0.3px" }}>100€</div>
+                </div>
+                <div style={{ flex: 1, minWidth: 0 }}>
+                  <p style={{ fontSize: 13, color: "rgba(255,255,255,0.78)", lineHeight: 1.5, margin: 0 }}>{t.affProLead}</p>
+                </div>
+              </div>
+
+              {/* Bullets */}
+              <div style={{ display: "flex", flexDirection: "column", gap: 2, position: "relative" }}>
+                <Bullet tone="gold" text={t.affProB1} />
+                <Bullet tone="gold" text={t.affProB2} />
+                <Bullet tone="gold" text={t.affProB3} />
+              </div>
+
+              {/* CTA */}
+              <a href="http://sorare.pxf.io/Deglingo" target="_blank" rel="noopener noreferrer"
+                style={{
+                  textDecoration: "none", display: "inline-flex", alignItems: "center", justifyContent: "center", gap: 8,
+                  padding: "13px 20px", borderRadius: 11,
+                  background: "linear-gradient(135deg,#F59E0B,#FBBF24)",
+                  color: "#0A0530", fontSize: 14, fontWeight: 900, fontFamily: "Outfit",
+                  boxShadow: "0 8px 26px rgba(251,191,36,0.5), inset 0 1px 0 rgba(255,255,255,0.25)",
+                  transition: "transform 0.2s, box-shadow 0.2s",
+                }}
+                onMouseEnter={e => { e.currentTarget.style.transform = "translateY(-1px)"; e.currentTarget.style.boxShadow = "0 12px 32px rgba(251,191,36,0.7), inset 0 1px 0 rgba(255,255,255,0.3)"; }}
+                onMouseLeave={e => { e.currentTarget.style.transform = ""; e.currentTarget.style.boxShadow = "0 8px 26px rgba(251,191,36,0.5), inset 0 1px 0 rgba(255,255,255,0.25)"; }}>
+                {t.affProCta}
+                <IconArrow color="#0A0530" size={14} />
+              </a>
+            </div>
+          </div>
+        </section>
+
+        {/* ==== POUR QUI ? (new section — Scout pour les 2 profils) ==== */}
+        <section style={{ width: "100%", padding: "40px 24px 30px" }}>
+          <div style={{ maxWidth: 1080, margin: "0 auto" }}>
+            <div style={{ textAlign: "center", marginBottom: 32 }}>
+              <div style={{ display: "inline-flex", alignItems: "center", gap: 8, padding: "5px 12px", borderRadius: 99, background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.1)", backdropFilter: "blur(10px)", WebkitBackdropFilter: "blur(10px)", marginBottom: 14 }}>
+                <span style={{ width: 5, height: 5, borderRadius: "50%", background: "#A78BFA" }} />
+                <span style={{ fontSize: 10, fontWeight: 800, color: "rgba(255,255,255,0.7)", letterSpacing: "0.18em" }}>{t.whoEyebrow}</span>
+              </div>
+              <h2 style={{ fontSize: "clamp(24px, 4vw, 38px)", fontWeight: 900, color: "#fff", letterSpacing: "-1px", margin: "0 0 10px" }}>{t.whoTitle}</h2>
+              <p style={{ fontSize: 14, color: "rgba(255,255,255,0.55)", maxWidth: 560, margin: "0 auto", lineHeight: 1.55 }}>{t.whoSub}</p>
+            </div>
+
+            <div className="landing-who" style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 20 }}>
+
+              {/* Profile Manager Débutant */}
+              <div style={{
+                position: "relative", overflow: "hidden", borderRadius: 22,
+                background: "rgba(139,92,246,0.04)", border: "1px solid rgba(196,181,253,0.2)",
+                padding: "26px 26px 22px", display: "flex", flexDirection: "column", gap: 14,
+                backdropFilter: "blur(12px)", WebkitBackdropFilter: "blur(12px)",
+                boxShadow: "inset 0 1px 0 rgba(255,255,255,0.04)",
+              }}>
+                <div style={{ position: "absolute", bottom: -80, left: -80, width: 220, height: 220, borderRadius: "50%", background: "radial-gradient(circle, rgba(196,181,253,0.12), transparent 70%)", pointerEvents: "none" }} />
+
+                <div style={{ display: "flex", alignItems: "center", gap: 12, position: "relative" }}>
+                  <div style={{ width: 44, height: 44, borderRadius: 12, background: "rgba(139,92,246,0.2)", border: "1px solid rgba(196,181,253,0.3)", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
+                    <IconSpark color="#C4B5FD" size={22} />
+                  </div>
+                  <div>
+                    <div style={{ fontSize: 10, fontWeight: 800, color: "#C4B5FD", letterSpacing: "0.14em" }}>{t.affDebTag}</div>
+                    <div style={{ fontSize: 18, fontWeight: 800, color: "#fff", letterSpacing: "-0.3px" }}>{t.debQ}</div>
+                  </div>
+                </div>
+
+                <p style={{ fontSize: 13, color: "rgba(255,255,255,0.62)", lineHeight: 1.5, margin: 0, position: "relative" }}>{t.debLead}</p>
+
+                <div style={{ display: "flex", flexDirection: "column", gap: 2, position: "relative" }}>
+                  <Bullet tone="violet" text={t.debB1} />
+                  <Bullet tone="violet" text={t.debB2} />
+                  <Bullet tone="violet" text={t.debB3} />
+                  <Bullet tone="violet" text={t.debB4} />
+                  <Bullet tone="violet" text={t.debB5} />
+                </div>
+
+                <button onClick={() => onNavigate ? onNavigate("stellar") : onEnter()}
+                  style={{
+                    marginTop: "auto", padding: "11px 18px", borderRadius: 10, cursor: "pointer",
+                    fontSize: 13, fontWeight: 700, fontFamily: "Outfit",
+                    background: "rgba(139,92,246,0.15)", border: "1px solid rgba(196,181,253,0.4)",
+                    color: "#C4B5FD",
+                    display: "inline-flex", alignItems: "center", justifyContent: "center", gap: 8,
+                    transition: "background 0.2s, border-color 0.2s, transform 0.2s",
+                  }}
+                  onMouseEnter={e => { e.currentTarget.style.background = "rgba(139,92,246,0.25)"; e.currentTarget.style.borderColor = "rgba(196,181,253,0.6)"; e.currentTarget.style.transform = "translateY(-1px)"; }}
+                  onMouseLeave={e => { e.currentTarget.style.background = "rgba(139,92,246,0.15)"; e.currentTarget.style.borderColor = "rgba(196,181,253,0.4)"; e.currentTarget.style.transform = ""; }}>
+                  {t.debGo}
+                  <IconArrow color="#C4B5FD" size={14} />
+                </button>
+              </div>
+
+              {/* Profile Manager Pro */}
+              <div style={{
+                position: "relative", overflow: "hidden", borderRadius: 22,
+                background: "rgba(251,191,36,0.04)", border: "1px solid rgba(251,191,36,0.2)",
+                padding: "26px 26px 22px", display: "flex", flexDirection: "column", gap: 14,
+                backdropFilter: "blur(12px)", WebkitBackdropFilter: "blur(12px)",
+                boxShadow: "inset 0 1px 0 rgba(255,255,255,0.04)",
+              }}>
+                <div style={{ position: "absolute", bottom: -80, right: -80, width: 220, height: 220, borderRadius: "50%", background: "radial-gradient(circle, rgba(251,191,36,0.12), transparent 70%)", pointerEvents: "none" }} />
+
+                <div style={{ display: "flex", alignItems: "center", gap: 12, position: "relative" }}>
+                  <div style={{ width: 44, height: 44, borderRadius: 12, background: "rgba(251,191,36,0.2)", border: "1px solid rgba(251,191,36,0.3)", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
+                    <IconCrown color="#FBBF24" size={22} />
+                  </div>
+                  <div>
+                    <div style={{ fontSize: 10, fontWeight: 800, color: "#FBBF24", letterSpacing: "0.14em" }}>{t.affProTag}</div>
+                    <div style={{ fontSize: 18, fontWeight: 800, color: "#fff", letterSpacing: "-0.3px" }}>{t.proQ}</div>
+                  </div>
+                </div>
+
+                <p style={{ fontSize: 13, color: "rgba(255,255,255,0.62)", lineHeight: 1.5, margin: 0, position: "relative" }}>{t.proLead}</p>
+
+                <div style={{ display: "flex", flexDirection: "column", gap: 2, position: "relative" }}>
+                  <Bullet tone="gold" text={t.proB1} />
+                  <Bullet tone="gold" text={t.proB2} />
+                  <Bullet tone="gold" text={t.proB3} />
+                  <Bullet tone="gold" text={t.proB4} />
+                  <Bullet tone="gold" text={t.proB5} />
+                </div>
+
+                <button onClick={() => onNavigate ? onNavigate("pro") : onEnter()}
+                  style={{
+                    marginTop: "auto", padding: "11px 18px", borderRadius: 10, cursor: "pointer",
+                    fontSize: 13, fontWeight: 700, fontFamily: "Outfit",
+                    background: "rgba(251,191,36,0.15)", border: "1px solid rgba(251,191,36,0.4)",
+                    color: "#FBBF24",
+                    display: "inline-flex", alignItems: "center", justifyContent: "center", gap: 8,
+                    transition: "background 0.2s, border-color 0.2s, transform 0.2s",
+                  }}
+                  onMouseEnter={e => { e.currentTarget.style.background = "rgba(251,191,36,0.25)"; e.currentTarget.style.borderColor = "rgba(251,191,36,0.6)"; e.currentTarget.style.transform = "translateY(-1px)"; }}
+                  onMouseLeave={e => { e.currentTarget.style.background = "rgba(251,191,36,0.15)"; e.currentTarget.style.borderColor = "rgba(251,191,36,0.4)"; e.currentTarget.style.transform = ""; }}>
+                  {t.proGo}
+                  <IconArrow color="#FBBF24" size={14} />
+                </button>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* ==== FEATURES live preview (existing FeatureBoxes) ==== */}
+        <section id="features" style={{ width: "100%", padding: "20px 0 40px" }}>
+          <div style={{ display: "flex", justifyContent: "center" }}>
+            <FeatureBoxes players={players} showcasePlayers={showcasePlayers} lang={lang} />
+          </div>
+        </section>
+
+        {/* ==== FINAL CTA ==== */}
+        <section style={{ width: "100%", padding: "20px 24px 60px" }}>
+          <div style={{
+            maxWidth: 880, margin: "0 auto",
+            position: "relative", overflow: "hidden",
+            borderRadius: 28, padding: "44px 32px", textAlign: "center",
+            background: "linear-gradient(135deg, rgba(139,92,246,0.14), rgba(251,191,36,0.1) 70%)",
+            border: "1px solid rgba(255,255,255,0.12)",
+            backdropFilter: "blur(16px)", WebkitBackdropFilter: "blur(16px)",
+            boxShadow: "0 12px 48px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.06)",
+          }}>
+            <div style={{ position: "absolute", top: -80, left: "50%", transform: "translateX(-50%)", width: 360, height: 240, background: "radial-gradient(ellipse at center, rgba(196,181,253,0.18), transparent 70%)", pointerEvents: "none" }} />
+            <h2 style={{ fontSize: "clamp(22px, 3.5vw, 32px)", fontWeight: 900, color: "#fff", letterSpacing: "-0.8px", margin: "0 0 10px", position: "relative" }}>{t.finalTitle}</h2>
+            <p style={{ fontSize: 14, color: "rgba(255,255,255,0.62)", margin: "0 0 22px", position: "relative" }}>{t.finalSub}</p>
+            <button onClick={() => onNavigate ? onNavigate("db") : onEnter()} className="scout-cta-holo"
+              style={{
+                padding: "15px 32px", borderRadius: 14, cursor: "pointer",
+                fontSize: 15, fontWeight: 800, fontFamily: "Outfit",
+                color: "#fff", border: "none",
+                display: "inline-flex", alignItems: "center", gap: 10,
+                letterSpacing: "0.02em",
+              }}>
+              <span style={{ position: "relative", zIndex: 2 }}>{t.finalCta}</span>
+              <span style={{ position: "relative", zIndex: 2, display: "inline-flex" }}><IconArrow color="#fff" size={16} /></span>
+            </button>
+          </div>
+        </section>
       </div>
-
 
       <style>{`
         @keyframes silverShine { 0%{background-position:200% center} 100%{background-position:-200% center} }
-        @media(max-width:600px){
-          .landing-cards > div { width: 110px !important; }
+
+        /* ==== Shiny Holographic CTA (Sorare holo vibe: violet + cyan + pink shimmer) ==== */
+        @keyframes holoShift {
+          0% { background-position: 0% 50%; }
+          100% { background-position: 300% 50%; }
+        }
+        @keyframes ctaShine {
+          0%, 20% { transform: translateX(-140%) skewX(22deg); opacity: 0; }
+          30% { opacity: 1; }
+          65% { opacity: 1; }
+          85%, 100% { transform: translateX(240%) skewX(22deg); opacity: 0; }
+        }
+        @keyframes holoGlow {
+          0%, 100% {
+            box-shadow:
+              0 10px 32px rgba(124,58,237,0.5),
+              0 0 42px rgba(196,181,253,0.3),
+              inset 0 0 0 1px rgba(255,255,255,0.12),
+              inset 0 1px 0 rgba(255,255,255,0.28);
+          }
+          50% {
+            box-shadow:
+              0 14px 46px rgba(167,139,250,0.55),
+              0 0 64px rgba(103,232,249,0.35),
+              inset 0 0 0 1px rgba(255,255,255,0.22),
+              inset 0 1px 0 rgba(255,255,255,0.35);
+          }
+        }
+        .scout-cta-holo {
+          position: relative;
+          overflow: hidden;
+          isolation: isolate;
+          background: linear-gradient(110deg,
+            #7C3AED 0%,
+            #A78BFA 18%,
+            #67E8F9 36%,
+            #F9A8D4 52%,
+            #A78BFA 72%,
+            #7C3AED 90%,
+            #C4B5FD 100%);
+          background-size: 280% 100%;
+          animation: holoShift 6s linear infinite, holoGlow 3s ease-in-out infinite;
+          transition: transform 0.2s ease;
+        }
+        .scout-cta-holo::before {
+          content: "";
+          position: absolute;
+          inset: 0;
+          background: linear-gradient(100deg,
+            transparent 38%,
+            rgba(255,255,255,0.55) 50%,
+            transparent 62%);
+          animation: ctaShine 4s ease-in-out infinite;
+          pointer-events: none;
+          z-index: 1;
+        }
+        .scout-cta-holo::after {
+          content: "";
+          position: absolute;
+          inset: 0;
+          background:
+            radial-gradient(circle at 25% 15%, rgba(255,255,255,0.18), transparent 50%),
+            radial-gradient(circle at 75% 85%, rgba(103,232,249,0.15), transparent 55%);
+          pointer-events: none;
+          z-index: 0;
+          mix-blend-mode: screen;
+        }
+        .scout-cta-holo:hover { transform: translateY(-2px); }
+        .scout-cta-holo:active { transform: translateY(0); }
+
+        @media(max-width:820px){
+          .landing-cards > div { width: 120px !important; }
           .landing-cards > div:first-child,
           .landing-cards > div:last-child { display: none !important; }
-          .landing-features { grid-template-columns: 1fr !important; }
+          .landing-affi, .landing-who { grid-template-columns: 1fr !important; }
         }
       `}</style>
     </div>

@@ -182,8 +182,14 @@ export default function App() {
           display: "grid", gridTemplateColumns: "1fr auto 1fr", alignItems: "center",
           maxWidth: 1800, margin: "0 auto", width: "100%",
         }}>
-          {/* Logo gauche */}
-          <div style={{ display: "flex", alignItems: "center", gap: 4 }}>
+          {/* Logo gauche — cliquable pour retour accueil */}
+          <div
+            onClick={() => setShowLanding(true)}
+            style={{ display: "flex", alignItems: "center", gap: 4, cursor: "pointer", transition: "opacity 0.15s" }}
+            onMouseEnter={e => { e.currentTarget.style.opacity = "0.8"; }}
+            onMouseLeave={e => { e.currentTarget.style.opacity = "1"; }}
+            title={lang === "fr" ? "Retour à l'accueil" : "Back to home"}
+          >
             <img src="/logo.png" alt="Deglingo Scout" style={{ width: 32, height: 32, objectFit: "contain" }} />
             <div>
               <div style={{ fontSize: 16, fontWeight: 800, letterSpacing: "-0.5px", ...silverShinyStyle }}>DEGLINGO SCOUT</div>

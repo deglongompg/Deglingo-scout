@@ -393,13 +393,6 @@ export default function SorareProTab({ players, teams, fixtures, logos = {}, mat
       const alreadyInTeam = Object.values(prev).some(pp => pp && (pp.slug || pp.name) === playerId);
       if (alreadyInTeam) return prev;
 
-      // Same CARD enforcement across saved teams: prevent picking the exact same card already used in a saved team
-      const cardKey = player._cardKey;
-      if (cardKey) {
-        const cardUsedInSaved = savedTeams.some(t => Object.values(t.picks).some(pp => pp && pp._cardKey === cardKey));
-        if (cardUsedInSaved) return prev;
-      }
-
       // Classic enforcement: max 1 off-season card per team
       const playerCard = getCard(player);
       if (playerCard?.isClassic) {
@@ -431,24 +424,9 @@ export default function SorareProTab({ players, teams, fixtures, logos = {}, mat
 
   const isInTeam = (p) => {
     const id = p.slug || p.name;
-    const cardKey = p._cardKey;
-
-    // Collect all picks of this player across current + saved teams
-    const allPicks = [];
-    Object.values(myPicks).forEach(pp => { if (pp && (pp.slug || pp.name) === id) allPicks.push(pp); });
-    savedTeams.forEach(t => Object.values(t.picks).forEach(pp => { if (pp && (pp.slug || pp.name) === id) allPicks.push(pp); }));
-
-    if (allPicks.length === 0) return false;
-
-    // Card-level check: if this row is a specific expanded card, check if THAT card (by _cardKey) is already used
-    if (cardKey) {
-      return allPicks.some(pp => pp._cardKey === cardKey);
-    }
-
-    // Player-level check (single-card or legacy): hide if all owned cards are already used elsewhere
-    const ownedCount = sorareCards.filter(c => c.playerSlug === id && ((rarity === "limited" && (c.isLimited || (includeRare && c.isRare))) || (rarity === "rare" && c.isRare))).length;
-    if (ownedCount > allPicks.length) return false;
-    return true;
+    // Only check current picks (myPicks) for visual ✓ state.
+    // Duplicate card detection across saved teams is done at save time (saveCurrentTeam).
+    return Object.values(myPicks).some(pp => pp && (pp.slug || pp.name) === id);
   };
 
   // ── Saved teams ──
@@ -466,6 +444,28 @@ export default function SorareProTab({ players, teams, fixtures, logos = {}, mat
     if (!savedTeamsKey) return;
     const existing = savedTeams;
     if (existing.length >= maxSaved) return;
+
+    // Duplicate check: block save if a card (_cardKey) in current picks is already used in another saved team
+    const conflicts = [];
+    Object.entries(myPicks).forEach(([slot, pick]) => {
+      if (!pick) return;
+      const pickKey = pick._cardKey;
+      if (!pickKey) return; // no card key = legacy pick, skip check
+      const dup = existing.find(t => Object.values(t.picks).some(pp => pp && pp._cardKey === pickKey));
+      if (dup) conflicts.push({ slot, name: pick.name, team: dup.label });
+    });
+    if (conflicts.length > 0) {
+      const msg = (lang === "fr"
+        ? "Impossible de sauvegarder — carte(s) déjà utilisée(s) dans une autre équipe :\n\n"
+        : "Cannot save — card(s) already used in another team:\n\n")
+        + conflicts.map(c => `• ${c.name} (${c.slot}) → ${c.team}`).join("\n")
+        + (lang === "fr"
+          ? "\n\nSupprime l'équipe en conflit ou change de carte."
+          : "\n\nDelete the conflicting team or change the card.");
+      alert(msg);
+      return;
+    }
+
     const newTeam = { id: Date.now(), picks: { ...myPicks }, score: totalScore, captain: captainSlot, label: `Equipe ${existing.length + 1}` };
     const updated = [...existing, newTeam];
     localStorage.setItem(savedTeamsKey, JSON.stringify(updated));

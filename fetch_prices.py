@@ -26,7 +26,8 @@ if API_KEY:
 else:
     SLEEP = 6.0  # Safe: no rate limit, no VPN needed
     print(f"⚠️  Pas de clé API — mode lent (prix)")
-CURRENT_SEASON = 2025  # 2025-26 season
+CURRENT_SEASON = 2025  # 2025-26 season (EU leagues)
+SEASON_BY_LEAGUE = {"L1": 2025, "PL": 2025, "Liga": 2025, "Bundes": 2025, "MLS": 2025}
 
 LEAGUE_FILES = {
     "L1":     "deglingo_ligue1_final.json",
@@ -64,14 +65,14 @@ def gql(query, variables=None):
 
 # Query 1: tokenPrices for Limited + Rare (card.liveSingleSaleOffer = secondary market floor)
 Q_TOKEN_PRICES = """query($s: String!, $r: Rarity!) { tokens { tokenPrices(playerSlug: $s, rarity: $r) {
-  card { seasonYear liveSingleSaleOffer { receiverSide { amounts { eurCents wei } } } }
+  card { seasonYear ... on Card { inSeasonEligible } liveSingleSaleOffer { receiverSide { amounts { eurCents wei } } } }
 }}}"""
 
 # Query 2: liveSingleSaleOffers backup (catches offers tokenPrices might miss)
 Q_OFFERS = """query($s: String!) { tokens {
   liveSingleSaleOffers(first: 20, sport: FOOTBALL, playerSlug: $s) {
     nodes {
-      senderSide { anyCards { rarityTyped seasonYear } }
+      senderSide { anyCards { rarityTyped seasonYear ... on Card { inSeasonEligible } } }
       receiverSide { amounts { eurCents wei } }
     }
   }
@@ -92,11 +93,12 @@ def extract_eur(amounts):
     return 0
 
 
-def fetch_player_prices(slug):
+def fetch_player_prices(slug, season=None):
     """Get floor price for Limited and Rare in-season cards.
     Strategy: 1 query (liveSingleSaleOffers) gets both rarities at once.
     If either is missing, fallback to tokenPrices for that rarity.
     = 1 query best case, 2-3 worst case."""
+    season = season or CURRENT_SEASON
     lim_prices = []
     rare_prices = []
 
@@ -109,7 +111,7 @@ def fetch_player_prices(slug):
             if not cards:
                 continue
             card = cards[0]
-            if card.get("seasonYear") != CURRENT_SEASON:
+            if not card.get("inSeasonEligible"):
                 continue
             eur = extract_eur(n.get("receiverSide", {}).get("amounts"))
             if eur <= 0:
@@ -129,7 +131,7 @@ def fetch_player_prices(slug):
         try:
             for c in data2.get("data", {}).get("tokens", {}).get("tokenPrices", []):
                 card = c.get("card", {})
-                if card.get("seasonYear") != CURRENT_SEASON:
+                if not card.get("inSeasonEligible"):
                     continue
                 offer = card.get("liveSingleSaleOffer")
                 if not offer:
@@ -147,7 +149,7 @@ def fetch_player_prices(slug):
         try:
             for c in data3.get("data", {}).get("tokens", {}).get("tokenPrices", []):
                 card = c.get("card", {})
-                if card.get("seasonYear") != CURRENT_SEASON:
+                if not card.get("inSeasonEligible"):
                     continue
                 offer = card.get("liveSingleSaleOffer")
                 if not offer:
@@ -198,7 +200,7 @@ def process_league(league_code, fresh=False):
 
         print(f"  [{i+1}/{len(players)}] {name}...", end=" ", flush=True)
 
-        lim, rare = fetch_player_prices(slug)
+        lim, rare = fetch_player_prices(slug, season=SEASON_BY_LEAGUE.get(league_code, CURRENT_SEASON))
 
         p["price_limited"] = lim
         p["price_rare"] = rare

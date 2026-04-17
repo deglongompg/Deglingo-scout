@@ -124,6 +124,18 @@ for p in all_players:
 if restored:
     print(f"✅ {restored} joueurs avec champs restaurés (GW + status fallback)")
 
+# ── Position overrides (Sorare API incorrect, visuellement FW alors qu'API dit MIL/DEF) ──
+OVERRIDES_FILE = "position_overrides.json"
+if os.path.exists(OVERRIDES_FILE):
+    with open(OVERRIDES_FILE, encoding="utf-8") as f:
+        overrides = json.load(f)
+    n_override = 0
+    for p in all_players:
+        if p.get("slug") in overrides:
+            p["position"] = overrides[p["slug"]]
+            n_override += 1
+    print(f"OK {n_override} positions overriddees depuis {OVERRIDES_FILE}")
+
 for outdir in ["public/data", "deglingo-scout-app/public/data"]:
     try:
         os.makedirs(outdir, exist_ok=True)

@@ -2298,9 +2298,17 @@ export default function StellarTab({ players, teams, fixtures, logos = {}, match
               <div style={{ display: "grid", gridTemplateColumns: "repeat(2, 1fr)", gap: 10 }}>
                 {savedTeams.map((st, si) => {
                   const POS_ORDER = ["GK","DEF","MIL","ATT","FLEX"];
-                  // Score dynamique selon Bonus ON/OFF
+                  // Score dynamique : vrai SO5 si match joue, sinon D-Score predit ajuste
                   const stPlayers = POS_ORDER.map(s => st.picks[s]).filter(Boolean);
-                  const stScores = stPlayers.map(p => getAdjDs(p));
+                  const stScores = stPlayers.map(p => {
+                    const fresh = players.find(pl => pl.slug === p.slug);
+                    if (fresh && fresh.last_so5_date === p.matchDate && fresh.last_so5_score != null) {
+                      const ownedCard = sorareCardMap[p.slug || p.name];
+                      const bonusMult = (ownedCard && ownedCard.totalBonus > 0) ? (1 + ownedCard.totalBonus / 100) : 1;
+                      return Math.round(fresh.last_so5_score * bonusMult);
+                    }
+                    return getAdjDs(p);
+                  });
                   const stCapDs = stScores.length === 5 ? Math.max(...stScores) : 0;
                   const stTotalAdj = Math.round(stScores.reduce((s, v) => s + v, 0) + stCapDs * 0.5);
                   const palSt = PALIERS.filter(p => stTotalAdj >= p.pts).pop();
@@ -2343,13 +2351,20 @@ export default function StellarTab({ players, teams, fixtures, logos = {}, match
                       </div>
                       <div style={{ display: "flex", justifyContent: "center", gap: 8 }}>
                         {POS_ORDER.map(slot => {
-                          const p = st.picks[slot];
-                          if (!p) return null;
+                          const raw = st.picks[slot];
+                          if (!raw) return null;
+                          // Enrich with fresh data (last_so5 scores)
+                          const fresh = players.find(pl => pl.slug === raw.slug);
+                          const p = fresh ? { ...raw, sorare_starter_pct: fresh.sorare_starter_pct, last_so5_score: fresh.last_so5_score, last_so5_date: fresh.last_so5_date } : raw;
                           const pc = PC[p.position];
                           const clubLogo = logos[p.club];
                           const oppLogo = logos[p.oppName];
                           const ownedCard = sorareCardMap[p.slug || p.name];
-                          const adjDs = getAdjDs(p);
+                          // Vrai score si match joue (last_so5_date matche matchDate), sinon D-Score prédit ajusté
+                          const hasRealScore = p.last_so5_date && p.matchDate && p.last_so5_date === p.matchDate && p.last_so5_score != null;
+                          const adjDs = hasRealScore
+                            ? Math.round(p.last_so5_score * (ownedCard && ownedCard.totalBonus > 0 ? (1 + ownedCard.totalBonus / 100) : 1))
+                            : getAdjDs(p);
                           const parisTime = p.kickoff && p.matchDate ? utcToParisTime(p.kickoff, p.matchDate) : "";
                           return (
                             <div key={slot} style={{ textAlign: "center", flex: 1, minWidth: 0 }}>

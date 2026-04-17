@@ -383,7 +383,8 @@ export default function SorareProTab({ players, teams, fixtures, logos = {}, mat
 
   // ── Team builder ──
   const [myPicks, setMyPicks] = useState({ GK: null, DEF: null, MIL: null, ATT: null, FLEX: null });
-  const resetTeam = () => setMyPicks({ GK: null, DEF: null, MIL: null, ATT: null, FLEX: null });
+  const [editingTeamId, setEditingTeamId] = useState(null); // null = nouvelle equipe ; id = edition d'une saved
+  const resetTeam = () => { setMyPicks({ GK: null, DEF: null, MIL: null, ATT: null, FLEX: null }); setEditingTeamId(null); };
   const removeFromTeam = (slot) => setMyPicks(prev => ({ ...prev, [slot]: null }));
 
   const addToTeam = (player) => {
@@ -422,11 +423,38 @@ export default function SorareProTab({ players, teams, fixtures, logos = {}, mat
     });
   };
 
+  // Visual ✓ indicator: carte dans le current team uniquement
   const isInTeam = (p) => {
     const id = p.slug || p.name;
-    // Only check current picks (myPicks) for visual ✓ state.
-    // Duplicate card detection across saved teams is done at save time (saveCurrentTeam).
     return Object.values(myPicks).some(pp => pp && (pp.slug || pp.name) === id);
+  };
+
+  // Filtre "Dispo" : carte deja utilisee dans une saved team (= indisponible pour nouvelle team).
+  // Discrimine par _cardKey ET par power (bonus), car 2 cartes du meme joueur ont rarement le meme bonus.
+  // En mode edition, l'equipe en cours d'edition est exclue du check.
+  const isUsedInOtherTeam = (p) => {
+    const cardKey = p._cardKey;
+    const id = p.slug || p.name;
+    const pPower = p._card?.power != null ? p._card.power : (proCardMap[id]?.power != null ? proCardMap[id].power : null);
+    const otherTeams = savedTeams.filter(t => t.id !== editingTeamId);
+
+    let totalUsedCount = 0;
+    for (const t of otherTeams) {
+      for (const pp of Object.values(t.picks)) {
+        if (!pp || (pp.slug || pp.name) !== id) continue;
+        totalUsedCount++;
+        // Match exact par _cardKey
+        if (cardKey && pp._cardKey === cardKey) return true;
+        // Match par power (meme bonus = meme carte)
+        const ppPower = pp._card?.power != null ? pp._card.power : (proCardMap[id]?.power != null ? proCardMap[id].power : null);
+        if (pPower != null && ppPower != null && Math.abs(pPower - ppPower) < 0.0001) return true;
+      }
+    }
+
+    if (totalUsedCount === 0) return false;
+    // Fallback safety net : toutes les cartes possedees sont prises
+    const ownedCount = sorareCards.filter(c => c.playerSlug === id && ((rarity === "limited" && (c.isLimited || (includeRare && c.isRare))) || (rarity === "rare" && c.isRare))).length;
+    return totalUsedCount >= ownedCount;
   };
 
   // ── Saved teams ──
@@ -443,16 +471,57 @@ export default function SorareProTab({ players, teams, fixtures, logos = {}, mat
   const saveCurrentTeam = () => {
     if (!savedTeamsKey) return;
     const existing = savedTeams;
-    if (existing.length >= maxSaved) return;
+    const isEditing = editingTeamId != null && existing.some(t => t.id === editingTeamId);
+    if (!isEditing && existing.length >= maxSaved) return;
 
-    // Duplicate check: block save if a card (_cardKey) in current picks is already used in another saved team
+    // Duplicate check: block save si carte (par _cardKey OU power) deja utilisee dans une autre saved team.
+    // En mode edition, on exclut l'equipe en cours d'edition.
+    // Le power differencie 2 cartes du meme joueur (in-season vs off-season ont des bonus differents).
+    const getPickPower = (pp) => {
+      if (pp._card && pp._card.power != null) return pp._card.power;
+      const slug = pp.slug || pp.name;
+      const card = proCardMap[slug];
+      return card ? card.power : null;
+    };
     const conflicts = [];
     Object.entries(myPicks).forEach(([slot, pick]) => {
       if (!pick) return;
+      const id = pick.slug || pick.name;
       const pickKey = pick._cardKey;
-      if (!pickKey) return; // no card key = legacy pick, skip check
-      const dup = existing.find(t => Object.values(t.picks).some(pp => pp && pp._cardKey === pickKey));
-      if (dup) conflicts.push({ slot, name: pick.name, team: dup.label });
+      const pickPower = getPickPower(pick);
+      const otherTeams = existing.filter(t => t.id !== editingTeamId);
+
+      for (const t of otherTeams) {
+        for (const pp of Object.values(t.picks)) {
+          if (!pp || (pp.slug || pp.name) !== id) continue;
+          const ppKey = pp._cardKey;
+          const ppPower = getPickPower(pp);
+          // Match exact par _cardKey
+          if (pickKey && ppKey && pickKey === ppKey) {
+            conflicts.push({ slot, name: pick.name, team: t.label });
+            return;
+          }
+          // Match par power (meme bonus = meme carte) — discrimine in-season vs off-season
+          if (pickPower != null && ppPower != null && Math.abs(pickPower - ppPower) < 0.0001) {
+            conflicts.push({ slot, name: pick.name, team: t.label });
+            return;
+          }
+        }
+      }
+
+      // Fallback: bloque si total uses depasse les cartes possedees (safety net)
+      let totalOtherUses = 0;
+      let firstUsingTeam = null;
+      otherTeams.forEach(t => {
+        Object.values(t.picks).forEach(pp => {
+          if (pp && (pp.slug || pp.name) === id) { totalOtherUses++; if (!firstUsingTeam) firstUsingTeam = t; }
+        });
+      });
+      if (totalOtherUses === 0) return;
+      const ownedCount = sorareCards.filter(c => c.playerSlug === id && ((rarity === "limited" && (c.isLimited || (includeRare && c.isRare))) || (rarity === "rare" && c.isRare))).length;
+      if (totalOtherUses + 1 > ownedCount) {
+        conflicts.push({ slot, name: pick.name, team: firstUsingTeam.label });
+      }
     });
     if (conflicts.length > 0) {
       const msg = (lang === "fr"
@@ -466,8 +535,16 @@ export default function SorareProTab({ players, teams, fixtures, logos = {}, mat
       return;
     }
 
-    const newTeam = { id: Date.now(), picks: { ...myPicks }, score: totalScore, captain: captainSlot, label: `Equipe ${existing.length + 1}` };
-    const updated = [...existing, newTeam];
+    let updated;
+    if (isEditing) {
+      // Mode edition: ecrase l'equipe existante en gardant son id + label
+      updated = existing.map(t => t.id === editingTeamId
+        ? { ...t, picks: { ...myPicks }, score: totalScore, captain: captainSlot }
+        : t);
+    } else {
+      const newTeam = { id: Date.now(), picks: { ...myPicks }, score: totalScore, captain: captainSlot, label: `Equipe ${existing.length + 1}` };
+      updated = [...existing, newTeam];
+    }
     localStorage.setItem(savedTeamsKey, JSON.stringify(updated));
     setSavedTeams(updated);
     resetTeam();
@@ -481,7 +558,7 @@ export default function SorareProTab({ players, teams, fixtures, logos = {}, mat
     setSavedTeams(updated);
   };
 
-  const loadSavedTeam = (team) => { setMyPicks({ ...team.picks }); };
+  const loadSavedTeam = (team) => { setMyPicks({ ...team.picks }); setEditingTeamId(team.id); };
 
   // ── GW fixtures for selected league ──
   const gwMatches = useMemo(() => {
@@ -763,7 +840,6 @@ export default function SorareProTab({ players, teams, fixtures, logos = {}, mat
     if (selectedSlot) {
       pool = selectedSlot === "FLEX" ? pool.filter(p => ["DEF","MIL","ATT"].includes(p.position)) : pool.filter(p => p.position === selectedSlot);
     }
-    if (hideUsed) pool = pool.filter(p => !isInTeam(p));
     if (filterTitu && selectedGwIdx <= 1) pool = pool.filter(p => p.sorare_starter_pct != null && p.sorare_starter_pct >= filterTitu);
     if (selectedMatchFilters.length > 0) {
       pool = pool.filter(p => selectedMatchFilters.some(m => clubMatch(p.club, m.home) || clubMatch(p.club, m.away)));
@@ -771,9 +847,11 @@ export default function SorareProTab({ players, teams, fixtures, logos = {}, mat
     if (myCardsMode && sorareConnected) {
       pool = pool.filter(p => proCardMap[p.slug || p.name]);
     }
-    // Expand duplicates: if a player has multiple cards, create a row per card
+
+    // Expansion : cree une row par carte (pour joueurs multi-cartes)
+    let expanded;
     if (sorareConnected) {
-      const expanded = [];
+      expanded = [];
       for (const p of pool) {
         const slug = p.slug || p.name;
         const cards = proAllCards[slug] || [];
@@ -785,18 +863,27 @@ export default function SorareProTab({ players, teams, fixtures, logos = {}, mat
           }
         }
       }
-      // Season filter: applied AFTER expand so each card row is filtered individually
-      if (seasonFilter !== "all") {
-        return expanded.filter(p => {
-          const card = p._card || proCardMap[p.slug || p.name];
-          if (!card) return true;
-          return seasonFilter === "in" ? !card.isClassic : card.isClassic;
-        });
-      }
-      return expanded;
+    } else {
+      expanded = pool;
     }
-    return pool;
-  }, [gwPlayers, selectedSlot, hideUsed, filterTitu, selectedMatchFilters, myCardsMode, sorareConnected, proCardMap, proAllCards, myPicks, savedTeams, seasonFilter]);
+
+    // Filtre Dispo: applique APRES expansion pour check par _cardKey individuel
+    // (masque les cartes deja utilisees dans le current team OU dans une saved team)
+    if (hideUsed) {
+      expanded = expanded.filter(p => !isInTeam(p) && !isUsedInOtherTeam(p));
+    }
+
+    // Filtre saison
+    if (sorareConnected && seasonFilter !== "all") {
+      expanded = expanded.filter(p => {
+        const card = p._card || proCardMap[p.slug || p.name];
+        if (!card) return true;
+        return seasonFilter === "in" ? !card.isClassic : card.isClassic;
+      });
+    }
+
+    return expanded;
+  }, [gwPlayers, selectedSlot, hideUsed, filterTitu, selectedMatchFilters, myCardsMode, sorareConnected, proCardMap, proAllCards, myPicks, savedTeams, seasonFilter, sorareCards, rarity, includeRare, editingTeamId]);
 
   // Reset match filters on league change
   useEffect(() => { setSelectedMatchFilters([]); }, [league]);
@@ -1416,7 +1503,17 @@ export default function SorareProTab({ players, teams, fixtures, logos = {}, mat
               const stAdjScores = stPlayers.map(p => getAdjDs(p));
               const stCaptain = st.captain && st.picks[st.captain] ? st.picks[st.captain] : (stAdjScores.length === 5 ? stPlayers[stAdjScores.indexOf(Math.max(...stAdjScores))] : null);
               const stCaptainId = stCaptain ? (stCaptain.slug || stCaptain.name) : null;
-              const stFullScores = stPlayers.map(p => getFullScore(p, stCaptainId && (p.slug || p.name) === stCaptainId));
+              // Score effectif: vrai score SO5 si match joue, sinon predicted (D-Score * power * captain)
+              const getEffectiveFullScore = (p, isCap) => {
+                const fresh = players.find(pl => pl.slug === p.slug);
+                if (fresh && fresh.last_so5_date === p.matchDate && fresh.last_so5_score != null) {
+                  const card = getCard(p);
+                  const power = (card?.power && card.power > 1) ? card.power : 1;
+                  return fresh.last_so5_score * power * (isCap ? 1.5 : 1);
+                }
+                return getFullScore(p, isCap);
+              };
+              const stFullScores = stPlayers.map(p => getEffectiveFullScore(p, stCaptainId && (p.slug || p.name) === stCaptainId));
               const stClubCounts = {};
               stPlayers.forEach(p => { stClubCounts[p.club] = (stClubCounts[p.club] || 0) + 1; });
               const stMultiClub = stPlayers.length === 5 && Object.values(stClubCounts).every(c => c <= 2);
@@ -1431,20 +1528,25 @@ export default function SorareProTab({ players, teams, fixtures, logos = {}, mat
               const renderCard = (slot) => {
                 const raw = st.picks[slot];
                 if (!raw) return null;
-                // Enrich with fresh data from players.json (titu%, injured, etc.)
+                // Enrich with fresh data from players.json (titu%, injured, last_so5, etc.)
                 const fresh = players.find(pl => pl.slug === raw.slug);
-                const p = fresh ? { ...raw, sorare_starter_pct: fresh.sorare_starter_pct, injured: fresh.injured, suspended: fresh.suspended } : raw;
+                const p = fresh ? { ...raw, sorare_starter_pct: fresh.sorare_starter_pct, injured: fresh.injured, suspended: fresh.suspended, last_so5_score: fresh.last_so5_score, last_so5_date: fresh.last_so5_date } : raw;
                 const pc = PC[p.position];
                 const ownedCard = getCard(p);
                 const oppLogo = logos[p.oppName];
                 const playerClubLogo = logos[p.club];
                 const isCap = stCaptainId && (p.slug || p.name) === stCaptainId;
-                const playerScore = Math.round(getFullScore(p, false));
+                const predictedScore = Math.round(getFullScore(p, false));
                 const bonusPct = getPowerPct(p);
                 const parisTime = p.kickoff && p.matchDate ? utcToParisTime(p.kickoff, p.matchDate) : "";
                 const dateLabel = p.matchDate ? new Date(p.matchDate + "T12:00:00").toLocaleDateString(lang === "fr" ? "fr-FR" : "en-US", { timeZone: TZ, weekday: "short", day: "numeric" }).toUpperCase().replace(".", "") : "";
-                const matchDt = p.matchDate && p.kickoff ? new Date(`${p.matchDate}T${p.kickoff}:00Z`) : null;
-                const hasRealScore = matchDt ? matchDt.getTime() + 2 * 3600000 < Date.now() : false;
+                // Real SO5 score: si last_so5_date matche la matchDate du pick, le match a ete joue -> on affiche le vrai score (avec power + captain mult applique)
+                const hasRealScore = p.last_so5_date && p.matchDate && p.last_so5_date === p.matchDate && p.last_so5_score != null;
+                const rawRealScore = hasRealScore ? p.last_so5_score : null;
+                const powerMult = (ownedCard?.power && ownedCard.power > 1) ? ownedCard.power : 1;
+                const captainMult = isCap ? 1.5 : 1;
+                const realScoreFinal = hasRealScore ? Math.round(rawRealScore * powerMult * captainMult) : null;
+                const playerScore = hasRealScore ? realScoreFinal : predictedScore;
                 return (
                   <div key={slot} style={{ display: "flex", flexDirection: "column", alignItems: "center", flex: 1, minWidth: 0, maxWidth: 120 }}>
                     <div style={{ width: "100%", aspectRatio: "3/4", borderRadius: 6, overflow: "hidden", margin: "0 auto", position: "relative",

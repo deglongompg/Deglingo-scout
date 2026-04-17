@@ -71,13 +71,13 @@ def fetch_score(slug):
 
 
 # ── DÉTECTION AUTOMATIQUE DES CLUBS AYANT JOUÉ ──────────────────────────────
-# Les kickoffs dans fixtures.json sont en UTC
-# La date GW est en heure Paris (CEST = UTC+2 en avril)
-_utc_now   = datetime.now(timezone.utc)
-_paris_now = _utc_now + timedelta(hours=2)
-today      = _paris_now.strftime("%Y-%m-%d")
-now_hhmm   = _utc_now.strftime("%H:%M")   # UTC pour comparer aux kickoffs UTC
-print(f"Aujourd'hui : {today}")
+# Les kickoffs dans fixtures.json sont en UTC -> on compare TOUT en UTC pour eviter les bugs de tz.
+# La date GW (ven/mar 16h Paris) est convertie en UTC.
+_utc_now    = datetime.now(timezone.utc)
+_paris_now  = _utc_now + timedelta(hours=2)
+today_utc   = _utc_now.strftime("%Y-%m-%d")
+now_hhmm    = _utc_now.strftime("%H:%M")
+print(f"Aujourd'hui (UTC) : {today_utc}")
 
 with open(FIXTURES_FILE, encoding="utf-8") as f:
     fixtures = json.load(f)
@@ -99,22 +99,29 @@ def get_gw_start(now):
             best = candidate
     return best
 
-_gw_start = get_gw_start(_paris_now)
-gw_cutoff_date  = _gw_start.strftime("%Y-%m-%d")
-gw_cutoff_hhmm  = _gw_start.strftime("%H:%M")  # toujours "16:00"
-print(f"Debut GW    : {gw_cutoff_date} {gw_cutoff_hhmm} (heure Paris)")
+_gw_start_paris = get_gw_start(_paris_now)
+# Convertion en UTC pour comparer aux fixtures (kickoffs en UTC)
+_gw_start_utc = _gw_start_paris - timedelta(hours=2)
+gw_cutoff_date_utc = _gw_start_utc.strftime("%Y-%m-%d")
+gw_cutoff_hhmm_utc = _gw_start_utc.strftime("%H:%M")
+print(f"Debut GW    : {_gw_start_paris.strftime('%Y-%m-%d %H:%M')} (Paris) = {gw_cutoff_date_utc} {gw_cutoff_hhmm_utc} (UTC)")
 
 def is_played(fx_date, kickoff):
-    """Retourne True si le match est terminé (date passée + +2h après ko)."""
+    """Retourne True si le match est terminé (date+kickoff en UTC, comparé à now UTC)."""
     if not fx_date:
         return False
-    if kickoff and kickoff != "99:99":
-        ko_h, ko_m = int(kickoff[:2]), int(kickoff[3:])
-        ko_end = f"{(ko_h + 2) % 24:02d}:{ko_m:02d}"
-    else:
-        ko_end = "99:99"
-    in_gw = fx_date > gw_cutoff_date or (fx_date == gw_cutoff_date and kickoff >= gw_cutoff_hhmm)
-    started = fx_date < today or (fx_date == today and ko_end <= now_hhmm)
+    # Utilise datetime objects pour eviter les bugs de tz string-comparison
+    try:
+        if kickoff and kickoff != "99:99":
+            ko_dt = datetime.fromisoformat(f"{fx_date}T{kickoff}:00").replace(tzinfo=timezone.utc)
+        else:
+            # Date sans heure : on assume qu'il faut attendre 23:59 UTC pour que ce soit "joue"
+            ko_dt = datetime.fromisoformat(f"{fx_date}T23:59:00").replace(tzinfo=timezone.utc)
+        ko_end_dt = ko_dt + timedelta(hours=2)
+    except Exception:
+        return False
+    in_gw   = ko_dt   >= _gw_start_utc
+    started = ko_end_dt <= _utc_now
     return in_gw and started
 
 # Source 1 : fixtures list (home_api / away_api = noms exacts dans players.json)

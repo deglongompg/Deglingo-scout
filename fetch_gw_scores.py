@@ -60,7 +60,7 @@ def fetch_score(slug):
     game     = last_s.get("game") or {}
     gw_date  = (game.get("date") or "")[:10] or None
     return {
-        "last_so5_score":        round(gw_score, 1) if gw_score is not None else None,
+        "last_so5_score":        round(gw_score, 2) if gw_score is not None else None,
         "last_so5_date":         gw_date,
         "last_match_home_goals": game.get("homeScore"),
         "last_match_away_goals": game.get("awayScore"),

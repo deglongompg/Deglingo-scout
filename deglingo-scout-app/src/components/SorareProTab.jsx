@@ -360,13 +360,15 @@ export default function SorareProTab({ players, teams, fixtures, logos = {}, mat
     if (!bonusEnabled || !card?.power || card.power <= 1) return Math.round(p.ds || 0);
     return Math.round((p.ds || 0) * card.power);
   };
-  // getFullScore : score final d'un joueur (avec power + capitaine si applicable)
+  // getFullScore : score final d'un joueur
+  // Formule Sorare officielle : (raw × power) + (capitaine ? raw × 0.5 : 0)
+  // Le bonus capitaine est calcule sur le RAW, pas sur le post-bonus.
   const getFullScore = (p, isCap) => {
     const card = getCard(p);
     const base = p.ds || 0;
-    const capMult = isCap ? 1.5 : 1;
     const power = (bonusEnabled && card?.power && card.power > 1) ? card.power : 1;
-    return base * capMult * power;
+    const captainBonus = isCap ? base * 0.5 : 0;
+    return base * power + captainBonus;
   };
   // getPowerPct : bonus % de la carte (pour affichage badge)
   const getPowerPct = (p) => {
@@ -1503,13 +1505,15 @@ export default function SorareProTab({ players, teams, fixtures, logos = {}, mat
               const stAdjScores = stPlayers.map(p => getAdjDs(p));
               const stCaptain = st.captain && st.picks[st.captain] ? st.picks[st.captain] : (stAdjScores.length === 5 ? stPlayers[stAdjScores.indexOf(Math.max(...stAdjScores))] : null);
               const stCaptainId = stCaptain ? (stCaptain.slug || stCaptain.name) : null;
-              // Score effectif: vrai score SO5 si match joue, sinon predicted (D-Score * power * captain)
+              // Score effectif: vrai score SO5 si match joue, sinon predicted (D-Score * power)
+              // Formule Sorare : raw × power + (capitaine ? raw × 0.5 : 0)
               const getEffectiveFullScore = (p, isCap) => {
                 const fresh = players.find(pl => pl.slug === p.slug);
                 if (fresh && fresh.last_so5_date === p.matchDate && fresh.last_so5_score != null) {
                   const card = getCard(p);
                   const power = (card?.power && card.power > 1) ? card.power : 1;
-                  return fresh.last_so5_score * power * (isCap ? 1.5 : 1);
+                  const captainBonus = isCap ? fresh.last_so5_score * 0.5 : 0;
+                  return fresh.last_so5_score * power + captainBonus;
                 }
                 return getFullScore(p, isCap);
               };
@@ -1530,7 +1534,7 @@ export default function SorareProTab({ players, teams, fixtures, logos = {}, mat
                 if (!raw) return null;
                 // Enrich with fresh data from players.json (titu%, injured, last_so5, etc.)
                 const fresh = players.find(pl => pl.slug === raw.slug);
-                const p = fresh ? { ...raw, sorare_starter_pct: fresh.sorare_starter_pct, injured: fresh.injured, suspended: fresh.suspended, last_so5_score: fresh.last_so5_score, last_so5_date: fresh.last_so5_date } : raw;
+                const p = fresh ? { ...raw, sorare_starter_pct: fresh.sorare_starter_pct, injured: fresh.injured, suspended: fresh.suspended, last_so5_score: fresh.last_so5_score, last_so5_date: fresh.last_so5_date, last_match_home_goals: fresh.last_match_home_goals, last_match_away_goals: fresh.last_match_away_goals } : raw;
                 const pc = PC[p.position];
                 const ownedCard = getCard(p);
                 const oppLogo = logos[p.oppName];
@@ -1540,13 +1544,15 @@ export default function SorareProTab({ players, teams, fixtures, logos = {}, mat
                 const bonusPct = getPowerPct(p);
                 const parisTime = p.kickoff && p.matchDate ? utcToParisTime(p.kickoff, p.matchDate) : "";
                 const dateLabel = p.matchDate ? new Date(p.matchDate + "T12:00:00").toLocaleDateString(lang === "fr" ? "fr-FR" : "en-US", { timeZone: TZ, weekday: "short", day: "numeric" }).toUpperCase().replace(".", "") : "";
-                // Real SO5 score: si last_so5_date matche la matchDate du pick, le match a ete joue -> on affiche le vrai score (avec power + captain mult applique)
+                // Score affiche par carte = RAW score (comme Sorare), bonus appliques au total uniquement.
                 const hasRealScore = p.last_so5_date && p.matchDate && p.last_so5_date === p.matchDate && p.last_so5_score != null;
                 const rawRealScore = hasRealScore ? p.last_so5_score : null;
-                const powerMult = (ownedCard?.power && ownedCard.power > 1) ? ownedCard.power : 1;
-                const captainMult = isCap ? 1.5 : 1;
-                const realScoreFinal = hasRealScore ? Math.round(rawRealScore * powerMult * captainMult) : null;
-                const playerScore = hasRealScore ? realScoreFinal : predictedScore;
+                const playerScore = hasRealScore ? Math.round(rawRealScore) : Math.round(p.ds || 0);
+                const captainBonusPts = isCap ? Math.round((hasRealScore ? rawRealScore : (p.ds || 0)) * 0.5) : 0;
+                // Score du match si joue : perspective du joueur (sa team a gauche)
+                const matchScore = hasRealScore && p.last_match_home_goals != null && p.last_match_away_goals != null
+                  ? (p.isHome ? `${p.last_match_home_goals} - ${p.last_match_away_goals}` : `${p.last_match_away_goals} - ${p.last_match_home_goals}`)
+                  : null;
                 return (
                   <div key={slot} style={{ display: "flex", flexDirection: "column", alignItems: "center", flex: 1, minWidth: 0, maxWidth: 120 }}>
                     <div style={{ width: "100%", aspectRatio: "3/4", borderRadius: 6, overflow: "hidden", margin: "0 auto", position: "relative",
@@ -1580,16 +1586,22 @@ export default function SorareProTab({ players, teams, fixtures, logos = {}, mat
                         boxShadow: hasRealScore ? `0 0 8px ${dsColor(playerScore)}50` : `0 0 6px ${dsColor(playerScore)}30`,
                       }}>{playerScore}</div>
                     </div>
-                    {/* Match info box */}
-                    <div style={{ marginTop: 3, padding: "3px 8px", borderRadius: 6, background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.06)", textAlign: "center" }}>
+                    {/* Match info box — date/heure remplacees par score si match joue */}
+                    <div style={{ marginTop: 3, padding: "3px 8px", borderRadius: 6, background: matchScore ? "rgba(15,40,30,0.5)" : "rgba(255,255,255,0.03)", border: `1px solid ${matchScore ? "rgba(74,222,128,0.25)" : "rgba(255,255,255,0.06)"}`, textAlign: "center" }}>
                       <div style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: 4 }}>
                         {playerClubLogo && <img src={`/data/logos/${playerClubLogo}`} alt="" style={{ width: 14, height: 14, objectFit: "contain" }} />}
-                        <span style={{ fontSize: 7, color: "rgba(255,255,255,0.25)" }}>vs</span>
+                        {matchScore ? (
+                          <span style={{ fontSize: 11, fontWeight: 900, color: "#4ADE80", fontFamily: "'DM Mono',monospace", letterSpacing: "-0.3px" }}>{matchScore}</span>
+                        ) : (
+                          <span style={{ fontSize: 7, color: "rgba(255,255,255,0.25)" }}>vs</span>
+                        )}
                         {oppLogo && <img src={`/data/logos/${oppLogo}`} alt="" style={{ width: 14, height: 14, objectFit: "contain" }} />}
                       </div>
-                      <div style={{ fontSize: 7, fontWeight: 700, color: "#fff", fontFamily: "'DM Mono',monospace", marginTop: 1 }}>
-                        {dateLabel} - {parisTime}
-                      </div>
+                      {!matchScore && (
+                        <div style={{ fontSize: 7, fontWeight: 700, color: "#fff", fontFamily: "'DM Mono',monospace", marginTop: 1 }}>
+                          {dateLabel} - {parisTime}
+                        </div>
+                      )}
                     </div>
                   </div>
                 );

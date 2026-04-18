@@ -2303,49 +2303,124 @@ export default function StellarTab({ players, teams, fixtures, logos = {}, match
                 {savedTeams.map((st, si) => {
                   const POS_ORDER = ["GK","DEF","MIL","ATT","FLEX"];
                   // Score dynamique : vrai SO5 si match joue, sinon D-Score predit ajuste
+                  // Captain bonus = raw × 50% (formule Sorare officielle, pas post-bonus × 50%)
                   const stPlayers = POS_ORDER.map(s => st.picks[s]).filter(Boolean);
-                  const stScores = stPlayers.map(p => {
+                  const playerData = stPlayers.map(p => {
                     const fresh = players.find(pl => pl.slug === p.slug);
+                    const ownedCard = sorareCardMap[p.slug || p.name];
+                    const bonusMult = (ownedCard && ownedCard.totalBonus > 0) ? (1 + ownedCard.totalBonus / 100) : 1;
+                    let rawScore, postBonus;
                     if (fresh && fresh.last_so5_date === p.matchDate && fresh.last_so5_score != null) {
-                      const ownedCard = sorareCardMap[p.slug || p.name];
-                      const bonusMult = (ownedCard && ownedCard.totalBonus > 0) ? (1 + ownedCard.totalBonus / 100) : 1;
-                      return Math.round(fresh.last_so5_score * bonusMult);
+                      rawScore = fresh.last_so5_score;       // decimal precision conservee
+                      postBonus = rawScore * bonusMult;       // pas de rounding intermediaire
+                    } else {
+                      rawScore = p.ds || 0;
+                      postBonus = getAdjDs(p);
                     }
-                    return getAdjDs(p);
+                    return { p, rawScore, postBonus };
                   });
-                  const stCapDs = stScores.length === 5 ? Math.max(...stScores) : 0;
-                  const stTotalAdj = Math.round(stScores.reduce((s, v) => s + v, 0) + stCapDs * 0.5);
+                  const stScores = playerData.map(x => x.postBonus);
+                  // Captain = celui designe par l'user, sinon le meilleur post-bonus
+                  let captainData = null;
+                  if (st.captain && st.picks[st.captain]) {
+                    captainData = playerData.find(x => (x.p.slug || x.p.name) === (st.picks[st.captain].slug || st.picks[st.captain].name));
+                  }
+                  if (!captainData && playerData.length === 5) {
+                    captainData = playerData.reduce((best, x) => x.postBonus > best.postBonus ? x : best, playerData[0]);
+                  }
+                  // Captain bonus = raw * 0.5 (pas de rounding intermediaire)
+                  const captainBonus = captainData ? captainData.rawScore * 0.5 : 0;
+                  // Round seulement sur le total final (precision Sorare)
+                  const stTotalAdj = Math.round(stScores.reduce((s, v) => s + v, 0) + captainBonus);
                   const palSt = PALIERS.filter(p => stTotalAdj >= p.pts).pop();
+                  // Render card Pro-style (image full + badges + bulle score raw + match info box)
+                  const renderStellarCard = (slot) => {
+                    const raw = st.picks[slot];
+                    if (!raw) return null;
+                    const fresh = players.find(pl => pl.slug === raw.slug);
+                    const p = fresh ? { ...raw, sorare_starter_pct: fresh.sorare_starter_pct, last_so5_score: fresh.last_so5_score, last_so5_date: fresh.last_so5_date, last_match_home_goals: fresh.last_match_home_goals, last_match_away_goals: fresh.last_match_away_goals } : raw;
+                    const pc = PC[p.position];
+                    const ownedCard = sorareCardMap[p.slug || p.name];
+                    const oppLogo = logos[p.oppName];
+                    const playerClubLogo = logos[p.club];
+                    const hasRealScore = p.last_so5_date && p.matchDate && p.last_so5_date === p.matchDate && p.last_so5_score != null;
+                    // Score affiche = RAW (comme Sorare), bonus appliques au total uniquement
+                    const playerScore = hasRealScore
+                      ? Math.round(p.last_so5_score)
+                      : Math.round(p.ds || 0);
+                    // Score du match si joue : perspective du joueur (sa team a gauche)
+                    const matchScore = hasRealScore && p.last_match_home_goals != null && p.last_match_away_goals != null
+                      ? (p.isHome ? `${p.last_match_home_goals} - ${p.last_match_away_goals}` : `${p.last_match_away_goals} - ${p.last_match_home_goals}`)
+                      : null;
+                    const parisTime = p.kickoff && p.matchDate ? utcToParisTime(p.kickoff, p.matchDate) : "";
+                    const dateLabel = p.matchDate ? new Date(p.matchDate + "T12:00:00").toLocaleDateString(lang === "fr" ? "fr-FR" : "en-US", { timeZone: TZ, weekday: "short", day: "numeric" }).toUpperCase().replace(".", "") : "";
+                    return (
+                      <div key={slot} style={{ display: "flex", flexDirection: "column", alignItems: "center", flex: 1, minWidth: 0, maxWidth: 120 }}>
+                        <div style={{ width: "100%", aspectRatio: "3/4", borderRadius: 6, overflow: "hidden", margin: "0 auto", position: "relative",
+                          background: ownedCard ? "transparent" : `linear-gradient(155deg, rgba(8,4,28,0.9), ${pc}25)`,
+                          border: ownedCard ? "none" : `1px solid ${pc}30`,
+                        }}>
+                          {ownedCard ? (
+                            <img src={ownedCard.pictureUrl} alt="" style={{ width: "100%", height: "100%", objectFit: "contain" }} />
+                          ) : (
+                            <div style={{ display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", height: "100%", gap: 2 }}>
+                              {playerClubLogo && <img src={`/data/logos/${playerClubLogo}`} alt="" style={{ width: 16, height: 16, objectFit: "contain" }} />}
+                              <span style={{ fontSize: 6, fontWeight: 800, color: pc }}>{slot}</span>
+                            </div>
+                          )}
+                          {p.sorare_starter_pct != null && (
+                            <span style={{ position: "absolute", top: 2, right: 2, fontSize: 7, fontWeight: 700, padding: "1px 3px", borderRadius: 3, color: "#fff", zIndex: 2,
+                              background: p.sorare_starter_pct >= 70 ? "rgba(22,101,52,0.9)" : p.sorare_starter_pct >= 50 ? "rgba(133,77,14,0.9)" : "rgba(153,27,27,0.9)",
+                            }}>{p.sorare_starter_pct}%</span>
+                          )}
+                          {ownedCard && ownedCard.totalBonus > 0 && (
+                            <span style={{ position: "absolute", bottom: 34, right: 4, fontSize: 8, fontWeight: 900, color: "#4ADE80", background: "rgba(0,0,0,0.7)", borderRadius: 3, padding: "1px 4px", zIndex: 3 }}>+{ownedCard.totalBonus}%</span>
+                          )}
+                          {/* D-Score / vrai score — bulle en bas a droite */}
+                          <div style={{ position: "absolute", bottom: 0, right: 8, zIndex: 2,
+                            width: 32, height: 32, borderRadius: "50%",
+                            display: "flex", alignItems: "center", justifyContent: "center",
+                            fontFamily: "'DM Mono',monospace", fontSize: 13, fontWeight: 900,
+                            color: hasRealScore ? "#fff" : dsColor(playerScore),
+                            background: hasRealScore ? dsBg(playerScore) : "rgba(0,0,0,0.6)",
+                            border: hasRealScore ? "none" : `1px dashed ${dsColor(playerScore)}60`,
+                            boxShadow: hasRealScore ? `0 0 8px ${dsColor(playerScore)}50` : `0 0 6px ${dsColor(playerScore)}30`,
+                          }}>{playerScore}</div>
+                        </div>
+                        {/* Match info box — date/heure remplacees par score si match joue */}
+                        <div style={{ marginTop: 3, padding: "3px 8px", borderRadius: 6, background: matchScore ? "rgba(15,40,30,0.5)" : "rgba(255,255,255,0.03)", border: `1px solid ${matchScore ? "rgba(74,222,128,0.25)" : "rgba(255,255,255,0.06)"}`, textAlign: "center" }}>
+                          <div style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: 4 }}>
+                            {playerClubLogo && <img src={`/data/logos/${playerClubLogo}`} alt="" style={{ width: 14, height: 14, objectFit: "contain" }} />}
+                            {matchScore ? (
+                              <span style={{ fontSize: 11, fontWeight: 900, color: "#4ADE80", fontFamily: "'DM Mono',monospace", letterSpacing: "-0.3px" }}>{matchScore}</span>
+                            ) : (
+                              <span style={{ fontSize: 7, color: "rgba(255,255,255,0.25)" }}>vs</span>
+                            )}
+                            {oppLogo && <img src={`/data/logos/${oppLogo}`} alt="" style={{ width: 14, height: 14, objectFit: "contain" }} />}
+                          </div>
+                          {!matchScore && (
+                            <div style={{ fontSize: 7, fontWeight: 700, color: "#fff", fontFamily: "'DM Mono',monospace", marginTop: 1 }}>
+                              {dateLabel} - {parisTime}
+                            </div>
+                          )}
+                        </div>
+                      </div>
+                    );
+                  };
+
                   return (
-                    <div key={st.id} style={{ position: "relative", borderRadius: 12, background: "rgba(15,8,40,0.7)", border: "1px solid rgba(74,222,128,0.15)", padding: "10px 12px", backdropFilter: "blur(6px)" }}>
-                      {/* Croix de suppression — top-right */}
-                      <button
-                        onClick={() => deleteSavedTeam(st.id)}
-                        title={lang === "fr" ? "Supprimer cette équipe" : "Delete this team"}
-                        style={{
-                          position: "absolute", top: 6, right: 6,
-                          width: 20, height: 20, borderRadius: "50%",
-                          display: "flex", alignItems: "center", justifyContent: "center",
-                          background: "rgba(239,68,68,0.12)",
-                          border: "1px solid rgba(239,68,68,0.3)",
-                          color: "#F87171", cursor: "pointer", padding: 0,
-                          fontSize: 12, fontWeight: 900, fontFamily: "Outfit",
-                          lineHeight: 1, transition: "background 0.15s, border-color 0.15s, color 0.15s",
-                          zIndex: 2,
-                        }}
-                        onMouseEnter={e => { e.currentTarget.style.background = "rgba(239,68,68,0.3)"; e.currentTarget.style.borderColor = "rgba(239,68,68,0.6)"; e.currentTarget.style.color = "#fff"; }}
-                        onMouseLeave={e => { e.currentTarget.style.background = "rgba(239,68,68,0.12)"; e.currentTarget.style.borderColor = "rgba(239,68,68,0.3)"; e.currentTarget.style.color = "#F87171"; }}
-                      >
-                        <svg width="10" height="10" viewBox="0 0 12 12" fill="none" aria-hidden>
-                          <path d="M2.5 2.5l7 7M9.5 2.5l-7 7" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
-                        </svg>
-                      </button>
-                      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 8, paddingRight: 26 }}>
-                        <span style={{ fontSize: 11, fontWeight: 900, color: "#4ADE80" }}>{st.label}</span>
+                    <div key={st.id} style={{ borderRadius: 12, background: "linear-gradient(160deg, rgba(10,5,30,0.95), rgba(20,10,50,0.9))", border: "1px solid rgba(196,181,253,0.25)", padding: "10px 10px", backdropFilter: "blur(8px)" }}>
+                      {/* Header */}
+                      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 8 }}>
                         <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
-                          {palSt && <span style={{ fontSize: 8, color: palSt.silver ? "#C0C0C0" : palSt.color, fontWeight: 700 }}>{palSt.reward}</span>}
+                          <span style={{ fontSize: 12, fontWeight: 900, color: "#C4B5FD" }}>{st.label}</span>
+                          <button onClick={() => loadSavedTeam(st)} style={{ fontSize: 7, fontWeight: 700, padding: "2px 6px", borderRadius: 4, border: "1px solid rgba(196,181,253,0.4)", background: "rgba(196,181,253,0.1)", color: "#C4B5FD", cursor: "pointer", fontFamily: "Outfit" }}>Charger</button>
+                          <button onClick={() => deleteSavedTeam(st.id)} style={{ fontSize: 8, padding: "2px 5px", borderRadius: 4, border: "1px solid rgba(255,255,255,0.08)", background: "rgba(255,255,255,0.03)", color: "rgba(255,255,255,0.3)", cursor: "pointer" }}>x</button>
+                        </div>
+                        <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
+                          {palSt && <span style={{ fontSize: 9, color: palSt.silver ? "#C0C0C0" : palSt.color, fontWeight: 700 }}>{palSt.reward}</span>}
                           <span style={{
-                            fontSize: 18, fontWeight: 900, fontFamily: "'DM Mono',monospace",
+                            fontSize: 22, fontWeight: 900, fontFamily: "'DM Mono',monospace",
                             color: palSt?.silver ? "#1a1a2e" : (palSt ? palSt.color : "#C4B5FD"),
                             background: palSt?.silver ? "linear-gradient(90deg,#C0C0C0,#A8E8D0,#B0C4E8,#D4B0E8,#fff,#D4B0E8,#B0C4E8,#A8E8D0,#C0C0C0)" : "none",
                             backgroundSize: "200% 100%", WebkitBackgroundClip: palSt?.silver ? "text" : "unset", WebkitTextFillColor: palSt?.silver ? "transparent" : "unset",
@@ -2353,59 +2428,17 @@ export default function StellarTab({ players, teams, fixtures, logos = {}, match
                           }}>{stTotalAdj}</span>
                         </div>
                       </div>
-                      <div style={{ display: "flex", justifyContent: "center", gap: 8 }}>
-                        {POS_ORDER.map(slot => {
-                          const raw = st.picks[slot];
-                          if (!raw) return null;
-                          // Enrich with fresh data (last_so5 scores)
-                          const fresh = players.find(pl => pl.slug === raw.slug);
-                          const p = fresh ? { ...raw, sorare_starter_pct: fresh.sorare_starter_pct, last_so5_score: fresh.last_so5_score, last_so5_date: fresh.last_so5_date } : raw;
-                          const pc = PC[p.position];
-                          const clubLogo = logos[p.club];
-                          const oppLogo = logos[p.oppName];
-                          const ownedCard = sorareCardMap[p.slug || p.name];
-                          // Vrai score si match joue (last_so5_date matche matchDate), sinon D-Score prédit ajusté
-                          const hasRealScore = p.last_so5_date && p.matchDate && p.last_so5_date === p.matchDate && p.last_so5_score != null;
-                          const adjDs = hasRealScore
-                            ? Math.round(p.last_so5_score * (ownedCard && ownedCard.totalBonus > 0 ? (1 + ownedCard.totalBonus / 100) : 1))
-                            : getAdjDs(p);
-                          const parisTime = p.kickoff && p.matchDate ? utcToParisTime(p.kickoff, p.matchDate) : "";
-                          return (
-                            <div key={slot} style={{ textAlign: "center", flex: 1, minWidth: 0 }}>
-                              <div style={{ width: "100%", maxWidth: 80, aspectRatio: "3/4", borderRadius: 8, overflow: "hidden", margin: "0 auto", position: "relative",
-                                background: ownedCard ? "transparent" : `linear-gradient(155deg, rgba(8,4,28,0.9), ${pc}25)`,
-                                border: ownedCard ? "none" : `1px solid ${pc}30`,
-                              }}>
-                                {ownedCard ? (
-                                  <img src={ownedCard.pictureUrl} alt="" style={{ width: "100%", height: "100%", objectFit: "contain" }} />
-                                ) : (
-                                  <div style={{ display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", height: "100%", gap: 3 }}>
-                                    {clubLogo && <img src={`/data/logos/${clubLogo}`} alt="" style={{ width: 22, height: 22, objectFit: "contain" }} />}
-                                    <span style={{ fontSize: 8, fontWeight: 800, color: pc }}>{slot}</span>
-                                  </div>
-                                )}
-                                {p.sorare_starter_pct != null && (
-                                  <span style={{ position: "absolute", top: 2, right: 2, fontSize: 7, fontWeight: 700, padding: "1px 4px", borderRadius: 3, color: "#fff",
-                                    background: p.sorare_starter_pct >= 70 ? "rgba(22,101,52,0.9)" : p.sorare_starter_pct >= 50 ? "rgba(133,77,14,0.9)" : "rgba(153,27,27,0.9)",
-                                  }}>{p.sorare_starter_pct}%</span>
-                                )}
-                                {ownedCard && ownedCard.totalBonus > 0 && (
-                                  <span style={{ position: "absolute", bottom: 2, left: 2, fontSize: 7, fontWeight: 900, padding: "1px 4px", borderRadius: 3, color: "#fff", background: "rgba(22,101,52,0.9)" }}>+{ownedCard.totalBonus}%</span>
-                                )}
-                              </div>
-                              <div style={{ fontSize: 9, fontWeight: 700, color: "#fff", marginTop: 3, whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>{p.name.split(" ").pop()}</div>
-                              <div style={{ fontSize: 12, fontWeight: 800, color: dsColor(adjDs), fontFamily: "'DM Mono',monospace" }}>{adjDs}</div>
-                              {p.oppName && (
-                                <div style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: 2, marginTop: 2 }}>
-                                  <span style={{ fontSize: 8 }}>{p.isHome ? "🏠" : "✈️"}</span>
-                                  {oppLogo && <img src={`/data/logos/${oppLogo}`} alt="" style={{ width: 10, height: 10, objectFit: "contain" }} />}
-                                  <span style={{ fontSize: 7, color: "rgba(255,255,255,0.45)", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>{sn(p.oppName)}</span>
-                                </div>
-                              )}
-                              {parisTime && <div style={{ fontSize: 8, fontWeight: 800, color: "#A78BFA", fontFamily: "'DM Mono',monospace", marginTop: 1 }}>{parisTime}</div>}
-                            </div>
-                          );
-                        })}
+                      {/* Pitch layout : ATT+FLEX en haut, DEF+GK+MIL en bas */}
+                      <div style={{ display: "flex", flexDirection: "column", gap: 6, alignItems: "center" }}>
+                        <div style={{ display: "flex", gap: 6, justifyContent: "center", width: "100%" }}>
+                          {renderStellarCard("ATT")}
+                          {renderStellarCard("FLEX")}
+                        </div>
+                        <div style={{ display: "flex", gap: 6, justifyContent: "center", width: "100%" }}>
+                          {renderStellarCard("DEF")}
+                          {renderStellarCard("GK")}
+                          {renderStellarCard("MIL")}
+                        </div>
                       </div>
                     </div>
                   );

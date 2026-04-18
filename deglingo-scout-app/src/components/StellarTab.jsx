@@ -2445,7 +2445,7 @@ export default function StellarTab({ players, teams, fixtures, logos = {}, match
                         </div>
                       </div>
                       {/* Skyrocket Gauge a droite — LIVE + projection + initial (snapshot save) */}
-                      <SkyrocketGauge score={stTotalLive} projectedScore={stTotalProjected} initialScore={st.score} paliers={PALIERS} />
+                      <SkyrocketGauge score={stTotalLive} projectedScore={stTotalProjected} initialScore={st.score} paliers={PALIERS} scaleMode="linear" />
                     </div>
                   );
                 })}

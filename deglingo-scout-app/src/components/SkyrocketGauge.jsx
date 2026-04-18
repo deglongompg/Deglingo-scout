@@ -100,16 +100,42 @@ function makeValueToPos(scoreMultiplier = 1.0) {
   };
 }
 
+// Mode lineaire : paliers equidistants entre 15% et 90% (laisse un headroom pour que le label du top tier reste lisible)
+// Ex Stellar : 280=15% / 320=30% / 360=45% / 400=60% / 440=75% / 480=90%
+// Score sous min palier : rampe lineaire 0 → 15%
+// Score au-dessus du max palier : rampe lineaire 90% → 100% (au prorata, plafond 110% du range)
+function makeLinearValueToPos(sortedPaliers) {
+  if (!sortedPaliers || sortedPaliers.length < 2) {
+    return (v) => Math.max(0, Math.min(100, (v / 500) * 100));
+  }
+  const minPts = sortedPaliers[0].pts;
+  const maxPts = sortedPaliers[sortedPaliers.length - 1].pts;
+  const MIN_POS = 15;
+  const MAX_POS = 90;
+  const range = maxPts - minPts;
+  return function valueToPos(v) {
+    if (v <= 0) return 0;
+    if (v <= minPts) return (v / minPts) * MIN_POS;
+    if (v >= maxPts) {
+      const overflow = Math.min(1, (v - maxPts) / (range * 0.5));
+      return MAX_POS + overflow * (100 - MAX_POS);
+    }
+    return MIN_POS + ((v - minPts) / range) * (MAX_POS - MIN_POS);
+  };
+}
+
 const KEYFRAMES = `
 @keyframes skrPrismFlow { 0% { background-position: 0 0; } 100% { background-position: 12px 12px; } }
 @keyframes skrFloatUp { 0%, 100% { transform: translateY(0); opacity: 1; } 50% { transform: translateY(-3px); opacity: 0.6; } }
 @keyframes skrShimmerText { 0% { background-position: 0% 50%; } 100% { background-position: 200% 50%; } }
 `;
 
-export default function SkyrocketGauge({ score = 0, projectedScore = null, initialScore = null, paliers = [], showRewards = false, scoreMultiplier = 1.0, topRewardColor = null, rarity = null, height = 280, width = 70 }) {
+export default function SkyrocketGauge({ score = 0, projectedScore = null, initialScore = null, paliers = [], showRewards = false, scoreMultiplier = 1.0, topRewardColor = null, rarity = null, scaleMode = "control-points", height = 280, width = 70 }) {
   const palette = getPalette(rarity);
-  const valueToPos = makeValueToPos(scoreMultiplier);
   const sortedPaliers = [...(paliers || [])].sort((a, b) => (a.pts || 0) - (b.pts || 0));
+  const valueToPos = scaleMode === "linear"
+    ? makeLinearValueToPos(sortedPaliers)
+    : makeValueToPos(scoreMultiplier);
   const minPalier = sortedPaliers.length > 0 ? sortedPaliers[0].pts : 200;
   const maxPalier = sortedPaliers.length > 0 ? sortedPaliers[sortedPaliers.length - 1].pts : 500;
   const midIdx = Math.max(0, Math.floor((sortedPaliers.length - 1) / 2));

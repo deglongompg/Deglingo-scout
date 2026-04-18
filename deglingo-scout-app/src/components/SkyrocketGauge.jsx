@@ -128,6 +128,10 @@ const KEYFRAMES = `
 @keyframes skrPrismFlow { 0% { background-position: 0 0; } 100% { background-position: 12px 12px; } }
 @keyframes skrFloatUp { 0%, 100% { transform: translateY(0); opacity: 1; } 50% { transform: translateY(-3px); opacity: 0.6; } }
 @keyframes skrShimmerText { 0% { background-position: 0% 50%; } 100% { background-position: 200% 50%; } }
+@keyframes skrWaveSlide { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }
+@keyframes skrWaveSlide2 { 0% { transform: translateX(-50%); } 100% { transform: translateX(0); } }
+@keyframes skrBubbleRise { 0% { transform: translateY(0) scale(0.6); opacity: 0; } 15% { opacity: 0.5; } 80% { opacity: 0.3; } 100% { transform: translateY(-70px) scale(1); opacity: 0; } }
+@keyframes skrGloss { 0%, 100% { opacity: 0.25; } 50% { opacity: 0.5; } }
 `;
 
 export default function SkyrocketGauge({ score = 0, projectedScore = null, initialScore = null, paliers = [], showRewards = false, scoreMultiplier = 1.0, topRewardColor = null, rarity = null, scaleMode = "control-points", height = 280, width = 70 }) {
@@ -196,54 +200,92 @@ export default function SkyrocketGauge({ score = 0, projectedScore = null, initi
         overflow: "hidden",
         boxShadow: palette.boxShadow,
       }}>
-        {/* Fill projection (zone ghost entre live et projected) — derriere */}
+        {/* Fill projection (zone ghost entre live et projected) — derriere, vide et subtil */}
         {hasProjection && (
           <div style={{
             position: "absolute", inset: 0,
             background: palette.fill,
-            opacity: 0.3,
+            opacity: 0.18,
             clipPath: `inset(${Math.max(0, 100 - projectedFillHeight)}% 0 ${fillHeight}% 0)`,
             transition: "clip-path 1.2s cubic-bezier(0.34, 1.56, 0.64, 1)",
-          }}>
-            <div style={{
-              position: "absolute", inset: 0,
-              background: "repeating-linear-gradient(45deg, rgba(255,255,255,0.18) 0px, rgba(255,255,255,0.18) 2px, transparent 2px, transparent 8px)",
-              animation: "skrPrismFlow 3s linear infinite",
-            }} />
-          </div>
+            filter: "saturate(0.6)",
+          }} />
         )}
 
-        {/* Fill LIVE — couleurs FIXES (clip-path, ne stretche pas) */}
+        {/* Fill LIVE — couleurs FIXES (clip-path, ne stretche pas), liquide plein */}
         <div style={{
           position: "absolute", inset: 0,
           background: palette.fill,
           clipPath: `inset(${Math.max(0, 100 - fillHeight)}% 0 0 0)`,
           transition: "clip-path 1.2s cubic-bezier(0.34, 1.56, 0.64, 1)",
         }}>
+          {/* Gloss interieur — reflet vertical qui donne profondeur */}
           <div style={{
             position: "absolute", inset: 0,
-            background: "repeating-linear-gradient(45deg, rgba(255,255,255,0.06) 0px, rgba(255,255,255,0.06) 2px, transparent 2px, transparent 6px)",
-            animation: "skrPrismFlow 3s linear infinite",
+            background: "linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.18) 15%, rgba(255,255,255,0.08) 50%, transparent 85%)",
+            animation: "skrGloss 4s ease-in-out infinite",
+            pointerEvents: "none",
+          }} />
+          {/* Bulles qui montent */}
+          <div style={{
+            position: "absolute", left: "25%", bottom: 0, width: 4, height: 4, borderRadius: "50%",
+            background: `radial-gradient(circle, ${palette.top} 0%, transparent 70%)`,
+            animation: "skrBubbleRise 5s ease-in infinite",
+            animationDelay: "0s",
+            pointerEvents: "none",
+          }} />
+          <div style={{
+            position: "absolute", left: "65%", bottom: 0, width: 3, height: 3, borderRadius: "50%",
+            background: `radial-gradient(circle, ${palette.top} 0%, transparent 70%)`,
+            animation: "skrBubbleRise 6s ease-in infinite",
+            animationDelay: "1.8s",
+            pointerEvents: "none",
+          }} />
+          <div style={{
+            position: "absolute", left: "45%", bottom: 0, width: 2, height: 2, borderRadius: "50%",
+            background: `radial-gradient(circle, ${palette.top} 0%, transparent 70%)`,
+            animation: "skrBubbleRise 4.5s ease-in infinite",
+            animationDelay: "3s",
+            pointerEvents: "none",
           }} />
         </div>
 
-        {/* Top edge highlight (au sommet du fill LIVE) */}
+        {/* Surface liquide ondulee — SVG waves animes */}
         <div style={{
           position: "absolute", left: 0, right: 0,
-          bottom: `${fillHeight}%`, height: 3,
-          background: `linear-gradient(180deg, ${palette.top}, transparent)`,
-          boxShadow: `0 0 12px ${palette.glow}`,
+          bottom: `${fillHeight}%`,
+          height: 10,
           zIndex: 2,
           transition: "bottom 1.2s cubic-bezier(0.34, 1.56, 0.64, 1)",
-        }} />
+          pointerEvents: "none",
+          overflow: "visible",
+        }}>
+          {/* Vague arriere (plus lente, plus pale) */}
+          <svg viewBox="0 0 200 10" preserveAspectRatio="none" style={{
+            position: "absolute", top: -3, left: 0, width: "200%", height: 10,
+            animation: "skrWaveSlide2 6s linear infinite",
+            opacity: 0.5,
+          }}>
+            <path d="M0,6 Q25,2 50,6 T100,6 T150,6 T200,6 L200,10 L0,10 Z" fill={palette.top} />
+          </svg>
+          {/* Vague avant (plus rapide, plus brillante) */}
+          <svg viewBox="0 0 200 10" preserveAspectRatio="none" style={{
+            position: "absolute", top: 0, left: 0, width: "200%", height: 10,
+            animation: "skrWaveSlide 3.5s linear infinite",
+            filter: `drop-shadow(0 0 6px ${palette.glow})`,
+          }}>
+            <path d="M0,5 Q25,1 50,5 T100,5 T150,5 T200,5 L200,10 L0,10 Z" fill={palette.top} />
+          </svg>
+        </div>
 
-        {/* Marqueur projected (top edge du fill ghost) */}
+        {/* Marqueur projected (top edge du fill ghost) — fin trait plein */}
         {hasProjection && (
           <div style={{
             position: "absolute", left: 0, right: 0,
             bottom: `${projectedFillHeight}%`, height: 1,
-            borderTop: `1px dashed ${palette.projColor}`,
+            background: palette.projColor,
             zIndex: 2,
+            opacity: 0.6,
           }} />
         )}
 

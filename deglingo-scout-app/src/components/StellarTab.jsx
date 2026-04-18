@@ -3,6 +3,7 @@ import { POSITION_COLORS, dsColor, dsBg, isSilver } from "../utils/colors";
 import { dScoreMatch, csProb, findTeam } from "../utils/dscore";
 import { T, t } from "../utils/i18n";
 import { getDailyLockKey, loadFrozen, saveFrozen } from "../utils/freeze";
+import SkyrocketGauge from "./SkyrocketGauge";
 
 const PC = POSITION_COLORS;
 
@@ -2299,7 +2300,8 @@ export default function StellarTab({ players, teams, fixtures, logos = {}, match
               <div style={{ fontSize: 10, fontWeight: 800, color: "rgba(196,181,253,0.5)", letterSpacing: "0.12em", textTransform: "uppercase", marginBottom: 8 }}>
                 {lang === "fr" ? "MES EQUIPES SAUVEGARDEES" : "MY SAVED TEAMS"}
               </div>
-              <div style={{ display: "grid", gridTemplateColumns: "repeat(2, 1fr)", gap: 10 }}>
+              {/* Largeur fixe compacte 480px par box pour share X / capture */}
+              <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, 480px)", gap: 10 }}>
                 {savedTeams.map((st, si) => {
                   const POS_ORDER = ["GK","DEF","MIL","ATT","FLEX"];
                   // Score dynamique : vrai SO5 si match joue, sinon D-Score predit ajuste
@@ -2309,17 +2311,18 @@ export default function StellarTab({ players, teams, fixtures, logos = {}, match
                     const fresh = players.find(pl => pl.slug === p.slug);
                     const ownedCard = sorareCardMap[p.slug || p.name];
                     const bonusMult = (ownedCard && ownedCard.totalBonus > 0) ? (1 + ownedCard.totalBonus / 100) : 1;
-                    let rawScore, postBonus;
+                    let rawScore, postBonus, isLive;
                     if (fresh && fresh.last_so5_date === p.matchDate && fresh.last_so5_score != null) {
-                      rawScore = fresh.last_so5_score;       // decimal precision conservee
-                      postBonus = rawScore * bonusMult;       // pas de rounding intermediaire
+                      rawScore = fresh.last_so5_score;
+                      postBonus = rawScore * bonusMult;
+                      isLive = true;
                     } else {
                       rawScore = p.ds || 0;
                       postBonus = getAdjDs(p);
+                      isLive = false;
                     }
-                    return { p, rawScore, postBonus };
+                    return { p, rawScore, postBonus, isLive };
                   });
-                  const stScores = playerData.map(x => x.postBonus);
                   // Captain = celui designe par l'user, sinon le meilleur post-bonus
                   let captainData = null;
                   if (st.captain && st.picks[st.captain]) {
@@ -2328,10 +2331,16 @@ export default function StellarTab({ players, teams, fixtures, logos = {}, match
                   if (!captainData && playerData.length === 5) {
                     captainData = playerData.reduce((best, x) => x.postBonus > best.postBonus ? x : best, playerData[0]);
                   }
-                  // Captain bonus = raw * 0.5 (pas de rounding intermediaire)
-                  const captainBonus = captainData ? captainData.rawScore * 0.5 : 0;
-                  // Round seulement sur le total final (precision Sorare)
-                  const stTotalAdj = Math.round(stScores.reduce((s, v) => s + v, 0) + captainBonus);
+                  // LIVE : matchs joues uniquement + captain si capitaine joue
+                  const liveSum = playerData.filter(x => x.isLive).reduce((s, x) => s + x.postBonus, 0);
+                  const liveCaptainBonus = captainData?.isLive ? captainData.rawScore * 0.5 : 0;
+                  const stTotalLive = Math.round(liveSum + liveCaptainBonus);
+                  // PROJECTED : tous les matchs (live + predits) + captain bonus complet
+                  const projectedSum = playerData.reduce((s, x) => s + x.postBonus, 0);
+                  const projectedCaptainBonus = captainData ? captainData.rawScore * 0.5 : 0;
+                  const stTotalProjected = Math.round(projectedSum + projectedCaptainBonus);
+                  // Score affiche (header) = projected (total final estime)
+                  const stTotalAdj = stTotalProjected;
                   const palSt = PALIERS.filter(p => stTotalAdj >= p.pts).pop();
                   // Render card Pro-style (image full + badges + bulle score raw + match info box)
                   const renderStellarCard = (slot) => {
@@ -2348,10 +2357,13 @@ export default function StellarTab({ players, teams, fixtures, logos = {}, match
                     const playerScore = hasRealScore
                       ? Math.round(p.last_so5_score)
                       : Math.round(p.ds || 0);
-                    // Score du match si joue : perspective du joueur (sa team a gauche)
+                    // Score du match si joue : ordre HOME - AWAY (reel)
                     const matchScore = hasRealScore && p.last_match_home_goals != null && p.last_match_away_goals != null
-                      ? (p.isHome ? `${p.last_match_home_goals} - ${p.last_match_away_goals}` : `${p.last_match_away_goals} - ${p.last_match_home_goals}`)
+                      ? `${p.last_match_home_goals} - ${p.last_match_away_goals}`
                       : null;
+                    // Logos dans l'ordre home -> away (independant du player)
+                    const homeLogo = p.isHome ? playerClubLogo : oppLogo;
+                    const awayLogo = p.isHome ? oppLogo : playerClubLogo;
                     const parisTime = p.kickoff && p.matchDate ? utcToParisTime(p.kickoff, p.matchDate) : "";
                     const dateLabel = p.matchDate ? new Date(p.matchDate + "T12:00:00").toLocaleDateString(lang === "fr" ? "fr-FR" : "en-US", { timeZone: TZ, weekday: "short", day: "numeric" }).toUpperCase().replace(".", "") : "";
                     return (
@@ -2368,7 +2380,7 @@ export default function StellarTab({ players, teams, fixtures, logos = {}, match
                               <span style={{ fontSize: 6, fontWeight: 800, color: pc }}>{slot}</span>
                             </div>
                           )}
-                          {p.sorare_starter_pct != null && (
+                          {p.sorare_starter_pct != null && !hasRealScore && (
                             <span style={{ position: "absolute", top: 2, right: 2, fontSize: 7, fontWeight: 700, padding: "1px 3px", borderRadius: 3, color: "#fff", zIndex: 2,
                               background: p.sorare_starter_pct >= 70 ? "rgba(22,101,52,0.9)" : p.sorare_starter_pct >= 50 ? "rgba(133,77,14,0.9)" : "rgba(153,27,27,0.9)",
                             }}>{p.sorare_starter_pct}%</span>
@@ -2387,16 +2399,16 @@ export default function StellarTab({ players, teams, fixtures, logos = {}, match
                             boxShadow: hasRealScore ? `0 0 8px ${dsColor(playerScore)}50` : `0 0 6px ${dsColor(playerScore)}30`,
                           }}>{playerScore}</div>
                         </div>
-                        {/* Match info box — date/heure remplacees par score si match joue */}
+                        {/* Match info box — ordre HOME vs AWAY toujours respecte */}
                         <div style={{ marginTop: 3, padding: "3px 8px", borderRadius: 6, background: matchScore ? "rgba(15,40,30,0.5)" : "rgba(255,255,255,0.03)", border: `1px solid ${matchScore ? "rgba(74,222,128,0.25)" : "rgba(255,255,255,0.06)"}`, textAlign: "center" }}>
                           <div style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: 4 }}>
-                            {playerClubLogo && <img src={`/data/logos/${playerClubLogo}`} alt="" style={{ width: 14, height: 14, objectFit: "contain" }} />}
+                            {homeLogo && <img src={`/data/logos/${homeLogo}`} alt="" style={{ width: 14, height: 14, objectFit: "contain" }} />}
                             {matchScore ? (
                               <span style={{ fontSize: 11, fontWeight: 900, color: "#4ADE80", fontFamily: "'DM Mono',monospace", letterSpacing: "-0.3px" }}>{matchScore}</span>
                             ) : (
                               <span style={{ fontSize: 7, color: "rgba(255,255,255,0.25)" }}>vs</span>
                             )}
-                            {oppLogo && <img src={`/data/logos/${oppLogo}`} alt="" style={{ width: 14, height: 14, objectFit: "contain" }} />}
+                            {awayLogo && <img src={`/data/logos/${awayLogo}`} alt="" style={{ width: 14, height: 14, objectFit: "contain" }} />}
                           </div>
                           {!matchScore && (
                             <div style={{ fontSize: 7, fontWeight: 700, color: "#fff", fontFamily: "'DM Mono',monospace", marginTop: 1 }}>
@@ -2409,37 +2421,31 @@ export default function StellarTab({ players, teams, fixtures, logos = {}, match
                   };
 
                   return (
-                    <div key={st.id} style={{ borderRadius: 12, background: "linear-gradient(160deg, rgba(10,5,30,0.95), rgba(20,10,50,0.9))", border: "1px solid rgba(196,181,253,0.25)", padding: "10px 10px", backdropFilter: "blur(8px)" }}>
-                      {/* Header */}
-                      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 8 }}>
-                        <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
-                          <span style={{ fontSize: 12, fontWeight: 900, color: "#C4B5FD" }}>{st.label}</span>
-                          <button onClick={() => loadSavedTeam(st)} style={{ fontSize: 7, fontWeight: 700, padding: "2px 6px", borderRadius: 4, border: "1px solid rgba(196,181,253,0.4)", background: "rgba(196,181,253,0.1)", color: "#C4B5FD", cursor: "pointer", fontFamily: "Outfit" }}>Charger</button>
-                          <button onClick={() => deleteSavedTeam(st.id)} style={{ fontSize: 8, padding: "2px 5px", borderRadius: 4, border: "1px solid rgba(255,255,255,0.08)", background: "rgba(255,255,255,0.03)", color: "rgba(255,255,255,0.3)", cursor: "pointer" }}>x</button>
+                    <div key={st.id} style={{ borderRadius: 12, background: "linear-gradient(160deg, rgba(10,5,30,0.95), rgba(20,10,50,0.9))", border: "1px solid rgba(196,181,253,0.25)", padding: "10px 10px", backdropFilter: "blur(8px)", display: "flex", gap: 12 }}>
+                      {/* Colonne gauche : team header + pitch */}
+                      <div style={{ flex: 1, minWidth: 0 }}>
+                        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 8 }}>
+                          <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
+                            <span style={{ fontSize: 12, fontWeight: 900, color: "#C4B5FD" }}>{st.label}</span>
+                            <button onClick={() => loadSavedTeam(st)} style={{ fontSize: 7, fontWeight: 700, padding: "2px 6px", borderRadius: 4, border: "1px solid rgba(196,181,253,0.4)", background: "rgba(196,181,253,0.1)", color: "#C4B5FD", cursor: "pointer", fontFamily: "Outfit" }}>Charger</button>
+                            <button onClick={() => deleteSavedTeam(st.id)} style={{ fontSize: 8, padding: "2px 5px", borderRadius: 4, border: "1px solid rgba(255,255,255,0.08)", background: "rgba(255,255,255,0.03)", color: "rgba(255,255,255,0.3)", cursor: "pointer" }}>x</button>
+                          </div>
                         </div>
-                        <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
-                          {palSt && <span style={{ fontSize: 9, color: palSt.silver ? "#C0C0C0" : palSt.color, fontWeight: 700 }}>{palSt.reward}</span>}
-                          <span style={{
-                            fontSize: 22, fontWeight: 900, fontFamily: "'DM Mono',monospace",
-                            color: palSt?.silver ? "#1a1a2e" : (palSt ? palSt.color : "#C4B5FD"),
-                            background: palSt?.silver ? "linear-gradient(90deg,#C0C0C0,#A8E8D0,#B0C4E8,#D4B0E8,#fff,#D4B0E8,#B0C4E8,#A8E8D0,#C0C0C0)" : "none",
-                            backgroundSize: "200% 100%", WebkitBackgroundClip: palSt?.silver ? "text" : "unset", WebkitTextFillColor: palSt?.silver ? "transparent" : "unset",
-                            animation: palSt?.silver ? "silverShine 3s linear infinite" : "none",
-                          }}>{stTotalAdj}</span>
-                        </div>
-                      </div>
-                      {/* Pitch layout : ATT+FLEX en haut, DEF+GK+MIL en bas */}
-                      <div style={{ display: "flex", flexDirection: "column", gap: 6, alignItems: "center" }}>
-                        <div style={{ display: "flex", gap: 6, justifyContent: "center", width: "100%" }}>
-                          {renderStellarCard("ATT")}
-                          {renderStellarCard("FLEX")}
-                        </div>
-                        <div style={{ display: "flex", gap: 6, justifyContent: "center", width: "100%" }}>
-                          {renderStellarCard("DEF")}
-                          {renderStellarCard("GK")}
-                          {renderStellarCard("MIL")}
+                        {/* Pitch layout : ATT+FLEX en haut, DEF+GK+MIL en bas */}
+                        <div style={{ display: "flex", flexDirection: "column", gap: 6, alignItems: "center" }}>
+                          <div style={{ display: "flex", gap: 6, justifyContent: "center", width: "100%" }}>
+                            {renderStellarCard("ATT")}
+                            {renderStellarCard("FLEX")}
+                          </div>
+                          <div style={{ display: "flex", gap: 6, justifyContent: "center", width: "100%" }}>
+                            {renderStellarCard("DEF")}
+                            {renderStellarCard("GK")}
+                            {renderStellarCard("MIL")}
+                          </div>
                         </div>
                       </div>
+                      {/* Skyrocket Gauge a droite — LIVE + projection + initial (snapshot save) */}
+                      <SkyrocketGauge score={stTotalLive} projectedScore={stTotalProjected} initialScore={st.score} paliers={PALIERS} />
                     </div>
                   );
                 })}

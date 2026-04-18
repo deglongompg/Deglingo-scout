@@ -1,0 +1,1167 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8" />
+<title>Skyrocket Gauge — 3 propositions</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Outfit:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #02000c;
+    --bg2: #07021a;
+    --violet: #8B5CF6;
+    --violet-dark: #6D28D9;
+    --violet-light: #C4B5FD;
+    --green: #4ADE80;
+    --gold: #FBBF24;
+    --cyan: #67E8F9;
+    --pink: #F472B6;
+  }
+  * { box-sizing: border-box; }
+  html, body {
+    background: linear-gradient(180deg, var(--bg), var(--bg2));
+    color: #fff; font-family: 'Outfit', sans-serif;
+    margin: 0; padding: 24px;
+    background-attachment: fixed;
+  }
+  body::before {
+    content: ""; position: fixed; inset: 0;
+    background-image: radial-gradient(1px 1px at 20% 30%, #fff5, transparent),
+                      radial-gradient(1px 1px at 80% 70%, #fff3, transparent),
+                      radial-gradient(2px 2px at 50% 80%, #fff4, transparent),
+                      radial-gradient(1px 1px at 30% 90%, #fff5, transparent),
+                      radial-gradient(1px 1px at 70% 20%, #fff3, transparent);
+    background-size: 200px 200px;
+    pointer-events: none; z-index: 0;
+  }
+  h1 { font-weight: 900; letter-spacing: -1px; margin: 0 0 4px; font-size: 26px; position: relative; z-index: 1; }
+  .sub { color: #fff7; margin: 0 0 28px; font-size: 13px; position: relative; z-index: 1; }
+  .grid {
+    display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; position: relative; z-index: 1;
+  }
+  @media (max-width: 1100px) { .grid { grid-template-columns: 1fr; } }
+  .variant-label {
+    font-size: 11px; font-weight: 800; color: var(--violet-light);
+    letter-spacing: 0.15em; text-transform: uppercase; margin-bottom: 8px;
+  }
+  .variant-name {
+    font-size: 18px; font-weight: 900; color: #fff; margin-bottom: 14px;
+  }
+  .team-with-gauge {
+    display: flex; gap: 10px; align-items: stretch;
+  }
+  .team-box {
+    flex: 1;
+    border-radius: 14px;
+    padding: 12px;
+    backdrop-filter: blur(8px);
+    position: relative;
+  }
+  .team-header {
+    display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;
+  }
+  .team-label { font-size: 12px; font-weight: 900; color: var(--violet-light); }
+  .team-actions { display: flex; gap: 4px; align-items: center; }
+  .btn-load {
+    font-size: 8px; font-weight: 700; padding: 3px 8px; border-radius: 4px;
+    border: 1px solid rgba(196,181,253,0.4); background: rgba(196,181,253,0.1);
+    color: var(--violet-light); cursor: pointer;
+  }
+  .btn-x {
+    font-size: 9px; padding: 2px 6px; border-radius: 4px;
+    border: 1px solid rgba(255,255,255,0.08); background: rgba(255,255,255,0.03);
+    color: rgba(255,255,255,0.3); cursor: pointer;
+  }
+  .team-total {
+    font-size: 22px; font-weight: 900; font-family: 'DM Mono', monospace;
+  }
+  .pitch {
+    display: flex; flex-direction: column; gap: 8px; align-items: center;
+  }
+  .pitch-row {
+    display: flex; gap: 8px; justify-content: center; width: 100%;
+  }
+  .player-card {
+    flex: 1; max-width: 90px; display: flex; flex-direction: column; align-items: center;
+  }
+  .card-img {
+    width: 100%; aspect-ratio: 3/4; border-radius: 6;
+    background: linear-gradient(155deg, rgba(8,4,28,0.9), rgba(139,92,246,0.25));
+    border: 1px solid rgba(139,92,246,0.3);
+    position: relative; overflow: hidden;
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+  }
+  .card-img.cap {
+    background: linear-gradient(155deg, rgba(40,30,10,0.95), rgba(251,191,36,0.3));
+    border: 1px solid rgba(251,191,36,0.5);
+  }
+  .card-pos {
+    font-size: 8px; font-weight: 800; padding: 2px 5px; border-radius: 3px;
+    background: rgba(255,255,255,0.1); color: #fff;
+  }
+  .card-name { font-size: 9px; font-weight: 700; margin-top: 4px; text-align: center; line-height: 1.1; }
+  .card-bonus {
+    position: absolute; bottom: 24px; right: 4px;
+    font-size: 7px; font-weight: 900; color: var(--green);
+    background: rgba(0,0,0,0.7); padding: 1px 4px; border-radius: 3px;
+  }
+  .card-titu {
+    position: absolute; top: 2px; right: 2px;
+    font-size: 7px; font-weight: 700; padding: 1px 3px; border-radius: 3px;
+    background: rgba(22,101,52,0.9); color: #fff;
+  }
+  .card-cap-badge {
+    position: absolute; top: 2px; left: 2px;
+    width: 11px; height: 11px; border-radius: 50%;
+    background: var(--gold); color: #000;
+    font-size: 7px; font-weight: 900;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .card-score {
+    position: absolute; bottom: -2px; right: 4px;
+    width: 26px; height: 26px; border-radius: 50%;
+    background: rgba(0,0,0,0.8); border: 1px dashed rgba(74,222,128,0.6);
+    color: var(--green); font-family: 'DM Mono', monospace; font-size: 11px; font-weight: 900;
+    display: flex; align-items: center; justify-content: center;
+    box-shadow: 0 0 6px rgba(74,222,128,0.4);
+  }
+  .match-info {
+    margin-top: 4px; padding: 3px 6px; border-radius: 5px;
+    background: rgba(15,40,30,0.5); border: 1px solid rgba(74,222,128,0.25);
+    text-align: center; font-family: 'DM Mono', monospace;
+  }
+  .match-score {
+    font-size: 10px; font-weight: 900; color: var(--green); letter-spacing: -0.3px;
+  }
+
+  /* ──────────────────────────────────────────────────────────────────────────
+     VARIANT 1 — SKYROCKET (rocket fuel gauge)
+     ────────────────────────────────────────────────────────────────────────── */
+  .v1 .team-box {
+    background: linear-gradient(160deg, rgba(10,5,30,0.95), rgba(20,10,50,0.9));
+    border: 1px solid rgba(139,92,246,0.3);
+  }
+  .v1 .team-total { color: var(--gold); }
+  .gauge-skyrocket {
+    width: 38px; min-height: 320px; position: relative;
+    background: linear-gradient(180deg, rgba(10,5,30,0.8), rgba(0,0,0,0.95));
+    border: 1px solid rgba(196,181,253,0.3);
+    border-radius: 8px 8px 4px 4px;
+    overflow: hidden;
+    box-shadow: inset 0 1px 0 rgba(255,255,255,0.1), 0 0 20px rgba(139,92,246,0.2);
+  }
+  .gauge-skyrocket::before {
+    content: ""; position: absolute; top: -10px; left: 50%; transform: translateX(-50%);
+    width: 0; height: 0;
+    border-left: 19px solid transparent; border-right: 19px solid transparent;
+    border-bottom: 12px solid rgba(196,181,253,0.4);
+  }
+  .gauge-skyrocket-fill {
+    position: absolute; bottom: 0; left: 0; right: 0;
+    background: linear-gradient(0deg, #6D28D9 0%, #8B5CF6 30%, #67E8F9 60%, #FBBF24 90%, #fff 100%);
+    background-size: 100% 200%;
+    animation: shimmer 3s linear infinite;
+    transition: height 1.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+    border-top: 2px solid #fff;
+    box-shadow: 0 -4px 12px rgba(255,255,255,0.4), 0 -8px 30px rgba(251,191,36,0.5);
+  }
+  .gauge-skyrocket-fill::after {
+    content: ""; position: absolute; top: -3px; left: 0; right: 0; height: 6px;
+    background: linear-gradient(180deg, #fff, transparent);
+    animation: pulse 1.5s ease-in-out infinite;
+  }
+  @keyframes shimmer { 0% { background-position: 0 100%; } 100% { background-position: 0 -100%; } }
+  @keyframes pulse { 0%, 100% { opacity: 0.6; } 50% { opacity: 1; } }
+  .gauge-skyrocket .palier-line {
+    position: absolute; left: 0; right: 0; height: 1px;
+    background: rgba(255,255,255,0.15);
+    z-index: 2;
+  }
+  .gauge-skyrocket .palier-line.crossed { background: rgba(74,222,128,0.6); box-shadow: 0 0 6px rgba(74,222,128,0.5); }
+  .gauge-skyrocket .palier-line.target { background: var(--gold); box-shadow: 0 0 8px var(--gold); }
+  .gauge-skyrocket-score {
+    position: absolute; top: -32px; left: 50%; transform: translateX(-50%);
+    font-family: 'DM Mono', monospace; font-size: 14px; font-weight: 900; color: var(--gold);
+    text-shadow: 0 0 10px var(--gold); white-space: nowrap;
+  }
+  .gauge-skyrocket-score::after {
+    content: "↑"; display: block; text-align: center; font-size: 12px; margin-top: -4px;
+    animation: floatUp 1.5s ease-in-out infinite;
+  }
+  @keyframes floatUp { 0%, 100% { transform: translateY(0); opacity: 1; } 50% { transform: translateY(-3px); opacity: 0.6; } }
+  .gauge-skyrocket-base {
+    position: absolute; bottom: -26px; left: 50%; transform: translateX(-50%);
+    font-size: 18px;
+  }
+  .palier-labels {
+    position: absolute; left: 100%; padding-left: 6px; top: 0; bottom: 0;
+    display: flex; flex-direction: column-reverse; justify-content: space-between;
+    font-size: 7px; font-family: 'DM Mono', monospace; color: rgba(255,255,255,0.5);
+    pointer-events: none;
+  }
+  .palier-labels .pl { white-space: nowrap; }
+  .palier-labels .pl.crossed { color: var(--green); font-weight: 700; }
+  .palier-labels .pl.target { color: var(--gold); font-weight: 800; }
+
+  /* ──────────────────────────────────────────────────────────────────────────
+     VARIANT 2 — HOLOGRAPHIC PRISM
+     ────────────────────────────────────────────────────────────────────────── */
+  .v2 .team-box {
+    background: linear-gradient(160deg, rgba(15,5,40,0.95), rgba(40,15,80,0.9));
+    border: 1px solid rgba(196,181,253,0.4);
+    box-shadow: 0 0 30px rgba(139,92,246,0.15);
+  }
+  .v2 .team-total {
+    background: linear-gradient(135deg, #C4B5FD, #67E8F9, #F472B6, #FBBF24);
+    background-size: 200% 100%;
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    background-clip: text;
+    animation: shimmer-text 3s linear infinite;
+  }
+  @keyframes shimmer-text { 0% { background-position: 0 50%; } 100% { background-position: 200% 50%; } }
+  .gauge-prism {
+    width: 44px; min-height: 320px; position: relative;
+    margin-top: 10px;
+  }
+  .prism-body {
+    position: absolute; inset: 0;
+    clip-path: polygon(50% 0%, 100% 12%, 100% 88%, 50% 100%, 0 88%, 0 12%);
+    background:
+      linear-gradient(180deg, rgba(10,5,30,0.95), rgba(20,10,60,0.95));
+    border: 1px solid rgba(196,181,253,0.5);
+    overflow: hidden;
+    box-shadow: 0 0 20px rgba(139,92,246,0.4), inset 0 0 30px rgba(139,92,246,0.2);
+  }
+  .prism-fill {
+    position: absolute; bottom: 0; left: 0; right: 0;
+    background: linear-gradient(180deg,
+      transparent 0%,
+      rgba(255,255,255,0.4) 5%,
+      rgba(196,181,253,0.6) 15%,
+      rgba(103,232,249,0.6) 40%,
+      rgba(244,114,182,0.5) 70%,
+      rgba(251,191,36,0.5) 95%);
+    transition: height 1.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+  }
+  .prism-fill::before {
+    content: ""; position: absolute; inset: 0;
+    background: repeating-linear-gradient(45deg,
+      rgba(255,255,255,0.1) 0px, rgba(255,255,255,0.1) 2px,
+      transparent 2px, transparent 6px);
+    animation: prism-flow 3s linear infinite;
+  }
+  @keyframes prism-flow { 0% { background-position: 0 0; } 100% { background-position: 12px 12px; } }
+  .prism-fill::after {
+    content: ""; position: absolute; top: 0; left: 0; right: 0; height: 4px;
+    background: linear-gradient(180deg, rgba(255,255,255,0.9), transparent);
+    box-shadow: 0 0 12px rgba(255,255,255,0.7);
+  }
+  .prism-facets {
+    position: absolute; inset: 0; pointer-events: none; z-index: 3;
+  }
+  .prism-facet {
+    position: absolute; left: -2px; right: -2px; height: 1px;
+    background: rgba(196,181,253,0.3);
+  }
+  .prism-facet.crossed { background: rgba(74,222,128,0.7); box-shadow: 0 0 6px rgba(74,222,128,0.6); }
+  .prism-facet.target { background: var(--gold); box-shadow: 0 0 10px var(--gold); height: 2px; }
+  .prism-score {
+    position: absolute; top: -28px; left: 50%; transform: translateX(-50%);
+    font-family: 'Outfit', sans-serif; font-size: 14px; font-weight: 900;
+    background: linear-gradient(135deg, #C4B5FD, #67E8F9, #FBBF24);
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    text-shadow: none; white-space: nowrap;
+  }
+
+  /* ──────────────────────────────────────────────────────────────────────────
+     VARIANT 3 — REACTOR CORE (battery cells stack)
+     ────────────────────────────────────────────────────────────────────────── */
+  .v3 .team-box {
+    background: linear-gradient(160deg, rgba(5,10,20,0.95), rgba(10,20,50,0.95));
+    border: 1px solid rgba(103,232,249,0.3);
+    box-shadow: 0 0 30px rgba(103,232,249,0.1);
+  }
+  .v3 .team-total { color: var(--cyan); text-shadow: 0 0 10px var(--cyan); }
+  .gauge-reactor {
+    width: 40px; min-height: 320px; position: relative;
+    display: flex; flex-direction: column-reverse; gap: 3px;
+    padding: 4px;
+    background: rgba(0,0,0,0.6); border: 1px solid rgba(103,232,249,0.2);
+    border-radius: 6px;
+    box-shadow: inset 0 0 15px rgba(0,0,0,0.5);
+  }
+  .reactor-cell {
+    flex: 1;
+    border-radius: 3px;
+    background: rgba(255,255,255,0.03);
+    border: 1px solid rgba(255,255,255,0.05);
+    position: relative;
+    overflow: hidden;
+  }
+  .reactor-cell.active {
+    background: linear-gradient(180deg, rgba(103,232,249,0.4), rgba(103,232,249,0.15));
+    border: 1px solid rgba(103,232,249,0.6);
+    box-shadow: 0 0 10px rgba(103,232,249,0.5), inset 0 0 8px rgba(103,232,249,0.3);
+  }
+  .reactor-cell.active::before {
+    content: ""; position: absolute; inset: 0;
+    background: linear-gradient(180deg, transparent, rgba(255,255,255,0.5), transparent);
+    background-size: 100% 200%;
+    animation: reactor-flow 1.5s linear infinite;
+  }
+  @keyframes reactor-flow { 0% { background-position: 0 -100%; } 100% { background-position: 0 100%; } }
+  .reactor-cell.target {
+    background: linear-gradient(180deg, rgba(251,191,36,0.5), rgba(251,191,36,0.2));
+    border: 2px solid var(--gold);
+    box-shadow: 0 0 16px rgba(251,191,36,0.6), inset 0 0 10px rgba(251,191,36,0.4);
+  }
+  .reactor-cell.target.active::before {
+    background: linear-gradient(180deg, transparent, rgba(255,255,200,0.8), transparent);
+  }
+  .reactor-cell-label {
+    position: absolute; left: 100%; top: 50%; transform: translateY(-50%);
+    margin-left: 6px; font-size: 7px; font-weight: 700;
+    font-family: 'DM Mono', monospace; color: rgba(255,255,255,0.4);
+    white-space: nowrap;
+  }
+  .reactor-cell.active .reactor-cell-label { color: var(--cyan); text-shadow: 0 0 6px var(--cyan); }
+  .reactor-cell.target .reactor-cell-label { color: var(--gold); text-shadow: 0 0 6px var(--gold); font-weight: 800; }
+  .gauge-reactor-score {
+    position: absolute; top: -32px; left: 50%; transform: translateX(-50%);
+    font-family: 'DM Mono', monospace; font-size: 14px; font-weight: 900; color: var(--cyan);
+    text-shadow: 0 0 10px var(--cyan); white-space: nowrap;
+    padding: 2px 6px; border: 1px solid rgba(103,232,249,0.4); border-radius: 4px;
+    background: rgba(0,0,0,0.7);
+  }
+  .gauge-reactor-core {
+    position: absolute; bottom: -24px; left: 50%; transform: translateX(-50%);
+    width: 16px; height: 16px; border-radius: 50%;
+    background: radial-gradient(circle, var(--cyan), rgba(103,232,249,0.3) 60%, transparent);
+    box-shadow: 0 0 12px var(--cyan), 0 0 24px rgba(103,232,249,0.5);
+    animation: core-pulse 2s ease-in-out infinite;
+  }
+  @keyframes core-pulse { 0%, 100% { transform: translateX(-50%) scale(1); opacity: 1; } 50% { transform: translateX(-50%) scale(1.15); opacity: 0.8; } }
+
+  /* PLAYER CARD MOCK (reused across variants) */
+</style>
+</head>
+<body>
+
+<h1>SKYROCKET V4 — 3 nouvelles palettes douces</h1>
+<p class="sub">Variant C base · Échelle non-linéaire · 3 codes couleurs alternatifs.</p>
+
+<style>
+.tbox-mini {
+  position: relative; border-radius: 14px; padding: 12px; backdrop-filter: blur(8px);
+  background: linear-gradient(160deg, rgba(15,5,40,0.95), rgba(40,15,80,0.9));
+  border: 1px solid rgba(196,181,253,0.3);
+  display: flex; gap: 12px;
+}
+.gauge-mini {
+  width: 80px; position: relative; padding-top: 36px; padding-bottom: 4px; flex-shrink: 0;
+}
+</style>
+
+<div style="margin-bottom: 32px; padding: 16px; border: 2px solid var(--gold); border-radius: 14px; background: rgba(251,191,36,0.05);">
+  <div style="font-size: 11px; font-weight: 800; color: var(--gold); letter-spacing: 0.15em; margin-bottom: 4px;">3 PALETTES DOUCES — pick one</div>
+  <div style="font-size: 14px; color: #fff9; margin-bottom: 16px;">Score 482 · paliers identiques · seules les couleurs du fill changent</div>
+
+  <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px;">
+
+    <!-- ════ PALETTE 1 : GALAXY SILK ════ -->
+    <div>
+      <div style="font-size: 10px; font-weight: 800; color: var(--violet-light); letter-spacing: 0.12em; margin-bottom: 4px;">PALETTE 1</div>
+      <div style="font-size: 14px; font-weight: 800; color: #fff; margin-bottom: 8px;">🌌 Galaxy Silk</div>
+      <div style="font-size: 10px; color: #fff7; margin-bottom: 10px;">Mono-violet → silver. Total intégration thème. Aucune couleur chaude.</div>
+      <div class="tbox-mini">
+        <div style="flex: 1;">
+          <div class="team-header">
+            <div class="team-actions"><span class="team-label">Équipe 1</span><button class="btn-x">x</button></div>
+            <span style="font-size:10px;color:var(--gold);font-weight:800; background: rgba(251,191,36,0.1); border: 1px solid rgba(251,191,36,0.4); border-radius: 4px; padding: 3px 8px;">1000$</span>
+          </div>
+          <div class="pitch">
+            <div class="pitch-row">
+              <div class="player-card"><div class="card-img"><span class="card-bonus">+10%</span><span class="card-pos">ATT</span><span class="card-name">Thauvin</span><div class="card-score">45</div></div></div>
+              <div class="player-card"><div class="card-img"><span class="card-bonus">+10%</span><span class="card-pos">FLEX</span><span class="card-name">Thomasson</span><div class="card-score">100</div></div></div>
+            </div>
+            <div class="pitch-row">
+              <div class="player-card"><div class="card-img cap"><span class="card-cap-badge">C</span><span class="card-bonus">+35%</span><span class="card-pos">DEF</span><span class="card-name">Sarr</span><div class="card-score">89</div></div></div>
+              <div class="player-card"><div class="card-img"><span class="card-bonus">+10%</span><span class="card-pos">GK</span><span class="card-name">Restes</span><div class="card-score">67</div></div></div>
+              <div class="player-card"><div class="card-img"><span class="card-bonus">+10%</span><span class="card-pos">MIL</span><span class="card-name">Sangaré</span><div class="card-score">79</div></div></div>
+            </div>
+          </div>
+        </div>
+        <div class="gauge-mini">
+          <div class="gscore-top"><div class="gscore-num">482</div><div class="gscore-arrow">↑</div></div>
+          <div style="position: relative; width: 100%; height: 100%; min-height: 240px; border-radius: 10px 10px 6px 6px; background: linear-gradient(180deg, rgba(10,5,30,0.95), rgba(20,10,60,0.95)); border: 1px solid rgba(196,181,253,0.4); overflow: hidden; box-shadow: 0 0 14px rgba(139,92,246,0.3), inset 0 0 18px rgba(139,92,246,0.15);">
+            <!-- Galaxy Silk : violet sombre -> violet -> mauve -> silver -->
+            <div style="position: absolute; inset: 0; background: linear-gradient(0deg, rgba(76,29,149,0.5) 0%, rgba(76,29,149,0.5) 18%, rgba(124,58,237,0.55) 40%, rgba(167,139,250,0.6) 62%, rgba(196,181,253,0.7) 73%, rgba(221,214,254,0.8) 84%, rgba(243,232,255,0.9) 95%); clip-path: inset(4.5% 0 0 0);">
+              <div style="position: absolute; inset: 0; background: repeating-linear-gradient(45deg, rgba(255,255,255,0.05) 0px, rgba(255,255,255,0.05) 2px, transparent 2px, transparent 6px); animation: prism-flow 3s linear infinite;"></div>
+            </div>
+            <div style="position: absolute; left: 0; right: 0; bottom: 95.5%; height: 3px; background: linear-gradient(180deg, rgba(255,255,255,0.95), transparent); box-shadow: 0 0 12px rgba(196,181,253,0.7); z-index: 2;"></div>
+            <div style="position: absolute; left: 4px; right: 4px; bottom: 40%; height: 1px; background-image: repeating-linear-gradient(90deg, rgba(255,255,255,0.4), rgba(255,255,255,0.4) 3px, transparent 3px, transparent 6px); z-index: 3;"></div>
+            <div style="position: absolute; left: 50%; transform: translateX(-50%); bottom: calc(40% - 8px); font-size: 10px; font-weight: 700; color: rgba(255,255,255,0.85); font-family: 'DM Mono', monospace; padding: 1px 6px; background: rgba(10,5,30,0.7); backdrop-filter: blur(4px); border-radius: 8px; z-index: 4;">280</div>
+            <div style="position: absolute; left: 4px; right: 4px; bottom: 51%; height: 1px; background-image: repeating-linear-gradient(90deg, rgba(255,255,255,0.4), rgba(255,255,255,0.4) 3px, transparent 3px, transparent 6px); z-index: 3;"></div>
+            <div style="position: absolute; left: 50%; transform: translateX(-50%); bottom: calc(51% - 8px); font-size: 10px; font-weight: 700; color: rgba(255,255,255,0.85); font-family: 'DM Mono', monospace; padding: 1px 6px; background: rgba(10,5,30,0.7); backdrop-filter: blur(4px); border-radius: 8px; z-index: 4;">320</div>
+            <div style="position: absolute; left: 4px; right: 4px; bottom: 62%; height: 1px; background-image: repeating-linear-gradient(90deg, rgba(255,255,255,0.4), rgba(255,255,255,0.4) 3px, transparent 3px, transparent 6px); z-index: 3;"></div>
+            <div style="position: absolute; left: 50%; transform: translateX(-50%); bottom: calc(62% - 8px); font-size: 10px; font-weight: 700; color: rgba(255,255,255,0.85); font-family: 'DM Mono', monospace; padding: 1px 6px; background: rgba(10,5,30,0.7); backdrop-filter: blur(4px); border-radius: 8px; z-index: 4;">360</div>
+            <div style="position: absolute; left: 4px; right: 4px; bottom: 73%; height: 1px; background-image: repeating-linear-gradient(90deg, rgba(255,255,255,0.4), rgba(255,255,255,0.4) 3px, transparent 3px, transparent 6px); z-index: 3;"></div>
+            <div style="position: absolute; left: 50%; transform: translateX(-50%); bottom: calc(73% - 8px); font-size: 10px; font-weight: 700; color: rgba(255,255,255,0.85); font-family: 'DM Mono', monospace; padding: 1px 6px; background: rgba(10,5,30,0.7); backdrop-filter: blur(4px); border-radius: 8px; z-index: 4;">400</div>
+            <div style="position: absolute; left: 4px; right: 4px; bottom: 84%; height: 1px; background-image: repeating-linear-gradient(90deg, rgba(255,255,255,0.4), rgba(255,255,255,0.4) 3px, transparent 3px, transparent 6px); z-index: 3;"></div>
+            <div style="position: absolute; left: 50%; transform: translateX(-50%); bottom: calc(84% - 8px); font-size: 10px; font-weight: 700; color: rgba(255,255,255,0.85); font-family: 'DM Mono', monospace; padding: 1px 6px; background: rgba(10,5,30,0.7); backdrop-filter: blur(4px); border-radius: 8px; z-index: 4;">440</div>
+            <div style="position: absolute; left: 4px; right: 4px; bottom: 95%; height: 1px; background-image: repeating-linear-gradient(90deg, rgba(251,191,36,0.7), rgba(251,191,36,0.7) 3px, transparent 3px, transparent 6px); box-shadow: 0 0 6px rgba(251,191,36,0.4); z-index: 3;"></div>
+            <div style="position: absolute; left: 50%; transform: translateX(-50%); bottom: calc(95% - 8px); font-size: 10px; font-weight: 900; color: var(--gold); font-family: 'DM Mono', monospace; padding: 1px 6px; background: rgba(40,25,5,0.85); backdrop-filter: blur(4px); border-radius: 8px; box-shadow: 0 0 8px rgba(251,191,36,0.3); z-index: 4;">480</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ════ PALETTE 2 : AURORA BOREALE ════ -->
+    <div>
+      <div style="font-size: 10px; font-weight: 800; color: var(--violet-light); letter-spacing: 0.12em; margin-bottom: 4px;">PALETTE 2</div>
+      <div style="font-size: 14px; font-weight: 800; color: #fff; margin-bottom: 8px;">🌊 Aurora Boréale</div>
+      <div style="font-size: 10px; color: #fff7; margin-bottom: 10px;">Violet → cyan → mint → silver. Cool, apaisant, premium.</div>
+      <div class="tbox-mini">
+        <div style="flex: 1;">
+          <div class="team-header">
+            <div class="team-actions"><span class="team-label">Équipe 1</span><button class="btn-x">x</button></div>
+            <span style="font-size:10px;color:var(--gold);font-weight:800; background: rgba(251,191,36,0.1); border: 1px solid rgba(251,191,36,0.4); border-radius: 4px; padding: 3px 8px;">1000$</span>
+          </div>
+          <div class="pitch">
+            <div class="pitch-row">
+              <div class="player-card"><div class="card-img"><span class="card-bonus">+10%</span><span class="card-pos">ATT</span><span class="card-name">Thauvin</span><div class="card-score">45</div></div></div>
+              <div class="player-card"><div class="card-img"><span class="card-bonus">+10%</span><span class="card-pos">FLEX</span><span class="card-name">Thomasson</span><div class="card-score">100</div></div></div>
+            </div>
+            <div class="pitch-row">
+              <div class="player-card"><div class="card-img cap"><span class="card-cap-badge">C</span><span class="card-bonus">+35%</span><span class="card-pos">DEF</span><span class="card-name">Sarr</span><div class="card-score">89</div></div></div>
+              <div class="player-card"><div class="card-img"><span class="card-bonus">+10%</span><span class="card-pos">GK</span><span class="card-name">Restes</span><div class="card-score">67</div></div></div>
+              <div class="player-card"><div class="card-img"><span class="card-bonus">+10%</span><span class="card-pos">MIL</span><span class="card-name">Sangaré</span><div class="card-score">79</div></div></div>
+            </div>
+          </div>
+        </div>
+        <div class="gauge-mini">
+          <div class="gscore-top"><div class="gscore-num">482</div><div class="gscore-arrow">↑</div></div>
+          <div style="position: relative; width: 100%; height: 100%; min-height: 240px; border-radius: 10px 10px 6px 6px; background: linear-gradient(180deg, rgba(10,5,30,0.95), rgba(20,10,60,0.95)); border: 1px solid rgba(196,181,253,0.4); overflow: hidden; box-shadow: 0 0 14px rgba(139,92,246,0.3), inset 0 0 18px rgba(139,92,246,0.15);">
+            <!-- Aurora : violet sombre -> indigo -> teal -> mint -> silver -->
+            <div style="position: absolute; inset: 0; background: linear-gradient(0deg, rgba(67,56,202,0.5) 0%, rgba(67,56,202,0.5) 18%, rgba(99,102,241,0.55) 40%, rgba(56,189,248,0.6) 62%, rgba(45,212,191,0.65) 73%, rgba(110,231,183,0.7) 84%, rgba(220,252,231,0.85) 95%); clip-path: inset(4.5% 0 0 0);">
+              <div style="position: absolute; inset: 0; background: repeating-linear-gradient(45deg, rgba(255,255,255,0.05) 0px, rgba(255,255,255,0.05) 2px, transparent 2px, transparent 6px); animation: prism-flow 3s linear infinite;"></div>
+            </div>
+            <div style="position: absolute; left: 0; right: 0; bottom: 95.5%; height: 3px; background: linear-gradient(180deg, rgba(220,252,231,0.95), transparent); box-shadow: 0 0 12px rgba(110,231,183,0.7); z-index: 2;"></div>
+            <div style="position: absolute; left: 4px; right: 4px; bottom: 40%; height: 1px; background-image: repeating-linear-gradient(90deg, rgba(255,255,255,0.4), rgba(255,255,255,0.4) 3px, transparent 3px, transparent 6px); z-index: 3;"></div>
+            <div style="position: absolute; left: 50%; transform: translateX(-50%); bottom: calc(40% - 8px); font-size: 10px; font-weight: 700; color: rgba(255,255,255,0.85); font-family: 'DM Mono', monospace; padding: 1px 6px; background: rgba(10,5,30,0.7); backdrop-filter: blur(4px); border-radius: 8px; z-index: 4;">280</div>
+            <div style="position: absolute; left: 4px; right: 4px; bottom: 51%; height: 1px; background-image: repeating-linear-gradient(90deg, rgba(255,255,255,0.4), rgba(255,255,255,0.4) 3px, transparent 3px, transparent 6px); z-index: 3;"></div>
+            <div style="position: absolute; left: 50%; transform: translateX(-50%); bottom: calc(51% - 8px); font-size: 10px; font-weight: 700; color: rgba(255,255,255,0.85); font-family: 'DM Mono', monospace; padding: 1px 6px; background: rgba(10,5,30,0.7); backdrop-filter: blur(4px); border-radius: 8px; z-index: 4;">320</div>
+            <div style="position: absolute; left: 4px; right: 4px; bottom: 62%; height: 1px; background-image: repeating-linear-gradient(90deg, rgba(255,255,255,0.4), rgba(255,255,255,0.4) 3px, transparent 3px, transparent 6px); z-index: 3;"></div>
+            <div style="position: absolute; left: 50%; transform: translateX(-50%); bottom: calc(62% - 8px); font-size: 10px; font-weight: 700; color: rgba(255,255,255,0.85); font-family: 'DM Mono', monospace; padding: 1px 6px; background: rgba(10,5,30,0.7); backdrop-filter: blur(4px); border-radius: 8px; z-index: 4;">360</div>
+            <div style="position: absolute; left: 4px; right: 4px; bottom: 73%; height: 1px; background-image: repeating-linear-gradient(90deg, rgba(255,255,255,0.4), rgba(255,255,255,0.4) 3px, transparent 3px, transparent 6px); z-index: 3;"></div>
+            <div style="position: absolute; left: 50%; transform: translateX(-50%); bottom: calc(73% - 8px); font-size: 10px; font-weight: 700; color: rgba(255,255,255,0.85); font-family: 'DM Mono', monospace; padding: 1px 6px; background: rgba(10,5,30,0.7); backdrop-filter: blur(4px); border-radius: 8px; z-index: 4;">400</div>
+            <div style="position: absolute; left: 4px; right: 4px; bottom: 84%; height: 1px; background-image: repeating-linear-gradient(90deg, rgba(255,255,255,0.4), rgba(255,255,255,0.4) 3px, transparent 3px, transparent 6px); z-index: 3;"></div>
+            <div style="position: absolute; left: 50%; transform: translateX(-50%); bottom: calc(84% - 8px); font-size: 10px; font-weight: 700; color: rgba(255,255,255,0.85); font-family: 'DM Mono', monospace; padding: 1px 6px; background: rgba(10,5,30,0.7); backdrop-filter: blur(4px); border-radius: 8px; z-index: 4;">440</div>
+            <div style="position: absolute; left: 4px; right: 4px; bottom: 95%; height: 1px; background-image: repeating-linear-gradient(90deg, rgba(251,191,36,0.7), rgba(251,191,36,0.7) 3px, transparent 3px, transparent 6px); box-shadow: 0 0 6px rgba(251,191,36,0.4); z-index: 3;"></div>
+            <div style="position: absolute; left: 50%; transform: translateX(-50%); bottom: calc(95% - 8px); font-size: 10px; font-weight: 900; color: var(--gold); font-family: 'DM Mono', monospace; padding: 1px 6px; background: rgba(40,25,5,0.85); backdrop-filter: blur(4px); border-radius: 8px; box-shadow: 0 0 8px rgba(251,191,36,0.3); z-index: 4;">480</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ════ PALETTE 3 : CHAMPAGNE TWILIGHT ════ -->
+    <div>
+      <div style="font-size: 10px; font-weight: 800; color: var(--violet-light); letter-spacing: 0.12em; margin-bottom: 4px;">PALETTE 3</div>
+      <div style="font-size: 14px; font-weight: 800; color: #fff; margin-bottom: 8px;">🥂 Champagne Twilight</div>
+      <div style="font-size: 10px; color: #fff7; margin-bottom: 10px;">Plum → mauve → rosé → champagne. Élégant, warmth contrôlée.</div>
+      <div class="tbox-mini">
+        <div style="flex: 1;">
+          <div class="team-header">
+            <div class="team-actions"><span class="team-label">Équipe 1</span><button class="btn-x">x</button></div>
+            <span style="font-size:10px;color:var(--gold);font-weight:800; background: rgba(251,191,36,0.1); border: 1px solid rgba(251,191,36,0.4); border-radius: 4px; padding: 3px 8px;">1000$</span>
+          </div>
+          <div class="pitch">
+            <div class="pitch-row">
+              <div class="player-card"><div class="card-img"><span class="card-bonus">+10%</span><span class="card-pos">ATT</span><span class="card-name">Thauvin</span><div class="card-score">45</div></div></div>
+              <div class="player-card"><div class="card-img"><span class="card-bonus">+10%</span><span class="card-pos">FLEX</span><span class="card-name">Thomasson</span><div class="card-score">100</div></div></div>
+            </div>
+            <div class="pitch-row">
+              <div class="player-card"><div class="card-img cap"><span class="card-cap-badge">C</span><span class="card-bonus">+35%</span><span class="card-pos">DEF</span><span class="card-name">Sarr</span><div class="card-score">89</div></div></div>
+              <div class="player-card"><div class="card-img"><span class="card-bonus">+10%</span><span class="card-pos">GK</span><span class="card-name">Restes</span><div class="card-score">67</div></div></div>
+              <div class="player-card"><div class="card-img"><span class="card-bonus">+10%</span><span class="card-pos">MIL</span><span class="card-name">Sangaré</span><div class="card-score">79</div></div></div>
+            </div>
+          </div>
+        </div>
+        <div class="gauge-mini">
+          <div class="gscore-top"><div class="gscore-num">482</div><div class="gscore-arrow">↑</div></div>
+          <div style="position: relative; width: 100%; height: 100%; min-height: 240px; border-radius: 10px 10px 6px 6px; background: linear-gradient(180deg, rgba(10,5,30,0.95), rgba(20,10,60,0.95)); border: 1px solid rgba(196,181,253,0.4); overflow: hidden; box-shadow: 0 0 14px rgba(139,92,246,0.3), inset 0 0 18px rgba(139,92,246,0.15);">
+            <!-- Champagne : plum -> mauve -> rose dust -> champagne pale -->
+            <div style="position: absolute; inset: 0; background: linear-gradient(0deg, rgba(76,29,82,0.5) 0%, rgba(76,29,82,0.5) 18%, rgba(120,60,110,0.55) 40%, rgba(180,120,150,0.55) 62%, rgba(220,170,160,0.6) 73%, rgba(243,213,170,0.7) 84%, rgba(252,233,189,0.85) 95%); clip-path: inset(4.5% 0 0 0);">
+              <div style="position: absolute; inset: 0; background: repeating-linear-gradient(45deg, rgba(255,255,255,0.05) 0px, rgba(255,255,255,0.05) 2px, transparent 2px, transparent 6px); animation: prism-flow 3s linear infinite;"></div>
+            </div>
+            <div style="position: absolute; left: 0; right: 0; bottom: 95.5%; height: 3px; background: linear-gradient(180deg, rgba(252,233,189,0.95), transparent); box-shadow: 0 0 12px rgba(243,213,170,0.7); z-index: 2;"></div>
+            <div style="position: absolute; left: 4px; right: 4px; bottom: 40%; height: 1px; background-image: repeating-linear-gradient(90deg, rgba(255,255,255,0.4), rgba(255,255,255,0.4) 3px, transparent 3px, transparent 6px); z-index: 3;"></div>
+            <div style="position: absolute; left: 50%; transform: translateX(-50%); bottom: calc(40% - 8px); font-size: 10px; font-weight: 700; color: rgba(255,255,255,0.85); font-family: 'DM Mono', monospace; padding: 1px 6px; background: rgba(10,5,30,0.7); backdrop-filter: blur(4px); border-radius: 8px; z-index: 4;">280</div>
+            <div style="position: absolute; left: 4px; right: 4px; bottom: 51%; height: 1px; background-image: repeating-linear-gradient(90deg, rgba(255,255,255,0.4), rgba(255,255,255,0.4) 3px, transparent 3px, transparent 6px); z-index: 3;"></div>
+            <div style="position: absolute; left: 50%; transform: translateX(-50%); bottom: calc(51% - 8px); font-size: 10px; font-weight: 700; color: rgba(255,255,255,0.85); font-family: 'DM Mono', monospace; padding: 1px 6px; background: rgba(10,5,30,0.7); backdrop-filter: blur(4px); border-radius: 8px; z-index: 4;">320</div>
+            <div style="position: absolute; left: 4px; right: 4px; bottom: 62%; height: 1px; background-image: repeating-linear-gradient(90deg, rgba(255,255,255,0.4), rgba(255,255,255,0.4) 3px, transparent 3px, transparent 6px); z-index: 3;"></div>
+            <div style="position: absolute; left: 50%; transform: translateX(-50%); bottom: calc(62% - 8px); font-size: 10px; font-weight: 700; color: rgba(255,255,255,0.85); font-family: 'DM Mono', monospace; padding: 1px 6px; background: rgba(10,5,30,0.7); backdrop-filter: blur(4px); border-radius: 8px; z-index: 4;">360</div>
+            <div style="position: absolute; left: 4px; right: 4px; bottom: 73%; height: 1px; background-image: repeating-linear-gradient(90deg, rgba(255,255,255,0.4), rgba(255,255,255,0.4) 3px, transparent 3px, transparent 6px); z-index: 3;"></div>
+            <div style="position: absolute; left: 50%; transform: translateX(-50%); bottom: calc(73% - 8px); font-size: 10px; font-weight: 700; color: rgba(255,255,255,0.85); font-family: 'DM Mono', monospace; padding: 1px 6px; background: rgba(10,5,30,0.7); backdrop-filter: blur(4px); border-radius: 8px; z-index: 4;">400</div>
+            <div style="position: absolute; left: 4px; right: 4px; bottom: 84%; height: 1px; background-image: repeating-linear-gradient(90deg, rgba(255,255,255,0.4), rgba(255,255,255,0.4) 3px, transparent 3px, transparent 6px); z-index: 3;"></div>
+            <div style="position: absolute; left: 50%; transform: translateX(-50%); bottom: calc(84% - 8px); font-size: 10px; font-weight: 700; color: rgba(255,255,255,0.85); font-family: 'DM Mono', monospace; padding: 1px 6px; background: rgba(10,5,30,0.7); backdrop-filter: blur(4px); border-radius: 8px; z-index: 4;">440</div>
+            <div style="position: absolute; left: 4px; right: 4px; bottom: 95%; height: 1px; background-image: repeating-linear-gradient(90deg, rgba(251,191,36,0.7), rgba(251,191,36,0.7) 3px, transparent 3px, transparent 6px); box-shadow: 0 0 6px rgba(251,191,36,0.4); z-index: 3;"></div>
+            <div style="position: absolute; left: 50%; transform: translateX(-50%); bottom: calc(95% - 8px); font-size: 10px; font-weight: 900; color: var(--gold); font-family: 'DM Mono', monospace; padding: 1px 6px; background: rgba(40,25,5,0.85); backdrop-filter: blur(4px); border-radius: 8px; box-shadow: 0 0 8px rgba(251,191,36,0.3); z-index: 4;">480</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<h1>Anciennes propositions ↓</h1>
+
+<style>
+.team-with-gauge-v3 { display: flex; gap: 12px; align-items: stretch; }
+.tbox-v3 {
+  flex: 1; border-radius: 14px; padding: 12px;
+  backdrop-filter: blur(8px);
+  background: linear-gradient(160deg, rgba(15,5,40,0.95), rgba(40,15,80,0.9));
+  border: 1px solid rgba(196,181,253,0.3);
+  display: flex; gap: 12px;
+}
+.tcontent { flex: 1; min-width: 0; }
+.gcol { width: 80px; position: relative; padding-top: 36px; padding-bottom: 4px; flex-shrink: 0; }
+.gscore-top {
+  position: absolute; top: 0; left: 0; right: 0; text-align: center;
+}
+.gscore-num {
+  font-family: 'Outfit', sans-serif; font-size: 22px; font-weight: 900;
+  background: linear-gradient(135deg, #C4B5FD, #67E8F9, #F472B6, #FBBF24);
+  background-size: 200% 100%;
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+  animation: shimmer-text 3s linear infinite;
+  line-height: 1; text-shadow: 0 0 12px rgba(196,181,253,0.5);
+}
+.gscore-arrow { font-size: 11px; color: var(--gold); animation: floatUp 1.5s ease-in-out infinite; line-height: 1; margin-top: 2px; }
+.gbody-base {
+  position: relative; width: 100%; height: 100%; min-height: 280px; overflow: hidden;
+}
+.gfill-prism {
+  position: absolute; bottom: 0; left: 0; right: 0;
+  background: linear-gradient(180deg, transparent 0%, rgba(255,255,255,0.4) 5%, rgba(196,181,253,0.65) 18%, rgba(103,232,249,0.65) 42%, rgba(244,114,182,0.55) 70%, rgba(251,191,36,0.55) 95%);
+  transition: height 1.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+.gfill-prism::before {
+  content: ""; position: absolute; inset: 0;
+  background: repeating-linear-gradient(45deg, rgba(255,255,255,0.08) 0px, rgba(255,255,255,0.08) 2px, transparent 2px, transparent 6px);
+  animation: prism-flow 3s linear infinite;
+}
+.gfill-prism::after {
+  content: ""; position: absolute; top: 0; left: 0; right: 0; height: 4px;
+  background: linear-gradient(180deg, rgba(255,255,255,0.95), transparent);
+  box-shadow: 0 0 14px rgba(255,255,255,0.8);
+}
+</style>
+
+<!-- ═══════════════════════════════════════════════════════════
+     V3-A : MINIMAL GLASS - lignes ultra fines, chiffres centres en outline (echelle non-lineaire)
+     ═══════════════════════════════════════════════════════════ -->
+<div style="margin-bottom: 24px; padding: 16px; border: 2px solid var(--gold); border-radius: 14px; background: rgba(251,191,36,0.05);">
+  <div style="font-size: 10px; font-weight: 800; color: var(--gold); letter-spacing: 0.15em; margin-bottom: 4px;">VARIANT A · MINIMAL GLASS (echelle non-lineaire)</div>
+  <div style="font-size: 16px; font-weight: 900; color: #fff; margin-bottom: 12px;">Lignes ultra fines, chiffres centrés en outline blanc subtil — échelle 200-500 élargie</div>
+  <div class="team-with-gauge-v3">
+    <div class="tbox-v3">
+      <div class="tcontent">
+        <div class="team-header">
+          <div class="team-actions">
+            <span class="team-label">Équipe 1</span>
+            <button class="btn-load">Charger</button>
+            <button class="btn-x">x</button>
+          </div>
+          <span style="font-size:10px;color:var(--gold);font-weight:800; background: rgba(251,191,36,0.1); border: 1px solid rgba(251,191,36,0.4); border-radius: 4px; padding: 3px 8px;">1000$</span>
+        </div>
+        <div class="pitch">
+          <div class="pitch-row">
+            <div class="player-card"><div class="card-img"><span class="card-titu">90%</span><span class="card-bonus">+10%</span><span class="card-pos">ATT</span><span class="card-name">Thauvin</span><div class="card-score">45</div></div><div class="match-info"><span class="match-score">3 - 2</span></div></div>
+            <div class="player-card"><div class="card-img"><span class="card-titu">90%</span><span class="card-bonus">+10%</span><span class="card-pos">FLEX</span><span class="card-name">Thomasson</span><div class="card-score">100</div></div><div class="match-info"><span class="match-score">3 - 2</span></div></div>
+          </div>
+          <div class="pitch-row">
+            <div class="player-card"><div class="card-img cap"><span class="card-cap-badge">C</span><span class="card-titu">90%</span><span class="card-bonus">+35%</span><span class="card-pos">DEF</span><span class="card-name">Sarr</span><div class="card-score">89</div></div><div class="match-info"><span class="match-score">3 - 2</span></div></div>
+            <div class="player-card"><div class="card-img"><span class="card-titu">90%</span><span class="card-bonus">+10%</span><span class="card-pos">GK</span><span class="card-name">Restes</span><div class="card-score">67</div></div><div class="match-info"><span class="match-score">3 - 2</span></div></div>
+            <div class="player-card"><div class="card-img"><span class="card-titu">90%</span><span class="card-bonus">+10%</span><span class="card-pos">MIL</span><span class="card-name">Sangaré</span><div class="card-score">79</div></div><div class="match-info"><span class="match-score">3 - 2</span></div></div>
+          </div>
+        </div>
+      </div>
+      <div class="gcol">
+        <div class="gscore-top"><div class="gscore-num">482</div><div class="gscore-arrow">↑</div></div>
+        <div class="gbody-base" style="border-radius: 10px 10px 6px 6px; background: linear-gradient(180deg, rgba(10,5,30,0.95), rgba(20,10,60,0.95)); border: 1px solid rgba(196,181,253,0.4); box-shadow: 0 0 18px rgba(139,92,246,0.3), inset 0 0 20px rgba(139,92,246,0.15);">
+          <!-- Fill non-lineaire 95.5% -->
+          <div class="gfill-prism" style="height: 95.5%;"></div>
+          <!-- Marqueur 200 (debut zone elargie) -->
+          <div style="position: absolute; left: 8px; right: 8px; bottom: 18%; height: 1px; background: rgba(255,255,255,0.08); z-index: 2;"></div>
+          <!-- Paliers : ligne fine + chiffre CENTRE (outline) - echelle non-lineaire -->
+          <div style="position: absolute; left: 6px; right: 6px; bottom: 40%; height: 1px; background: rgba(255,255,255,0.18); z-index: 3;"></div>
+          <div style="position: absolute; left: 0; right: 0; bottom: calc(40% - 7px); text-align: center; font-size: 10px; font-weight: 700; color: rgba(255,255,255,0.55); font-family: 'DM Mono', monospace; z-index: 4; letter-spacing: 0.5px; text-shadow: 0 0 6px rgba(0,0,0,0.95), 0 0 6px rgba(0,0,0,0.95);">280</div>
+
+          <div style="position: absolute; left: 6px; right: 6px; bottom: 51%; height: 1px; background: rgba(255,255,255,0.18); z-index: 3;"></div>
+          <div style="position: absolute; left: 0; right: 0; bottom: calc(51% - 7px); text-align: center; font-size: 10px; font-weight: 700; color: rgba(255,255,255,0.55); font-family: 'DM Mono', monospace; z-index: 4; letter-spacing: 0.5px; text-shadow: 0 0 6px rgba(0,0,0,0.95), 0 0 6px rgba(0,0,0,0.95);">320</div>
+
+          <div style="position: absolute; left: 6px; right: 6px; bottom: 62%; height: 1px; background: rgba(255,255,255,0.18); z-index: 3;"></div>
+          <div style="position: absolute; left: 0; right: 0; bottom: calc(62% - 7px); text-align: center; font-size: 10px; font-weight: 700; color: rgba(255,255,255,0.55); font-family: 'DM Mono', monospace; z-index: 4; letter-spacing: 0.5px; text-shadow: 0 0 6px rgba(0,0,0,0.95), 0 0 6px rgba(0,0,0,0.95);">360</div>
+
+          <div style="position: absolute; left: 6px; right: 6px; bottom: 73%; height: 1px; background: rgba(255,255,255,0.18); z-index: 3;"></div>
+          <div style="position: absolute; left: 0; right: 0; bottom: calc(73% - 7px); text-align: center; font-size: 10px; font-weight: 700; color: rgba(255,255,255,0.55); font-family: 'DM Mono', monospace; z-index: 4; letter-spacing: 0.5px; text-shadow: 0 0 6px rgba(0,0,0,0.95), 0 0 6px rgba(0,0,0,0.95);">400</div>
+
+          <div style="position: absolute; left: 6px; right: 6px; bottom: 84%; height: 1px; background: rgba(255,255,255,0.18); z-index: 3;"></div>
+          <div style="position: absolute; left: 0; right: 0; bottom: calc(84% - 7px); text-align: center; font-size: 10px; font-weight: 700; color: rgba(255,255,255,0.55); font-family: 'DM Mono', monospace; z-index: 4; letter-spacing: 0.5px; text-shadow: 0 0 6px rgba(0,0,0,0.95), 0 0 6px rgba(0,0,0,0.95);">440</div>
+
+          <div style="position: absolute; left: 4px; right: 4px; bottom: 95%; height: 1.5px; background: rgba(251,191,36,0.7); box-shadow: 0 0 8px rgba(251,191,36,0.5); z-index: 3;"></div>
+          <div style="position: absolute; left: 0; right: 0; bottom: calc(95% - 7px); text-align: center; font-size: 10px; font-weight: 900; color: var(--gold); font-family: 'DM Mono', monospace; z-index: 4; letter-spacing: 0.5px; text-shadow: 0 0 6px rgba(0,0,0,0.95), 0 0 6px rgba(0,0,0,0.95);">480</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════
+     V3-B : ETCHED STEEL - graduations métalliques, chiffres centrés en chip
+     ═══════════════════════════════════════════════════════════ -->
+<div style="margin-bottom: 24px; padding: 16px; border: 1px solid rgba(196,181,253,0.3); border-radius: 14px; background: rgba(196,181,253,0.04);">
+  <div style="font-size: 10px; font-weight: 800; color: var(--violet-light); letter-spacing: 0.15em; margin-bottom: 4px;">VARIANT B · ETCHED STEEL</div>
+  <div style="font-size: 16px; font-weight: 900; color: #fff; margin-bottom: 12px;">Graduations métalliques, chiffres dans des chips translucides centrés</div>
+  <div class="team-with-gauge-v3">
+    <div class="tbox-v3">
+      <div class="tcontent">
+        <div class="team-header">
+          <div class="team-actions">
+            <span class="team-label">Équipe 1</span>
+            <button class="btn-load">Charger</button>
+            <button class="btn-x">x</button>
+          </div>
+          <span style="font-size:10px;color:var(--gold);font-weight:800; background: rgba(251,191,36,0.1); border: 1px solid rgba(251,191,36,0.4); border-radius: 4px; padding: 3px 8px;">1000$</span>
+        </div>
+        <div class="pitch">
+          <div class="pitch-row">
+            <div class="player-card"><div class="card-img"><span class="card-titu">90%</span><span class="card-bonus">+10%</span><span class="card-pos">ATT</span><span class="card-name">Thauvin</span><div class="card-score">45</div></div><div class="match-info"><span class="match-score">3 - 2</span></div></div>
+            <div class="player-card"><div class="card-img"><span class="card-titu">90%</span><span class="card-bonus">+10%</span><span class="card-pos">FLEX</span><span class="card-name">Thomasson</span><div class="card-score">100</div></div><div class="match-info"><span class="match-score">3 - 2</span></div></div>
+          </div>
+          <div class="pitch-row">
+            <div class="player-card"><div class="card-img cap"><span class="card-cap-badge">C</span><span class="card-titu">90%</span><span class="card-bonus">+35%</span><span class="card-pos">DEF</span><span class="card-name">Sarr</span><div class="card-score">89</div></div><div class="match-info"><span class="match-score">3 - 2</span></div></div>
+            <div class="player-card"><div class="card-img"><span class="card-titu">90%</span><span class="card-bonus">+10%</span><span class="card-pos">GK</span><span class="card-name">Restes</span><div class="card-score">67</div></div><div class="match-info"><span class="match-score">3 - 2</span></div></div>
+            <div class="player-card"><div class="card-img"><span class="card-titu">90%</span><span class="card-bonus">+10%</span><span class="card-pos">MIL</span><span class="card-name">Sangaré</span><div class="card-score">79</div></div><div class="match-info"><span class="match-score">3 - 2</span></div></div>
+          </div>
+        </div>
+      </div>
+      <div class="gcol">
+        <div class="gscore-top"><div class="gscore-num">482</div><div class="gscore-arrow">↑</div></div>
+        <div class="gbody-base" style="border-radius: 10px 10px 6px 6px; background: linear-gradient(180deg, rgba(10,5,30,0.95), rgba(20,10,60,0.95)); border: 1px solid rgba(196,181,253,0.4); box-shadow: 0 0 18px rgba(139,92,246,0.3), inset 0 0 20px rgba(139,92,246,0.15);">
+          <div class="gfill-prism" style="height: 87%;"></div>
+          <!-- Paliers : graduations metalliques (3 traits) + chip centre -->
+          <div style="position: absolute; left: 0; right: 0; bottom: 58%; height: 1px; background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent); z-index: 3;"></div>
+          <div style="position: absolute; left: 50%; transform: translateX(-50%); bottom: calc(58% - 8px); font-size: 9px; font-weight: 800; color: rgba(255,255,255,0.7); font-family: 'DM Mono', monospace; padding: 1px 5px; background: rgba(0,0,0,0.55); border: 1px solid rgba(255,255,255,0.15); border-radius: 3px; z-index: 4; letter-spacing: 0.3px;">280</div>
+
+          <div style="position: absolute; left: 0; right: 0; bottom: 67%; height: 1px; background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent); z-index: 3;"></div>
+          <div style="position: absolute; left: 50%; transform: translateX(-50%); bottom: calc(67% - 8px); font-size: 9px; font-weight: 800; color: rgba(255,255,255,0.7); font-family: 'DM Mono', monospace; padding: 1px 5px; background: rgba(0,0,0,0.55); border: 1px solid rgba(255,255,255,0.15); border-radius: 3px; z-index: 4; letter-spacing: 0.3px;">320</div>
+
+          <div style="position: absolute; left: 0; right: 0; bottom: 75%; height: 1px; background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent); z-index: 3;"></div>
+          <div style="position: absolute; left: 50%; transform: translateX(-50%); bottom: calc(75% - 8px); font-size: 9px; font-weight: 800; color: rgba(255,255,255,0.7); font-family: 'DM Mono', monospace; padding: 1px 5px; background: rgba(0,0,0,0.55); border: 1px solid rgba(255,255,255,0.15); border-radius: 3px; z-index: 4; letter-spacing: 0.3px;">360</div>
+
+          <div style="position: absolute; left: 0; right: 0; bottom: 83%; height: 1px; background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent); z-index: 3;"></div>
+          <div style="position: absolute; left: 50%; transform: translateX(-50%); bottom: calc(83% - 8px); font-size: 9px; font-weight: 800; color: rgba(255,255,255,0.7); font-family: 'DM Mono', monospace; padding: 1px 5px; background: rgba(0,0,0,0.55); border: 1px solid rgba(255,255,255,0.15); border-radius: 3px; z-index: 4; letter-spacing: 0.3px;">400</div>
+
+          <div style="position: absolute; left: 0; right: 0; bottom: 92%; height: 1px; background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent); z-index: 3;"></div>
+          <div style="position: absolute; left: 50%; transform: translateX(-50%); bottom: calc(92% - 8px); font-size: 9px; font-weight: 800; color: rgba(255,255,255,0.7); font-family: 'DM Mono', monospace; padding: 1px 5px; background: rgba(0,0,0,0.55); border: 1px solid rgba(255,255,255,0.15); border-radius: 3px; z-index: 4; letter-spacing: 0.3px;">440</div>
+
+          <div style="position: absolute; left: 0; right: 0; bottom: 99%; height: 1.5px; background: linear-gradient(90deg, transparent, rgba(251,191,36,0.7), transparent); box-shadow: 0 0 6px rgba(251,191,36,0.4); z-index: 3;"></div>
+          <div style="position: absolute; left: 50%; transform: translateX(-50%); bottom: calc(99% - 8px); font-size: 9px; font-weight: 900; color: var(--gold); font-family: 'DM Mono', monospace; padding: 1px 5px; background: rgba(0,0,0,0.7); border: 1px solid rgba(251,191,36,0.5); border-radius: 3px; z-index: 4; letter-spacing: 0.3px; box-shadow: 0 0 6px rgba(251,191,36,0.3);">480</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════
+     V3-C : DOTTED STEALTH - echelle non-lineaire (0-200 compresse, 200-500 elargi)
+     ═══════════════════════════════════════════════════════════ -->
+<div style="margin-bottom: 32px; padding: 16px; border: 2px solid var(--gold); border-radius: 14px; background: rgba(251,191,36,0.05);">
+  <div style="font-size: 10px; font-weight: 800; color: var(--gold); letter-spacing: 0.15em; margin-bottom: 4px;">VARIANT C · DOTTED STEALTH (echelle non-lineaire)</div>
+  <div style="font-size: 16px; font-weight: 900; color: #fff; margin-bottom: 12px;">0-200 compresse en bas (18%) · 200-500 elargi en haut (82%) · focus sur la zone d'action</div>
+  <div class="team-with-gauge-v3">
+    <div class="tbox-v3">
+      <div class="tcontent">
+        <div class="team-header">
+          <div class="team-actions">
+            <span class="team-label">Équipe 1</span>
+            <button class="btn-load">Charger</button>
+            <button class="btn-x">x</button>
+          </div>
+          <span style="font-size:10px;color:var(--gold);font-weight:800; background: rgba(251,191,36,0.1); border: 1px solid rgba(251,191,36,0.4); border-radius: 4px; padding: 3px 8px;">1000$</span>
+        </div>
+        <div class="pitch">
+          <div class="pitch-row">
+            <div class="player-card"><div class="card-img"><span class="card-titu">90%</span><span class="card-bonus">+10%</span><span class="card-pos">ATT</span><span class="card-name">Thauvin</span><div class="card-score">45</div></div><div class="match-info"><span class="match-score">3 - 2</span></div></div>
+            <div class="player-card"><div class="card-img"><span class="card-titu">90%</span><span class="card-bonus">+10%</span><span class="card-pos">FLEX</span><span class="card-name">Thomasson</span><div class="card-score">100</div></div><div class="match-info"><span class="match-score">3 - 2</span></div></div>
+          </div>
+          <div class="pitch-row">
+            <div class="player-card"><div class="card-img cap"><span class="card-cap-badge">C</span><span class="card-titu">90%</span><span class="card-bonus">+35%</span><span class="card-pos">DEF</span><span class="card-name">Sarr</span><div class="card-score">89</div></div><div class="match-info"><span class="match-score">3 - 2</span></div></div>
+            <div class="player-card"><div class="card-img"><span class="card-titu">90%</span><span class="card-bonus">+10%</span><span class="card-pos">GK</span><span class="card-name">Restes</span><div class="card-score">67</div></div><div class="match-info"><span class="match-score">3 - 2</span></div></div>
+            <div class="player-card"><div class="card-img"><span class="card-titu">90%</span><span class="card-bonus">+10%</span><span class="card-pos">MIL</span><span class="card-name">Sangaré</span><div class="card-score">79</div></div><div class="match-info"><span class="match-score">3 - 2</span></div></div>
+          </div>
+        </div>
+      </div>
+      <div class="gcol">
+        <div class="gscore-top"><div class="gscore-num">482</div><div class="gscore-arrow">↑</div></div>
+        <div class="gbody-base" style="border-radius: 10px 10px 6px 6px; background: linear-gradient(180deg, rgba(10,5,30,0.95), rgba(20,10,60,0.95)); border: 1px solid rgba(196,181,253,0.4); box-shadow: 0 0 18px rgba(139,92,246,0.3), inset 0 0 20px rgba(139,92,246,0.15);">
+          <!-- Fill avec gradient D-Score FIXE (clip-path pour ne pas stretcher) - 482 -> 95.5% -->
+          <div style="position: absolute; inset: 0; background: linear-gradient(0deg, rgba(231,111,81,0.65) 0%, rgba(231,111,81,0.65) 18%, rgba(244,162,97,0.7) 40%, rgba(233,196,106,0.7) 51%, rgba(46,196,182,0.7) 62%, rgba(6,214,160,0.75) 73%, rgba(232,232,232,0.85) 84%, rgba(255,255,255,0.95) 95%); clip-path: inset(4.5% 0 0 0); transition: clip-path 1.2s cubic-bezier(0.34, 1.56, 0.64, 1);">
+            <div style="position: absolute; inset: 0; background: repeating-linear-gradient(45deg, rgba(255,255,255,0.06) 0px, rgba(255,255,255,0.06) 2px, transparent 2px, transparent 6px); animation: prism-flow 3s linear infinite;"></div>
+          </div>
+          <!-- Top edge du fill (highlight blanc) -->
+          <div style="position: absolute; left: 0; right: 0; bottom: 95.5%; height: 4px; background: linear-gradient(180deg, rgba(255,255,255,0.95), transparent); box-shadow: 0 0 14px rgba(255,255,255,0.8); z-index: 2;"></div>
+          <!-- Marqueur 200 (debut zone elargie) - tres subtil -->
+          <div style="position: absolute; left: 8px; right: 8px; bottom: 18%; height: 1px; background: rgba(255,255,255,0.08); z-index: 2;"></div>
+          <!-- Paliers en echelle non-lineaire: 280=40%, 320=51%, 360=62%, 400=73%, 440=84%, 480=95% -->
+          <div style="position: absolute; left: 4px; right: 4px; bottom: 40%; height: 1px; background-image: repeating-linear-gradient(90deg, rgba(255,255,255,0.4), rgba(255,255,255,0.4) 3px, transparent 3px, transparent 6px); z-index: 3;"></div>
+          <div style="position: absolute; left: 50%; transform: translateX(-50%); bottom: calc(40% - 8px); font-size: 10px; font-weight: 700; color: rgba(255,255,255,0.85); font-family: 'DM Mono', monospace; padding: 1px 6px; background: rgba(10,5,30,0.7); backdrop-filter: blur(4px); border-radius: 8px; z-index: 4;">280</div>
+
+          <div style="position: absolute; left: 4px; right: 4px; bottom: 51%; height: 1px; background-image: repeating-linear-gradient(90deg, rgba(255,255,255,0.4), rgba(255,255,255,0.4) 3px, transparent 3px, transparent 6px); z-index: 3;"></div>
+          <div style="position: absolute; left: 50%; transform: translateX(-50%); bottom: calc(51% - 8px); font-size: 10px; font-weight: 700; color: rgba(255,255,255,0.85); font-family: 'DM Mono', monospace; padding: 1px 6px; background: rgba(10,5,30,0.7); backdrop-filter: blur(4px); border-radius: 8px; z-index: 4;">320</div>
+
+          <div style="position: absolute; left: 4px; right: 4px; bottom: 62%; height: 1px; background-image: repeating-linear-gradient(90deg, rgba(255,255,255,0.4), rgba(255,255,255,0.4) 3px, transparent 3px, transparent 6px); z-index: 3;"></div>
+          <div style="position: absolute; left: 50%; transform: translateX(-50%); bottom: calc(62% - 8px); font-size: 10px; font-weight: 700; color: rgba(255,255,255,0.85); font-family: 'DM Mono', monospace; padding: 1px 6px; background: rgba(10,5,30,0.7); backdrop-filter: blur(4px); border-radius: 8px; z-index: 4;">360</div>
+
+          <div style="position: absolute; left: 4px; right: 4px; bottom: 73%; height: 1px; background-image: repeating-linear-gradient(90deg, rgba(255,255,255,0.4), rgba(255,255,255,0.4) 3px, transparent 3px, transparent 6px); z-index: 3;"></div>
+          <div style="position: absolute; left: 50%; transform: translateX(-50%); bottom: calc(73% - 8px); font-size: 10px; font-weight: 700; color: rgba(255,255,255,0.85); font-family: 'DM Mono', monospace; padding: 1px 6px; background: rgba(10,5,30,0.7); backdrop-filter: blur(4px); border-radius: 8px; z-index: 4;">400</div>
+
+          <div style="position: absolute; left: 4px; right: 4px; bottom: 84%; height: 1px; background-image: repeating-linear-gradient(90deg, rgba(255,255,255,0.4), rgba(255,255,255,0.4) 3px, transparent 3px, transparent 6px); z-index: 3;"></div>
+          <div style="position: absolute; left: 50%; transform: translateX(-50%); bottom: calc(84% - 8px); font-size: 10px; font-weight: 700; color: rgba(255,255,255,0.85); font-family: 'DM Mono', monospace; padding: 1px 6px; background: rgba(10,5,30,0.7); backdrop-filter: blur(4px); border-radius: 8px; z-index: 4;">440</div>
+
+          <div style="position: absolute; left: 4px; right: 4px; bottom: 95%; height: 1px; background-image: repeating-linear-gradient(90deg, rgba(251,191,36,0.7), rgba(251,191,36,0.7) 3px, transparent 3px, transparent 6px); box-shadow: 0 0 6px rgba(251,191,36,0.4); z-index: 3;"></div>
+          <div style="position: absolute; left: 50%; transform: translateX(-50%); bottom: calc(95% - 8px); font-size: 10px; font-weight: 900; color: var(--gold); font-family: 'DM Mono', monospace; padding: 1px 6px; background: rgba(40,25,5,0.85); backdrop-filter: blur(4px); border-radius: 8px; box-shadow: 0 0 8px rgba(251,191,36,0.3); z-index: 4;">480</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- VERSION FINALE V2 : barre + large + paliers en chiffres + 1 seul score en haut -->
+<div style="margin-bottom: 32px; padding: 16px; border: 2px solid var(--gold); border-radius: 16px; background: rgba(251,191,36,0.05);">
+  <div style="font-size: 11px; font-weight: 800; color: var(--gold); letter-spacing: 0.15em; margin-bottom: 4px;">VERSION FINALE V2 — VALIDATION</div>
+  <div style="font-size: 18px; font-weight: 900; color: #fff; margin-bottom: 14px;">💎🚀 Holographic Bar — barre large + paliers en chiffres + 1 score top</div>
+
+  <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+
+    <!-- Equipe 1 -->
+    <div style="position: relative; border-radius: 14px; padding: 12px; backdrop-filter: blur(8px); background: linear-gradient(160deg, rgba(15,5,40,0.95), rgba(40,15,80,0.9)); border: 1px solid rgba(196,181,253,0.4); box-shadow: 0 0 30px rgba(139,92,246,0.15); display: flex; gap: 12px;">
+      <div style="flex: 1; min-width: 0;">
+        <div class="team-header">
+          <div class="team-actions">
+            <span class="team-label">Équipe 1</span>
+            <button class="btn-load">Charger</button>
+            <button class="btn-x">x</button>
+          </div>
+          <span style="font-size:10px;color:var(--gold);font-weight:800; background: rgba(251,191,36,0.1); border: 1px solid rgba(251,191,36,0.4); border-radius: 4px; padding: 3px 8px; letter-spacing: 0.06em;">1000$</span>
+        </div>
+        <div class="pitch">
+          <div class="pitch-row">
+            <div class="player-card"><div class="card-img"><span class="card-titu">90%</span><span class="card-bonus">+10%</span><span class="card-pos">ATT</span><span class="card-name">Thauvin</span><div class="card-score">45</div></div><div class="match-info"><span class="match-score">3 - 2</span></div></div>
+            <div class="player-card"><div class="card-img"><span class="card-titu">90%</span><span class="card-bonus">+10%</span><span class="card-pos">FLEX</span><span class="card-name">Thomasson</span><div class="card-score">100</div></div><div class="match-info"><span class="match-score">3 - 2</span></div></div>
+          </div>
+          <div class="pitch-row">
+            <div class="player-card"><div class="card-img cap"><span class="card-cap-badge">C</span><span class="card-titu">90%</span><span class="card-bonus">+35%</span><span class="card-pos">DEF</span><span class="card-name">Sarr</span><div class="card-score">89</div></div><div class="match-info"><span class="match-score">3 - 2</span></div></div>
+            <div class="player-card"><div class="card-img"><span class="card-titu">90%</span><span class="card-bonus">+10%</span><span class="card-pos">GK</span><span class="card-name">Restes</span><div class="card-score">67</div></div><div class="match-info"><span class="match-score">3 - 2</span></div></div>
+            <div class="player-card"><div class="card-img"><span class="card-titu">90%</span><span class="card-bonus">+10%</span><span class="card-pos">MIL</span><span class="card-name">Sangaré</span><div class="card-score">79</div></div><div class="match-info"><span class="match-score">3 - 2</span></div></div>
+          </div>
+        </div>
+      </div>
+      <!-- Gauge LARGE avec paliers en chiffres -->
+      <div style="width: 70px; position: relative; padding-top: 38px; padding-bottom: 4px; flex-shrink: 0;">
+        <!-- Score UNIQUE en haut, gros, iridescent -->
+        <div style="position: absolute; top: 0; left: 0; right: 0; text-align: center;">
+          <div style="font-family: 'Outfit', sans-serif; font-size: 22px; font-weight: 900; background: linear-gradient(135deg, #C4B5FD, #67E8F9, #F472B6, #FBBF24); background-size: 200% 100%; -webkit-background-clip: text; -webkit-text-fill-color: transparent; animation: shimmer-text 3s linear infinite; line-height: 1; text-shadow: 0 0 12px rgba(196,181,253,0.5);">482</div>
+          <div style="font-size: 12px; color: var(--gold); animation: floatUp 1.5s ease-in-out infinite; line-height: 1; margin-top: 1px;">↑</div>
+        </div>
+        <!-- Body gauge LARGE avec paliers en chiffres -->
+        <div style="position: relative; width: 100%; height: 100%; min-height: 280px; border-radius: 10px 10px 6px 6px; background: linear-gradient(180deg, rgba(10,5,30,0.95), rgba(20,10,60,0.95)); border: 1px solid rgba(196,181,253,0.5); overflow: hidden; box-shadow: 0 0 18px rgba(139,92,246,0.4), inset 0 0 20px rgba(139,92,246,0.2);">
+          <!-- Fill iridescent -->
+          <div style="position: absolute; bottom: 0; left: 0; right: 0; height: 87%; background: linear-gradient(180deg, transparent 0%, rgba(255,255,255,0.4) 5%, rgba(196,181,253,0.7) 18%, rgba(103,232,249,0.7) 42%, rgba(244,114,182,0.55) 70%, rgba(251,191,36,0.55) 95%); transition: height 1.2s cubic-bezier(0.34, 1.56, 0.64, 1);">
+            <div style="position: absolute; inset: 0; background: repeating-linear-gradient(45deg, rgba(255,255,255,0.1) 0px, rgba(255,255,255,0.1) 2px, transparent 2px, transparent 6px); animation: prism-flow 3s linear infinite;"></div>
+            <div style="position: absolute; top: 0; left: 0; right: 0; height: 4px; background: linear-gradient(180deg, rgba(255,255,255,0.95), transparent); box-shadow: 0 0 14px rgba(255,255,255,0.8);"></div>
+          </div>
+          <!-- Paliers : ligne + chiffre intégré -->
+          <div style="position: absolute; left: 0; right: 0; bottom: 58%; height: 1px; background: rgba(74,222,128,0.6); z-index: 3;"></div>
+          <div style="position: absolute; right: 4px; bottom: calc(58% + 1px); font-size: 9px; font-weight: 800; color: #4ADE80; font-family: 'DM Mono', monospace; text-shadow: 0 0 4px rgba(0,0,0,0.9); z-index: 4;">280</div>
+
+          <div style="position: absolute; left: 0; right: 0; bottom: 67%; height: 1px; background: rgba(74,222,128,0.6); z-index: 3;"></div>
+          <div style="position: absolute; right: 4px; bottom: calc(67% + 1px); font-size: 9px; font-weight: 800; color: #4ADE80; font-family: 'DM Mono', monospace; text-shadow: 0 0 4px rgba(0,0,0,0.9); z-index: 4;">320</div>
+
+          <div style="position: absolute; left: 0; right: 0; bottom: 75%; height: 1px; background: rgba(74,222,128,0.6); z-index: 3;"></div>
+          <div style="position: absolute; right: 4px; bottom: calc(75% + 1px); font-size: 9px; font-weight: 800; color: #4ADE80; font-family: 'DM Mono', monospace; text-shadow: 0 0 4px rgba(0,0,0,0.9); z-index: 4;">360</div>
+
+          <div style="position: absolute; left: 0; right: 0; bottom: 83%; height: 1px; background: rgba(74,222,128,0.6); z-index: 3;"></div>
+          <div style="position: absolute; right: 4px; bottom: calc(83% + 1px); font-size: 9px; font-weight: 800; color: #4ADE80; font-family: 'DM Mono', monospace; text-shadow: 0 0 4px rgba(0,0,0,0.9); z-index: 4;">400</div>
+
+          <div style="position: absolute; left: 0; right: 0; bottom: 92%; height: 1px; background: rgba(74,222,128,0.6); z-index: 3;"></div>
+          <div style="position: absolute; right: 4px; bottom: calc(92% + 1px); font-size: 9px; font-weight: 800; color: #4ADE80; font-family: 'DM Mono', monospace; text-shadow: 0 0 4px rgba(0,0,0,0.9); z-index: 4;">440</div>
+
+          <div style="position: absolute; left: 0; right: 0; bottom: 99%; height: 2px; background: var(--gold); box-shadow: 0 0 10px var(--gold); z-index: 3;"></div>
+          <div style="position: absolute; right: 4px; bottom: calc(99% + 2px); font-size: 9px; font-weight: 900; color: var(--gold); font-family: 'DM Mono', monospace; text-shadow: 0 0 4px rgba(0,0,0,0.9); z-index: 4;">480</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Equipe 2 -->
+    <div style="position: relative; border-radius: 14px; padding: 12px; backdrop-filter: blur(8px); background: linear-gradient(160deg, rgba(15,5,40,0.95), rgba(40,15,80,0.9)); border: 1px solid rgba(196,181,253,0.3); box-shadow: 0 0 30px rgba(139,92,246,0.1); display: flex; gap: 12px;">
+      <div style="flex: 1; min-width: 0;">
+        <div class="team-header">
+          <div class="team-actions">
+            <span class="team-label">Équipe 2</span>
+            <button class="btn-load">Charger</button>
+            <button class="btn-x">x</button>
+          </div>
+          <span style="font-size:10px;color:#A78BFA;font-weight:800; background: rgba(167,139,250,0.1); border: 1px solid rgba(167,139,250,0.4); border-radius: 4px; padding: 3px 8px; letter-spacing: 0.06em;">100€</span>
+        </div>
+        <div class="pitch">
+          <div class="pitch-row">
+            <div class="player-card"><div class="card-img"><span class="card-titu">90%</span><span class="card-bonus">+10%</span><span class="card-pos">ATT</span><span class="card-name">Edouard</span><div class="card-score">37</div></div><div class="match-info"><span class="match-score">3 - 2</span></div></div>
+            <div class="player-card"><div class="card-img"><span class="card-titu">90%</span><span class="card-bonus">+5%</span><span class="card-pos">FLEX</span><span class="card-name">Udol</span><div class="card-score">56</div></div><div class="match-info"><span class="match-score">3 - 2</span></div></div>
+          </div>
+          <div class="pitch-row">
+            <div class="player-card"><div class="card-img cap"><span class="card-cap-badge">C</span><span class="card-titu">90%</span><span class="card-bonus">+35%</span><span class="card-pos">DEF</span><span class="card-name">Sarr</span><div class="card-score">89</div></div><div class="match-info"><span class="match-score">3 - 2</span></div></div>
+            <div class="player-card"><div class="card-img"><span class="card-titu">90%</span><span class="card-bonus">+10%</span><span class="card-pos">GK</span><span class="card-name">Restes</span><div class="card-score">67</div></div><div class="match-info"><span class="match-score">3 - 2</span></div></div>
+            <div class="player-card"><div class="card-img"><span class="card-titu">90%</span><span class="card-bonus">+10%</span><span class="card-pos">MIL</span><span class="card-name">Sangaré</span><div class="card-score">79</div></div><div class="match-info"><span class="match-score">3 - 2</span></div></div>
+          </div>
+        </div>
+      </div>
+      <div style="width: 70px; position: relative; padding-top: 38px; padding-bottom: 4px; flex-shrink: 0;">
+        <div style="position: absolute; top: 0; left: 0; right: 0; text-align: center;">
+          <div style="font-family: 'Outfit', sans-serif; font-size: 22px; font-weight: 900; background: linear-gradient(135deg, #C4B5FD, #67E8F9); -webkit-background-clip: text; -webkit-text-fill-color: transparent; line-height: 1; text-shadow: 0 0 12px rgba(196,181,253,0.5);">435</div>
+          <div style="font-size: 12px; color: #A78BFA; animation: floatUp 1.5s ease-in-out infinite; line-height: 1; margin-top: 1px;">↑</div>
+        </div>
+        <div style="position: relative; width: 100%; height: 100%; min-height: 280px; border-radius: 10px 10px 6px 6px; background: linear-gradient(180deg, rgba(10,5,30,0.95), rgba(20,10,60,0.95)); border: 1px solid rgba(196,181,253,0.4); overflow: hidden; box-shadow: 0 0 14px rgba(139,92,246,0.3), inset 0 0 20px rgba(139,92,246,0.2);">
+          <div style="position: absolute; bottom: 0; left: 0; right: 0; height: 78%; background: linear-gradient(180deg, transparent 0%, rgba(255,255,255,0.3) 5%, rgba(196,181,253,0.6) 25%, rgba(103,232,249,0.55) 60%, rgba(244,114,182,0.4) 95%); transition: height 1.2s;">
+            <div style="position: absolute; inset: 0; background: repeating-linear-gradient(45deg, rgba(255,255,255,0.08) 0px, rgba(255,255,255,0.08) 2px, transparent 2px, transparent 6px); animation: prism-flow 3s linear infinite;"></div>
+            <div style="position: absolute; top: 0; left: 0; right: 0; height: 4px; background: linear-gradient(180deg, rgba(255,255,255,0.85), transparent); box-shadow: 0 0 12px rgba(255,255,255,0.6);"></div>
+          </div>
+          <div style="position: absolute; left: 0; right: 0; bottom: 58%; height: 1px; background: rgba(74,222,128,0.6); z-index: 3;"></div>
+          <div style="position: absolute; right: 4px; bottom: calc(58% + 1px); font-size: 9px; font-weight: 800; color: #4ADE80; font-family: 'DM Mono', monospace; text-shadow: 0 0 4px rgba(0,0,0,0.9); z-index: 4;">280</div>
+          <div style="position: absolute; left: 0; right: 0; bottom: 67%; height: 1px; background: rgba(74,222,128,0.6); z-index: 3;"></div>
+          <div style="position: absolute; right: 4px; bottom: calc(67% + 1px); font-size: 9px; font-weight: 800; color: #4ADE80; font-family: 'DM Mono', monospace; text-shadow: 0 0 4px rgba(0,0,0,0.9); z-index: 4;">320</div>
+          <div style="position: absolute; left: 0; right: 0; bottom: 75%; height: 1px; background: rgba(74,222,128,0.6); z-index: 3;"></div>
+          <div style="position: absolute; right: 4px; bottom: calc(75% + 1px); font-size: 9px; font-weight: 800; color: #4ADE80; font-family: 'DM Mono', monospace; text-shadow: 0 0 4px rgba(0,0,0,0.9); z-index: 4;">360</div>
+          <div style="position: absolute; left: 0; right: 0; bottom: 83%; height: 2px; background: rgba(167,139,250,0.9); box-shadow: 0 0 8px rgba(167,139,250,0.7); z-index: 3;"></div>
+          <div style="position: absolute; right: 4px; bottom: calc(83% + 2px); font-size: 9px; font-weight: 900; color: #A78BFA; font-family: 'DM Mono', monospace; text-shadow: 0 0 4px rgba(0,0,0,0.9); z-index: 4;">400</div>
+          <div style="position: absolute; left: 0; right: 0; bottom: 92%; height: 1px; background: rgba(255,255,255,0.25); z-index: 3;"></div>
+          <div style="position: absolute; right: 4px; bottom: calc(92% + 1px); font-size: 9px; font-weight: 700; color: rgba(255,255,255,0.5); font-family: 'DM Mono', monospace; text-shadow: 0 0 4px rgba(0,0,0,0.9); z-index: 4;">440</div>
+          <div style="position: absolute; left: 0; right: 0; bottom: 99%; height: 1px; background: rgba(255,255,255,0.25); z-index: 3;"></div>
+          <div style="position: absolute; right: 4px; bottom: calc(99% + 1px); font-size: 9px; font-weight: 700; color: rgba(255,255,255,0.5); font-family: 'DM Mono', monospace; text-shadow: 0 0 4px rgba(0,0,0,0.9); z-index: 4;">480</div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <p style="margin-top:14px; color:#fff8; font-size:11px;">→ Barre LARGE 70px · Score iridescent UNIQUE en haut · Paliers (280, 320, 360, 400, 440, 480) affichés en chiffres dans la barre · Verts = atteints, gold = cible 1000$, gris = pas atteints.</p>
+</div>
+
+<div class="grid">
+
+  <!-- ═══════════════════════════════════════════════════════════
+       VARIANT 1 — SKYROCKET
+       ═══════════════════════════════════════════════════════════ -->
+  <div class="v1">
+    <div class="variant-label">Variant A</div>
+    <div class="variant-name">🚀 Skyrocket — Fuel Gauge</div>
+    <div class="team-with-gauge">
+      <div class="team-box">
+        <div class="team-header">
+          <div class="team-actions">
+            <span class="team-label">Équipe 1</span>
+            <button class="btn-load">Charger</button>
+            <button class="btn-x">x</button>
+          </div>
+          <div style="display:flex; align-items:center; gap:6px;">
+            <span style="font-size:9px;color:var(--gold);font-weight:700">1000$</span>
+            <span class="team-total">482</span>
+          </div>
+        </div>
+        <div class="pitch">
+          <div class="pitch-row">
+            <div class="player-card">
+              <div class="card-img">
+                <span class="card-titu">90%</span>
+                <span class="card-bonus">+10%</span>
+                <span class="card-pos">ATT</span>
+                <span class="card-name">Thauvin</span>
+                <div class="card-score">45</div>
+              </div>
+              <div class="match-info"><span class="match-score">3 - 2</span></div>
+            </div>
+            <div class="player-card">
+              <div class="card-img">
+                <span class="card-titu">90%</span>
+                <span class="card-bonus">+10%</span>
+                <span class="card-pos">FLEX</span>
+                <span class="card-name">Thomasson</span>
+                <div class="card-score">100</div>
+              </div>
+              <div class="match-info"><span class="match-score">3 - 2</span></div>
+            </div>
+          </div>
+          <div class="pitch-row">
+            <div class="player-card">
+              <div class="card-img cap">
+                <span class="card-cap-badge">C</span>
+                <span class="card-titu">90%</span>
+                <span class="card-bonus">+35%</span>
+                <span class="card-pos">DEF</span>
+                <span class="card-name">Sarr</span>
+                <div class="card-score">89</div>
+              </div>
+              <div class="match-info"><span class="match-score">3 - 2</span></div>
+            </div>
+            <div class="player-card">
+              <div class="card-img">
+                <span class="card-titu">90%</span>
+                <span class="card-bonus">+10%</span>
+                <span class="card-pos">GK</span>
+                <span class="card-name">Restes</span>
+                <div class="card-score">67</div>
+              </div>
+              <div class="match-info"><span class="match-score">3 - 2</span></div>
+            </div>
+            <div class="player-card">
+              <div class="card-img">
+                <span class="card-titu">90%</span>
+                <span class="card-bonus">+10%</span>
+                <span class="card-pos">MIL</span>
+                <span class="card-name">Sangaré</span>
+                <div class="card-score">79</div>
+              </div>
+              <div class="match-info"><span class="match-score">3 - 2</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div style="display:flex; flex-direction:column; align-items:center; padding-top:30px; padding-right:36px;">
+        <div class="gauge-skyrocket">
+          <div class="gauge-skyrocket-score">482</div>
+          <div class="gauge-skyrocket-fill" style="height: 87%;"></div>
+          <div class="palier-line crossed" style="bottom: calc(58% - 1px);"></div>
+          <div class="palier-line crossed" style="bottom: calc(67% - 1px);"></div>
+          <div class="palier-line crossed" style="bottom: calc(75% - 1px);"></div>
+          <div class="palier-line crossed" style="bottom: calc(83% - 1px);"></div>
+          <div class="palier-line crossed" style="bottom: calc(92% - 1px);"></div>
+          <div class="palier-line target" style="bottom: calc(100% - 1px);"></div>
+          <div class="palier-labels">
+            <div class="pl crossed">280 · 2k</div>
+            <div class="pl crossed">320 · 5k</div>
+            <div class="pl crossed">360 · 10g</div>
+            <div class="pl crossed">400 · 30g</div>
+            <div class="pl crossed">440 · 100€</div>
+            <div class="pl target">480 · 1000$</div>
+          </div>
+          <div class="gauge-skyrocket-base">🔥</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════════════════════
+       VARIANT 2 — HOLOGRAPHIC PRISM
+       ═══════════════════════════════════════════════════════════ -->
+  <div class="v2">
+    <div class="variant-label">Variant B</div>
+    <div class="variant-name">💎 Holographic Prism</div>
+    <div class="team-with-gauge">
+      <div class="team-box">
+        <div class="team-header">
+          <div class="team-actions">
+            <span class="team-label">Équipe 1</span>
+            <button class="btn-load">Charger</button>
+            <button class="btn-x">x</button>
+          </div>
+          <div style="display:flex; align-items:center; gap:6px;">
+            <span style="font-size:9px;color:var(--gold);font-weight:700">1000$</span>
+            <span class="team-total">482</span>
+          </div>
+        </div>
+        <div class="pitch">
+          <div class="pitch-row">
+            <div class="player-card">
+              <div class="card-img">
+                <span class="card-titu">90%</span>
+                <span class="card-bonus">+10%</span>
+                <span class="card-pos">ATT</span>
+                <span class="card-name">Thauvin</span>
+                <div class="card-score">45</div>
+              </div>
+              <div class="match-info"><span class="match-score">3 - 2</span></div>
+            </div>
+            <div class="player-card">
+              <div class="card-img">
+                <span class="card-titu">90%</span>
+                <span class="card-bonus">+10%</span>
+                <span class="card-pos">FLEX</span>
+                <span class="card-name">Thomasson</span>
+                <div class="card-score">100</div>
+              </div>
+              <div class="match-info"><span class="match-score">3 - 2</span></div>
+            </div>
+          </div>
+          <div class="pitch-row">
+            <div class="player-card">
+              <div class="card-img cap">
+                <span class="card-cap-badge">C</span>
+                <span class="card-titu">90%</span>
+                <span class="card-bonus">+35%</span>
+                <span class="card-pos">DEF</span>
+                <span class="card-name">Sarr</span>
+                <div class="card-score">89</div>
+              </div>
+              <div class="match-info"><span class="match-score">3 - 2</span></div>
+            </div>
+            <div class="player-card">
+              <div class="card-img">
+                <span class="card-titu">90%</span>
+                <span class="card-bonus">+10%</span>
+                <span class="card-pos">GK</span>
+                <span class="card-name">Restes</span>
+                <div class="card-score">67</div>
+              </div>
+              <div class="match-info"><span class="match-score">3 - 2</span></div>
+            </div>
+            <div class="player-card">
+              <div class="card-img">
+                <span class="card-titu">90%</span>
+                <span class="card-bonus">+10%</span>
+                <span class="card-pos">MIL</span>
+                <span class="card-name">Sangaré</span>
+                <div class="card-score">79</div>
+              </div>
+              <div class="match-info"><span class="match-score">3 - 2</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div style="display:flex; flex-direction:column; align-items:center; padding-top:30px;">
+        <div class="gauge-prism">
+          <div class="prism-score">482</div>
+          <div class="prism-body">
+            <div class="prism-fill" style="height: 87%;"></div>
+            <div class="prism-facets">
+              <div class="prism-facet crossed" style="bottom: 58%;"></div>
+              <div class="prism-facet crossed" style="bottom: 67%;"></div>
+              <div class="prism-facet crossed" style="bottom: 75%;"></div>
+              <div class="prism-facet crossed" style="bottom: 83%;"></div>
+              <div class="prism-facet crossed" style="bottom: 92%;"></div>
+              <div class="prism-facet target" style="bottom: 100%;"></div>
+            </div>
+          </div>
+          <div style="position:absolute; left: 100%; top: 12%; bottom: 12%; padding-left:10px; display:flex; flex-direction:column-reverse; justify-content:space-between; font-size:7px; font-family:'DM Mono', monospace;">
+            <div style="color:var(--green); font-weight: 700;">280 · 2k</div>
+            <div style="color:var(--green); font-weight: 700;">320 · 5k</div>
+            <div style="color:var(--green); font-weight: 700;">360 · 10g</div>
+            <div style="color:var(--green); font-weight: 700;">400 · 30g</div>
+            <div style="color:var(--green); font-weight: 700;">440 · 100€</div>
+            <div style="color:var(--gold); font-weight: 800;">480 · 1000$</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════════════════════
+       VARIANT 3 — REACTOR CORE (battery cells)
+       ═══════════════════════════════════════════════════════════ -->
+  <div class="v3">
+    <div class="variant-label">Variant C</div>
+    <div class="variant-name">⚡ Reactor Core — Cell Stack</div>
+    <div class="team-with-gauge">
+      <div class="team-box">
+        <div class="team-header">
+          <div class="team-actions">
+            <span class="team-label">Équipe 1</span>
+            <button class="btn-load">Charger</button>
+            <button class="btn-x">x</button>
+          </div>
+          <div style="display:flex; align-items:center; gap:6px;">
+            <span style="font-size:9px;color:var(--gold);font-weight:700">1000$</span>
+            <span class="team-total">482</span>
+          </div>
+        </div>
+        <div class="pitch">
+          <div class="pitch-row">
+            <div class="player-card">
+              <div class="card-img">
+                <span class="card-titu">90%</span>
+                <span class="card-bonus">+10%</span>
+                <span class="card-pos">ATT</span>
+                <span class="card-name">Thauvin</span>
+                <div class="card-score">45</div>
+              </div>
+              <div class="match-info"><span class="match-score">3 - 2</span></div>
+            </div>
+            <div class="player-card">
+              <div class="card-img">
+                <span class="card-titu">90%</span>
+                <span class="card-bonus">+10%</span>
+                <span class="card-pos">FLEX</span>
+                <span class="card-name">Thomasson</span>
+                <div class="card-score">100</div>
+              </div>
+              <div class="match-info"><span class="match-score">3 - 2</span></div>
+            </div>
+          </div>
+          <div class="pitch-row">
+            <div class="player-card">
+              <div class="card-img cap">
+                <span class="card-cap-badge">C</span>
+                <span class="card-titu">90%</span>
+                <span class="card-bonus">+35%</span>
+                <span class="card-pos">DEF</span>
+                <span class="card-name">Sarr</span>
+                <div class="card-score">89</div>
+              </div>
+              <div class="match-info"><span class="match-score">3 - 2</span></div>
+            </div>
+            <div class="player-card">
+              <div class="card-img">
+                <span class="card-titu">90%</span>
+                <span class="card-bonus">+10%</span>
+                <span class="card-pos">GK</span>
+                <span class="card-name">Restes</span>
+                <div class="card-score">67</div>
+              </div>
+              <div class="match-info"><span class="match-score">3 - 2</span></div>
+            </div>
+            <div class="player-card">
+              <div class="card-img">
+                <span class="card-titu">90%</span>
+                <span class="card-bonus">+10%</span>
+                <span class="card-pos">MIL</span>
+                <span class="card-name">Sangaré</span>
+                <div class="card-score">79</div>
+              </div>
+              <div class="match-info"><span class="match-score">3 - 2</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div style="display:flex; flex-direction:column; align-items:center; padding-top:30px; padding-right:60px;">
+        <div class="gauge-reactor">
+          <div class="gauge-reactor-score">482</div>
+          <div class="reactor-cell active"><span class="reactor-cell-label">280 · 2k essence</span></div>
+          <div class="reactor-cell active"><span class="reactor-cell-label">320 · 5k essence</span></div>
+          <div class="reactor-cell active"><span class="reactor-cell-label">360 · 10 gems</span></div>
+          <div class="reactor-cell active"><span class="reactor-cell-label">400 · 30 gems</span></div>
+          <div class="reactor-cell active"><span class="reactor-cell-label">440 · 100€</span></div>
+          <div class="reactor-cell active target"><span class="reactor-cell-label">480 · 1000$</span></div>
+          <div class="gauge-reactor-core"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<p style="margin-top:32px; color:#fff5; font-size:11px; text-align:center;">
+  Choisis ton variant : A (Skyrocket), B (Prism), ou C (Reactor) — je l'intègre direct dans Stellar + Pro recap.
+</p>
+
+</body>
+</html>

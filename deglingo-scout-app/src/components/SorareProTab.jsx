@@ -3,6 +3,7 @@ import { POSITION_COLORS, LEAGUE_COLORS, LEAGUE_FLAG_CODES, LEAGUE_NAMES, dsColo
 import { dScoreMatch, csProb, findTeam } from "../utils/dscore";
 import { T, t } from "../utils/i18n";
 import { getProGwInfo, getProGwList, loadFrozen, saveFrozen } from "../utils/freeze";
+import SkyrocketGauge from "./SkyrocketGauge";
 
 const PC = POSITION_COLORS;
 const PRO_LEAGUES = ["L1", "PL", "Liga", "Bundes", "MLS"];
@@ -144,7 +145,8 @@ export default function SorareProTab({ players, teams, fixtures, logos = {}, mat
 
   // ── GW Info — 5 prochaines GW ──
   const gwList = useMemo(() => getProGwList(5), []);
-  const [selectedGwIdx, setSelectedGwIdx] = useState(gwList.length > 1 ? 1 : 0);
+  // Defaut = GW LIVE (idx 0) — la GW en cours
+  const [selectedGwIdx, setSelectedGwIdx] = useState(0);
   const gwInfo = gwList[selectedGwIdx] || null;
   const [countdown, setCountdown] = useState("");
   const [teamSort, setTeamSort] = useState("ds");
@@ -1499,25 +1501,26 @@ export default function SorareProTab({ players, teams, fixtures, logos = {}, mat
             {t(lang, "proRecap")}
             <span style={{ fontSize: 9, fontWeight: 600, color: "rgba(255,255,255,0.35)" }}>{savedTeams.length}/{maxSaved} · {LEAGUE_NAMES[league] || league} · {rarity === "rare" ? t(lang, "proRare") : t(lang, "proLimited")} · {gwInfo?.displayNumber ? `GW${gwInfo.displayNumber}` : ""}</span>
           </div>
-          <div className="pro-recap-grid" style={{ display: "grid", gridTemplateColumns: `repeat(${maxSaved}, 1fr)`, gap: 6 }}>
+          <div className="pro-recap-grid" style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, 480px)", gap: 10 }}>
             {savedTeams.map((st) => {
               const stPlayers = TEAM_SLOTS.map(s => st.picks[s]).filter(Boolean);
               const stAdjScores = stPlayers.map(p => getAdjDs(p));
               const stCaptain = st.captain && st.picks[st.captain] ? st.picks[st.captain] : (stAdjScores.length === 5 ? stPlayers[stAdjScores.indexOf(Math.max(...stAdjScores))] : null);
               const stCaptainId = stCaptain ? (stCaptain.slug || stCaptain.name) : null;
-              // Score effectif: vrai score SO5 si match joue, sinon predicted (D-Score * power)
-              // Formule Sorare : raw × power + (capitaine ? raw × 0.5 : 0)
-              const getEffectiveFullScore = (p, isCap) => {
+              // Score effectif + flag isLive (match joue ou non)
+              const getScoreInfo = (p, isCap) => {
                 const fresh = players.find(pl => pl.slug === p.slug);
+                const card = getCard(p);
+                const power = (card?.power && card.power > 1) ? card.power : 1;
                 if (fresh && fresh.last_so5_date === p.matchDate && fresh.last_so5_score != null) {
-                  const card = getCard(p);
-                  const power = (card?.power && card.power > 1) ? card.power : 1;
                   const captainBonus = isCap ? fresh.last_so5_score * 0.5 : 0;
-                  return fresh.last_so5_score * power + captainBonus;
+                  return { full: fresh.last_so5_score * power + captainBonus, isLive: true };
                 }
-                return getFullScore(p, isCap);
+                return { full: getFullScore(p, isCap), isLive: false };
               };
-              const stFullScores = stPlayers.map(p => getEffectiveFullScore(p, stCaptainId && (p.slug || p.name) === stCaptainId));
+              const stPlayerInfos = stPlayers.map(p => ({ p, ...getScoreInfo(p, stCaptainId && (p.slug || p.name) === stCaptainId) }));
+              const stFullScores = stPlayerInfos.map(x => x.full);
+              const stLiveScores = stPlayerInfos.filter(x => x.isLive).map(x => x.full);
               const stClubCounts = {};
               stPlayers.forEach(p => { stClubCounts[p.club] = (stClubCounts[p.club] || 0) + 1; });
               const stMultiClub = stPlayers.length === 5 && Object.values(stClubCounts).every(c => c <= 2);
@@ -1527,6 +1530,9 @@ export default function SorareProTab({ players, teams, fixtures, logos = {}, mat
               const stRawTotal = stFullScores.reduce((s, v) => s + v, 0);
               const stTotal = Math.round(stRawTotal * (1 + stCompoPct / 100));
               const stBonusPts = Math.round(stRawTotal - stPlayers.reduce((s, p) => s + (p.ds || 0), 0));
+              // LIVE only (matchs joues)
+              const stLiveRaw = stLiveScores.reduce((s, v) => s + v, 0);
+              const stTotalLive = Math.round(stLiveRaw * (1 + stCompoPct / 100));
               const palSt = paliers.filter(p => stTotal >= p.pts).pop();
 
               const renderCard = (slot) => {
@@ -1549,10 +1555,13 @@ export default function SorareProTab({ players, teams, fixtures, logos = {}, mat
                 const rawRealScore = hasRealScore ? p.last_so5_score : null;
                 const playerScore = hasRealScore ? Math.round(rawRealScore) : Math.round(p.ds || 0);
                 const captainBonusPts = isCap ? Math.round((hasRealScore ? rawRealScore : (p.ds || 0)) * 0.5) : 0;
-                // Score du match si joue : perspective du joueur (sa team a gauche)
+                // Score du match si joue : ordre HOME - AWAY (reel)
                 const matchScore = hasRealScore && p.last_match_home_goals != null && p.last_match_away_goals != null
-                  ? (p.isHome ? `${p.last_match_home_goals} - ${p.last_match_away_goals}` : `${p.last_match_away_goals} - ${p.last_match_home_goals}`)
+                  ? `${p.last_match_home_goals} - ${p.last_match_away_goals}`
                   : null;
+                // Logos dans l'ordre home -> away (independant du player)
+                const recapHomeLogo = p.isHome ? playerClubLogo : oppLogo;
+                const recapAwayLogo = p.isHome ? oppLogo : playerClubLogo;
                 return (
                   <div key={slot} style={{ display: "flex", flexDirection: "column", alignItems: "center", flex: 1, minWidth: 0, maxWidth: 120 }}>
                     <div style={{ width: "100%", aspectRatio: "3/4", borderRadius: 6, overflow: "hidden", margin: "0 auto", position: "relative",
@@ -1568,7 +1577,7 @@ export default function SorareProTab({ players, teams, fixtures, logos = {}, mat
                         </div>
                       )}
                       {isCap && <span style={{ position: "absolute", top: 2, right: 12, width: 12, height: 12, borderRadius: "50%", background: "#FBBF24", color: "#000", fontSize: 7, fontWeight: 900, display: "flex", alignItems: "center", justifyContent: "center", zIndex: 2 }}>C</span>}
-                      {p.sorare_starter_pct != null && (
+                      {p.sorare_starter_pct != null && !hasRealScore && (
                         <span style={{ position: "absolute", top: isCap ? 16 : 2, right: 2, fontSize: 7, fontWeight: 700, padding: "1px 3px", borderRadius: 3, color: "#fff", zIndex: 2,
                           background: p.sorare_starter_pct >= 70 ? "rgba(22,101,52,0.9)" : p.sorare_starter_pct >= 50 ? "rgba(133,77,14,0.9)" : "rgba(153,27,27,0.9)",
                         }}>{p.sorare_starter_pct}%</span>
@@ -1586,16 +1595,16 @@ export default function SorareProTab({ players, teams, fixtures, logos = {}, mat
                         boxShadow: hasRealScore ? `0 0 8px ${dsColor(playerScore)}50` : `0 0 6px ${dsColor(playerScore)}30`,
                       }}>{playerScore}</div>
                     </div>
-                    {/* Match info box — date/heure remplacees par score si match joue */}
+                    {/* Match info box — ordre HOME vs AWAY toujours respecte */}
                     <div style={{ marginTop: 3, padding: "3px 8px", borderRadius: 6, background: matchScore ? "rgba(15,40,30,0.5)" : "rgba(255,255,255,0.03)", border: `1px solid ${matchScore ? "rgba(74,222,128,0.25)" : "rgba(255,255,255,0.06)"}`, textAlign: "center" }}>
                       <div style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: 4 }}>
-                        {playerClubLogo && <img src={`/data/logos/${playerClubLogo}`} alt="" style={{ width: 14, height: 14, objectFit: "contain" }} />}
+                        {recapHomeLogo && <img src={`/data/logos/${recapHomeLogo}`} alt="" style={{ width: 14, height: 14, objectFit: "contain" }} />}
                         {matchScore ? (
                           <span style={{ fontSize: 11, fontWeight: 900, color: "#4ADE80", fontFamily: "'DM Mono',monospace", letterSpacing: "-0.3px" }}>{matchScore}</span>
                         ) : (
                           <span style={{ fontSize: 7, color: "rgba(255,255,255,0.25)" }}>vs</span>
                         )}
-                        {oppLogo && <img src={`/data/logos/${oppLogo}`} alt="" style={{ width: 14, height: 14, objectFit: "contain" }} />}
+                        {recapAwayLogo && <img src={`/data/logos/${recapAwayLogo}`} alt="" style={{ width: 14, height: 14, objectFit: "contain" }} />}
                       </div>
                       {!matchScore && (
                         <div style={{ fontSize: 7, fontWeight: 700, color: "#fff", fontFamily: "'DM Mono',monospace", marginTop: 1 }}>
@@ -1608,34 +1617,43 @@ export default function SorareProTab({ players, teams, fixtures, logos = {}, mat
               };
 
               return (
-                <div key={st.id} style={{ borderRadius: 12, background: "linear-gradient(160deg, rgba(10,5,30,0.95), rgba(20,10,50,0.9))", border: `1px solid ${rarityColor}25`, padding: "10px 10px", backdropFilter: "blur(8px)" }}>
-                  {/* Header */}
-                  <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 8 }}>
-                    <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
-                      <span style={{ fontSize: 12, fontWeight: 900, color: rarityColor }}>{st.label}</span>
-                      <button onClick={() => loadSavedTeam(st)} style={{ fontSize: 7, fontWeight: 700, padding: "2px 6px", borderRadius: 4, border: `1px solid ${rarityColor}40`, background: `${rarityColor}10`, color: rarityColor, cursor: "pointer", fontFamily: "Outfit" }}>Charger</button>
-                      <button onClick={() => deleteSavedTeam(st.id)} style={{ fontSize: 8, padding: "2px 5px", borderRadius: 4, border: "1px solid rgba(255,255,255,0.08)", background: "rgba(255,255,255,0.03)", color: "rgba(255,255,255,0.3)", cursor: "pointer" }}>x</button>
+                <div key={st.id} style={{ borderRadius: 12, background: "linear-gradient(160deg, rgba(10,5,30,0.95), rgba(20,10,50,0.9))", border: `1px solid ${rarityColor}25`, padding: "10px 10px", backdropFilter: "blur(8px)", display: "flex", gap: 12 }}>
+                  {/* Colonne gauche : header + pitch */}
+                  <div style={{ flex: 1, minWidth: 0 }}>
+                    <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 8 }}>
+                      <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
+                        <span style={{ fontSize: 12, fontWeight: 900, color: rarityColor }}>{st.label}</span>
+                        <button onClick={() => loadSavedTeam(st)} style={{ fontSize: 7, fontWeight: 700, padding: "2px 6px", borderRadius: 4, border: `1px solid ${rarityColor}40`, background: `${rarityColor}10`, color: rarityColor, cursor: "pointer", fontFamily: "Outfit" }}>Charger</button>
+                        <button onClick={() => deleteSavedTeam(st.id)} style={{ fontSize: 8, padding: "2px 5px", borderRadius: 4, border: "1px solid rgba(255,255,255,0.08)", background: "rgba(255,255,255,0.03)", color: "rgba(255,255,255,0.3)", cursor: "pointer" }}>x</button>
+                      </div>
+                      <div style={{ display: "flex", alignItems: "center", gap: 4 }}>
+                        {stCap260 && <span style={{ fontSize: 8, fontWeight: 800, padding: "2px 5px", borderRadius: 3, border: "1px solid rgba(139,92,246,0.5)", color: "#A78BFA", background: "rgba(139,92,246,0.1)" }}>CAP</span>}
+                      </div>
                     </div>
-                    <div style={{ display: "flex", alignItems: "center", gap: 3 }}>
-                      {stMultiClub && <span style={{ fontSize: 7, fontWeight: 800, padding: "2px 4px", borderRadius: 3, border: "1px solid rgba(74,222,128,0.5)", color: "#4ADE80", background: "rgba(74,222,128,0.1)" }}>MC</span>}
-                      {stCap260 && <span style={{ fontSize: 7, fontWeight: 800, padding: "2px 4px", borderRadius: 3, border: "1px solid rgba(139,92,246,0.5)", color: "#A78BFA", background: "rgba(139,92,246,0.1)" }}>CAP</span>}
-                      {stCompoPct > 0 && <span style={{ fontSize: 9, fontWeight: 700, color: "#4ADE80" }}>+{stCompoPct}%</span>}
-                      {palSt && <span style={{ fontSize: 9, color: palSt.color, fontWeight: 700 }}>{palSt.reward}</span>}
-                      <span style={{ fontSize: 22, fontWeight: 900, fontFamily: "'DM Mono',monospace", color: palSt ? palSt.color : rarityColor }}>{stTotal}</span>
-                    </div>
-                  </div>
-                  {/* Pitch layout : ATT+FLEX en haut, DEF+GK+MIL en bas */}
-                  <div style={{ display: "flex", flexDirection: "column", gap: 6, alignItems: "center" }}>
-                    <div style={{ display: "flex", gap: 6, justifyContent: "center", width: "100%" }}>
-                      {renderCard("ATT")}
-                      {renderCard("FLEX")}
-                    </div>
-                    <div style={{ display: "flex", gap: 6, justifyContent: "center", width: "100%" }}>
-                      {renderCard("DEF")}
-                      {renderCard("GK")}
-                      {renderCard("MIL")}
+                    {/* Pitch layout : ATT+FLEX en haut, DEF+GK+MIL en bas */}
+                    <div style={{ display: "flex", flexDirection: "column", gap: 6, alignItems: "center" }}>
+                      <div style={{ display: "flex", gap: 6, justifyContent: "center", width: "100%" }}>
+                        {renderCard("ATT")}
+                        {renderCard("FLEX")}
+                      </div>
+                      <div style={{ display: "flex", gap: 6, justifyContent: "center", width: "100%" }}>
+                        {renderCard("DEF")}
+                        {renderCard("GK")}
+                        {renderCard("MIL")}
+                      </div>
                     </div>
                   </div>
+                  {/* Skyrocket Gauge a droite — LIVE + projection + initial + rewards en fond.
+                      Pro Limited : top reward (1000$) en gold. Pro Rare : top reward (4000$) en rouge sang. Rare = +10% sur tous les seuils. */}
+                  <SkyrocketGauge
+                    score={stTotalLive}
+                    projectedScore={stTotal}
+                    initialScore={st.score}
+                    paliers={paliers}
+                    showRewards={true}
+                    scoreMultiplier={rarity === "rare" ? 1.10 : 1.0}
+                    topRewardColor={rarity === "rare" ? "#DC2626" : "#FBBF24"}
+                  />
                 </div>
               );
             })}

@@ -13,8 +13,63 @@ import React from "react";
 
 const AURORA_FILL =
   "linear-gradient(0deg, rgba(67,56,202,0.5) 0%, rgba(67,56,202,0.5) 18%, rgba(99,102,241,0.55) 40%, rgba(56,189,248,0.6) 62%, rgba(45,212,191,0.65) 73%, rgba(110,231,183,0.7) 84%, rgba(220,252,231,0.85) 95%)";
-const TOP_HIGHLIGHT = "rgba(220,252,231,0.95)";
-const GLOW = "rgba(110,231,183,0.7)";
+const AURORA_TOP = "rgba(220,252,231,0.95)";
+const AURORA_GLOW = "rgba(110,231,183,0.7)";
+const AURORA_TEXT = "linear-gradient(135deg, #C4B5FD, #67E8F9, #6EE7B7, #DCFCE7)";
+const AURORA_TEXT_SHADOW = "0 0 12px rgba(196,181,253,0.5)";
+const AURORA_BORDER = "rgba(196,181,253,0.4)";
+const AURORA_BOX_SHADOW = "0 0 14px rgba(139,92,246,0.3), inset 0 0 18px rgba(139,92,246,0.15)";
+const AURORA_PROJ_COLOR = "rgba(196,181,253,0.7)";
+const AURORA_BG = "linear-gradient(180deg, rgba(10,5,30,0.95), rgba(20,10,60,0.95))";
+
+// Pro Rare : fill rouge sang (burgundy → rouge → orangé incandescent au top)
+const RARE_FILL =
+  "linear-gradient(0deg, rgba(76,5,25,0.55) 0%, rgba(120,10,35,0.55) 18%, rgba(185,28,28,0.6) 40%, rgba(220,38,38,0.65) 62%, rgba(239,68,68,0.7) 73%, rgba(251,146,60,0.75) 84%, rgba(254,215,170,0.9) 95%)";
+const RARE_TOP = "rgba(254,215,170,0.95)";
+const RARE_GLOW = "rgba(239,68,68,0.75)";
+const RARE_TEXT = "linear-gradient(135deg, #FCA5A5, #F87171, #FB923C, #FED7AA)";
+const RARE_TEXT_SHADOW = "0 0 12px rgba(248,113,113,0.55)";
+const RARE_BORDER = "rgba(248,113,113,0.45)";
+const RARE_BOX_SHADOW = "0 0 14px rgba(220,38,38,0.35), inset 0 0 18px rgba(185,28,28,0.2)";
+const RARE_PROJ_COLOR = "rgba(252,165,165,0.75)";
+const RARE_BG = "linear-gradient(180deg, rgba(30,3,10,0.96), rgba(60,8,20,0.95))";
+
+// Pro Limited : fill jaune/orange/gold (amber sombre → orange → gold vif au top)
+const LIMITED_FILL =
+  "linear-gradient(0deg, rgba(120,53,15,0.55) 0%, rgba(146,64,14,0.55) 18%, rgba(180,83,9,0.6) 40%, rgba(217,119,6,0.65) 62%, rgba(245,158,11,0.7) 73%, rgba(251,191,36,0.78) 84%, rgba(254,240,138,0.92) 95%)";
+const LIMITED_TOP = "rgba(254,240,138,0.95)";
+const LIMITED_GLOW = "rgba(251,191,36,0.8)";
+const LIMITED_TEXT = "linear-gradient(135deg, #FCD34D, #FBBF24, #F59E0B, #FDE68A)";
+const LIMITED_TEXT_SHADOW = "0 0 12px rgba(251,191,36,0.55)";
+const LIMITED_BORDER = "rgba(251,191,36,0.45)";
+const LIMITED_BOX_SHADOW = "0 0 14px rgba(217,119,6,0.35), inset 0 0 18px rgba(146,64,14,0.2)";
+const LIMITED_PROJ_COLOR = "rgba(252,211,77,0.75)";
+const LIMITED_BG = "linear-gradient(180deg, rgba(30,15,3,0.96), rgba(60,30,8,0.95))";
+
+function getPalette(rarity) {
+  if (rarity === "rare") {
+    return {
+      fill: RARE_FILL, top: RARE_TOP, glow: RARE_GLOW,
+      text: RARE_TEXT, textShadow: RARE_TEXT_SHADOW,
+      border: RARE_BORDER, boxShadow: RARE_BOX_SHADOW,
+      projColor: RARE_PROJ_COLOR, bg: RARE_BG,
+    };
+  }
+  if (rarity === "limited") {
+    return {
+      fill: LIMITED_FILL, top: LIMITED_TOP, glow: LIMITED_GLOW,
+      text: LIMITED_TEXT, textShadow: LIMITED_TEXT_SHADOW,
+      border: LIMITED_BORDER, boxShadow: LIMITED_BOX_SHADOW,
+      projColor: LIMITED_PROJ_COLOR, bg: LIMITED_BG,
+    };
+  }
+  return {
+    fill: AURORA_FILL, top: AURORA_TOP, glow: AURORA_GLOW,
+    text: AURORA_TEXT, textShadow: AURORA_TEXT_SHADOW,
+    border: AURORA_BORDER, boxShadow: AURORA_BOX_SHADOW,
+    projColor: AURORA_PROJ_COLOR, bg: AURORA_BG,
+  };
+}
 
 // Courbe Pro Limited de base. Pour Pro Rare, multiplier par 1.10 (cartes Rare ont bonus +10%).
 // 0=0% / 280=20% / 360=30% / 380=45% / 400=60% / 420=75% / 460=90% / 510+=100%
@@ -51,7 +106,8 @@ const KEYFRAMES = `
 @keyframes skrShimmerText { 0% { background-position: 0% 50%; } 100% { background-position: 200% 50%; } }
 `;
 
-export default function SkyrocketGauge({ score = 0, projectedScore = null, initialScore = null, paliers = [], showRewards = false, scoreMultiplier = 1.0, topRewardColor = null, height = 280, width = 70 }) {
+export default function SkyrocketGauge({ score = 0, projectedScore = null, initialScore = null, paliers = [], showRewards = false, scoreMultiplier = 1.0, topRewardColor = null, rarity = null, height = 280, width = 70 }) {
+  const palette = getPalette(rarity);
   const valueToPos = makeValueToPos(scoreMultiplier);
   const sortedPaliers = [...(paliers || [])].sort((a, b) => (a.pts || 0) - (b.pts || 0));
   const minPalier = sortedPaliers.length > 0 ? sortedPaliers[0].pts : 200;
@@ -75,15 +131,15 @@ export default function SkyrocketGauge({ score = 0, projectedScore = null, initi
         <div style={{
           fontFamily: "'Outfit', sans-serif",
           fontSize: 22, fontWeight: 900,
-          background: "linear-gradient(135deg, #C4B5FD, #67E8F9, #6EE7B7, #DCFCE7)",
+          background: palette.text,
           backgroundSize: "200% 100%",
           WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent", backgroundClip: "text",
           animation: "skrShimmerText 3s linear infinite",
-          lineHeight: 1, textShadow: "0 0 12px rgba(196,181,253,0.5)",
+          lineHeight: 1, textShadow: palette.textShadow,
         }}>{Math.round(score)}</div>
         {hasProjection ? (
           <div style={{
-            fontSize: 8, fontWeight: 700, color: "rgba(196,181,253,0.7)",
+            fontSize: 8, fontWeight: 700, color: palette.projColor,
             fontFamily: "'DM Mono', monospace", lineHeight: 1, marginTop: 3,
             letterSpacing: 0.3,
           }}>→ {Math.round(projectedScore)} <span style={{ opacity: 0.6 }}>proj</span></div>
@@ -109,16 +165,16 @@ export default function SkyrocketGauge({ score = 0, projectedScore = null, initi
       <div style={{
         position: "relative", width: "100%", height: "100%", minHeight: height,
         borderRadius: "10px 10px 6px 6px",
-        background: "linear-gradient(180deg, rgba(10,5,30,0.95), rgba(20,10,60,0.95))",
-        border: "1px solid rgba(196,181,253,0.4)",
+        background: palette.bg,
+        border: `1px solid ${palette.border}`,
         overflow: "hidden",
-        boxShadow: "0 0 14px rgba(139,92,246,0.3), inset 0 0 18px rgba(139,92,246,0.15)",
+        boxShadow: palette.boxShadow,
       }}>
         {/* Fill projection (zone ghost entre live et projected) — derriere */}
         {hasProjection && (
           <div style={{
             position: "absolute", inset: 0,
-            background: AURORA_FILL,
+            background: palette.fill,
             opacity: 0.3,
             clipPath: `inset(${Math.max(0, 100 - projectedFillHeight)}% 0 ${fillHeight}% 0)`,
             transition: "clip-path 1.2s cubic-bezier(0.34, 1.56, 0.64, 1)",
@@ -131,10 +187,10 @@ export default function SkyrocketGauge({ score = 0, projectedScore = null, initi
           </div>
         )}
 
-        {/* Fill LIVE Aurora — couleurs FIXES (clip-path, ne stretche pas) */}
+        {/* Fill LIVE — couleurs FIXES (clip-path, ne stretche pas) */}
         <div style={{
           position: "absolute", inset: 0,
-          background: AURORA_FILL,
+          background: palette.fill,
           clipPath: `inset(${Math.max(0, 100 - fillHeight)}% 0 0 0)`,
           transition: "clip-path 1.2s cubic-bezier(0.34, 1.56, 0.64, 1)",
         }}>
@@ -149,8 +205,8 @@ export default function SkyrocketGauge({ score = 0, projectedScore = null, initi
         <div style={{
           position: "absolute", left: 0, right: 0,
           bottom: `${fillHeight}%`, height: 3,
-          background: `linear-gradient(180deg, ${TOP_HIGHLIGHT}, transparent)`,
-          boxShadow: `0 0 12px ${GLOW}`,
+          background: `linear-gradient(180deg, ${palette.top}, transparent)`,
+          boxShadow: `0 0 12px ${palette.glow}`,
           zIndex: 2,
           transition: "bottom 1.2s cubic-bezier(0.34, 1.56, 0.64, 1)",
         }} />
@@ -160,7 +216,7 @@ export default function SkyrocketGauge({ score = 0, projectedScore = null, initi
           <div style={{
             position: "absolute", left: 0, right: 0,
             bottom: `${projectedFillHeight}%`, height: 1,
-            borderTop: "1px dashed rgba(196,181,253,0.5)",
+            borderTop: `1px dashed ${palette.projColor}`,
             zIndex: 2,
           }} />
         )}

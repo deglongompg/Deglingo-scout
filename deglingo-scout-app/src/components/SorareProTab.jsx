@@ -1653,6 +1653,7 @@ export default function SorareProTab({ players, teams, fixtures, logos = {}, mat
                     showRewards={true}
                     scoreMultiplier={rarity === "rare" ? 1.10 : 1.0}
                     topRewardColor={rarity === "rare" ? "#DC2626" : "#FBBF24"}
+                    rarity={rarity}
                   />
                 </div>
               );

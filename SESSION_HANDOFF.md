@@ -1,4 +1,4 @@
-# SESSION HANDOFF — 2026-04-19 (dimanche GW71)
+# SESSION HANDOFF — 2026-04-19 → 20 (dimanche → lundi GW71)
 
 > **Claude Code sur Mac :** lis ce fichier au démarrage pour reprendre le contexte.
 > Source de vérité complémentaire : `git log --oneline -20` et les fichiers modifiés récents.
@@ -51,6 +51,23 @@ Les noms d'équipe débordaient sur 2 lignes (ex "Nott. Forest", "Aston Villa", 
 - `columnGap: 4` + `padding: "4px 6px"`
 
 Fichier : `deglingo-scout-app/src/components/StellarTab.jsx` ligne ~1656 à ~1674.
+
+### 7bis. Sync teams cross-device + onglet Mes Teams (commits `4a16964` + `65cd542`)
+Feature complete : indexation des teams sauvegardées par compte Sorare via Cloudflare KV.
+- `/api/teams` Function GET/POST — auth via Bearer Sorare, slug vérifié GraphQL
+- KV namespace `deglingo-teams`, binding `TEAMS_KV` (Production + Preview) bindés dashboard
+- `utils/cloudSync.js` — push/fetch helpers
+- Dual-write (localStorage + KV) dans SorareProTab et StellarTab au save/delete
+- Nouvel onglet **📋 Mes Teams** (lecture seule) dans App.jsx
+- Sync cross-device validée : Mac + iPhone + PC voient les mêmes teams
+- Setup complet dans `deglingo-scout-app/SETUP_KV.md`
+
+### 7ter. ⚠️ Pitch layout Mes Teams (commit `65cd542` = CASSÉ en prod)
+Tentative d'upgrade visuel Recap avec pitch layout style saved teams + sub-tabs par ligue.
+**A causé un écran noir en prod**. Rollback Cloudflare effectué → prod revenue sur `321116ba` (v1 Recap simple).
+- Main GitHub contient TOUJOURS le commit cassé `65cd542` → **NE PAS lancer `./deploy.sh`** tant que pas fixé
+- WIP debug avec ErrorBoundary + checks défensifs sur branche `claude/deglingo-scout-relis-7leVn` (commit `315f352`)
+- Pour débugger : sur prod actuelle, forcer l'URL vers un deploy avec le code cassé (ex preview URL), ouvrir F12 Console, screenshot l'erreur rouge
 
 ### 7. Scripts .sh pour Mac (commit `63c70f6`)
 Équivalents des `.bat` Windows, exécutables (`chmod +x`) :

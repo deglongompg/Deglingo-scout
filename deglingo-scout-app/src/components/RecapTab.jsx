@@ -1,11 +1,29 @@
-import { useEffect, useMemo, useState } from "react";
-import { LEAGUE_COLORS, LEAGUE_NAMES, LEAGUE_FLAG_CODES, POSITION_COLORS, dsColor } from "../utils/colors";
+import { Component, useEffect, useMemo, useState } from "react";
+import { LEAGUE_COLORS, LEAGUE_NAMES, LEAGUE_FLAG_CODES, POSITION_COLORS, dsColor, dsBg } from "../utils/colors";
 import { fetchCloudStore } from "../utils/cloudSync";
 import { t } from "../utils/i18n";
 
+class RecapErrorBoundary extends Component {
+  constructor(props) { super(props); this.state = { err: null }; }
+  static getDerivedStateFromError(err) { return { err }; }
+  componentDidCatch(err, info) { console.error("[RecapTab]", err, info); }
+  render() {
+    if (this.state.err) {
+      return (
+        <div style={{ padding: 30, textAlign: "center", color: "#F87171", fontFamily: "Outfit" }}>
+          <div style={{ fontSize: 14, fontWeight: 800 }}>Erreur d'affichage Mes Teams</div>
+          <div style={{ fontSize: 11, color: "rgba(255,255,255,0.5)", marginTop: 6, maxWidth: 600, margin: "6px auto 0" }}>
+            {String(this.state.err?.message || this.state.err)}
+          </div>
+        </div>
+      );
+    }
+    return this.props.children;
+  }
+}
+
 const PC = POSITION_COLORS;
 const PRO_LEAGUES = ["L1", "PL", "Liga", "Bundes", "MLS"];
-const TEAM_SLOTS = ["GK", "DEF", "MIL", "ATT", "FLEX"];
 
 function slotColor(slot) {
   if (slot === "FLEX") return "#A78BFA";
@@ -14,80 +32,160 @@ function slotColor(slot) {
 
 function formatScore(s) {
   if (s == null || Number.isNaN(s)) return "—";
-  return Number(s).toFixed(1);
+  return Math.round(Number(s));
 }
 
-function TeamCard({ team, rarity, league, lang }) {
+function enrichPick(pick, players) {
+  if (!pick) return null;
+  const fresh = pick.slug ? players?.find?.(p => p.slug === pick.slug) : null;
+  if (!fresh) return pick;
+  return {
+    ...pick,
+    sorare_starter_pct: fresh.sorare_starter_pct,
+    injured: fresh.injured,
+    last_so5_score: fresh.last_so5_score,
+    last_so5_date: fresh.last_so5_date,
+    last_match_home_goals: fresh.last_match_home_goals,
+    last_match_away_goals: fresh.last_match_away_goals,
+  };
+}
+
+function PitchCard({ pick, slot, isCaptain, players, logos }) {
+  const p = enrichPick(pick, players);
+  if (!p) {
+    return (
+      <div style={{ display: "flex", flexDirection: "column", alignItems: "center", flex: 1, minWidth: 0, maxWidth: 120 }}>
+        <div style={{
+          width: "100%", aspectRatio: "3/4", borderRadius: 6,
+          background: "rgba(255,255,255,0.02)", border: `1px dashed ${slotColor(slot)}40`,
+          display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", gap: 2,
+        }}>
+          <span style={{ fontSize: 9, fontWeight: 800, color: slotColor(slot), opacity: 0.6 }}>{slot}</span>
+          <span style={{ fontSize: 8, color: "rgba(255,255,255,0.2)" }}>—</span>
+        </div>
+      </div>
+    );
+  }
+  const pc = PC[p.position] || "#94A3B8";
+  const clubLogo = logos?.[p.club];
+  const oppLogo = logos?.[p.oppName];
+  const hasRealScore = p.last_so5_date && p.matchDate && p.last_so5_date === p.matchDate && p.last_so5_score != null;
+  const playerScore = hasRealScore ? Math.round(p.last_so5_score) : Math.round(p.ds || 0);
+  const matchScore = hasRealScore && p.last_match_home_goals != null && p.last_match_away_goals != null
+    ? `${p.last_match_home_goals} - ${p.last_match_away_goals}`
+    : null;
+  const homeLogo = p.isHome ? clubLogo : oppLogo;
+  const awayLogo = p.isHome ? oppLogo : clubLogo;
+  const dateLabel = p.matchDate ? new Date(p.matchDate + "T12:00:00").toLocaleDateString("fr-FR", { weekday: "short", day: "numeric" }).toUpperCase().replace(".", "") : "";
+
+  return (
+    <div style={{ display: "flex", flexDirection: "column", alignItems: "center", flex: 1, minWidth: 0, maxWidth: 120 }}>
+      <div style={{
+        width: "100%", aspectRatio: "3/4", borderRadius: 6, overflow: "hidden", position: "relative",
+        background: `linear-gradient(155deg, rgba(8,4,28,0.9), ${pc}25)`,
+        border: `1px solid ${pc}40`,
+        display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center",
+      }}>
+        {clubLogo && <img src={`/data/logos/${clubLogo}`} alt="" style={{ width: 28, height: 28, objectFit: "contain", opacity: 0.9 }} />}
+        <div style={{ fontSize: 7, fontWeight: 900, color: pc, marginTop: 4, letterSpacing: 0.5 }}>{slot}</div>
+        <div style={{ fontSize: 9, fontWeight: 700, color: "#fff", marginTop: 4, padding: "0 4px", textAlign: "center", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis", maxWidth: "100%" }}>
+          {p.name || p.slug || "—"}
+        </div>
+        {isCaptain && <span style={{ position: "absolute", top: 3, right: 3, width: 12, height: 12, borderRadius: "50%", background: "#FBBF24", color: "#000", fontSize: 7, fontWeight: 900, display: "flex", alignItems: "center", justifyContent: "center" }}>C</span>}
+        {p.sorare_starter_pct != null && !hasRealScore && (
+          <span style={{ position: "absolute", top: isCaptain ? 17 : 3, right: 3, fontSize: 7, fontWeight: 700, padding: "1px 3px", borderRadius: 3, color: "#fff",
+            background: p.sorare_starter_pct >= 70 ? "rgba(22,101,52,0.9)" : p.sorare_starter_pct >= 50 ? "rgba(133,77,14,0.9)" : "rgba(153,27,27,0.9)",
+          }}>{p.sorare_starter_pct}%</span>
+        )}
+        <div style={{ position: "absolute", bottom: 2, right: 4,
+          width: 28, height: 28, borderRadius: "50%",
+          display: "flex", alignItems: "center", justifyContent: "center",
+          fontFamily: "'DM Mono',monospace", fontSize: 11, fontWeight: 900,
+          color: hasRealScore ? "#fff" : dsColor(playerScore),
+          background: hasRealScore ? dsBg(playerScore) : "rgba(0,0,0,0.6)",
+          border: hasRealScore ? "none" : `1px dashed ${dsColor(playerScore)}60`,
+        }}>{playerScore}</div>
+      </div>
+      {/* Match info chip */}
+      <div style={{ marginTop: 3, padding: "2px 6px", borderRadius: 5, background: matchScore ? "rgba(15,40,30,0.5)" : "rgba(255,255,255,0.03)", border: `1px solid ${matchScore ? "rgba(74,222,128,0.25)" : "rgba(255,255,255,0.06)"}`, textAlign: "center", width: "100%" }}>
+        <div style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: 3 }}>
+          {homeLogo && <img src={`/data/logos/${homeLogo}`} alt="" style={{ width: 11, height: 11, objectFit: "contain" }} />}
+          {matchScore ? (
+            <span style={{ fontSize: 9, fontWeight: 900, color: "#4ADE80", fontFamily: "'DM Mono',monospace" }}>{matchScore}</span>
+          ) : (
+            <span style={{ fontSize: 6, color: "rgba(255,255,255,0.25)" }}>vs</span>
+          )}
+          {awayLogo && <img src={`/data/logos/${awayLogo}`} alt="" style={{ width: 11, height: 11, objectFit: "contain" }} />}
+        </div>
+        {!matchScore && dateLabel && (
+          <div style={{ fontSize: 6, fontWeight: 700, color: "#fff", fontFamily: "'DM Mono',monospace", marginTop: 1 }}>{dateLabel}</div>
+        )}
+      </div>
+    </div>
+  );
+}
+
+function TeamPitch({ team, rarity, league, players, logos, lang }) {
   const picks = team.picks || {};
-  const filled = Object.values(picks).filter(Boolean).length;
   const captain = team.captain;
+  const rarityColor = rarity === "rare" ? "#F472B6" : rarity === "limited" ? "#60A5FA" : "#C084FC";
+  const totalScore = team.score != null ? Math.round(team.score) : null;
   return (
     <div style={{
-      background: "rgba(15,15,35,0.6)", border: "1px solid rgba(255,255,255,0.08)",
-      borderRadius: 10, padding: "10px 12px", minWidth: 240, flex: "1 1 240px",
+      borderRadius: 12,
+      background: "linear-gradient(160deg, rgba(10,5,30,0.95), rgba(20,10,50,0.9))",
+      border: `1px solid ${rarityColor}25`,
+      padding: 12, minWidth: 0,
     }}>
-      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "baseline", marginBottom: 6 }}>
-        <div style={{ fontSize: 11, fontWeight: 800, color: "#E5E7EB", letterSpacing: 0.2 }}>{team.label || (lang === "fr" ? "Équipe" : "Team")}</div>
-        <div style={{ fontSize: 13, fontWeight: 800, color: dsColor(team.score || 0) }}>{formatScore(team.score)}</div>
+      {/* Header */}
+      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 10 }}>
+        <div style={{ display: "flex", alignItems: "center", gap: 6, minWidth: 0 }}>
+          <span style={{ fontSize: 12, fontWeight: 900, color: rarityColor }}>{team.label || "Team"}</span>
+          {rarity && (
+            <span style={{ fontSize: 8, fontWeight: 700, padding: "2px 5px", borderRadius: 3, border: `1px solid ${rarityColor}40`, color: rarityColor, background: `${rarityColor}10` }}>
+              {rarity === "rare" ? "RARE" : "LIMITED"}
+            </span>
+          )}
+          {league && (
+            <span style={{ fontSize: 8, fontWeight: 700, padding: "2px 5px", borderRadius: 3, border: "1px solid rgba(255,255,255,0.1)", color: "rgba(255,255,255,0.5)" }}>
+              {LEAGUE_NAMES[league] || league}
+            </span>
+          )}
+        </div>
+        {totalScore != null && (
+          <div style={{ display: "flex", alignItems: "center", gap: 4 }}>
+            <div style={{
+              width: 42, height: 42, borderRadius: "50%",
+              display: "flex", alignItems: "center", justifyContent: "center",
+              fontFamily: "'DM Mono',monospace", fontSize: 16, fontWeight: 900,
+              color: dsColor(totalScore), background: "rgba(0,0,0,0.5)",
+              border: `2px solid ${dsColor(totalScore)}`,
+              boxShadow: `0 0 10px ${dsColor(totalScore)}40`,
+            }}>{totalScore}</div>
+          </div>
+        )}
       </div>
-      <div style={{ display: "grid", gridTemplateColumns: "28px 1fr auto", rowGap: 3, fontSize: 10 }}>
-        {TEAM_SLOTS.map(slot => {
-          const p = picks[slot];
-          const isCap = captain === slot;
-          return (
-            <div key={slot} style={{ display: "contents" }}>
-              <div style={{ color: slotColor(slot), fontWeight: 800, fontSize: 9 }}>{slot}{isCap ? " ©" : ""}</div>
-              <div style={{ color: p ? "#fff" : "rgba(255,255,255,0.25)", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
-                {p ? (p.name || p.slug || "—") : "—"}
-              </div>
-              <div style={{ color: "rgba(255,255,255,0.45)", fontSize: 9 }}>{p?.dscore != null ? formatScore(p.dscore) : ""}</div>
-            </div>
-          );
-        })}
-      </div>
-      <div style={{ fontSize: 8, color: "rgba(255,255,255,0.3)", marginTop: 6 }}>
-        {filled}/5 · {rarity ? (rarity === "rare" ? (lang === "fr" ? "Rare" : "Rare") : "Limited") : ""}{league ? ` · ${LEAGUE_NAMES[league] || league}` : ""}
-      </div>
-    </div>
-  );
-}
-
-function SectionHeader({ title, count, color = "#A5B4FC" }) {
-  return (
-    <div style={{ display: "flex", alignItems: "center", gap: 10, margin: "18px 0 8px" }}>
-      <div style={{ width: 4, height: 16, background: color, borderRadius: 2 }} />
-      <div style={{ fontSize: 14, fontWeight: 800, color: "#fff", letterSpacing: 0.3 }}>{title}</div>
-      <div style={{ fontSize: 10, color: "rgba(255,255,255,0.4)", fontWeight: 700 }}>{count} {count === 1 ? "team" : "teams"}</div>
-    </div>
-  );
-}
-
-function LeagueRow({ league, gwBuckets, rarity, lang }) {
-  const gwKeys = Object.keys(gwBuckets).sort().reverse();
-  if (gwKeys.length === 0) return null;
-  const latest = gwKeys[0];
-  const teams = gwBuckets[latest] || [];
-  if (teams.length === 0) return null;
-  const color = LEAGUE_COLORS[league] || "#A5B4FC";
-  const flag = LEAGUE_FLAG_CODES[league];
-  return (
-    <div style={{ marginBottom: 10 }}>
-      <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 6 }}>
-        {flag && <img src={`https://flagcdn.com/w20/${flag}.png`} alt="" style={{ width: 18, height: 12, objectFit: "cover", borderRadius: 2, boxShadow: "0 0 2px rgba(0,0,0,0.4)" }} />}
-        <div style={{ fontSize: 12, fontWeight: 800, color }}>{LEAGUE_NAMES[league] || league}</div>
-        <div style={{ fontSize: 9, color: "rgba(255,255,255,0.35)" }}>{latest} · {teams.length} {lang === "fr" ? "équipe" + (teams.length > 1 ? "s" : "") : "team" + (teams.length > 1 ? "s" : "")}</div>
-      </div>
-      <div style={{ display: "flex", flexWrap: "wrap", gap: 8 }}>
-        {teams.map(team => <TeamCard key={team.id} team={team} rarity={rarity} league={league} lang={lang} />)}
+      {/* Pitch layout */}
+      <div style={{ display: "flex", flexDirection: "column", gap: 6, alignItems: "center" }}>
+        <div style={{ display: "flex", gap: 6, justifyContent: "center", width: "100%" }}>
+          <PitchCard pick={picks.ATT} slot="ATT" isCaptain={captain === "ATT"} players={players} logos={logos} />
+          <PitchCard pick={picks.FLEX} slot="FLEX" isCaptain={captain === "FLEX"} players={players} logos={logos} />
+        </div>
+        <div style={{ display: "flex", gap: 6, justifyContent: "center", width: "100%" }}>
+          <PitchCard pick={picks.DEF} slot="DEF" isCaptain={captain === "DEF"} players={players} logos={logos} />
+          <PitchCard pick={picks.GK} slot="GK" isCaptain={captain === "GK"} players={players} logos={logos} />
+          <PitchCard pick={picks.MIL} slot="MIL" isCaptain={captain === "MIL"} players={players} logos={logos} />
+        </div>
       </div>
     </div>
   );
 }
 
-export default function RecapTab({ lang }) {
+function RecapTabInner({ players, logos, lang }) {
   const [store, setStore] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [filter, setFilter] = useState("all"); // "all" | "L1" | "PL" | "Liga" | "Bundes" | "MLS" | "stellar"
 
   useEffect(() => {
     let cancelled = false;
@@ -104,25 +202,37 @@ export default function RecapTab({ lang }) {
   const aggregates = useMemo(() => {
     if (!store) return null;
     const d = store.data || {};
-    const countTeams = (obj) => {
+    const count = (obj) => {
       let c = 0, sum = 0;
       Object.values(obj || {}).forEach(leagueBuckets => {
         Object.values(leagueBuckets || {}).forEach(list => {
-          list.forEach(t => { c++; if (t.score != null) sum += Number(t.score) || 0; });
+          if (!Array.isArray(list)) return;
+          list.forEach(t => { c++; if (t && t.score != null) sum += Number(t.score) || 0; });
         });
       });
       return { count: c, total: sum };
     };
-    const limited = countTeams(d.proLimited);
-    const rare = countTeams(d.proRare);
+    const limited = count(d.proLimited);
+    const rare = count(d.proRare);
     let stellarCount = 0, stellarTotal = 0;
     Object.values(d.stellar || {}).forEach(list => {
-      list.forEach(t => { stellarCount++; if (t.score != null) stellarTotal += Number(t.score) || 0; });
+      if (!Array.isArray(list)) return;
+      list.forEach(t => { stellarCount++; if (t && t.score != null) stellarTotal += Number(t.score) || 0; });
+    });
+    // Par ligue
+    const perLeague = {};
+    PRO_LEAGUES.forEach(l => {
+      let c = 0;
+      Object.values(d.proLimited?.[l] || {}).forEach(list => { if (Array.isArray(list)) c += list.length; });
+      Object.values(d.proRare?.[l] || {}).forEach(list => { if (Array.isArray(list)) c += list.length; });
+      perLeague[l] = c;
     });
     return {
-      limited, rare, stellar: { count: stellarCount, total: stellarTotal },
+      limited, rare,
+      stellar: { count: stellarCount, total: stellarTotal },
       grandCount: limited.count + rare.count + stellarCount,
       grandTotal: limited.total + rare.total + stellarTotal,
+      perLeague,
     };
   }, [store]);
 
@@ -145,15 +255,45 @@ export default function RecapTab({ lang }) {
     );
   }
   if (error === "fetch_failed" || !store) {
-    return (
-      <div style={{ padding: 40, textAlign: "center", color: "#F87171", fontFamily: "Outfit" }}>
-        {lang === "fr" ? "Impossible de charger le cloud." : "Cloud unavailable."}
-      </div>
-    );
+    return <div style={{ padding: 40, textAlign: "center", color: "#F87171", fontFamily: "Outfit" }}>{lang === "fr" ? "Impossible de charger le cloud." : "Cloud unavailable."}</div>;
   }
 
   const d = store.data || {};
   const hasAny = aggregates && aggregates.grandCount > 0;
+
+  // Aplatit les teams selon le filter
+  const flat = [];
+  const addLeagueTeams = (leagueKey) => {
+    ["proLimited", "proRare"].forEach(bucket => {
+      const rarity = bucket === "proRare" ? "rare" : "limited";
+      const buckets = d[bucket]?.[leagueKey] || {};
+      Object.keys(buckets).sort().reverse().forEach(gwKey => {
+        const list = buckets[gwKey];
+        if (!Array.isArray(list)) return;
+        list.forEach(team => { if (team) flat.push({ team, rarity, league: leagueKey, gwKey }); });
+      });
+    });
+  };
+  if (filter === "all") {
+    PRO_LEAGUES.forEach(addLeagueTeams);
+  } else if (filter === "stellar") {
+    Object.keys(d.stellar || {}).sort().reverse().forEach(dateStr => {
+      const list = d.stellar[dateStr];
+      if (!Array.isArray(list)) return;
+      list.forEach(team => { if (team) flat.push({ team, rarity: null, league: null, dateStr, scope: "stellar" }); });
+    });
+  } else {
+    addLeagueTeams(filter);
+  }
+
+  const chipStyle = (active, accent) => ({
+    padding: "6px 12px", borderRadius: 8, fontSize: 11, fontWeight: 800, fontFamily: "Outfit",
+    cursor: "pointer", border: "1px solid " + (active ? accent + "60" : "rgba(255,255,255,0.08)"),
+    background: active ? accent + "18" : "rgba(255,255,255,0.02)",
+    color: active ? accent : "rgba(255,255,255,0.45)",
+    display: "inline-flex", alignItems: "center", gap: 5, whiteSpace: "nowrap",
+    transition: "all 0.15s",
+  });
 
   return (
     <div style={{ maxWidth: 1400, margin: "0 auto", padding: "12px 16px", fontFamily: "Outfit" }}>
@@ -173,7 +313,7 @@ export default function RecapTab({ lang }) {
           </div>
         </div>
         {aggregates && (
-          <div style={{ display: "flex", gap: 14, fontFamily: "Outfit" }}>
+          <div style={{ display: "flex", gap: 14 }}>
             <div style={{ textAlign: "center", minWidth: 70 }}>
               <div style={{ fontSize: 22, fontWeight: 900, color: "#fff" }}>{aggregates.grandCount}</div>
               <div style={{ fontSize: 9, color: "rgba(255,255,255,0.45)", letterSpacing: 1 }}>{lang === "fr" ? "ÉQUIPES" : "TEAMS"}</div>
@@ -186,7 +326,7 @@ export default function RecapTab({ lang }) {
             </div>
             <div style={{ textAlign: "center", minWidth: 90 }}>
               <div style={{ fontSize: 22, fontWeight: 900, color: "#E9D5FF" }}>{formatScore(aggregates.grandTotal)}</div>
-              <div style={{ fontSize: 9, color: "rgba(255,255,255,0.45)", letterSpacing: 1 }}>{lang === "fr" ? "TOTAL" : "TOTAL"}</div>
+              <div style={{ fontSize: 9, color: "rgba(255,255,255,0.45)", letterSpacing: 1 }}>TOTAL</div>
             </div>
           </div>
         )}
@@ -206,49 +346,68 @@ export default function RecapTab({ lang }) {
 
       {hasAny && (
         <>
-          {/* Pro Limited */}
-          {aggregates.limited.count > 0 && (
-            <>
-              <SectionHeader title={`Pro Limited · ${lang === "fr" ? "5 ligues" : "5 leagues"}`} count={aggregates.limited.count} color="#60A5FA" />
-              {PRO_LEAGUES.map(l => (
-                <LeagueRow key={l} league={l} gwBuckets={d.proLimited?.[l] || {}} rarity="limited" lang={lang} />
+          {/* Sub-tabs par ligue */}
+          <div style={{ display: "flex", flexWrap: "wrap", gap: 6, marginTop: 16, marginBottom: 14 }}>
+            <button onClick={() => setFilter("all")} style={chipStyle(filter === "all", "#A5B4FC")}>
+              {lang === "fr" ? "Tous" : "All"}
+              <span style={{ fontSize: 9, opacity: 0.7 }}>{aggregates.limited.count + aggregates.rare.count}</span>
+            </button>
+            {PRO_LEAGUES.map(l => {
+              const accent = LEAGUE_COLORS[l] || "#A5B4FC";
+              const flag = LEAGUE_FLAG_CODES[l];
+              const n = aggregates.perLeague[l] || 0;
+              return (
+                <button key={l} onClick={() => setFilter(l)} style={chipStyle(filter === l, accent)} disabled={n === 0}>
+                  {flag && <img src={`https://flagcdn.com/w20/${flag}.png`} alt="" style={{ width: 14, height: 10, objectFit: "cover", borderRadius: 2 }} />}
+                  {LEAGUE_NAMES[l] || l}
+                  <span style={{ fontSize: 9, opacity: 0.7 }}>{n}</span>
+                </button>
+              );
+            })}
+            <button onClick={() => setFilter("stellar")} style={chipStyle(filter === "stellar", "#C084FC")} disabled={aggregates.stellar.count === 0}>
+              ✨ Stellar
+              <span style={{ fontSize: 9, opacity: 0.7 }}>{aggregates.stellar.count}</span>
+            </button>
+          </div>
+
+          {/* Grid 2 par 2 */}
+          {flat.length === 0 ? (
+            <div style={{ padding: 30, textAlign: "center", color: "rgba(255,255,255,0.35)", fontSize: 11 }}>
+              {lang === "fr" ? "Aucune équipe dans cette sélection." : "No team in this selection."}
+            </div>
+          ) : (
+            <div className="recap-grid" style={{
+              display: "grid", gridTemplateColumns: "repeat(2, 1fr)", gap: 12,
+            }}>
+              {flat.map((item, i) => (
+                <TeamPitch
+                  key={`${item.team.id}-${i}`}
+                  team={item.team}
+                  rarity={item.rarity}
+                  league={item.league}
+                  players={players}
+                  logos={logos}
+                  lang={lang}
+                />
               ))}
-            </>
+            </div>
           )}
 
-          {/* Pro Rare */}
-          {aggregates.rare.count > 0 && (
-            <>
-              <SectionHeader title={`Pro Rare · ${lang === "fr" ? "5 ligues" : "5 leagues"}`} count={aggregates.rare.count} color="#F472B6" />
-              {PRO_LEAGUES.map(l => (
-                <LeagueRow key={l} league={l} gwBuckets={d.proRare?.[l] || {}} rarity="rare" lang={lang} />
-              ))}
-            </>
-          )}
-
-          {/* Stellar */}
-          {aggregates.stellar.count > 0 && (
-            <>
-              <SectionHeader title="Stellar" count={aggregates.stellar.count} color="#C084FC" />
-              {Object.keys(d.stellar || {}).sort().reverse().map(dateStr => {
-                const teams = d.stellar[dateStr] || [];
-                if (teams.length === 0) return null;
-                return (
-                  <div key={dateStr} style={{ marginBottom: 10 }}>
-                    <div style={{ fontSize: 11, fontWeight: 700, color: "#C4B5FD", marginBottom: 6 }}>
-                      {new Date(dateStr).toLocaleDateString(lang === "fr" ? "fr-FR" : "en-US", { weekday: "long", day: "numeric", month: "long" })}
-                      <span style={{ color: "rgba(255,255,255,0.35)", fontWeight: 500, marginLeft: 8 }}>· {teams.length} {teams.length > 1 ? (lang === "fr" ? "équipes" : "teams") : (lang === "fr" ? "équipe" : "team")}</span>
-                    </div>
-                    <div style={{ display: "flex", flexWrap: "wrap", gap: 8 }}>
-                      {teams.map(team => <TeamCard key={team.id} team={team} rarity={null} league={null} lang={lang} />)}
-                    </div>
-                  </div>
-                );
-              })}
-            </>
-          )}
+          <style>{`
+            @media (max-width: 900px) {
+              .recap-grid { grid-template-columns: 1fr !important; }
+            }
+          `}</style>
         </>
       )}
     </div>
+  );
+}
+
+export default function RecapTab(props) {
+  return (
+    <RecapErrorBoundary>
+      <RecapTabInner {...props} />
+    </RecapErrorBoundary>
   );
 }

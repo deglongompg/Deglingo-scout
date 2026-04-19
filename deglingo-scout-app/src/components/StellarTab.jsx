@@ -1451,7 +1451,7 @@ export default function StellarTab({ players, teams, fixtures, logos = {}, match
           <div className="st-main-layout" style={{ display: "flex", gap: 16, alignItems: "flex-start" }}>
 
           {/* Colonne gauche — Date + Matchs */}
-          <div style={{ flexShrink: 0, transition: "all 0.25s" }}>
+          <div style={{ width: leftCollapsed ? 30 : 280, flexShrink: 0, transition: "width 0.25s" }}>
 
             {/* Titre du jour */}
             <div style={{ marginBottom: 8 }}>

@@ -1841,7 +1841,7 @@ export default function StellarTab({ players, teams, fixtures, logos = {}, match
                 )}
 
                 {/* ── Corps : PITCH gauche + DATABASE droite — centre sur grand ecran pour eviter l'espace mort ── */}
-                <div style={{ display: "flex", height: 600, minHeight: 0, overflow: "hidden", justifyContent: "center" }}>
+                <div style={{ display: "flex", height: 520, minHeight: 0, overflow: "hidden", justifyContent: "center" }}>
 
                   {/* ══ COLONNE GAUCHE : Sélection équipe ══ */}
                   <div style={{ width: 370, flexShrink: 0, display: "flex", flexDirection: "column", borderRight: "1px solid rgba(255,255,255,0.06)", background: "rgba(0,0,0,0.15)" }}>

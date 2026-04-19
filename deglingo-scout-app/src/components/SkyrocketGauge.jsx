@@ -323,12 +323,26 @@ export default function SkyrocketGauge({ score = 0, projectedScore = null, initi
           const rewardColor = isTopReward && topRewardColor ? topRewardColor : "rgba(255,255,255,0.28)";
           const rewardWeight = isTopReward && topRewardColor ? 900 : 800;
           const rewardShadow = isTopReward && topRewardColor ? `0 0 6px ${topRewardColor}, 0 0 3px rgba(0,0,0,0.7)` : "0 0 3px rgba(0,0,0,0.6)";
+          // Parse reward string : detecte essence / gems / $ pour afficher icone + nombre
+          const rewardStr = p.reward.toLowerCase();
+          let icon = null;
+          let text = p.reward;
+          if (rewardStr.includes("essence")) {
+            icon = "/essence.png";
+            text = p.reward.replace(/essences?/i, "").trim();
+          } else if (rewardStr.includes("gem")) {
+            icon = "/gem.png";
+            text = p.reward.replace(/gems?/i, "").trim();
+          } else if (rewardStr.includes("shard")) {
+            icon = "/shard-stellar.png";
+            text = p.reward.replace(/shards?/i, "").trim();
+          }
           return (
             <div key={p.pts + "_reward"} style={{
               position: "absolute", left: 0, right: 0,
               bottom: `${midPos}%`,
               transform: "translateY(50%)",
-              textAlign: "center",
+              display: "flex", alignItems: "center", justifyContent: "center", gap: 3,
               fontSize: isTopReward && topRewardColor ? 10 : 8,
               fontWeight: rewardWeight,
               color: rewardColor,
@@ -337,7 +351,11 @@ export default function SkyrocketGauge({ score = 0, projectedScore = null, initi
               pointerEvents: "none",
               zIndex: 1,
               textShadow: rewardShadow,
-            }}>{p.reward}</div>
+              opacity: isTopReward && topRewardColor ? 1 : 0.55,
+            }}>
+              {icon && <img src={icon} alt="" style={{ width: 11, height: 11, objectFit: "contain", filter: "drop-shadow(0 0 2px rgba(0,0,0,0.8))" }} />}
+              <span>{text}</span>
+            </div>
           );
         })}
 

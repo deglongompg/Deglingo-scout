@@ -159,6 +159,11 @@ const starsKeyframes = `
 @keyframes silverShine { 0%{background-position:0% 50%} 100%{background-position:200% 50%} }
 @keyframes spin { 0%{transform:rotate(0deg)} 100%{transform:rotate(360deg)} }
 @keyframes loadBar { 0%{transform:translateX(-100%)} 50%{transform:translateX(60%)} 100%{transform:translateX(200%)} }
+/* Auto-zoom selon la taille d'ecran — evite de passer en 125% manuellement sur grand ecran */
+@media (min-width: 1600px) { .st-root { zoom: 1.10; } }
+@media (min-width: 1920px) { .st-root { zoom: 1.20; } }
+@media (min-width: 2400px) { .st-root { zoom: 1.35; } }
+@media (min-width: 3000px) { .st-root { zoom: 1.55; } }
 @media(max-width:768px){
   .st-root { padding: 0 8px 40px !important; }
   .st-info-row { flex-direction: row !important; flex-wrap: nowrap !important; gap: 6px !important; padding: 8px 0 8px !important; align-items: stretch !important; }
@@ -633,9 +638,22 @@ export default function StellarTab({ players, teams, fixtures, logos = {}, match
   const [leftCollapsed, setLeftCollapsed] = useState(false);
 
   // ── OAuth Sorare — cartes réelles de l'utilisateur ───────────────────────
-  const [sorareConnected, setSorareConnected] = useState(false);
-  const [sorareCards, setSorareCards] = useState([]); // { playerSlug, rarity, pictureUrl, cardSlug, cardEditionName, power }
-  const [sorareUser, setSorareUser] = useState(null);
+  // Optimistic init : si un token existe, on considere l'user connecte le temps que le fetch silencieux confirme.
+  // Cache cards en sessionStorage pour eviter un reload complet a chaque switch de tab.
+  const _initialToken = typeof window !== "undefined" ? localStorage.getItem("sorare_access_token") : null;
+  const _cachedCards = (() => {
+    try {
+      const raw = sessionStorage.getItem("sorare_cards_cache");
+      if (!raw) return null;
+      const { cards, ts, user } = JSON.parse(raw);
+      // TTL 10 min
+      if (Date.now() - ts < 10 * 60 * 1000) return { cards, user };
+    } catch {}
+    return null;
+  })();
+  const [sorareConnected, setSorareConnected] = useState(!!_initialToken);
+  const [sorareCards, setSorareCards] = useState(_cachedCards?.cards || []); // { playerSlug, rarity, pictureUrl, cardSlug, cardEditionName, power }
+  const [sorareUser, setSorareUser] = useState(_cachedCards?.user || null);
   const [sorareLoading, setSorareLoading] = useState(false);
   const [sorareLoadProgress, setSorareLoadProgress] = useState(0); // 0-100 loading bar
   const [myCardsMode, setMyCardsMode] = useState(false); // vue "Mes cartes" uniquement
@@ -688,8 +706,17 @@ export default function StellarTab({ players, teams, fixtures, logos = {}, match
     }
 
     // Vérifier silencieusement si déjà connecté (token dans localStorage)
+    // Skip le fetch si le cache sessionStorage est frais (<10 min) — evite le reload a chaque switch de tab
     const savedToken = localStorage.getItem("sorare_access_token");
-    if (savedToken) fetchSorareCards(savedToken, true);
+    if (!savedToken) return;
+    try {
+      const raw = sessionStorage.getItem("sorare_cards_cache");
+      if (raw) {
+        const { ts } = JSON.parse(raw);
+        if (Date.now() - ts < 10 * 60 * 1000) return; // cache frais, pas besoin de refetch
+      }
+    } catch {}
+    fetchSorareCards(savedToken, true);
   }, []);
 
   const fetchSorareCards = async (token, silent = false) => {
@@ -702,6 +729,7 @@ export default function StellarTab({ players, teams, fixtures, logos = {}, match
       if (!silent) setSorareLoadProgress(40);
       if (res.status === 401) {
         localStorage.removeItem("sorare_access_token");
+        sessionStorage.removeItem("sorare_cards_cache");
         setSorareConnected(false); setSorareCards([]);
         return;
       }
@@ -735,7 +763,13 @@ export default function StellarTab({ players, teams, fixtures, logos = {}, match
       if (!silent) setSorareLoadProgress(90);
       setSorareCards(cards);
       setSorareConnected(true);
-      setMyCardsMode(true); // Auto switch to "Mes cartes" après connexion
+      if (!silent) setMyCardsMode(true); // Auto switch "Mes cartes" seulement lors d'une connexion explicite (pas silent)
+      // Cache pour eviter refetch complet a chaque switch de tab
+      try {
+        sessionStorage.setItem("sorare_cards_cache", JSON.stringify({
+          cards, user: { slug: user.slug, nickname: user.nickname }, ts: Date.now(),
+        }));
+      } catch {}
     } catch {
       setSorareConnected(false);
     } finally {
@@ -757,6 +791,7 @@ export default function StellarTab({ players, teams, fixtures, logos = {}, match
 
   const disconnectSorare = () => {
     localStorage.removeItem("sorare_access_token");
+    sessionStorage.removeItem("sorare_cards_cache");
     setSorareConnected(false);
     setSorareCards([]);
     setSorareUser(null);
@@ -1240,7 +1275,7 @@ export default function StellarTab({ players, teams, fixtures, logos = {}, match
   const weekLabel = `${fmtDate(weekDays[0])} — ${fmtDate(weekDays[6])}`;
 
   return (
-    <div className="st-root" style={{ position: "relative", minHeight: "80vh", padding: "0 16px 40px", zIndex: 1, maxWidth: 1800, margin: "0 auto" }}>
+    <div className="st-root" style={{ position: "relative", minHeight: "80vh", padding: "0 16px 40px", zIndex: 1, width: "100%" }}>
       <style>{starsKeyframes}</style>
 
 {/* Loading popup supprimé ici — il est dans le bloc Mon Equipe (position: relative overlay) */}
@@ -1683,6 +1718,7 @@ export default function StellarTab({ players, teams, fixtures, logos = {}, match
             // Score total ajusté + bonus capitaine (highest ds)
             const scores = pickedPlayers.map(p => getAdjDs(p));
             const capDs = scores.length === 5 ? Math.max(...scores) : 0;
+            const hasManualCaptain = Object.values(myPicks).some(pp => pp && pp.isCaptain);
             const totalAdj = Math.round(scores.reduce((s, v) => s + v, 0) + capDs * 0.5);
             const palier = PALIERS.filter(p => totalAdj >= p.pts).pop();
             const dayPool = [...(dayData?.players || [])].sort((a, b) => getAdjDs(b) - getAdjDs(a));
@@ -1804,8 +1840,8 @@ export default function StellarTab({ players, teams, fixtures, logos = {}, match
                   </div>
                 )}
 
-                {/* ── Corps : PITCH gauche + DATABASE droite ── */}
-                <div style={{ display: "flex", flex: 1, minHeight: 0, overflow: "hidden" }}>
+                {/* ── Corps : PITCH gauche + DATABASE droite — centre sur grand ecran pour eviter l'espace mort ── */}
+                <div style={{ display: "flex", flex: 1, minHeight: 0, overflow: "hidden", justifyContent: "center" }}>
 
                   {/* ══ COLONNE GAUCHE : Sélection équipe ══ */}
                   <div style={{ width: 370, flexShrink: 0, display: "flex", flexDirection: "column", borderRight: "1px solid rgba(255,255,255,0.06)", background: "rgba(0,0,0,0.15)" }}>
@@ -1871,7 +1907,8 @@ export default function StellarTab({ players, teams, fixtures, logos = {}, match
                             const p = myPicks[slot];
                             const sc = POS_SLOT_COLORS[slot];
                             const adjDs = p ? getAdjDs(p) : 0;
-                            const isCap = p && scores.length === 5 && adjDs === capDs;
+                            // Captain : respecte le flag manuel si user a clique le C, sinon auto (plus gros score)
+                            const isCap = p && (hasManualCaptain ? !!p.isCaptain : (scores.length === 5 && adjDs === capDs));
                             const isActive = selectedSlot === slot;
                             // Vraie carte Sorare si connecté
                             const sorareCard = p ? sorareCardMap[p.slug] : null;
@@ -2140,8 +2177,8 @@ export default function StellarTab({ players, teams, fixtures, logos = {}, match
                             );
                           })}
                         </div>
-                        {/* Rows — 15 lignes, flex: 1 chacune = hauteur exacte = panel gauche */}
-                        <div style={{ overflowY: "auto", flex: 1, minHeight: 0 }}>
+                        {/* Rows — 11 visibles max (~meme hauteur que pick zone), scroll pour le reste */}
+                        <div style={{ overflowY: "auto", flex: 1, minHeight: 0, maxHeight: "calc(11 * 34px + 4px)" }}>
                           <div style={{ minWidth: "max-content" }}>
                           {sortedPool.map(p => {
                             const slug = p.slug || p.name;
@@ -2291,17 +2328,15 @@ export default function StellarTab({ players, teams, fixtures, logos = {}, match
           })()}
 
           {/* Decisive Pick déplacé dans la colonne gauche */}
-          </div>{/* fin colonne droite */}
-          </div>{/* fin layout flex */}
 
-          {/* ── RECAP EQUIPES SAUVEGARDEES — aligne plein largeur avec le container du dessus ── */}
+          {/* ── RECAP EQUIPES SAUVEGARDEES — DANS la colonne droite, pile largeur du pick zone ── */}
           {savedTeams.length > 0 && (
             <div style={{ marginTop: 16, width: "100%" }}>
               <div style={{ fontSize: 10, fontWeight: 800, color: "rgba(196,181,253,0.5)", letterSpacing: "0.12em", textTransform: "uppercase", marginBottom: 8 }}>
                 {lang === "fr" ? "MES EQUIPES SAUVEGARDEES" : "MY SAVED TEAMS"}
               </div>
-              {/* 2 equipes par ligne, chaque box remplit pile la moitie de la largeur dispo */}
-              <div style={{ display: "grid", gridTemplateColumns: "repeat(2, minmax(0, 1fr))", gap: 10 }}>
+              {/* Grid responsive : box 480px fixe, wrap naturel (1 col petit ecran, 2 cols medium, 3 cols large) */}
+              <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(460px, 480px))", gap: 10, justifyContent: "flex-start" }}>
                 {savedTeams.map((st, si) => {
                   const POS_ORDER = ["GK","DEF","MIL","ATT","FLEX"];
                   // Score dynamique : vrai SO5 si match joue, sinon D-Score predit ajuste
@@ -2327,9 +2362,10 @@ export default function StellarTab({ players, teams, fixtures, logos = {}, match
                     }
                     return { p, rawScore, postBonus, isLive };
                   });
-                  // Captain = celui designe par l'user, sinon le meilleur post-bonus
-                  let captainData = null;
-                  if (st.captain && st.picks[st.captain]) {
+                  // Captain = celui marque isCaptain dans les picks, sinon le meilleur post-bonus
+                  let captainData = playerData.find(x => x.p.isCaptain);
+                  if (!captainData && st.captain && st.picks[st.captain]) {
+                    // Fallback legacy : st.captain = slot name
                     captainData = playerData.find(x => (x.p.slug || x.p.name) === (st.picks[st.captain].slug || st.picks[st.captain].name));
                   }
                   if (!captainData && playerData.length === 5) {
@@ -2389,6 +2425,19 @@ export default function StellarTab({ players, teams, fixtures, logos = {}, match
                             <span style={{ position: "absolute", top: 2, right: 2, fontSize: 7, fontWeight: 700, padding: "1px 3px", borderRadius: 3, color: "#fff", zIndex: 2,
                               background: p.sorare_starter_pct >= 70 ? "rgba(22,101,52,0.9)" : p.sorare_starter_pct >= 50 ? "rgba(133,77,14,0.9)" : "rgba(153,27,27,0.9)",
                             }}>{p.sorare_starter_pct}%</span>
+                          )}
+                          {/* Badge Capitaine — pastille rouge rose avec C (style Sorare officiel) */}
+                          {p.isCaptain && (
+                            <span style={{
+                              position: "absolute", top: 3, left: 3, zIndex: 3,
+                              width: 16, height: 16, borderRadius: "50%",
+                              background: "linear-gradient(135deg, #F472B6, #E11D48)",
+                              color: "#fff", fontSize: 9, fontWeight: 900,
+                              display: "flex", alignItems: "center", justifyContent: "center",
+                              fontFamily: "'Outfit', sans-serif",
+                              boxShadow: "0 0 8px rgba(225,29,72,0.7), 0 0 2px rgba(0,0,0,0.6)",
+                              border: "1px solid rgba(255,255,255,0.9)",
+                            }}>C</span>
                           )}
                           {ownedCard && ownedCard.totalBonus > 0 && (
                             <span style={{ position: "absolute", bottom: 34, right: 4, fontSize: 8, fontWeight: 900, color: "#4ADE80", background: "rgba(0,0,0,0.7)", borderRadius: 3, padding: "1px 4px", zIndex: 3 }}>+{ownedCard.totalBonus}%</span>
@@ -2450,13 +2499,15 @@ export default function StellarTab({ players, teams, fixtures, logos = {}, match
                         </div>
                       </div>
                       {/* Skyrocket Gauge a droite — LIVE + projection + initial (snapshot save) */}
-                      <SkyrocketGauge score={stTotalLive} projectedScore={stTotalProjected} initialScore={st.score} paliers={PALIERS} scaleMode="linear" />
+                      <SkyrocketGauge score={stTotalLive} projectedScore={stTotalProjected} initialScore={st.score} paliers={PALIERS} scaleMode="linear" showRewards={true} topRewardColor="#E5E7EB" />
                     </div>
                   );
                 })}
               </div>
             </div>
           )}
+          </div>{/* fin colonne droite */}
+          </div>{/* fin layout flex */}
 
           {/* ── BOUTON FIGHT ── */}
           <div style={{ marginTop: 24, textAlign: "center" }}>

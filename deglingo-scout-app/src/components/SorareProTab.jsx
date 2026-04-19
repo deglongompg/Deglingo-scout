@@ -363,14 +363,15 @@ export default function SorareProTab({ players, teams, fixtures, logos = {}, mat
     return Math.round((p.ds || 0) * card.power);
   };
   // getFullScore : score final d'un joueur
-  // Formule Sorare officielle : (raw × power) + (capitaine ? raw × 0.5 : 0)
-  // Le bonus capitaine est calcule sur le RAW, pas sur le post-bonus.
+  // Formule Sorare officielle : post-bonus + (capitaine ? post-bonus × 0.5 : 0)
+  // Le bonus capitaine est calcule sur le POST-BONUS (confirme par comparaison score reel Sorare).
   const getFullScore = (p, isCap) => {
     const card = getCard(p);
     const base = p.ds || 0;
     const power = (bonusEnabled && card?.power && card.power > 1) ? card.power : 1;
-    const captainBonus = isCap ? base * 0.5 : 0;
-    return base * power + captainBonus;
+    const postBonus = base * power;
+    const captainBonus = isCap ? postBonus * 0.5 : 0;
+    return postBonus + captainBonus;
   };
   // getPowerPct : bonus % de la carte (pour affichage badge)
   const getPowerPct = (p) => {
@@ -1513,8 +1514,9 @@ export default function SorareProTab({ players, teams, fixtures, logos = {}, mat
                 const card = getCard(p);
                 const power = (card?.power && card.power > 1) ? card.power : 1;
                 if (fresh && fresh.last_so5_date === p.matchDate && fresh.last_so5_score != null) {
-                  const captainBonus = isCap ? fresh.last_so5_score * 0.5 : 0;
-                  return { full: fresh.last_so5_score * power + captainBonus, isLive: true };
+                  const postBonus = fresh.last_so5_score * power;
+                  const captainBonus = isCap ? postBonus * 0.5 : 0;
+                  return { full: postBonus + captainBonus, isLive: true };
                 }
                 return { full: getFullScore(p, isCap), isLive: false };
               };
@@ -1554,7 +1556,10 @@ export default function SorareProTab({ players, teams, fixtures, logos = {}, mat
                 const hasRealScore = p.last_so5_date && p.matchDate && p.last_so5_date === p.matchDate && p.last_so5_score != null;
                 const rawRealScore = hasRealScore ? p.last_so5_score : null;
                 const playerScore = hasRealScore ? Math.round(rawRealScore) : Math.round(p.ds || 0);
-                const captainBonusPts = isCap ? Math.round((hasRealScore ? rawRealScore : (p.ds || 0)) * 0.5) : 0;
+                // Captain bonus = POST-BONUS × 0.5 (formule Sorare officielle)
+                const capBase = hasRealScore ? rawRealScore : (p.ds || 0);
+                const capCardPower = getCard(p)?.power && getCard(p).power > 1 ? getCard(p).power : 1;
+                const captainBonusPts = isCap ? Math.round(capBase * (bonusEnabled ? capCardPower : 1) * 0.5) : 0;
                 // Score du match si joue : ordre HOME - AWAY (reel)
                 const matchScore = hasRealScore && p.last_match_home_goals != null && p.last_match_away_goals != null
                   ? `${p.last_match_home_goals} - ${p.last_match_away_goals}`

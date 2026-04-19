@@ -238,14 +238,35 @@ export default function SkyrocketGauge({ score = 0, projectedScore = null, initi
             position: "absolute", left: "65%", bottom: 0, width: 3, height: 3, borderRadius: "50%",
             background: `radial-gradient(circle, ${palette.top} 0%, transparent 70%)`,
             animation: "skrBubbleRise 6s ease-in infinite",
-            animationDelay: "1.8s",
+            animationDelay: "1.2s",
             pointerEvents: "none",
           }} />
           <div style={{
             position: "absolute", left: "45%", bottom: 0, width: 2, height: 2, borderRadius: "50%",
             background: `radial-gradient(circle, ${palette.top} 0%, transparent 70%)`,
             animation: "skrBubbleRise 4.5s ease-in infinite",
-            animationDelay: "3s",
+            animationDelay: "2.2s",
+            pointerEvents: "none",
+          }} />
+          <div style={{
+            position: "absolute", left: "78%", bottom: 0, width: 3, height: 3, borderRadius: "50%",
+            background: `radial-gradient(circle, ${palette.top} 0%, transparent 70%)`,
+            animation: "skrBubbleRise 5.5s ease-in infinite",
+            animationDelay: "0.6s",
+            pointerEvents: "none",
+          }} />
+          <div style={{
+            position: "absolute", left: "15%", bottom: 0, width: 2, height: 2, borderRadius: "50%",
+            background: `radial-gradient(circle, ${palette.top} 0%, transparent 70%)`,
+            animation: "skrBubbleRise 4s ease-in infinite",
+            animationDelay: "3.2s",
+            pointerEvents: "none",
+          }} />
+          <div style={{
+            position: "absolute", left: "55%", bottom: 0, width: 2.5, height: 2.5, borderRadius: "50%",
+            background: `radial-gradient(circle, ${palette.top} 0%, transparent 70%)`,
+            animation: "skrBubbleRise 5.8s ease-in infinite",
+            animationDelay: "4s",
             pointerEvents: "none",
           }} />
         </div>

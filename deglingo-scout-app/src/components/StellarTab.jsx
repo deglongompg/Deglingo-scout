@@ -2294,14 +2294,14 @@ export default function StellarTab({ players, teams, fixtures, logos = {}, match
           </div>{/* fin colonne droite */}
           </div>{/* fin layout flex */}
 
-          {/* ── RECAP EQUIPES SAUVEGARDEES — calé à droite (pas dans la colonne calendrier) ── */}
+          {/* ── RECAP EQUIPES SAUVEGARDEES — aligne plein largeur avec le container du dessus ── */}
           {savedTeams.length > 0 && (
-            <div style={{ marginTop: 16, marginLeft: "auto", width: "calc(100% - 300px)" }}>
+            <div style={{ marginTop: 16, width: "100%" }}>
               <div style={{ fontSize: 10, fontWeight: 800, color: "rgba(196,181,253,0.5)", letterSpacing: "0.12em", textTransform: "uppercase", marginBottom: 8 }}>
                 {lang === "fr" ? "MES EQUIPES SAUVEGARDEES" : "MY SAVED TEAMS"}
               </div>
-              {/* Largeur fixe compacte 480px par box pour share X / capture */}
-              <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, 480px)", gap: 10 }}>
+              {/* 2 equipes par ligne, chaque box remplit pile la moitie de la largeur dispo */}
+              <div style={{ display: "grid", gridTemplateColumns: "repeat(2, minmax(0, 1fr))", gap: 10 }}>
                 {savedTeams.map((st, si) => {
                   const POS_ORDER = ["GK","DEF","MIL","ATT","FLEX"];
                   // Score dynamique : vrai SO5 si match joue, sinon D-Score predit ajuste
@@ -2310,7 +2310,11 @@ export default function StellarTab({ players, teams, fixtures, logos = {}, match
                   const playerData = stPlayers.map(p => {
                     const fresh = players.find(pl => pl.slug === p.slug);
                     const ownedCard = sorareCardMap[p.slug || p.name];
-                    const bonusMult = (ownedCard && ownedCard.totalBonus > 0) ? (1 + ownedCard.totalBonus / 100) : 1;
+                    // Bonus TOUJOURS applique dans la jauge (totalBonus carte Sorare si owned, sinon edition manuelle)
+                    const bonusPct = (ownedCard && ownedCard.totalBonus > 0)
+                      ? ownedCard.totalBonus
+                      : (getEdition(cardEditions[p.slug || p.name] || "base")?.bonus || 0);
+                    const bonusMult = 1 + bonusPct / 100;
                     let rawScore, postBonus, isLive;
                     if (fresh && fresh.last_so5_date === p.matchDate && fresh.last_so5_score != null) {
                       rawScore = fresh.last_so5_score;
@@ -2318,7 +2322,7 @@ export default function StellarTab({ players, teams, fixtures, logos = {}, match
                       isLive = true;
                     } else {
                       rawScore = p.ds || 0;
-                      postBonus = getAdjDs(p);
+                      postBonus = rawScore * bonusMult;
                       isLive = false;
                     }
                     return { p, rawScore, postBonus, isLive };
@@ -2332,12 +2336,13 @@ export default function StellarTab({ players, teams, fixtures, logos = {}, match
                     captainData = playerData.reduce((best, x) => x.postBonus > best.postBonus ? x : best, playerData[0]);
                   }
                   // LIVE : matchs joues uniquement + captain si capitaine joue
+                  // Formule Sorare officielle : captain bonus = POST-BONUS × 0.5 (confirme par comparaison score reel)
                   const liveSum = playerData.filter(x => x.isLive).reduce((s, x) => s + x.postBonus, 0);
-                  const liveCaptainBonus = captainData?.isLive ? captainData.rawScore * 0.5 : 0;
+                  const liveCaptainBonus = captainData?.isLive ? captainData.postBonus * 0.5 : 0;
                   const stTotalLive = Math.round(liveSum + liveCaptainBonus);
                   // PROJECTED : tous les matchs (live + predits) + captain bonus complet
                   const projectedSum = playerData.reduce((s, x) => s + x.postBonus, 0);
-                  const projectedCaptainBonus = captainData ? captainData.rawScore * 0.5 : 0;
+                  const projectedCaptainBonus = captainData ? captainData.postBonus * 0.5 : 0;
                   const stTotalProjected = Math.round(projectedSum + projectedCaptainBonus);
                   // Score affiche (header) = projected (total final estime)
                   const stTotalAdj = stTotalProjected;

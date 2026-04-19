@@ -1055,7 +1055,7 @@ export default function SorareProTab({ players, teams, fixtures, logos = {}, mat
 
         {/* ── Right column: Builder + Player list ── */}
         <div className="pro-right-col" style={{ flex: 1, minWidth: 0, maxWidth: "100%", overflow: "hidden" }}>
-          <div className="pro-builder-wrap" style={{ borderRadius: 14, background: "rgba(6,3,20,0.95)", border: "none", overflow: "hidden", display: "flex", flexDirection: "column", height: isMobile ? "auto" : "calc(100vh - 180px)", minHeight: isMobile ? "60vh" : undefined, position: "relative", width: "100%", maxWidth: "100%" }}>
+          <div className="pro-builder-wrap" style={{ borderRadius: 14, background: "rgba(6,3,20,0.95)", border: "none", overflow: "hidden", display: "flex", flexDirection: "column", minHeight: isMobile ? "60vh" : undefined, position: "relative", width: "100%", maxWidth: "100%" }}>
 
             {/* Loading overlay — first connection */}
             {sorareLoading && (
@@ -1136,7 +1136,7 @@ export default function SorareProTab({ players, teams, fixtures, logos = {}, mat
             </div>
 
             {/* Body: Pitch + Player list */}
-            <div className="pro-builder-body" style={{ display: "flex", flexDirection: isMobile ? "column" : "row", flex: 1, minHeight: 0, overflow: isMobile ? "auto" : "hidden", maxWidth: "100%" }}>
+            <div className="pro-builder-body" style={{ display: "flex", flexDirection: isMobile ? "column" : "row", height: isMobile ? "auto" : 600, minHeight: 0, overflow: isMobile ? "auto" : "hidden", maxWidth: "100%" }}>
 
               {/* Pitch (left) */}
               <div className="pro-pitch" style={{ width: isMobile ? "100%" : 370, flexShrink: 0, display: "flex", flexDirection: "column", alignItems: "center", borderRight: isMobile ? "none" : "1px solid rgba(255,255,255,0.06)", borderBottom: isMobile ? "1px solid rgba(255,255,255,0.06)" : "none", background: "rgba(0,0,0,0.15)" }}>

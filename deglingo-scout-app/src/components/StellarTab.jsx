@@ -1725,7 +1725,7 @@ export default function StellarTab({ players, teams, fixtures, logos = {}, match
             const POS_SLOT_COLORS = { GK: "#4FC3F7", DEF: "#818CF8", MIL: "#C084FC", FLEX: "#A78BFA", ATT: "#F87171" };
 
             return (
-              <div style={{ borderRadius: 14, background: "rgba(6,3,20,0.95)", border: "none", overflow: "hidden", backdropFilter: "blur(16px)", display: "flex", flexDirection: "column", height: "calc(100vh - 220px)", width: "100%", position: "relative" }}>
+              <div style={{ borderRadius: 14, background: "rgba(6,3,20,0.95)", border: "none", overflow: "hidden", backdropFilter: "blur(16px)", display: "flex", flexDirection: "column", width: "100%", position: "relative" }}>
 
                 {/* ── Loading overlay cartes Sorare ── */}
                 {sorareLoading && (
@@ -1841,7 +1841,7 @@ export default function StellarTab({ players, teams, fixtures, logos = {}, match
                 )}
 
                 {/* ── Corps : PITCH gauche + DATABASE droite — centre sur grand ecran pour eviter l'espace mort ── */}
-                <div style={{ display: "flex", flex: 1, minHeight: 0, overflow: "hidden", justifyContent: "center" }}>
+                <div style={{ display: "flex", height: 600, minHeight: 0, overflow: "hidden", justifyContent: "center" }}>
 
                   {/* ══ COLONNE GAUCHE : Sélection équipe ══ */}
                   <div style={{ width: 370, flexShrink: 0, display: "flex", flexDirection: "column", borderRight: "1px solid rgba(255,255,255,0.06)", background: "rgba(0,0,0,0.15)" }}>

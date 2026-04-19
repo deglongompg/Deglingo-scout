@@ -1725,7 +1725,7 @@ export default function StellarTab({ players, teams, fixtures, logos = {}, match
             const POS_SLOT_COLORS = { GK: "#4FC3F7", DEF: "#818CF8", MIL: "#C084FC", FLEX: "#A78BFA", ATT: "#F87171" };
 
             return (
-              <div style={{ borderRadius: 14, background: "rgba(6,3,20,0.95)", border: "none", overflow: "hidden", backdropFilter: "blur(16px)", display: "flex", flexDirection: "column", height: "calc(100vh - 280px)", position: "relative" }}>
+              <div style={{ borderRadius: 14, background: "rgba(6,3,20,0.95)", border: "none", overflow: "hidden", backdropFilter: "blur(16px)", display: "flex", flexDirection: "column", maxHeight: "calc(100vh - 280px)", position: "relative" }}>
 
                 {/* ── Loading overlay cartes Sorare ── */}
                 {sorareLoading && (

@@ -899,7 +899,14 @@ export default function SorareProTab({ players, teams, fixtures, logos = {}, mat
   const rarityBg = rarity === "rare" ? "linear-gradient(135deg, #EF4444, #DC2626)" : "linear-gradient(135deg, #F59E0B, #D97706)";
 
   return (
-    <div style={{ position: "relative", minHeight: "80vh", padding: isMobile ? "0 8px 40px" : "0 16px 40px", maxWidth: 1800, margin: "0 auto", overflowX: "hidden" }}>
+    <div className="sp-root" style={{ position: "relative", minHeight: "80vh", padding: isMobile ? "0 8px 40px" : "0 16px 40px", width: "100%", overflowX: "hidden" }}>
+      <style>{`
+        /* Auto-zoom grand ecran pour eviter de passer en 125% manuellement */
+        @media (min-width: 1600px) { .sp-root { zoom: 1.10; } }
+        @media (min-width: 1920px) { .sp-root { zoom: 1.20; } }
+        @media (min-width: 2400px) { .sp-root { zoom: 1.35; } }
+        @media (min-width: 3000px) { .sp-root { zoom: 1.55; } }
+      `}</style>
       <style>{proKeyframes}</style>
 
       {/* ═══ HEADER : Titre + League selector + Rarity toggle ═══ */}

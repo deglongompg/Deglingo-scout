@@ -298,8 +298,13 @@ export default function DbTab({ players, teams, fixtures, logos = {}, lang = "fr
   };
 
   return (
-    <div style={{ padding: "0 16px 20px" }}>
+    <div className="db-root" style={{ padding: "0 16px 20px", width: "100%" }}>
       <style>{`
+        /* Auto-zoom grand ecran pour eviter de passer en 125% manuellement */
+        @media (min-width: 1600px) { .db-root { zoom: 1.10; } }
+        @media (min-width: 1920px) { .db-root { zoom: 1.20; } }
+        @media (min-width: 2400px) { .db-root { zoom: 1.35; } }
+        @media (min-width: 3000px) { .db-root { zoom: 1.55; } }
         @keyframes explosionPulse { 0%,100%{box-shadow:0 0 4px #4ADE8066,0 0 10px #4ADE8033} 50%{box-shadow:0 0 6px #4ADE8088,0 0 14px #4ADE8044} }
         @keyframes legendShimmer { 0%{background-position:-200% center} 100%{background-position:200% center} }
         @keyframes silverShine { 0%{background-position:200% center} 100%{background-position:-200% center} }

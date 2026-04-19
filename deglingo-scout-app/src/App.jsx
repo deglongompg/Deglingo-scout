@@ -280,7 +280,7 @@ export default function App() {
       </header>
 
       {/* Content */}
-      <main style={{ maxWidth: tab === "stellar" ? "100%" : 1800, margin: "0 auto", paddingTop: 8, overflowX: "hidden" }}>
+      <main style={{ maxWidth: "100%", margin: "0 auto", paddingTop: 8, overflowX: "hidden" }}>
         {tab === "db" && <DbTab players={players} teams={teams} fixtures={fixtures} logos={logos} lang={lang} />}
         {tab === "fight" && <FightTab players={players} teams={teams} fixtures={fixtures} logos={logos} lang={lang} />}
         {tab === "reco" && <div style={{ display: "flex", justifyContent: "center" }}><RecoTab players={players} teams={teams} fixtures={fixtures} logos={logos} lang={lang} /></div>}

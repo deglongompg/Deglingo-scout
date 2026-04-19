@@ -1055,7 +1055,7 @@ export default function SorareProTab({ players, teams, fixtures, logos = {}, mat
 
         {/* ── Right column: Builder + Player list ── */}
         <div className="pro-right-col" style={{ flex: 1, minWidth: 0, maxWidth: "100%", overflow: "hidden" }}>
-          <div className="pro-builder-wrap" style={{ borderRadius: 14, background: "rgba(6,3,20,0.95)", border: "none", overflow: "hidden", display: "flex", flexDirection: "column", height: isMobile ? "auto" : "calc(100vh - 180px)", minHeight: isMobile ? "60vh" : undefined, position: "relative", maxWidth: "100%" }}>
+          <div className="pro-builder-wrap" style={{ borderRadius: 14, background: "rgba(6,3,20,0.95)", border: "none", overflow: "hidden", display: "flex", flexDirection: "column", height: isMobile ? "auto" : "calc(100vh - 180px)", minHeight: isMobile ? "60vh" : undefined, position: "relative", width: "100%", maxWidth: "100%" }}>
 
             {/* Loading overlay — first connection */}
             {sorareLoading && (

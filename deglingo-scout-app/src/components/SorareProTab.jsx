@@ -3,6 +3,7 @@ import { POSITION_COLORS, LEAGUE_COLORS, LEAGUE_FLAG_CODES, LEAGUE_NAMES, dsColo
 import { dScoreMatch, csProb, findTeam } from "../utils/dscore";
 import { T, t } from "../utils/i18n";
 import { getProGwInfo, getProGwList, loadFrozen, saveFrozen } from "../utils/freeze";
+import { pushTeams, fetchCloudStore, extractProTeams } from "../utils/cloudSync";
 import SkyrocketGauge from "./SkyrocketGauge";
 
 const PC = POSITION_COLORS;
@@ -469,9 +470,26 @@ export default function SorareProTab({ players, teams, fixtures, logos = {}, mat
 
   useEffect(() => {
     if (!savedTeamsKey) return;
-    try { setSavedTeams(JSON.parse(localStorage.getItem(savedTeamsKey) || "[]")); } catch { setSavedTeams([]); }
+    // 1) Lecture immediate localStorage (offline / demarrage rapide)
+    let local = [];
+    try { local = JSON.parse(localStorage.getItem(savedTeamsKey) || "[]"); } catch { local = []; }
+    setSavedTeams(local);
     resetTeam();
-  }, [savedTeamsKey]);
+    // 2) Si connecte Sorare, on tente le fetch cloud et on ecrase si present (cloud = source de verite cross-device)
+    if (sorareConnected && gwInfo) {
+      fetchCloudStore().then(store => {
+        if (!store) return;
+        const remote = extractProTeams(store, league, rarity, gwInfo.gwKey);
+        if (Array.isArray(remote)) {
+          try { localStorage.setItem(savedTeamsKey, JSON.stringify(remote)); } catch (_e) { void 0; }
+          setSavedTeams(remote);
+        } else if (local.length > 0) {
+          // Premiere synchro : pousse le local vers le cloud
+          pushTeams("pro", { league, rarity, gwKey: gwInfo.gwKey }, local);
+        }
+      });
+    }
+  }, [savedTeamsKey, sorareConnected]);
 
   const saveCurrentTeam = () => {
     if (!savedTeamsKey) return;
@@ -552,6 +570,7 @@ export default function SorareProTab({ players, teams, fixtures, logos = {}, mat
     }
     localStorage.setItem(savedTeamsKey, JSON.stringify(updated));
     setSavedTeams(updated);
+    if (sorareConnected && gwInfo) pushTeams("pro", { league, rarity, gwKey: gwInfo.gwKey }, updated);
     resetTeam();
     setCaptainSlot(null);
   };
@@ -561,6 +580,7 @@ export default function SorareProTab({ players, teams, fixtures, logos = {}, mat
     const updated = savedTeams.filter(t => t.id !== id).map((t, i) => ({ ...t, label: `Equipe ${i + 1}` }));
     localStorage.setItem(savedTeamsKey, JSON.stringify(updated));
     setSavedTeams(updated);
+    if (sorareConnected && gwInfo) pushTeams("pro", { league, rarity, gwKey: gwInfo.gwKey }, updated);
   };
 
   const loadSavedTeam = (team) => { setMyPicks({ ...team.picks }); setEditingTeamId(team.id); };

@@ -3,6 +3,7 @@ import { POSITION_COLORS, dsColor, dsBg, isSilver } from "../utils/colors";
 import { dScoreMatch, csProb, findTeam } from "../utils/dscore";
 import { T, t } from "../utils/i18n";
 import { getDailyLockKey, loadFrozen, saveFrozen } from "../utils/freeze";
+import { pushTeams, fetchCloudStore, extractStellarTeams } from "../utils/cloudSync";
 import SkyrocketGauge from "./SkyrocketGauge";
 
 const PC = POSITION_COLORS;
@@ -958,6 +959,7 @@ export default function StellarTab({ players, teams, fixtures, logos = {}, match
     const updated = [...existing, newTeam];
     localStorage.setItem(key, JSON.stringify(updated));
     setSavedTeams(updated);
+    if (sorareConnected) pushTeams("stellar", { dateStr }, updated);
     resetTeam();
   };
 
@@ -977,6 +979,7 @@ export default function StellarTab({ players, teams, fixtures, logos = {}, match
     const updated = savedTeams.filter(t => t.id !== id).map((t, i) => ({ ...t, label: `Équipe ${i + 1}` }));
     localStorage.setItem(key, JSON.stringify(updated));
     setSavedTeams(updated);
+    if (sorareConnected) pushTeams("stellar", { dateStr }, updated);
   };
 
   // ── Tri du tableau joueurs du jour ──────────────────────────────────────────
@@ -1074,19 +1077,34 @@ export default function StellarTab({ players, teams, fixtures, logos = {}, match
     const dateStr = isoDate(weekDays[firstMatchDay]);
     let teams = [];
     try { teams = JSON.parse(localStorage.getItem(savedTeamsKey(dateStr)) || "[]"); } catch { teams = []; }
-    setSavedTeams(teams);
-    // Charger Équipe 1 automatiquement si elle existe
-    if (teams.length > 0) {
-      setMyPicks({ ...teams[0].picks });
-      setCardEditions(prev => {
-        const next = { ...prev, ...teams[0].editions };
-        localStorage.setItem("stellar_card_editions", JSON.stringify(next));
-        return next;
+    const applyTeams = (list) => {
+      setSavedTeams(list);
+      if (list.length > 0) {
+        setMyPicks({ ...list[0].picks });
+        setCardEditions(prev => {
+          const next = { ...prev, ...list[0].editions };
+          localStorage.setItem("stellar_card_editions", JSON.stringify(next));
+          return next;
+        });
+      } else {
+        setMyPicks({ GK: null, DEF: null, MIL: null, FLEX: null, ATT: null });
+      }
+    };
+    applyTeams(teams);
+    // Synchro cloud en arriere-plan: prend le dessus si different
+    if (sorareConnected) {
+      fetchCloudStore().then(store => {
+        if (!store) return;
+        const remote = extractStellarTeams(store, dateStr);
+        if (Array.isArray(remote)) {
+          try { localStorage.setItem(savedTeamsKey(dateStr), JSON.stringify(remote)); } catch (_e) { void 0; }
+          applyTeams(remote);
+        } else if (teams.length > 0) {
+          pushTeams("stellar", { dateStr }, teams);
+        }
       });
-    } else {
-      setMyPicks({ GK: null, DEF: null, MIL: null, FLEX: null, ATT: null });
     }
-  }, [selectedDaysKey, weekDays, fixturesByDate]);
+  }, [selectedDaysKey, weekDays, fixturesByDate, sorareConnected]);
 
   // Scored players for selected days (multi-day merge)
   const dayData = useMemo(() => {

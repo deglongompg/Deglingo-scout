@@ -4,6 +4,7 @@ import FightTab from "./components/FightTab";
 import RecoTab from "./components/RecoTab";
 import StellarTab from "./components/StellarTab";
 import SorareProTab from "./components/SorareProTab";
+import RecapTab from "./components/RecapTab";
 import LandingPage from "./components/LandingPage";
 import { t } from "./utils/i18n";
 
@@ -13,6 +14,7 @@ const TABS = [
   { id: "stellar", label: "Sorare Stellar", icon: "✨" },
   { id: "fight", label: "Fight", icon: "🥊" },
   { id: "reco", label: "Best Pick", icon: "⚽" },
+  { id: "recap", label: "Mes Teams", icon: "📋" },
 ];
 
 export default function App() {
@@ -21,14 +23,14 @@ export default function App() {
     const p = new URLSearchParams(window.location.search).get("tab");
     const h = window.location.hash.replace("#", "");
     const rt = sessionStorage.getItem("sorare_return_tab");
-    return !["db","fight","reco","stellar","pro"].includes(p) && !["db","fight","reco","stellar","pro"].includes(h) && !rt;
+    return !["db","fight","reco","stellar","pro","recap"].includes(p) && !["db","fight","reco","stellar","pro","recap"].includes(h) && !rt;
   });
   const [tab, setTab] = useState(() => {
     const p = new URLSearchParams(window.location.search).get("tab");
     const h = window.location.hash.replace("#", "");
     const rt = sessionStorage.getItem("sorare_return_tab");
     if (rt) sessionStorage.removeItem("sorare_return_tab");
-    const valid = ["db","fight","reco","stellar","pro"];
+    const valid = ["db","fight","reco","stellar","pro","recap"];
     return valid.includes(rt) ? rt : valid.includes(p) ? p : valid.includes(h) ? h : "db";
   });
   // Sync hash avec l'onglet actif (persist au refresh)
@@ -286,6 +288,7 @@ export default function App() {
         {tab === "reco" && <div style={{ display: "flex", justifyContent: "center" }}><RecoTab players={players} teams={teams} fixtures={fixtures} logos={logos} lang={lang} /></div>}
         {tab === "stellar" && <StellarTab players={players} teams={teams} fixtures={fixtures} logos={logos} matchEvents={matchEvents} onFight={() => setTab("fight")} lang={lang} />}
         {tab === "pro" && <SorareProTab players={players} teams={teams} fixtures={fixtures} logos={logos} matchEvents={matchEvents} lang={lang} />}
+        {tab === "recap" && <RecapTab lang={lang} />}
       </main>
 
       {/* Footer */}

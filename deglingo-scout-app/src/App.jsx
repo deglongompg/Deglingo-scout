@@ -288,7 +288,7 @@ export default function App() {
         {tab === "reco" && <div style={{ display: "flex", justifyContent: "center" }}><RecoTab players={players} teams={teams} fixtures={fixtures} logos={logos} lang={lang} /></div>}
         {tab === "stellar" && <StellarTab players={players} teams={teams} fixtures={fixtures} logos={logos} matchEvents={matchEvents} onFight={() => setTab("fight")} lang={lang} />}
         {tab === "pro" && <SorareProTab players={players} teams={teams} fixtures={fixtures} logos={logos} matchEvents={matchEvents} lang={lang} />}
-        {tab === "recap" && <RecapTab players={players} logos={logos} lang={lang} />}
+        {tab === "recap" && <RecapTab lang={lang} />}
       </main>
 
       {/* Footer */}

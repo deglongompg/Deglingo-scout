@@ -1653,7 +1653,7 @@ export default function StellarTab({ players, teams, fixtures, logos = {}, match
                                 if (exists) return prev.filter(m => !(m.home === f.home && m.away === f.away));
                                 return [...prev, { home: f.home, away: f.away }];
                               });
-                            }} style={{ display: "grid", gridTemplateColumns: "38px 28px 16px 1fr 50px 1fr 16px", alignItems: "center", columnGap: 6, padding: "4px 8px", cursor: "pointer",
+                            }} style={{ display: "grid", gridTemplateColumns: "32px 22px 12px minmax(0,1fr) 32px minmax(0,1fr) 12px", alignItems: "center", columnGap: 4, padding: "4px 6px", cursor: "pointer",
                               background: selectedMatchFilters.some(m => m.home === f.home && m.away === f.away) ? "rgba(139,92,246,0.35)" : isOpen ? "rgba(50,20,100,0.6)" : scoreStr ? "rgba(15,40,30,0.55)" : "rgba(30,10,70,0.45)",
                               border: `1px solid ${selectedMatchFilters.some(m => m.home === f.home && m.away === f.away) ? "rgba(167,139,250,0.6)" : isOpen ? "rgba(196,181,253,0.3)" : scoreStr ? "rgba(74,222,128,0.25)" : "rgba(140,100,255,0.12)"}`,
                               borderRadius: isOpen ? "6px 6px 0 0" : 6, backdropFilter: "blur(6px)", transition: "all 0.15s" }}>
@@ -1663,15 +1663,15 @@ export default function StellarTab({ players, teams, fixtures, logos = {}, match
                                 <span className="st-match-time-inline" style={{ visibility: "hidden", fontSize: 8, fontWeight: 900, color: "#A78BFA", fontFamily: "'DM Mono',monospace", flexShrink: 0 }}>{g.time}</span>
                               )}
                               <span style={{ fontSize: 8, fontWeight: 800, color: lgColor, minWidth: 22 }}>{f.league}</span>
-                              <img src={logos[f.home] ? `/data/logos/${logos[f.home]}` : ""} alt="" style={{ width: 14, height: 14, objectFit: "contain", visibility: logos[f.home] ? "visible" : "hidden" }} />
-                              <span className="mc-home" onClick={() => hasHomePlayers && toggleSide("home")} style={{ fontSize: 11, fontWeight: scoreStr ? 700 : 600, color: isOpenHome ? "#C4B5FD" : (scoreStr && sc && sc.home > sc.away ? "#4ADE80" : "#fff"), cursor: hasHomePlayers ? "pointer" : "default", textDecoration: isOpenHome ? "underline" : "none", transition: "color 0.15s" }}>{sn(f.home)}</span>
+                              <img src={logos[f.home] ? `/data/logos/${logos[f.home]}` : ""} alt="" style={{ width: 12, height: 12, objectFit: "contain", visibility: logos[f.home] ? "visible" : "hidden" }} />
+                              <span className="mc-home" onClick={() => hasHomePlayers && toggleSide("home")} style={{ fontSize: 9, fontWeight: scoreStr ? 700 : 600, color: isOpenHome ? "#C4B5FD" : (scoreStr && sc && sc.home > sc.away ? "#4ADE80" : "#fff"), cursor: hasHomePlayers ? "pointer" : "default", textDecoration: isOpenHome ? "underline" : "none", transition: "color 0.15s", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>{sn(f.home)}</span>
                               {scoreStr ? (
-                                <span className="mc-vs" style={{ fontSize: 13, fontWeight: 900, color: "#fff", fontFamily: "'DM Mono',monospace", textAlign: "center", whiteSpace: "nowrap", letterSpacing: "-0.5px" }}>{scoreStr}</span>
+                                <span className="mc-vs" style={{ fontSize: 11, fontWeight: 900, color: "#fff", fontFamily: "'DM Mono',monospace", textAlign: "center", whiteSpace: "nowrap", letterSpacing: "-0.5px" }}>{scoreStr}</span>
                               ) : (
-                                <span className="mc-vs" style={{ fontSize: 9, color: "rgba(255,255,255,0.25)", whiteSpace: "nowrap", textAlign: "center" }}>vs</span>
+                                <span className="mc-vs" style={{ fontSize: 8, color: "rgba(255,255,255,0.25)", whiteSpace: "nowrap", textAlign: "center" }}>vs</span>
                               )}
-                              <span className="mc-away" onClick={() => hasAwayPlayers && toggleSide("away")} style={{ fontSize: 11, fontWeight: scoreStr ? 700 : 600, color: isOpenAway ? "#C4B5FD" : (scoreStr && sc && sc.away > sc.home ? "#4ADE80" : hasAwayPlayers ? "#fff" : "rgba(255,255,255,0.35)"), cursor: hasAwayPlayers ? "pointer" : "default", textDecoration: isOpenAway ? "underline" : "none", transition: "color 0.15s" }}>{sn(f.away)}</span>
-                              <img src={logos[f.away] ? `/data/logos/${logos[f.away]}` : ""} alt="" style={{ width: 14, height: 14, objectFit: "contain", visibility: logos[f.away] ? "visible" : "hidden" }} />
+                              <span className="mc-away" onClick={() => hasAwayPlayers && toggleSide("away")} style={{ fontSize: 9, fontWeight: scoreStr ? 700 : 600, color: isOpenAway ? "#C4B5FD" : (scoreStr && sc && sc.away > sc.home ? "#4ADE80" : hasAwayPlayers ? "#fff" : "rgba(255,255,255,0.35)"), cursor: hasAwayPlayers ? "pointer" : "default", textDecoration: isOpenAway ? "underline" : "none", transition: "color 0.15s", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>{sn(f.away)}</span>
+                              <img src={logos[f.away] ? `/data/logos/${logos[f.away]}` : ""} alt="" style={{ width: 12, height: 12, objectFit: "contain", visibility: logos[f.away] ? "visible" : "hidden" }} />
                             </div>
 
                             {/* Dropdown scores joueurs */}

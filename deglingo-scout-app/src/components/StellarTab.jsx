@@ -1725,7 +1725,7 @@ export default function StellarTab({ players, teams, fixtures, logos = {}, match
             const POS_SLOT_COLORS = { GK: "#4FC3F7", DEF: "#818CF8", MIL: "#C084FC", FLEX: "#A78BFA", ATT: "#F87171" };
 
             return (
-              <div style={{ borderRadius: 14, background: "rgba(6,3,20,0.95)", border: "none", overflow: "hidden", backdropFilter: "blur(16px)", display: "flex", flexDirection: "column", maxHeight: "calc(100vh - 280px)", position: "relative" }}>
+              <div style={{ borderRadius: 14, background: "rgba(6,3,20,0.95)", border: "none", overflow: "hidden", backdropFilter: "blur(16px)", display: "flex", flexDirection: "column", height: "calc(100vh - 220px)", width: "100%", position: "relative" }}>
 
                 {/* ── Loading overlay cartes Sorare ── */}
                 {sorareLoading && (
@@ -2178,7 +2178,7 @@ export default function StellarTab({ players, teams, fixtures, logos = {}, match
                           })}
                         </div>
                         {/* Rows — 11 visibles max (~meme hauteur que pick zone), scroll pour le reste */}
-                        <div style={{ overflowY: "auto", flex: 1, minHeight: 0, maxHeight: "calc(11 * 34px + 4px)" }}>
+                        <div style={{ overflowY: "auto", flex: 1, minHeight: 0 }}>
                           <div style={{ minWidth: "max-content" }}>
                           {sortedPool.map(p => {
                             const slug = p.slug || p.name;

@@ -56,6 +56,66 @@ function groupTeamsByLeague(store) {
   return result;
 }
 
+/**
+ * Lit le cache des cartes Sorare (posé par SorareProTab via /api/sorare/cards)
+ * et construit { limited: { slug: [cards sorted by power desc] }, rare: { ... } }
+ */
+function buildCardsBySlugFromCache() {
+  const empty = { limited: {}, rare: {} };
+  try {
+    const raw = localStorage.getItem("pro_cards_cache");
+    if (!raw) return empty;
+    const cards = JSON.parse(raw);
+    if (!Array.isArray(cards)) return empty;
+    const out = { limited: {}, rare: {} };
+    for (const c of cards) {
+      if (!c || c.isStellar) continue;
+      const slug = c.playerSlug;
+      if (!slug) continue;
+      if (c.isLimited) {
+        if (!out.limited[slug]) out.limited[slug] = [];
+        out.limited[slug].push(c);
+      }
+      if (c.isRare) {
+        if (!out.rare[slug]) out.rare[slug] = [];
+        out.rare[slug].push(c);
+      }
+    }
+    for (const r of ["limited", "rare"]) {
+      for (const slug in out[r]) {
+        out[r][slug].sort((a, b) => (b.power || 1) - (a.power || 1));
+      }
+    }
+    return out;
+  } catch {
+    return empty;
+  }
+}
+
+/**
+ * Migration legacy : pour chaque pick sans `_card`, assigne la meilleure carte
+ * du joueur trouvee dans le cache Sorare. Necessaire pour les teams sauvegardees
+ * avant que `_card` ne soit stocke a la sauvegarde.
+ */
+function enrichTeamWithBestCards(team, cardsBySlug) {
+  if (!team?.picks || !cardsBySlug) return team;
+  const picks = {};
+  let changed = false;
+  for (const slot of Object.keys(team.picks)) {
+    const pick = team.picks[slot];
+    if (!pick || pick._card) { picks[slot] = pick; continue; }
+    const slug = pick.slug || pick.name;
+    const candidates = slug ? (cardsBySlug[slug] || []) : [];
+    if (candidates.length > 0) {
+      picks[slot] = { ...pick, _card: candidates[0], _cardKey: pick._cardKey || `${slug}_0` };
+      changed = true;
+    } else {
+      picks[slot] = pick;
+    }
+  }
+  return changed ? { ...team, picks } : team;
+}
+
 function RecapTabInner({ players, logos, lang }) {
   const [store, setStore] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -76,6 +136,8 @@ function RecapTabInner({ players, logos, lang }) {
     return () => { cancelled = true; };
   }, []);
 
+  const cardsBySlug = useMemo(() => buildCardsBySlugFromCache(), [store]);
+
   const grouped = useMemo(() => store ? groupTeamsByLeague(store) : null, [store]);
 
   const stats = useMemo(() => {
@@ -85,7 +147,8 @@ function RecapTabInner({ players, logos, lang }) {
       PRO_LEAGUES.forEach(l => {
         grouped[rarity][l].forEach(({ team }) => {
           count++;
-          const { projectedTotal } = computeTeamScores(team, players || []);
+          const enriched = enrichTeamWithBestCards(team, cardsBySlug[rarity]);
+          const { projectedTotal } = computeTeamScores(enriched, players || []);
           sum += projectedTotal || 0;
         });
       });
@@ -259,7 +322,7 @@ function RecapTabInner({ players, logos, lang }) {
                         {teams.map((item, i) => (
                           <ProSavedTeamCard
                             key={`${item.team.id}-${i}`}
-                            team={item.team}
+                            team={enrichTeamWithBestCards(item.team, cardsBySlug[item.rarity])}
                             league={item.league}
                             rarity={item.rarity}
                             players={players}

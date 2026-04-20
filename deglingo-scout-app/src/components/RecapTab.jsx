@@ -4,6 +4,7 @@ import { fetchCloudStore } from "../utils/cloudSync";
 import { PRO_LEAGUES, computeTeamScores } from "../utils/proScoring";
 import { t } from "../utils/i18n";
 import ProSavedTeamCard from "./ProSavedTeamCard";
+import StellarSavedTeamCard from "./StellarSavedTeamCard";
 
 class RecapErrorBoundary extends Component {
   constructor(props) { super(props); this.state = { err: null }; }
@@ -24,7 +25,7 @@ class RecapErrorBoundary extends Component {
   }
 }
 
-const RARITY_COLOR = { limited: "#60A5FA", rare: "#F472B6" };
+const RARITY_COLOR = { limited: "#60A5FA", rare: "#F472B6", stellar: "#C4B5FD" };
 
 function formatScore(s) {
   if (s == null || Number.isNaN(s)) return "—";
@@ -93,6 +94,76 @@ function buildCardsBySlugFromCache() {
 }
 
 /**
+ * Lit le cache Stellar (posé par StellarTab dans sessionStorage) et construit
+ * { slug: meilleure carte Stellar possédée } — trié par totalBonus desc.
+ */
+function buildStellarCardsBySlug() {
+  const out = {};
+  try {
+    const raw = sessionStorage.getItem("sorare_cards_cache");
+    if (!raw) return out;
+    const parsed = JSON.parse(raw);
+    const cards = Array.isArray(parsed?.cards) ? parsed.cards : (Array.isArray(parsed) ? parsed : []);
+    for (const c of cards) {
+      if (!c || !c.isStellar) continue;
+      const slug = c.playerSlug;
+      if (!slug) continue;
+      if (!out[slug] || (c.totalBonus || 0) > (out[slug].totalBonus || 0)) {
+        out[slug] = c;
+      }
+    }
+  } catch { /* ignore */ }
+  return out;
+}
+
+/**
+ * Regroupe les teams Stellar par date (plus récente en premier).
+ * Retourne : [{ dateStr, teams: [...] }, ...]
+ */
+function groupStellarByDate(store) {
+  const stellar = store?.data?.stellar || {};
+  const entries = Object.entries(stellar).filter(([, v]) => Array.isArray(v) && v.length > 0);
+  entries.sort(([a], [b]) => b.localeCompare(a));
+  return entries.map(([dateStr, teams]) => ({ dateStr, teams }));
+}
+
+function formatStellarDate(dateStr, lang) {
+  if (!dateStr) return "";
+  try {
+    const d = new Date(dateStr + "T12:00:00");
+    return d.toLocaleDateString(lang === "fr" ? "fr-FR" : "en-US", {
+      timeZone: "Europe/Paris", weekday: "long", day: "numeric", month: "long",
+    });
+  } catch { return dateStr; }
+}
+
+function computeStellarProjected(team, players, stellarCardsBySlug) {
+  if (!team?.picks) return 0;
+  const POS = ["GK", "DEF", "MIL", "ATT", "FLEX"];
+  const picks = POS.map(s => team.picks[s]).filter(Boolean);
+  const data = picks.map(p => {
+    const fresh = players.find(pl => pl.slug === p.slug);
+    const owned = stellarCardsBySlug[p.slug || p.name];
+    const bonusPct = (owned && owned.totalBonus > 0) ? owned.totalBonus : 0;
+    const mult = 1 + bonusPct / 100;
+    const raw = (fresh && fresh.last_so5_date === p.matchDate && fresh.last_so5_score != null)
+      ? fresh.last_so5_score : (p.ds || 0);
+    return { p, postBonus: raw * mult };
+  });
+  let cap = data.find(x => x.p.isCaptain);
+  if (!cap && team.captain && team.picks[team.captain]) {
+    const cp = team.picks[team.captain];
+    cap = data.find(x => (x.p.slug || x.p.name) === (cp.slug || cp.name));
+  }
+  if (!cap && data.length === 5) {
+    cap = data.reduce((best, x) => x.postBonus > best.postBonus ? x : best, data[0]);
+  }
+  const sum = data.reduce((s, x) => s + x.postBonus, 0);
+  const capBonus = cap ? cap.postBonus * 0.5 : 0;
+  return Math.round(sum + capBonus);
+}
+
+/**
  * Migration legacy : pour chaque pick sans `_card`, assigne la meilleure carte
  * du joueur trouvee dans le cache Sorare. Necessaire pour les teams sauvegardees
  * avant que `_card` ne soit stocke a la sauvegarde.
@@ -137,8 +208,10 @@ function RecapTabInner({ players, logos, lang }) {
   }, []);
 
   const cardsBySlug = useMemo(() => buildCardsBySlugFromCache(), [store]);
+  const stellarCardsBySlug = useMemo(() => buildStellarCardsBySlug(), [store]);
 
   const grouped = useMemo(() => store ? groupTeamsByLeague(store) : null, [store]);
+  const stellarGroups = useMemo(() => store ? groupStellarByDate(store) : [], [store]);
 
   const stats = useMemo(() => {
     if (!grouped) return null;
@@ -154,20 +227,36 @@ function RecapTabInner({ players, logos, lang }) {
       });
       return { count, sum };
     };
+    const computeStellar = () => {
+      let count = 0, sum = 0;
+      stellarGroups.forEach(({ teams }) => {
+        teams.forEach(team => {
+          count++;
+          sum += computeStellarProjected(team, players || [], stellarCardsBySlug) || 0;
+        });
+      });
+      return { count, sum };
+    };
     const perLeague = { limited: {}, rare: {} };
     ["limited", "rare"].forEach(r => {
       PRO_LEAGUES.forEach(l => { perLeague[r][l] = grouped[r][l].length; });
     });
-    return { limited: compute("limited"), rare: compute("rare"), perLeague };
-  }, [grouped, players]);
+    return {
+      limited: compute("limited"),
+      rare: compute("rare"),
+      stellar: computeStellar(),
+      perLeague,
+    };
+  }, [grouped, stellarGroups, players, cardsBySlug, stellarCardsBySlug]);
 
-  // Initialise openLeagues une fois que les stats sont dispo : ouvre toutes les ligues non vides.
+  // Initialise openLeagues une fois que les stats sont dispo : ouvre toutes les ligues/dates non vides.
   useEffect(() => {
     if (!stats || openLeagues !== null) return;
     const init = {};
     ["limited", "rare"].forEach(r => { PRO_LEAGUES.forEach(l => { init[`${r}_${l}`] = stats.perLeague[r][l] > 0; }); });
+    stellarGroups.forEach(({ dateStr }) => { init[`stellar_${dateStr}`] = true; });
     setOpenLeagues(init);
-  }, [stats, openLeagues]);
+  }, [stats, openLeagues, stellarGroups]);
 
   const toggleLeague = (rarity, league) => {
     setOpenLeagues(prev => ({ ...(prev || {}), [`${rarity}_${league}`]: !prev?.[`${rarity}_${league}`] }));
@@ -196,7 +285,10 @@ function RecapTabInner({ players, logos, lang }) {
   }
 
   const activeStats = stats?.[activeRarity];
-  const hasAny = (stats?.limited.count || 0) + (stats?.rare.count || 0) > 0;
+  const totalCount = (stats?.limited.count || 0) + (stats?.rare.count || 0) + (stats?.stellar.count || 0);
+  const totalSum = (stats?.limited.sum || 0) + (stats?.rare.sum || 0) + (stats?.stellar.sum || 0);
+  const avgScore = totalCount > 0 ? totalSum / totalCount : 0;
+  const hasAny = totalCount > 0;
   const rColor = RARITY_COLOR[activeRarity];
 
   const d = store.data || {};
@@ -222,17 +314,17 @@ function RecapTabInner({ players, logos, lang }) {
         {stats && (
           <div style={{ display: "flex", gap: 14 }}>
             <div style={{ textAlign: "center", minWidth: 70 }}>
-              <div style={{ fontSize: 22, fontWeight: 900, color: "#fff" }}>{stats.limited.count + stats.rare.count}</div>
+              <div style={{ fontSize: 22, fontWeight: 900, color: "#fff" }}>{totalCount}</div>
               <div style={{ fontSize: 9, color: "rgba(255,255,255,0.45)", letterSpacing: 1 }}>{lang === "fr" ? "ÉQUIPES" : "TEAMS"}</div>
             </div>
             <div style={{ textAlign: "center", minWidth: 90 }}>
-              <div style={{ fontSize: 22, fontWeight: 900, color: dsColor((stats.limited.sum + stats.rare.sum) / Math.max(1, stats.limited.count + stats.rare.count)) }}>
-                {formatScore((stats.limited.count + stats.rare.count) > 0 ? (stats.limited.sum + stats.rare.sum) / (stats.limited.count + stats.rare.count) : 0)}
+              <div style={{ fontSize: 22, fontWeight: 900, color: dsColor(avgScore) }}>
+                {formatScore(avgScore)}
               </div>
               <div style={{ fontSize: 9, color: "rgba(255,255,255,0.45)", letterSpacing: 1 }}>{lang === "fr" ? "SCORE MOY." : "AVG SCORE"}</div>
             </div>
             <div style={{ textAlign: "center", minWidth: 90 }}>
-              <div style={{ fontSize: 22, fontWeight: 900, color: "#E9D5FF" }}>{formatScore(stats.limited.sum + stats.rare.sum)}</div>
+              <div style={{ fontSize: 22, fontWeight: 900, color: "#E9D5FF" }}>{formatScore(totalSum)}</div>
               <div style={{ fontSize: 9, color: "rgba(255,255,255,0.45)", letterSpacing: 1 }}>TOTAL</div>
             </div>
           </div>
@@ -253,12 +345,13 @@ function RecapTabInner({ players, logos, lang }) {
 
       {hasAny && (
         <>
-          {/* Toggle Limited / Rare */}
+          {/* Toggle Limited / Rare / Stellar */}
           <div style={{ display: "flex", gap: 8, marginTop: 18, marginBottom: 14 }}>
-            {["limited", "rare"].map(r => {
+            {["limited", "rare", "stellar"].map(r => {
               const accent = RARITY_COLOR[r];
               const active = activeRarity === r;
               const s = stats[r];
+              const label = r === "limited" ? "Pro Limited" : r === "rare" ? "Pro Rare" : "Stellar";
               return (
                 <button key={r} onClick={() => setActiveRarity(r)} style={{
                   padding: "8px 16px", borderRadius: 10, fontSize: 12, fontWeight: 800, fontFamily: "Outfit",
@@ -268,20 +361,22 @@ function RecapTabInner({ players, logos, lang }) {
                   display: "inline-flex", alignItems: "center", gap: 8, whiteSpace: "nowrap",
                   letterSpacing: 0.5, textTransform: "uppercase",
                 }}>
-                  {r === "limited" ? "Pro Limited" : "Pro Rare"}
+                  {label}
                   <span style={{ fontSize: 10, opacity: 0.8, padding: "1px 6px", borderRadius: 10, background: active ? accent + "18" : "rgba(255,255,255,0.05)" }}>{s.count}</span>
                 </button>
               );
             })}
           </div>
 
-          {activeStats.count === 0 ? (
+          {activeStats.count === 0 && (
             <div style={{ padding: 30, textAlign: "center", color: "rgba(255,255,255,0.35)", fontSize: 11 }}>
               {lang === "fr"
-                ? `Aucune équipe ${activeRarity === "rare" ? "Rare" : "Limited"} sauvegardée.`
+                ? `Aucune équipe ${activeRarity === "rare" ? "Rare" : activeRarity === "stellar" ? "Stellar" : "Limited"} sauvegardée.`
                 : `No ${activeRarity} team saved.`}
             </div>
-          ) : (
+          )}
+
+          {activeStats.count > 0 && activeRarity !== "stellar" && (
             <div style={{ display: "flex", flexDirection: "column", gap: 14 }}>
               {PRO_LEAGUES.map(league => {
                 const teams = grouped[activeRarity][league];
@@ -329,6 +424,60 @@ function RecapTabInner({ players, logos, lang }) {
                             logos={logos}
                             lang={lang}
                             rarityColor={rColor}
+                          />
+                        ))}
+                      </div>
+                    )}
+                  </div>
+                );
+              })}
+            </div>
+          )}
+
+          {activeStats.count > 0 && activeRarity === "stellar" && (
+            <div style={{ display: "flex", flexDirection: "column", gap: 14 }}>
+              {stellarGroups.map(({ dateStr, teams }) => {
+                const accent = RARITY_COLOR.stellar;
+                const open = openLeagues?.[`stellar_${dateStr}`] !== false;
+                return (
+                  <div key={dateStr} style={{
+                    borderRadius: 12, border: `1px solid ${accent}25`,
+                    background: "linear-gradient(180deg, rgba(10,5,28,0.5), rgba(6,3,18,0.35))",
+                    overflow: "hidden",
+                  }}>
+                    <button
+                      onClick={() => toggleLeague("stellar", dateStr)}
+                      style={{
+                        width: "100%", display: "flex", alignItems: "center", gap: 10,
+                        padding: "10px 14px", border: "none", cursor: "pointer",
+                        background: `${accent}10`, color: "#fff", fontFamily: "Outfit",
+                        borderBottom: open ? `1px solid ${accent}20` : "none",
+                      }}
+                    >
+                      <span style={{ fontSize: 12, transition: "transform 0.2s", display: "inline-block", transform: open ? "rotate(90deg)" : "rotate(0deg)", color: accent, width: 10 }}>▶</span>
+                      <span style={{ fontSize: 13, fontWeight: 800, color: accent, letterSpacing: 0.3, textTransform: "capitalize" }}>
+                        {formatStellarDate(dateStr, lang)}
+                      </span>
+                      <span style={{ fontSize: 10, fontWeight: 700, color: "rgba(255,255,255,0.45)", padding: "2px 8px", borderRadius: 10, background: "rgba(255,255,255,0.04)" }}>
+                        {teams.length} {lang === "fr" ? (teams.length > 1 ? "équipes" : "équipe") : (teams.length > 1 ? "teams" : "team")}
+                      </span>
+                      <span style={{ marginLeft: "auto", fontSize: 10, color: "rgba(255,255,255,0.3)" }}>
+                        {open ? (lang === "fr" ? "Masquer" : "Hide") : (lang === "fr" ? "Afficher" : "Show")}
+                      </span>
+                    </button>
+                    {open && (
+                      <div className="recap-grid" style={{
+                        display: "grid", gridTemplateColumns: "repeat(auto-fill, 480px)",
+                        gap: 10, padding: 12,
+                      }}>
+                        {teams.map((team, i) => (
+                          <StellarSavedTeamCard
+                            key={`${team.id}-${i}`}
+                            team={team}
+                            players={players}
+                            logos={logos}
+                            cardsBySlug={stellarCardsBySlug}
+                            lang={lang}
                           />
                         ))}
                       </div>

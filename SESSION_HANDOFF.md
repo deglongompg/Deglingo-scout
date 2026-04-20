@@ -52,6 +52,46 @@
 
 ---
 
+## 🚀 PROCESS DEPLOY (important — Cloudflare Pages en mode Direct Upload)
+
+**Cloudflare NE BUILD PAS automatiquement depuis GitHub main !** Le projet est configuré en "Direct Upload" mode. Les pushes git servent uniquement de backup/historique.
+
+**Pour déployer en prod `scout.deglingosorare.com` :**
+
+Sur le Mac (ou PC) dans le dossier du repo :
+```bash
+cd ~/Documents/Deglingo-scout       # ou là où est le repo
+git status                           # VERIFIE qu'il n'y a pas de modifs locales non commitees
+git pull origin main                 # recupere les derniers commits
+cd deglingo-scout-app
+npm run build                        # cree dist/ avec le code frais
+cd ..
+./deploy.sh                          # Mac — build + wrangler pages deploy + sync scout-dist
+# OU deploy.bat sur Windows
+```
+
+Le `deploy.sh` fait dans l'ordre :
+1. `npm run build` dans `deglingo-scout-app/` → crée `dist/`
+2. `wrangler pages deploy dist/` → upload direct à Cloudflare Pages (production)
+3. Copie `dist/*` → `scout-dist/` (mirror pour legacy `www.deglingosorare.com/scout`)
+4. `git add scout-dist/ && git commit && git push origin main`
+
+**Vérifier que le deploy a marché :**
+- Dashboard Cloudflare → Workers & Pages → `deglingo-sorare` → Deployments
+- Nouveau deploy en haut avec status ✅ et URL `XXXXXXXX.deglingo-sorare.pages.dev`
+- Ou simplement : F5 sur `scout.deglingosorare.com` et check le changement
+
+**Rollback si plantage :**
+- Dashboard Cloudflare → Deployments → trouve un ancien deploy qui marchait → clic `...` → **Rollback to this deployment**
+- Revert instantané (~30 sec), pas besoin de re-build
+
+**⚠️ Pièges fréquents :**
+- Ne pas oublier `git pull` AVANT de build → sinon tu deploy le code ancien du Mac
+- Ne pas oublier `git status` → des modifs locales non commitees vont se retrouver en prod
+- Tester en preview d'abord si possible (push sur branche différente que main)
+
+---
+
 ## Contexte projet
 
 - **Repo** : https://github.com/deglongompg/Deglingo-scout (branche `main`)

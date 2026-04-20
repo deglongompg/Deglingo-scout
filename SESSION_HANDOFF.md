@@ -1,7 +1,33 @@
 # SESSION HANDOFF — 2026-04-19 → 20 (dimanche → lundi GW71)
 
-> **Claude Code sur Mac :** lis ce fichier au démarrage pour reprendre le contexte.
+> **Claude Code :** lis ce fichier au démarrage pour reprendre le contexte.
 > Source de vérité complémentaire : `git log --oneline -20` et les fichiers modifiés récents.
+
+---
+
+## ⏱ État au 2026-04-20 (reprise session sur Mac)
+
+**Prod `scout.deglingosorare.com` = OK ✅**
+- Branche `main` HEAD = `1808c0a` (Revert pitch layout)
+- Contient bien le feature **Mes Teams + sync KV** (commit `4a16964`)
+- L'utilisateur a confirmé visuellement : onglet "Mes Teams" affiche 5 équipes (Pro Limited Ligue 1 + Stellar dimanche 19 avril), score moyen 398.6
+
+**Ce que l'utilisateur veut maintenant (WIP) :**
+- Refaire le **visuel de Mes Teams exactement comme Sorare Pro** (pitch + `SkyrocketGauge` sur le côté, filtres ligue/rareté collapsibles)
+- Tentative précédente → **écran noir en prod** → rollback effectué (commit `1808c0a` sur main)
+- Nouvelle tentative existe sur branche **`claude/fix-conversation-loading-bRv3u`** (commit `eac04d9`), déployée en **Cloudflare Preview "test-recap"** (URL `538135b9.deglingo-sorare.pages.dev`)
+- **NE PAS merger `eac04d9` dans `main` tant que pas validé sans écran noir**
+
+**Branches à connaître :**
+- `main` → prod, stable, Mes Teams v1 simple OK
+- `claude/fix-conversation-loading-bRv3u` → WIP pitch layout (preview Cloudflare)
+- `debug/pitch-layout` / `claude/debug-communication-issue-8nd1t` → ancienne tentative avec ErrorBoundary + vite proxy local (NE PAS merger, debug only)
+- `claude/deglingo-scout-relis-7leVn` → autre WIP debug (ErrorBoundary défensif)
+
+**Mémo communication :**
+- L'utilisateur parle français, préfère explications simples, pas de jargon git
+- Il a parfois du mal à suivre les branches → expliquer en termes de "le site en prod" vs "brouillon preview"
+- Anthropic API a eu des erreurs 400 `cache_control cannot be set for empty text blocks` pendant la session du 20/04 → si la conv plante, démarrer une nouvelle session et lire ce handoff
 
 ---
 

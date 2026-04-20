@@ -1,93 +1,68 @@
-import { useEffect, useMemo, useState } from "react";
-import { LEAGUE_COLORS, LEAGUE_NAMES, LEAGUE_FLAG_CODES, POSITION_COLORS, dsColor } from "../utils/colors";
+import { Component, useEffect, useMemo, useState } from "react";
+import { LEAGUE_COLORS, LEAGUE_NAMES, LEAGUE_FLAG_CODES, dsColor } from "../utils/colors";
 import { fetchCloudStore } from "../utils/cloudSync";
+import { PRO_LEAGUES, computeTeamScores } from "../utils/proScoring";
 import { t } from "../utils/i18n";
+import ProSavedTeamCard from "./ProSavedTeamCard";
 
-const PC = POSITION_COLORS;
-const PRO_LEAGUES = ["L1", "PL", "Liga", "Bundes", "MLS"];
-const TEAM_SLOTS = ["GK", "DEF", "MIL", "ATT", "FLEX"];
-
-function slotColor(slot) {
-  if (slot === "FLEX") return "#A78BFA";
-  return PC[slot] || "#94A3B8";
+class RecapErrorBoundary extends Component {
+  constructor(props) { super(props); this.state = { err: null }; }
+  static getDerivedStateFromError(err) { return { err }; }
+  componentDidCatch(err, info) { console.error("[RecapTab]", err, info); }
+  render() {
+    if (this.state.err) {
+      return (
+        <div style={{ padding: 30, textAlign: "center", color: "#F87171", fontFamily: "Outfit" }}>
+          <div style={{ fontSize: 14, fontWeight: 800 }}>Erreur d'affichage Mes Teams</div>
+          <div style={{ fontSize: 11, color: "rgba(255,255,255,0.5)", marginTop: 6, maxWidth: 600, margin: "6px auto 0" }}>
+            {String(this.state.err?.message || this.state.err)}
+          </div>
+        </div>
+      );
+    }
+    return this.props.children;
+  }
 }
+
+const RARITY_COLOR = { limited: "#60A5FA", rare: "#F472B6" };
 
 function formatScore(s) {
   if (s == null || Number.isNaN(s)) return "—";
-  return Number(s).toFixed(1);
+  return Math.round(Number(s));
 }
 
-function TeamCard({ team, rarity, league, lang }) {
-  const picks = team.picks || {};
-  const filled = Object.values(picks).filter(Boolean).length;
-  const captain = team.captain;
-  return (
-    <div style={{
-      background: "rgba(15,15,35,0.6)", border: "1px solid rgba(255,255,255,0.08)",
-      borderRadius: 10, padding: "10px 12px", minWidth: 240, flex: "1 1 240px",
-    }}>
-      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "baseline", marginBottom: 6 }}>
-        <div style={{ fontSize: 11, fontWeight: 800, color: "#E5E7EB", letterSpacing: 0.2 }}>{team.label || (lang === "fr" ? "Équipe" : "Team")}</div>
-        <div style={{ fontSize: 13, fontWeight: 800, color: dsColor(team.score || 0) }}>{formatScore(team.score)}</div>
-      </div>
-      <div style={{ display: "grid", gridTemplateColumns: "28px 1fr auto", rowGap: 3, fontSize: 10 }}>
-        {TEAM_SLOTS.map(slot => {
-          const p = picks[slot];
-          const isCap = captain === slot;
-          return (
-            <div key={slot} style={{ display: "contents" }}>
-              <div style={{ color: slotColor(slot), fontWeight: 800, fontSize: 9 }}>{slot}{isCap ? " ©" : ""}</div>
-              <div style={{ color: p ? "#fff" : "rgba(255,255,255,0.25)", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
-                {p ? (p.name || p.slug || "—") : "—"}
-              </div>
-              <div style={{ color: "rgba(255,255,255,0.45)", fontSize: 9 }}>{p?.dscore != null ? formatScore(p.dscore) : ""}</div>
-            </div>
-          );
-        })}
-      </div>
-      <div style={{ fontSize: 8, color: "rgba(255,255,255,0.3)", marginTop: 6 }}>
-        {filled}/5 · {rarity ? (rarity === "rare" ? (lang === "fr" ? "Rare" : "Rare") : "Limited") : ""}{league ? ` · ${LEAGUE_NAMES[league] || league}` : ""}
-      </div>
-    </div>
-  );
+/**
+ * Regroupe les teams par ligue/rareté depuis le store cloud.
+ * Retourne : { limited: { L1: [teams], PL: [...], ... }, rare: { ... } }
+ * Chaque entry team a { team, gwKey, league, rarity }.
+ */
+function groupTeamsByLeague(store) {
+  const result = { limited: {}, rare: {} };
+  PRO_LEAGUES.forEach(l => { result.limited[l] = []; result.rare[l] = []; });
+  const d = store?.data || {};
+  ["proLimited", "proRare"].forEach(bucket => {
+    const rarity = bucket === "proRare" ? "rare" : "limited";
+    const leagues = d[bucket] || {};
+    Object.entries(leagues).forEach(([league, gwBuckets]) => {
+      if (!result[rarity][league]) return;
+      // Plus récent GW d'abord
+      Object.keys(gwBuckets || {}).sort().reverse().forEach(gwKey => {
+        const list = gwBuckets[gwKey];
+        if (!Array.isArray(list)) return;
+        list.forEach(team => { if (team) result[rarity][league].push({ team, gwKey, league, rarity }); });
+      });
+    });
+  });
+  return result;
 }
 
-function SectionHeader({ title, count, color = "#A5B4FC" }) {
-  return (
-    <div style={{ display: "flex", alignItems: "center", gap: 10, margin: "18px 0 8px" }}>
-      <div style={{ width: 4, height: 16, background: color, borderRadius: 2 }} />
-      <div style={{ fontSize: 14, fontWeight: 800, color: "#fff", letterSpacing: 0.3 }}>{title}</div>
-      <div style={{ fontSize: 10, color: "rgba(255,255,255,0.4)", fontWeight: 700 }}>{count} {count === 1 ? "team" : "teams"}</div>
-    </div>
-  );
-}
-
-function LeagueRow({ league, gwBuckets, rarity, lang }) {
-  const gwKeys = Object.keys(gwBuckets).sort().reverse();
-  if (gwKeys.length === 0) return null;
-  const latest = gwKeys[0];
-  const teams = gwBuckets[latest] || [];
-  if (teams.length === 0) return null;
-  const color = LEAGUE_COLORS[league] || "#A5B4FC";
-  const flag = LEAGUE_FLAG_CODES[league];
-  return (
-    <div style={{ marginBottom: 10 }}>
-      <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 6 }}>
-        {flag && <img src={`https://flagcdn.com/w20/${flag}.png`} alt="" style={{ width: 18, height: 12, objectFit: "cover", borderRadius: 2, boxShadow: "0 0 2px rgba(0,0,0,0.4)" }} />}
-        <div style={{ fontSize: 12, fontWeight: 800, color }}>{LEAGUE_NAMES[league] || league}</div>
-        <div style={{ fontSize: 9, color: "rgba(255,255,255,0.35)" }}>{latest} · {teams.length} {lang === "fr" ? "équipe" + (teams.length > 1 ? "s" : "") : "team" + (teams.length > 1 ? "s" : "")}</div>
-      </div>
-      <div style={{ display: "flex", flexWrap: "wrap", gap: 8 }}>
-        {teams.map(team => <TeamCard key={team.id} team={team} rarity={rarity} league={league} lang={lang} />)}
-      </div>
-    </div>
-  );
-}
-
-export default function RecapTab({ lang }) {
+function RecapTabInner({ players, logos, lang }) {
   const [store, setStore] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [activeRarity, setActiveRarity] = useState("limited");
+  // Par défaut : toutes les ligues qui ont au moins une team sont ouvertes.
+  const [openLeagues, setOpenLeagues] = useState(null);
 
   useEffect(() => {
     let cancelled = false;
@@ -101,30 +76,39 @@ export default function RecapTab({ lang }) {
     return () => { cancelled = true; };
   }, []);
 
-  const aggregates = useMemo(() => {
-    if (!store) return null;
-    const d = store.data || {};
-    const countTeams = (obj) => {
-      let c = 0, sum = 0;
-      Object.values(obj || {}).forEach(leagueBuckets => {
-        Object.values(leagueBuckets || {}).forEach(list => {
-          list.forEach(t => { c++; if (t.score != null) sum += Number(t.score) || 0; });
+  const grouped = useMemo(() => store ? groupTeamsByLeague(store) : null, [store]);
+
+  const stats = useMemo(() => {
+    if (!grouped) return null;
+    const compute = (rarity) => {
+      let count = 0, sum = 0;
+      PRO_LEAGUES.forEach(l => {
+        grouped[rarity][l].forEach(({ team }) => {
+          count++;
+          const { projectedTotal } = computeTeamScores(team, players || []);
+          sum += projectedTotal || 0;
         });
       });
-      return { count: c, total: sum };
+      return { count, sum };
     };
-    const limited = countTeams(d.proLimited);
-    const rare = countTeams(d.proRare);
-    let stellarCount = 0, stellarTotal = 0;
-    Object.values(d.stellar || {}).forEach(list => {
-      list.forEach(t => { stellarCount++; if (t.score != null) stellarTotal += Number(t.score) || 0; });
+    const perLeague = { limited: {}, rare: {} };
+    ["limited", "rare"].forEach(r => {
+      PRO_LEAGUES.forEach(l => { perLeague[r][l] = grouped[r][l].length; });
     });
-    return {
-      limited, rare, stellar: { count: stellarCount, total: stellarTotal },
-      grandCount: limited.count + rare.count + stellarCount,
-      grandTotal: limited.total + rare.total + stellarTotal,
-    };
-  }, [store]);
+    return { limited: compute("limited"), rare: compute("rare"), perLeague };
+  }, [grouped, players]);
+
+  // Initialise openLeagues une fois que les stats sont dispo : ouvre toutes les ligues non vides.
+  useEffect(() => {
+    if (!stats || openLeagues !== null) return;
+    const init = {};
+    ["limited", "rare"].forEach(r => { PRO_LEAGUES.forEach(l => { init[`${r}_${l}`] = stats.perLeague[r][l] > 0; }); });
+    setOpenLeagues(init);
+  }, [stats, openLeagues]);
+
+  const toggleLeague = (rarity, league) => {
+    setOpenLeagues(prev => ({ ...(prev || {}), [`${rarity}_${league}`]: !prev?.[`${rarity}_${league}`] }));
+  };
 
   if (loading) {
     return <div style={{ padding: 40, textAlign: "center", color: "rgba(255,255,255,0.4)", fontFamily: "Outfit" }}>{t(lang, "loading") || "Chargement…"}</div>;
@@ -138,22 +122,22 @@ export default function RecapTab({ lang }) {
         </div>
         <div style={{ fontSize: 12, color: "rgba(255,255,255,0.5)" }}>
           {lang === "fr"
-            ? "Le Recap centralise tes équipes Pro Limited, Pro Rare et Stellar sauvegardées sur tous tes appareils. Va dans l'onglet Sorare Pro ou Stellar pour te connecter."
-            : "Recap centralizes your saved Pro Limited, Pro Rare and Stellar teams across all devices. Go to Sorare Pro or Stellar tab to connect."}
+            ? "Mes Teams centralise tes équipes Pro Limited et Pro Rare sauvegardées sur tous tes appareils. Va dans l'onglet Sorare Pro pour te connecter."
+            : "My Teams centralizes your saved Pro Limited and Pro Rare teams across all devices. Go to Sorare Pro tab to connect."}
         </div>
       </div>
     );
   }
   if (error === "fetch_failed" || !store) {
-    return (
-      <div style={{ padding: 40, textAlign: "center", color: "#F87171", fontFamily: "Outfit" }}>
-        {lang === "fr" ? "Impossible de charger le cloud." : "Cloud unavailable."}
-      </div>
-    );
+    return <div style={{ padding: 40, textAlign: "center", color: "#F87171", fontFamily: "Outfit" }}>{lang === "fr" ? "Impossible de charger le cloud." : "Cloud unavailable."}</div>;
   }
 
+  const activeStats = stats?.[activeRarity];
+  const hasAny = (stats?.limited.count || 0) + (stats?.rare.count || 0) > 0;
+  const rColor = RARITY_COLOR[activeRarity];
+
   const d = store.data || {};
-  const hasAny = aggregates && aggregates.grandCount > 0;
+  const lastSync = d._updatedAt;
 
   return (
     <div style={{ maxWidth: 1400, margin: "0 auto", padding: "12px 16px", fontFamily: "Outfit" }}>
@@ -169,24 +153,24 @@ export default function RecapTab({ lang }) {
           </div>
           <div style={{ fontSize: 18, fontWeight: 800, color: "#fff" }}>{store.slug}</div>
           <div style={{ fontSize: 10, color: "rgba(255,255,255,0.35)", marginTop: 2 }}>
-            {d._updatedAt ? `${lang === "fr" ? "Dernière synchro" : "Last sync"}: ${new Date(d._updatedAt).toLocaleString(lang === "fr" ? "fr-FR" : "en-US")}` : (lang === "fr" ? "Aucune synchro encore" : "No sync yet")}
+            {lastSync ? `${lang === "fr" ? "Dernière synchro" : "Last sync"}: ${new Date(lastSync).toLocaleString(lang === "fr" ? "fr-FR" : "en-US")}` : (lang === "fr" ? "Aucune synchro encore" : "No sync yet")}
           </div>
         </div>
-        {aggregates && (
-          <div style={{ display: "flex", gap: 14, fontFamily: "Outfit" }}>
+        {stats && (
+          <div style={{ display: "flex", gap: 14 }}>
             <div style={{ textAlign: "center", minWidth: 70 }}>
-              <div style={{ fontSize: 22, fontWeight: 900, color: "#fff" }}>{aggregates.grandCount}</div>
+              <div style={{ fontSize: 22, fontWeight: 900, color: "#fff" }}>{stats.limited.count + stats.rare.count}</div>
               <div style={{ fontSize: 9, color: "rgba(255,255,255,0.45)", letterSpacing: 1 }}>{lang === "fr" ? "ÉQUIPES" : "TEAMS"}</div>
             </div>
             <div style={{ textAlign: "center", minWidth: 90 }}>
-              <div style={{ fontSize: 22, fontWeight: 900, color: dsColor(aggregates.grandTotal / Math.max(1, aggregates.grandCount)) }}>
-                {formatScore(aggregates.grandCount > 0 ? aggregates.grandTotal / aggregates.grandCount : 0)}
+              <div style={{ fontSize: 22, fontWeight: 900, color: dsColor((stats.limited.sum + stats.rare.sum) / Math.max(1, stats.limited.count + stats.rare.count)) }}>
+                {formatScore((stats.limited.count + stats.rare.count) > 0 ? (stats.limited.sum + stats.rare.sum) / (stats.limited.count + stats.rare.count) : 0)}
               </div>
               <div style={{ fontSize: 9, color: "rgba(255,255,255,0.45)", letterSpacing: 1 }}>{lang === "fr" ? "SCORE MOY." : "AVG SCORE"}</div>
             </div>
             <div style={{ textAlign: "center", minWidth: 90 }}>
-              <div style={{ fontSize: 22, fontWeight: 900, color: "#E9D5FF" }}>{formatScore(aggregates.grandTotal)}</div>
-              <div style={{ fontSize: 9, color: "rgba(255,255,255,0.45)", letterSpacing: 1 }}>{lang === "fr" ? "TOTAL" : "TOTAL"}</div>
+              <div style={{ fontSize: 22, fontWeight: 900, color: "#E9D5FF" }}>{formatScore(stats.limited.sum + stats.rare.sum)}</div>
+              <div style={{ fontSize: 9, color: "rgba(255,255,255,0.45)", letterSpacing: 1 }}>TOTAL</div>
             </div>
           </div>
         )}
@@ -199,56 +183,114 @@ export default function RecapTab({ lang }) {
             {lang === "fr" ? "Aucune équipe sauvegardée pour l'instant" : "No saved teams yet"}
           </div>
           <div style={{ fontSize: 11 }}>
-            {lang === "fr" ? "Construis tes équipes dans les onglets Sorare Pro et Stellar, elles apparaîtront ici." : "Build your teams in Sorare Pro and Stellar tabs, they'll show up here."}
+            {lang === "fr" ? "Construis tes équipes dans l'onglet Sorare Pro, elles apparaîtront ici." : "Build your teams in Sorare Pro tab, they'll show up here."}
           </div>
         </div>
       )}
 
       {hasAny && (
         <>
-          {/* Pro Limited */}
-          {aggregates.limited.count > 0 && (
-            <>
-              <SectionHeader title={`Pro Limited · ${lang === "fr" ? "5 ligues" : "5 leagues"}`} count={aggregates.limited.count} color="#60A5FA" />
-              {PRO_LEAGUES.map(l => (
-                <LeagueRow key={l} league={l} gwBuckets={d.proLimited?.[l] || {}} rarity="limited" lang={lang} />
-              ))}
-            </>
-          )}
+          {/* Toggle Limited / Rare */}
+          <div style={{ display: "flex", gap: 8, marginTop: 18, marginBottom: 14 }}>
+            {["limited", "rare"].map(r => {
+              const accent = RARITY_COLOR[r];
+              const active = activeRarity === r;
+              const s = stats[r];
+              return (
+                <button key={r} onClick={() => setActiveRarity(r)} style={{
+                  padding: "8px 16px", borderRadius: 10, fontSize: 12, fontWeight: 800, fontFamily: "Outfit",
+                  cursor: "pointer", border: "1px solid " + (active ? accent + "70" : "rgba(255,255,255,0.08)"),
+                  background: active ? accent + "22" : "rgba(255,255,255,0.02)",
+                  color: active ? accent : "rgba(255,255,255,0.45)",
+                  display: "inline-flex", alignItems: "center", gap: 8, whiteSpace: "nowrap",
+                  letterSpacing: 0.5, textTransform: "uppercase",
+                }}>
+                  {r === "limited" ? "Pro Limited" : "Pro Rare"}
+                  <span style={{ fontSize: 10, opacity: 0.8, padding: "1px 6px", borderRadius: 10, background: active ? accent + "18" : "rgba(255,255,255,0.05)" }}>{s.count}</span>
+                </button>
+              );
+            })}
+          </div>
 
-          {/* Pro Rare */}
-          {aggregates.rare.count > 0 && (
-            <>
-              <SectionHeader title={`Pro Rare · ${lang === "fr" ? "5 ligues" : "5 leagues"}`} count={aggregates.rare.count} color="#F472B6" />
-              {PRO_LEAGUES.map(l => (
-                <LeagueRow key={l} league={l} gwBuckets={d.proRare?.[l] || {}} rarity="rare" lang={lang} />
-              ))}
-            </>
-          )}
-
-          {/* Stellar */}
-          {aggregates.stellar.count > 0 && (
-            <>
-              <SectionHeader title="Stellar" count={aggregates.stellar.count} color="#C084FC" />
-              {Object.keys(d.stellar || {}).sort().reverse().map(dateStr => {
-                const teams = d.stellar[dateStr] || [];
-                if (teams.length === 0) return null;
+          {activeStats.count === 0 ? (
+            <div style={{ padding: 30, textAlign: "center", color: "rgba(255,255,255,0.35)", fontSize: 11 }}>
+              {lang === "fr"
+                ? `Aucune équipe ${activeRarity === "rare" ? "Rare" : "Limited"} sauvegardée.`
+                : `No ${activeRarity} team saved.`}
+            </div>
+          ) : (
+            <div style={{ display: "flex", flexDirection: "column", gap: 14 }}>
+              {PRO_LEAGUES.map(league => {
+                const teams = grouped[activeRarity][league];
+                if (!teams.length) return null;
+                const accent = LEAGUE_COLORS[league] || "#A5B4FC";
+                const flag = LEAGUE_FLAG_CODES[league];
+                const open = openLeagues?.[`${activeRarity}_${league}`] !== false;
                 return (
-                  <div key={dateStr} style={{ marginBottom: 10 }}>
-                    <div style={{ fontSize: 11, fontWeight: 700, color: "#C4B5FD", marginBottom: 6 }}>
-                      {new Date(dateStr).toLocaleDateString(lang === "fr" ? "fr-FR" : "en-US", { weekday: "long", day: "numeric", month: "long" })}
-                      <span style={{ color: "rgba(255,255,255,0.35)", fontWeight: 500, marginLeft: 8 }}>· {teams.length} {teams.length > 1 ? (lang === "fr" ? "équipes" : "teams") : (lang === "fr" ? "équipe" : "team")}</span>
-                    </div>
-                    <div style={{ display: "flex", flexWrap: "wrap", gap: 8 }}>
-                      {teams.map(team => <TeamCard key={team.id} team={team} rarity={null} league={null} lang={lang} />)}
-                    </div>
+                  <div key={league} style={{
+                    borderRadius: 12, border: `1px solid ${accent}25`,
+                    background: "linear-gradient(180deg, rgba(10,5,28,0.5), rgba(6,3,18,0.35))",
+                    overflow: "hidden",
+                  }}>
+                    <button
+                      onClick={() => toggleLeague(activeRarity, league)}
+                      style={{
+                        width: "100%", display: "flex", alignItems: "center", gap: 10,
+                        padding: "10px 14px", border: "none", cursor: "pointer",
+                        background: `${accent}10`, color: "#fff", fontFamily: "Outfit",
+                        borderBottom: open ? `1px solid ${accent}20` : "none",
+                      }}
+                    >
+                      <span style={{ fontSize: 12, transition: "transform 0.2s", display: "inline-block", transform: open ? "rotate(90deg)" : "rotate(0deg)", color: accent, width: 10 }}>▶</span>
+                      {flag && <img src={`https://flagcdn.com/w20/${flag}.png`} alt="" style={{ width: 18, height: 13, objectFit: "cover", borderRadius: 2 }} />}
+                      <span style={{ fontSize: 13, fontWeight: 800, color: accent, letterSpacing: 0.3 }}>{LEAGUE_NAMES[league] || league}</span>
+                      <span style={{ fontSize: 10, fontWeight: 700, color: "rgba(255,255,255,0.45)", padding: "2px 8px", borderRadius: 10, background: "rgba(255,255,255,0.04)" }}>
+                        {teams.length} {lang === "fr" ? (teams.length > 1 ? "équipes" : "équipe") : (teams.length > 1 ? "teams" : "team")}
+                      </span>
+                      <span style={{ marginLeft: "auto", fontSize: 10, color: "rgba(255,255,255,0.3)" }}>
+                        {open ? (lang === "fr" ? "Masquer" : "Hide") : (lang === "fr" ? "Afficher" : "Show")}
+                      </span>
+                    </button>
+                    {open && (
+                      <div className="recap-grid" style={{
+                        display: "grid", gridTemplateColumns: "repeat(auto-fill, 480px)",
+                        gap: 10, padding: 12,
+                      }}>
+                        {teams.map((item, i) => (
+                          <ProSavedTeamCard
+                            key={`${item.team.id}-${i}`}
+                            team={item.team}
+                            league={item.league}
+                            rarity={item.rarity}
+                            players={players}
+                            logos={logos}
+                            lang={lang}
+                            rarityColor={rColor}
+                          />
+                        ))}
+                      </div>
+                    )}
                   </div>
                 );
               })}
-            </>
+            </div>
           )}
+
+          <style>{`
+            @media (max-width: 900px) {
+              .recap-grid { grid-template-columns: 1fr !important; }
+            }
+          `}</style>
         </>
       )}
     </div>
+  );
+}
+
+export default function RecapTab(props) {
+  return (
+    <RecapErrorBoundary>
+      <RecapTabInner {...props} />
+    </RecapErrorBoundary>
   );
 }

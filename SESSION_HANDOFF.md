@@ -31,6 +31,27 @@
 
 ---
 
+## 🔍 Findings session 20/04 (Mac, matin)
+
+### Preview pitch layout ne plante PAS (bug écran noir résolu)
+- Preview `538135b9.deglingo-sorare.pages.dev` charge OK, pitch + SkyrocketGauge s'affichent
+- L'utilisateur a copié son token `sorare_access_token` depuis prod via devtools console (`copy(localStorage.getItem("sorare_access_token"))` puis `localStorage.setItem(...)`) parce que le `redirect_uri` OAuth est hardcodé sur prod (`SorareProTab.jsx:300`, `StellarTab.jsx:786`)
+
+### ⚠️ BUG ACTUEL à fixer : cartes Sorare ne s'affichent pas dans Mes Teams pitch
+- Les pitch cards affichent le **fallback club logo** au lieu des vraies images Sorare
+- Cause : `getPickCard(pick)` dans `proScoring.js:79` retourne `pick._card || null`
+- Les saved teams en KV ont été créées **AVANT** que `_card` soit requis → `_card` = undefined → fallback
+- **Fix = TODO #4 du handoff** : migration au load → pour chaque pick sans `_card`, chercher la meilleure carte dans `proAllCards[slug][0]` (user's Sorare cards) et l'assigner automatiquement
+- Fichiers à modifier : probablement `RecapTab.jsx` (chargement teams) ou `cloudSync.js` (fetchCloudStore) pour enrichir au fetch
+- Tester sur preview avant merge dans main
+
+### URLs preview en cours
+- Preview branch : `claude/fix-conversation-loading-bRv3u` (commit `eac04d9`)
+- Preview URL : `https://538135b9.deglingo-sorare.pages.dev/#recap`
+- NE PAS merger tant que le bug cartes non fixé
+
+---
+
 ## Contexte projet
 
 - **Repo** : https://github.com/deglongompg/Deglingo-scout (branche `main`)

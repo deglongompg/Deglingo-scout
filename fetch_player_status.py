@@ -93,8 +93,11 @@ def parse_player_data(p):
     """Parse la reponse player -> dict avec injured/suspended/proj/starter_pct.
 
     Source titu% (par ordre de priorite) :
-      1. nextClassicFixturePlayingStatusOdds.starterOddsBasisPoints (precis, 0-100%, pour matchs Classic)
-      2. Fallback playingStatus enum -> % mappe (pour matchs mid-week qui ne sont pas Classic)
+      1. Si odds precis (starterOddsBasisPoints) : utiliser ces odds.
+         - Si odds >= 10% : joueur de retour, override injured/suspended
+         - Si odds < 10% et blesse/suspendu : force a 0
+      2. Si pas d'odds ET blesse/suspendu : force a 0 (flag prioritaire sur enum)
+      3. Si pas d'odds ET pas blesse : fallback enum playingStatus (matchs mid-week non-Classic)
     """
     if not p:
         return None
@@ -103,19 +106,24 @@ def parse_player_data(p):
     proj      = p.get("nextClassicFixtureProjectedScore")
     odds      = (p.get("nextClassicFixturePlayingStatusOdds") or {})
     bp        = odds.get("starterOddsBasisPoints")
-    starter_pct = min(round(bp / 100), 90) if bp is not None else None
-    # Fallback : si pas d'odds precis, utilise l'enum playingStatus (matchs mid-week)
-    if starter_pct is None:
-        ps = p.get("playingStatus")
-        if ps in PLAYING_STATUS_TO_PCT:
-            starter_pct = PLAYING_STATUS_TO_PCT[ps]
-    # Titu% >= 10% → joueur de retour, ignorer le flag blessé/suspendu
-    if starter_pct is not None and starter_pct >= 10:
-        injured = False
-        suspended = False
-    # Blessé/suspendu sans titu% élevé → forcer à 0
-    elif (injured or suspended) and starter_pct is not None:
+
+    if bp is not None:
+        # Priorite 1 : odds precis Sorare
+        starter_pct = min(round(bp / 100), 90)
+        if starter_pct >= 10:
+            # Titu% eleve : Sorare indique que le joueur est disponible (override flag stale)
+            injured = False
+            suspended = False
+        elif injured or suspended:
+            starter_pct = 0
+    elif injured or suspended:
+        # Priorite 2 : blesse/suspendu sans odds -> 0% (ne PAS utiliser l'enum qui est generique)
         starter_pct = 0
+    else:
+        # Priorite 3 : fallback enum playingStatus (matchs mid-week non-Classic)
+        ps = p.get("playingStatus")
+        starter_pct = PLAYING_STATUS_TO_PCT.get(ps) if ps in PLAYING_STATUS_TO_PCT else None
+
     return {
         "injured":          injured,
         "suspended":        suspended,

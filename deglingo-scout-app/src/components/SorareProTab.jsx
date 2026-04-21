@@ -1628,6 +1628,11 @@ export default function SorareProTab({ players, teams, fixtures, logos = {}, mat
                   const captainBonus = isCap ? postBonus * 0.5 : 0;
                   return { full: postBonus + captainBonus, isLive: true };
                 }
+                // DNP : match deja joue mais pas de SO5 pour ce joueur -> score reel = 0
+                const todayStrFx = new Date().toISOString().split("T")[0];
+                if (p.matchDate && p.matchDate < todayStrFx) {
+                  return { full: 0, isLive: true };
+                }
                 return { full: getFullScore(p, isCap), isLive: false };
               };
               const stPlayerInfos = stPlayers.map(p => ({ p, ...getScoreInfo(p, stCaptainId && (p.slug || p.name) === stCaptainId) }));
@@ -1664,16 +1669,24 @@ export default function SorareProTab({ players, teams, fixtures, logos = {}, mat
                 const dateLabel = p.matchDate ? new Date(p.matchDate + "T12:00:00").toLocaleDateString(lang === "fr" ? "fr-FR" : "en-US", { timeZone: TZ, weekday: "short", day: "numeric" }).toUpperCase().replace(".", "") : "";
                 // Score affiche par carte = RAW score (comme Sorare), bonus appliques au total uniquement.
                 const hasRealScore = p.last_so5_date && p.matchDate && p.last_so5_date === p.matchDate && p.last_so5_score != null;
+                const todayStrFx = new Date().toISOString().split("T")[0];
+                const matchIsPast = p.matchDate && p.matchDate < todayStrFx;
+                // DNP = match deja joue mais pas de SO5 pour le joueur (blesse, banc, absent)
+                const isDNP = matchIsPast && !hasRealScore;
                 const rawRealScore = hasRealScore ? p.last_so5_score : null;
-                const playerScore = hasRealScore ? Math.round(rawRealScore) : Math.round(p.ds || 0);
+                const playerScore = hasRealScore ? Math.round(rawRealScore) : isDNP ? 0 : Math.round(p.ds || 0);
                 // Captain bonus = POST-BONUS × 0.5 (formule Sorare officielle)
-                const capBase = hasRealScore ? rawRealScore : (p.ds || 0);
+                const capBase = hasRealScore ? rawRealScore : isDNP ? 0 : (p.ds || 0);
                 const capCardPower = getCard(p)?.power && getCard(p).power > 1 ? getCard(p).power : 1;
                 const captainBonusPts = isCap ? Math.round(capBase * (bonusEnabled ? capCardPower : 1) * 0.5) : 0;
-                // Score du match si joue : ordre HOME - AWAY (reel)
-                const matchScore = hasRealScore && p.last_match_home_goals != null && p.last_match_away_goals != null
+                // Score du match : depuis le joueur lui-meme si SO5 OK, sinon depuis un co-equipier fetche (cas DNP)
+                let matchScore = hasRealScore && p.last_match_home_goals != null && p.last_match_away_goals != null
                   ? `${p.last_match_home_goals} - ${p.last_match_away_goals}`
                   : null;
+                if (!matchScore && isDNP && p.club && p.matchDate) {
+                  const mate = players.find(pl => pl.club === p.club && pl.last_so5_date === p.matchDate && pl.last_match_home_goals != null);
+                  if (mate) matchScore = `${mate.last_match_home_goals} - ${mate.last_match_away_goals}`;
+                }
                 // Logos dans l'ordre home -> away (independant du player)
                 const recapHomeLogo = p.isHome ? playerClubLogo : oppLogo;
                 const recapAwayLogo = p.isHome ? oppLogo : playerClubLogo;
@@ -1692,11 +1705,12 @@ export default function SorareProTab({ players, teams, fixtures, logos = {}, mat
                         </div>
                       )}
                       {isCap && <span style={{ position: "absolute", top: 2, right: 12, width: 12, height: 12, borderRadius: "50%", background: "#FBBF24", color: "#000", fontSize: 7, fontWeight: 900, display: "flex", alignItems: "center", justifyContent: "center", zIndex: 2 }}>C</span>}
-                      {p.sorare_starter_pct != null && !hasRealScore && (
+                      {p.sorare_starter_pct != null && !hasRealScore && !isDNP && (
                         <span style={{ position: "absolute", top: isCap ? 16 : 2, right: 2, fontSize: 7, fontWeight: 700, padding: "1px 3px", borderRadius: 3, color: "#fff", zIndex: 2,
                           background: p.sorare_starter_pct >= 70 ? "rgba(22,101,52,0.9)" : p.sorare_starter_pct >= 50 ? "rgba(133,77,14,0.9)" : "rgba(153,27,27,0.9)",
                         }}>{p.sorare_starter_pct}%</span>
                       )}
+                      {isDNP && <span style={{ position: "absolute", top: 2, right: 2, fontSize: 7, fontWeight: 800, padding: "1px 4px", borderRadius: 3, color: "#fff", zIndex: 2, background: "rgba(153,27,27,0.95)", letterSpacing: "0.5px" }}>DNP</span>}
                       {bonusPct > 0 && <span style={{ position: "absolute", bottom: 34, right: 4, fontSize: 8, fontWeight: 900, color: "#4ADE80", background: "rgba(0,0,0,0.7)", borderRadius: 3, padding: "1px 4px", zIndex: 3 }}>+{bonusPct}%</span>}
                       {ownedCard?.isClassic && <span style={{ position: "absolute", top: 2, left: 2, fontSize: 4, fontWeight: 900, color: "#fff", background: "rgba(139,92,246,0.8)", borderRadius: 2, padding: "0px 2px", zIndex: 2 }}>CLASSIC</span>}
                       {/* D-Score — inside card, bottom right */}
@@ -1704,10 +1718,10 @@ export default function SorareProTab({ players, teams, fixtures, logos = {}, mat
                         width: 32, height: 32, borderRadius: "50%",
                         display: "flex", alignItems: "center", justifyContent: "center",
                         fontFamily: "'DM Mono',monospace", fontSize: 13, fontWeight: 900,
-                        color: hasRealScore ? "#fff" : dsColor(playerScore),
-                        background: hasRealScore ? dsBg(playerScore) : "rgba(0,0,0,0.6)",
-                        border: hasRealScore ? "none" : `1px dashed ${dsColor(playerScore)}60`,
-                        boxShadow: hasRealScore ? `0 0 8px ${dsColor(playerScore)}50` : `0 0 6px ${dsColor(playerScore)}30`,
+                        color: hasRealScore ? "#fff" : isDNP ? "#fff" : dsColor(playerScore),
+                        background: hasRealScore ? dsBg(playerScore) : isDNP ? "rgba(127,29,29,0.9)" : "rgba(0,0,0,0.6)",
+                        border: hasRealScore ? "none" : isDNP ? "1px solid rgba(220,38,38,0.8)" : `1px dashed ${dsColor(playerScore)}60`,
+                        boxShadow: hasRealScore ? `0 0 8px ${dsColor(playerScore)}50` : isDNP ? "0 0 6px rgba(220,38,38,0.4)" : `0 0 6px ${dsColor(playerScore)}30`,
                       }}>{playerScore}</div>
                     </div>
                     {/* Match info box — ordre HOME vs AWAY toujours respecte */}

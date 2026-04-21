@@ -140,14 +140,19 @@ function formatStellarDate(dateStr, lang) {
 function computeStellarProjected(team, players, stellarCardsBySlug) {
   if (!team?.picks) return 0;
   const POS = ["GK", "DEF", "MIL", "ATT", "FLEX"];
+  const todayStrFx = new Date().toISOString().split("T")[0];
   const picks = POS.map(s => team.picks[s]).filter(Boolean);
   const data = picks.map(p => {
     const fresh = players.find(pl => pl.slug === p.slug);
     const owned = stellarCardsBySlug[p.slug || p.name];
     const bonusPct = (owned && owned.totalBonus > 0) ? owned.totalBonus : 0;
     const mult = 1 + bonusPct / 100;
-    const raw = (fresh && fresh.last_so5_date === p.matchDate && fresh.last_so5_score != null)
-      ? fresh.last_so5_score : (p.ds || 0);
+    const hasReal = fresh && fresh.last_so5_date === p.matchDate && fresh.last_so5_score != null;
+    const matchIsPast = p.matchDate && p.matchDate < todayStrFx;
+    let raw;
+    if (hasReal) raw = fresh.last_so5_score;
+    else if (matchIsPast) raw = 0; // DNP
+    else raw = p.ds || 0;
     return { p, postBonus: raw * mult };
   });
   let cap = data.find(x => x.p.isCaptain);

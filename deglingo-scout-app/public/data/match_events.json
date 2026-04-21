@@ -1,65 +1,10 @@
 {
-  "Game:d9403151-1fac-4325-a9b5-83c65c985f81": {
-    "home": "FC Metz",
-    "away": "Paris FC",
-    "date": "2026-04-19",
-    "home_goals": 1,
-    "away_goals": 3,
-    "home_scorers": [],
-    "away_scorers": [],
-    "home_assists": [],
-    "away_assists": []
-  },
-  "Game:1d51c004-24ca-4db9-9b2f-d239cca3cd40": {
-    "home": "AS Monaco",
-    "away": "AJ Auxerre",
-    "date": "2026-04-19",
-    "home_goals": 2,
-    "away_goals": 2,
-    "home_scorers": [],
-    "away_scorers": [],
-    "home_assists": [],
-    "away_assists": []
-  },
   "Game:8811e302-dcb5-4d27-8ba6-d4f9d4d2516c": {
     "home": "Stade de Reims",
     "away": "Red Star FC 93",
     "date": "2026-04-18",
     "home_goals": 3,
     "away_goals": 2,
-    "home_scorers": [],
-    "away_scorers": [],
-    "home_assists": [],
-    "away_assists": []
-  },
-  "Game:f3cbe434-5e6f-4748-bea7-aea39f8e224b": {
-    "home": "Paris Saint-Germain",
-    "away": "Olympique Lyonnais",
-    "date": "2026-04-19",
-    "home_goals": 1,
-    "away_goals": 2,
-    "home_scorers": [],
-    "away_scorers": [],
-    "home_assists": [],
-    "away_assists": []
-  },
-  "Game:13410b3e-32d3-464e-9c30-1dc203c46b06": {
-    "home": "RC Strasbourg Alsace",
-    "away": "Stade Rennais F.C.",
-    "date": "2026-04-19",
-    "home_goals": 0,
-    "away_goals": 3,
-    "home_scorers": [],
-    "away_scorers": [],
-    "home_assists": [],
-    "away_assists": []
-  },
-  "Game:d16a9b99-9b32-4c67-921f-497de4c93b87": {
-    "home": "Nottingham Forest FC",
-    "away": "Burnley FC",
-    "date": "2026-04-19",
-    "home_goals": 4,
-    "away_goals": 1,
     "home_scorers": [],
     "away_scorers": [],
     "home_assists": [],

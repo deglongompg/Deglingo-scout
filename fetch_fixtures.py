@@ -16,6 +16,11 @@ from urllib.request import Request, urlopen
 from urllib.error import HTTPError
 from datetime import datetime, timedelta
 sys.stdout.reconfigure(errors="replace")
+try:
+    from dotenv import load_dotenv
+    load_dotenv()
+except ImportError:
+    pass
 
 API_KEY = sys.argv[1] if len(sys.argv) > 1 else os.environ.get("FOOTBALL_DATA_API_KEY", "")
 if not API_KEY:

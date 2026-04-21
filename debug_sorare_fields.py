@@ -1,8 +1,10 @@
 #!/usr/bin/env python3
 """
-debug_sorare_fields.py — GOLDEN HIT probable : Player.playingStatus
+debug_sorare_fields.py — 1) Confirme les valeurs possibles de playingStatus
+2) Cherche encore un champ % precis (odds) a cote
 """
 import requests, json, os
+from collections import Counter
 from dotenv import load_dotenv
 
 load_dotenv()
@@ -13,74 +15,85 @@ if key:
     HEADERS["APIKEY"] = key
     print("🔑 API key active\n")
 
-SLUG = "kylian-mbappe-lottin"
+# 1) Sample 50 joueurs (toutes ligues) - quelle est la distribution de playingStatus?
+print("=== TEST 1 : distribution playingStatus sur 50 joueurs ===\n")
+with open("deglingo-scout-app/public/data/players.json") as f:
+    players = json.load(f)
+# Priorite : clubs jouant mid-week (Liga, L1 PSG, PL)
+midweek_clubs = ["Real Madrid", "FC Barcelona", "Paris Saint-Germain", "Atlético de Madrid",
+                 "Manchester City FC", "FC Metz", "Nottingham Forest FC", "Burnley FC"]
+sample = []
+for c in midweek_clubs:
+    sample.extend([p for p in players if p.get("club") == c][:5])
+sample = sample[:50]
 
-# 1) Teste playingStatus direct sur Player
-print("=== TEST 1 : player.playingStatus (sans sous-sel) ===")
-r = requests.post(URL, json={"query": '{ football { player(slug: "%s") { playingStatus } } }' % SLUG}, headers=HEADERS, timeout=10)
-print(json.dumps(r.json(), indent=2, ensure_ascii=False)[:400])
+Q = 'query($s:String!){football{player(slug:$s){displayName playingStatus}}}'
+stats = Counter()
+results = []
+for p in sample:
+    r = requests.post(URL, json={"query": Q, "variables": {"s": p["slug"]}}, headers=HEADERS, timeout=10)
+    body = r.json()
+    pp = (body.get("data") or {}).get("football", {}).get("player") or {}
+    ps = pp.get("playingStatus")
+    stats[ps] += 1
+    results.append((p.get("name"), p.get("club"), ps))
 
-print("\n=== TEST 2 : player.playingStatus avec __typename (objet) ===")
-r = requests.post(URL, json={"query": '{ football { player(slug: "%s") { playingStatus { __typename } } } }' % SLUG}, headers=HEADERS, timeout=10)
-print(json.dumps(r.json(), indent=2, ensure_ascii=False)[:400])
+# Resume par club
+print("Distribution des valeurs :")
+for ps, n in stats.most_common():
+    print(f"  {ps}: {n}")
+print()
+print("Detail (20 premiers) :")
+for name, club, ps in results[:20]:
+    print(f"  {name:<25} {club:<25} -> {ps}")
 
-# 2) Candidats de sous-champs sur playingStatus
-SUBFIELDS = [
-    "status",
-    "starterOddsBasisPoints",
+# 2) Cherche un champ odds % scoped au prochain match (pas Classic)
+print("\n\n=== TEST 2 : cherche champ odds % scoped au next match ===\n")
+CANDIDATES = [
+    "nextGamePlayingStatusOdds",
+    "playingStatusOddsForNextGame",
+    "activePlayingStatusOdds",
+    "upcomingPlayingStatusOdds",
+    "startingOddsBasisPoints",
     "oddsBasisPoints",
-    "starterOdds",
-    "probability",
-    "starter",
-    "startingProbability",
-    "__typename",
-    "type",
-    "value",
-    "kind",
+    "playingOdds",
+    "playingStatusOdds",
 ]
-print("\n=== TEST 3 : sous-champs de playingStatus ===\n")
-for sf in SUBFIELDS:
-    q = '{ football { player(slug: "%s") { playingStatus { %s } } } }' % (SLUG, sf)
+for c in CANDIDATES:
+    q = '{ football { player(slug: "kylian-mbappe-lottin") { %s { starterOddsBasisPoints } } } }' % c
     r = requests.post(URL, json={"query": q}, headers=HEADERS, timeout=10)
     body = r.json()
     if "errors" in body:
-        msg = body["errors"][0].get("message","?")[:140]
-        if "doesn't exist" in msg or "No field" in msg:
-            print(f"  ❌ {sf:<30} : n'existe pas")
+        msg = body["errors"][0].get("message","?")[:120]
+        if "doesn't exist" in msg:
+            print(f"  ❌ {c:<35} : n'existe pas")
         else:
-            print(f"  ⚠️  {sf:<30} : {msg}")
+            print(f"  ⚠️  {c:<35} : {msg}")
     else:
         d = body.get("data", {}).get("football", {}).get("player", {}) or {}
-        print(f"  ✅ {sf:<30} : {json.dumps(d.get('playingStatus'))[:180]}")
+        print(f"  ✅ {c:<35} : {json.dumps(d.get(c))[:150]}")
 
-# 3) Sample plus large de joueurs : qui a un playingStatus ?
-print("\n\n=== TEST 4 : sample 10 joueurs (Liga/L1/Bundes) : playingStatus existe? ===\n")
-with open("deglingo-scout-app/public/data/players.json") as f:
-    players = json.load(f)
-sample = (
-    [p for p in players if p.get("league") == "Liga"][:3]
-    + [p for p in players if p.get("league") == "L1"][:3]
-    + [p for p in players if p.get("league") == "Bundes"][:2]
-    + [p for p in players if p.get("league") == "PL"][:2]
-)
-# Query avec quelques sous-champs prometteurs
-Q = """query($slug: String!) {
-  football {
-    player(slug: $slug) {
-      displayName
-      playingStatus {
-        __typename
-      }
-    }
-  }
-}"""
-for p in sample:
-    slug = p.get("slug")
-    r = requests.post(URL, json={"query": Q, "variables": {"slug": slug}}, headers=HEADERS, timeout=10)
+# 3) Teste variantes sans sous-sel (peut-etre scalar)
+print("\n\n=== TEST 3 : champs scalar % (sans sous-sel) ===\n")
+SCALAR_CANDIDATES = [
+    "starterOddsBasisPoints",
+    "playingStatusOddsBasisPoints",
+    "startingProbability",
+    "startingOdds",
+    "starterOdds",
+    "lineupProbability",
+    "titularisationOdds",
+]
+for c in SCALAR_CANDIDATES:
+    q = '{ football { player(slug: "kylian-mbappe-lottin") { %s } } }' % c
+    r = requests.post(URL, json={"query": q}, headers=HEADERS, timeout=10)
     body = r.json()
     if "errors" in body:
-        print(f"  ❌ {p.get('name'):<25} ({p.get('league'):<6}) : {body['errors'][0].get('message','')[:60]}")
+        msg = body["errors"][0].get("message","?")[:120]
+        if "doesn't exist" in msg:
+            print(f"  ❌ {c:<35} : n'existe pas")
+        else:
+            print(f"  ⚠️  {c:<35} : {msg}")
     else:
-        pp = (body.get("data") or {}).get("football", {}).get("player") or {}
-        ps = pp.get("playingStatus")
-        print(f"  {'✅' if ps else '⚠️ '} {p.get('name'):<25} ({p.get('league'):<6}) : playingStatus={json.dumps(ps)[:80]}")
+        d = body.get("data", {}).get("football", {}).get("player", {}) or {}
+        print(f"  ✅ {c:<35} : {json.dumps(d.get(c))[:150]}")

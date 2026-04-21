@@ -99,7 +99,11 @@ def get_gw_start(now):
             best = candidate
     return best
 
-_gw_start_paris = get_gw_start(_paris_now)
+# Fenetre de fetch : on prend la PLUS LARGE entre la GW courante et 7 jours en arriere.
+# Sans ca, les matchs du week-end precedent sont exclus si on lance le script apres Mardi 16h
+# (la borne GW saute au mardi 16h et coupe tout ce qui est avant).
+_gw_window_start_paris = _paris_now - timedelta(days=7)
+_gw_start_paris = min(get_gw_start(_paris_now), _gw_window_start_paris)
 # Convertion en UTC pour comparer aux fixtures (kickoffs en UTC)
 _gw_start_utc = _gw_start_paris - timedelta(hours=2)
 gw_cutoff_date_utc = _gw_start_utc.strftime("%Y-%m-%d")

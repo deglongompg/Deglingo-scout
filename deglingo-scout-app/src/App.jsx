@@ -13,7 +13,7 @@ const TABS = [
   { id: "pro", label: "Sorare Pro", icon: "⚙️" },
   { id: "stellar", label: "Sorare Stellar", icon: "✨" },
   { id: "fight", label: "Fight", icon: "🥊" },
-  { id: "reco", label: "Best Pick", icon: "⚽" },
+  // { id: "reco", label: "Best Pick", icon: "⚽" }, // ← Masque cote clients (code conserve dans RecoTab.jsx, re-activer en decommentant)
   { id: "recap", label: "Mes Teams", icon: "📋" },
 ];
 

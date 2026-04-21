@@ -1,11 +1,9 @@
 #!/usr/bin/env python3
 """
-debug_sorare_fields.py — Introspection ciblee :
-1) Liste tous les types Player/Football du schema
-2) Pour chaque, liste les champs contenant 'odds' 'starter' 'playing' 'fixture'
-3) Test sur Mbappé
+debug_sorare_fields.py — Test a l'aveugle de champs candidats sur Mbappé.
+Sorare bloque l'introspection du schema, on tente des noms plausibles.
 """
-import requests, json, os, sys
+import requests, json, os
 from dotenv import load_dotenv
 
 load_dotenv()
@@ -16,58 +14,76 @@ if key:
     HEADERS["APIKEY"] = key
     print("🔑 API key active\n")
 
-# 1) Liste des types contenant 'Player'
-Q1 = '{ __schema { types { name kind } } }'
-r = requests.post(URL, json={"query": Q1}, headers=HEADERS, timeout=30)
-types = (r.json().get("data") or {}).get("__schema", {}).get("types") or []
-relevant_types = [t["name"] for t in types if t["name"] and ("Player" in t["name"] or "Odds" in t["name"] or "Fixture" in t["name"])]
-print(f"📋 Types pertinents ({len(relevant_types)}):")
-for t in relevant_types:
-    print(f"   - {t}")
+SLUG = "kylian-mbappe-lottin"
 
-# 2) Pour chaque type Player-like, lister tous les champs
-def introspect_type(name):
-    q = '{ __type(name: "%s") { name fields { name type { name kind ofType { name kind ofType { name } } } } } }' % name
-    rr = requests.post(URL, json={"query": q}, headers=HEADERS, timeout=15)
-    return ((rr.json().get("data") or {}).get("__type") or {})
+# Test 1 : Le champ actuel utilise par fetch_player_status.py — est-il a jour?
+Q1 = '{ football { player(slug: "%s") { displayName nextClassicFixtureProjectedScore nextClassicFixturePlayingStatusOdds { starterOddsBasisPoints } } } }' % SLUG
+print("=== TEST 1 : Champ actuel nextClassicFixture* ===")
+r = requests.post(URL, json={"query": Q1}, headers=HEADERS, timeout=15)
+print(json.dumps(r.json(), indent=2, ensure_ascii=False))
 
-print(f"\n\n🔍 Champs pertinents (odds/starter/playing/fixture/game/lineup/probab) par type :\n")
-for tname in relevant_types:
-    t = introspect_type(tname)
-    fields = t.get("fields") or []
-    if not fields: continue
-    hits = [f for f in fields if any(k in f["name"].lower() for k in ["odds","starter","playing","fixture","game","lineup","probab","starting"])]
-    if not hits: continue
-    print(f"\n=== {tname} ===")
-    for f in hits:
-        ty = f.get("type") or {}
-        # remonter le ofType
-        name = ty.get("name") or (ty.get("ofType") or {}).get("name") or (ty.get("ofType") or {}).get("ofType", {}).get("name") or ty.get("kind")
-        print(f"   - {f['name']:<50} → {name}")
-
-# 3) Test direct sur Mbappé avec une query qui liste les games a venir
-print(f"\n\n🎯 Test query 'games'/'upcomingFixtures'/'fixtures' sur Mbappé :\n")
-probes = [
-    '{ football { player(slug: "kylian-mbappe-lottin") { __typename } } }',
-    # Tests basiques si on trouve des champs dans les types ci-dessus
+# Test 2 : Candidats alternatifs
+CANDIDATES = [
+    "upcomingFixtures",
+    "upcomingGames",
+    "nextFixture",
+    "activeFixture",
+    "currentFixture",
+    "fixtures",
+    "games",
+    "anyGame",
+    "openFixtures",
+    "nextFootballFixture",
+    "allFixtures",
+    "latestFixture",
+    "latestGame",
+    "nextGame",
+    "activePlayingStatus",
+    "playingStatusOdds",
+    "startingProbability",
+    "startingOdds",
+    "lineupOdds",
 ]
-for q in probes:
-    r = requests.post(URL, json={"query": q}, headers=HEADERS, timeout=15)
-    print(f"Q: {q[:100]}")
-    print(f"R: {json.dumps(r.json(), ensure_ascii=False)[:500]}\n")
 
-# 4) Ultra brute force : on tente de lister tous les champs du type retourne par player(slug)
-# Comme c'est un PlayerInterface, on cherche le type concret
-print("🧪 Query ultra-large pour voir TOUT ce que player retourne :\n")
-BROAD = """{
-  football {
-    player(slug: "kylian-mbappe-lottin") {
-      __typename
-      ... on Player {
-        displayName
-      }
-    }
-  }
-}"""
-r = requests.post(URL, json={"query": BROAD}, headers=HEADERS, timeout=15)
-print(json.dumps(r.json(), ensure_ascii=False, indent=2)[:500])
+print("\n\n=== TEST 2 : Champs candidats (tente chaque sous-champ avec __typename) ===\n")
+for cand in CANDIDATES:
+    q = '{ football { player(slug: "%s") { %s { __typename } } } }' % (SLUG, cand)
+    try:
+        r = requests.post(URL, json={"query": q}, headers=HEADERS, timeout=10)
+        body = r.json()
+        if "errors" in body:
+            msg = body["errors"][0].get("message", "?")
+            # Si le champ existe mais necessite args -> message different
+            if "doesn't exist" in msg or "is not defined" in msg or "Unknown" in msg:
+                print(f"  ❌ {cand:<30} : n'existe pas")
+            else:
+                # Champ existe probablement
+                print(f"  ⚠️  {cand:<30} : {msg[:100]}")
+        else:
+            p = (body.get("data") or {}).get("football", {}).get("player") or {}
+            print(f"  ✅ {cand:<30} : {json.dumps(p.get(cand))[:120]}")
+    except Exception as e:
+        print(f"  💥 {cand}: {e}")
+
+# Test 3 : Tester avec args first: N (liste paginee)
+print("\n\n=== TEST 3 : Champs avec pagination (first: 3) ===\n")
+LIST_CANDIDATES = ["upcomingFixtures", "upcomingGames", "fixtures", "games", "allFixtures"]
+for cand in LIST_CANDIDATES:
+    q = '{ football { player(slug: "%s") { %s(first: 3) { nodes { __typename } } } } }' % (SLUG, cand)
+    try:
+        r = requests.post(URL, json={"query": q}, headers=HEADERS, timeout=10)
+        body = r.json()
+        if "errors" in body:
+            msg = body["errors"][0].get("message", "?")[:150]
+            print(f"  ❌ {cand:<25}(first:3) : {msg}")
+        else:
+            p = (body.get("data") or {}).get("football", {}).get("player") or {}
+            print(f"  ✅ {cand:<25}(first:3) : {json.dumps(p)[:200]}")
+    except Exception as e:
+        print(f"  💥 {cand}: {e}")
+
+# Test 4 : Interfaces alternatives — peut-etre qu'on passe par AnyPlayer
+print("\n\n=== TEST 4 : Essaie anyPlayer (interface alternative) ===\n")
+Q_ANY = '{ football { anyPlayer(slug: "%s") { __typename displayName } } }' % SLUG
+r = requests.post(URL, json={"query": Q_ANY}, headers=HEADERS, timeout=10)
+print(json.dumps(r.json(), indent=2, ensure_ascii=False)[:400])

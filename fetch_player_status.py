@@ -64,7 +64,19 @@ FRAGMENT = """{
       activeSuspensions { active }
       nextClassicFixtureProjectedScore
       nextClassicFixturePlayingStatusOdds { starterOddsBasisPoints }
+      playingStatus
     }"""
+
+# Mapping enum PlayerPlayingStatus -> % titu (fallback quand nextClassic* odds renvoie null)
+# Utilise pour les matchs mid-week qui ne sont pas "Classic" cote Sorare.
+# Valeurs confirmees : STARTER / REGULAR / SUPER_SUBSTITUTE / SUBSTITUTE / NOT_PLAYING
+PLAYING_STATUS_TO_PCT = {
+    "STARTER":          90,  # titulaire confirme annonce
+    "REGULAR":          70,  # titulaire habituel (pas encore confirme mais probable)
+    "SUPER_SUBSTITUTE": 40,  # remplacant qui rentre souvent
+    "SUBSTITUTE":       25,  # remplacant classique
+    "NOT_PLAYING":       0,  # hors groupe / blesse / suspendu
+}
 
 
 def build_batch_query(slugs):
@@ -77,7 +89,12 @@ def build_batch_query(slugs):
 
 
 def parse_player_data(p):
-    """Parse la reponse player -> dict avec injured/suspended/proj/starter_pct."""
+    """Parse la reponse player -> dict avec injured/suspended/proj/starter_pct.
+
+    Source titu% (par ordre de priorite) :
+      1. nextClassicFixturePlayingStatusOdds.starterOddsBasisPoints (precis, 0-100%, pour matchs Classic)
+      2. Fallback playingStatus enum -> % mappe (pour matchs mid-week qui ne sont pas Classic)
+    """
     if not p:
         return None
     injured   = any(x.get("active") for x in (p.get("activeInjuries")    or []))
@@ -86,6 +103,11 @@ def parse_player_data(p):
     odds      = (p.get("nextClassicFixturePlayingStatusOdds") or {})
     bp        = odds.get("starterOddsBasisPoints")
     starter_pct = min(round(bp / 100), 90) if bp is not None else None
+    # Fallback : si pas d'odds precis, utilise l'enum playingStatus (matchs mid-week)
+    if starter_pct is None:
+        ps = p.get("playingStatus")
+        if ps in PLAYING_STATUS_TO_PCT:
+            starter_pct = PLAYING_STATUS_TO_PCT[ps]
     # Titu% >= 10% → joueur de retour, ignorer le flag blessé/suspendu
     if starter_pct is not None and starter_pct >= 10:
         injured = False

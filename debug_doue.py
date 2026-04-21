@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""debug_doue.py — Exploration finale : football.* root + Game par id + so5Scores"""
+"""debug_doue.py — so5Score(gameId:) sur le prochain match"""
 import requests, json, os
 from dotenv import load_dotenv
 
@@ -12,81 +12,82 @@ if key:
     print("🔑 API key active\n")
 
 SLUG = "desire-doue"
-GAME_ID = "Game:db595776-a88c-4846-ae43-83473161e4d1"  # PSG-Nantes mid-week
 
-# 1) football.* root — quels champs existent (so5/fixture/game/leaderboard/pro)
-print("=== TEST 1 : football.* champs racine ===\n")
-ROOT_FIELDS = [
-    "so5Fixtures", "openSo5Fixtures", "currentSo5Fixture", "nextSo5Fixture",
-    "so5Leaderboard", "upcomingSo5Fixtures", "activeSo5Fixtures",
-    "game", "games", "fixture", "fixtures",
-    "liveFixtures", "openFixtures", "classicFixture",
-    "proFixtures", "proLineups",
-]
-for rf in ROOT_FIELDS:
-    q = '{ football { %s { __typename } } }' % rf
+# 1) Recuperer l'ID du nextGame
+print("=== TEST 1 : recuperer gameId ===\n")
+Q1 = '{ football { player(slug: "%s") { nextGame { id date } } } }' % SLUG
+r = requests.post(URL, json={"query": Q1}, headers=HEADERS, timeout=10)
+body = r.json()
+ng = (body.get("data") or {}).get("football",{}).get("player",{}).get("nextGame") or {}
+game_id = ng.get("id")
+print(f"Game ID: {game_id}  date: {ng.get('date')}")
+
+# ID peut etre format "Game:UUID" (Relay) ou juste UUID
+uuid_only = game_id.replace("Game:", "") if game_id else None
+
+# 2) Teste so5Score(gameId:) avec les 2 formats
+print(f"\n=== TEST 2 : player.so5Score(gameId:) — 2 formats d'ID ===\n")
+for gid in [game_id, uuid_only]:
+    q = '{ football { player(slug: "%s") { so5Score(gameId: "%s") { __typename } } } }' % (SLUG, gid)
     r = requests.post(URL, json={"query": q}, headers=HEADERS, timeout=10)
     body = r.json()
     if "errors" in body:
-        msg = body["errors"][0].get("message","?")[:150]
-        if "doesn't exist" in msg:
-            print(f"  ❌ football.{rf:<30} : n'existe pas")
-        else:
-            print(f"  ⚠️  football.{rf:<30} : {msg}")
-    else:
-        print(f"  ✅ football.{rf:<30} : {json.dumps(body.get('data'))[:180]}")
-
-# 2) football.game(id:) — tenter avec ID du match PSG-Nantes
-print("\n\n=== TEST 2 : football.game(id:) avec ID PSG-Nantes ===\n")
-Q = '{ football { game(id: "%s") { __typename id date } } }' % GAME_ID
-r = requests.post(URL, json={"query": Q}, headers=HEADERS, timeout=10)
-print(json.dumps(r.json(), indent=2, ensure_ascii=False)[:500])
-
-# 3) so5Scores sur Player avec filter UPCOMING / orderBy
-print("\n\n=== TEST 3 : so5Scores variantes (upcoming/orderBy) ===\n")
-SO5_VARIANTS = [
-    "so5Scores(first: 1) { score game { id date } }",
-    "so5Scores(last: 2) { score game { id date } }",
-    "so5Scores(orderBy: PLAYED_AT_DESC, first: 3) { score game { id date } }",
-    "upcomingSo5Scores(first: 1) { __typename }",
-    "nextSo5Score { __typename }",
-    "so5Score { __typename }",
-]
-for v in SO5_VARIANTS:
-    q = '{ football { player(slug: "%s") { %s } } }' % (SLUG, v)
-    r = requests.post(URL, json={"query": q}, headers=HEADERS, timeout=10)
-    body = r.json()
-    if "errors" in body:
-        msg = body["errors"][0].get("message","?")[:180]
-        if "doesn't exist" in msg:
-            print(f"  ❌ {v[:60]:<60} : n'existe pas")
-        else:
-            print(f"  ⚠️  {v[:60]:<60} : {msg}")
+        print(f"  ❌ gameId={gid!r:<50} : {body['errors'][0].get('message','?')[:150]}")
     else:
         d = (body.get("data") or {}).get("football",{}).get("player",{})
-        print(f"  ✅ {v[:60]:<60} : {json.dumps(d)[:300]}")
+        print(f"  ✅ gameId={gid!r:<50} : {json.dumps(d)[:250]}")
 
-# 4) anyGame / anyPlayer / so5Leaderboard — root-level candidats
-print("\n\n=== TEST 4 : autres root candidats ===\n")
-OTHER_ROOTS = [
-    'anyGame(id: "%s") { __typename }' % GAME_ID,
-    'anyCard(slug: "%s") { __typename }' % SLUG,
-    'openFootballSo5Fixtures { __typename }',
-    'openSo5Fixture { __typename }',
-    'currentSo5Fixture { __typename }',
-    'nextFootballSo5Fixture { __typename }',
-    'activeClassicFixture { __typename }',
-    'currentFootballSo5Fixture { __typename }',
-]
-for v in OTHER_ROOTS:
-    q = '{ football { %s } }' % v
-    r = requests.post(URL, json={"query": q}, headers=HEADERS, timeout=10)
-    body = r.json()
-    if "errors" in body:
-        msg = body["errors"][0].get("message","?")[:180]
-        if "doesn't exist" in msg:
-            print(f"  ❌ {v[:55]:<55} : n'existe pas")
+# 3) Si so5Score marche, tester tous ses sous-champs pour trouver les odds
+print(f"\n=== TEST 3 : sous-champs de so5Score ===\n")
+for gid in [game_id, uuid_only]:
+    SO5_SCORE_FIELDS = [
+        "score",
+        "playingStatus",
+        "starterOddsBasisPoints",
+        "playingStatusOddsBasisPoints",
+        "startingProbability",
+        "startingOdds { starterOddsBasisPoints }",
+        "playingStatusOdds { starterOddsBasisPoints }",
+        "odds { starterOddsBasisPoints }",
+        "game { id date }",
+        "player { slug }",
+        "__typename",
+        "appeared",
+        "started",
+        "minsPlayed",
+    ]
+    for sf in SO5_SCORE_FIELDS:
+        q = '{ football { player(slug: "%s") { so5Score(gameId: "%s") { %s } } } }' % (SLUG, gid, sf)
+        r = requests.post(URL, json={"query": q}, headers=HEADERS, timeout=10)
+        body = r.json()
+        if "errors" in body:
+            msg = body["errors"][0].get("message","?")[:150]
+            if "doesn't exist" in msg or "No field" in msg:
+                continue  # skip silently
+            else:
+                # Autre erreur
+                if gid == game_id:  # log seulement le premier
+                    print(f"  ⚠️  [{gid[:20]}...].{sf:<50} : {msg}")
         else:
-            print(f"  ⚠️  {v[:55]:<55} : {msg}")
-    else:
-        print(f"  ✅ {v[:55]:<55} : {json.dumps(body.get('data'))[:250]}")
+            d = (body.get("data") or {}).get("football",{}).get("player",{})
+            so5 = d.get("so5Score") if d else None
+            if so5:
+                print(f"  ✅ [{gid[:20]}...].{sf:<50} : {json.dumps(so5)[:200]}")
+    break  # Si le 1er format marche, arrete
+
+# 4) Query ultra-large avec tous les champs
+print(f"\n=== TEST 4 : query large so5Score avec champs combines ===\n")
+Q_LARGE = """{
+  football {
+    player(slug: "%s") {
+      displayName
+      so5Score(gameId: "%s") {
+        __typename
+        score
+        game { id date }
+      }
+    }
+  }
+}""" % (SLUG, game_id)
+r = requests.post(URL, json={"query": Q_LARGE}, headers=HEADERS, timeout=10)
+print(json.dumps(r.json(), indent=2, ensure_ascii=False)[:800])

@@ -193,9 +193,46 @@ def _club_in_played(club):
     n = _norm_club(club)
     return bool(n) and n in _played_norm
 
-targets = [p for p in players if _club_in_played(p.get("club", "")) and p.get("slug")]
+# Map : club (api name) -> date du dernier match joue dans la fenetre
+# Utilise pour skipper les players deja a jour (last_so5_date >= dernier match)
+latest_played_per_club = {}
+for f in fixtures_list:
+    if not is_played(f.get("date", ""), f.get("kickoff", "99:99")):
+        continue
+    fdate = f.get("date", "")
+    for key in (f.get("home_api"), f.get("away_api")):
+        if not key: continue
+        if key not in latest_played_per_club or fdate > latest_played_per_club[key]:
+            latest_played_per_club[key] = fdate
+
+# Etend ce mapping aux noms players.club via fuzzy + aliases
+def latest_match_for_player_club(club):
+    if not club: return None
+    if club in latest_played_per_club: return latest_played_per_club[club]
+    n = _norm_club(club)
+    for k, d in latest_played_per_club.items():
+        if _norm_club(k) == n: return d
+    # via aliases (cles fixtures -> variantes players)
+    for fix_name, variants in ALIASES.items():
+        if club in variants and fix_name in latest_played_per_club:
+            return latest_played_per_club[fix_name]
+    return None
+
+targets = []
+skipped_fresh = 0
+for p in players:
+    if not p.get("slug"): continue
+    if not _club_in_played(p.get("club", "")): continue
+    latest = latest_match_for_player_club(p.get("club", ""))
+    last_so5 = p.get("last_so5_date")
+    # Skip si data deja a jour : last_so5_date >= dernier match joue
+    if latest and last_so5 and last_so5 >= latest:
+        skipped_fresh += 1
+        continue
+    targets.append(p)
 fetched_clubs = sorted(set(p.get("club", "") for p in targets))
-print(f"Clubs matches dans players.json : {len(fetched_clubs)}")
+print(f"Clubs matches dans players.json : {len(set(p.get('club','') for p in players if _club_in_played(p.get('club',''))))}")
+print(f"Players deja a jour (skippes) : {skipped_fresh}")
 print(f"Joueurs a fetcher : {len(targets)}")
 
 # ── FETCH SCORES JOUEURS ──────────────────────────────────────────────────────

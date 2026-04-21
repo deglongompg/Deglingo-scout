@@ -1616,7 +1616,7 @@ export default function SorareProTab({ players, teams, fixtures, logos = {}, mat
             {t(lang, "proRecap")}
             <span style={{ fontSize: 9, fontWeight: 600, color: "rgba(255,255,255,0.35)" }}>{savedTeams.length}/{maxSaved} · {LEAGUE_NAMES[league] || league} · {rarity === "rare" ? t(lang, "proRare") : t(lang, "proLimited")} · {gwInfo?.displayNumber ? `GW${gwInfo.displayNumber}` : ""}</span>
           </div>
-          <div className="pro-recap-grid" style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, 480px)", gap: 10 }}>
+          <div className="pro-recap-grid" style={{ display: "grid", gridTemplateColumns: "repeat(2, minmax(0, 480px))", gap: 10, justifyContent: "center", margin: "0 auto", maxWidth: 980 }}>
             {savedTeams.map((st) => {
               const stPlayers = TEAM_SLOTS.map(s => st.picks[s]).filter(Boolean);
               const stAdjScores = stPlayers.map(p => getAdjDs(p));

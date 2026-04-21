@@ -183,6 +183,7 @@ const starsKeyframes = `
   .st-cal-day .cal-match-count { font-size: 8px !important; }
   .st-main-layout { flex-direction: column !important; }
   .st-main-layout > div { width: 100% !important; flex-shrink: unset !important; }
+  .stellar-recap-grid { grid-template-columns: 1fr !important; }
   .st-match-chip { width: 100% !important; box-sizing: border-box !important; display: grid !important; grid-template-columns: 28px 22px 15px 1fr 18px 1fr 15px !important; align-items: center !important; gap: 0 4px !important; justify-content: unset !important; }
   .st-match-chip .mc-vs { text-align: center !important; }
   .st-match-chip .mc-home { text-align: right !important; }
@@ -2343,8 +2344,8 @@ export default function StellarTab({ players, teams, fixtures, logos = {}, match
               <div style={{ fontSize: 10, fontWeight: 800, color: "rgba(196,181,253,0.5)", letterSpacing: "0.12em", textTransform: "uppercase", marginBottom: 8 }}>
                 {lang === "fr" ? "MES EQUIPES SAUVEGARDEES" : "MY SAVED TEAMS"}
               </div>
-              {/* Grid responsive : box 480px fixe, wrap naturel (1 col petit ecran, 2 cols medium, 3 cols large) */}
-              <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(460px, 480px))", gap: 10, justifyContent: "flex-start" }}>
+              {/* Grid 2x2 centre : 2 equipes par ligne, centre horizontalement */}
+              <div className="stellar-recap-grid" style={{ display: "grid", gridTemplateColumns: "repeat(2, minmax(0, 480px))", gap: 10, justifyContent: "center", margin: "0 auto", maxWidth: 980 }}>
                 {savedTeams.map((st, si) => {
                   const POS_ORDER = ["GK","DEF","MIL","ATT","FLEX"];
                   const todayStrFxSt = new Date().toISOString().split("T")[0];

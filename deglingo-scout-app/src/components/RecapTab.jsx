@@ -512,8 +512,8 @@ function RecapTabInner({ players, logos, lang }) {
                     </div>
                     {open && (
                       <div className="recap-grid" style={{
-                        display: "grid", gridTemplateColumns: "repeat(auto-fill, 480px)",
-                        gap: 10, padding: 12,
+                        display: "grid", gridTemplateColumns: "repeat(2, minmax(0, 480px))",
+                        gap: 10, padding: 12, justifyContent: "center", margin: "0 auto", maxWidth: 980,
                       }}>
                         {teams.map((team, i) => (
                           <ProSavedTeamCard
@@ -595,8 +595,8 @@ function RecapTabInner({ players, logos, lang }) {
                     </div>
                     {open && (
                       <div className="recap-grid" style={{
-                        display: "grid", gridTemplateColumns: "repeat(auto-fill, 480px)",
-                        gap: 10, padding: 12,
+                        display: "grid", gridTemplateColumns: "repeat(2, minmax(0, 480px))",
+                        gap: 10, padding: 12, justifyContent: "center", margin: "0 auto", maxWidth: 980,
                       }}>
                         {teams.map((team, i) => (
                           <StellarSavedTeamCard

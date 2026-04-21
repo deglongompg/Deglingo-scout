@@ -455,6 +455,12 @@ function RecapTabInner({ players, logos, lang }) {
                 const key = `${activeRarity}_${league}_${gwKey}`;
                 const open = openLeagues?.[key] !== false;
                 const gwNum = getGwDisplayNumber(gwKey);
+                // Scores par equipe pour le mini recap dans le header
+                const teamScores = teams.map(team => {
+                  const enriched = enrichTeamWithBestCards(team, cardsBySlug[activeRarity]);
+                  const { projectedTotal, liveTotal } = computeTeamScores(enriched, players || []);
+                  return { label: team.label || "?", projectedTotal: projectedTotal || 0, liveTotal: liveTotal || 0 };
+                });
                 return (
                   <div key={key} style={{
                     borderRadius: 12, border: `1px solid ${accent}25`,
@@ -492,6 +498,18 @@ function RecapTabInner({ players, logos, lang }) {
                         {open ? (lang === "fr" ? "Masquer" : "Hide") : (lang === "fr" ? "Afficher" : "Show")}
                       </span>
                     </button>
+                    {/* Mini recap scores par equipe — toujours visible (ouvert ou ferme) */}
+                    <div style={{ padding: "6px 14px 8px", display: "flex", flexWrap: "wrap", gap: 10, background: `${accent}05`, borderTop: open ? "none" : `1px solid ${accent}12` }}>
+                      {teamScores.map((ts, i) => (
+                        <span key={i} style={{ fontSize: 10, fontFamily: "'DM Mono',monospace", color: "rgba(255,255,255,0.55)", padding: "2px 8px", borderRadius: 6, background: "rgba(0,0,0,0.2)", border: `1px solid ${accent}20` }}>
+                          <span style={{ fontWeight: 800, color: accent, marginRight: 6 }}>{ts.label}</span>
+                          <span style={{ color: ts.liveTotal > 0 ? "#4ADE80" : "rgba(255,255,255,0.45)", fontWeight: 700 }}>{ts.liveTotal}</span>
+                          <span style={{ color: "rgba(255,255,255,0.3)", margin: "0 4px" }}>→</span>
+                          <span style={{ color: dsColor(ts.projectedTotal), fontWeight: 700 }}>{ts.projectedTotal}</span>
+                          <span style={{ color: "rgba(255,255,255,0.3)", marginLeft: 3, fontSize: 8 }}>proj</span>
+                        </span>
+                      ))}
+                    </div>
                     {open && (
                       <div className="recap-grid" style={{
                         display: "grid", gridTemplateColumns: "repeat(auto-fill, 480px)",
@@ -527,6 +545,11 @@ function RecapTabInner({ players, logos, lang }) {
               {stellarGroups.map(({ dateStr, teams }) => {
                 const accent = RARITY_COLOR.stellar;
                 const open = openLeagues?.[`stellar_${dateStr}`] !== false;
+                // Scores par equipe pour mini recap header Stellar
+                const teamScores = teams.map(team => ({
+                  label: team.label || "?",
+                  projectedTotal: computeStellarProjected(team, players || [], stellarCardsBySlug) || 0,
+                }));
                 return (
                   <div key={dateStr} style={{
                     borderRadius: 12, border: `1px solid ${accent}25`,
@@ -560,6 +583,16 @@ function RecapTabInner({ players, logos, lang }) {
                         {open ? (lang === "fr" ? "Masquer" : "Hide") : (lang === "fr" ? "Afficher" : "Show")}
                       </span>
                     </button>
+                    {/* Mini recap scores Stellar */}
+                    <div style={{ padding: "6px 14px 8px", display: "flex", flexWrap: "wrap", gap: 10, background: `${accent}05`, borderTop: open ? "none" : `1px solid ${accent}12` }}>
+                      {teamScores.map((ts, i) => (
+                        <span key={i} style={{ fontSize: 10, fontFamily: "'DM Mono',monospace", color: "rgba(255,255,255,0.55)", padding: "2px 8px", borderRadius: 6, background: "rgba(0,0,0,0.2)", border: `1px solid ${accent}20` }}>
+                          <span style={{ fontWeight: 800, color: accent, marginRight: 6 }}>{ts.label}</span>
+                          <span style={{ color: dsColor(ts.projectedTotal), fontWeight: 700 }}>{ts.projectedTotal}</span>
+                          <span style={{ color: "rgba(255,255,255,0.3)", marginLeft: 3, fontSize: 8 }}>pts</span>
+                        </span>
+                      ))}
+                    </div>
                     {open && (
                       <div className="recap-grid" style={{
                         display: "grid", gridTemplateColumns: "repeat(auto-fill, 480px)",

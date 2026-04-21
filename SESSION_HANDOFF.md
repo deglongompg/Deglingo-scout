@@ -1,27 +1,58 @@
-# SESSION HANDOFF — 2026-04-19 → 21 (dimanche GW71 → mardi)
+# SESSION HANDOFF — 2026-04-19 → 22 (dimanche GW71 → mercredi)
 
 > **Claude Code :** lis ce fichier au démarrage pour reprendre le contexte.
-> Source de vérité complémentaire : `git log --oneline -20` et les fichiers modifiés récents.
+> Source de vérité complémentaire : `git log --oneline -30` et les fichiers modifiés récents.
 
 ---
 
-## ⏱ État au 2026-04-21 (fin session Mac, mardi soir)
+## ⏱ État au 2026-04-22 (fin session Mac, mardi soir / mercredi matin)
 
 **Prod `scout.deglingosorare.com` = OK ✅**
-- Branche `main` HEAD = `6e5f9b4` (feat(recap): detection DNP)
+- Branche `main` HEAD = `c6b127b` (chore(nav): masque Best Pick côté clients)
 - Tout est déployé en prod via `./deploy.sh` + `./MAJ_daily.sh` lancés depuis le Mac
-- Dernier `MAJ_daily.sh` ran le 2026-04-21 : scores GW71 à jour (match du 19 avril PSG-OL 1-2 visible, Monaco-Auxerre 2-2, etc.)
+- Dernier `MAJ_daily.sh` ran le 2026-04-21 : scores GW71 à jour (PSG-OL 1-2, Monaco-Auxerre 2-2, etc.)
 
-**Features ajoutées cette session (commits de d144773 à 6e5f9b4) :**
-1. **Onglet Stellar dans Mes Teams** (commit `d144773`) — 3ème tab à côté de Pro Limited/Pro Rare, teams groupées par date, nouveau composant `StellarSavedTeamCard.jsx`
-2. **Calendrier Pro : scores FT + dropdown joueurs par match** (commit `ba95ad5`) — comme Stellar : badge FT vert, match score "1-2", click sur nom de club → dropdown avec notes SO5 des joueurs
-3. **Fuzzy club matching dans fetch_gw_scores.py** (commit `d2f24c3`) — avant, des clubs comme "AS Monaco", "Stade Rennais F.C.", "Paris Saint-Germain", "Sport-Club Freiburg" étaient jamais fetchés car `fixtures.home_api` (ex "AS Monaco FC") ≠ `players.club` (ex "AS Monaco"). Fix = normalisation + dict ALIASES manuel pour cas irréductibles
-4. **Détection DNP (Did Not Play)** (commit `6e5f9b4`) — sur les 4 surfaces de rendu (SorareProTab recap inline, ProSavedTeamCard, StellarTab recap inline, StellarSavedTeamCard). Si `matchDate < today` ET `!hasRealScore` → bulle rouge solide 0 + badge "DNP". Score total équipe comptabilisé à 0 (au lieu du D-Score projeté). Match score récupéré via fallback co-équipier. Exemple : Dembélé 2026-04-19 (pick) mais last_so5_date=2026-04-03 → DNP affiché au lieu de 69 pointillé
+### Features majeures livrées cette session (du commit `d144773` au `c6b127b`)
 
-**Flow des données validé par user :**
+**1. Onglet Stellar dans Mes Teams** (commit `d144773`)
+3ème tab à côté de Pro Limited/Pro Rare. Teams groupées par date (pas par ligue). Nouveau composant `StellarSavedTeamCard.jsx` avec pitch + SkyrocketGauge palier Stellar (280→480 pts).
+
+**2. Calendrier Pro — scores FT + dropdown joueurs par match** (commit `ba95ad5`)
+Comme Stellar : badge FT vert sur les chips, score "1-2" affiché, click sur nom de club → dropdown avec notes SO5 des joueurs de ce club (position, logo, H/A, score).
+
+**3. Fuzzy club matching dans `fetch_gw_scores.py`** (commit `d2f24c3`)
+Les noms de clubs diffèrent entre `fixtures.home_api` (api foot-data) et `players.club` (Sorare). Fix = normalisation (retire accents, suffixes FC/AFC/SC, années 4 chiffres) + dict `ALIASES` manuel pour cas irréductibles (SC Freiburg ↔ Sport-Club Freiburg, Lille OSC ↔ LOSC Lille, etc.). Sans ce fix, Monaco/PSG/Rennes/Freiburg étaient jamais fetchés.
+
+**4. Détection DNP (Did Not Play)** (commits `6e5f9b4` + `af87d31` pour le vrai fix)
+Sur les 4 surfaces de rendu (SorareProTab recap inline, ProSavedTeamCard, StellarTab recap inline, StellarSavedTeamCard). Si `matchDate < today` ET `!hasRealScore` → bulle rouge solide 0 + badge "DNP". Score total équipe comptabilisé à 0 (au lieu du D-Score projeté). Match score récupéré via fallback co-équipier.
+**⚠️ BUG CRITIQUE FIXÉ (commit `af87d31`) :** App.jsx ligne 293 passait `<RecapTab lang={lang} />` sans `players` ni `logos` → dans Mes Teams, `enrichPick()` ne trouvait JAMAIS de fresh data → TOUS les joueurs affichés en DNP par défaut. Fix 1-ligne.
+
+**5. Fenêtre fetch 7 jours + smart-skip** (commits `a7f2c0e` + `92b330c`)
+Bug : `get_gw_start()` prend le Vendredi/Mardi 16h Paris le plus récent → après mardi 16h, les matchs du weekend précédent étaient exclus → jamais re-fetchés. Fix = fenêtre min 7 jours. Pour éviter les 2800+ players fetches (trop long), ajout d'un smart-skip : pour chaque club, retient la date de son dernier match dans la fenêtre, skip tous les players dont `last_so5_date >= cette date`. En steady state : 30-60 players fetchés au lieu de 2800.
+
+**6. Cache-busting sur `/data/*.json`** (commit `fa3b2c2`)
+Ajout de `?v={Date.now()}` sur tous les fetch dans App.jsx pour éviter Cloudflare/browser cache qui servait des players.json stales.
+
+**7. Dropdown inclut score=0** (commit `57a761e`)
+Enlevé le filtre `last_so5_score > 0` → les DNPs/bench (ex Nuno Mendes PSG) apparaissent maintenant dans le dropdown (triés en bas par score desc).
+
+**8. GW précédente dans le sélecteur Pro** (commit `24abb17`)
+`getProGwList()` retourne `[prev, live, +1, +2, +3, +4]`. Badge "GW71 FIN" grisé pour la passée, "GW72 LIVE" pour l'active. L'utilisateur peut consulter ses teams de la GW qui vient de finir. Filtres (titu%, etc.) basculent sur `gwInfo.offsetFromLive` au lieu de `selectedGwIdx <= 1`.
+
+**9. Badge GW dans Mes Teams** (commit `fa63621`)
+Les teams Pro sont désormais groupées par `(ligue, GW)` au lieu de juste `(ligue)`. Header collapsible : "Ligue 1 · [GW72] · 2 équipes". Helper `getGwDisplayNumber(gwKey)` dans `proScoring.js`. Stellar garde le groupement par date (format naturel pour daily).
+
+**10. Sélection cross-semaines dans Sorare Stellar** (commit `32032d2`)
+`selectedDays` stockait des indices [0-6] relatifs à la semaine affichée → cliquer sur ◀/▶ vidait la sélection. Refactor pour stocker des **dates absolues YYYY-MM-DD**. Navigation entre semaines préserve la sélection. Permet de piquer Mardi (semaine A) + Mercredi (semaine B).
+
+**11. Onglet "Best Pick" masqué** (commit `c6b127b`)
+Retiré de la barre de navigation (commenté dans TABS d'App.jsx). Code conservé dans `RecoTab.jsx`, route `?tab=reco`/`#reco` toujours fonctionnelle. Pour réactiver : décommenter la ligne dans `App.jsx:16`.
+
+### Flow des données (validé par user)
+
 > "lors du daily fetch on alimente le score des calendriers pro et stellar avec dropdown des notes par match et ensuite on repartit les notes dans les bulles des equipes sauvegardées dans onglet stellar et pro... quon reprend évidemment dans MES TEAMS pour une vision globale"
 
-Les 4 surfaces utilisent le même data source (`players.json` avec `last_so5_score`, `last_so5_date`, `last_match_home_goals/away_goals`) → cohérence garantie.
+Les 4 surfaces (SorareProTab inline recap, StellarTab inline recap, ProSavedTeamCard, StellarSavedTeamCard) utilisent toutes le même `players.json` via les mêmes champs (`last_so5_score`, `last_so5_date`, `last_match_home_goals/away_goals`) → cohérence garantie.
 
 ---
 
@@ -48,11 +79,17 @@ Si "Permission denied" sur `.sh` : `chmod +x *.sh` une fois.
 1. Fix **CAP260 avec `sorare_l10` officiel** — écrire `fetch_sorare_l10.py`, ajouter champ `sorare_l10` dans `players.json`, remplacer `p.l10` par `p.sorare_l10` aux lignes 733 et 1403 de `SorareProTab.jsx`. Bug visible : Psal78 affiche +6% CAP alors que Sorare dit +4%.
 2. **Card-specific position** (Kvara Classic = MIL, etc.) — override JSON `card_position_overrides.json` + filtre slot après expansion
 3. **Seal teams Pro après deadline GW** — détecter `Date.now() > gwInfo.deadline` → bloquer Charger/X/Save
-4. **Stellar calendar** — real scores au lieu de projection (partiellement fait via match-chip) + améliorer dropdown
-5. **Live scores polling** — Cloudflare Function proxy Sorare API toutes les 60s pour scores live pendant les matchs
+4. **Live scores polling** — Cloudflare Function proxy Sorare API toutes les 60s pour scores live pendant les matchs
+5. **computeTeamScores DNP logic** — la fonction dans `proScoring.js` (`getPickScore`) ne gère pas encore DNP dans les totaux de `computeTeamScores`. Actuellement seul `SorareProTab inline recap` (via `getScoreInfo` custom) et les 2 SavedTeamCard files traitent DNP=0 dans le total. Si on voulait unifier, `getPickScore` pourrait retourner `{full:0, isLive:true}` quand matchDate < today et !hasRealScore.
 
-**Bug API Sorare possible :**
-Certains matchs (Burnley, Metz, Paris FC, Nott Forest, Strasbourg quand ils ont joué le 2026-04-19) restent à `last_so5_date = 2026-04-11` même après fetch. Hypothèse : Sorare n'a pas traité les SO5 scores pour ces matchs (délai API), pas un bug côté nous. Re-run MAJ_daily.sh quelques heures plus tard devrait corriger.
+**Bug API Sorare observé :**
+Certains matchs (Burnley, Metz, Paris FC, Nott Forest, Strasbourg Rennes du 2026-04-19) restent stales même après fetch. Causes probables :
+- Sorare n'a pas traité les SO5 pour ces matchs (délai API selon les ligues)
+- Pour les matchs du soir (ex West Ham vs Crystal Palace 21h), lancer MAJ_daily.sh trop tôt fetche avant que Sorare ait scoré
+- Solution = re-run MAJ_daily.sh quelques heures plus tard. Le smart-skip (commit `92b330c`) garantit que ça prend 30-60s.
+
+**Best Pick désactivé** (commit `c6b127b`) :
+L'onglet a été masqué sur demande. Pour le réactiver : décommenter `{ id: "reco", label: "Best Pick", icon: "⚽" }` dans `App.jsx:16`.
 
 ---
 
@@ -108,6 +145,12 @@ Le `.env` à la racine contient cette clé. `.env` est dans `.gitignore` (vérif
 - Bug écran noir pitch = causé par IIFE dans JSX. Résolu en passant par expressions inline
 - Cartes fallback dans Mes Teams pitch = saved teams KV créées avant `_card` → fix via `enrichTeamWithBestCards()` dans `RecapTab.jsx` qui assigne la meilleure carte au load
 - OAuth `redirect_uri` hardcodé sur prod (`SorareProTab.jsx:300`, `StellarTab.jsx:786`) → si besoin tester sur preview Cloudflare, copier le token depuis prod via devtools console : `copy(localStorage.getItem("sorare_access_token"))` puis `localStorage.setItem(...)` sur le preview
+- **Toujours passer `players` + `logos`** aux composants qui font du enrichPick. Le bug DNP-faux-positif venait d'un oubli dans App.jsx (ligne 293). Si un nouveau composant de recap est créé, penser à passer ces props.
+- **Fenêtre fetch SO5** : `fetch_gw_scores.py` utilise `min(get_gw_start, now - 7 jours)` pour ne jamais manquer les matchs du weekend précédent. Le smart-skip par club évite de re-fetcher les players déjà à jour.
+- **Fuzzy matching de clubs** : fixtures.json et players.json utilisent des noms différents. Le dict `ALIASES` dans `fetch_gw_scores.py` doit être maintenu à jour quand de nouveaux clubs apparaissent (ex : promotions L2→L1).
+- **Cross-week selection Stellar** : `selectedDays` stocke maintenant des dates ISO `"YYYY-MM-DD"`, pas des indices. Les callbacks sur prev/next semaine ne doivent PAS vider la sélection.
+- **Cache busting** : les fetch `/data/*.json` dans App.jsx ont un `?v={Date.now()}` pour bypass le cache navigateur. Cloudflare n'a pas de cache agressif par défaut sur Pages mais certains navigateurs cachaient players.json.
+- **GW numbering** : `getGwDisplayNumber(gwKey)` dans `proScoring.js` dérive GW71/GW72/... depuis le gwKey stocké (ex: `pro_2026-04-17_gw1` → 71), basé sur epoch GW69 = 2026-04-10.
 
 ---
 

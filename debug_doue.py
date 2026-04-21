@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""debug_doue.py — so5Score(gameId:) sur le prochain match"""
+"""debug_doue.py — Game par UUID nu + club.upcomingGames + dernieres tentatives"""
 import requests, json, os
 from dotenv import load_dotenv
 
@@ -11,83 +11,67 @@ if key:
     HEADERS["APIKEY"] = key
     print("🔑 API key active\n")
 
-SLUG = "desire-doue"
+UUID = "db595776-a88c-4846-ae43-83473161e4d1"
+GAME_RELAY = f"Game:{UUID}"
 
-# 1) Recuperer l'ID du nextGame
-print("=== TEST 1 : recuperer gameId ===\n")
-Q1 = '{ football { player(slug: "%s") { nextGame { id date } } } }' % SLUG
-r = requests.post(URL, json={"query": Q1}, headers=HEADERS, timeout=10)
-body = r.json()
-ng = (body.get("data") or {}).get("football",{}).get("player",{}).get("nextGame") or {}
-game_id = ng.get("id")
-print(f"Game ID: {game_id}  date: {ng.get('date')}")
-
-# ID peut etre format "Game:UUID" (Relay) ou juste UUID
-uuid_only = game_id.replace("Game:", "") if game_id else None
-
-# 2) Teste so5Score(gameId:) avec les 2 formats
-print(f"\n=== TEST 2 : player.so5Score(gameId:) — 2 formats d'ID ===\n")
-for gid in [game_id, uuid_only]:
-    q = '{ football { player(slug: "%s") { so5Score(gameId: "%s") { __typename } } } }' % (SLUG, gid)
+# 1) football.game avec differents formats d'id
+print("=== TEST 1 : football.game avec plusieurs formats d'ID ===\n")
+for gid in [UUID, GAME_RELAY, f"FootballGame:{UUID}", f"FootballRegularGame:{UUID}"]:
+    q = '{ football { game(id: "%s") { __typename id } } }' % gid
     r = requests.post(URL, json={"query": q}, headers=HEADERS, timeout=10)
     body = r.json()
     if "errors" in body:
-        print(f"  ❌ gameId={gid!r:<50} : {body['errors'][0].get('message','?')[:150]}")
+        print(f"  ❌ id={gid!r:<60} : {body['errors'][0].get('message','?')[:100]}")
     else:
-        d = (body.get("data") or {}).get("football",{}).get("player",{})
-        print(f"  ✅ gameId={gid!r:<50} : {json.dumps(d)[:250]}")
+        d = (body.get("data") or {}).get("football",{})
+        print(f"  ✅ id={gid!r:<60} : {json.dumps(d)[:200]}")
 
-# 3) Si so5Score marche, tester tous ses sous-champs pour trouver les odds
-print(f"\n=== TEST 3 : sous-champs de so5Score ===\n")
-for gid in [game_id, uuid_only]:
-    SO5_SCORE_FIELDS = [
-        "score",
-        "playingStatus",
-        "starterOddsBasisPoints",
-        "playingStatusOddsBasisPoints",
-        "startingProbability",
-        "startingOdds { starterOddsBasisPoints }",
-        "playingStatusOdds { starterOddsBasisPoints }",
-        "odds { starterOddsBasisPoints }",
-        "game { id date }",
-        "player { slug }",
-        "__typename",
-        "appeared",
-        "started",
-        "minsPlayed",
-    ]
-    for sf in SO5_SCORE_FIELDS:
-        q = '{ football { player(slug: "%s") { so5Score(gameId: "%s") { %s } } } }' % (SLUG, gid, sf)
-        r = requests.post(URL, json={"query": q}, headers=HEADERS, timeout=10)
-        body = r.json()
-        if "errors" in body:
-            msg = body["errors"][0].get("message","?")[:150]
-            if "doesn't exist" in msg or "No field" in msg:
-                continue  # skip silently
-            else:
-                # Autre erreur
-                if gid == game_id:  # log seulement le premier
-                    print(f"  ⚠️  [{gid[:20]}...].{sf:<50} : {msg}")
-        else:
-            d = (body.get("data") or {}).get("football",{}).get("player",{})
-            so5 = d.get("so5Score") if d else None
-            if so5:
-                print(f"  ✅ [{gid[:20]}...].{sf:<50} : {json.dumps(so5)[:200]}")
-    break  # Si le 1er format marche, arrete
-
-# 4) Query ultra-large avec tous les champs
-print(f"\n=== TEST 4 : query large so5Score avec champs combines ===\n")
-Q_LARGE = """{
-  football {
-    player(slug: "%s") {
-      displayName
-      so5Score(gameId: "%s") {
-        __typename
-        score
-        game { id date }
-      }
-    }
-  }
-}""" % (SLUG, game_id)
-r = requests.post(URL, json={"query": Q_LARGE}, headers=HEADERS, timeout=10)
+# 2) club(slug: "paris").upcomingGames avec sous-champs odds
+print("\n=== TEST 2 : club.upcomingGames + sous-champs ===\n")
+# Chercher slug du PSG
+Q_CLUB = '{ football { club(slug: "paris-saint-germain") { name upcomingGames(first: 3) { id date homeTeam { name } awayTeam { name } } } } }'
+r = requests.post(URL, json={"query": Q_CLUB}, headers=HEADERS, timeout=15)
 print(json.dumps(r.json(), indent=2, ensure_ascii=False)[:800])
+
+# 3) Si on a un Game directement, tester tous ses sous-champs potentiels
+print("\n=== TEST 3 : sous-champs Game via upcomingGames ===\n")
+GAME_SUBFIELDS = [
+    "id",
+    "date",
+    "competition { displayName }",
+    "gameWeek { id }",
+    "playingStatusOddsList { __typename }",
+    "playingStatusOdds(playerSlug: \"desire-doue\") { starterOddsBasisPoints }",
+    "playerStatusOdds { __typename }",
+    "startingLineups { __typename }",
+    "playerOdds { __typename }",
+    "odds { __typename }",
+    "so5Scores(first: 3) { __typename }",
+    "lineup { __typename }",
+    "homeLineup { __typename }",
+]
+for sf in GAME_SUBFIELDS:
+    q = '{ football { club(slug: "paris-saint-germain") { upcomingGames(first: 1) { id %s } } } }' % sf
+    r = requests.post(URL, json={"query": q}, headers=HEADERS, timeout=10)
+    body = r.json()
+    if "errors" in body:
+        msg = body["errors"][0].get("message","?")[:180]
+        if "doesn't exist" in msg:
+            print(f"  ❌ {sf[:60]:<60} : n'existe pas")
+        else:
+            print(f"  ⚠️  {sf[:60]:<60} : {msg}")
+    else:
+        d = body.get("data") or {}
+        # Juste regarder si la data est non-trivial (pas null/empty)
+        print(f"  ✅ {sf[:60]:<60} : {json.dumps(d)[:300]}")
+
+# 4) Recherche du slug correct pour PSG (variantes)
+print("\n=== TEST 4 : trouve le slug du club PSG ===\n")
+for club_slug in ["paris-saint-germain", "paris-saint-germain-fc", "psg", "paris-sg"]:
+    q = '{ football { club(slug: "%s") { name slug } } }' % club_slug
+    r = requests.post(URL, json={"query": q}, headers=HEADERS, timeout=5)
+    body = r.json()
+    if "errors" not in body:
+        d = (body.get("data") or {}).get("football",{}).get("club")
+        if d:
+            print(f"  ✅ slug={club_slug!r} -> {d}")

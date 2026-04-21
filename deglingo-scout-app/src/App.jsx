@@ -51,12 +51,14 @@ export default function App() {
   const [error, setError] = useState(null);
 
   useEffect(() => {
+    // Cache busting : force reload des data files a chaque session (Cloudflare/browser cache parfois stale)
+    const cb = `?v=${Date.now()}`;
     Promise.all([
-      fetch("/data/players.json").then(r => { if (!r.ok) throw new Error("players.json"); return r.json(); }),
-      fetch("/data/teams.json").then(r => { if (!r.ok) throw new Error("teams.json"); return r.json(); }),
-      fetch("/data/fixtures.json").then(r => r.ok ? r.json() : null).catch(() => null),
-      fetch("/data/club_logos.json").then(r => r.ok ? r.json() : {}).catch(() => ({})),
-      fetch("/data/match_events.json").then(r => r.ok ? r.json() : {}).catch(() => ({})),
+      fetch(`/data/players.json${cb}`).then(r => { if (!r.ok) throw new Error("players.json"); return r.json(); }),
+      fetch(`/data/teams.json${cb}`).then(r => { if (!r.ok) throw new Error("teams.json"); return r.json(); }),
+      fetch(`/data/fixtures.json${cb}`).then(r => r.ok ? r.json() : null).catch(() => null),
+      fetch(`/data/club_logos.json${cb}`).then(r => r.ok ? r.json() : {}).catch(() => ({})),
+      fetch(`/data/match_events.json${cb}`).then(r => r.ok ? r.json() : {}).catch(() => ({})),
     ])
       .then(([p, t, f, l, me]) => { setPlayers(p); setTeams(t); setFixtures(f); setLogos(l || {}); setMatchEvents(me || {}); setLoading(false); })
       .catch(e => { setError(e.message); setLoading(false); });

@@ -24,8 +24,9 @@ const STELLAR_PALIERS = [
  *  - logos : map club -> filename
  *  - cardsBySlug : map playerSlug -> meilleure carte Stellar possedee
  *  - lang : "fr" | "en"
+ *  - onDelete : (id) => void  (optionnel — bouton X pour supprimer)
  */
-export default function StellarSavedTeamCard({ team, players = [], logos = {}, cardsBySlug = {}, lang = "fr" }) {
+export default function StellarSavedTeamCard({ team, players = [], logos = {}, cardsBySlug = {}, lang = "fr", onDelete }) {
   if (!team || !team.picks) return null;
 
   const todayStrFx = new Date().toISOString().split("T")[0];
@@ -194,7 +195,16 @@ export default function StellarSavedTeamCard({ team, players = [], logos = {}, c
     }}>
       <div style={{ flex: 1, minWidth: 0 }}>
         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 8 }}>
-          <span style={{ fontSize: 12, fontWeight: 900, color: "#C4B5FD" }}>{team.label}</span>
+          <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
+            <span style={{ fontSize: 12, fontWeight: 900, color: "#C4B5FD" }}>{team.label}</span>
+            {onDelete && (
+              <button
+                onClick={(e) => { e.stopPropagation(); if (window.confirm(lang === "fr" ? `Supprimer "${team.label}" ?` : `Delete "${team.label}"?`)) onDelete(team.id); }}
+                title={lang === "fr" ? "Supprimer cette équipe" : "Delete this team"}
+                style={{ fontSize: 9, fontWeight: 700, padding: "2px 6px", borderRadius: 4, border: "1px solid rgba(239,68,68,0.3)", background: "rgba(239,68,68,0.08)", color: "#F87171", cursor: "pointer", fontFamily: "Outfit", lineHeight: 1 }}
+              >✕</button>
+            )}
+          </div>
         </div>
         <div style={{ display: "flex", flexDirection: "column", gap: 6, alignItems: "center" }}>
           <div style={{ display: "flex", gap: 6, justifyContent: "center", width: "100%" }}>

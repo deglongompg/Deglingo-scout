@@ -1,6 +1,6 @@
 import { Component, useEffect, useMemo, useState } from "react";
 import { LEAGUE_COLORS, LEAGUE_NAMES, LEAGUE_FLAG_CODES, dsColor } from "../utils/colors";
-import { fetchCloudStore } from "../utils/cloudSync";
+import { fetchCloudStore, pushTeams } from "../utils/cloudSync";
 import { PRO_LEAGUES, computeTeamScores, getGwDisplayNumber } from "../utils/proScoring";
 import { t } from "../utils/i18n";
 import ProSavedTeamCard from "./ProSavedTeamCard";
@@ -269,6 +269,70 @@ function RecapTabInner({ players, logos, lang }) {
     setOpenLeagues(prev => ({ ...(prev || {}), [key]: !prev?.[key] }));
   };
 
+  // ── Suppression d'une team Pro (ligue, GW, teamId) ─────────────────────────
+  const deletePro = (rarity, league, gwKey, teamId) => {
+    if (!store) return;
+    const bucket = rarity === "rare" ? "proRare" : "proLimited";
+    const current = store.data?.[bucket]?.[league]?.[gwKey] || [];
+    const updated = current.filter(t => t && t.id !== teamId);
+    // Met a jour le store local (optimiste)
+    const newStore = JSON.parse(JSON.stringify(store));
+    if (!newStore.data[bucket]) newStore.data[bucket] = {};
+    if (!newStore.data[bucket][league]) newStore.data[bucket][league] = {};
+    newStore.data[bucket][league][gwKey] = updated;
+    setStore(newStore);
+    // Push vers KV
+    pushTeams("pro", { league, rarity, gwKey }, updated);
+    // Nettoie aussi le localStorage local au cas ou
+    try { localStorage.setItem(`pro_saved_${league}_${rarity}_${gwKey}`, JSON.stringify(updated)); } catch (_e) { void 0; }
+  };
+
+  // ── Suppression d'une team Stellar (date, teamId) ──────────────────────────
+  const deleteStellar = (dateStr, teamId) => {
+    if (!store) return;
+    const current = store.data?.stellar?.[dateStr] || [];
+    const updated = current.filter(t => t && t.id !== teamId);
+    const newStore = JSON.parse(JSON.stringify(store));
+    if (!newStore.data.stellar) newStore.data.stellar = {};
+    newStore.data.stellar[dateStr] = updated;
+    setStore(newStore);
+    pushTeams("stellar", { dateStr }, updated);
+    try { localStorage.setItem(`stellar_saved_teams_${dateStr}`, JSON.stringify(updated)); } catch (_e) { void 0; }
+  };
+
+  // ── Suppression bulk : toute une section (ligue+GW) Pro d'un coup ──────────
+  const deleteProSection = (rarity, league, gwKey, gwNum, count) => {
+    const msg = lang === "fr"
+      ? `Supprimer les ${count} équipe${count > 1 ? "s" : ""} de ${league} GW${gwNum || "?"} ?`
+      : `Delete the ${count} team${count > 1 ? "s" : ""} from ${league} GW${gwNum || "?"}?`;
+    if (!window.confirm(msg)) return;
+    if (!store) return;
+    const bucket = rarity === "rare" ? "proRare" : "proLimited";
+    const newStore = JSON.parse(JSON.stringify(store));
+    if (newStore.data[bucket]?.[league]?.[gwKey]) {
+      delete newStore.data[bucket][league][gwKey];
+    }
+    setStore(newStore);
+    pushTeams("pro", { league, rarity, gwKey }, []);
+    try { localStorage.removeItem(`pro_saved_${league}_${rarity}_${gwKey}`); } catch (_e) { void 0; }
+  };
+
+  // ── Suppression bulk : toute une date Stellar d'un coup ────────────────────
+  const deleteStellarSection = (dateStr, count) => {
+    const msg = lang === "fr"
+      ? `Supprimer les ${count} équipe${count > 1 ? "s" : ""} Stellar du ${dateStr} ?`
+      : `Delete the ${count} Stellar team${count > 1 ? "s" : ""} from ${dateStr}?`;
+    if (!window.confirm(msg)) return;
+    if (!store) return;
+    const newStore = JSON.parse(JSON.stringify(store));
+    if (newStore.data.stellar?.[dateStr]) {
+      delete newStore.data.stellar[dateStr];
+    }
+    setStore(newStore);
+    pushTeams("stellar", { dateStr }, []);
+    try { localStorage.removeItem(`stellar_saved_teams_${dateStr}`); } catch (_e) { void 0; }
+  };
+
   if (loading) {
     return <div style={{ padding: 40, textAlign: "center", color: "rgba(255,255,255,0.4)", fontFamily: "Outfit" }}>{t(lang, "loading") || "Chargement…"}</div>;
   }
@@ -417,6 +481,13 @@ function RecapTabInner({ players, logos, lang }) {
                       <span style={{ fontSize: 10, fontWeight: 700, color: "rgba(255,255,255,0.45)", padding: "2px 8px", borderRadius: 10, background: "rgba(255,255,255,0.04)" }}>
                         {teams.length} {lang === "fr" ? (teams.length > 1 ? "équipes" : "équipe") : (teams.length > 1 ? "teams" : "team")}
                       </span>
+                      <span
+                        role="button"
+                        tabIndex={0}
+                        onClick={(e) => { e.stopPropagation(); deleteProSection(activeRarity, league, gwKey, gwNum, teams.length); }}
+                        title={lang === "fr" ? `Supprimer toute cette GW (${teams.length} équipe${teams.length>1?"s":""})` : `Delete whole GW`}
+                        style={{ fontSize: 9, fontWeight: 700, padding: "2px 6px", borderRadius: 4, border: "1px solid rgba(239,68,68,0.3)", background: "rgba(239,68,68,0.08)", color: "#F87171", cursor: "pointer", fontFamily: "Outfit", lineHeight: 1 }}
+                      >🗑 {lang === "fr" ? "GW entière" : "Whole GW"}</span>
                       <span style={{ marginLeft: "auto", fontSize: 10, color: "rgba(255,255,255,0.3)" }}>
                         {open ? (lang === "fr" ? "Masquer" : "Hide") : (lang === "fr" ? "Afficher" : "Show")}
                       </span>
@@ -436,6 +507,11 @@ function RecapTabInner({ players, logos, lang }) {
                             logos={logos}
                             lang={lang}
                             rarityColor={rColor}
+                            onDelete={(id) => {
+                              if (window.confirm(lang === "fr" ? `Supprimer "${team.label}" (${league} · GW${gwNum || "?"}) ?` : `Delete "${team.label}"?`)) {
+                                deletePro(activeRarity, league, gwKey, id);
+                              }
+                            }}
                           />
                         ))}
                       </div>
@@ -473,6 +549,13 @@ function RecapTabInner({ players, logos, lang }) {
                       <span style={{ fontSize: 10, fontWeight: 700, color: "rgba(255,255,255,0.45)", padding: "2px 8px", borderRadius: 10, background: "rgba(255,255,255,0.04)" }}>
                         {teams.length} {lang === "fr" ? (teams.length > 1 ? "équipes" : "équipe") : (teams.length > 1 ? "teams" : "team")}
                       </span>
+                      <span
+                        role="button"
+                        tabIndex={0}
+                        onClick={(e) => { e.stopPropagation(); deleteStellarSection(dateStr, teams.length); }}
+                        title={lang === "fr" ? `Supprimer toute cette journée (${teams.length} équipe${teams.length>1?"s":""})` : `Delete whole day`}
+                        style={{ fontSize: 9, fontWeight: 700, padding: "2px 6px", borderRadius: 4, border: "1px solid rgba(239,68,68,0.3)", background: "rgba(239,68,68,0.08)", color: "#F87171", cursor: "pointer", fontFamily: "Outfit", lineHeight: 1 }}
+                      >🗑 {lang === "fr" ? "Journée entière" : "Whole day"}</span>
                       <span style={{ marginLeft: "auto", fontSize: 10, color: "rgba(255,255,255,0.3)" }}>
                         {open ? (lang === "fr" ? "Masquer" : "Hide") : (lang === "fr" ? "Afficher" : "Show")}
                       </span>
@@ -490,6 +573,7 @@ function RecapTabInner({ players, logos, lang }) {
                             logos={logos}
                             cardsBySlug={stellarCardsBySlug}
                             lang={lang}
+                            onDelete={(id) => deleteStellar(dateStr, id)}
                           />
                         ))}
                       </div>

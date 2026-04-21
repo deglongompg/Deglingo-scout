@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""debug_doue.py — football.game(id: UUID) ACCESSIBLE ! Explore ses sous-champs pour les odds"""
+"""debug_doue.py — FINAL : game.players[].sous-champs pour trouver les ODDS"""
 import requests, json, os
 from dotenv import load_dotenv
 
@@ -11,46 +11,49 @@ if key:
     HEADERS["APIKEY"] = key
     print("🔑 API key active\n")
 
-UUID = "db595776-a88c-4846-ae43-83473161e4d1"
+UUID = "db595776-a88c-4846-ae43-83473161e4d1"  # PSG vs Nantes mid-week
 
-# 1) Test massif de sous-champs sur football.game(id: UUID)
-print("=== TEST 1 : sous-champs de football.game(id:) pour odds/lineup/players ===\n")
-FIELDS = [
-    # Basics
-    "id", "date", "homeTeam { name slug }", "awayTeam { name slug }",
-    # Lineup officiel (publie par Sorare juste avant match)
-    "homeFormation { startingLineup { slug } substitutes { slug } }",
-    "awayFormation { startingLineup { slug } substitutes { slug } }",
-    "confirmedLineup { __typename }",
-    "officialLineup { __typename }",
-    "announcedLineup { __typename }",
-    # Odds / Probabilities
-    "playerStats { __typename }",
-    "playerOdds { __typename }",
+# 1) __typename de game.players pour voir si c'est Player ou un wrapper
+print("=== TEST 1 : typename des objets dans game.players ===\n")
+Q = '{ football { game(id: "%s") { players { __typename } } } }' % UUID
+r = requests.post(URL, json={"query": Q}, headers=HEADERS, timeout=15)
+body = r.json()
+players = ((body.get("data") or {}).get("football") or {}).get("game", {}).get("players") or []
+print(f"Nombre de joueurs: {len(players)}")
+if players:
+    types = set(p.get("__typename") for p in players)
+    print(f"Types uniques: {types}")
+
+# 2) Identifier le type exact des objets players
+# Si c'est Player -> accès direct, sinon c'est probablement un wrapper type GamePlayer
+type_name = list(types)[0] if players else None
+print(f"\nType des players: {type_name}")
+
+# 3) Explore sous-champs sur ce type
+print(f"\n=== TEST 3 : sous-champs de game.players[] (type={type_name}) ===\n")
+SUBFIELDS = [
+    # Player info
+    "slug", "displayName",
+    "player { slug displayName }",
+    # Probabilites / odds PRE-MATCH pour ce joueur
+    "playingStatus",
+    "starterOddsBasisPoints",
+    "playingStatusOdds { starterOddsBasisPoints }",
     "playingStatusOdds { __typename }",
-    "playerPlayingStatusOdds(slug: \"desire-doue\") { starterOddsBasisPoints }",
-    "odds { __typename }",
-    "lineupProbabilities { __typename }",
-    "probableLineup { __typename }",
-    # So5
-    "so5Fixtures { __typename }",
-    "so5Scores(first: 3) { __typename }",
-    "so5Lineups { __typename }",
-    # Status
-    "statusTyped",
+    "starterOdds", "startingOdds",
+    "probability", "startingProbability",
+    "expectedStatus", "expectedRole",
     "status",
-    "scheduledDate",
-    "kickoffTime",
-    # Players
-    "players { __typename }",
-    "homePlayers { __typename }",
-    "awayPlayers { __typename }",
-    # Misc
-    "gameWeek { __typename }",
-    "competition { displayName }",
+    # Score post-match (pour rappel)
+    "so5Score { score }",
+    "score",
+    "minsPlayed",
+    "started", "appeared",
+    # Meta
+    "position",
 ]
-for sf in FIELDS:
-    q = '{ football { game(id: "%s") { %s } } }' % (UUID, sf)
+for sf in SUBFIELDS:
+    q = '{ football { game(id: "%s") { players { %s } } } }' % (UUID, sf)
     r = requests.post(URL, json={"query": q}, headers=HEADERS, timeout=10)
     body = r.json()
     if "errors" in body:
@@ -58,28 +61,31 @@ for sf in FIELDS:
         if "doesn't exist" in msg or "No field" in msg:
             continue
         else:
-            print(f"  ⚠️  {sf[:70]:<70} : {msg}")
+            print(f"  ⚠️  {sf[:55]:<55} : {msg}")
     else:
-        d = (body.get("data") or {}).get("football",{}).get("game")
-        if d:
-            print(f"  ✅ {sf[:70]:<70} : {json.dumps(d)[:250]}")
+        pls = (body.get("data") or {}).get("football",{}).get("game",{}).get("players") or []
+        # Check si un Doué est dedans avec une valeur interessante
+        doue = next((p for p in pls if p.get("slug") == "desire-doue" or (p.get("player") or {}).get("slug") == "desire-doue"), None)
+        if doue:
+            print(f"  ✅ {sf[:55]:<55} (DOUE) : {json.dumps(doue)[:200]}")
+        elif pls and any(p for p in pls if p):
+            print(f"  ✅ {sf[:55]:<55} (sample): {json.dumps(pls[0])[:200]}")
+        else:
+            print(f"  ⚠️  {sf[:55]:<55} : vide")
 
-# 2) Query large : game avec tous les champs valides
-print(f"\n\n=== TEST 2 : query large Game ===\n")
+# 4) Query large ciblee Doue dans game.players
+print(f"\n\n=== TEST 4 : query large — cherche Doue dans game.players ===\n")
 Q = """{
   football {
     game(id: "%s") {
-      __typename
-      id
-      date
-      statusTyped
-      homeTeam { name slug }
-      awayTeam { name slug }
-      competition { displayName }
-      homeFormation { startingLineup { slug displayName } substitutes { slug displayName } }
-      awayFormation { startingLineup { slug displayName } substitutes { slug displayName } }
+      players {
+        __typename
+      }
     }
   }
 }""" % UUID
 r = requests.post(URL, json={"query": Q}, headers=HEADERS, timeout=15)
-print(json.dumps(r.json(), indent=2, ensure_ascii=False)[:2500])
+body = r.json()
+pls = ((body.get("data") or {}).get("football") or {}).get("game",{}).get("players") or []
+print(f"Total {len(pls)} players dans game.players")
+print(f"Sample premiers 3: {json.dumps(pls[:3], ensure_ascii=False)}")

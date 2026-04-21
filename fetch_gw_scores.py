@@ -124,7 +124,7 @@ def is_played(fx_date, kickoff):
     started = ko_end_dt <= _utc_now
     return in_gw and started
 
-# Source 1 : fixtures list (home_api / away_api = noms exacts dans players.json)
+# Source 1 : fixtures list (home_api / away_api = noms api Sorare/foot-data)
 played_clubs = set()
 fixtures_list = fixtures.get("fixtures", [])
 for f in fixtures_list:
@@ -144,7 +144,54 @@ if not played_clubs:
 
 print(f"\nClubs ayant deja joue : {', '.join(sorted(played_clubs))}")
 
-targets = [p for p in players if p.get("club", "") in played_clubs and p.get("slug")]
+# Match fuzzy: les noms de clubs different parfois entre fixtures.json (noms api foot-data)
+# et players.json (noms Sorare). On normalise et on accepte uniquement l'egalite stricte
+# apres normalisation pour eviter les faux positifs (ex: "Real Madrid" vs "Real Salt Lake").
+import unicodedata, re
+
+# Aliases manuels pour les cas pas resolvables par normalisation simple
+# Cles = noms api fixtures.json, valeurs = variantes equivalentes dans players.club
+ALIASES = {
+    "SC Freiburg": ["Sport-Club Freiburg"],
+    "Lille OSC": ["LOSC Lille"],
+    "Deportivo Alavés": ["D. Alavés"],
+    "Racing Club de Lens": ["RC Lens"],
+    "TSG 1899 Hoffenheim": ["TSG Hoffenheim"],
+}
+
+def _norm_club(name):
+    if not name: return ""
+    s = unicodedata.normalize("NFD", name)
+    s = "".join(c for c in s if unicodedata.category(c) != "Mn")
+    s = s.lower()
+    s = re.sub(r"[^a-z0-9 ]", " ", s)
+    # Retire suffixes/mots generiques + chiffres-annees ("1899", "1901", etc.)
+    tokens = [t for t in s.split() if t and not (t.isdigit() and len(t) == 4) and t not in {
+        "fc", "afc", "cf", "sc", "ac", "as", "rc", "ssc",
+        "club", "de", "del", "la", "le", "los", "the",
+        "f", "c", "futbol", "football", "balompie",
+    }]
+    return " ".join(tokens)
+
+# Build set des cles normalisees (cote played_clubs / fixtures.api)
+_played_norm = set()
+for c in played_clubs:
+    _played_norm.add(_norm_club(c))
+# Inclus aussi les aliases (si la cle est dans played_clubs, ses variantes sont aussi "played")
+for fix_name, variants in ALIASES.items():
+    if fix_name in played_clubs:
+        for v in variants:
+            _played_norm.add(_norm_club(v))
+
+def _club_in_played(club):
+    if not club: return False
+    if club in played_clubs: return True
+    n = _norm_club(club)
+    return bool(n) and n in _played_norm
+
+targets = [p for p in players if _club_in_played(p.get("club", "")) and p.get("slug")]
+fetched_clubs = sorted(set(p.get("club", "") for p in targets))
+print(f"Clubs matches dans players.json : {len(fetched_clubs)}")
 print(f"Joueurs a fetcher : {len(targets)}")
 
 # ── FETCH SCORES JOUEURS ──────────────────────────────────────────────────────

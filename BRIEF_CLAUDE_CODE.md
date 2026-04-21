@@ -1,15 +1,38 @@
-# BIBLE DEGLINGO SCOUT V4
-## Dernière mise à jour : 26 mars 2026
+# BIBLE DEGLINGO SCOUT V5
+## Dernière mise à jour : 22 avril 2026
+
+> **Claude Code :** lis ce fichier pour comprendre le projet de bout en bout.
+> Pour reprendre une session récente, lis aussi `SESSION_HANDOFF.md` (état courant + bugs pending).
+
+---
+
+## 🆕 Ajouts majeurs depuis V4 (mars 2026 → avril 2026)
+
+| Feature | Commit phare | Description |
+|---------|--------------|-------------|
+| **Onglet Sorare Pro** | Multi commits | Builder 5-joueurs (GK+DEF+MIL+ATT+FLEX) par ligue/rareté avec GW selector, saved teams, SkyrocketGauge, card power bonus, captain × 0.5 |
+| **Onglet Sorare Stellar** | Multi commits | Fixtures quotidiennes, 4 ligues + Europe, multi-jours (max 4), freeze daily, Fight mode, paliers rewards 280→480 pts |
+| **Onglet Mes Teams** | `4a16964` + `d144773` | Recap centralisé cross-device via Cloudflare KV. 3 sous-onglets : Pro Limited / Pro Rare / Stellar. Groupement (ligue, GW) pour Pro, par date pour Stellar |
+| **Sync KV cross-device** | `4a16964` | `/api/teams` Cloudflare Function avec namespace `TEAMS_KV`. Dual-write localStorage + KV. Mac + iPhone + PC synchronisés |
+| **OAuth Sorare** | — | Flow OAuth avec `sorare_access_token` dans localStorage, Bearer token, redirect_uri hardcodé sur prod |
+| **Fetch cartes Sorare** | — | `/api/sorare/cards` Function (max 39 pages), cache `pro_cards_cache` (localStorage, TTL 1h) + `sorare_cards_cache` (sessionStorage, TTL 10min) |
+| **Scores SO5 + match goals** | `ba95ad5` + `6e5f9b4` | Calendrier Pro+Stellar : badge FT + "1-2", dropdown joueurs par match. Saved teams : vraie note SO5 en bulle solide, DNP rouge 0, projeté pointillé |
+| **Fetch intelligent** | `d2f24c3` + `a7f2c0e` + `92b330c` | `fetch_gw_scores.py` : fuzzy matching clubs (AS Monaco↔AS Monaco FC), fenêtre 7 jours min, smart-skip des players déjà à jour (30-60 fetch au lieu de 2800) |
+| **Cache busting data** | `fa3b2c2` | `/data/*.json?v={Date.now()}` → bypass cache Cloudflare/navigateur |
+| **Cross-week Stellar** | `32032d2` | `selectedDays` passe d'indices [0-6] à dates ISO — permet sélection Mardi + Mercredi sur 2 semaines différentes |
+| **GW précédente Pro** | `24abb17` | Sélecteur Pro affiche GW71 FIN grisée à gauche de GW72 LIVE |
+| **Best Pick (Reco) masqué** | `c6b127b` | Retiré de la barre de nav (commenté dans TABS). Code conservé, route `?tab=reco` toujours fonctionnelle |
 
 ---
 
 ## 🎯 Résumé du projet
 
-**Deglingo Scout** est un outil de recommandation hebdomadaire pour **Sorare SO7** (fantasy football).
-Il tourne sous la marque **Deglingo Foot** sur **deglingosorare.com/scout**.
+**Deglingo Scout** est un outil de recommandation pour **Sorare SO5 / Sorare Pro / Sorare Stellar** (fantasy football).
+Il tourne sous la marque **Deglingo Foot** sur **scout.deglingosorare.com** (prod) et `deglingosorare.com/scout` (legacy mirror).
 
-**Objectif :** Aider les managers Sorare à choisir leurs meilleurs joueurs chaque semaine grâce au **D-Score**,
-un algorithme propriétaire qui croise forme du joueur × contexte adversaire × momentum × dom/ext.
+**Objectif :** Aider les managers Sorare à construire leurs équipes chaque GW (Sorare Pro, deadline Ven/Mar 16h Paris) et chaque jour (Sorare Stellar) grâce au **D-Score** + des outils de scoring live.
+
+**Utilisateurs :** 1 admin (deglongompg) + clients payants via Sorare Affiliate. Tout se fait côté frontend + Cloudflare KV (pas de DB backend classique).
 
 ---
 
@@ -42,7 +65,13 @@ un algorithme propriétaire qui croise forme du joueur × contexte adversaire ×
 - **142 mappings** nom→logo (couvre toutes les variantes de noms entre players.json, teams.json et l'API)
 - Fichier : `public/data/club_logos.json`
 - Dossier : `public/data/logos/`
-- Clé API football-data.org : `d265aec39d9c401aa27a85b32349bd86`
+- Clé API football-data.org : **stockée dans `.env` local** (jamais committée, voir `.gitignore`). Si besoin, regenerate via https://www.football-data.org/client/home
+
+### Nouvelles données (depuis V4)
+- **`player_status.json`** — injured/suspended/sorare_starter_pct par slug (fetchable via `fetch_player_status.py`)
+- **`player_prices.json`** — prix Limited/Rare Sorare marketplace (fetchable via `fetch_prices.py`)
+- **`match_events.json`** — buteurs/passeurs par match (`fetch_gw_scores.py` construit aussi ça)
+- **Scores SO5 par joueur** dans players.json : `last_so5_score`, `last_so5_date`, `last_match_home_goals`, `last_match_away_goals`, `game_id`
 
 ---
 
@@ -122,11 +151,13 @@ D-Score = clamp(raw, floor/100 × 55, 95)
 ### Stack technique
 
 ```
-React 18 + Vite (JavaScript pur, pas TypeScript)
+React 19 + Vite 8 (JavaScript pur, pas TypeScript)
 ├── Styles : inline styles uniquement (pas de Tailwind, pas de CSS modules)
-├── fetch() natif pour charger les JSON depuis /public/data/
-├── Pas de react-router (tabs gérés en useState)
-└── SVG inline pour radar chart et mini graphe L5
+├── fetch() natif pour charger les JSON depuis /public/data/ (avec cache-busting ?v=ts)
+├── Pas de react-router (tabs gérés en useState + URL hash)
+├── SVG inline pour radar chart, mini graphe, SkyrocketGauge
+├── Cloudflare Functions : /api/teams (KV), /api/sorare/cards (proxy OAuth)
+└── KV namespace : TEAMS_KV (bindé en Production + Preview)
 ```
 
 ### Structure des fichiers
@@ -135,43 +166,96 @@ React 18 + Vite (JavaScript pur, pas TypeScript)
 deglingo-scout-app/
 ├── public/
 │   └── data/
-│       ├── players.json      (1450 joueurs, 60+ champs chacun)
-│       ├── teams.json        (76 clubs avec PPDA/xGA/xG dom+ext)
-│       ├── fixtures.json     (matchs prochaine journée, 4 ligues)
-│       ├── club_logos.json   (142 mappings nom→logo)
-│       └── logos/            (76 fichiers PNG)
+│       ├── players.json        (3500+ joueurs, 60+ champs + last_so5_*)
+│       ├── teams.json          (76 clubs avec PPDA/xGA/xG dom+ext)
+│       ├── fixtures.json       (matchs + player_fixtures + home_api/away_api)
+│       ├── club_logos.json     (mappings nom→logo)
+│       ├── match_events.json   (buteurs/passeurs par game_id)
+│       └── logos/              (PNG par club)
 ├── src/
-│   ├── App.jsx               (shell : fetch data + 3 tabs + logos)
+│   ├── App.jsx                 (shell : fetch data + tabs + OAuth return handling)
 │   ├── components/
-│   │   ├── DbTab.jsx         (📊 Database — table triée/filtrée 1450 joueurs)
-│   │   ├── FightTab.jsx      (🥊 Fight — duel D-Score 1v1)
-│   │   ├── RecoTab.jsx       (⚽ Reco SO7 — picks auto par ligue)
-│   │   ├── PlayerCard.jsx    (Modal fiche joueur détaillée)
-│   │   ├── RadarChart.jsx    (5 axes AA : DEF/PASS/POSS/ATT/FTP)
-│   │   └── MiniGraph.jsx     (Graphe L5 scores)
-│   └── utils/
-│       ├── dscore.js         (formule D-Score V2)
-│       └── colors.js         (palettes couleurs positions/archétypes/D-Score)
-├── fetch_logos.py             (scraper logos football-data.org)
-├── fetch_fixtures.py          (scraper fixtures prochaine journée)
-├── fetch_all_players.py       (pipeline complet joueurs)
-├── merge_data.py              (merge 4 ligues → players.json)
-├── patch_final.py             (patches corrections joueurs)
-├── reclassify_v3.py           (classification archétypes V3)
-└── find_slugs.py              (résolution slugs Sorare)
+│   │   ├── DbTab.jsx                   (📊 Database — table triée/filtrée)
+│   │   ├── SorareProTab.jsx            (⚙️ Sorare Pro — builder GW + saved + recap)
+│   │   ├── StellarTab.jsx              (✨ Sorare Stellar — daily multi-jours + Fight)
+│   │   ├── RecapTab.jsx                (📋 Mes Teams — recap cross-device via KV)
+│   │   ├── FightTab.jsx                (🥊 Fight — duel D-Score)
+│   │   ├── RecoTab.jsx                 (⚽ Best Pick — MASQUÉ côté clients)
+│   │   ├── ProSavedTeamCard.jsx        (Pitch 5 joueurs + SkyrocketGauge Pro)
+│   │   ├── StellarSavedTeamCard.jsx    (Pitch 5 joueurs + gauge Stellar)
+│   │   ├── SkyrocketGauge.jsx          (Jauge verticale paliers rewards)
+│   │   ├── PlayerCard.jsx              (Modal fiche joueur détaillée)
+│   │   ├── RadarChart.jsx              (5 axes AA)
+│   │   ├── MiniGraph.jsx               (Graphe L5 scores)
+│   │   └── LandingPage.jsx             (Page d'accueil)
+│   ├── utils/
+│   │   ├── dscore.js       (formule D-Score V2)
+│   │   ├── colors.js       (palettes positions/archétypes/ligues)
+│   │   ├── proScoring.js   (paliers, getGwDisplayNumber, computeTeamScores, enrichPick)
+│   │   ├── cloudSync.js    (pushTeams, fetchCloudStore, extractProTeams/Stellar)
+│   │   ├── freeze.js       (getProGwInfo, getProGwList, loadFrozen, saveFrozen)
+│   │   └── i18n.js         (traductions fr/en)
+│   └── components/         (...)
+├── functions/
+│   ├── api/
+│   │   ├── teams/index.js        (GET/POST KV, auth via Bearer Sorare)
+│   │   └── sorare/cards.js       (proxy GraphQL Sorare)
+│   └── auth/sorare/
+│       ├── callback.js           (OAuth callback → redirect avec token)
+│       └── logout.js
+├── dist/                   (build output, uploaded par wrangler)
+└── SETUP_KV.md             (doc setup KV namespace)
+
+Racine du repo :
+├── fetch_all_players.py    (pipeline complet joueurs 4 ligues)
+├── fetch_gw_scores.py      (scores SO5 matchs joués — fuzzy clubs + smart-skip)
+├── fetch_fixtures.py       (prochaine journée)
+├── fetch_logos.py          (logos clubs)
+├── fetch_player_status.py  (injured/suspended/titu_pct Sorare)
+├── fetch_prices.py         (prix Limited/Rare marketplace)
+├── fetch_sorare_cards.py   (inventaire cartes user)
+├── fetch_sorareinside.py   (ajouts externes)
+├── merge_data.py           (merge 4 ligues → players.json)
+├── fix_*.py                (patches correctifs ponctuels)
+├── reclassify_v3.py        (archétypes V3)
+├── deploy.sh / deploy.bat              (build + wrangler + scout-dist + git)
+├── MAJ_daily.sh / MAJ_daily.bat        (fetch scores + deploy complet)
+├── fetch_vendredi.sh / .bat            (MAJ léger)
+├── fetch_mercredi.sh / .bat            (grosse MAJ hebdo)
+└── scout-dist/             (mirror legacy pour deglingosorare.com/scout via Wix)
 ```
 
 ### Data flow dans App.jsx
 
 ```
 App.jsx → Promise.all([
-  fetch("/data/players.json"),   → setPlayers (1419)
-  fetch("/data/teams.json"),     → setTeams (76)
-  fetch("/data/fixtures.json"),  → setFixtures
-  fetch("/data/club_logos.json") → setLogos (142 mappings)
+  fetch(`/data/players.json?v=${Date.now()}`),   → setPlayers
+  fetch(`/data/teams.json?v=...`),               → setTeams
+  fetch(`/data/fixtures.json?v=...`),            → setFixtures
+  fetch(`/data/club_logos.json?v=...`),          → setLogos
+  fetch(`/data/match_events.json?v=...`),        → setMatchEvents
 ])
-→ Passe { players, teams, fixtures, logos } à chaque tab
+→ Passe { players, teams, fixtures, logos, matchEvents } à chaque tab
+
+OAuth return handling (StellarTab/SorareProTab) :
+window.location.hash contient sorare_token=... → localStorage.setItem("sorare_access_token", token)
+→ fetchCards avec Bearer Authorization
+
+Sync cross-device (Mes Teams) :
+localStorage = offline local + KV = cross-device truth
+pushTeams("pro", {league, rarity, gwKey}, teams) → POST /api/teams avec Bearer
+fetchCloudStore() → GET /api/teams → {slug, data: {proLimited, proRare, stellar, _updatedAt}}
 ```
+
+### Onglets actifs (dans la barre de nav)
+
+1. **📊 Database** (`db`) — Table triée/filtrée de tous les joueurs, modal PlayerCard détaillé
+2. **⚙️ Sorare Pro** (`pro`) — Builder GW, saved teams, recap inline, GW selector prev+live+future
+3. **✨ Sorare Stellar** (`stellar`) — Calendrier multi-jours cross-semaines, builder, Fight
+4. **📋 Mes Teams** (`recap`) — Recap centralisé cross-device (Pro Limited / Pro Rare / Stellar)
+5. **🥊 Fight** (`fight`) — Duel D-Score 1v1
+
+**Masqué** : `⚽ Best Pick` (`reco`) — commenté dans `App.jsx:TABS`, code `RecoTab.jsx` conservé
 
 ---
 
@@ -238,7 +322,10 @@ Basé sur xG adverse : <1.0 = très peu dangereux, <1.3 = peu offensif, <1.6 = m
 
 ---
 
-## ⚽ Onglet 3 : Reco SO7 (RecoTab.jsx)
+## ⚽ Onglet 3 (MASQUÉ) : Best Pick / Reco SO7 (RecoTab.jsx)
+
+**Status :** masqué dans la nav depuis le 22/04/2026 (commit `c6b127b`), code conservé.
+Décommenter `{ id: "reco", label: "Best Pick", icon: "⚽" }` dans `App.jsx:TABS` pour réactiver.
 
 ### Logique de sélection
 1. Filtrer joueurs de la ligue avec `l5 >= 35`
@@ -248,16 +335,121 @@ Basé sur xG adverse : <1.0 = très peu dangereux, <1.3 = peu offensif, <1.6 = m
 5. Picker top 7 : **1 GK, 2 DEF, 2 MIL, 2 ATT, max 2 joueurs/club** (+2% bonus Sorare)
 
 ### Fonctionnalités
-- Sélection ligue → auto-pick des meilleurs joueurs par poste : 1 GK + 2 DEF + 2 MIL + 2 ATT (max 2/club)
-- Cartes joueur 110×156px avec :
-  - Position badge coloré en haut
-  - D-Score rond 38px (dsColor/dsBg)
-  - Nom (last name), club texte, logo 26px
-  - Étoiles confiance (1-5, animation pulse pour 5★)
-  - Mini-histogramme L5
-- Gradients de carte par position (GK=bleu profond, DEF=indigo, MIL=violet, ATT=rouge)
+- Cartes joueur 110×156px avec position badge, D-Score rond, étoiles confiance, mini-L5
 - Clic → DetailPanel avec 4 sections verdict : Situation, Adversaire, Style, Conclusion
-- DetailPanel adapté GK : labels "🧤 Clean Sheet & Arrêts" + context cards CS probability / xG adverse / Potentiel d'arrêts / Tendance récente
+- DetailPanel GK : Clean Sheet probability + xG adverse + tendance récente
+
+---
+
+## ⚙️ Onglet 4 : Sorare Pro (SorareProTab.jsx)
+
+### Concept
+Builder pour les tournois Sorare Pro (GW = Vendredi 16h → Mardi 16h Paris, ou Mardi 16h → Vendredi 16h).
+5 slots : **GK · DEF · MIL · ATT · FLEX**. Captain bonus × 50% sur le raw SO5 (formule Sorare officielle).
+
+### Composants clés
+
+**GW selector** (commit `24abb17`) :
+- `getProGwList(5)` dans `freeze.js` retourne `[prev, live, +1, +2, +3, +4]`
+- Chaque GW : `{gwKey, gwStart, gwEnd, gwNumber, startDateStr, endDateStr, displayNumber, isLive, isPast, offsetFromLive}`
+- Numérotation : epoch GW69 = 2026-04-10, chaque GW dure ~3.5 jours
+- Par défaut : `liveIdx` (la live), user peut cliquer sur "GW71 FIN" à gauche pour consulter la passée
+
+**Decisive Picker** (haut de l'écran) :
+- Top 3 ATT du jour, triés par un score "decisive" (`gaRate × posMult × formFactor × oppFactor`)
+
+**Calendrier matchs** (colonne gauche, 280px) :
+- Liste des fixtures de la GW groupées par date
+- **Depuis commit `ba95ad5`** : chip vert + "FT" + score "1-2" si match joué, sinon heure + "vs"
+- Click sur nom de club → dropdown avec joueurs du club + leurs notes SO5 (position, logo, H/A, score)
+- Click sur chip → filtre le pool à ce match
+
+**Pool joueurs** (colonne droite principale) :
+- Tous les joueurs de la ligue qui ont un fixture dans la GW
+- Tri par D-Score desc par défaut
+- Colonnes : flag, nom, club, pos, match info (home→away + score si joué), bonus pct carte, D-Score rond
+- Si user connecté Sorare : bouton "Mes cartes" filter au pool de cartes possédées
+- Filtres : titu% (masqué pour GW +2/+3/+4), décisive only, multi-club, CAP260
+
+**Builder 5-joueurs** :
+- Drag-drop OU click-pour-pick depuis le pool
+- Slots GK / DEF / MIL / ATT / FLEX
+- Chaque pick = `{ ...player, _card: sorareCard, _cardKey, matchDate, oppName, isHome, kickoff }`
+- Bouton Charger/Saver/X par team slot
+
+**Saved teams** (section recap en bas) :
+- 4 teams max par (league, rarity, gwKey)
+- Clé localStorage : `pro_saved_{league}_{rarity}_{gwKey}`
+- Clé KV : `proLimited[league][gwKey]` ou `proRare[league][gwKey]`
+- Chaque saved team : `{id, label, picks, captain, score, savedAt}`
+- Rendu en pitch ATT+FLEX / DEF+GK+MIL + SkyrocketGauge à droite
+- **DNP detection** (commit `6e5f9b4`) : si `matchDate < today && !hasRealScore` → bulle rouge 0 + badge DNP
+- **Fallback match score** : si joueur DNP, cherche un co-équipier qui a joué pour afficher le score du match
+
+### Paliers rewards (`proScoring.js`)
+
+EU Limited : $5 → $10 → $50 → $200 → $1000 (360/380/400/420/460)
+EU Rare : $20 → $40 → $200 → $800 → $4000 🔥 (400/420/440/460/510, Rare × 1.10 multiplier)
+MLS Limited/Rare : paliers essence + cash différents
+
+---
+
+## ✨ Onglet 5 : Sorare Stellar (StellarTab.jsx)
+
+### Concept
+Compétition quotidienne Sorare. Fixtures du jour (L1 + PL + Liga + coupes EU). 5 slots comme Pro.
+Paliers : 2k ess → 5k ess → 10 gems → 30 gems → 100$ → 1000$ 🏆 (280/320/360/400/440/480)
+
+### Features uniques
+- **Multi-jours** (max 4) : sélection cross-semaines via dates ISO (commit `32032d2`)
+- **Freeze daily** : snapshot du pool joueurs à la deadline stellar (minuit Paris)
+- **Fight mode** : deadline approchant → 1 click vers FightTab avec les picks
+- **Editions** : Base/Shiny/Maillot/Meteor/Holo/Legend./Signed (bonus 0/5/20/25/10/30/40%)
+- **Match-chip cliquable** : click sur nom club → dropdown joueurs (même pattern que Pro)
+
+### Sauvegarde teams
+- Clé localStorage : `stellar_saved_teams_{dateStr}` (1 entry par date)
+- Clé KV : `stellar[dateStr]` (1 entry par date)
+- Chaque team : `{id, label, picks, editions, score, savedAt}`
+- 4 teams max par date
+
+### selectedDays (IMPORTANT — ne pas casser)
+- **Stocke des dates ISO "YYYY-MM-DD"** (pas des indices)
+- Permet selection Mardi semaine A + Mercredi semaine B
+- Navigation prev/next semaine (◀ ▶) **préserve la sélection** — ne jamais rajouter `setSelectedDays([])`
+- Max 4 jours, tri par `.sort()` alphabétique (ISO naturel)
+
+---
+
+## 📋 Onglet 6 : Mes Teams (RecapTab.jsx)
+
+### Concept
+Vue centralisée cross-device des équipes sauvegardées (Pro Limited + Pro Rare + Stellar).
+Données pullées depuis KV via `fetchCloudStore()`.
+
+### Structure de rendu
+- **Header user** : slug Sorare, total équipes, score moyen, total cumulé, dernière synchro
+- **Tabs rarity** : Pro Limited (n) / Pro Rare (n) / Stellar (n)
+- **Pro (Limited/Rare)** — commit `fa63621` :
+  - Groupement par (ligue, gwKey), un collapsible par paire
+  - Header : "🇫🇷 Ligue 1 · [GW72] · 2 équipes"
+  - Badge GW jaune dérivé via `getGwDisplayNumber(gwKey)`
+  - Tri : GW plus récente d'abord, puis ordre PRO_LEAGUES
+  - Chaque team → `<ProSavedTeamCard>` avec pitch + SkyrocketGauge
+- **Stellar** — commit `d144773` :
+  - Groupement par date (ex "Dimanche 19 avril") — format naturel pour daily
+  - Chaque team → `<StellarSavedTeamCard>`
+
+### Props critiques (ne pas oublier — commit `af87d31`)
+```jsx
+<RecapTab players={players} logos={logos} lang={lang} />
+```
+Sans `players`, `enrichPick()` ne trouve aucun joueur frais → tous les picks affichent DNP faussement.
+
+### Enrichissement des picks
+- `enrichTeamWithBestCards(team, cardsBySlug)` : pour chaque pick sans `_card`, assigne la meilleure carte Sorare du joueur (migration legacy)
+- `computeTeamScores(team, players)` via `proScoring.js` : enrichit last_so5_* + calcule totaux
+- Les cartes Pro viennent de `localStorage["pro_cards_cache"]`, les Stellar de `sessionStorage["sorare_cards_cache"]`
 
 ---
 
@@ -374,50 +566,80 @@ goals, ga                    — Buts marqués / encaissés
 
 ---
 
-## 🔄 Pipeline hebdomadaire
+## 🔄 Pipelines
 
-### Routine avant chaque Game Week (vendredi 16h deadline Sorare)
-
+### Daily — Scores SO5 matchs joués
 ```
-1. fetch_all_players.py   → Scrape 4 ligues via API Sorare (detailedScores)
-2. reclassify_v3.py       → Reclassification archétypes
-3. merge_data.py           → Merge 4 JSON → players.json normalisé
-4. patch_final.py          → Corrections manuelles si nécessaire
-5. fetch_fixtures.py       → Scrape prochaine journée (football-data.org)
-6. Build & deploy          → npx vite build + push GitHub → Cloudflare Pages
-```
-
-### Commandes build
-
-```bash
-# Charger Node.js
-export NVM_DIR="$HOME/.nvm" && [ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh"
-
-# Build
-cd deglingo-scout-app && npx vite build
-
-# Le dist/ est servi soit par :
-# - Cloudflare Pages (auto-deploy depuis GitHub)
-# - Serveur local (.claude/scout-server.mjs dans Moonwalk, port 5173)
+./MAJ_daily.sh
+  ↓ python3 fetch_gw_scores.py   (fuzzy clubs + smart-skip, ~30-60s en steady state)
+  ↓ npm run build                 (Vite, ~1s)
+  ↓ npx wrangler pages deploy dist  (Cloudflare Pages direct upload)
+  ↓ rsync dist → scout-dist/       (mirror legacy)
+  ↓ git add scout-dist + data + src → git commit → git push
 ```
 
-### Preview local (depuis le repo Moonwalk)
+### Vendredi — MAJ avant GW (prochaine journée)
+```
+./fetch_vendredi.sh
+  ↓ fetch_player_status.py   (titu_pct, injured, suspended)
+  ↓ fetch_fixtures.py         (prochaine journée)
+  ↓ merge_data.py             (merge)
+  ↓ build
+```
 
-Le serveur de preview est configuré dans `/Users/damiengheza/Desktop/Moonwalk/.claude/launch.json` :
-- Nom : `deglingo-scout`
-- Sert depuis : `/Users/damiengheza/Desktop/Moonwalk/.claude/scout-dist/`
-- Port : 5173
-- **Important** : après un build, copier le dist vers `Moonwalk/.claude/scout-dist/`
+### Mercredi — MAJ hebdo complète
+```
+./fetch_mercredi.sh
+  ↓ fetch_all_players.py      (stats scoring complet 4 ligues)
+  ↓ fetch_fixtures.py + fetch_player_status.py + merge
+  ↓ build + deploy
+  ↓ fetch_prices.py EN FOND   (~25min/ligue)
+```
+
+### Routine hebdo complète
+```
+1. fetch_all_players.py  → Scrape 4 ligues via API Sorare (detailedScores + so5Scores)
+2. reclassify_v3.py      → Archétypes V3
+3. merge_data.py         → players.json normalisé
+4. patch_final.py        → Corrections si nécessaire
+5. fetch_fixtures.py     → Prochaine journée (football-data.org)
+6. fetch_gw_scores.py    → Scores SO5 matchs joués
+7. ./deploy.sh           → Build + Cloudflare + mirror + push
+```
 
 ---
 
-## 🔗 GitHub & Déploiement
+## 🚀 Déploiement
 
-- **Repo GitHub** : `github.com/deglongompg/Deglingo-scout`
-- **Branche** : `main`
-- **Déploiement** : Cloudflare Pages (build command: `npm run build`, output: `dist`)
-- **Site** : `deglingosorare.com/scout`
-- **Phase 2 (future)** : Remplacer fetch locaux par Cloudflare R2 URLs
+### ⚠️ Cloudflare Pages est en **Direct Upload** (pas auto-deploy GitHub)
+Git push sert uniquement de backup/historique. **Seul `./deploy.sh` ou `./MAJ_daily.sh` met en prod.**
+
+### Commandes (Mac ou PC)
+```bash
+cd ~/Documents/Deglingo-scout   # ou autre path
+git pull origin main
+./deploy.sh         # build + wrangler + mirror + push GitHub
+# ou
+./MAJ_daily.sh      # fetch scores + deploy complet
+```
+
+### Scripts `.bat` équivalents sur Windows (PC bureau)
+- `deploy.bat` / `MAJ_daily.bat` / `fetch_vendredi.bat` / `fetch_mercredi.bat`
+- Utilisent `py` au lieu de `python3`
+
+### Rollback en cas de plantage prod
+Cloudflare Dashboard → Workers & Pages → `deglingo-sorare` → Deployments → find un ancien OK → `...` → Rollback. Instantané (~30s).
+
+---
+
+## 🔗 GitHub & Stack déploiement
+
+- **Repo unique** : `github.com/deglongompg/Deglingo-scout` (branche `main`)
+- **Prod** : `scout.deglingosorare.com` (Cloudflare Pages, projet `deglingo-sorare`)
+- **Legacy mirror** : `deglingosorare.com/scout` (via Wix, sync via `scout-dist/`)
+- **KV namespace** : `TEAMS_KV` bindé Production + Preview (cf. `deglingo-scout-app/SETUP_KV.md`)
+- **Secrets** : `.env` local (FOOTBALL_DATA_API_KEY), jamais committé (`.gitignore`)
+- **Setup nouveau device** (Mac ou PC bureau) : `git clone` + `npm install` dans `deglingo-scout-app/` + `npx wrangler login` + copier `.env` manuel
 
 ---
 
@@ -436,39 +658,76 @@ Script : `reclassify_v3.py` (512 changements V1→V3 documentés dans `reclassif
 
 ---
 
-## ⚠️ Points d'attention / Décisions techniques
+## ⚠️ Règles sacrées à respecter
 
-1. **NE PAS toucher le layout/fonctionnalité du Fight** sauf changements additifs (logos, verdicts)
-2. **min_15 ?? floor** : le D-Score utilise `min_15` comme floor quand disponible (plus fiable car L15)
-3. **Logos** : le mapping `club_logos.json` couvre 3 systèmes de noms différents (football-data.org, teams.json, players.json)
-4. **GK verdicts** : toujours parler de Clean Sheet probability (basé sur xG adverse), pas de "style de jeu"
-5. **D-Score 60 = gold/jaune**, pas orange (seuil à 55, pas 60)
-6. **Badge D-Score** = rond avec gradient (dsBg), jamais hexagonal
-7. **Fight verdicts** = identiques à Reco SO7 + conclusion comparative risk/reward en plus
+1. **Pas d'IIFE dans JSX** : écrans noirs garantis en prod Cloudflare. Utiliser expressions inline ou extraire vers variables avant le return.
+2. **NE PAS toucher le flow OAuth Sorare** (`token/proxy/query`) sans test prod : localStorage Bearer + cards(first:50) + `... on Card` fragment
+3. **Cloudflare Cards Function** : déployée dans `deglingo-scout-app/functions/`, timeout 30s, max 39 pages, rarities filter KO (filtrer côté client)
+4. **Database = source unique** : `players.json` alimente tous les onglets, jamais d'override inline dans les composants
+5. **Captain bonus** = `raw_so5 × 0.5` (PAS post-bonus × 0.5). Confirmé par comparaison score réel Sorare.
+6. **min_15 ?? floor** : le D-Score utilise `min_15` comme floor quand disponible (plus fiable car L15)
+7. **Logos** : `club_logos.json` couvre 3 systèmes de noms différents (football-data.org, teams.json, players.json)
+8. **D-Score 60 = gold/jaune**, seuil à 55 pas 60
+9. **Badge D-Score** = rond avec gradient (dsBg), jamais hexagonal
+10. **Toujours passer `players` + `logos`** aux composants qui font `enrichPick()` — sinon DNP faux positifs
+11. **Pas d'emoji flags** : Windows compat → utiliser `flagcdn.com` images
+12. **ALIASES fetch_gw_scores.py** : maintenir à jour quand nouveaux clubs (ex L2→L1). Noms fixtures.api ≠ players.club.
+13. **selectedDays dans Stellar** = dates ISO, pas indices. Ne pas casser en rajoutant `setSelectedDays([])` sur navigation semaine.
+
+---
+
+## 🐛 Debugging — raccourcis
+
+### Les saved teams affichent DNP pour tous les joueurs
+→ Vérifier que `RecapTab` reçoit bien `players={players}` en props (cf. `App.jsx`)
+
+### Cartes Sorare n'apparaissent pas dans Mes Teams pitch
+→ `enrichTeamWithBestCards()` dans `RecapTab.jsx` assigne `_card` au load (migration legacy pour teams sauvegardées avant le schéma `_card`)
+
+### Scores stales après MAJ_daily.sh
+→ Cloudflare ou browser cache. Le `?v={Date.now()}` en App.jsx bypass le cache navigateur. Si persiste : `Cloudflare dashboard → Caching → Purge Everything`
+
+### Match-chip FT absent sur un match pourtant joué
+→ `fetch_gw_scores.py` peut avoir manqué un club par mismatch de nom. Ajouter l'alias dans `ALIASES` dict. OU Sorare API n'a pas encore scoré ce match (délai API) — attendre 24h.
+
+### Preview Cloudflare pour tester sans polluer prod
+- Push sur une branche autre que `main` → Cloudflare build un preview
+- URL : `{hash}.deglingo-sorare.pages.dev`
+- Pour OAuth : copier le token prod via devtools console (`copy(localStorage.getItem("sorare_access_token"))`) puis `localStorage.setItem(...)` sur preview (redirect_uri est hardcodé sur prod)
 
 ---
 
 ## 🔮 Roadmap / Idées futures
 
-- [x] Intégrer CS% dans Database + verdicts GK/DEF (Poisson clamped, range 13%-61%)
-- [x] Ajouter prix cartes Limited/Rare (L€/R€) depuis Sorare marketplace
-- [x] Renommer Rég10%→Reg10, Titu%→Titu10
-- [x] Max 2 joueurs/club dans Reco SO7 (+2% bonus Sorare)
-- [x] shortName mapping 40+ clubs (PSG, OM, Wolves, etc.)
-- [ ] Fetcher prix L€/R€ pour les 1450 joueurs (script fetch_prices.py prêt, ~25min/ligue)
-- [ ] Re-fetch PL/Liga/Bundes avec fix AA scores (L1 done)
-- [ ] Pipeline Make.com → Claude API → Cloudflare R2 (automatisation complète)
-- [ ] Déployer sur Cloudflare Pages avec auto-deploy GitHub
-- [ ] Ajouter filtres avancés dans Database (DOM only, EXT only, forme récente)
-- [ ] Accès API Sorare étendu (demande en cours)
+**Done (depuis V4)**
+- [x] Cloudflare Pages déploiement (Direct Upload mode)
+- [x] Onglet Sorare Pro avec saved teams cross-device (KV)
+- [x] Onglet Sorare Stellar avec multi-jours cross-semaines
+- [x] Onglet Mes Teams (recap centralisé Pro + Stellar)
+- [x] OAuth Sorare + fetch cartes réelles (pro_cards_cache + sorare_cards_cache)
+- [x] Scores SO5 live (fetch_gw_scores.py avec fuzzy + smart-skip)
+- [x] Calendrier Pro/Stellar avec badge FT + dropdown joueurs par match
+- [x] DNP detection sur saved teams
+- [x] Prix L€/R€ Sorare marketplace (fetch_prices.py)
+
+**En cours / TODO**
+- [ ] **Fix CAP260 avec `sorare_l10` officiel** — écrire `fetch_sorare_l10.py`, ajouter `sorare_l10` dans players.json, remplacer `p.l10` par `p.sorare_l10` aux lignes 733 et 1403 de `SorareProTab.jsx`. Bug : Psal78 affiche +6% CAP alors que Sorare dit +4%.
+- [ ] **Card-specific position** (Kvara Classic = MIL) — override JSON `card_position_overrides.json` + filtre slot après expansion
+- [ ] **Seal teams Pro après deadline** — détecter `Date.now() > gwInfo.deadline` → bloquer Charger/X/Save
+- [ ] **Live scores polling** — Cloudflare Function proxy Sorare API toutes les 60s pour live scores pendant les matchs
+- [ ] **Unifier DNP dans computeTeamScores** — actuellement DNP géré dans 4 surfaces séparément (SorareProTab inline, StellarTab inline, ProSavedTeamCard, StellarSavedTeamCard). Intégrer dans `proScoring.js::getPickScore` pour factoriser.
 
 ---
 
 ## 📞 Liens utiles
 
-- Site : https://deglingosorare.com
-- Sorare API : https://api.sorare.com/federation/graphql
-- Affiliate link : http://sorare.pxf.io/Deglingo
-- Football-data.org : https://api.football-data.org/v4/ (clé: `d265aec39d9c401aa27a85b32349bd86`)
-- Cloudflare Dashboard : https://dash.cloudflare.com
-- GitHub : https://github.com/deglongompg/Deglingo-scout
+- **Repo GitHub** : https://github.com/deglongompg/Deglingo-scout (unique, branche `main`)
+- **Prod** : https://scout.deglingosorare.com
+- **Legacy mirror** : https://deglingosorare.com/scout
+- **Sorare API** : https://api.sorare.com/federation/graphql
+- **Affiliate link** : http://sorare.pxf.io/Deglingo
+- **Football-data.org API** : https://api.football-data.org/v4/ (clé dans `.env` local, **jamais committée**)
+- **Cloudflare Dashboard** : https://dash.cloudflare.com → Workers & Pages → `deglingo-sorare`
+- **KV namespace** : `TEAMS_KV` (binding Production + Preview)
+- **Setup doc** : `deglingo-scout-app/SETUP_KV.md`
+- **Handoff session courante** : `SESSION_HANDOFF.md` (état + bugs + TODOs à date)

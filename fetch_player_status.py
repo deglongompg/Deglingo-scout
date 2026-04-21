@@ -229,18 +229,51 @@ for path in OUT_PATHS:
     print(f"✅ {patched} joueurs patchés → {path}")
 
 # ── RÉSUMÉ ───────────────────────────────────────────────────────────────────
+# Stats titu% et proj — par ligue pour verifier la couverture (surtout Liga qui bug parfois)
+from collections import defaultdict
+with open(OUT_PATHS[0], encoding="utf-8") as f:
+    final_data = json.load(f)
+titu_by_lg = defaultdict(lambda: [0, 0])  # [with_titu, total]
+proj_by_lg = defaultdict(lambda: [0, 0])
+for p in final_data:
+    lg = p.get("league") or "?"
+    titu_by_lg[lg][1] += 1
+    proj_by_lg[lg][1] += 1
+    if p.get("sorare_starter_pct") is not None:
+        titu_by_lg[lg][0] += 1
+    if p.get("sorare_proj") is not None:
+        proj_by_lg[lg][0] += 1
+
 print(f"\n{'='*55}")
 print(f"📊 RÉSUMÉ STATUS")
 print(f"{'='*55}")
 print(f"  🏥 Blessés     : {len(injured_list)}")
-for n in injured_list:
+for n in injured_list[:20]:
     print(f"     - {n}")
+if len(injured_list) > 20:
+    print(f"     - ...+{len(injured_list)-20} autres")
 print(f"  🟥 Suspendus   : {len(suspended_list)}")
 for n in suspended_list:
     print(f"     - {n}")
 if errors:
     print(f"  ⚠️  Erreurs     : {errors}")
 print(f"{'='*55}")
+print(f"📈 COUVERTURE TITU% (starter_pct) par ligue")
+print(f"{'='*55}")
+for lg in sorted(titu_by_lg):
+    w, t = titu_by_lg[lg]
+    pct = (w / t * 100) if t else 0
+    flag = "✅" if pct >= 80 else ("⚠️ " if pct >= 40 else "❌")
+    print(f"  {flag} {lg:<8} {w:>4}/{t:<5} ({pct:>5.1f}%)")
+print(f"{'='*55}")
+print(f"📈 COUVERTURE PROJECTION (sorare_proj) par ligue")
+print(f"{'='*55}")
+for lg in sorted(proj_by_lg):
+    w, t = proj_by_lg[lg]
+    pct = (w / t * 100) if t else 0
+    flag = "✅" if pct >= 80 else ("⚠️ " if pct >= 40 else "❌")
+    print(f"  {flag} {lg:<8} {w:>4}/{t:<5} ({pct:>5.1f}%)")
+print(f"{'='*55}")
 print(f"\n✅ Terminé ! Lance maintenant :")
-print(f"   npm run build")
-print(f"   [puis déploie sur Cloudflare]")
+print(f"   ./deploy.sh")
+print(f"   [puis Cmd+Shift+R sur scout.deglingosorare.com]")

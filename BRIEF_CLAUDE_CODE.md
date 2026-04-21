@@ -1,5 +1,116 @@
-# BIBLE DEGLINGO SCOUT V5
-## Dernière mise à jour : 22 avril 2026
+# BIBLE DEGLINGO SCOUT V6
+## Dernière mise à jour : 22 avril 2026 (soir) — Turbo + Liga mid-week fix
+
+---
+
+## 🚀 NOUVEAUTÉ V6 — `MAJ_turbo.sh` + perf batch GraphQL
+
+### `MAJ_turbo.sh` — script quotidien tout-en-un (~90s)
+
+```bash
+cd ~/Documents/Deglingo-scout
+git pull origin main
+./MAJ_turbo.sh
+```
+
+Enchaine 6 étapes en **<2 minutes** :
+1. **fetch_fixtures.py** (~30s) — calendriers 5 ligues + player_fixtures (filtre matchs passés)
+2. **fetch_player_status.py** (~10s) — titu% + injured/suspended via batch GraphQL 150 + 4 workers
+3. **fetch_gw_scores.py** (~2-5s) — scores SO5 via batch + smart-skip + fuzzy club matching
+4. **merge_data.py** (~5s)
+5. **npm run build** (~5s)
+6. **wrangler deploy** + mirror scout-dist + git push (~30s)
+
+Met à jour les **3 onglets clients** (Database, Sorare Pro, Sorare Stellar) en une commande. Peut être lancé plusieurs fois par jour (avant deadline, après matchs, pour capter les titu% au fur et à mesure de la publication Sorare).
+
+### Optimisations batch GraphQL (gain ~25x)
+
+**Principe** : au lieu d'une requête HTTP par joueur, on batch N joueurs en UNE requête GraphQL avec des alias `p0: player(slug:"a") {...} p1: player(slug:"b") {...}`.
+
+**Limites Sorare API** :
+- Sans API key : complexity max 500 → batch ~50 joueurs
+- Avec `SORARE_API_KEY` (developers.sorare.com) : complexity max 30000 → batch ~150 (payload HTTP limit hits ~200)
+- Rate limit : 600 req/min → ThreadPoolExecutor 4 workers parallèles
+
+**Fichiers optimisés** :
+- `fetch_player_status.py` : 7 min → 10-20s
+- `fetch_gw_scores.py` : 22s → 2-5s
+
+**CLI override** :
+```bash
+python3 fetch_player_status.py --batch 100 --workers 6   # turbo si API key
+python3 fetch_player_status.py --no-titu                 # mercredi (titu pas publié)
+```
+
+### Titu% — le double mécanisme (Classic + Fallback)
+
+**Problème découvert V6** : Sorare a un champ `nextClassicFixturePlayingStatusOdds` qui renvoie le % titu (basisPoints/100) UNIQUEMENT pour les matchs "Classic" (weekend SO5). Les matchs mid-week (Tue/Wed/Thu) reçoivent `null`. Avant V6, tous les joueurs Liga mid-week étaient sans titu%.
+
+**Fix V6** : on fetche AUSSI `player.playingStatus` (enum) dans le même batch. Mapping fallback :
+
+```python
+PLAYING_STATUS_TO_PCT = {
+    "STARTER":          90,  # titulaire annoncé confirmé
+    "REGULAR":          70,  # titulaire habituel (non confirmé)
+    "SUPER_SUBSTITUTE": 40,
+    "SUBSTITUTE":       25,
+    "NOT_PLAYING":       0,
+}
+```
+
+Priorité lecture : `starterOddsBasisPoints` précis > fallback enum. Le script est maintenant agnostique weekend vs mid-week.
+
+### Aliases clubs (`fetch_gw_scores.py:ALIASES`)
+
+Quand le nom fixtures.api ≠ players.club, on ajoute un alias explicite. Liste à jour :
+
+```python
+ALIASES = {
+    # Bundesliga
+    "SC Freiburg": ["Sport-Club Freiburg"],
+    "TSG 1899 Hoffenheim": ["TSG Hoffenheim"],
+    # Ligue 1
+    "Lille OSC": ["LOSC Lille"],
+    "Racing Club de Lens": ["RC Lens"],
+    # Liga
+    "Deportivo Alavés": ["D. Alavés"],
+    "RC Celta de Vigo": ["RC Celta"],
+    "Rayo Vallecano de Madrid": ["Rayo Vallecano"],
+}
+```
+
+**Audit en vigueur (2026-04-22)** :
+| Ligue | Status |
+|-------|--------|
+| L1 | ✅ 18 fixtures clubs tous matchent |
+| PL | ✅ 20/20 |
+| Liga | ✅ 20/20 (après fix Celta + Rayo) |
+| Bundes | ✅ 18/18 |
+| MLS | ⚠️ 30/32 (Tigres UANL + Toluca = Concacaf, Mexicains, pas dans DB, OK ignorés) |
+
+**Si un club manque dans le futur** (promotion, nouveau en Concacaf, etc.) :
+```bash
+# Re-run l'audit via
+python3 -c "# script audit dans SESSION_HANDOFF.md"
+# Puis ajouter l'alias manquant dans ALIASES
+```
+
+### `.env` — 2 clés obligatoires
+
+```bash
+FOOTBALL_DATA_API_KEY=<clé football-data.org>      # gratuite, register
+SORARE_API_KEY=<clé Sorare>                         # developers.sorare.com
+```
+
+Sans `SORARE_API_KEY`, MAJ_turbo reste fonctionnel mais ~20s au lieu de 10s (batch auto-réduit à 50).
+
+### Bugs subtils corrigés en V6
+
+- **`build_player_fixtures` gardait les matchs passés** — si PSG a joué 19/04 ET rejoue 22/04, le mapping `player → next fixture` pointait sur 04-19. Dans DbTab la colonne Titu% masquait le % (logique `if last_so5_date >= matchDate return '—'`). **Fix** : filtre `date >= today` avant le tri.
+- **RecapTab sans props players/logos** (App.jsx ligne 293) → tous les picks affichés DNP faussement. **Fix** : 1 ligne.
+- **`fetch_fixtures.py` sans dotenv** — MAJ_turbo plantait à l'étape 1/6. **Fix** : ajout `load_dotenv()`.
+
+---
 
 > **Claude Code :** lis ce fichier pour comprendre le projet de bout en bout.
 > Pour reprendre une session récente, lis aussi `SESSION_HANDOFF.md` (état courant + bugs pending).

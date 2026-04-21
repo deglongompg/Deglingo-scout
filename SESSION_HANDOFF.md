@@ -1,3 +1,101 @@
+# SESSION HANDOFF — 2026-04-19 → 22 (dimanche GW71 → mardi soir GW72 mid-week)
+
+---
+
+## 🚀 MISE À JOUR 2026-04-22 mardi soir — TURBO MAJ complete + Liga mid-week fix
+
+**État prod `scout.deglingosorare.com` = OK ✅**
+- Branche `main` HEAD = `6da3215` (fix aliases Liga)
+- Workflow quotidien unifie en UNE commande : `./MAJ_turbo.sh` (~90s total)
+
+### Nouveau script magique : `MAJ_turbo.sh`
+
+Script **tout-en-un** pour la MAJ quotidienne complete :
+```
+[1/6] fetch_fixtures.py        (~30s, API foot-data)
+[2/6] fetch_player_status.py   (~10s avec SORARE_API_KEY batch=150)
+[3/6] fetch_gw_scores.py       (~2-5s avec batch GraphQL + smart-skip)
+[4/6] merge_data.py            (~5s)
+[5/6] npm run build            (~5s)
+[6/6] wrangler deploy + mirror + git push  (~30s)
+```
+Temps total ~60-90s. Met a jour **les 3 onglets clients** (Database, Sorare Pro, Sorare Stellar).
+
+### Optimisations perf batch GraphQL
+
+**`fetch_player_status.py`** (commit `2fb7f46` → `2d0b17e`) :
+- Batch GraphQL alias p0..pN : 3526 joueurs → ~70 requetes HTTP au lieu de 3526
+- ThreadPoolExecutor 4 workers parallel
+- Auto-batch 150 si `SORARE_API_KEY` detectee (complexity 30000 vs 500 sans)
+- Safety abort si <80% joueurs recus (evite de pourrir `players.json`)
+- 7 min → **10-20s** (gain ~25x)
+
+**`fetch_gw_scores.py`** (commit `2895804`) :
+- Meme pattern batch + workers + smart-skip
+- 22s → **~2-5s** (gain ~10x)
+
+### Liga mid-week : probleme de champ Sorare `nextClassicFixture*`
+
+**Contexte** : `nextClassicFixturePlayingStatusOdds` renvoie NULL pour les matchs **mid-week** (Mardi/Mercredi/Jeudi) qui ne sont pas classes comme "Classic" chez Sorare. Consequence : 98% des joueurs Liga sans titu% avant leur match mid-week.
+
+**Fix** (commit `2d0b17e`) : on fetche AUSSI `player.playingStatus` (enum, gratuit car meme batch). Mapping fallback :
+
+```python
+PLAYING_STATUS_TO_PCT = {
+    "STARTER":          90,  # titulaire annonce confirme
+    "REGULAR":          70,  # titulaire habituel
+    "SUPER_SUBSTITUTE": 40,  # remplacant qui rentre souvent
+    "SUBSTITUTE":       25,  # remplacant classique
+    "NOT_PLAYING":       0,  # hors groupe / blesse
+}
+```
+
+Priorite : `starterOddsBasisPoints` precis (si dispo) > fallback enum. Le fetch devient agnostique sport/GW.
+
+### Bugs corriges (wave finale)
+
+1. **`fetch_fixtures.py` dotenv manquant** (commit `dc9ebf1`) — `FOOTBALL_DATA_API_KEY` n'etait pas lu depuis `.env`, MAJ_turbo plantait a l'etape 1/6.
+2. **`build_player_fixtures` gardait matchs passes** (commit `6a7a5ab`) — pour PSG qui a joue 19/04 et rejoue 22/04, le mapping `player → next fixture` pointait encore vers 04-19 (passe). DbTab masquait alors la colonne Titu% (logique `if last_so5_date >= matchDate`). **Fix** : filtre `date >= today` avant le tri.
+3. **Aliases Liga manquants** (commit `6da3215`) — `RC Celta de Vigo` (fixtures) ≠ `RC Celta` (players), pareil `Rayo Vallecano de Madrid` ≠ `Rayo Vallecano`. Ajoutes au dict `ALIASES`.
+4. **RecapTab sans props** (commit `af87d31`) — App.jsx passait `<RecapTab lang={lang} />` sans `players`/`logos` → tous les picks DNP faussement. Fix : passer les props.
+
+### Audit complet des 5 ligues (2026-04-22)
+
+| Ligue | fixtures.api | players.clubs | Status |
+|-------|-------------|---------------|--------|
+| L1 | 18 | 20 | ✅ 13 exact + 3 norm + 2 alias |
+| PL | 20 | 24 | ✅ 20 exact |
+| Liga | 20 | 21 | ✅ 13 exact + 4 norm + 3 alias (2 nouveaux) |
+| Bundes | 18 | 20 | ✅ 15 exact + 2 norm + 1 alias |
+| MLS | 32 | 30 | ⚠️ Tigres UANL + Toluca FC (Concacaf, Mexicains, pas dans DB, ignorés silencieusement) |
+
+**Aliases maintenus dans `fetch_gw_scores.py:ALIASES`** :
+```python
+ALIASES = {
+    # Bundesliga
+    "SC Freiburg": ["Sport-Club Freiburg"],
+    "TSG 1899 Hoffenheim": ["TSG Hoffenheim"],
+    # Ligue 1
+    "Lille OSC": ["LOSC Lille"],
+    "Racing Club de Lens": ["RC Lens"],
+    # Liga
+    "Deportivo Alavés": ["D. Alavés"],
+    "RC Celta de Vigo": ["RC Celta"],
+    "Rayo Vallecano de Madrid": ["Rayo Vallecano"],
+}
+```
+
+### Clefs `.env` (sur Mac + PC)
+
+```
+FOOTBALL_DATA_API_KEY=<cle football-data.org>
+SORARE_API_KEY=<cle API Sorare, obtenue sur developers.sorare.com>
+```
+
+Les 2 sont obligatoires pour `MAJ_turbo.sh`. Sans `SORARE_API_KEY`, batch=50 automatique (~20s au lieu de 10s).
+
+---
+
 # SESSION HANDOFF — 2026-04-19 → 22 (dimanche GW71 → mercredi)
 
 > **Claude Code :** lis ce fichier au démarrage pour reprendre le contexte.

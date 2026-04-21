@@ -1,19 +1,37 @@
 #!/usr/bin/env python3
 """
-fetch_player_status.py — Mise à jour rapide du vendredi matin
-=============================================================
-Fetch UNIQUEMENT : blessures, suspensions, score projeté Sorare.
-Source : humains Sorare (coach, blessés, suspendu) — pas de calcul historique.
+fetch_player_status.py — MAJ flash titu% + blessures + projection Sorare
+=========================================================================
+Batch GraphQL : 20 joueurs par requete avec alias -> 3500 joueurs en ~25s
+(vs 7 min sans batch).
 
-Durée : ~3 min pour 1450 joueurs
-Workflow vendredi :
-  py fetch_player_status.py
-  npm run build
-  [déployer]
+Source : API Sorare (coach, blessures, suspensions, titu%).
+Duree : ~25-30 sec pour 3500 joueurs (175 batchs @ 0.12s sleep)
+
+Usage :
+  py fetch_player_status.py              # avec titu%
+  py fetch_player_status.py --no-titu    # mercredi (titu pas encore publie)
+  py fetch_player_status.py --batch 30   # taille de batch custom
 """
 import requests, json, os, time, sys
+from concurrent.futures import ThreadPoolExecutor, as_completed
 sys.stdout.reconfigure(errors="replace")
 NO_TITU = "--no-titu" in sys.argv  # Mercredi: pas de titu% (pas encore publie)
+
+# CLI : --batch N (default 50) et --workers N (default 4, parallele)
+BATCH_SIZE = 50
+if "--batch" in sys.argv:
+    try:
+        BATCH_SIZE = int(sys.argv[sys.argv.index("--batch") + 1])
+    except (IndexError, ValueError):
+        pass
+WORKERS = 4
+if "--workers" in sys.argv:
+    try:
+        WORKERS = int(sys.argv[sys.argv.index("--workers") + 1])
+    except (IndexError, ValueError):
+        pass
+
 from dotenv import load_dotenv
 
 load_dotenv()
@@ -24,7 +42,7 @@ HEADERS  = {"Content-Type": "application/json", "User-Agent": "Mozilla/5.0", "Ac
 if API_KEY:
     HEADERS["APIKEY"] = API_KEY
 
-SLEEP = 0.12   # 500 req/min max Sorare
+SLEEP = 0.05   # Entre 2 batchs. Limite Sorare = 600 req/min = 10 req/s, avec 4 workers on reste sous le plafond
 
 PLAYERS_IN   = "deglingo-scout-app/public/data/players.json"
 STATUS_FILE  = "player_status.json"
@@ -33,23 +51,29 @@ OUT_PATHS    = [
     "public/data/players.json",
 ]
 
-Q = """query($slug: String!) {
-  football {
-    player(slug: $slug) {
+
+FRAGMENT = """{
       displayName
       activeInjuries   { active }
       activeSuspensions { active }
       nextClassicFixtureProjectedScore
       nextClassicFixturePlayingStatusOdds { starterOddsBasisPoints }
-    }
-  }
-}"""
+    }"""
 
 
-def fetch_status(slug):
-    r = requests.post(URL, json={"query": Q, "variables": {"slug": slug}},
-                      headers=HEADERS, timeout=30)
-    p = ((r.json().get("data") or {}).get("football") or {}).get("player") or {}
+def build_batch_query(slugs):
+    """Construit une query GraphQL avec des alias p0, p1, p2, ... pour tous les slugs du batch."""
+    parts = []
+    for i, slug in enumerate(slugs):
+        # json.dumps pour escape propre (slugs contiennent parfois apostrophes, accents dans rares cas)
+        parts.append(f'      p{i}: player(slug: {json.dumps(slug)}) {FRAGMENT}')
+    return "query {\n  football {\n" + "\n".join(parts) + "\n  }\n}"
+
+
+def parse_player_data(p):
+    """Parse la reponse player -> dict avec injured/suspended/proj/starter_pct."""
+    if not p:
+        return None
     injured   = any(x.get("active") for x in (p.get("activeInjuries")    or []))
     suspended = any(x.get("active") for x in (p.get("activeSuspensions") or []))
     proj      = p.get("nextClassicFixtureProjectedScore")
@@ -71,6 +95,23 @@ def fetch_status(slug):
     }
 
 
+def fetch_batch(slugs):
+    """Fetch un batch de slugs en une seule requete. Retourne {slug: status_dict}."""
+    q = build_batch_query(slugs)
+    r = requests.post(URL, json={"query": q}, headers=HEADERS, timeout=60)
+    r.raise_for_status()
+    body = r.json()
+    if "errors" in body:
+        # Log les erreurs mais continue avec ce qu'on a
+        print(f"  ⚠️  GraphQL errors (batch): {str(body['errors'])[:200]}")
+    data = (body.get("data") or {}).get("football") or {}
+    out = {}
+    for i, slug in enumerate(slugs):
+        p = data.get(f"p{i}")
+        out[slug] = parse_player_data(p)
+    return out
+
+
 # ── LECTURE ──────────────────────────────────────────────────────────────────
 print("📥 Lecture players.json...")
 with open(PLAYERS_IN, encoding="utf-8") as f:
@@ -82,28 +123,57 @@ injured_list   = []
 suspended_list = []
 errors         = 0
 
-print(f"🔄 Fetch status pour {total} joueurs (Sorare API)...\n")
+# Build liste de slugs + decoupe en batchs
+slug_to_player = {p["slug"]: p for p in players if p.get("slug")}
+all_slugs = list(slug_to_player.keys())
+batches = [all_slugs[i:i + BATCH_SIZE] for i in range(0, len(all_slugs), BATCH_SIZE)]
 
-for i, p in enumerate(players):
-    slug = p.get("slug", "")
-    if not slug:
-        continue
+print(f"🔄 Fetch status pour {total} joueurs (Sorare API)")
+print(f"   Batch size : {BATCH_SIZE} players/requete")
+print(f"   Workers    : {WORKERS} requetes en parallele")
+print(f"   Total      : {len(batches)} batchs a fetcher")
+print(f"   Estimation : ~{len(batches) * 0.35 / WORKERS:.0f}s si 350ms/requete\n")
+
+t_start = time.time()
+done = 0
+
+def process_batch(batch_slugs):
     try:
-        s = fetch_status(slug)
-        status[slug] = s
-        tag = " BLESSE" if s["injured"] else (" SUSPENDU" if s["suspended"] else "")
-        if s["injured"]:
-            injured_list.append(f"{p.get('name','?')} ({p.get('club','?')})")
-        if s["suspended"]:
-            suspended_list.append(f"{p.get('name','?')} ({p.get('club','?')})")
-        starter = f"{s['sorare_starter_pct']}%" if s["sorare_starter_pct"] is not None else "-"
-        if tag or (i+1) % 50 == 0:
-            print(f"  [{i+1:4}/{total}] {p.get('name','?'):<28} proj={str(s['sorare_proj'] or '-'):>5}  start={starter:>4}{tag}")
-        time.sleep(SLEEP)
+        return batch_slugs, fetch_batch(batch_slugs), None
     except Exception as e:
-        errors += 1
-        print(f"  [{i+1:4}/{total}] ERR {slug}: {e}")
-        time.sleep(1)
+        return batch_slugs, {}, str(e)
+
+with ThreadPoolExecutor(max_workers=WORKERS) as executor:
+    futures = {}
+    # Submit avec un petit delai entre soumissions pour lisser le burst initial
+    for batch in batches:
+        futures[executor.submit(process_batch, batch)] = batch
+        time.sleep(SLEEP)
+
+    for future in as_completed(futures):
+        batch_slugs, batch_result, err = future.result()
+        done += 1
+        if err:
+            errors += 1
+            print(f"  [batch {done:3}/{len(batches)}] ERR: {err[:100]}")
+            continue
+        for slug, s in batch_result.items():
+            if s is None:
+                continue
+            status[slug] = s
+            p = slug_to_player.get(slug) or {}
+            if s["injured"]:
+                injured_list.append(f"{p.get('name','?')} ({p.get('club','?')})")
+            if s["suspended"]:
+                suspended_list.append(f"{p.get('name','?')} ({p.get('club','?')})")
+        # Log periodique
+        if done % max(1, len(batches) // 10) == 0 or done == len(batches):
+            elapsed = time.time() - t_start
+            rate = (done * BATCH_SIZE) / max(0.1, elapsed)
+            print(f"  [batch {done:3}/{len(batches)}] {len(status):4} players fetches · {elapsed:.1f}s · {rate:.0f} players/s")
+
+elapsed_total = time.time() - t_start
+print(f"\n⏱  Fetch termine en {elapsed_total:.1f}s ({len(status)}/{total} joueurs recus)")
 
 # ── SAUVEGARDE STATUS STANDALONE ─────────────────────────────────────────────
 with open(STATUS_FILE, "w", encoding="utf-8") as f:

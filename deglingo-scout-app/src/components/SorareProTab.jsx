@@ -143,6 +143,7 @@ export default function SorareProTab({ players, teams, fixtures, logos = {}, mat
   const [seasonFilter, setSeasonFilter] = useState("all"); // "all" | "in" | "off"
   const [algoMultiClub, setAlgoMultiClub] = useState(false);  // false = off par defaut
   const [algoCap260, setAlgoCap260] = useState(false);        // false = off par defaut
+  const [expandedFixture, setExpandedFixture] = useState(null); // { key, side: "home"|"away" }
 
   // ── GW Info — 5 prochaines GW ──
   const gwList = useMemo(() => getProGwList(5), []);
@@ -1029,6 +1030,23 @@ export default function SorareProTab({ players, teams, fixtures, logos = {}, mat
           {gwMatches.length === 0 ? (
             <div style={{ padding: 20, textAlign: "center", color: "rgba(255,255,255,0.2)", fontSize: 11 }}>{t(lang, "proNoFixtures")}</div>
           ) : (() => {
+            // Map clubs -> score final du match deja joue dans la GW courante
+            const clubScores = {};
+            for (const p of players || []) {
+              if (p.last_so5_date && p.last_so5_date >= gwInfo.startDateStr && p.last_so5_date <= gwInfo.endDateStr && p.last_match_home_goals != null) {
+                const key = normClub(p.club);
+                if (!clubScores[key]) clubScores[key] = { home: p.last_match_home_goals, away: p.last_match_away_goals };
+              }
+            }
+            const findScore = (name) => {
+              const direct = clubScores[normClub(name)];
+              if (direct != null) return direct;
+              for (const [key, val] of Object.entries(clubScores)) {
+                if (clubMatch(key, name)) return val;
+              }
+              return null;
+            };
+            const todayStrFx = new Date().toISOString().split("T")[0];
             const groups = [];
             for (const f of gwMatches) {
               const last = groups[groups.length - 1];
@@ -1045,22 +1063,87 @@ export default function SorareProTab({ players, teams, fixtures, logos = {}, mat
                       {g.fixtures.map((f, fi) => {
                         const isActive = selectedMatchFilters.some(m => m.home === f.home && m.away === f.away);
                         const parisTime = utcToParisTime(f.kickoff, f.date);
+                        const sc = (f.date < todayStrFx) ? (findScore(f.home) ?? findScore(f.away) ?? null) : null;
+                        const scoreStr = sc != null ? `${sc.home}-${sc.away}` : null;
+                        const matchKey = `${normClub(f.home)}_${normClub(f.away)}`;
+                        const isOpenHome = expandedFixture?.key === matchKey && expandedFixture?.side === "home";
+                        const isOpenAway = expandedFixture?.key === matchKey && expandedFixture?.side === "away";
+                        const isOpen = isOpenHome || isOpenAway;
+                        const activeSide = isOpenHome ? "home" : isOpenAway ? "away" : null;
+                        const playersOf = (club) => [...(players || [])].filter(p =>
+                          p.last_so5_date && p.last_so5_date >= gwInfo.startDateStr && p.last_so5_date <= gwInfo.endDateStr &&
+                          p.last_so5_score != null && p.last_so5_score > 0 &&
+                          clubMatch(p.club, club)
+                        ).sort((a, b) => b.last_so5_score - a.last_so5_score);
+                        const hasHomePlayers = scoreStr && playersOf(f.home).length > 0;
+                        const hasAwayPlayers = scoreStr && playersOf(f.away).length > 0;
+                        const matchPlayers = activeSide ? playersOf(activeSide === "home" ? f.home : f.away) : [];
+                        const toggleSide = (side) => {
+                          if (expandedFixture?.key === matchKey && expandedFixture?.side === side) setExpandedFixture(null);
+                          else setExpandedFixture({ key: matchKey, side });
+                        };
+                        const homeWin = scoreStr && sc && sc.home > sc.away;
+                        const awayWin = scoreStr && sc && sc.away > sc.home;
                         return (
-                          <div key={fi} onClick={() => {
-                            setSelectedMatchFilters(prev => {
-                              const exists = prev.some(m => m.home === f.home && m.away === f.away);
-                              return exists ? prev.filter(m => !(m.home === f.home && m.away === f.away)) : [...prev, { home: f.home, away: f.away }];
-                            });
-                          }} style={{
-                            display: "flex", alignItems: "center", gap: 4, padding: "4px 6px", borderRadius: 5, cursor: "pointer", marginBottom: 2,
-                            background: isActive ? `${rarityColor}25` : "rgba(20,10,40,0.5)", border: `1px solid ${isActive ? rarityColor + "60" : "rgba(255,255,255,0.06)"}`, transition: "all 0.15s",
-                          }}>
-                            <span style={{ fontSize: 8, fontWeight: 800, color: "#A78BFA", fontFamily: "'DM Mono',monospace", width: 32 }}>{parisTime}</span>
-                            {logos[f.home] && <img src={`/data/logos/${logos[f.home]}`} alt="" style={{ width: 12, height: 12, objectFit: "contain" }} />}
-                            <span style={{ fontSize: 9, fontWeight: 600, color: "#fff", flex: 1, textAlign: "right", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{sn(f.home)}</span>
-                            <span style={{ fontSize: 8, color: "rgba(255,255,255,0.2)" }}>vs</span>
-                            <span style={{ fontSize: 9, fontWeight: 600, color: "#fff", flex: 1, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{sn(f.away)}</span>
-                            {logos[f.away] && <img src={`/data/logos/${logos[f.away]}`} alt="" style={{ width: 12, height: 12, objectFit: "contain" }} />}
+                          <div key={fi} style={{ marginBottom: 2 }}>
+                            <div onClick={() => {
+                              setSelectedMatchFilters(prev => {
+                                const exists = prev.some(m => m.home === f.home && m.away === f.away);
+                                return exists ? prev.filter(m => !(m.home === f.home && m.away === f.away)) : [...prev, { home: f.home, away: f.away }];
+                              });
+                            }} style={{
+                              display: "flex", alignItems: "center", gap: 4, padding: "4px 6px",
+                              borderRadius: isOpen ? "5px 5px 0 0" : 5, cursor: "pointer",
+                              background: isActive ? `${rarityColor}25` : scoreStr ? "rgba(15,40,30,0.5)" : "rgba(20,10,40,0.5)",
+                              border: `1px solid ${isActive ? rarityColor + "60" : scoreStr ? "rgba(74,222,128,0.25)" : "rgba(255,255,255,0.06)"}`,
+                              transition: "all 0.15s",
+                            }}>
+                              {scoreStr ? (
+                                <span style={{ fontSize: 8, fontWeight: 900, color: "#4ADE80", fontFamily: "'DM Mono',monospace", width: 32, padding: "1px 3px", background: "rgba(74,222,128,0.15)", border: "1px solid rgba(74,222,128,0.4)", borderRadius: 3, textAlign: "center" }}>FT</span>
+                              ) : (
+                                <span style={{ fontSize: 8, fontWeight: 800, color: "#A78BFA", fontFamily: "'DM Mono',monospace", width: 32 }}>{parisTime}</span>
+                              )}
+                              {logos[f.home] && <img src={`/data/logos/${logos[f.home]}`} alt="" style={{ width: 12, height: 12, objectFit: "contain" }} />}
+                              <span onClick={(e) => { if (hasHomePlayers) { e.stopPropagation(); toggleSide("home"); } }} style={{
+                                fontSize: 9, fontWeight: scoreStr ? 700 : 600,
+                                color: isOpenHome ? "#C4B5FD" : (homeWin ? "#4ADE80" : "#fff"),
+                                flex: 1, textAlign: "right", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap",
+                                cursor: hasHomePlayers ? "pointer" : "default",
+                                textDecoration: isOpenHome ? "underline" : "none",
+                              }}>{sn(f.home)}</span>
+                              {scoreStr ? (
+                                <span style={{ fontSize: 11, fontWeight: 900, color: "#fff", fontFamily: "'DM Mono',monospace", letterSpacing: "-0.5px" }}>{scoreStr}</span>
+                              ) : (
+                                <span style={{ fontSize: 8, color: "rgba(255,255,255,0.2)" }}>vs</span>
+                              )}
+                              <span onClick={(e) => { if (hasAwayPlayers) { e.stopPropagation(); toggleSide("away"); } }} style={{
+                                fontSize: 9, fontWeight: scoreStr ? 700 : 600,
+                                color: isOpenAway ? "#C4B5FD" : (awayWin ? "#4ADE80" : "#fff"),
+                                flex: 1, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap",
+                                cursor: hasAwayPlayers ? "pointer" : "default",
+                                textDecoration: isOpenAway ? "underline" : "none",
+                              }}>{sn(f.away)}</span>
+                              {logos[f.away] && <img src={`/data/logos/${logos[f.away]}`} alt="" style={{ width: 12, height: 12, objectFit: "contain" }} />}
+                            </div>
+                            {isOpen && matchPlayers.length > 0 && (
+                              <div style={{ background: "rgba(15,5,40,0.95)", border: "1px solid rgba(196,181,253,0.15)", borderTop: "none", borderRadius: "0 0 5px 5px", padding: "4px 0" }}>
+                                {matchPlayers.map((p, pi) => {
+                                  const scp = Math.round(p.last_so5_score);
+                                  const col = p.last_so5_score >= 75 ? "#4ADE80" : p.last_so5_score >= 60 ? "#A3E635" : p.last_so5_score >= 50 ? "#FBBF24" : p.last_so5_score >= 40 ? "#FB923C" : "#EF4444";
+                                  const pc = PC[p.position] || "#888";
+                                  const isHome = normClub(p.club) === normClub(f.home);
+                                  return (
+                                    <div key={pi} style={{ display: "flex", alignItems: "center", gap: 6, padding: "3px 8px", borderBottom: pi < matchPlayers.length - 1 ? "1px solid rgba(255,255,255,0.04)" : "none" }}>
+                                      <span style={{ fontSize: 7, fontWeight: 800, background: pc, borderRadius: 2, padding: "1px 4px", color: "#fff", minWidth: 22, textAlign: "center" }}>{p.position}</span>
+                                      {logos[p.club] && <img src={`/data/logos/${logos[p.club]}`} alt="" style={{ width: 10, height: 10, objectFit: "contain" }} />}
+                                      <span style={{ fontSize: 10, color: "rgba(255,255,255,0.8)", flex: 1, whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>{p.name.split(" ").pop()}</span>
+                                      <span style={{ fontSize: 8, color: "rgba(255,255,255,0.3)" }}>{isHome ? "H" : "A"}</span>
+                                      <span style={{ fontSize: 12, fontWeight: 900, color: col, fontFamily: "'DM Mono',monospace", minWidth: 28, textAlign: "right" }}>{scp}</span>
+                                    </div>
+                                  );
+                                })}
+                              </div>
+                            )}
                           </div>
                         );
                       })}

@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""debug_doue.py — Explore player.status et Game formations pour trouver les odds mid-week"""
+"""debug_doue.py — player.stats au lieu de player.status !"""
 import requests, json, os
 from dotenv import load_dotenv
 
@@ -13,115 +13,57 @@ if key:
 
 SLUG = "desire-doue"
 
-# 1) Explore player.status — champs connus + candidats
-print("=== TEST 1 : player.status sous-champs ===\n")
-STATUS_FIELDS = [
+# 1) D'abord: verifie que stats existe et voir son __typename
+print("=== TEST 1 : player.stats __typename ===")
+r = requests.post(URL, json={"query": '{ football { player(slug: "%s") { stats { __typename } } } }' % SLUG},
+                  headers=HEADERS, timeout=10)
+print(json.dumps(r.json(), indent=2, ensure_ascii=False)[:400])
+
+# 2) Probe plein de sous-champs sur stats
+print("\n\n=== TEST 2 : sous-champs de player.stats ===\n")
+STATS_FIELDS = [
     "playingStatus",
-    "lastFifteenSo5Appearances",
-    "projectedScore",
+    "playingStatusOdds",
+    "nextFixturePlayingStatusOdds",
+    "nextClassicFixturePlayingStatusOdds",
     "starterOddsBasisPoints",
     "playingStatusOddsBasisPoints",
-    "playingProbability",
+    "nextGamePlayingStatusOdds",
+    "lineupProbability",
     "startingProbability",
-    "playingOdds",
     "startingOdds",
-    "nextFixtureOdds",
-    "nextFixturePlayingStatusOdds",
-    "statusType",
+    "upcomingFixtureOdds",
+    "lastFifteenSo5Appearances",
+    "projectedScore",
     "__typename",
 ]
-for sf in STATUS_FIELDS:
-    q = '{ football { player(slug: "%s") { status { %s } } } }' % (SLUG, sf)
-    r = requests.post(URL, json={"query": q}, headers=HEADERS, timeout=10)
+for sf in STATS_FIELDS:
+    # Tente d'abord sans sous-sel (scalar)
+    q_scalar = '{ football { player(slug: "%s") { stats { %s } } } }' % (SLUG, sf)
+    r = requests.post(URL, json={"query": q_scalar}, headers=HEADERS, timeout=10)
     body = r.json()
     if "errors" in body:
-        msg = body["errors"][0].get("message", "?")[:180]
-        if "doesn't exist" in msg:
-            print(f"  ❌ status.{sf:<40} : n'existe pas")
+        msg = body["errors"][0].get("message", "?")[:200]
+        if "doesn't exist" in msg or "No field" in msg:
+            print(f"  ❌ stats.{sf:<45} : n'existe pas")
+        elif "must have" in msg or "selections" in msg:
+            # Objet — tente avec __typename
+            q_obj = '{ football { player(slug: "%s") { stats { %s { __typename } } } }' % (SLUG, sf)
+            r2 = requests.post(URL, json={"query": q_obj}, headers=HEADERS, timeout=10)
+            body2 = r2.json()
+            if "errors" in body2:
+                print(f"  ⚠️  stats.{sf:<45} : OBJET mais {body2['errors'][0].get('message','?')[:80]}")
+            else:
+                d = (body2.get("data") or {}).get("football",{}).get("player",{}) or {}
+                print(f"  ✅ stats.{sf:<45} : OBJET {json.dumps(d.get('stats'))[:120]}")
         else:
-            print(f"  ⚠️  status.{sf:<40} : {msg}")
+            print(f"  ⚠️  stats.{sf:<45} : {msg}")
     else:
-        d = (body.get("data") or {}).get("football", {}).get("player", {})
-        print(f"  ✅ status.{sf:<40} : {json.dumps(d.get('status'))[:150]}")
+        d = (body.get("data") or {}).get("football", {}).get("player", {}) or {}
+        print(f"  ✅ stats.{sf:<45} : {json.dumps(d.get('stats'))[:180]}")
 
-# 2) Que contient player.status dans sa totalite ? Essaie une query large
-print("\n\n=== TEST 2 : query status avec tous les champs validés ===\n")
-Q_STATUS = """{
-  football {
-    player(slug: "%s") {
-      displayName
-      status {
-        playingStatus
-        lastFifteenSo5Appearances
-      }
-    }
-  }
-}""" % SLUG
-r = requests.post(URL, json={"query": Q_STATUS}, headers=HEADERS, timeout=10)
+# 3) Query large : on tente stats avec TOUS les champs probables d'un coup
+print("\n\n=== TEST 3 : query stats avec playingStatus ===\n")
+r = requests.post(URL, json={"query": '{ football { player(slug: "%s") { displayName stats { playingStatus lastFifteenSo5Appearances } } } }' % SLUG},
+                  headers=HEADERS, timeout=10)
 print(json.dumps(r.json(), indent=2, ensure_ascii=False)[:600])
-
-# 3) Game formations — voir si Doue est dans le startingLineup annoncé
-print("\n\n=== TEST 3 : nextGame formations (startingLineup officiel) ===\n")
-Q_FORMATION = """{
-  football {
-    player(slug: "%s") {
-      displayName
-      nextGame {
-        id
-        date
-        homeTeam { name }
-        awayTeam { name }
-        homeFormation { startingLineup { slug displayName } substitutes { slug displayName } }
-        awayFormation { startingLineup { slug displayName } substitutes { slug displayName } }
-      }
-    }
-  }
-}""" % SLUG
-r = requests.post(URL, json={"query": Q_FORMATION}, headers=HEADERS, timeout=15)
-body = r.json()
-if "errors" in body:
-    print(f"ERREUR: {body['errors']}")
-else:
-    print(json.dumps(body, indent=2, ensure_ascii=False)[:1500])
-    p = body.get("data",{}).get("football",{}).get("player",{})
-    ng = p.get("nextGame") or {}
-    hf = ng.get("homeFormation") or {}
-    af = ng.get("awayFormation") or {}
-    all_starters = [x["slug"] for x in (hf.get("startingLineup") or []) + (af.get("startingLineup") or [])]
-    all_subs = [x["slug"] for x in (hf.get("substitutes") or []) + (af.get("substitutes") or [])]
-    if SLUG in all_starters:
-        print(f"\n✅ Doué est dans startingLineup (titulaire annonce)")
-    elif SLUG in all_subs:
-        print(f"\n🟡 Doué est sur le banc (substitute)")
-    else:
-        print(f"\n❌ Doué pas dans la composition officielle (pas encore publiee ou ecarte)")
-
-# 4) Explore Game sous-champs potentiels odds/probability
-print("\n\n=== TEST 4 : sous-champs de Game pour odds/probability ===\n")
-GAME_FIELDS = [
-    "startingLineupOdds",
-    "playingStatusOdds",
-    "startingOdds",
-    "playerStatusOdds",
-    "playerOdds",
-    "probableLineup",
-    "probableStartingLineup",
-    "predictedLineup",
-    "lineupProbabilities",
-    "playingStatusProbabilities",
-    "statusTyped",
-    "kickOff",
-]
-for gf in GAME_FIELDS:
-    q = '{ football { player(slug: "%s") { nextGame { %s } } } }' % (SLUG, gf)
-    r = requests.post(URL, json={"query": q}, headers=HEADERS, timeout=10)
-    body = r.json()
-    if "errors" in body:
-        msg = body["errors"][0].get("message", "?")[:180]
-        if "doesn't exist" in msg:
-            print(f"  ❌ nextGame.{gf:<35} : n'existe pas")
-        else:
-            print(f"  ⚠️  nextGame.{gf:<35} : {msg}")
-    else:
-        d = (body.get("data") or {}).get("football", {}).get("player", {})
-        print(f"  ✅ nextGame.{gf:<35} : {json.dumps(d.get('nextGame'))[:200]}")

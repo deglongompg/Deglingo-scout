@@ -120,7 +120,33 @@ export function getProGwList(count = 5) {
   const gwOffset = Math.round(msSinceEpoch / avgGwDuration);
   const currentGwNumber = GW_EPOCH_NUMBER + gwOffset;
   current.displayNumber = currentGwNumber;
-  const list = [current];
+  current.isLive = true;
+  current.offsetFromLive = 0;
+
+  // GW precedente (pour consultation apres deadline) : se termine quand la current commence
+  const prevEnd = new Date(current.gwStart);
+  const prevStart = new Date(prevEnd);
+  const prevEndDay = prevEnd.getDay();
+  // Si current commence un mardi → la precedente commence un vendredi (4 jours avant)
+  // Si current commence un vendredi → la precedente commence un mardi (3 jours avant)
+  const daysBack = prevEndDay === 2 ? 4 : prevEndDay === 5 ? 3 : 4;
+  prevStart.setDate(prevStart.getDate() - daysBack);
+  prevStart.setHours(16, 0, 0, 0);
+  const prevGwNumber = prevEndDay === 5 ? 2 : 1; // si current=ven→prev=mar(gw2), si current=mar→prev=ven(gw1)
+  const prev = {
+    gwKey: `pro_${prevStart.toISOString().slice(0, 10)}_gw${prevGwNumber}`,
+    gwStart: prevStart,
+    gwEnd: prevEnd,
+    gwNumber: prevGwNumber,
+    startDateStr: prevStart.toISOString().slice(0, 10),
+    endDateStr: prevEnd.toISOString().slice(0, 10),
+    displayNumber: currentGwNumber - 1,
+    isLive: false,
+    isPast: true,
+    offsetFromLive: -1,
+  };
+
+  const list = [prev, current];
   let cursor = new Date(current.gwEnd);
   for (let i = 1; i < count; i++) {
     // La GW suivante commence exactement quand la precedente finit
@@ -136,7 +162,11 @@ export function getProGwList(count = 5) {
     const gwKey = `pro_${gwStart.toISOString().slice(0, 10)}_gw${gwNumber}`;
     const startDateStr = gwStart.toISOString().slice(0, 10);
     const endDateStr = gwEnd.toISOString().slice(0, 10);
-    list.push({ gwKey, gwStart, gwEnd, gwNumber, startDateStr, endDateStr, displayNumber: currentGwNumber + i });
+    list.push({
+      gwKey, gwStart, gwEnd, gwNumber, startDateStr, endDateStr,
+      displayNumber: currentGwNumber + i,
+      isLive: false, offsetFromLive: i,
+    });
     cursor = gwEnd;
   }
   return list;

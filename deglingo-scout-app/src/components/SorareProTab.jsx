@@ -145,10 +145,12 @@ export default function SorareProTab({ players, teams, fixtures, logos = {}, mat
   const [algoCap260, setAlgoCap260] = useState(false);        // false = off par defaut
   const [expandedFixture, setExpandedFixture] = useState(null); // { key, side: "home"|"away" }
 
-  // ── GW Info — 5 prochaines GW ──
+  // ── GW Info — 1 GW passee + 5 prochaines GW (y compris la live) ──
   const gwList = useMemo(() => getProGwList(5), []);
-  // Defaut = GW LIVE (idx 0) — la GW en cours
-  const [selectedGwIdx, setSelectedGwIdx] = useState(0);
+  // Index de la GW LIVE dans la liste (0 = GW passee, 1 = LIVE, 2+ = futures)
+  const liveIdx = useMemo(() => gwList.findIndex(gw => gw.isLive), [gwList]);
+  // Defaut = GW LIVE
+  const [selectedGwIdx, setSelectedGwIdx] = useState(liveIdx >= 0 ? liveIdx : 0);
   const gwInfo = gwList[selectedGwIdx] || null;
   const [countdown, setCountdown] = useState("");
   const [teamSort, setTeamSort] = useState("ds");
@@ -660,7 +662,7 @@ export default function SorareProTab({ players, teams, fixtures, logos = {}, mat
       .filter(p => p.ds >= 20)
       .filter(p => !usedIds.has(p.slug || p.name))
       .filter(p => !sorareConnected || proCardMap[p.slug || p.name])
-      .filter(p => selectedGwIdx > 1 || p.sorare_starter_pct == null || p.sorare_starter_pct >= 70)
+      .filter(p => (gwInfo?.offsetFromLive || 0) > 1 || p.sorare_starter_pct == null || p.sorare_starter_pct >= 70)
       .filter(p => selectedMatchFilters.length === 0 || selectedMatchFilters.some(m => clubMatch(p.club, m.home) || clubMatch(p.club, m.away)))
       .map(p => ({ ...p, _algoDs: getAlgoDs(p) }))
       .sort((a, b) => b._algoDs - a._algoDs);
@@ -866,7 +868,7 @@ export default function SorareProTab({ players, teams, fixtures, logos = {}, mat
     if (selectedSlot) {
       pool = selectedSlot === "FLEX" ? pool.filter(p => ["DEF","MIL","ATT"].includes(p.position)) : pool.filter(p => p.position === selectedSlot);
     }
-    if (filterTitu && selectedGwIdx <= 1) pool = pool.filter(p => p.sorare_starter_pct != null && p.sorare_starter_pct >= filterTitu);
+    if (filterTitu && (gwInfo?.offsetFromLive || 0) <= 1) pool = pool.filter(p => p.sorare_starter_pct != null && p.sorare_starter_pct >= filterTitu);
     if (selectedMatchFilters.length > 0) {
       pool = pool.filter(p => selectedMatchFilters.some(m => clubMatch(p.club, m.home) || clubMatch(p.club, m.away)));
     }
@@ -990,7 +992,8 @@ export default function SorareProTab({ players, teams, fixtures, logos = {}, mat
           <div className="pro-gw-btns" style={{ marginLeft: "auto", display: "flex", alignItems: "center", gap: 4, flexShrink: 0 }}>
             {gwList.map((gw, i) => {
               const isActive = selectedGwIdx === i;
-              const isCurrent = i === 0;
+              const isCurrent = gw.isLive;
+              const isPast = gw.isPast;
               const startD = gw.gwStart.getDate();
               const endD = gw.gwEnd.getDate();
               const month = gw.gwStart.toLocaleDateString(lang === "fr" ? "fr-FR" : "en-US", { month: "short" }).toUpperCase().replace(".", "");
@@ -999,10 +1002,11 @@ export default function SorareProTab({ players, teams, fixtures, logos = {}, mat
                   padding: "3px 8px", borderRadius: 6, cursor: "pointer", fontFamily: "Outfit", border: "none",
                   background: isActive ? `${rarityColor}30` : "rgba(255,255,255,0.04)",
                   outline: isActive ? `2px solid ${rarityColor}` : "none",
+                  opacity: isPast && !isActive ? 0.55 : 1,
                   transition: "all 0.15s",
                 }}>
-                  <div style={{ fontSize: 7, fontWeight: 800, color: isActive ? rarityColor : "rgba(255,255,255,0.35)" }}>
-                    GW{gw.displayNumber || "?"}{isCurrent ? " LIVE" : ""}
+                  <div style={{ fontSize: 7, fontWeight: 800, color: isActive ? rarityColor : isPast ? "rgba(255,255,255,0.45)" : "rgba(255,255,255,0.35)" }}>
+                    GW{gw.displayNumber || "?"}{isCurrent ? " LIVE" : isPast ? " FIN" : ""}
                   </div>
                   <div style={{ fontSize: 10, fontWeight: 700, color: isActive ? "#fff" : "rgba(255,255,255,0.4)", fontFamily: "'DM Mono',monospace" }}>
                     {startD}-{endD}
@@ -1011,7 +1015,7 @@ export default function SorareProTab({ players, teams, fixtures, logos = {}, mat
                 </button>
               );
             })}
-            {selectedGwIdx <= 1 && (
+            {(gwInfo?.offsetFromLive || 0) <= 1 && !gwInfo?.isPast && (
               <span style={{ fontSize: 12, fontWeight: 900, color: rarityColor, fontFamily: "'DM Mono',monospace", marginLeft: 4 }}>{countdown}</span>
             )}
           </div>
@@ -1302,7 +1306,7 @@ export default function SorareProTab({ players, teams, fixtures, logos = {}, mat
                                   {bonusPct > 0 && <span style={{ fontSize: 7, fontWeight: 900, color: "#4ADE80", background: "rgba(0,0,0,0.6)", borderRadius: 3, padding: "1px 4px" }}>+{bonusPct}%</span>}
                                   <span style={{ display: "inline-block", padding: "3px 7px", borderRadius: 8, fontFamily: "'DM Mono',monospace", fontSize: 14, fontWeight: 700, color: "#fff", background: dsBg(dsVal), boxShadow: `0 0 8px ${dsColor(dsVal)}50` }}>{dsVal}</span>
                                 </div>
-                                {selectedGwIdx <= 1 && p.sorare_starter_pct != null && (
+                                {(gwInfo?.offsetFromLive || 0) <= 1 && p.sorare_starter_pct != null && (
                                   <span style={{ position: "absolute", top: 22, right: 4, fontSize: 8, fontWeight: 700, padding: "1px 4px", borderRadius: 3, color: "#fff", background: p.sorare_starter_pct >= 70 ? "rgba(22,101,52,0.9)" : p.sorare_starter_pct >= 50 ? "rgba(133,77,14,0.9)" : "rgba(153,27,27,0.9)", zIndex: 2 }}>{p.sorare_starter_pct}%</span>
                                 )}
                                 <button onClick={e => { e.stopPropagation(); removeFromTeam(slot); }} style={{ position: "absolute", top: 4, left: card.isClassic ? 40 : 4, background: "rgba(0,0,0,0.5)", border: "none", color: "rgba(255,255,255,0.5)", cursor: "pointer", fontSize: 10, padding: "2px 5px", borderRadius: 4, zIndex: 2 }}>x</button>
@@ -1538,7 +1542,7 @@ export default function SorareProTab({ players, teams, fixtures, logos = {}, mat
                               </div>
                               {/* Titu% Sorare — masque pour GW futures (pas encore publie) */}
                               <div style={{ textAlign: "center" }}>
-                                {selectedGwIdx <= 1 ? (
+                                {(gwInfo?.offsetFromLive || 0) <= 1 ? (
                                   <span style={{ fontSize: 10, fontWeight: 600, fontFamily: "Outfit", padding: "2px 5px", borderRadius: 3, color: "#fff",
                                     background: (p.sorare_starter_pct||0) >= 70 ? "linear-gradient(135deg,#166534,#15803d)" : (p.sorare_starter_pct||0) >= 50 ? "linear-gradient(135deg,#854d0e,#a16207)" : p.sorare_starter_pct == null ? "rgba(255,255,255,0.06)" : "linear-gradient(135deg,#991b1b,#b91c1c)",
                                   }}>{p.sorare_starter_pct == null ? "—" : `${p.sorare_starter_pct}%`}</span>

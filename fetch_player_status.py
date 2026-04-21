@@ -41,6 +41,12 @@ API_KEY  = os.getenv("SORARE_API_KEY", "")
 HEADERS  = {"Content-Type": "application/json", "User-Agent": "Mozilla/5.0", "Accept": "application/json"}
 if API_KEY:
     HEADERS["APIKEY"] = API_KEY
+    print(f"🔑 API key Sorare detectee -> complexity max 30000 (batch jusqu'a ~3000 OK)")
+else:
+    print(f"⚠️  Pas d'API key Sorare (ajoute SORARE_API_KEY=... dans .env) -> complexity max 500")
+    if BATCH_SIZE > 50:
+        print(f"   BATCH_SIZE ({BATCH_SIZE}) reduit a 50 pour rester sous la limite.")
+        BATCH_SIZE = 50
 
 SLEEP = 0.05   # Entre 2 batchs. Limite Sorare = 600 req/min = 10 req/s, avec 4 workers on reste sous le plafond
 
@@ -174,6 +180,15 @@ with ThreadPoolExecutor(max_workers=WORKERS) as executor:
 
 elapsed_total = time.time() - t_start
 print(f"\n⏱  Fetch termine en {elapsed_total:.1f}s ({len(status)}/{total} joueurs recus)")
+
+# Securite : si < 80% des joueurs recus, probable echec massif (complexity limit, rate limit...)
+# On s'arrete la sans patcher players.json pour ne pas polluer avec des valeurs par defaut.
+if len(status) < total * 0.8:
+    print(f"\n❌ ECHEC : seulement {len(status)}/{total} joueurs recus (<80%).")
+    print(f"   Cause probable : GraphQL complexity limit depasse ou rate limit Sorare.")
+    print(f"   Reduis BATCH_SIZE ou ajoute SORARE_API_KEY dans .env.")
+    print(f"   players.json N'EST PAS modifie. Re-run avec --batch 50 par defaut.")
+    sys.exit(1)
 
 # ── SAUVEGARDE STATUS STANDALONE ─────────────────────────────────────────────
 with open(STATUS_FILE, "w", encoding="utf-8") as f:

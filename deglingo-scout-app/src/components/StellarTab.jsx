@@ -1549,11 +1549,14 @@ export default function StellarTab({ players, teams, fixtures, logos = {}, match
                 }
                 return false;
               };
-              const clubScores = {};
-              for (const p of dayData.players || []) {
-                if (p.last_so5_date && p.last_so5_date >= gwWeekStart && p.last_match_home_goals != null) {
-                  const key = normClub(p.club);
-                  if (!clubScores[key]) clubScores[key] = { home: p.last_match_home_goals, away: p.last_match_away_goals };
+              // Indexe par (club, date) pour matcher le match EXACT et eviter d'afficher
+              // le score d'un match precedent sur la chip d'un match a venir
+              const clubScoresByDate = {};
+              for (const p of (players || [])) {
+                if (!p.last_so5_date || p.last_match_home_goals == null) continue;
+                const key = `${normClub(p.club)}|${p.last_so5_date}`;
+                if (!clubScoresByDate[key]) {
+                  clubScoresByDate[key] = { home: p.last_match_home_goals, away: p.last_match_away_goals };
                 }
               }
 
@@ -1606,18 +1609,23 @@ export default function StellarTab({ players, teams, fixtures, logos = {}, match
                       <div className="st-match-group-time-label" style={{ fontSize: 10, fontWeight: 900, color: "#fff", fontFamily: "'DM Mono',monospace", paddingLeft: 2 }}>{g.time}</div>
                       {g.fixtures.map((f, i) => {
                         const lgColor = LEAGUE_COLOR[f.league] || "#FF8A80";
-                        const findScore = (name) => {
-                          const direct = clubScores[normClub(name)];
-                          if (direct != null) return direct;
-                          for (const [key, val] of Object.entries(clubScores)) {
-                            if (clubMatch(key, name)) return val;
+                        // Cherche le score du match EXACT (club + date stricte) pour ne PAS
+                        // afficher le FT d'un match precedent sur la chip d'un match a venir
+                        const findScoreForMatch = (home, away, date) => {
+                          const k1 = `${normClub(home)}|${date}`;
+                          const k2 = `${normClub(away)}|${date}`;
+                          if (clubScoresByDate[k1]) return clubScoresByDate[k1];
+                          if (clubScoresByDate[k2]) return clubScoresByDate[k2];
+                          for (const [fullKey, val] of Object.entries(clubScoresByDate)) {
+                            const sep = fullKey.lastIndexOf("|");
+                            const c = fullKey.slice(0, sep);
+                            const d = fullKey.slice(sep + 1);
+                            if (d !== date) continue;
+                            if (clubMatch(c, home) || clubMatch(c, away)) return val;
                           }
                           return null;
                         };
-                        // Score réel uniquement si le match est déjà joué (date passée)
-                        const todayStrFx = new Date().toISOString().split("T")[0];
-                        // Pas de check date : clubScores n'a que les matchs deja joues (last_match_home_goals != null)
-                        const sc = findScore(f.home) ?? findScore(f.away) ?? null;
+                        const sc = findScoreForMatch(f.home, f.away, f.date);
                         const scoreStr = sc != null ? `${sc.home}-${sc.away}` : null;
 
                         // Trouver les events de ce match dans matchEvents
@@ -1641,8 +1649,9 @@ export default function StellarTab({ players, teams, fixtures, logos = {}, match
                         const isOpenAway = expandedFixture?.key === matchKey && expandedFixture?.side === "away";
                         const isOpen = isOpenHome || isOpenAway;
                         const activeSide = isOpenHome ? "home" : isOpenAway ? "away" : null;
+                        // Filtre strict par DATE EXACTE du match pour eviter de mixer les matchs
                         const playersOf = (club) => [...(players || [])].filter(p =>
-                          p.last_so5_date && p.last_so5_date >= gwWeekStart &&
+                          p.last_so5_date === f.date &&
                           p.last_so5_score != null &&
                           clubMatch(p.club, club)
                         ).sort((a, b) => b.last_so5_score - a.last_so5_score);

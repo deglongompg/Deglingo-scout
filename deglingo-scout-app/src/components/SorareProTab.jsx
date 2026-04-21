@@ -1034,23 +1034,32 @@ export default function SorareProTab({ players, teams, fixtures, logos = {}, mat
           {gwMatches.length === 0 ? (
             <div style={{ padding: 20, textAlign: "center", color: "rgba(255,255,255,0.2)", fontSize: 11 }}>{t(lang, "proNoFixtures")}</div>
           ) : (() => {
-            // Map clubs -> score final du match deja joue dans la GW courante
-            const clubScores = {};
+            // Map (club, date) -> score du match EXACT (indexer par date evite d'afficher
+            // le score d'un match precedent sur la chip d'un match a venir)
+            const clubScoresByDate = {};
             for (const p of players || []) {
-              if (p.last_so5_date && p.last_so5_date >= gwInfo.startDateStr && p.last_so5_date <= gwInfo.endDateStr && p.last_match_home_goals != null) {
-                const key = normClub(p.club);
-                if (!clubScores[key]) clubScores[key] = { home: p.last_match_home_goals, away: p.last_match_away_goals };
+              if (!p.last_so5_date || p.last_match_home_goals == null) continue;
+              const key = `${normClub(p.club)}|${p.last_so5_date}`;
+              if (!clubScoresByDate[key]) {
+                clubScoresByDate[key] = { home: p.last_match_home_goals, away: p.last_match_away_goals };
               }
             }
-            const findScore = (name) => {
-              const direct = clubScores[normClub(name)];
-              if (direct != null) return direct;
-              for (const [key, val] of Object.entries(clubScores)) {
-                if (clubMatch(key, name)) return val;
+            // Cherche le score d'un match precis : home/away ET date stricte
+            const findScoreForMatch = (home, away, date) => {
+              const k1 = `${normClub(home)}|${date}`;
+              const k2 = `${normClub(away)}|${date}`;
+              if (clubScoresByDate[k1]) return clubScoresByDate[k1];
+              if (clubScoresByDate[k2]) return clubScoresByDate[k2];
+              // Fuzzy clubMatch sur la meme date uniquement
+              for (const [fullKey, val] of Object.entries(clubScoresByDate)) {
+                const sep = fullKey.lastIndexOf("|");
+                const club = fullKey.slice(0, sep);
+                const d = fullKey.slice(sep + 1);
+                if (d !== date) continue;
+                if (clubMatch(club, home) || clubMatch(club, away)) return val;
               }
               return null;
             };
-            const todayStrFx = new Date().toISOString().split("T")[0];
             const groups = [];
             for (const f of gwMatches) {
               const last = groups[groups.length - 1];
@@ -1067,18 +1076,19 @@ export default function SorareProTab({ players, teams, fixtures, logos = {}, mat
                       {g.fixtures.map((f, fi) => {
                         const isActive = selectedMatchFilters.some(m => m.home === f.home && m.away === f.away);
                         const parisTime = utcToParisTime(f.kickoff, f.date);
-                        // Check si le match a un score FT : on se base directement sur la presence
-                        // des goals dans clubScores (populate que pour les matchs deja joues avec last_match_home_goals != null)
-                        // Pas de check date : last_match_home_goals est garanti null si match non joue.
-                        const sc = findScore(f.home) ?? findScore(f.away) ?? null;
+                        // Check match EXACT par date : evite de montrer le score d'un match
+                        // precedent sur la chip d'un match a venir (ex: PSG a joue Lyon le 19 et
+                        // rejoue Nantes le 22 -> chip Nantes ne doit pas montrer FT du Lyon match)
+                        const sc = findScoreForMatch(f.home, f.away, f.date);
                         const scoreStr = sc != null ? `${sc.home}-${sc.away}` : null;
                         const matchKey = `${normClub(f.home)}_${normClub(f.away)}`;
                         const isOpenHome = expandedFixture?.key === matchKey && expandedFixture?.side === "home";
                         const isOpenAway = expandedFixture?.key === matchKey && expandedFixture?.side === "away";
                         const isOpen = isOpenHome || isOpenAway;
                         const activeSide = isOpenHome ? "home" : isOpenAway ? "away" : null;
+                        // Filtre strict par DATE EXACTE du match pour eviter de montrer des joueurs d'un autre match
                         const playersOf = (club) => [...(players || [])].filter(p =>
-                          p.last_so5_date && p.last_so5_date >= gwInfo.startDateStr && p.last_so5_date <= gwInfo.endDateStr &&
+                          p.last_so5_date === f.date &&
                           p.last_so5_score != null &&
                           clubMatch(p.club, club)
                         ).sort((a, b) => b.last_so5_score - a.last_so5_score);

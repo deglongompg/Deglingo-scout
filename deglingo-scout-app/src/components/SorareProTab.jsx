@@ -1067,7 +1067,10 @@ export default function SorareProTab({ players, teams, fixtures, logos = {}, mat
                       {g.fixtures.map((f, fi) => {
                         const isActive = selectedMatchFilters.some(m => m.home === f.home && m.away === f.away);
                         const parisTime = utcToParisTime(f.kickoff, f.date);
-                        const sc = (f.date < todayStrFx) ? (findScore(f.home) ?? findScore(f.away) ?? null) : null;
+                        // Check si le match a un score FT : on se base directement sur la presence
+                        // des goals dans clubScores (populate que pour les matchs deja joues avec last_match_home_goals != null)
+                        // Pas de check date : last_match_home_goals est garanti null si match non joue.
+                        const sc = findScore(f.home) ?? findScore(f.away) ?? null;
                         const scoreStr = sc != null ? `${sc.home}-${sc.away}` : null;
                         const matchKey = `${normClub(f.home)}_${normClub(f.away)}`;
                         const isOpenHome = expandedFixture?.key === matchKey && expandedFixture?.side === "home";
@@ -1673,10 +1676,13 @@ export default function SorareProTab({ players, teams, fixtures, logos = {}, mat
                 const dateLabel = p.matchDate ? new Date(p.matchDate + "T12:00:00").toLocaleDateString(lang === "fr" ? "fr-FR" : "en-US", { timeZone: TZ, weekday: "short", day: "numeric" }).toUpperCase().replace(".", "") : "";
                 // Score affiche par carte = RAW score (comme Sorare), bonus appliques au total uniquement.
                 const hasRealScore = p.last_so5_date && p.matchDate && p.last_so5_date === p.matchDate && p.last_so5_score != null;
-                const todayStrFx = new Date().toISOString().split("T")[0];
-                const matchIsPast = p.matchDate && p.matchDate < todayStrFx;
+                // Detection "match joue" via la presence d'au moins un co-equipier ayant une SO5 a cette date
+                // (plus robuste que comparer la date a 'aujourd'hui UTC' qui casse entre 22h-02h Paris)
+                const matchWasPlayed = p.matchDate && p.club && (players || []).some(pl =>
+                  pl.club === p.club && pl.last_so5_date === p.matchDate && pl.last_match_home_goals != null
+                );
                 // DNP = match deja joue mais pas de SO5 pour le joueur (blesse, banc, absent)
-                const isDNP = matchIsPast && !hasRealScore;
+                const isDNP = matchWasPlayed && !hasRealScore;
                 const rawRealScore = hasRealScore ? p.last_so5_score : null;
                 const playerScore = hasRealScore ? Math.round(rawRealScore) : isDNP ? 0 : Math.round(p.ds || 0);
                 // Captain bonus = POST-BONUS × 0.5 (formule Sorare officielle)

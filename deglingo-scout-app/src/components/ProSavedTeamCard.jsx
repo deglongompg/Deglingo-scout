@@ -44,10 +44,12 @@ export default function ProSavedTeamCard({
       ? new Date(p.matchDate + "T12:00:00").toLocaleDateString(lang === "fr" ? "fr-FR" : "en-US", { weekday: "short", day: "numeric" }).toUpperCase().replace(".", "")
       : "";
     const hasRealScore = p.last_so5_date && p.matchDate && p.last_so5_date === p.matchDate && p.last_so5_score != null;
-    const todayStrFx = new Date().toISOString().split("T")[0];
-    const matchIsPast = p.matchDate && p.matchDate < todayStrFx;
+    // Detection "match joue" via teammate (robuste au fuseau UTC vs local)
+    const matchWasPlayed = p.matchDate && p.club && (players || []).some(pl =>
+      pl.club === p.club && pl.last_so5_date === p.matchDate && pl.last_match_home_goals != null
+    );
     // DNP = match deja joue mais pas de SO5 pour ce joueur (blesse, banc, absent)
-    const isDNP = matchIsPast && !hasRealScore;
+    const isDNP = matchWasPlayed && !hasRealScore;
     const rawRealScore = hasRealScore ? p.last_so5_score : null;
     const playerScore = hasRealScore ? Math.round(rawRealScore) : isDNP ? 0 : Math.round(p.ds || 0);
     let matchScore = hasRealScore && p.last_match_home_goals != null && p.last_match_away_goals != null

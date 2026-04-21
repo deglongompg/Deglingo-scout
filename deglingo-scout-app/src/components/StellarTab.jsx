@@ -1616,7 +1616,8 @@ export default function StellarTab({ players, teams, fixtures, logos = {}, match
                         };
                         // Score réel uniquement si le match est déjà joué (date passée)
                         const todayStrFx = new Date().toISOString().split("T")[0];
-                        const sc = (f.date < todayStrFx) ? (findScore(f.home) ?? findScore(f.away) ?? null) : null;
+                        // Pas de check date : clubScores n'a que les matchs deja joues (last_match_home_goals != null)
+                        const sc = findScore(f.home) ?? findScore(f.away) ?? null;
                         const scoreStr = sc != null ? `${sc.home}-${sc.away}` : null;
 
                         // Trouver les events de ce match dans matchEvents
@@ -2359,7 +2360,9 @@ export default function StellarTab({ players, teams, fixtures, logos = {}, match
                       ? ownedCard.totalBonus
                       : (getEdition(cardEditions[p.slug || p.name] || "base")?.bonus || 0);
                     const bonusMult = 1 + bonusPct / 100;
-                    const matchIsPast = p.matchDate && p.matchDate < todayStrFxSt;
+                    const matchIsPast = !!(p.matchDate && p.club && (players || []).some(pl =>
+                      pl.club === p.club && pl.last_so5_date === p.matchDate && pl.last_match_home_goals != null
+                    ));
                     let rawScore, postBonus, isLive, isDNP;
                     if (fresh && fresh.last_so5_date === p.matchDate && fresh.last_so5_score != null) {
                       rawScore = fresh.last_so5_score;
@@ -2411,7 +2414,9 @@ export default function StellarTab({ players, teams, fixtures, logos = {}, match
                     const oppLogo = logos[p.oppName];
                     const playerClubLogo = logos[p.club];
                     const hasRealScore = p.last_so5_date && p.matchDate && p.last_so5_date === p.matchDate && p.last_so5_score != null;
-                    const matchIsPast = p.matchDate && p.matchDate < todayStrFxSt;
+                    const matchIsPast = !!(p.matchDate && p.club && (players || []).some(pl =>
+                      pl.club === p.club && pl.last_so5_date === p.matchDate && pl.last_match_home_goals != null
+                    ));
                     const isDNP = matchIsPast && !hasRealScore;
                     // Score affiche = RAW (comme Sorare), bonus appliques au total uniquement
                     const playerScore = hasRealScore

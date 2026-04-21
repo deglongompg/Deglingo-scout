@@ -29,14 +29,19 @@ const STELLAR_PALIERS = [
 export default function StellarSavedTeamCard({ team, players = [], logos = {}, cardsBySlug = {}, lang = "fr", onDelete }) {
   if (!team || !team.picks) return null;
 
-  const todayStrFx = new Date().toISOString().split("T")[0];
+  // Helper pour detection "match joue" basee sur teammate data (robuste UTC/local)
+  const wasMatchPlayed = (matchDate, club) =>
+    !!(matchDate && club && (players || []).some(pl =>
+      pl.club === club && pl.last_so5_date === matchDate && pl.last_match_home_goals != null
+    ));
+
   const stPlayers = POS_ORDER.map(s => team.picks[s]).filter(Boolean);
   const playerData = stPlayers.map(p => {
     const fresh = players.find(pl => pl.slug === p.slug);
     const ownedCard = cardsBySlug[p.slug || p.name];
     const bonusPct = (ownedCard && ownedCard.totalBonus > 0) ? ownedCard.totalBonus : 0;
     const bonusMult = 1 + bonusPct / 100;
-    const matchIsPast = p.matchDate && p.matchDate < todayStrFx;
+    const matchIsPast = wasMatchPlayed(p.matchDate, p.club);
     let rawScore, postBonus, isLive, isDNP;
     if (fresh && fresh.last_so5_date === p.matchDate && fresh.last_so5_score != null) {
       rawScore = fresh.last_so5_score;
@@ -92,7 +97,7 @@ export default function StellarSavedTeamCard({ team, players = [], logos = {}, c
     const oppLogo = logos[p.oppName];
     const playerClubLogo = logos[p.club];
     const hasRealScore = p.last_so5_date && p.matchDate && p.last_so5_date === p.matchDate && p.last_so5_score != null;
-    const matchIsPast = p.matchDate && p.matchDate < todayStrFx;
+    const matchIsPast = wasMatchPlayed(p.matchDate, p.club);
     const isDNP = matchIsPast && !hasRealScore;
     const playerScore = hasRealScore ? Math.round(p.last_so5_score) : isDNP ? 0 : Math.round(p.ds || 0);
     let matchScore = hasRealScore && p.last_match_home_goals != null && p.last_match_away_goals != null

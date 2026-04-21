@@ -1,7 +1,6 @@
 #!/usr/bin/env python3
 """
-debug_sorare_fields.py — On a trouve `nextGame` ! On explore ses sous-champs
-pour trouver ou est le titu%.
+debug_sorare_fields.py — GOLDEN HIT probable : Player.playingStatus
 """
 import requests, json, os
 from dotenv import load_dotenv
@@ -16,86 +15,72 @@ if key:
 
 SLUG = "kylian-mbappe-lottin"
 
-# Test candidats de sous-champs sur nextGame
-CANDIDATES = [
-    "startingOdds",
-    "playingStatusOdds",
-    "startingProbability",
-    "starterOdds",
+# 1) Teste playingStatus direct sur Player
+print("=== TEST 1 : player.playingStatus (sans sous-sel) ===")
+r = requests.post(URL, json={"query": '{ football { player(slug: "%s") { playingStatus } } }' % SLUG}, headers=HEADERS, timeout=10)
+print(json.dumps(r.json(), indent=2, ensure_ascii=False)[:400])
+
+print("\n=== TEST 2 : player.playingStatus avec __typename (objet) ===")
+r = requests.post(URL, json={"query": '{ football { player(slug: "%s") { playingStatus { __typename } } } }' % SLUG}, headers=HEADERS, timeout=10)
+print(json.dumps(r.json(), indent=2, ensure_ascii=False)[:400])
+
+# 2) Candidats de sous-champs sur playingStatus
+SUBFIELDS = [
     "status",
-    "date",
-    "kickoff",
-    "homeTeam",
-    "awayTeam",
-    "id",
-    "fixture",
-    "week",
-    "competition",
+    "starterOddsBasisPoints",
+    "oddsBasisPoints",
+    "starterOdds",
+    "probability",
+    "starter",
+    "startingProbability",
+    "__typename",
+    "type",
+    "value",
+    "kind",
 ]
-
-print(f"=== TEST 1 : Sous-champs de nextGame (sans sous-sel) ===\n")
-for c in CANDIDATES:
-    q = '{ football { player(slug: "%s") { nextGame { %s } } } }' % (SLUG, c)
+print("\n=== TEST 3 : sous-champs de playingStatus ===\n")
+for sf in SUBFIELDS:
+    q = '{ football { player(slug: "%s") { playingStatus { %s } } } }' % (SLUG, sf)
     r = requests.post(URL, json={"query": q}, headers=HEADERS, timeout=10)
     body = r.json()
     if "errors" in body:
-        msg = body["errors"][0].get("message", "?")[:150]
-        if "doesn't exist" in msg:
-            print(f"  ❌ {c:<30} : n'existe pas")
+        msg = body["errors"][0].get("message","?")[:140]
+        if "doesn't exist" in msg or "No field" in msg:
+            print(f"  ❌ {sf:<30} : n'existe pas")
         else:
-            print(f"  ⚠️  {c:<30} : {msg}")
+            print(f"  ⚠️  {sf:<30} : {msg}")
     else:
-        p = (body.get("data") or {}).get("football", {}).get("player", {}) or {}
-        print(f"  ✅ {c:<30} : {json.dumps(p.get('nextGame'))[:150]}")
+        d = body.get("data", {}).get("football", {}).get("player", {}) or {}
+        print(f"  ✅ {sf:<30} : {json.dumps(d.get('playingStatus'))[:180]}")
 
-# Test avec sous-sel __typename pour les champs type objet
-print(f"\n=== TEST 2 : Sous-champs (avec __typename, pour objets) ===\n")
-OBJECTS = ["startingOdds", "playingStatusOdds", "homeTeam", "awayTeam", "fixture", "competition", "gameWeek"]
-for c in OBJECTS:
-    q = '{ football { player(slug: "%s") { nextGame { %s { __typename } } } } }' % (SLUG, c)
-    r = requests.post(URL, json={"query": q}, headers=HEADERS, timeout=10)
-    body = r.json()
-    if "errors" in body:
-        msg = body["errors"][0].get("message", "?")[:150]
-        if "doesn't exist" in msg:
-            print(f"  ❌ {c:<25} : n'existe pas")
-        else:
-            print(f"  ⚠️  {c:<25} : {msg}")
-    else:
-        print(f"  ✅ {c:<25} : {json.dumps(body.get('data'))[:200]}")
-
-# Test query complete pour voir ce qu'on peut tirer de nextGame
-print(f"\n=== TEST 3 : Query complete nextGame + metadata ===\n")
-Q = """{
+# 3) Sample plus large de joueurs : qui a un playingStatus ?
+print("\n\n=== TEST 4 : sample 10 joueurs (Liga/L1/Bundes) : playingStatus existe? ===\n")
+with open("deglingo-scout-app/public/data/players.json") as f:
+    players = json.load(f)
+sample = (
+    [p for p in players if p.get("league") == "Liga"][:3]
+    + [p for p in players if p.get("league") == "L1"][:3]
+    + [p for p in players if p.get("league") == "Bundes"][:2]
+    + [p for p in players if p.get("league") == "PL"][:2]
+)
+# Query avec quelques sous-champs prometteurs
+Q = """query($slug: String!) {
   football {
-    player(slug: "%s") {
+    player(slug: $slug) {
       displayName
-      nextGame {
+      playingStatus {
         __typename
-        id
-        date
-        status
-        homeTeam { name }
-        awayTeam { name }
       }
     }
   }
-}""" % SLUG
-r = requests.post(URL, json={"query": Q}, headers=HEADERS, timeout=15)
-print(json.dumps(r.json(), indent=2, ensure_ascii=False)[:1500])
-
-# Test 4 : Le game a-t-il un champ pour les odds du joueur specifique?
-# Essaie playingStatusOddsForPlayer(slug: X) ou variants
-print(f"\n\n=== TEST 4 : Odds sur Game scoped par player ===\n")
-GAME_ODDS_CANDIDATES = [
-    '{ football { player(slug: "%s") { nextGame { playingStatusOdds { starterOddsBasisPoints } } } } }' % SLUG,
-    '{ football { player(slug: "%s") { nextGame { startingOdds { starterOddsBasisPoints } } } } }' % SLUG,
-    '{ football { player(slug: "%s") { playingStatusOdds { starterOddsBasisPoints } } } }' % SLUG,
-]
-for q in GAME_ODDS_CANDIDATES:
-    r = requests.post(URL, json={"query": q}, headers=HEADERS, timeout=10)
+}"""
+for p in sample:
+    slug = p.get("slug")
+    r = requests.post(URL, json={"query": Q, "variables": {"slug": slug}}, headers=HEADERS, timeout=10)
     body = r.json()
     if "errors" in body:
-        print(f"  ❌ {body['errors'][0].get('message','?')[:120]}")
+        print(f"  ❌ {p.get('name'):<25} ({p.get('league'):<6}) : {body['errors'][0].get('message','')[:60]}")
     else:
-        print(f"  ✅ {json.dumps(body.get('data'))[:200]}")
+        pp = (body.get("data") or {}).get("football", {}).get("player") or {}
+        ps = pp.get("playingStatus")
+        print(f"  {'✅' if ps else '⚠️ '} {p.get('name'):<25} ({p.get('league'):<6}) : playingStatus={json.dumps(ps)[:80]}")

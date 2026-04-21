@@ -1,7 +1,7 @@
 import { Component, useEffect, useMemo, useState } from "react";
 import { LEAGUE_COLORS, LEAGUE_NAMES, LEAGUE_FLAG_CODES, dsColor } from "../utils/colors";
 import { fetchCloudStore } from "../utils/cloudSync";
-import { PRO_LEAGUES, computeTeamScores } from "../utils/proScoring";
+import { PRO_LEAGUES, computeTeamScores, getGwDisplayNumber } from "../utils/proScoring";
 import { t } from "../utils/i18n";
 import ProSavedTeamCard from "./ProSavedTeamCard";
 import StellarSavedTeamCard from "./StellarSavedTeamCard";
@@ -33,26 +33,31 @@ function formatScore(s) {
 }
 
 /**
- * Regroupe les teams par ligue/rareté depuis le store cloud.
- * Retourne : { limited: { L1: [teams], PL: [...], ... }, rare: { ... } }
- * Chaque entry team a { team, gwKey, league, rarity }.
+ * Regroupe les teams par (rarete, ligue, gwKey). Retourne pour chaque rarete une liste plate
+ * de sections ordonnees par GW desc puis ligue, chaque section contenant les teams de ce (ligue, GW).
+ *
+ * Retourne : { limited: [{league, gwKey, teams}], rare: [...] }
  */
 function groupTeamsByLeague(store) {
-  const result = { limited: {}, rare: {} };
-  PRO_LEAGUES.forEach(l => { result.limited[l] = []; result.rare[l] = []; });
+  const result = { limited: [], rare: [] };
   const d = store?.data || {};
   ["proLimited", "proRare"].forEach(bucket => {
     const rarity = bucket === "proRare" ? "rare" : "limited";
     const leagues = d[bucket] || {};
+    const sections = [];
     Object.entries(leagues).forEach(([league, gwBuckets]) => {
-      if (!result[rarity][league]) return;
-      // Plus récent GW d'abord
-      Object.keys(gwBuckets || {}).sort().reverse().forEach(gwKey => {
-        const list = gwBuckets[gwKey];
-        if (!Array.isArray(list)) return;
-        list.forEach(team => { if (team) result[rarity][league].push({ team, gwKey, league, rarity }); });
+      if (!PRO_LEAGUES.includes(league)) return;
+      Object.entries(gwBuckets || {}).forEach(([gwKey, list]) => {
+        if (!Array.isArray(list) || list.length === 0) return;
+        sections.push({ league, gwKey, teams: list.filter(Boolean) });
       });
     });
+    // Sort : GW plus recent d'abord, puis ligue par ordre PRO_LEAGUES
+    sections.sort((a, b) => {
+      if (a.gwKey !== b.gwKey) return b.gwKey.localeCompare(a.gwKey);
+      return PRO_LEAGUES.indexOf(a.league) - PRO_LEAGUES.indexOf(b.league);
+    });
+    result[rarity] = sections;
   });
   return result;
 }
@@ -222,8 +227,8 @@ function RecapTabInner({ players, logos, lang }) {
     if (!grouped) return null;
     const compute = (rarity) => {
       let count = 0, sum = 0;
-      PRO_LEAGUES.forEach(l => {
-        grouped[rarity][l].forEach(({ team }) => {
+      grouped[rarity].forEach(({ teams }) => {
+        teams.forEach(team => {
           count++;
           const enriched = enrichTeamWithBestCards(team, cardsBySlug[rarity]);
           const { projectedTotal } = computeTeamScores(enriched, players || []);
@@ -242,29 +247,26 @@ function RecapTabInner({ players, logos, lang }) {
       });
       return { count, sum };
     };
-    const perLeague = { limited: {}, rare: {} };
-    ["limited", "rare"].forEach(r => {
-      PRO_LEAGUES.forEach(l => { perLeague[r][l] = grouped[r][l].length; });
-    });
     return {
       limited: compute("limited"),
       rare: compute("rare"),
       stellar: computeStellar(),
-      perLeague,
     };
   }, [grouped, stellarGroups, players, cardsBySlug, stellarCardsBySlug]);
 
-  // Initialise openLeagues une fois que les stats sont dispo : ouvre toutes les ligues/dates non vides.
+  // Initialise openLeagues une fois : ouvre toutes les sections (GW, dates) non vides.
   useEffect(() => {
-    if (!stats || openLeagues !== null) return;
+    if (!stats || !grouped || openLeagues !== null) return;
     const init = {};
-    ["limited", "rare"].forEach(r => { PRO_LEAGUES.forEach(l => { init[`${r}_${l}`] = stats.perLeague[r][l] > 0; }); });
+    ["limited", "rare"].forEach(r => {
+      grouped[r].forEach(({ league, gwKey }) => { init[`${r}_${league}_${gwKey}`] = true; });
+    });
     stellarGroups.forEach(({ dateStr }) => { init[`stellar_${dateStr}`] = true; });
     setOpenLeagues(init);
-  }, [stats, openLeagues, stellarGroups]);
+  }, [stats, grouped, openLeagues, stellarGroups]);
 
-  const toggleLeague = (rarity, league) => {
-    setOpenLeagues(prev => ({ ...(prev || {}), [`${rarity}_${league}`]: !prev?.[`${rarity}_${league}`] }));
+  const toggleLeague = (key) => {
+    setOpenLeagues(prev => ({ ...(prev || {}), [key]: !prev?.[key] }));
   };
 
   if (loading) {
@@ -383,20 +385,20 @@ function RecapTabInner({ players, logos, lang }) {
 
           {activeStats.count > 0 && activeRarity !== "stellar" && (
             <div style={{ display: "flex", flexDirection: "column", gap: 14 }}>
-              {PRO_LEAGUES.map(league => {
-                const teams = grouped[activeRarity][league];
-                if (!teams.length) return null;
+              {grouped[activeRarity].map(({ league, gwKey, teams }) => {
                 const accent = LEAGUE_COLORS[league] || "#A5B4FC";
                 const flag = LEAGUE_FLAG_CODES[league];
-                const open = openLeagues?.[`${activeRarity}_${league}`] !== false;
+                const key = `${activeRarity}_${league}_${gwKey}`;
+                const open = openLeagues?.[key] !== false;
+                const gwNum = getGwDisplayNumber(gwKey);
                 return (
-                  <div key={league} style={{
+                  <div key={key} style={{
                     borderRadius: 12, border: `1px solid ${accent}25`,
                     background: "linear-gradient(180deg, rgba(10,5,28,0.5), rgba(6,3,18,0.35))",
                     overflow: "hidden",
                   }}>
                     <button
-                      onClick={() => toggleLeague(activeRarity, league)}
+                      onClick={() => toggleLeague(key)}
                       style={{
                         width: "100%", display: "flex", alignItems: "center", gap: 10,
                         padding: "10px 14px", border: "none", cursor: "pointer",
@@ -407,6 +409,11 @@ function RecapTabInner({ players, logos, lang }) {
                       <span style={{ fontSize: 12, transition: "transform 0.2s", display: "inline-block", transform: open ? "rotate(90deg)" : "rotate(0deg)", color: accent, width: 10 }}>▶</span>
                       {flag && <img src={`https://flagcdn.com/w20/${flag}.png`} alt="" style={{ width: 18, height: 13, objectFit: "cover", borderRadius: 2 }} />}
                       <span style={{ fontSize: 13, fontWeight: 800, color: accent, letterSpacing: 0.3 }}>{LEAGUE_NAMES[league] || league}</span>
+                      {gwNum != null && (
+                        <span style={{ fontSize: 10, fontWeight: 900, color: "#FBBF24", padding: "2px 8px", borderRadius: 6, background: "rgba(251,191,36,0.12)", border: "1px solid rgba(251,191,36,0.3)", letterSpacing: 0.3 }}>
+                          GW{gwNum}
+                        </span>
+                      )}
                       <span style={{ fontSize: 10, fontWeight: 700, color: "rgba(255,255,255,0.45)", padding: "2px 8px", borderRadius: 10, background: "rgba(255,255,255,0.04)" }}>
                         {teams.length} {lang === "fr" ? (teams.length > 1 ? "équipes" : "équipe") : (teams.length > 1 ? "teams" : "team")}
                       </span>
@@ -419,12 +426,12 @@ function RecapTabInner({ players, logos, lang }) {
                         display: "grid", gridTemplateColumns: "repeat(auto-fill, 480px)",
                         gap: 10, padding: 12,
                       }}>
-                        {teams.map((item, i) => (
+                        {teams.map((team, i) => (
                           <ProSavedTeamCard
-                            key={`${item.team.id}-${i}`}
-                            team={enrichTeamWithBestCards(item.team, cardsBySlug[item.rarity])}
-                            league={item.league}
-                            rarity={item.rarity}
+                            key={`${team.id}-${i}`}
+                            team={enrichTeamWithBestCards(team, cardsBySlug[activeRarity])}
+                            league={league}
+                            rarity={activeRarity}
                             players={players}
                             logos={logos}
                             lang={lang}
@@ -451,7 +458,7 @@ function RecapTabInner({ players, logos, lang }) {
                     overflow: "hidden",
                   }}>
                     <button
-                      onClick={() => toggleLeague("stellar", dateStr)}
+                      onClick={() => toggleLeague(`stellar_${dateStr}`)}
                       style={{
                         width: "100%", display: "flex", alignItems: "center", gap: 10,
                         padding: "10px 14px", border: "none", cursor: "pointer",

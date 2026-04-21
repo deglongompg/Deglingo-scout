@@ -6,6 +6,24 @@
 export const PRO_LEAGUES = ["L1", "PL", "Liga", "Bundes", "MLS"];
 export const TEAM_SLOTS = ["GK", "DEF", "MIL", "ATT", "FLEX"];
 
+// GW epoch (aligned sur freeze.js : GW69 = 2026-04-10 14:00 UTC)
+const GW_EPOCH_DATE_MS = new Date("2026-04-10T14:00:00Z").getTime();
+const GW_EPOCH_NUMBER = 69;
+
+/**
+ * Derive le numero de GW affiche (GW71, GW72, ...) depuis une gwKey du type "pro_2026-04-17_gw1".
+ * Utilise l'epoch GW69 et la duree moyenne d'une GW (~3.5 jours).
+ */
+export function getGwDisplayNumber(gwKey) {
+  if (!gwKey) return null;
+  const m = /^pro_(\d{4}-\d{2}-\d{2})_gw\d$/.exec(gwKey);
+  if (!m) return null;
+  const startMs = new Date(`${m[1]}T14:00:00Z`).getTime();
+  const avgGwDuration = 3.5 * 24 * 60 * 60 * 1000;
+  const offset = Math.round((startMs - GW_EPOCH_DATE_MS) / avgGwDuration);
+  return GW_EPOCH_NUMBER + offset;
+}
+
 const EU_LEAGUES = ["L1", "PL", "Liga", "Bundes"];
 
 const PALIERS_EU_LIMITED = [

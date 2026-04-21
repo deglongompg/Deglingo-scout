@@ -408,9 +408,14 @@ def build_player_fixtures(fixtures, teams, players):
     - home/away
     """
     # Build club → fixture mapping
-    # Pour les matchs multiples, on garde le PLUS PROCHE (tri par date+kickoff)
+    # Pour les matchs multiples, on garde le PLUS PROCHE A VENIR (date >= today, tri par date+kickoff)
+    # Fix bug : sans le filtre today, un match passe du jour meme reste prioritaire sur le prochain match
+    today_str = datetime.now().strftime("%Y-%m-%d")
     club_fixture = {}
-    sorted_fixtures = sorted(fixtures, key=lambda x: (x.get("date",""), x.get("kickoff","99:99")))
+    # On filtre d'abord les matchs deja joues : date stricte < today
+    # On inclut les matchs du jour meme (ils peuvent etre en cours ou a venir)
+    upcoming = [f for f in fixtures if (f.get("date") or "") >= today_str]
+    sorted_fixtures = sorted(upcoming, key=lambda x: (x.get("date",""), x.get("kickoff","99:99")))
     for f in sorted_fixtures:
         comp = f.get("competition", "")
         if f["home"] not in club_fixture:

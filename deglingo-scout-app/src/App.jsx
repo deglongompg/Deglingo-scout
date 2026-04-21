@@ -12,9 +12,9 @@ const TABS = [
   { id: "db", label: "Database", icon: "📊" },
   { id: "pro", label: "Sorare Pro", icon: "⚙️" },
   { id: "stellar", label: "Sorare Stellar", icon: "✨" },
+  { id: "recap", label: "Mes Teams", icon: "📋" },
   { id: "fight", label: "Fight", icon: "🥊" },
   // { id: "reco", label: "Best Pick", icon: "⚽" }, // ← Masque cote clients (code conserve dans RecoTab.jsx, re-activer en decommentant)
-  { id: "recap", label: "Mes Teams", icon: "📋" },
 ];
 
 export default function App() {

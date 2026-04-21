@@ -1072,7 +1072,7 @@ export default function SorareProTab({ players, teams, fixtures, logos = {}, mat
                         const activeSide = isOpenHome ? "home" : isOpenAway ? "away" : null;
                         const playersOf = (club) => [...(players || [])].filter(p =>
                           p.last_so5_date && p.last_so5_date >= gwInfo.startDateStr && p.last_so5_date <= gwInfo.endDateStr &&
-                          p.last_so5_score != null && p.last_so5_score > 0 &&
+                          p.last_so5_score != null &&
                           clubMatch(p.club, club)
                         ).sort((a, b) => b.last_so5_score - a.last_so5_score);
                         const hasHomePlayers = scoreStr && playersOf(f.home).length > 0;

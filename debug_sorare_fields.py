@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
-debug_sorare_fields.py — Test a l'aveugle de champs candidats sur Mbappé.
-Sorare bloque l'introspection du schema, on tente des noms plausibles.
+debug_sorare_fields.py — On a trouve `nextGame` ! On explore ses sous-champs
+pour trouver ou est le titu%.
 """
 import requests, json, os
 from dotenv import load_dotenv
@@ -16,74 +16,86 @@ if key:
 
 SLUG = "kylian-mbappe-lottin"
 
-# Test 1 : Le champ actuel utilise par fetch_player_status.py — est-il a jour?
-Q1 = '{ football { player(slug: "%s") { displayName nextClassicFixtureProjectedScore nextClassicFixturePlayingStatusOdds { starterOddsBasisPoints } } } }' % SLUG
-print("=== TEST 1 : Champ actuel nextClassicFixture* ===")
-r = requests.post(URL, json={"query": Q1}, headers=HEADERS, timeout=15)
-print(json.dumps(r.json(), indent=2, ensure_ascii=False))
-
-# Test 2 : Candidats alternatifs
+# Test candidats de sous-champs sur nextGame
 CANDIDATES = [
-    "upcomingFixtures",
-    "upcomingGames",
-    "nextFixture",
-    "activeFixture",
-    "currentFixture",
-    "fixtures",
-    "games",
-    "anyGame",
-    "openFixtures",
-    "nextFootballFixture",
-    "allFixtures",
-    "latestFixture",
-    "latestGame",
-    "nextGame",
-    "activePlayingStatus",
+    "startingOdds",
     "playingStatusOdds",
     "startingProbability",
-    "startingOdds",
-    "lineupOdds",
+    "starterOdds",
+    "status",
+    "date",
+    "kickoff",
+    "homeTeam",
+    "awayTeam",
+    "id",
+    "fixture",
+    "week",
+    "competition",
 ]
 
-print("\n\n=== TEST 2 : Champs candidats (tente chaque sous-champ avec __typename) ===\n")
-for cand in CANDIDATES:
-    q = '{ football { player(slug: "%s") { %s { __typename } } } }' % (SLUG, cand)
-    try:
-        r = requests.post(URL, json={"query": q}, headers=HEADERS, timeout=10)
-        body = r.json()
-        if "errors" in body:
-            msg = body["errors"][0].get("message", "?")
-            # Si le champ existe mais necessite args -> message different
-            if "doesn't exist" in msg or "is not defined" in msg or "Unknown" in msg:
-                print(f"  ❌ {cand:<30} : n'existe pas")
-            else:
-                # Champ existe probablement
-                print(f"  ⚠️  {cand:<30} : {msg[:100]}")
+print(f"=== TEST 1 : Sous-champs de nextGame (sans sous-sel) ===\n")
+for c in CANDIDATES:
+    q = '{ football { player(slug: "%s") { nextGame { %s } } } }' % (SLUG, c)
+    r = requests.post(URL, json={"query": q}, headers=HEADERS, timeout=10)
+    body = r.json()
+    if "errors" in body:
+        msg = body["errors"][0].get("message", "?")[:150]
+        if "doesn't exist" in msg:
+            print(f"  ❌ {c:<30} : n'existe pas")
         else:
-            p = (body.get("data") or {}).get("football", {}).get("player") or {}
-            print(f"  ✅ {cand:<30} : {json.dumps(p.get(cand))[:120]}")
-    except Exception as e:
-        print(f"  💥 {cand}: {e}")
+            print(f"  ⚠️  {c:<30} : {msg}")
+    else:
+        p = (body.get("data") or {}).get("football", {}).get("player", {}) or {}
+        print(f"  ✅ {c:<30} : {json.dumps(p.get('nextGame'))[:150]}")
 
-# Test 3 : Tester avec args first: N (liste paginee)
-print("\n\n=== TEST 3 : Champs avec pagination (first: 3) ===\n")
-LIST_CANDIDATES = ["upcomingFixtures", "upcomingGames", "fixtures", "games", "allFixtures"]
-for cand in LIST_CANDIDATES:
-    q = '{ football { player(slug: "%s") { %s(first: 3) { nodes { __typename } } } } }' % (SLUG, cand)
-    try:
-        r = requests.post(URL, json={"query": q}, headers=HEADERS, timeout=10)
-        body = r.json()
-        if "errors" in body:
-            msg = body["errors"][0].get("message", "?")[:150]
-            print(f"  ❌ {cand:<25}(first:3) : {msg}")
+# Test avec sous-sel __typename pour les champs type objet
+print(f"\n=== TEST 2 : Sous-champs (avec __typename, pour objets) ===\n")
+OBJECTS = ["startingOdds", "playingStatusOdds", "homeTeam", "awayTeam", "fixture", "competition", "gameWeek"]
+for c in OBJECTS:
+    q = '{ football { player(slug: "%s") { nextGame { %s { __typename } } } } }' % (SLUG, c)
+    r = requests.post(URL, json={"query": q}, headers=HEADERS, timeout=10)
+    body = r.json()
+    if "errors" in body:
+        msg = body["errors"][0].get("message", "?")[:150]
+        if "doesn't exist" in msg:
+            print(f"  ❌ {c:<25} : n'existe pas")
         else:
-            p = (body.get("data") or {}).get("football", {}).get("player") or {}
-            print(f"  ✅ {cand:<25}(first:3) : {json.dumps(p)[:200]}")
-    except Exception as e:
-        print(f"  💥 {cand}: {e}")
+            print(f"  ⚠️  {c:<25} : {msg}")
+    else:
+        print(f"  ✅ {c:<25} : {json.dumps(body.get('data'))[:200]}")
 
-# Test 4 : Interfaces alternatives — peut-etre qu'on passe par AnyPlayer
-print("\n\n=== TEST 4 : Essaie anyPlayer (interface alternative) ===\n")
-Q_ANY = '{ football { anyPlayer(slug: "%s") { __typename displayName } } }' % SLUG
-r = requests.post(URL, json={"query": Q_ANY}, headers=HEADERS, timeout=10)
-print(json.dumps(r.json(), indent=2, ensure_ascii=False)[:400])
+# Test query complete pour voir ce qu'on peut tirer de nextGame
+print(f"\n=== TEST 3 : Query complete nextGame + metadata ===\n")
+Q = """{
+  football {
+    player(slug: "%s") {
+      displayName
+      nextGame {
+        __typename
+        id
+        date
+        status
+        homeTeam { name }
+        awayTeam { name }
+      }
+    }
+  }
+}""" % SLUG
+r = requests.post(URL, json={"query": Q}, headers=HEADERS, timeout=15)
+print(json.dumps(r.json(), indent=2, ensure_ascii=False)[:1500])
+
+# Test 4 : Le game a-t-il un champ pour les odds du joueur specifique?
+# Essaie playingStatusOddsForPlayer(slug: X) ou variants
+print(f"\n\n=== TEST 4 : Odds sur Game scoped par player ===\n")
+GAME_ODDS_CANDIDATES = [
+    '{ football { player(slug: "%s") { nextGame { playingStatusOdds { starterOddsBasisPoints } } } } }' % SLUG,
+    '{ football { player(slug: "%s") { nextGame { startingOdds { starterOddsBasisPoints } } } } }' % SLUG,
+    '{ football { player(slug: "%s") { playingStatusOdds { starterOddsBasisPoints } } } }' % SLUG,
+]
+for q in GAME_ODDS_CANDIDATES:
+    r = requests.post(URL, json={"query": q}, headers=HEADERS, timeout=10)
+    body = r.json()
+    if "errors" in body:
+        print(f"  ❌ {body['errors'][0].get('message','?')[:120]}")
+    else:
+        print(f"  ✅ {json.dumps(body.get('data'))[:200]}")

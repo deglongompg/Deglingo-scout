@@ -10,20 +10,31 @@
     "home_assists": [],
     "away_assists": []
   },
-  "Game:d16a9b99-9b32-4c67-921f-497de4c93b87": {
-    "home": "Nottingham Forest FC",
-    "away": "Burnley FC",
+  "Game:1d51c004-24ca-4db9-9b2f-d239cca3cd40": {
+    "home": "AS Monaco",
+    "away": "AJ Auxerre",
     "date": "2026-04-19",
-    "home_goals": 4,
-    "away_goals": 1,
+    "home_goals": 2,
+    "away_goals": 2,
     "home_scorers": [],
     "away_scorers": [],
     "home_assists": [],
     "away_assists": []
   },
-  "Game:1b288e51-bcaf-4ce5-92b5-f619a2fbe785": {
-    "home": "Everton FC",
-    "away": "Liverpool FC",
+  "Game:8811e302-dcb5-4d27-8ba6-d4f9d4d2516c": {
+    "home": "Stade de Reims",
+    "away": "Red Star FC 93",
+    "date": "2026-04-18",
+    "home_goals": 3,
+    "away_goals": 2,
+    "home_scorers": [],
+    "away_scorers": [],
+    "home_assists": [],
+    "away_assists": []
+  },
+  "Game:f3cbe434-5e6f-4748-bea7-aea39f8e224b": {
+    "home": "Paris Saint-Germain",
+    "away": "Olympique Lyonnais",
     "date": "2026-04-19",
     "home_goals": 1,
     "away_goals": 2,
@@ -32,111 +43,23 @@
     "home_assists": [],
     "away_assists": []
   },
-  "Game:7d118007-b404-4374-8565-da5575f1a41b": {
-    "home": "Manchester City FC",
-    "away": "Arsenal FC",
+  "Game:13410b3e-32d3-464e-9c30-1dc203c46b06": {
+    "home": "RC Strasbourg Alsace",
+    "away": "Stade Rennais F.C.",
     "date": "2026-04-19",
-    "home_goals": 2,
-    "away_goals": 1,
-    "home_scorers": [],
-    "away_scorers": [],
-    "home_assists": [],
-    "away_assists": []
-  },
-  "Game:8db9065f-47f4-4001-a2ff-1282f2915a9b": {
-    "home": "Crystal Palace FC",
-    "away": "West Ham United FC",
-    "date": "2026-04-20",
     "home_goals": 0,
-    "away_goals": 0,
-    "home_scorers": [],
-    "away_scorers": [],
-    "home_assists": [],
-    "away_assists": []
-  },
-  "Game:68752061-e6d9-43c4-bcc8-ba1bca810da1": {
-    "home": "FC Bayern München",
-    "away": "Real Madrid",
-    "date": "2026-04-15",
-    "home_goals": 4,
     "away_goals": 3,
     "home_scorers": [],
     "away_scorers": [],
     "home_assists": [],
     "away_assists": []
   },
-  "Game:51c4dd82-69d0-4b63-a4a2-c86229897246": {
-    "home": "Borussia Mönchengladbach",
-    "away": "1. FSV Mainz 05",
+  "Game:d16a9b99-9b32-4c67-921f-497de4c93b87": {
+    "home": "Nottingham Forest FC",
+    "away": "Burnley FC",
     "date": "2026-04-19",
-    "home_goals": 1,
+    "home_goals": 4,
     "away_goals": 1,
-    "home_scorers": [],
-    "away_scorers": [],
-    "home_assists": [],
-    "away_assists": []
-  },
-  "Game:38a514d1-3153-49f8-b33a-5547395c3e9c": {
-    "home": "Sport-Club Freiburg",
-    "away": "1. FC Heidenheim 1846",
-    "date": "2026-04-19",
-    "home_goals": 2,
-    "away_goals": 1,
-    "home_scorers": [],
-    "away_scorers": [],
-    "home_assists": [],
-    "away_assists": []
-  },
-  "Game:79f17493-65f6-4b55-83c4-60e712cf95bf": {
-    "home": "Los Angeles FC",
-    "away": "San Jose Earthquakes",
-    "date": "2026-04-19",
-    "home_goals": 1,
-    "away_goals": 4,
-    "home_scorers": [],
-    "away_scorers": [],
-    "home_assists": [],
-    "away_assists": []
-  },
-  "Game:d67472a8-7195-46f2-abbd-8a4e86e1bec6": {
-    "home": "Cruz Azul FC",
-    "away": "Los Angeles FC",
-    "date": "2026-04-15",
-    "home_goals": 1,
-    "away_goals": 1,
-    "home_scorers": [],
-    "away_scorers": [],
-    "home_assists": [],
-    "away_assists": []
-  },
-  "Game:cfa466c7-a18c-4e36-8567-56ab2a8a6e0c": {
-    "home": "Minnesota United",
-    "away": "Portland Timbers",
-    "date": "2026-04-19",
-    "home_goals": 2,
-    "away_goals": 0,
-    "home_scorers": [],
-    "away_scorers": [],
-    "home_assists": [],
-    "away_assists": []
-  },
-  "Game:55f24edd-c82d-4703-8b78-70c0784b0ae9": {
-    "home": "Orlando City SC",
-    "away": "Houston Dynamo FC",
-    "date": "2026-04-18",
-    "home_goals": 0,
-    "away_goals": 1,
-    "home_scorers": [],
-    "away_scorers": [],
-    "home_assists": [],
-    "away_assists": []
-  },
-  "Game:66215755-ab60-43bd-9218-033d409f605a": {
-    "home": "Philadelphia Union",
-    "away": "DC United",
-    "date": "2026-04-18",
-    "home_goals": 0,
-    "away_goals": 0,
     "home_scorers": [],
     "away_scorers": [],
     "home_assists": [],

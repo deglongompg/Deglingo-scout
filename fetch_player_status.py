@@ -18,8 +18,13 @@ from concurrent.futures import ThreadPoolExecutor, as_completed
 sys.stdout.reconfigure(errors="replace")
 NO_TITU = "--no-titu" in sys.argv  # Mercredi: pas de titu% (pas encore publie)
 
-# CLI : --batch N (default 50) et --workers N (default 4, parallele)
-BATCH_SIZE = 50
+from dotenv import load_dotenv
+
+load_dotenv()
+
+# CLI : --batch N et --workers N (defaut auto selon presence API key)
+_HAS_KEY = bool(os.getenv("SORARE_API_KEY", ""))
+BATCH_SIZE = 150 if _HAS_KEY else 50   # 150 turbo avec key (complexity 30k), 50 safe sans
 if "--batch" in sys.argv:
     try:
         BATCH_SIZE = int(sys.argv[sys.argv.index("--batch") + 1])
@@ -31,10 +36,6 @@ if "--workers" in sys.argv:
         WORKERS = int(sys.argv[sys.argv.index("--workers") + 1])
     except (IndexError, ValueError):
         pass
-
-from dotenv import load_dotenv
-
-load_dotenv()
 
 URL      = "https://api.sorare.com/federation/graphql"
 API_KEY  = os.getenv("SORARE_API_KEY", "")

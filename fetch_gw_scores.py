@@ -33,10 +33,8 @@ OUT_PATHS = [
     "public/data/players.json",
 ]
 
-# ── Query score joueur (avec game id) ────────────────────────────────────────
-Q_PLAYER = """query($slug: String!) {
-  football {
-    player(slug: $slug) {
+# ── Query score joueur (avec game id) — fragment utilise dans batchs GraphQL ──
+SCORE_FRAGMENT = """{
       so5Scores(last: 1) {
         score
         game {
@@ -45,15 +43,13 @@ Q_PLAYER = """query($slug: String!) {
           awayTeam { name }
         }
       }
-    }
-  }
-}"""
+    }"""
 
 
-def fetch_score(slug):
-    r = requests.post(URL, json={"query": Q_PLAYER, "variables": {"slug": slug}},
-                      headers=HEADERS, timeout=30)
-    p = ((r.json().get("data") or {}).get("football") or {}).get("player") or {}
+def parse_score_data(p):
+    """Parse la reponse player.so5Scores -> dict score + metadata match."""
+    if not p:
+        return None
     scores = p.get("so5Scores") or []
     last_s = scores[0] if scores else {}
     gw_score = last_s.get("score")
@@ -68,6 +64,28 @@ def fetch_score(slug):
         "game_home_team":        (game.get("homeTeam") or {}).get("name", ""),
         "game_away_team":        (game.get("awayTeam") or {}).get("name", ""),
     }
+
+
+def build_batch_query(slugs):
+    """Construit une query GraphQL avec alias pour fetch N joueurs d'un coup."""
+    parts = [f'      p{i}: player(slug: {json.dumps(slug)}) {SCORE_FRAGMENT}' for i, slug in enumerate(slugs)]
+    return "query {\n  football {\n" + "\n".join(parts) + "\n  }\n}"
+
+
+def fetch_scores_batch(slugs):
+    """Fetch un batch de scores. Retourne {slug: score_dict}."""
+    q = build_batch_query(slugs)
+    r = requests.post(URL, json={"query": q}, headers=HEADERS, timeout=60)
+    body = r.json()
+    if "errors" in body:
+        print(f"  ⚠️  GraphQL errors: {str(body['errors'])[:200]}")
+    data = (body.get("data") or {}).get("football") or {}
+    return {slug: parse_score_data(data.get(f"p{i}")) for i, slug in enumerate(slugs)}
+
+
+def fetch_score(slug):
+    """Legacy: fetch single score (fallback pour erreurs batch)."""
+    return fetch_scores_batch([slug]).get(slug)
 
 
 # ── DÉTECTION AUTOMATIQUE DES CLUBS AYANT JOUÉ ──────────────────────────────
@@ -235,40 +253,67 @@ print(f"Clubs matches dans players.json : {len(set(p.get('club','') for p in pla
 print(f"Players deja a jour (skippes) : {skipped_fresh}")
 print(f"Joueurs a fetcher : {len(targets)}")
 
-# ── FETCH SCORES JOUEURS ──────────────────────────────────────────────────────
+# ── FETCH SCORES JOUEURS (batch GraphQL + parallele) ──────────────────────────
+from concurrent.futures import ThreadPoolExecutor, as_completed
+
+BATCH_SIZE = 150 if API_KEY else 50   # complexity limit 30000 avec key vs 500 sans
+WORKERS = 4
+
 scores_map = {}
 game_ids   = {}   # { game_id: { home, away, home_scorers, away_scorers, ... } }
 errors = 0
 
-print(f"\nFetch scores...\n")
-for i, p in enumerate(targets):
-    slug = p["slug"]
+slug_to_player = {p["slug"]: p for p in targets if p.get("slug")}
+all_slugs = list(slug_to_player.keys())
+batches = [all_slugs[i:i + BATCH_SIZE] for i in range(0, len(all_slugs), BATCH_SIZE)]
+
+print(f"\nFetch scores : {len(targets)} joueurs · batch {BATCH_SIZE} · {WORKERS} workers · {len(batches)} batchs\n")
+t_start = time.time()
+done = 0
+
+def process_batch(batch_slugs):
     try:
-        s = fetch_score(slug)
-        scores_map[slug] = s
-        score_str = str(s["last_so5_score"]) if s["last_so5_score"] is not None else "-"
-        print(f"  [{i+1:3}/{len(targets)}] {p.get('name','?'):<28} score={score_str:>5}  date={s['last_so5_date'] or '?'}")
-
-        # Mémoriser game_id + teams
-        gid = s.get("game_id")
-        if gid and gid not in game_ids:
-            game_ids[gid] = {
-                "home":       s["game_home_team"],
-                "away":       s["game_away_team"],
-                "date":       s["last_so5_date"],
-                "home_goals": s["last_match_home_goals"],
-                "away_goals": s["last_match_away_goals"],
-                "home_scorers": [],
-                "away_scorers": [],
-                "home_assists": [],
-                "away_assists": [],
-            }
-
-        time.sleep(SLEEP)
+        return batch_slugs, fetch_scores_batch(batch_slugs), None
     except Exception as e:
-        errors += 1
-        print(f"  [{i+1:3}/{len(targets)}] ERR {slug}: {e}")
-        time.sleep(1)
+        return batch_slugs, {}, str(e)
+
+with ThreadPoolExecutor(max_workers=WORKERS) as executor:
+    futures = {}
+    for batch in batches:
+        futures[executor.submit(process_batch, batch)] = batch
+        time.sleep(0.05)
+
+    for future in as_completed(futures):
+        batch_slugs, batch_result, err = future.result()
+        done += 1
+        if err:
+            errors += 1
+            print(f"  [batch {done:3}/{len(batches)}] ERR: {err[:100]}")
+            continue
+        for slug, s in batch_result.items():
+            if s is None:
+                continue
+            scores_map[slug] = s
+            gid = s.get("game_id")
+            if gid and gid not in game_ids:
+                game_ids[gid] = {
+                    "home":        s["game_home_team"],
+                    "away":        s["game_away_team"],
+                    "date":        s["last_so5_date"],
+                    "home_goals":  s["last_match_home_goals"],
+                    "away_goals":  s["last_match_away_goals"],
+                    "home_scorers": [],
+                    "away_scorers": [],
+                    "home_assists": [],
+                    "away_assists": [],
+                }
+        if done % max(1, len(batches) // 10) == 0 or done == len(batches):
+            elapsed = time.time() - t_start
+            rate = (done * BATCH_SIZE) / max(0.1, elapsed)
+            print(f"  [batch {done:3}/{len(batches)}] {len(scores_map):4} scores recus · {elapsed:.1f}s · {rate:.0f} players/s")
+
+elapsed_total = time.time() - t_start
+print(f"\n⏱  Fetch scores termine en {elapsed_total:.1f}s ({len(scores_map)}/{len(targets)} joueurs)")
 
 # ── PATCH players.json ────────────────────────────────────────────────────────
 for path in OUT_PATHS:

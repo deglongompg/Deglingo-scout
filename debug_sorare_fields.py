@@ -1,10 +1,6 @@
 #!/usr/bin/env python3
 """
-debug_sorare_fields.py — Introspecte le Player Sorare pour trouver
-le bon champ titu% (pas limite a Classic).
-
-Usage :
-  python3 debug_sorare_fields.py
+debug_sorare_fields.py — Test simple : query Mbappé tel quel, voir la reponse.
 """
 import requests, json, os, sys
 from dotenv import load_dotenv
@@ -18,89 +14,89 @@ if API_KEY:
     HEADERS["APIKEY"] = API_KEY
     print("🔑 API key active")
 else:
-    print("⚠️ Pas d'API key — limite complexity 500")
+    print("⚠️ Pas d'API key")
 
-SLUG = "kylian-mbappe-lottin"
-
-# ── 1) Introspection : tous les champs de Player avec "Odds" ou "Starter" ou "PlayingStatus"
-INTROSPECT = """
-{
-  __type(name: "Player") {
-    name
-    fields {
-      name
-      type { name kind ofType { name kind } }
-      description
-    }
-  }
-}
-"""
-
-print(f"\n📋 Introspection du type Player (champs pertinents)...")
-r = requests.post(URL, json={"query": INTROSPECT}, headers=HEADERS, timeout=30)
-data = r.json()
-fields = (data.get("data") or {}).get("__type", {}).get("fields") or []
-
-relevant = [f for f in fields if any(k in f["name"].lower() for k in ["odds", "starter", "playing", "fixture", "game", "lineup", "probab"])]
-print(f"\n{len(relevant)} champs potentiels sur Player :")
-for f in relevant:
-    t = f["type"]
-    type_str = t.get("name") or (t.get("ofType") or {}).get("name") or t.get("kind") or "?"
-    print(f"  - {f['name']:<55} -> {type_str}")
-    if f.get("description"):
-        print(f"      \"{f['description'][:100]}\"")
-
-# ── 2) Test sur Mbappé avec plusieurs champs candidats
-print(f"\n\n🎯 Test query Mbappé ({SLUG}) avec tous les champs candidats...")
-field_names = [f["name"] for f in relevant if "odd" in f["name"].lower() or "status" in f["name"].lower()]
-
-# Construit une query avec tous les champs qui semblent "safe" (pas d'argument requis)
-# On tente avec/sans sous-selection
-SAFE_TESTS = [
-    "nextClassicFixturePlayingStatusOdds { starterOddsBasisPoints noShowOddsBasisPoints substituteOddsBasisPoints }",
-    "activeClub { name }",
+# Test sur 4 joueurs : 2 Liga (prob. null), 2 autres ligues (prob. OK) pour comparaison
+SLUGS = [
+    ("kylian-mbappe-lottin",      "Mbappé (Real Madrid, Liga)"),
+    ("lamine-yamal",              "Yamal (Barça, Liga)"),
+    ("ousmane-dembele",           "Dembélé (PSG, L1)"),
+    ("jobe-bellingham",           "Jobe Bellingham (Dortmund, Bundes)"),
 ]
 
-# On rajoute tous les champs *Odds* / *Fixture* / *Game* / *Lineup* et on tente une sous-selection generique
-def build_probe_query(fnames):
-    parts = []
-    for fn in fnames:
-        # On tente une intro sans sous-sel d'abord (sera rejete si obj) puis avec
-        parts.append(f'    _{fn}: {fn} {{ __typename }}')
-    return "{\n  football {\n    player(slug: \"" + SLUG + "\") {\n      displayName\n" + "\n".join(parts) + "\n    }\n  }\n}"
-
-# Tester un par un pour identifier ceux qui marchent
-print(f"\nTest individuel des champs pertinents (peut en rater certains) :")
-for fname in field_names:
-    q = '{ football { player(slug: "' + SLUG + '") { ' + fname + ' { __typename } } }'
-    try:
-        rr = requests.post(URL, json={"query": q}, headers=HEADERS, timeout=15)
-        body = rr.json()
-        if "errors" in body:
-            msg = body["errors"][0].get("message", "?")[:80]
-            print(f"  ❌ {fname}: {msg}")
-        else:
-            p = (body.get("data") or {}).get("football", {}).get("player") or {}
-            print(f"  ✅ {fname}: {json.dumps(p.get(fname))[:120]}")
-    except Exception as e:
-        print(f"  💥 {fname}: {e}")
-
-# ── 3) Test query complete sur Mbappé avec les meilleurs candidats
-print(f"\n\n🎯 Query complete Mbappé avec tous les champs Odds/Probabilities qu'on connait :")
-Q_FULL = """{
+Q = """query($slug: String!) {
   football {
-    player(slug: "%s") {
+    player(slug: $slug) {
       displayName
       activeClub { name }
+      activeInjuries   { active }
+      activeSuspensions { active }
       nextClassicFixtureProjectedScore
-      nextClassicFixturePlayingStatusOdds {
-        starterOddsBasisPoints
-        noShowOddsBasisPoints
-        substituteOddsBasisPoints
-      }
+      nextClassicFixturePlayingStatusOdds { starterOddsBasisPoints }
     }
   }
-}""" % SLUG
+}"""
 
-r = requests.post(URL, json={"query": Q_FULL}, headers=HEADERS, timeout=30)
-print(json.dumps(r.json(), indent=2, ensure_ascii=False)[:3000])
+print(f"\n🎯 Test query identique a fetch_player_status.py (ancienne version)")
+print("=" * 75)
+for slug, label in SLUGS:
+    r = requests.post(URL, json={"query": Q, "variables": {"slug": slug}}, headers=HEADERS, timeout=30)
+    body = r.json()
+    if "errors" in body:
+        print(f"\n{label}")
+        print(f"  ❌ ERREUR: {body['errors']}")
+        continue
+    p = ((body.get("data") or {}).get("football") or {}).get("player") or {}
+    print(f"\n{label}  (slug={slug})")
+    print(f"  displayName         : {p.get('displayName')}")
+    print(f"  activeClub          : {(p.get('activeClub') or {}).get('name')}")
+    print(f"  activeInjuries      : {p.get('activeInjuries')}")
+    print(f"  activeSuspensions   : {p.get('activeSuspensions')}")
+    print(f"  projectedScore      : {p.get('nextClassicFixtureProjectedScore')}")
+    odds = p.get('nextClassicFixturePlayingStatusOdds')
+    if odds is None:
+        print(f"  playingStatusOdds   : ❌ NULL (pas de titu%)")
+    else:
+        bp = odds.get('starterOddsBasisPoints')
+        pct = round(bp / 100) if bp is not None else None
+        print(f"  playingStatusOdds   : ✅ {pct}% (basisPoints={bp})")
+
+# Test GLOBAL : combien de joueurs Liga dans la DB retournent quoi
+print(f"\n\n🔬 Test sur 50 joueurs Liga aleatoires pour voir la proportion")
+print("=" * 75)
+with open("deglingo-scout-app/public/data/players.json") as f:
+    players = json.load(f)
+import random
+liga = [p for p in players if p.get("league") == "Liga"]
+sample = random.sample(liga, min(50, len(liga)))
+
+with_titu, without_titu, null_playerobj = 0, 0, 0
+errors_list = []
+for p in sample:
+    slug = p.get("slug")
+    if not slug: continue
+    try:
+        r = requests.post(URL, json={"query": Q, "variables": {"slug": slug}}, headers=HEADERS, timeout=15)
+        body = r.json()
+        if "errors" in body:
+            errors_list.append(f"{p.get('name')}: {body['errors'][0].get('message','?')[:60]}")
+            continue
+        pp = ((body.get("data") or {}).get("football") or {}).get("player")
+        if pp is None:
+            null_playerobj += 1
+            continue
+        odds = pp.get("nextClassicFixturePlayingStatusOdds")
+        if odds and odds.get("starterOddsBasisPoints") is not None:
+            with_titu += 1
+        else:
+            without_titu += 1
+    except Exception as e:
+        errors_list.append(f"{p.get('name')}: {e}")
+
+print(f"  ✅ Avec titu%              : {with_titu}/50")
+print(f"  ❌ Sans titu% (odds null)  : {without_titu}/50")
+print(f"  ⚠️  Player object null     : {null_playerobj}/50")
+if errors_list:
+    print(f"  🐛 Erreurs ({len(errors_list)}):")
+    for e in errors_list[:5]:
+        print(f"     - {e}")

@@ -174,11 +174,18 @@ import unicodedata, re
 # Aliases manuels pour les cas pas resolvables par normalisation simple
 # Cles = noms api fixtures.json, valeurs = variantes equivalentes dans players.club
 ALIASES = {
+    # Bundesliga
     "SC Freiburg": ["Sport-Club Freiburg"],
-    "Lille OSC": ["LOSC Lille"],
-    "Deportivo Alavés": ["D. Alavés"],
-    "Racing Club de Lens": ["RC Lens"],
     "TSG 1899 Hoffenheim": ["TSG Hoffenheim"],
+    # Ligue 1
+    "Lille OSC": ["LOSC Lille"],
+    "Racing Club de Lens": ["RC Lens"],
+    # Liga
+    "Deportivo Alavés": ["D. Alavés"],
+    "RC Celta de Vigo": ["RC Celta"],
+    "Rayo Vallecano de Madrid": ["Rayo Vallecano"],
+    # MLS : clubs mexicains en Concacaf qu'on ne couvre PAS dans players.json (a ignorer silencieusement)
+    # "CF Tigres de la Universidad Autónoma de Nuevo León", "Deportivo Toluca FC"
 }
 
 def _norm_club(name):

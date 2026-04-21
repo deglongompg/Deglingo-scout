@@ -622,18 +622,10 @@ export default function StellarTab({ players, teams, fixtures, logos = {}, match
   const todayStr = getParisTodayStr(); // "2026-04-03"
   const today = new Date(todayStr + "T12:00:00"); // objet Date safe pour getWednesday
   const [weekOffset, setWeekOffset] = useState(0);
-  // Multi-selection : array d'indices de jours (max 4), triee
-  const [selectedDays, setSelectedDays] = useState(() => {
-    const d = new Date(getParisTodayStr() + "T12:00:00");
-    const day = d.getDay(); // 0=dim, 3=mer
-    // Mer=0, Jeu=1, Ven=2, Sam=3, Dim=4, Lun=5, Mar=6
-    const idx = day >= 3 ? day - 3 : day + 4;
-    return [idx];
-  });
+  // Multi-selection : array de date strings "YYYY-MM-DD" (max 4), permet selection cross-semaines
+  const [selectedDays, setSelectedDays] = useState(() => [getParisTodayStr()]);
   // Helper : key stable pour useMemo deps
   const selectedDaysKey = selectedDays.join(",");
-  // Premier jour selectionne (pour titre, sauvegarde, etc.)
-  const selectedDay = selectedDays.length > 0 ? Math.min(...selectedDays) : null;
   const [expandedFixture, setExpandedFixture] = useState(null); // { key, side: "home"|"away" }
   const [selectedMatchFilters, setSelectedMatchFilters] = useState([]); // [{ home, away }, ...] — filtre joueurs par matchs
   const [leftCollapsed, setLeftCollapsed] = useState(false);
@@ -943,8 +935,9 @@ export default function StellarTab({ players, teams, fixtures, logos = {}, match
 
   const saveCurrentTeam = (picks, editions, score) => {
     // Cle = 1er jour avec match parmi les jours selectionnes
-    const firstMatchDay = selectedDays.find(i => (fixturesByDate[isoDate(weekDays[i])] || []).length > 0);
-    const dateStr = firstMatchDay != null ? isoDate(weekDays[firstMatchDay]) : isoDate(weekDays[[...selectedDays][0]] || new Date());
+    const sortedDays = [...selectedDays].sort();
+    const firstMatchDate = sortedDays.find(d => (fixturesByDate[d] || []).length > 0);
+    const dateStr = firstMatchDate || sortedDays[0] || isoDate(new Date());
     const key = savedTeamsKey(dateStr);
     const existing = (() => { try { return JSON.parse(localStorage.getItem(key) || "[]"); } catch { return []; } })();
     if (existing.length >= 4) return;
@@ -973,8 +966,9 @@ export default function StellarTab({ players, teams, fixtures, logos = {}, match
   };
 
   const deleteSavedTeam = (id) => {
-    const firstMatchDay = selectedDays.find(i => (fixturesByDate[isoDate(weekDays[i])] || []).length > 0);
-    const dateStr = firstMatchDay != null ? isoDate(weekDays[firstMatchDay]) : isoDate(new Date());
+    const sortedDays = [...selectedDays].sort();
+    const firstMatchDate = sortedDays.find(d => (fixturesByDate[d] || []).length > 0);
+    const dateStr = firstMatchDate || sortedDays[0] || isoDate(new Date());
     const key = savedTeamsKey(dateStr);
     const updated = savedTeams.filter(t => t.id !== id).map((t, i) => ({ ...t, label: `Équipe ${i + 1}` }));
     localStorage.setItem(key, JSON.stringify(updated));
@@ -1072,9 +1066,10 @@ export default function StellarTab({ players, teams, fixtures, logos = {}, match
   // Recharge les équipes sauvegardées quand la selection change + charge Équipe 1 par défaut
   useEffect(() => {
     if (selectedDays.length === 0) return;
-    const firstMatchDay = selectedDays.find(i => (fixturesByDate[isoDate(weekDays[i])] || []).length > 0);
-    if (firstMatchDay == null) return;
-    const dateStr = isoDate(weekDays[firstMatchDay]);
+    const sortedDays = [...selectedDays].sort();
+    const firstMatchDate = sortedDays.find(d => (fixturesByDate[d] || []).length > 0);
+    if (!firstMatchDate) return;
+    const dateStr = firstMatchDate;
     let teams = [];
     try { teams = JSON.parse(localStorage.getItem(savedTeamsKey(dateStr)) || "[]"); } catch { teams = []; }
     const applyTeams = (list) => {
@@ -1104,12 +1099,12 @@ export default function StellarTab({ players, teams, fixtures, logos = {}, match
         }
       });
     }
-  }, [selectedDaysKey, weekDays, fixturesByDate, sorareConnected]);
+  }, [selectedDaysKey, fixturesByDate, sorareConnected]);
 
-  // Scored players for selected days (multi-day merge)
+  // Scored players for selected days (multi-day merge — works across weeks)
   const dayData = useMemo(() => {
     if (selectedDays.length === 0) return null;
-    const selectedIndices = selectedDays;
+    const selectedDates = [...selectedDays].sort();
 
     const allFixtures = [];
     const allPlayers = [];
@@ -1117,13 +1112,11 @@ export default function StellarTab({ players, teams, fixtures, logos = {}, match
     const pf = fixtures?.player_fixtures || {};
     const NO_STELLAR_CLUBS = ["FC Metz"];
 
-    for (const dayIdx of selectedIndices) {
-      const day = weekDays[dayIdx];
-      if (!day) continue;
-      const dateStr = isoDate(day);
+    for (const dateStr of selectedDates) {
+      if (!dateStr) continue;
 
       // Freeze check (single day only)
-      if (selectedIndices.length === 1 && dailyLockKey && dateStr === dailyLockKey && frozenDayData) {
+      if (selectedDates.length === 1 && dailyLockKey && dateStr === dailyLockKey && frozenDayData) {
         return { ...frozenDayData, frozen: true };
       }
 
@@ -1199,7 +1192,7 @@ export default function StellarTab({ players, teams, fixtures, logos = {}, match
     const decisiveTop3 = decisiveAll.slice(0, 3);
 
     return { fixtures: allFixtures, players: allPlayers, teams: [], decisivePick, decisiveTop3, frozen: false };
-  }, [selectedDaysKey, weekDays, fixturesByDate, players, teams, fixtures, dailyLockKey, frozenDayData]);
+  }, [selectedDaysKey, fixturesByDate, players, teams, fixtures, dailyLockKey, frozenDayData]);
 
   // Pool "mes cartes" — 4 ligues, sans filtre titu%, double matching (player_fixtures + club)
   const myCardsDayPlayers = useMemo(() => {
@@ -1209,8 +1202,8 @@ export default function StellarTab({ players, teams, fixtures, logos = {}, match
 
     // Club → fixture pour tous les jours selectionnes
     const clubFxMap = {};
-    for (const dayIdx of selectedDays) {
-      const dateStr = isoDate(weekDays[dayIdx]);
+    const selectedDateStrs = new Set(selectedDays);
+    for (const dateStr of selectedDays) {
       const dayFixtures = fixturesByDate[dateStr] || [];
       for (const f of dayFixtures) {
         if (f.home && !clubFxMap[f.home]) clubFxMap[f.home] = { opp: f.away, isHome: true, kickoff: f.kickoff || f.time || "", date: dateStr };
@@ -1227,7 +1220,6 @@ export default function StellarTab({ players, teams, fixtures, logos = {}, match
       if (!ALL_LEAGUES.includes(p.league)) continue;
 
       // 1) player_fixtures (check si date dans un des jours selectionnes)
-      const selectedDateStrs = new Set([...selectedDays].map(di => isoDate(weekDays[di])));
       const fx = pf[p.slug] || pf[p.name];
       let oppName, isHome, kickoff, matchDate;
       if (fx && selectedDateStrs.has(fx.date)) {
@@ -1260,17 +1252,15 @@ export default function StellarTab({ players, teams, fixtures, logos = {}, match
       .sort((a, b) => (RARITY_ORDER[b.rarity]||0) - (RARITY_ORDER[a.rarity]||0));
 
     return { playing, notPlaying };
-  }, [sorareCards, selectedDaysKey, weekDays, players, fixtures, teams, fixturesByDate]);
+  }, [sorareCards, selectedDaysKey, players, fixtures, teams, fixturesByDate]);
 
   // ── Sauvegarder dans localStorage quand le freeze est actif et pas encore figé ──
   useEffect(() => {
     if (!stellarFreezeKey || frozenDayData) return; // déjà figé ou pas encore l'heure
     if (!dayData || dayData.frozen) return;
     if (selectedDays.length === 0) return;
-    const firstIdx = Math.min(...selectedDays);
-    const day = weekDays[firstIdx];
-    if (!day) return;
-    const dateStr = isoDate(day);
+    const dateStr = [...selectedDays].sort()[0];
+    if (!dateStr) return;
     if (dateStr !== dailyLockKey) return;
     if (!dayData.players?.length) return;
     saveFrozen(stellarFreezeKey, {
@@ -1279,14 +1269,14 @@ export default function StellarTab({ players, teams, fixtures, logos = {}, match
       teams: dayData.teams || [],
       decisivePick: dayData.decisivePick,
     });
-  }, [stellarFreezeKey, frozenDayData, dayData, selectedDaysKey, weekDays, dailyLockKey]);
+  }, [stellarFreezeKey, frozenDayData, dayData, selectedDaysKey, dailyLockKey]);
 
   // Auto-select first day with matches (si aucun jour selectionne)
   useEffect(() => {
     if (selectedDays.length > 0) return;
     for (let i = 0; i < 7; i++) {
       const dateStr = isoDate(weekDays[i]);
-      if (fixturesByDate[dateStr]?.length) { setSelectedDays([i]); return; }
+      if (fixturesByDate[dateStr]?.length) { setSelectedDays([dateStr]); return; }
     }
   }, [weekDays, fixturesByDate]);
 
@@ -1397,31 +1387,31 @@ export default function StellarTab({ players, teams, fixtures, logos = {}, match
 
       {/* ═══ CALENDRIER + bouton semaine suivante ═══ */}
       <div className="st-calendar-wrap" style={{ display: "grid", gridTemplateColumns: "auto repeat(7, 1fr) auto", gap: 4, marginBottom: 14, alignItems: "stretch" }}>
-        {/* Bouton semaine précédente */}
-        <button onClick={() => { setWeekOffset(w => w - 1); setSelectedDays([]); }}
+        {/* Bouton semaine précédente (ne touche pas selectedDays pour preserver selection cross-semaines) */}
+        <button onClick={() => setWeekOffset(w => w - 1)}
           style={{ background: "rgba(255,255,255,0.06)", border: "1px solid rgba(255,255,255,0.12)", borderRadius: 10, color: "#C4B5FD", cursor: "pointer", fontSize: 13, fontWeight: 700, fontFamily: "Outfit", display: "flex", alignItems: "center", justifyContent: "center", padding: "0 10px" }}>◀</button>
         {weekDays.map((day, i) => {
           const dateStr = isoDate(day);
           const dayFixtures = fixturesByDate[dateStr] || [];
           const hasMatches = dayFixtures.length > 0;
-          const isSelected = selectedDays.includes(i);
+          const isSelected = selectedDays.includes(dateStr);
           const isToday = dateStr === isoDate(today);
 
           return (
-            <div key={i} className="st-cal-day"
+            <div key={dateStr} className="st-cal-day"
               onClick={() => {
                 if (!hasMatches) return;
-                // Clic simple = ajoute ce jour (max 4), ctrl = retire
+                // Clic simple = ajoute ce jour (max 4), re-clic = retire
                 setSelectedDays(prev => {
-                  if (prev.includes(i)) return prev.filter(x => x !== i);
+                  if (prev.includes(dateStr)) return prev.filter(x => x !== dateStr);
                   if (prev.length >= 4) return prev;
-                  return [...prev, i].sort((a, b) => a - b);
+                  return [...prev, dateStr].sort();
                 });
               }}
               onDoubleClick={() => {
                 if (!hasMatches) return;
                 // Double clic = selectionne ce jour UNIQUEMENT
-                setSelectedDays([i]);
+                setSelectedDays([dateStr]);
               }}
               style={{
                 background: isSelected ? "rgba(120,60,240,0.40)" : hasMatches ? "rgba(15,8,40,0.70)" : "rgba(8,4,25,0.55)",
@@ -1454,12 +1444,12 @@ export default function StellarTab({ players, teams, fixtures, logos = {}, match
             </div>
           );
         })}
-        {/* Bouton semaine suivante */}
-        <button onClick={() => { setWeekOffset(w => w + 1); setSelectedDays([]); }}
+        {/* Bouton semaine suivante (ne touche pas selectedDays pour preserver selection cross-semaines) */}
+        <button onClick={() => setWeekOffset(w => w + 1)}
           style={{ background: "rgba(255,255,255,0.06)", border: "1px solid rgba(255,255,255,0.12)", borderRadius: 10, color: "#C4B5FD", cursor: "pointer", fontSize: 13, fontWeight: 700, fontFamily: "Outfit", display: "flex", alignItems: "center", justifyContent: "center", padding: "0 10px" }}>▶</button>
       </div>
       <div style={{ textAlign: "center", fontSize: 8, color: "rgba(255,255,255,0.2)", marginTop: -8, marginBottom: 10 }}>
-        {lang === "fr" ? "Clic = ajouter un jour · Double-clic = jour unique · Max 4 jours · Clic sur un match = filtrer" : "Click = add day · Double-click = single day · Max 4 days · Click a match = filter"}
+        {lang === "fr" ? "Clic = ajouter un jour (meme d'une autre semaine) · Double-clic = jour unique · Max 4 jours · Clic sur un match = filtrer" : "Click = add day (even across weeks) · Double-click = single day · Max 4 days · Click a match = filter"}
       </div>
 
       {/* ═══ SELECTED DAY CONTENT ═══ */}
@@ -1474,7 +1464,7 @@ export default function StellarTab({ players, teams, fixtures, logos = {}, match
             {/* Titre du jour */}
             <div style={{ marginBottom: 8 }}>
               <h2 style={{ fontSize: 16, fontWeight: 800, color: "#fff", margin: 0, display: "flex", alignItems: "center", gap: 8, flexWrap: "wrap" }}>
-                {!leftCollapsed && <span style={{ color: "#C4B5FD" }}>{selectedDays.map(i => weekDays[i]?.toLocaleDateString(S.stellarDateLocale, { timeZone: TZ, weekday: "short", day: "numeric", month: "short" })).join(" · ").toUpperCase()}</span>}
+                {!leftCollapsed && <span style={{ color: "#C4B5FD" }}>{[...selectedDays].sort().map(dateStr => new Date(dateStr + "T12:00:00").toLocaleDateString(S.stellarDateLocale, { timeZone: TZ, weekday: "short", day: "numeric", month: "short" })).join(" · ").toUpperCase()}</span>}
 {/* Badge freeze supprime — plus de picks auto dans Stellar */}
                 {/* Bouton collapse colonne gauche */}
                 <button onClick={() => setLeftCollapsed(v => !v)}

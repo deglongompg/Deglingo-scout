@@ -2,6 +2,34 @@
 
 ---
 
+## 🔥 2026-04-22 nuit — FETCH TITU% FAST **VALIDE** (5h de chasse)
+
+Apres une chasse epique au schema GraphQL Sorare, **`fetch_titu_fast.py` marche** :
+- Field correct : `game.playerGameScores` → liste de `PlayerGameScore`
+- Chaque item expose `anyPlayerGameStats.footballPlayingStatusOdds.starterOddsBasisPoints`
+- Test sur PSG-Nantes : **55 joueurs avec titu% precis**, valeurs identiques a l'UI Sorare
+  (Doue 40%, Dembele 70%, Kvara 70%, Barcola 60%, etc.)
+- Marche pour **mid-week ET weekend** (le but initial)
+
+**🧠 Voir `MEMOIRE.md`** pour la doc complete du schema GraphQL — NE PAS re-chercher
+ce chemin une 2eme fois, c'est documente pour de bon.
+
+### Trajectoire des tentatives (chemins morts)
+
+- `Game.anyPlayerGameStats` → `Did you mean anyPlayers` ❌
+- `Game.playerGameStats` → `Did you mean playerGameScores` ✅ (c'etait la piste)
+- `Game.anyPlayers` → renvoie juste `[Player]`, pas les odds ⚠️
+- `Player.footballPlayingStatusOdds` → n'existe pas ❌
+- Introspection `__type` → disabled cote Sorare ❌
+- Scraping `__NEXT_DATA__` frontend → pas les odds dedans ❌
+- ID format `Game:<uuid>` dans query → fails, il faut UUID nu ✅
+
+**La cle** : le type parent `PlayerGameScore` porte `anyPlayer` + `anyPlayerGameStats`
+(join type). Les interfaces `AnyPlayerInterface` + `AnyPlayerGameStatsInterface`
+requierent des fragments `... on Player` / `... on PlayerGameStats`.
+
+---
+
 ## 🚀 MISE À JOUR 2026-04-22 soir — Titu% FAST via API Sorare officielle
 
 **Contexte** : on a capture via DevTools (page `/football/scores/matches/{uuid}/lineups`)

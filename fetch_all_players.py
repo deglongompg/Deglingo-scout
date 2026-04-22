@@ -1,18 +1,20 @@
 #!/usr/bin/env python3
 """
 Deglingo Scout — Fetch ALL players for a league from Sorare API.
-Clean version V2: 2 queries/player, anti-ban, proper backoff.
+Clean version V3 (2026-04-22) : batch GraphQL + ThreadPool parallel (~15x plus rapide)
 
 Usage:
   python3 fetch_all_players.py PL          # Premier League
   python3 fetch_all_players.py Liga        # La Liga
   python3 fetch_all_players.py Bundes      # Bundesliga
   python3 fetch_all_players.py L1          # Ligue 1
-  python3 fetch_all_players.py ALL         # All 5 leagues (L1+PL+Liga+Bundes+MLS)
-  python3 fetch_all_players.py PL --fresh  # Delete existing & start from scratch
+  python3 fetch_all_players.py ALL         # 5 ligues
+  python3 fetch_all_players.py PL --fresh  # Redemarre de zero
+  python3 fetch_all_players.py ALL --legacy  # Mode ancien (1 player / query) si batch plante
 """
 
 import requests, json, time, math, sys, os
+from concurrent.futures import ThreadPoolExecutor, as_completed
 from datetime import datetime
 from dotenv import load_dotenv
 
@@ -26,17 +28,24 @@ HEADERS = {
     "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36",
     "Accept": "application/json",
 }
+LEGACY = "--legacy" in sys.argv
+
 if API_KEY:
     HEADERS["APIKEY"] = API_KEY
-    print(f"🔑 API Key détectée — mode rapide activé")
-    SLEEP = 0.109        # ~550 req/min (safe sous 600 limit)
-    CLUB_SLEEP = 1       # Minimal pause between clubs
+    print("🔑 API Key détectée — mode TURBO activé (batch + parallele)")
+    SLEEP      = 0.05 if not LEGACY else 0.109
+    CLUB_SLEEP = 0.5 if not LEGACY else 1
+    BATCH_SIZE = 20      # Batch 20 players/query (complexity ~20k, safe sous 30k)
+    WORKERS    = 4       # 4 requetes en parallele (rate limit 600 req/min = OK)
 else:
-    print(f"⚠️  Pas de clé API — mode lent (24 req/min)")
-    SLEEP = 2.5          # Between each query (safe for ~24 req/min)
-    CLUB_SLEEP = 5       # Between clubs (extra breathing room)
-BAN_PAUSE = 120      # Pause if 403 detected (IP ban)
-SAVE_EVERY = 5       # Save every N players
+    print("⚠️  Pas de clé API — mode lent (24 req/min, pas de batch possible)")
+    SLEEP      = 2.5
+    CLUB_SLEEP = 5
+    BATCH_SIZE = 1       # Impossible sans key (complexity 500)
+    WORKERS    = 1
+
+BAN_PAUSE  = 120
+SAVE_EVERY = 50  # Save tous les N joueurs nouveaux (en batch mode on gere autrement)
 
 LEAGUE_SLUGS = {
     "L1":     "ligue-1-fr",
@@ -170,8 +179,9 @@ def fetch_club_players(club_slug):
     return all_nodes
 
 
-# ─── STEP 3+4: FETCH PLAYER (2 queries au lieu de 3) ────────
-Q_MAIN = """query P($slug: String!) { football { player(slug: $slug) {
+# ─── FRAGMENT unique (fusion Q_MAIN + Q_DETAIL en 1 seule requete par joueur)
+# Batch aliases p0..pN pour fetcher 20 joueurs par requete.
+PLAYER_FRAGMENT = """{
     displayName position age
     country { code }
     activeClub { name }
@@ -183,17 +193,28 @@ Q_MAIN = """query P($slug: String!) { football { player(slug: $slug) {
     so5Scores(last: 40) {
         score
         allAroundStats { category totalScore }
+        detailedScore { category stat statValue totalScore }
         game { date competition { slug } homeTeam { name } awayTeam { name } homeGoals awayGoals }
     }
-}}}"""
+}"""
 
-Q_DETAIL = """query P($slug: String!) { football { player(slug: $slug) {
-    so5Scores(last: 40) {
-        score
-        detailedScore { category stat statValue totalScore }
-        game { competition { slug } }
-    }
-}}}"""
+
+def build_batch_query(slugs):
+    """Construit une query avec alias p0, p1, ... pour N joueurs. Complexity ~1000/joueur."""
+    parts = [f'p{i}: player(slug: {json.dumps(s)}) {PLAYER_FRAGMENT}' for i, s in enumerate(slugs)]
+    return "query {\n  football {\n" + "\n".join(parts) + "\n  }\n}"
+
+
+def fetch_batch_players(slugs):
+    """Fetch N joueurs en 1 requete batch. Retourne {slug: player_data_raw}."""
+    if not slugs:
+        return {}
+    q = build_batch_query(slugs)
+    data = gql(q, label=f"batch-{len(slugs)}")
+    if not data or "errors" in data:
+        return {}
+    football = (data.get("data") or {}).get("football") or {}
+    return {slug: football.get(f"p{i}") for i, slug in enumerate(slugs)}
 
 # Championnats uniquement — Streak Ligue only (pas de CL, coupes, sélections)
 VALID_COMPS = {
@@ -202,57 +223,32 @@ VALID_COMPS = {
 }
 
 
-def fetch_player(slug, club_name, league):
-    """Fetch full player data in 2 queries (main + detailedScore)."""
-
-    # Query 1: Main data (scores + allAroundStats + season stats)
-    raw = gql(Q_MAIN, {"slug": slug}, label=f"main:{slug}")
-    time.sleep(SLEEP)
-
-    try:
-        player = raw["data"]["football"]["player"]
-    except:
-        return None
+def compute_player_kpis(player, slug, club_name, league):
+    """Calcule les KPIs d'un joueur depuis les donnees raw (fusion main + detail).
+    Retourne None si player invalide ou aucun match valide.
+    """
     if not player:
         return None
 
     # Filtrer : score > 0 ET compétition club (pas sélections/friendlies)
     all_scores = player.get("so5Scores", [])
     played = []
-    # Timeline: garde les 5 derniers matchs club AVEC DNP (score=0) pour sparkline
     timeline_5 = []
     for s in all_scores:
         comp_slug = (s.get("game") or {}).get("competition", {}).get("slug", "")
         if comp_slug and comp_slug not in VALID_COMPS:
-            continue  # Skip friendlies, sélections nationales, etc.
-        # Timeline: inclut DNP (score 0) pour les 5 plus récents
+            continue
         if len(timeline_5) < 5:
             timeline_5.append(s.get("score", 0))
         if s.get("score", 0) <= 0:
             continue
         played.append(s)
-    played = played[:25]  # On garde max 25 matchs club (élargi pour clubs en coupe d'Europe)
+    played = played[:25]
 
-    # Query 2: DetailedScore — SKIP si 0 matchs (économise 1 query = moins de ban)
-    det_data = None
-    if len(played) >= 1:
-        raw_det = gql(Q_DETAIL, {"slug": slug}, label=f"detail:{slug}")
-        time.sleep(SLEEP)
-        # Filtrer detailedScore aussi (même filtre compétition)
-        if raw_det and "data" in raw_det:
-            det_scores = raw_det["data"]["football"]["player"]["so5Scores"]
-            det_filtered = []
-            for ds in det_scores:
-                if ds.get("score", 0) <= 0:
-                    continue
-                comp_slug = (ds.get("game") or {}).get("competition", {}).get("slug", "")
-                if comp_slug and comp_slug not in VALID_COMPS:
-                    continue
-                det_filtered.append(ds)
-            det_filtered = det_filtered[:15]
-            det_data = {"data": {"football": {"player": {"so5Scores": det_filtered}}}}
-        else:
-            det_data = raw_det
+    # detailedScore est dans le meme so5Scores maintenant — on reutilise played pour le profile
+    # (filtre VALID_COMPS deja applique, on prend les 15 premiers pour AA profile)
+    det_filtered = played[:15]
+    det_data = {"data": {"football": {"player": {"so5Scores": det_filtered}}}} if det_filtered else None
 
     # ─── COMPUTE KPIs ────────────────────────────────────────
     stats = player.get("stats") or {}
@@ -534,58 +530,79 @@ def scrape_league(league_code, fresh=False):
     total_skipped = 0
     total_players = 0
 
+    # 1) Collecte la liste complete des (slug, club_name) a fetch (sans skippes)
+    to_fetch = []  # list of (slug, display_name, club_name)
     for ci, club in enumerate(clubs):
         club_name = club["name"]
         club_slug = club["slug"]
-        elapsed = time.time() - t0
-        eta = ""
-        if total_players > 0:
-            rate = elapsed / total_players  # seconds per player
-            remaining_clubs = len(clubs) - ci
-            est_remaining = remaining_clubs * 25 * rate  # ~25 players/club estimate
-            eta = f" | ETA ~{int(est_remaining/60)}min"
-
-        print(f"\n🏟️  [{ci+1}/{len(clubs)}] {club_name}{eta}")
-
+        print(f"\n🏟️  [{ci+1}/{len(clubs)}] {club_name}")
         players = fetch_club_players(club_slug)
         time.sleep(CLUB_SLEEP)
         print(f"  👥 {len(players)} joueurs actifs")
-
-        for pi, p in enumerate(players):
+        for p in players:
             pslug = p["slug"]
-            pname = p["displayName"]
             total_players += 1
-            print(f"  [{pi+1}/{len(players)}] {pname}...", end=" ", flush=True)
-
-            # SKIP joueurs déjà en base (sauf --fresh)
-            if pslug in existing_slugs:
-                print(f"⏭️  déjà en base")
+            if pslug in existing_slugs and not fresh:
                 total_skipped += 1
                 continue
+            to_fetch.append((pslug, p["displayName"], club_name))
 
-            kpis = fetch_player(pslug, club_name, league_code)
-            if kpis is None:
-                print("skip (no data)")
-                total_skipped += 1
-                continue
+    print(f"\n📦 Total a fetch : {len(to_fetch)} joueurs ({total_skipped} deja en base)")
+    if not to_fetch:
+        print("  Rien a fetch, skip.")
+        return
 
-            # Add new player
-            if pslug in existing_slugs:
-                existing = [x for x in existing if x["slug"] != pslug]
-                existing.append(kpis)
-                print(f"🔄 L5={kpis['l5']:.0f} AA5={kpis['aa5']:.0f} | {kpis['archetype']}")
-                total_updated += 1
-            else:
-                existing.append(kpis)
-                existing_slugs.add(pslug)
-                print(f"🆕 L5={kpis['l5']:.0f} AA5={kpis['aa5']:.0f} | {kpis['archetype']}")
-                total_new += 1
+    # 2) Batch GraphQL + workers parallele
+    if LEGACY or BATCH_SIZE == 1:
+        print(f"  Mode legacy : 1 joueur par requete")
+        batches = [[s[0]] for s in to_fetch]
+    else:
+        print(f"  Mode TURBO : {BATCH_SIZE} joueurs / requete, {WORKERS} workers")
+        batches = [[s[0] for s in to_fetch[i:i+BATCH_SIZE]]
+                   for i in range(0, len(to_fetch), BATCH_SIZE)]
+    slug_to_meta = {s: (name, club) for s, name, club in to_fetch}
 
-            # Periodic save
-            if (total_new + total_updated) % SAVE_EVERY == 0:
-                with open(outfile, "w", encoding="utf-8") as f:
-                    json.dump(existing, f, ensure_ascii=False, indent=2)
-                print(f"    💾 Sauvegarde ({len(existing)} joueurs)")
+    print(f"  Batches a fetch : {len(batches)} (estimation ~{len(batches)*0.5/WORKERS:.0f}s avec {WORKERS} workers)")
+
+    t_fetch = time.time()
+
+    def process_batch(batch_slugs):
+        return batch_slugs, fetch_batch_players(batch_slugs)
+
+    all_raw = {}  # slug -> raw player data
+    done = 0
+    with ThreadPoolExecutor(max_workers=WORKERS) as ex:
+        futs = {}
+        for b in batches:
+            futs[ex.submit(process_batch, b)] = b
+            time.sleep(SLEEP)  # petit jitter pour lisser le burst
+        for fut in as_completed(futs):
+            batch_slugs, result = fut.result()
+            done += 1
+            all_raw.update(result)
+            if done % max(1, len(batches) // 10) == 0 or done == len(batches):
+                dt = time.time() - t_fetch
+                rate = (done * BATCH_SIZE) / max(0.1, dt)
+                print(f"  [batch {done:3}/{len(batches)}] {len(all_raw):4} recus · {dt:.1f}s · {rate:.0f} players/s")
+
+    print(f"  ⏱  Fetch termine en {time.time()-t_fetch:.1f}s")
+
+    # 3) Calcule les KPIs pour chaque joueur fetched
+    print(f"\n🧮 Calcul KPIs pour {len(all_raw)} joueurs...")
+    for pslug, player in all_raw.items():
+        name, club_name = slug_to_meta.get(pslug, ("?", "?"))
+        kpis = compute_player_kpis(player, pslug, club_name, league_code)
+        if kpis is None:
+            total_skipped += 1
+            continue
+        if pslug in existing_slugs:
+            existing = [x for x in existing if x["slug"] != pslug]
+            existing.append(kpis)
+            total_updated += 1
+        else:
+            existing.append(kpis)
+            existing_slugs.add(pslug)
+            total_new += 1
 
     # Final save
     with open(outfile, "w", encoding="utf-8") as f:
@@ -623,8 +640,9 @@ if __name__ == "__main__":
     if target == "ALL":
         for lg in ["L1", "PL", "Liga", "Bundes", "MLS"]:
             scrape_league(lg, fresh=fresh)
-            print(f"\n⏸️  Pause 30s avant la prochaine ligue...")
-            time.sleep(30)
+            pause = 5 if not LEGACY else 30
+            print(f"\n⏸️  Pause {pause}s avant la prochaine ligue...")
+            time.sleep(pause)
     elif target in LEAGUE_SLUGS:
         scrape_league(target, fresh=fresh)
     else:

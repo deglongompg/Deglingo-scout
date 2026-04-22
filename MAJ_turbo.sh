@@ -26,6 +26,17 @@ python3 fetch_player_status.py
 echo "[2/6] OK"
 echo
 
+# ---- [2bis/6] Titu% precis via Sorareinside (override les approximations enum) ----
+if grep -q "^SORAREINSIDE_PASSWORD=" .env 2>/dev/null; then
+  echo "[2bis/6] TITU% PRECIS via Sorareinside (~5-10s)..."
+  python3 fetch_sorareinside.py || echo "  ⚠️  Sorareinside fetch a echoue (continue avec enum approx)"
+  echo "[2bis/6] OK"
+  echo
+else
+  echo "[2bis/6] SKIP Sorareinside (ajoute SORAREINSIDE_PASSWORD=... dans .env pour vrais titu% mid-week)"
+  echo
+fi
+
 # ---- [3/6] Scores SO5 matchs joues (smart-skip) ----
 echo "[3/6] SCORES SO5 matchs joues (~30-60s)..."
 python3 fetch_gw_scores.py

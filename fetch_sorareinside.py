@@ -232,17 +232,25 @@ DEBUG_SLUGS = {"bradley-barcola", "mohamed-kaba", "desire-doue", "ousmane-dembel
 def parse_lineup_data(data, source):
     """Parse Sorareinside lineup data and map sorare_slug -> starter_pct.
 
-    Chaque joueur peut apparaitre dans plusieurs items (plusieurs lineup_id = plusieurs
-    variantes de prediction). Un item represente (player_id, position_in_lineup).
+    IMPORTANT : comprendre la structure Sorareinside :
+    - Un joueur apparait dans N items (on a vu jusqu'a 160 pour Zaire-Emery).
+    - Les items regroupent plusieurs lineup_id (scenarios de formation) et plusieurs
+      positions possibles pour ce joueur dans ces scenarios.
+    - Pour UN lineup_id donne, un joueur peut avoir 2 items : un comme starter
+      (conf=70) + un comme alternate (conf=30), somme = 100%.
+    - 'total_confidence_percentage' = somme de toutes les conf du joueur = proba qu'il
+      soit DANS LE GROUPE (starter OU alt OU bench). Pas un titu% !
+    - 'confidence_percentage' = proba qu'il soit a CETTE position specifique.
 
-    Strategie :
-    - Groupe tous les items par slug
-    - Pour chaque slug, cherche si le joueur est predit TITULAIRE :
-        starter = is_bench=False, is_alternate=False, is_dnp=False
-    - Titu% = max(confidence_percentage OR total_confidence_percentage) sur les items starter
-    - Si aucun item starter mais quelques items bench/alternate : % plus bas (25-40)
-    - Si tous les items sont is_dnp : 0%
-    - Si aucun confidence disponible : ignore (fallback Sorare API enum reste)
+    -> titu% = part du temps ou il est STARTER, par rapport au temps ou il est dans
+       le groupe (starter + alt + bench). Formule :
+
+        titu = sum(conf des items starter) / sum(conf de tous les items "en groupe") * 100
+
+    Cas particuliers :
+    - Tous items is_dnp : 0%
+    - Aucun starter mais des alt : 25-40% selon la conf
+    - Aucune conf disponible : skip (garde fallback Sorare enum)
     """
     slug_to_pct = {}
 
@@ -279,69 +287,69 @@ def parse_lineup_data(data, source):
 
     # Pour chaque slug, calcule le titu%
     counts = {"dnp": 0, "starter": 0, "bench_only": 0, "alt_only": 0, "no_conf": 0}
+    def conf_val(e):
+        c = e.get("confidence_percentage")
+        return c if c is not None else 0
+
     for slug, entries in slug_to_entries.items():
-        # DNP prioritaire
+        # DNP total : tous les items marques is_dnp
         if all(e.get("is_dnp") for e in entries):
             slug_to_pct[slug] = 0
             counts["dnp"] += 1
             continue
 
-        # Cherche items "pur starter" (ni bench ni alternate ni dnp)
-        starter_entries = [e for e in entries
-                          if not e.get("is_bench") and not e.get("is_alternate") and not e.get("is_dnp")]
+        # Separation des items hors DNP
+        starter = [e for e in entries
+                  if not e.get("is_bench") and not e.get("is_alternate") and not e.get("is_dnp")]
+        alt     = [e for e in entries if e.get("is_alternate") and not e.get("is_dnp")]
+        bench   = [e for e in entries if e.get("is_bench") and not e.get("is_dnp")]
 
-        def best_conf(entries_list):
-            """Retourne le meilleur % confidence parmi les entries (conf OR total_conf)."""
-            vals = []
-            for e in entries_list:
-                c = e.get("confidence_percentage")
-                t = e.get("total_confidence_percentage")
-                if c is not None: vals.append(c)
-                if t is not None: vals.append(t)
-            return max(vals) if vals else None
+        s_sum = sum(conf_val(e) for e in starter)
+        a_sum = sum(conf_val(e) for e in alt)
+        b_sum = sum(conf_val(e) for e in bench)
+        total_in_squad = s_sum + a_sum + b_sum
 
-        if starter_entries:
-            pct = best_conf(starter_entries)
-            if pct is not None:
-                slug_to_pct[slug] = min(int(pct), 95)
-                counts["starter"] += 1
-                continue
-
-        # Pas d'item starter OU pas de conf sur les items starter
-        # -> regarde les items bench/alternate
-        bench_alt = [e for e in entries if (e.get("is_bench") or e.get("is_alternate")) and not e.get("is_dnp")]
-        if bench_alt:
-            pct = best_conf(bench_alt)
-            # Alternate : plus haut potentiel starter que bench pur
-            has_alt = any(e.get("is_alternate") for e in bench_alt)
-            default = 35 if has_alt else 20
-            slug_to_pct[slug] = int(pct) if pct is not None else default
-            if has_alt:
-                counts["alt_only"] += 1
-            else:
-                counts["bench_only"] += 1
+        if total_in_squad == 0:
+            # Aucune conf : skip (fallback enum restera)
+            counts["no_conf"] += 1
             continue
 
-        # Aucune info exploitable
-        counts["no_conf"] += 1
+        # Titu% = part starter / total "en groupe"
+        titu_ratio = s_sum / total_in_squad
+        pct = round(titu_ratio * 100)
+
+        # Cap a 95 (aucun prediction n'est jamais 100% sure en foot)
+        pct = min(pct, 95)
+        slug_to_pct[slug] = pct
+
+        if starter:
+            counts["starter"] += 1
+        elif alt:
+            counts["alt_only"] += 1
+        elif bench:
+            counts["bench_only"] += 1
 
     print(f"  Breakdown : starters={counts['starter']} alt_only={counts['alt_only']} "
           f"bench_only={counts['bench_only']} dnp={counts['dnp']} no_conf={counts['no_conf']}")
     print(f"  Mapped {len(slug_to_pct)} joueurs (sur {len(slug_to_entries)} slugs uniques)")
 
-    # Debug cible sur quelques joueurs connus
+    # Debug cible sur quelques joueurs connus — montre detail entries + titu final
     for slug in DEBUG_SLUGS:
         entries = slug_to_entries.get(slug)
         if entries:
-            print(f"\n  🔎 DEBUG {slug}: {len(entries)} items")
-            for e in entries[:4]:
-                print(f"     bench={e.get('is_bench')} alt={e.get('is_alternate')} dnp={e.get('is_dnp')} "
-                      f"conf={e.get('confidence_percentage')} total_conf={e.get('total_confidence_percentage')} "
-                      f"pos_idx={e.get('lineup_position_index')}")
+            n_starter = sum(1 for e in entries if not e.get("is_bench") and not e.get("is_alternate") and not e.get("is_dnp"))
+            n_alt     = sum(1 for e in entries if e.get("is_alternate"))
+            n_bench   = sum(1 for e in entries if e.get("is_bench"))
+            n_dnp     = sum(1 for e in entries if e.get("is_dnp"))
+            s_sum_dbg = sum(conf_val(e) for e in entries if not e.get("is_bench") and not e.get("is_alternate") and not e.get("is_dnp"))
+            a_sum_dbg = sum(conf_val(e) for e in entries if e.get("is_alternate") and not e.get("is_dnp"))
+            b_sum_dbg = sum(conf_val(e) for e in entries if e.get("is_bench") and not e.get("is_dnp"))
+            print(f"\n  🔎 DEBUG {slug}: {len(entries)} items (starter={n_starter} alt={n_alt} bench={n_bench} dnp={n_dnp})")
+            print(f"     Somme conf : starter={s_sum_dbg} alt={a_sum_dbg} bench={b_sum_dbg}")
             if slug in slug_to_pct:
                 print(f"     -> titu%={slug_to_pct[slug]}%")
             else:
-                print(f"     -> NOT mapped")
+                print(f"     -> NOT mapped (no_conf)")
 
     if slug_to_pct:
         print(f"\n  Echantillon (5 premiers) :")

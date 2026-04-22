@@ -290,14 +290,17 @@ def fetch_recent_finished(comp_code, our_league, days_back=8):
     if not matches:
         print(f"  ⚠️ Aucun match terminé dans les {days_back} derniers jours")
         return []
-    # Garder seulement la/les dernières journées (matchday max = GW terminée)
+    # Garder TOUS les matchs finis dans la fenetre (y compris rattrapages d'anciennes journees).
+    # Why: un match comme PSG-Nantes joue le 22/04 est matchday 26 (retard), pas 30.
+    # Filtrer par matchday max jetait ces matchs et les faisait disparaitre du calendrier Stellar.
     from collections import Counter
     md_counts = Counter(m["matchday"] for m in matches if m["matchday"])
-    if not md_counts:
-        return []
-    last_md = max(md_counts.keys())
-    md_matches = [m for m in matches if m["matchday"] == last_md]
-    print(f"  ✅ Journée {last_md} terminée — {len(md_matches)} matchs")
+    md_matches = matches
+    if md_counts:
+        mds_str = ", ".join(f"J{md}:{md_counts[md]}" for md in sorted(md_counts.keys()))
+        print(f"  ✅ {len(md_matches)} matchs termines ({mds_str})")
+    else:
+        print(f"  ✅ {len(md_matches)} matchs termines")
     fixtures = []
     for m in md_matches:
         home = normalize_team(m["homeTeam"]["name"])
@@ -306,7 +309,7 @@ def fetch_recent_finished(comp_code, our_league, days_back=8):
         kickoff = m["utcDate"][11:16] if m.get("utcDate") and len(m["utcDate"]) >= 16 else ""
         fixtures.append({
             "home": home, "away": away, "date": date, "kickoff": kickoff,
-            "matchday": last_md, "league": our_league,
+            "matchday": m.get("matchday", ""), "league": our_league,
             "home_api": m["homeTeam"]["name"], "away_api": m["awayTeam"]["name"],
             "finished": True,
         })

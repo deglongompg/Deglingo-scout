@@ -1,5 +1,5 @@
 {
-  "generated": "2026-04-23T06:56:09.298180",
+  "generated": "2026-04-23T07:09:42.512586",
   "matchdays": {
     "L1": 29,
     "PL": 36,
@@ -401,6 +401,17 @@
       "finished": true
     },
     {
+      "home": "Paris Saint Germain",
+      "away": "Nantes",
+      "date": "2026-04-22",
+      "kickoff": "17:00",
+      "matchday": 26,
+      "league": "L1",
+      "home_api": "Paris Saint-Germain FC",
+      "away_api": "FC Nantes",
+      "finished": true
+    },
+    {
       "home": "Sunderland",
       "away": "Nottingham Forest",
       "date": "2026-04-24",
@@ -669,6 +680,116 @@
       "league": "PL",
       "home_api": "Tottenham Hotspur FC",
       "away_api": "Leeds United FC"
+    },
+    {
+      "home": "Brentford",
+      "away": "Fulham",
+      "date": "2026-04-18",
+      "kickoff": "11:30",
+      "matchday": 33,
+      "league": "PL",
+      "home_api": "Brentford FC",
+      "away_api": "Fulham FC",
+      "finished": true
+    },
+    {
+      "home": "Newcastle United",
+      "away": "Bournemouth",
+      "date": "2026-04-18",
+      "kickoff": "14:00",
+      "matchday": 33,
+      "league": "PL",
+      "home_api": "Newcastle United FC",
+      "away_api": "AFC Bournemouth",
+      "finished": true
+    },
+    {
+      "home": "Leeds",
+      "away": "Wolverhampton Wanderers",
+      "date": "2026-04-18",
+      "kickoff": "14:00",
+      "matchday": 33,
+      "league": "PL",
+      "home_api": "Leeds United FC",
+      "away_api": "Wolverhampton Wanderers FC",
+      "finished": true
+    },
+    {
+      "home": "Tottenham",
+      "away": "Brighton",
+      "date": "2026-04-18",
+      "kickoff": "16:30",
+      "matchday": 33,
+      "league": "PL",
+      "home_api": "Tottenham Hotspur FC",
+      "away_api": "Brighton & Hove Albion FC",
+      "finished": true
+    },
+    {
+      "home": "Chelsea",
+      "away": "Manchester United",
+      "date": "2026-04-18",
+      "kickoff": "19:00",
+      "matchday": 33,
+      "league": "PL",
+      "home_api": "Chelsea FC",
+      "away_api": "Manchester United FC",
+      "finished": true
+    },
+    {
+      "home": "Nottingham Forest",
+      "away": "Burnley",
+      "date": "2026-04-19",
+      "kickoff": "13:00",
+      "matchday": 33,
+      "league": "PL",
+      "home_api": "Nottingham Forest FC",
+      "away_api": "Burnley FC",
+      "finished": true
+    },
+    {
+      "home": "Aston Villa",
+      "away": "Sunderland",
+      "date": "2026-04-19",
+      "kickoff": "13:00",
+      "matchday": 33,
+      "league": "PL",
+      "home_api": "Aston Villa FC",
+      "away_api": "Sunderland AFC",
+      "finished": true
+    },
+    {
+      "home": "Everton",
+      "away": "Liverpool",
+      "date": "2026-04-19",
+      "kickoff": "13:00",
+      "matchday": 33,
+      "league": "PL",
+      "home_api": "Everton FC",
+      "away_api": "Liverpool FC",
+      "finished": true
+    },
+    {
+      "home": "Manchester City",
+      "away": "Arsenal",
+      "date": "2026-04-19",
+      "kickoff": "15:30",
+      "matchday": 33,
+      "league": "PL",
+      "home_api": "Manchester City FC",
+      "away_api": "Arsenal FC",
+      "finished": true
+    },
+    {
+      "home": "Crystal Palace",
+      "away": "West Ham",
+      "date": "2026-04-20",
+      "kickoff": "19:00",
+      "matchday": 33,
+      "league": "PL",
+      "home_api": "Crystal Palace FC",
+      "away_api": "West Ham United FC",
+      "finished": true
     },
     {
       "home": "Brighton",
@@ -1550,48 +1671,48 @@
       "finished": true
     },
     {
-      "home": "Unknown",
-      "away": "Unknown",
+      "home": "Paris Saint Germain",
+      "away": "Bayern Munich",
       "date": "2026-04-28",
       "kickoff": "19:00",
       "matchday": "SEMI_FINALS",
       "league": "UCL",
       "competition": "UCL",
-      "home_api": null,
-      "away_api": null
+      "home_api": "Paris Saint-Germain FC",
+      "away_api": "FC Bayern München"
     },
     {
-      "home": "Unknown",
-      "away": "Unknown",
+      "home": "Atletico Madrid",
+      "away": "Arsenal",
       "date": "2026-04-29",
       "kickoff": "19:00",
       "matchday": "SEMI_FINALS",
       "league": "UCL",
       "competition": "UCL",
-      "home_api": null,
-      "away_api": null
+      "home_api": "Club Atlético de Madrid",
+      "away_api": "Arsenal FC"
     },
     {
-      "home": "Unknown",
-      "away": "Unknown",
+      "home": "Arsenal",
+      "away": "Atletico Madrid",
       "date": "2026-05-05",
       "kickoff": "19:00",
       "matchday": "SEMI_FINALS",
       "league": "UCL",
       "competition": "UCL",
-      "home_api": null,
-      "away_api": null
+      "home_api": "Arsenal FC",
+      "away_api": "Club Atlético de Madrid"
     },
     {
-      "home": "Unknown",
-      "away": "Unknown",
+      "home": "Bayern Munich",
+      "away": "Paris Saint Germain",
       "date": "2026-05-06",
       "kickoff": "19:00",
       "matchday": "SEMI_FINALS",
       "league": "UCL",
       "competition": "UCL",
-      "home_api": null,
-      "away_api": null
+      "home_api": "FC Bayern München",
+      "away_api": "Paris Saint-Germain FC"
     },
     {
       "home": "Sporting",

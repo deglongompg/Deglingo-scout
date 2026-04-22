@@ -198,4 +198,65 @@ Avec : complexity 30000 → batch 150 players OK.
 
 ---
 
-**TL;DR** : `game.playerGameScores → PlayerGameScore.anyPlayerGameStats → PlayerGameStats.footballPlayingStatusOdds.starterOddsBasisPoints`. UUID brut. Fragments sur interfaces.
+## 🔁 PIPELINE DAILY TURBO — architecture peremne
+
+### Vue d'ensemble (MAJ_turbo.sh, ~90s)
+
+```
+[1/6] fetch_fixtures.py        → fixtures.json (football-data.org, 5 ligues)
+[2/6] fetch_player_status.py   → players.json patch (injured, suspended, proj, titu% enum fallback)
+[3/6] fetch_titu_fast.py       → players.json override (titu% precis Sorare Inside)
+       ├── si pas de sorare_club_slugs.json : build_sorare_club_slugs.py (auto)
+       └── fallback : fetch_sorareinside.py (si SORAREINSIDE_PASSWORD dispo)
+[4/6] fetch_gw_scores.py       → players.json patch (last_so5_* scores matchs joues)
+[5/6] merge_data.py + npm build
+[6/6] wrangler pages deploy + mirror scout-dist/ + git push
+```
+
+### Fichiers de config (dans le repo, committes)
+
+| Fichier                    | Role                                               | Maj quand ?                |
+|----------------------------|----------------------------------------------------|----------------------------|
+| `sorare_club_slugs.json`   | Mapping nom club → slug Sorare (ex: PSG → psg-paris) | Promotion L2→L1, rename Sorare |
+| `.env` (pas committe)      | FOOTBALL_DATA_API_KEY + SORARE_API_KEY             | Rotation API keys          |
+
+### Maintenance — scenarios courants
+
+**🚩 Nouveau club promu (ex: Nantes redescend, Reims remonte)**
+```bash
+python3 build_sorare_club_slugs.py    # regenere le mapping
+git add sorare_club_slugs.json && git commit -m "chore: MAJ club slugs Sorare"
+```
+
+**🚩 Sorare change le nom d'un field GraphQL (ex: playerGameScores devient ...)**
+1. Ouvre F12 sur sorare.com/football/scores/matches/{uuid}/lineups
+2. Filtre Network `graphql`, regarde le Payload de la requete
+3. Adapte `Q_LINEUP` dans `fetch_titu_fast.py` avec le nouveau nom
+4. Teste : `python3 fetch_titu_fast.py --game <uuid> --dry-run --verbose`
+5. Si 0 resultat, lance le probe : re-introduire le mode probe si besoin
+
+**🚩 API Sorare down temporairement**
+- Fallback auto vers Sorareinside (si `SORAREINSIDE_PASSWORD` dans .env)
+- Sinon enum `playingStatus` (STARTER/REGULAR/SUBSTITUTE) via `fetch_player_status.py`
+- Apres 24h, relancer `./MAJ_turbo.sh` — auto-correct
+
+**🚩 "X clubs sans upcomingGames" dans les logs**
+- Soit le club est en Championship/L2 (pas supporte) → ignorer
+- Soit le slug est mauvais → `build_sorare_club_slugs.py` pour regenerer
+
+### Debug rapide
+
+```bash
+# 1 seul game (PSG-Nantes) pour tester le fetch
+python3 fetch_titu_fast.py --game db595776-a88c-4846-ae43-83473161e4d1 --dry-run
+
+# Verbose pour voir les logs par game
+python3 fetch_titu_fast.py --verbose --dry-run
+
+# Regenerer le mapping club-slug
+python3 build_sorare_club_slugs.py --verbose
+```
+
+---
+
+**TL;DR** : `game.playerGameScores → PlayerGameScore.anyPlayerGameStats → PlayerGameStats.footballPlayingStatusOdds.starterOddsBasisPoints`. UUID brut. Fragments sur interfaces. Mapping `sorare_club_slugs.json` pour passer par `club.upcomingGames`.

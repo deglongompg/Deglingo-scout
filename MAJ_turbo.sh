@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 # DEGLINGO SCOUT — MAJ TURBO (version pérenne, 2026-04-22+)
 # Full refresh quotidien : fixtures + titu% + scores + build + deploy Cloudflare
-# Cible : < 2 min total. Pré-requis : .env avec FOOTBALL_DATA_API_KEY + SORARE_API_KEY.
+# Cible : < 5 min total. Pré-requis : .env avec FOOTBALL_DATA_API_KEY + SORARE_API_KEY.
 # Doc maintenance : MEMOIRE.md
 
 set -eo pipefail
@@ -9,7 +9,7 @@ cd "$(dirname "$0")"
 
 START=$(date +%s)
 step() { echo; echo "───────── [$1/$TOTAL] $2 ─────────"; }
-TOTAL=6
+TOTAL=7
 
 echo "========================================================"
 echo "  DEGLINGO SCOUT — MAJ TURBO ($(date '+%Y-%m-%d %H:%M'))"
@@ -24,44 +24,48 @@ if ! grep -q "^SORARE_API_KEY=" .env; then
     echo "⚠️  SORARE_API_KEY absent du .env — batch limite (complexity 500 vs 30000)"
 fi
 
-# ---- [1/6] Fixtures (5 ligues, football-data.org) ----
+# ---- [1/7] Fixtures (5 ligues, football-data.org) ----
 step 1 "FIXTURES (~30s)"
 python3 fetch_fixtures.py
 
-# ---- [2/6] Statut joueurs (blessures, suspensions, enum titu%) ----
+# ---- [2/7] Statut joueurs (blessures, suspensions, enum titu% fallback) ----
 step 2 "STATUT JOUEURS (batch GraphQL, ~10s)"
 python3 fetch_player_status.py
 
-# ---- [3/6] Titu% précis via API Sorare officielle (footballPlayingStatusOdds) ----
+# ---- [3/7] Scores SO5 des matchs joués (smart-skip) ----
+step 3 "SCORES SO5 (smart-skip, ~5-30s)"
+python3 fetch_gw_scores.py
+
+# ---- [4/7] Merge data (agrege tout dans players.json) ----
+# ⚠️  merge_data.py relit player_status.json et ecrase sorare_starter_pct !
+#     C'est pour ca que fetch_titu_fast.py tourne APRES, pas avant.
+step 4 "MERGE donnees (raw leagues + status + prices)"
+python3 merge_data.py
+
+# ---- [5/7] Titu% précis via API Sorare (OVERRIDE des enum) ----
 # Utilise game.playerGameScores.anyPlayerGameStats.footballPlayingStatusOdds
 # Schema complet : voir MEMOIRE.md. Marche weekend + mid-week.
-step 3 "TITU% PRECIS via API Sorare (~10s)"
-# Regen le mapping club-slug si absent (1ere fois ou après un reset)
+# DOIT TOURNER APRES merge_data.py pour que ses valeurs ne soient pas ecrasees.
+step 5 "TITU% PRECIS via API Sorare (~2min)"
 if [ ! -f sorare_club_slugs.json ]; then
     echo "  📦 sorare_club_slugs.json absent — génération..."
     python3 build_sorare_club_slugs.py
 fi
-# Run le fetch. Si ça échoue (API down, schema change), fallback Sorareinside.
 if python3 fetch_titu_fast.py; then
     echo "  ✅ titu% précis via API Sorare"
 elif grep -q "^SORAREINSIDE_PASSWORD=" .env; then
     echo "  ⚠️  fetch_titu_fast KO — fallback Sorareinside"
-    python3 fetch_sorareinside.py || echo "  ⚠️  Sorareinside aussi KO (continue avec enum approx)"
+    python3 fetch_sorareinside.py || echo "  ⚠️  Sorareinside aussi KO (on garde enum approx)"
 else
-    echo "  ⚠️  fetch_titu_fast KO et pas de SORAREINSIDE_PASSWORD — continue avec enum approx"
+    echo "  ⚠️  fetch_titu_fast KO et pas de SORAREINSIDE_PASSWORD — on garde enum approx"
 fi
 
-# ---- [4/6] Scores SO5 des matchs joués (smart-skip) ----
-step 4 "SCORES SO5 (smart-skip, ~5-30s)"
-python3 fetch_gw_scores.py
-
-# ---- [5/6] Merge + build Vite ----
-step 5 "MERGE + BUILD"
-python3 merge_data.py
+# ---- [6/7] Build Vite ----
+step 6 "BUILD Vite"
 (cd deglingo-scout-app && npm run build)
 
-# ---- [6/6] Deploy Cloudflare + mirror + git push ----
-step 6 "DEPLOY Cloudflare + git push"
+# ---- [7/7] Deploy Cloudflare + mirror + git push ----
+step 7 "DEPLOY Cloudflare + git push"
 (cd deglingo-scout-app && npx wrangler pages deploy dist \
     --project-name=deglingo-sorare \
     --branch=deglingo-sorare \

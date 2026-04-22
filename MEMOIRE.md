@@ -200,18 +200,27 @@ Avec : complexity 30000 → batch 150 players OK.
 
 ## 🔁 PIPELINE DAILY TURBO — architecture peremne
 
-### Vue d'ensemble (MAJ_turbo.sh, ~90s)
+### Vue d'ensemble (MAJ_turbo.sh, ~3min)
 
 ```
-[1/6] fetch_fixtures.py        → fixtures.json (football-data.org, 5 ligues)
-[2/6] fetch_player_status.py   → players.json patch (injured, suspended, proj, titu% enum fallback)
-[3/6] fetch_titu_fast.py       → players.json override (titu% precis Sorare Inside)
-       ├── si pas de sorare_club_slugs.json : build_sorare_club_slugs.py (auto)
+[1/7] fetch_fixtures.py        → fixtures.json (football-data.org, 5 ligues)
+[2/7] fetch_player_status.py   → player_status.json + patch players.json (enum fallback)
+[3/7] fetch_gw_scores.py       → players.json patch (last_so5_* scores matchs joues)
+[4/7] merge_data.py            → rebuild players.json from raw + status
+       ⚠️  CRITIQUE : merge_data.py ECRASE sorare_starter_pct depuis player_status.json !
+           C'est pour ca que fetch_titu_fast.py tourne APRES, pas avant.
+[5/7] fetch_titu_fast.py       → players.json OVERRIDE sorare_starter_pct + reliability
+       └── si pas de sorare_club_slugs.json : build_sorare_club_slugs.py (auto)
        └── fallback : fetch_sorareinside.py (si SORAREINSIDE_PASSWORD dispo)
-[4/6] fetch_gw_scores.py       → players.json patch (last_so5_* scores matchs joues)
-[5/6] merge_data.py + npm build
-[6/6] wrangler pages deploy + mirror scout-dist/ + git push
+[6/7] npm run build
+[7/7] wrangler pages deploy + mirror scout-dist/ + git push
 ```
+
+**🐛 Bug historique (2026-04-22)** : avant, fetch_titu_fast tournait AVANT merge_data.
+Resultat : ses valeurs precises (40% Doué, 60% Barcola) etaient ECRASEES par les enum
+de player_status.json (70% REGULAR, 25% SUBSTITUTE) lors du merge. Les joueurs PSG
+apparaissaient tous a 70%. **Corrige** : fetch_titu_fast.py apres merge_data.py
+→ sa valeur est la derniere ecriture, rien ne l'ecrase. **Ordre DEFINITIF.**
 
 ### Fichiers de config (dans le repo, committes)
 

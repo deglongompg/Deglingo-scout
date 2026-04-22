@@ -22,21 +22,36 @@ if errorlevel 1 (
 
 set START=%TIME%
 
-REM ---- [1/6] Fixtures 5 ligues (football-data.org) ----
-echo --------- [1/6] FIXTURES (~30s) ---------
+REM ---- [1/7] Fixtures 5 ligues (football-data.org) ----
+echo --------- [1/7] FIXTURES (~30s) ---------
 py fetch_fixtures.py
 if errorlevel 1 ( echo [ERREUR] fetch_fixtures.py & pause & exit /b 1 )
 echo.
 
-REM ---- [2/6] Statut joueurs (blessures, suspensions, enum titu) ----
-echo --------- [2/6] STATUT JOUEURS (batch GraphQL, ~10s) ---------
+REM ---- [2/7] Statut joueurs (blessures, suspensions, enum titu fallback) ----
+echo --------- [2/7] STATUT JOUEURS (batch GraphQL, ~10s) ---------
 py fetch_player_status.py
 if errorlevel 1 ( echo [ERREUR] fetch_player_status.py & pause & exit /b 1 )
 echo.
 
-REM ---- [3/6] Titu%% precis via API Sorare (footballPlayingStatusOdds) ----
-REM    Schema complet : voir MEMOIRE.md. Marche weekend + mid-week.
-echo --------- [3/6] TITU%% PRECIS via API Sorare (~2min) ---------
+REM ---- [3/7] Scores SO5 des matchs joues (smart-skip) ----
+echo --------- [3/7] SCORES SO5 (smart-skip, ~5-30s) ---------
+py fetch_gw_scores.py
+if errorlevel 1 ( echo [ERREUR] fetch_gw_scores.py & pause & exit /b 1 )
+echo.
+
+REM ---- [4/7] Merge data (raw leagues + status + prices) ----
+REM ATTENTION : merge_data.py relit player_status.json et ecrase sorare_starter_pct !
+REM C'est pour ca que fetch_titu_fast.py tourne APRES, pas avant.
+echo --------- [4/7] MERGE donnees ---------
+py merge_data.py
+if errorlevel 1 ( echo [ERREUR] merge_data.py & pause & exit /b 1 )
+echo.
+
+REM ---- [5/7] Titu%% precis via API Sorare (OVERRIDE des enum) ----
+REM Schema complet : voir MEMOIRE.md. Marche weekend + mid-week.
+REM DOIT TOURNER APRES merge_data.py pour que ses valeurs ne soient pas ecrasees.
+echo --------- [5/7] TITU%% PRECIS via API Sorare (~2min) ---------
 if not exist sorare_club_slugs.json (
     echo   sorare_club_slugs.json absent - generation...
     py build_sorare_club_slugs.py
@@ -49,31 +64,23 @@ if errorlevel 1 (
     if not errorlevel 1 (
         echo   Fallback Sorareinside...
         py fetch_sorareinside.py
-        if errorlevel 1 ( echo   [WARN] Sorareinside aussi KO - continue avec enum approx )
+        if errorlevel 1 ( echo   [WARN] Sorareinside aussi KO - on garde enum approx )
     ) else (
-        echo   Pas de SORAREINSIDE_PASSWORD - continue avec enum approx.
+        echo   Pas de SORAREINSIDE_PASSWORD - on garde enum approx.
     )
 )
 echo.
 
-REM ---- [4/6] Scores SO5 matchs joues (smart-skip) ----
-echo --------- [4/6] SCORES SO5 (smart-skip, ~5-30s) ---------
-py fetch_gw_scores.py
-if errorlevel 1 ( echo [ERREUR] fetch_gw_scores.py & pause & exit /b 1 )
-echo.
-
-REM ---- [5/6] Merge + build Vite ----
-echo --------- [5/6] MERGE + BUILD ---------
-py merge_data.py
-if errorlevel 1 ( echo [ERREUR] merge_data.py & pause & exit /b 1 )
+REM ---- [6/7] Build Vite ----
+echo --------- [6/7] BUILD Vite ---------
 cd /d "%~dp0deglingo-scout-app"
 call npm run build
 if errorlevel 1 ( echo [ERREUR] npm run build & cd /d "%~dp0" & pause & exit /b 1 )
 cd /d "%~dp0"
 echo.
 
-REM ---- [6/6] Deploy Cloudflare + mirror scout-dist + git push ----
-echo --------- [6/6] DEPLOY Cloudflare + git push ---------
+REM ---- [7/7] Deploy Cloudflare + mirror scout-dist + git push ----
+echo --------- [7/7] DEPLOY Cloudflare + git push ---------
 cd /d "%~dp0deglingo-scout-app"
 call npx wrangler pages deploy dist --project-name=deglingo-sorare --branch=deglingo-sorare --commit-dirty=true
 if errorlevel 1 ( echo [ERREUR] wrangler & cd /d "%~dp0" & pause & exit /b 1 )

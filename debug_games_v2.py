@@ -24,8 +24,8 @@ print(f"Login: {r.status_code}\n")
 GW = "football-21-24-apr-2026"
 
 # Competitions des 5 ligues principales
-TARGET_COMP_SLUGS = {"ligue-1-fr", "premier-league-gb-eng", "la-liga-es",
-                     "bundesliga-de", "mls-us"}
+TARGET_COMP_SLUGS = {"ligue-1-fr", "premier-league-gb-eng", "laliga-es",
+                     "bundesliga-de", "mlspa"}
 
 # ═══════════════════════════════════════════════════════════════════════════
 # 1) Fetch games + parse structure nested
@@ -60,6 +60,38 @@ for cs, n in comps_count.most_common():
     target = "⭐" if cs in TARGET_COMP_SLUGS else "  "
     print(f"    {target} {cs:<40} : {n} games")
 
+# ═══ RECHERCHE GLOBALE PSG-NANTES (tout competition confondue) ═══
+print("\n  🔍 Recherche globale PSG vs NANTES (tous slugs competitions) :")
+found_psg_nantes = []
+for cs, cn, g in all_games:
+    ht_slug = (g.get("homeTeam", {}) or {}).get("slug","").lower()
+    at_slug = (g.get("awayTeam", {}) or {}).get("slug","").lower()
+    ht_name = (g.get("homeTeam", {}) or {}).get("name","")
+    at_name = (g.get("awayTeam", {}) or {}).get("name","")
+    combined = f"{ht_slug} {at_slug} {ht_name} {at_name}".lower()
+    if ("paris" in combined or "psg" in combined) and ("nantes" in combined):
+        found_psg_nantes.append((cs, g))
+        print(f"    ✅ TROUVE dans competition={cs}")
+        print(f"       {ht_name} vs {at_name} @ {g.get('date')}")
+        print(f"       game_id = {g.get('id')}")
+if not found_psg_nantes:
+    print("    ⚠️  AUCUN match PSG vs Nantes dans les 272 games de cette GW")
+    print("    -> match dans une autre GW ? On va tester les GWs adjacentes.")
+    for alt_gw in ["football-17-21-apr-2026", "football-24-28-apr-2026"]:
+        r2 = session.get(f"{PLATFORM_API}/games", params={"gameweek_slug": alt_gw, "limit": 100}, timeout=30)
+        if r2.status_code == 200:
+            body2 = r2.json()
+            for region in (body2 if isinstance(body2, list) else []):
+                for comp in region.get("competitions", []):
+                    for g in comp.get("games", []):
+                        ht = (g.get("homeTeam",{}) or {}).get("slug","").lower()
+                        at = (g.get("awayTeam",{}) or {}).get("slug","").lower()
+                        if ("paris" in ht + at or "psg" in ht + at) and "nantes" in ht + at:
+                            print(f"    ✅ TROUVE dans GW {alt_gw} / comp {(g.get('competition') or {}).get('slug')}")
+                            print(f"       home={ht} away={at} date={g.get('date')}")
+                            print(f"       game_id={g.get('id')}")
+                            found_psg_nantes.append((alt_gw, g))
+
 # ═══════════════════════════════════════════════════════════════════════════
 # 2) Liste TOUS les games des 5 ligues cibles
 # ═══════════════════════════════════════════════════════════════════════════
@@ -83,16 +115,27 @@ for cs, cn, g in target_games:
 
 if not psg_nantes_game:
     print("\n  ⚠️  PSG-Nantes pas trouve dans les games L1 du GW mid-week")
-    print("      Peut-etre dans la GW weekend ?")
+    print("      Fallback : on teste sur le premier match L1 disponible")
 else:
     print(f"\n  ✅ PSG-Nantes identifie !")
     print(f"     game_id: {psg_nantes_game.get('id')}")
 
 # ═══════════════════════════════════════════════════════════════════════════
-# 3) Test /lineups?game_id=X pour PSG-Nantes (si trouve)
+# 3) Test /lineups?game_id=X (fallback sur n'importe quel L1 game)
 # ═══════════════════════════════════════════════════════════════════════════
-if psg_nantes_game:
-    gid = psg_nantes_game.get("id")
+test_game = psg_nantes_game
+if not test_game:
+    # Fallback : premier match L1 trouve
+    for cs, cn, g in target_games:
+        if cs == "ligue-1-fr":
+            test_game = g
+            ht = g.get("homeTeam",{}).get("name","?")
+            at = g.get("awayTeam",{}).get("name","?")
+            print(f"\n  → Fallback sur L1 game : {ht} vs {at}")
+            break
+
+if test_game:
+    gid = test_game.get("id")
     print(f"\n{'='*80}")
     print(f"3) Test /lineups avec game_id={gid}")
     print("="*80)

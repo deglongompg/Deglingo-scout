@@ -109,57 +109,118 @@ query($id: ID!) {
 }
 """
 
-# Fallback si anyPlayerGameStats n'est pas le bon field name
-FIELD_ALTERNATIVES = ["anyPlayerGameStats", "playerGameStats", "lineup", "playingPlayers"]
+# GraphQL error hints ont confirme : le bon field sur Game est `anyPlayers`.
+# On fait d'abord une discovery (__typename) pour trouver le type concret retourne.
+FIELD_NAME = "anyPlayers"
 
 
-def build_game_query(field_name):
+def discover_any_player_type(sample_uuid):
+    """Query game(id).anyPlayers { __typename } pour decouvrir le type concret."""
+    print(f"  → Discovery du type anyPlayers[] sur Game {sample_uuid[:8]}...")
+    for id_variant in [sample_uuid, f"Game:{sample_uuid}"]:
+        q = """
+        query($id: ID!) {
+          football {
+            game(id: $id) {
+              __typename
+              anyPlayers { __typename }
+            }
+          }
+        }
+        """
+        body = gql(q, {"id": id_variant})
+        if ok(body):
+            game = (body["data"].get("football") or {}).get("game") or {}
+            items = game.get("anyPlayers") or []
+            if items:
+                types = {it.get("__typename") for it in items if it}
+                print(f"  ✅ id={id_variant!r} → {len(items)} entries, types={types}")
+                return id_variant, types
+            else:
+                print(f"  ⚠️  id={id_variant!r} → anyPlayers vide")
+        else:
+            print(f"  ❌ id={id_variant!r} → {first_err(body)[:150]}")
+    return None, set()
+
+
+def build_game_query(typenames):
+    """Construit la query finale avec fragments sur les types concrets detectes."""
+    # Fragments a essayer : on couvre les noms plausibles. L'API ignore les fragments
+    # pour des types qui ne matchent pas (pas d'erreur).
+    frags = []
+    for tn in typenames:
+        frags.append("""
+            ... on %s {
+              footballPlayingStatusOdds { starterOddsBasisPoints reliability }
+              anyPlayer { __typename ... on Player { slug displayName } }
+              player { slug displayName }
+            }
+        """ % tn)
+    # Fallback : tente aussi les noms communs meme s'ils ne sont pas dans typenames
+    # (au cas ou l'API retourne un type parent seul en discovery)
+    for guess in ["PlayerGameStats", "FootballPlayerGameStats", "AnyPlayer",
+                  "LineupEntry", "GameLineupPlayer"]:
+        if guess not in typenames:
+            frags.append("""
+                ... on %s {
+                  footballPlayingStatusOdds { starterOddsBasisPoints reliability }
+                  anyPlayer { __typename ... on Player { slug displayName } }
+                  player { slug displayName }
+                }
+            """ % guess)
     return """
     query($id: ID!) {
       football {
         game(id: $id) {
-          __typename
-          ... on Game {
-            id
-            %s {
-              __typename
-              ... on PlayerGameStats {
-                footballPlayingStatusOdds {
-                  starterOddsBasisPoints
-                  reliability
-                }
-                anyPlayer {
-                  __typename
-                  ... on Player { slug displayName }
-                }
-              }
-            }
+          anyPlayers {
+            __typename
+            %s
           }
         }
       }
     }
-    """ % field_name
+    """ % "\n".join(frags)
 
 
 def detect_working_field(sample_game_uuid):
-    """Teste les alternatives de field name + les 2 formats d'ID. Retourne (field, id_used)."""
-    print(f"  → Detection champ actif sur Game {sample_game_uuid[:8]}...")
-    for id_variant in [sample_game_uuid, f"Game:{sample_game_uuid}"]:
-        for field in FIELD_ALTERNATIVES:
-            q = build_game_query(field)
-            body = gql(q, {"id": id_variant})
-            if ok(body):
-                game = (body["data"].get("football") or {}).get("game") or {}
-                items = game.get(field)
-                if isinstance(items, list) and items:
-                    print(f"  ✅ field='{field}' id_variant={id_variant!r} → {len(items)} entries")
-                    return field, id_variant
-                elif isinstance(items, list):
-                    print(f"  ⚠️  field='{field}' id_variant={id_variant!r} → liste vide")
-            else:
-                msg = first_err(body)
-                print(f"  ❌ field='{field}' id_variant={id_variant!r:40} → {msg[:120]}")
-    return None, None
+    """Discovery → teste la query finale. Retourne (typenames, id_variant)."""
+    id_variant, typenames = discover_any_player_type(sample_game_uuid)
+    if not id_variant:
+        return None, None
+    # Teste la query avec fragments
+    q = build_game_query(typenames)
+    body = gql(q, {"id": id_variant})
+    if not ok(body):
+        print(f"  ❌ query avec fragments : {first_err(body)[:200]}")
+        # Retry sans les fragments guess (qui peuvent etre invalides)
+        q_min = """
+        query($id: ID!) {
+          football {
+            game(id: $id) {
+              anyPlayers {
+                __typename
+                %s
+              }
+            }
+          }
+        }
+        """ % "\n".join([
+            """... on %s {
+                 footballPlayingStatusOdds { starterOddsBasisPoints reliability }
+                 anyPlayer { ... on Player { slug displayName } }
+               }""" % tn for tn in typenames
+        ])
+        body = gql(q_min, {"id": id_variant})
+        if not ok(body):
+            print(f"  ❌ query minimale : {first_err(body)[:200]}")
+            return None, None
+        print(f"  ✅ query minimale OK")
+        return typenames, id_variant
+    # Check que les fragments renvoient bien quelque chose d'utile
+    items = (body["data"].get("football") or {}).get("game", {}).get("anyPlayers") or []
+    got_odds = sum(1 for it in items if (it.get("footballPlayingStatusOdds") or {}).get("starterOddsBasisPoints") is not None)
+    print(f"  ✅ query OK : {len(items)} entries, {got_odds} avec starterOddsBasisPoints")
+    return typenames, id_variant
 
 
 # ── introspection utilities ──────────────────────────────────────────────────
@@ -277,17 +338,18 @@ def fetch_upcoming_games():
     return list(uuids)
 
 
-def fetch_game_lineup(game_uuid, field, id_format):
-    q = build_game_query(field)
+def fetch_game_lineup(game_uuid, typenames, id_format):
+    q = build_game_query(typenames)
     gid = f"Game:{game_uuid}" if id_format == "prefixed" else game_uuid
     body = gql(q, {"id": gid})
     if not ok(body):
         return game_uuid, {}, first_err(body)
     game = (body["data"].get("football") or {}).get("game") or {}
-    items = game.get(field) or []
+    items = game.get("anyPlayers") or []
     out = {}
     for it in items:
-        pl = it.get("anyPlayer") or {}
+        # anyPlayer peut etre sous 'anyPlayer' (selon fragment) ou 'player'
+        pl = it.get("anyPlayer") or it.get("player") or {}
         slug = pl.get("slug")
         odds = it.get("footballPlayingStatusOdds") or {}
         bp = odds.get("starterOddsBasisPoints")
@@ -320,21 +382,21 @@ def main():
         print("❌ Aucun game. Abort.")
         sys.exit(1)
 
-    # 2. Detecte field
-    print(f"[2/3] Detection du champ GraphQL actif...")
-    field, id_variant = detect_working_field(game_uuids[0])
-    if not field:
-        print("\n❌ Aucun champ ne marche. Utilise : python3 fetch_titu_fast.py --introspect")
+    # 2. Detecte types
+    print(f"[2/3] Discovery du type GraphQL sur anyPlayers...")
+    typenames, id_variant = detect_working_field(game_uuids[0])
+    if not typenames:
+        print("\n❌ Discovery KO. Copie la sortie ci-dessus et envoie-la.")
         sys.exit(2)
     id_format = "prefixed" if id_variant.startswith("Game:") else "raw"
     print()
 
     # 3. Batch parallele
-    print(f"[3/3] Fetch {len(game_uuids)} games (workers={WORKERS}, field={field}, id={id_format})...")
+    print(f"[3/3] Fetch {len(game_uuids)} games (workers={WORKERS}, types={typenames}, id={id_format})...")
     slug_to_info = {}
     errors = 0
     with ThreadPoolExecutor(max_workers=WORKERS) as ex:
-        futs = {ex.submit(fetch_game_lineup, gid, field, id_format): gid for gid in game_uuids}
+        futs = {ex.submit(fetch_game_lineup, gid, typenames, id_format): gid for gid in game_uuids}
         for fut in as_completed(futs):
             gid, pct_map, err = fut.result()
             if err:

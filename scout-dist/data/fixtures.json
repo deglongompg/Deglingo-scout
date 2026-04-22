@@ -1,7 +1,7 @@
 {
-  "generated": "2026-04-22T07:10:53.328117",
+  "generated": "2026-04-22T17:26:54.249094",
   "matchdays": {
-    "L1": 33,
+    "L1": 29,
     "PL": 36,
     "Liga": 36,
     "Bundes": 33,
@@ -290,6 +290,26 @@
       "league": "L1",
       "home_api": "Stade Rennais FC 1901",
       "away_api": "Paris FC"
+    },
+    {
+      "home": "Brest",
+      "away": "Strasbourg",
+      "date": "2026-05-13",
+      "kickoff": "17:00",
+      "matchday": 29,
+      "league": "L1",
+      "home_api": "Stade Brestois 29",
+      "away_api": "RC Strasbourg Alsace"
+    },
+    {
+      "home": "Lens",
+      "away": "Paris Saint Germain",
+      "date": "2026-05-13",
+      "kickoff": "19:00",
+      "matchday": 29,
+      "league": "L1",
+      "home_api": "Racing Club de Lens",
+      "away_api": "Paris Saint-Germain FC"
     },
     {
       "home": "Lens",
@@ -1082,6 +1102,46 @@
       "away_api": "Club Atlético de Madrid"
     },
     {
+      "home": "Espanyol",
+      "away": "Athletic Club",
+      "date": "2026-05-13",
+      "kickoff": "17:00",
+      "matchday": 36,
+      "league": "Liga",
+      "home_api": "RCD Espanyol de Barcelona",
+      "away_api": "Athletic Club"
+    },
+    {
+      "home": "Villarreal",
+      "away": "Sevilla",
+      "date": "2026-05-13",
+      "kickoff": "17:00",
+      "matchday": 36,
+      "league": "Liga",
+      "home_api": "Villarreal CF",
+      "away_api": "Sevilla FC"
+    },
+    {
+      "home": "Alaves",
+      "away": "Barcelona",
+      "date": "2026-05-13",
+      "kickoff": "19:30",
+      "matchday": 36,
+      "league": "Liga",
+      "home_api": "Deportivo Alavés",
+      "away_api": "FC Barcelona"
+    },
+    {
+      "home": "Getafe",
+      "away": "Mallorca",
+      "date": "2026-05-13",
+      "kickoff": "19:30",
+      "matchday": 36,
+      "league": "Liga",
+      "home_api": "Getafe CF",
+      "away_api": "RCD Mallorca"
+    },
+    {
       "home": "Athletic Club",
       "away": "Osasuna",
       "date": "2026-04-21",
@@ -1520,6 +1580,17 @@
       "home": "Unknown",
       "away": "Unknown",
       "date": "2026-05-05",
+      "kickoff": "19:00",
+      "matchday": "SEMI_FINALS",
+      "league": "UCL",
+      "competition": "UCL",
+      "home_api": null,
+      "away_api": null
+    },
+    {
+      "home": "Unknown",
+      "away": "Unknown",
+      "date": "2026-05-06",
       "kickoff": "19:00",
       "matchday": "SEMI_FINALS",
       "league": "UCL",

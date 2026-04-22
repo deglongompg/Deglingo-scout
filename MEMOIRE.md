@@ -192,9 +192,42 @@ Avec : complexity 30000 → batch 150 players OK.
 | `fetch_sorareinside.py`              | Fallback titu% via Sorareinside si API plante |
 | `fetch_gw_scores.py`                 | Scores SO5 matchs joues                       |
 | `fetch_fixtures.py`                  | Fixtures 5 ligues (football-data.org)         |
-| `MAJ_turbo.sh`                       | Orchestrateur tout-en-un (~90s)               |
+| `fetch_all_players.py`               | Gros rebuild L5/L10/AA (batch V3, ~20min pour 5 ligues) |
+| `fetch_prices.py`                    | Prix marketplace Limited + Rare               |
+| `build_sorare_club_slugs.py`         | Genere mapping club → slug Sorare             |
+| `MAJ_turbo.sh` / `.bat`              | Pipeline daily 7 etapes (~8 min)              |
+| `MAJ_hebdo.sh` / `.bat`              | Pipeline hebdo 2 etapes + turbo (~20-30 min)  |
+| `install_schedule.bat`               | Installe les 2 taches Task Scheduler PC       |
 | `debug_titu_via_game.py`             | Introspection GraphQL sur un Game             |
 | `deglingo-scout-app/public/data/players.json` | Source de verite 1450 joueurs        |
+
+---
+
+## ⚡ PERF fetch_all_players.py V3 (2026-04-22)
+
+Avant V3 : 2 queries/joueur sequentiel → ~8 min pour 5 ligues (soit ~40 min avec ban/rate-limits occasionnels)
+
+V3 :
+- **Fusion Q_MAIN + Q_DETAIL** en un seul `PLAYER_FRAGMENT`. `so5Scores(last:40)` peut
+  contenir en meme temps `allAroundStats` ET `detailedScore`. Plus besoin de 2 queries.
+- **Batch GraphQL** avec aliases `p0..p19` = 20 joueurs par requete (complexity ~20k/30k)
+- **ThreadPoolExecutor 4 workers** en parallele
+- Flag `--legacy` pour retomber sur le mode ancien si le batch plante
+
+Gain mesure : 3500 joueurs (5 ligues) en **~20 min** (vs ~40 min avant).
+
+### Si on veut aller plus vite encore
+Paralleliser `fetch_club_players` (30 clubs en parallele) + batch 30 au lieu de 20 +
+workers 6 au lieu de 4. Gain attendu : 20min → ~10min. Pas prioritaire pour l'instant.
+
+### Ajout nouveaux championnats
+Pour ajouter Belgique / Pays-Bas / Japon / Coree :
+1. Ajouter dans `LEAGUE_SLUGS` (fetch_all_players.py) : slug Sorare exact
+2. Ajouter dans `LEAGUE_FILES` : nom fichier deglingo_*_final.json
+3. Ajouter dans `VALID_COMPS` : slug competition (pour filtrer so5Scores)
+4. Ajouter dans `merge_data.py:LEAGUES` pour le merge
+5. Ajouter dans `fetch_fixtures.py` (football-data.org) : league code
+6. Frontend : drapeau + entree dans le filtre ligues (`App.jsx` / `DbTab.jsx`)
 
 ---
 
@@ -268,4 +301,49 @@ python3 build_sorare_club_slugs.py --verbose
 
 ---
 
-**TL;DR** : `game.playerGameScores → PlayerGameScore.anyPlayerGameStats → PlayerGameStats.footballPlayingStatusOdds.starterOddsBasisPoints`. UUID brut. Fragments sur interfaces. Mapping `sorare_club_slugs.json` pour passer par `club.upcomingGames`.
+## 📅 AUTOMATION Task Scheduler PC (2026-04-22)
+
+### Architecture des MAJ
+
+| Jour            | Script         | Duree attendue | Role                                                     |
+|-----------------|----------------|----------------|----------------------------------------------------------|
+| Lu/Ma/Je/Ve/Di  | MAJ_turbo.bat  | ~8 min         | fixtures + titu% + scores + build + deploy               |
+| **Me + Sa**     | MAJ_hebdo.bat  | ~20-30 min     | full rebuild L5/L10/AA + prix + tout le turbo            |
+
+Mercredi = post matchs mid-week (Mar-Mer soir).
+Samedi = post deadline GW Vendredi 16h + matchs weekend.
+
+### Installation (UNE fois, clic droit -> Admin)
+
+```cmd
+cd C:\chemin\vers\Deglingo-scout
+git pull origin main
+install_schedule.bat          REM defaut 06:00
+install_schedule.bat 07:30    REM ou autre heure
+```
+
+Cree 2 taches Windows :
+- **"Deglingo Scout MAJ Daily"** (Lu/Ma/Je/Ve/Di a 06:00)
+- **"Deglingo Scout MAJ Hebdo"** (Me+Sa a 06:00)
+
+Logs ecrits dans `maj_log_daily.txt` et `maj_log_hebdo.txt` a la racine du repo.
+
+### Commandes utiles
+
+```cmd
+schtasks /Query /TN "Deglingo Scout MAJ Daily" /V /FO LIST
+schtasks /Run   /TN "Deglingo Scout MAJ Daily"     REM test maintenant
+schtasks /Delete /TN "Deglingo Scout MAJ Daily" /F REM supprimer
+type maj_log_daily.txt
+```
+
+### Prerequis PC
+
+1. PC allume a 06:00 (ou activer "Reveiller l'ordinateur" dans Task Scheduler GUI)
+2. `.env` avec FOOTBALL_DATA_API_KEY + SORARE_API_KEY
+3. `npx wrangler login` fait une fois (pour deploy Cloudflare)
+4. `py` dans le PATH (Python 3)
+
+---
+
+**TL;DR** : `game.playerGameScores → PlayerGameScore.anyPlayerGameStats → PlayerGameStats.footballPlayingStatusOdds.starterOddsBasisPoints`. UUID brut. Fragments sur interfaces. Mapping `sorare_club_slugs.json` pour passer par `club.upcomingGames`. Task Scheduler 2 taches : Daily (Lu/Ma/Je/Ve/Di) + Hebdo (Me/Sa).

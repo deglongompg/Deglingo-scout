@@ -1,4 +1,29 @@
-# SESSION HANDOFF — 2026-04-19 → 22 (dimanche GW71 → mardi soir GW72 mid-week)
+# SESSION HANDOFF — 2026-04-22 (session marathon GW72 mid-week, 5h+)
+
+> **Claude Code :** lis `MEMOIRE.md` EN PREMIER pour le schema GraphQL Sorare.
+> Puis ce fichier pour le contexte de la derniere session.
+> `git log --oneline -30` pour l'historique detaille.
+
+---
+
+## 🏆 RESUME SESSION 2026-04-22 (du matin au soir, +15 commits)
+
+### Livraisons finales sur `main`
+
+1. **Titu% précis live en prod** — schema Sorare GraphQL découvert et exploité
+   (`game.playerGameScores` → `PlayerGameScore.anyPlayerGameStats.footballPlayingStatusOdds`)
+2. **Pipeline 7 étapes bulletproof** (MAJ_turbo.sh + .bat)
+3. **Pipeline hebdo** (MAJ_hebdo.sh + .bat) — gros rebuild mercredi + samedi
+4. **Auto-scheduler PC** (install_schedule.bat) — 2 tâches Task Scheduler
+5. **fetch_all_players V3** — batch + workers, ~20 min pour 5 ligues
+6. **MEMOIRE.md complet** — schéma GraphQL + chemins morts + procédures maintenance
+7. **mapping club slugs** (`sorare_club_slugs.json`) — 112 clubs Sorare officiels
+
+### TODO prochaine session
+- [ ] Ajouter 4 championnats (Belgique, Pays-Bas, Japon, Corée)
+  Slugs Sorare probables : `jupiler-pro-league-be`, `eredivisie-nl`, `j1-league-jp`, `k-league-1-kr`
+- [ ] Procédure dans MEMOIRE.md section "Ajout nouveaux championnats"
+- [ ] (Optionnel) Paralléliser `fetch_club_players` pour gagner encore ~10 min
 
 ---
 

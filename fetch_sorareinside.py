@@ -132,9 +132,13 @@ def get_current_gw_slugs(session):
 # ── FETCH LINEUPS ─────────────────────────────────────────────────────────────
 def fetch_lineups(session, gw_slug):
     """Fetch all lineup predictions for a specific GW with pagination.
-    Le serveur Sorareinside cap a 50 items/page. Pour aller VITE :
-    - On submit 8 pages en parallele via ThreadPoolExecutor
-    - On s'arrete des qu'une page renvoie <50 items (fin de pagination)
+    Le serveur Sorareinside cap a 50 items/page. Strategie :
+    - On submit WORKERS=4 pages en parallele via ThreadPoolExecutor (moins agressif)
+    - Chaque page a 3 retries avec backoff exponentiel sur timeout/erreur reseau
+    - Timeout eleve (60s) car l'API peut etre lente surtout sur les GW week-end
+    - On s'arrete UNIQUEMENT quand une page renvoie <limit items (vraie fin de pagination)
+    - Les pages en erreur apres retries sont LOGUEES mais n'arretent pas la pagination
+      (sinon une page lente en milieu de pagination fait perdre tout le reste)
     """
     from concurrent.futures import ThreadPoolExecutor, as_completed
 
@@ -144,34 +148,51 @@ def fetch_lineups(session, gw_slug):
     limit = 50
     all_items = []
     done_paging = False
-    WORKERS = 8
-    max_pages = 60  # safety ~3000 items max
+    failed_offsets = []
+    WORKERS = 4
+    MAX_RETRIES = 3
+    TIMEOUT = 60
+    max_pages = 80  # safety ~4000 items max
 
     # Pre-copy la session (cookies auth) pour chaque worker
     headers_for_worker = dict(session.headers)
     cookies_for_worker = session.cookies.get_dict()
 
     def fetch_page(offset):
-        try:
-            r = requests.get(url, params={"gameweekSlug": gw_slug, "limit": limit, "offset": offset},
-                             headers=headers_for_worker, cookies=cookies_for_worker, timeout=30)
-            if r.status_code != 200:
-                return offset, None, f"HTTP {r.status_code}"
-            data = r.json()
-            items = data.get("data", data) if isinstance(data, dict) else data
-            if not isinstance(items, list):
-                items = []
-            return offset, items, None
-        except Exception as e:
-            return offset, None, str(e)
+        last_err = None
+        for attempt in range(MAX_RETRIES):
+            try:
+                r = requests.get(url, params={"gameweekSlug": gw_slug, "limit": limit, "offset": offset},
+                                 headers=headers_for_worker, cookies=cookies_for_worker, timeout=TIMEOUT)
+                if r.status_code != 200:
+                    last_err = f"HTTP {r.status_code}"
+                    if attempt < MAX_RETRIES - 1:
+                        time.sleep(2 ** attempt)
+                        continue
+                    return offset, None, last_err
+                data = r.json()
+                items = data.get("data", data) if isinstance(data, dict) else data
+                if not isinstance(items, list):
+                    items = []
+                return offset, items, None
+            except (requests.exceptions.Timeout, requests.exceptions.ConnectionError,
+                    requests.exceptions.ReadTimeout) as e:
+                last_err = f"{type(e).__name__}"
+                if attempt < MAX_RETRIES - 1:
+                    print(f"    retry offset={offset} (attempt {attempt+1}/{MAX_RETRIES}) after {last_err}")
+                    time.sleep(2 ** attempt)
+                    continue
+                return offset, None, last_err
+            except Exception as e:
+                return offset, None, str(e)[:80]
+        return offset, None, last_err or "unknown"
 
-    # Batch de WORKERS pages en parallele, on continue tant qu'on recoit des pages pleines
+    # Batch de WORKERS pages en parallele, on continue tant qu'aucune page "pleine" ne renvoie <limit
     next_offset = 0
     while not done_paging and next_offset < max_pages * limit:
         batch_offsets = [next_offset + i * limit for i in range(WORKERS)]
         with ThreadPoolExecutor(max_workers=WORKERS) as executor:
             futures = {executor.submit(fetch_page, off): off for off in batch_offsets}
-            # Collecte resultats dans l'ordre des offsets
             results = [None] * WORKERS
             for fut in as_completed(futures):
                 off = futures[fut]
@@ -179,19 +200,28 @@ def fetch_lineups(session, gw_slug):
                 _, items, err = fut.result()
                 results[idx] = (items or [], err)
 
-        # Process dans l'ordre : on arrete des qu'on voit une page <50 items
+        # Process dans l'ordre : on SKIP les pages en erreur (pas break), break SEULEMENT sur <limit
+        batch_end_detected = False
         for idx, (items, err) in enumerate(results):
+            off = batch_offsets[idx]
             if err:
-                print(f"  offset={batch_offsets[idx]}: err {err}")
-                done_paging = True
-                break
+                print(f"  ⚠️  offset={off}: FAILED apres {MAX_RETRIES} retries ({err}) — continue")
+                failed_offsets.append(off)
+                continue
             all_items.extend(items)
-            print(f"  offset={batch_offsets[idx]}: +{len(items)} items (total={len(all_items)})")
+            print(f"  offset={off}: +{len(items)} items (total={len(all_items)})")
             if len(items) < limit:
-                done_paging = True
-                break
+                batch_end_detected = True
+                # Ne break PAS tout de suite : continue a traiter les autres pages du batch
+                # au cas ou elles auraient aussi retourne des items (hors ordre par rapport au serveur)
+
+        # Si une page a signale la fin (<limit), ET que toutes les autres du batch sont traitees :
+        if batch_end_detected:
+            done_paging = True
         next_offset += WORKERS * limit
 
+    if failed_offsets:
+        print(f"  ⚠️  {len(failed_offsets)} pages en echec definitif: offsets {failed_offsets}")
     return all_items, "linedup-players"
 
 

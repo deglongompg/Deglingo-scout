@@ -226,8 +226,24 @@ def fetch_lineups(session, gw_slug):
 
 
 # ── PARSE & MAP ───────────────────────────────────────────────────────────────
+DEBUG_SLUGS = {"bradley-barcola", "mohamed-kaba", "desire-doue", "ousmane-dembele",
+               "vitor-machado-ferreira", "achraf-hakimi", "warren-zaire-emery"}
+
 def parse_lineup_data(data, source):
-    """Parse Sorareinside lineup data and map sorare_slug -> starter_pct"""
+    """Parse Sorareinside lineup data and map sorare_slug -> starter_pct.
+
+    Chaque joueur peut apparaitre dans plusieurs items (plusieurs lineup_id = plusieurs
+    variantes de prediction). Un item represente (player_id, position_in_lineup).
+
+    Strategie :
+    - Groupe tous les items par slug
+    - Pour chaque slug, cherche si le joueur est predit TITULAIRE :
+        starter = is_bench=False, is_alternate=False, is_dnp=False
+    - Titu% = max(confidence_percentage OR total_confidence_percentage) sur les items starter
+    - Si aucun item starter mais quelques items bench/alternate : % plus bas (25-40)
+    - Si tous les items sont is_dnp : 0%
+    - Si aucun confidence disponible : ignore (fallback Sorare API enum reste)
+    """
     slug_to_pct = {}
 
     if data is None:
@@ -243,30 +259,92 @@ def parse_lineup_data(data, source):
     # Show structure of first item
     first = items[0] if items else {}
     print(f"  First item keys: {list(first.keys())}")
-    # Show nested player keys if present
-    if "player" in first:
-        print(f"  first.player keys: {list(first['player'].keys())}")
+    if "players" in first and isinstance(first.get("players"), dict):
+        print(f"  first.players keys: {list(first['players'].keys())}")
 
+    # Groupe les items par slug
+    slug_to_entries = {}
     for item in items:
         if not isinstance(item, dict):
             continue
-
-        # Player slug is in nested "players" object (JOIN result from DB)
         player_obj = item.get("players") or item.get("player") or {}
         slug = (player_obj.get("slug") or player_obj.get("sorare_slug") or
                 item.get("slug") or item.get("sorare_slug") or
                 item.get("player_slug") or "")
+        if not slug:
+            continue
+        slug_to_entries.setdefault(slug, []).append(item)
 
-        # Confidence percentage (0-100) — main field from linedup-players
-        conf = item.get("confidence_percentage") or item.get("confidence")
+    print(f"  {len(slug_to_entries)} slugs uniques sur {len(items)} items")
 
-        if not slug or conf is None:
+    # Pour chaque slug, calcule le titu%
+    counts = {"dnp": 0, "starter": 0, "bench_only": 0, "alt_only": 0, "no_conf": 0}
+    for slug, entries in slug_to_entries.items():
+        # DNP prioritaire
+        if all(e.get("is_dnp") for e in entries):
+            slug_to_pct[slug] = 0
+            counts["dnp"] += 1
             continue
 
-        slug_to_pct[slug] = int(conf)
+        # Cherche items "pur starter" (ni bench ni alternate ni dnp)
+        starter_entries = [e for e in entries
+                          if not e.get("is_bench") and not e.get("is_alternate") and not e.get("is_dnp")]
 
-    print(f"  Mapped {len(slug_to_pct)} joueurs")
+        def best_conf(entries_list):
+            """Retourne le meilleur % confidence parmi les entries (conf OR total_conf)."""
+            vals = []
+            for e in entries_list:
+                c = e.get("confidence_percentage")
+                t = e.get("total_confidence_percentage")
+                if c is not None: vals.append(c)
+                if t is not None: vals.append(t)
+            return max(vals) if vals else None
+
+        if starter_entries:
+            pct = best_conf(starter_entries)
+            if pct is not None:
+                slug_to_pct[slug] = min(int(pct), 95)
+                counts["starter"] += 1
+                continue
+
+        # Pas d'item starter OU pas de conf sur les items starter
+        # -> regarde les items bench/alternate
+        bench_alt = [e for e in entries if (e.get("is_bench") or e.get("is_alternate")) and not e.get("is_dnp")]
+        if bench_alt:
+            pct = best_conf(bench_alt)
+            # Alternate : plus haut potentiel starter que bench pur
+            has_alt = any(e.get("is_alternate") for e in bench_alt)
+            default = 35 if has_alt else 20
+            slug_to_pct[slug] = int(pct) if pct is not None else default
+            if has_alt:
+                counts["alt_only"] += 1
+            else:
+                counts["bench_only"] += 1
+            continue
+
+        # Aucune info exploitable
+        counts["no_conf"] += 1
+
+    print(f"  Breakdown : starters={counts['starter']} alt_only={counts['alt_only']} "
+          f"bench_only={counts['bench_only']} dnp={counts['dnp']} no_conf={counts['no_conf']}")
+    print(f"  Mapped {len(slug_to_pct)} joueurs (sur {len(slug_to_entries)} slugs uniques)")
+
+    # Debug cible sur quelques joueurs connus
+    for slug in DEBUG_SLUGS:
+        entries = slug_to_entries.get(slug)
+        if entries:
+            print(f"\n  🔎 DEBUG {slug}: {len(entries)} items")
+            for e in entries[:4]:
+                print(f"     bench={e.get('is_bench')} alt={e.get('is_alternate')} dnp={e.get('is_dnp')} "
+                      f"conf={e.get('confidence_percentage')} total_conf={e.get('total_confidence_percentage')} "
+                      f"pos_idx={e.get('lineup_position_index')}")
+            if slug in slug_to_pct:
+                print(f"     -> titu%={slug_to_pct[slug]}%")
+            else:
+                print(f"     -> NOT mapped")
+
     if slug_to_pct:
+        print(f"\n  Echantillon (5 premiers) :")
         for slug, pct in list(slug_to_pct.items())[:5]:
             print(f"    {slug}: {pct}%")
 

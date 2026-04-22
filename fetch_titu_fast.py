@@ -50,6 +50,7 @@ if "--game" in sys.argv:
     try: SINGLE_GAME = sys.argv[sys.argv.index("--game") + 1]
     except IndexError: pass
 INTROSPECT = "--introspect" in sys.argv
+PROBE = "--probe" in sys.argv
 WORKERS = 4
 
 PLAYERS_IN = "deglingo-scout-app/public/data/players.json"
@@ -109,118 +110,105 @@ query($id: ID!) {
 }
 """
 
-# GraphQL error hints ont confirme : le bon field sur Game est `anyPlayers`.
-# On fait d'abord une discovery (__typename) pour trouver le type concret retourne.
-FIELD_NAME = "anyPlayers"
+# Decouverte DevTools 2026-04-22 :
+# game.playerGameScores (ou playerGameScore) retourne une liste de So5Score,
+# et chaque So5Score a :
+#   anyPlayer           -> Player (slug, displayName)
+#   anyPlayerGameStats  -> PlayerGameStats (footballPlayingStatusOdds)
+#   id                  -> "So5Score:<uuid>"
+#
+# Confirmation par GraphQL hint "Did you mean playerGameScores or playerGameScore".
 
-
-def discover_any_player_type(sample_uuid):
-    """Query game(id).anyPlayers { __typename } pour decouvrir le type concret."""
-    print(f"  → Discovery du type anyPlayers[] sur Game {sample_uuid[:8]}...")
+def discover_field_and_type(sample_uuid):
+    """Trouve le bon field name sur Game qui retourne des So5Score."""
+    candidates = ["playerGameScores", "playerGameScore", "anyPlayerGameScores",
+                  "so5Scores", "anySo5Scores"]
+    print(f"  → Discovery sur Game {sample_uuid[:8]}...")
     for id_variant in [sample_uuid, f"Game:{sample_uuid}"]:
-        q = """
-        query($id: ID!) {
-          football {
-            game(id: $id) {
-              __typename
-              anyPlayers { __typename }
+        for field in candidates:
+            q = """
+            query($id: ID!) {
+              football {
+                game(id: $id) {
+                  __typename
+                  %s { __typename id }
+                }
+              }
             }
-          }
-        }
-        """
-        body = gql(q, {"id": id_variant})
-        if ok(body):
-            game = (body["data"].get("football") or {}).get("game") or {}
-            items = game.get("anyPlayers") or []
-            if items:
-                types = {it.get("__typename") for it in items if it}
-                print(f"  ✅ id={id_variant!r} → {len(items)} entries, types={types}")
-                return id_variant, types
+            """ % field
+            body = gql(q, {"id": id_variant})
+            if ok(body):
+                game = (body["data"].get("football") or {}).get("game") or {}
+                items = game.get(field) or []
+                if isinstance(items, list) and items:
+                    types = {it.get("__typename") for it in items if it}
+                    print(f"  ✅ field={field:<20} id={id_variant!r} → {len(items)} entries, types={types}")
+                    return field, id_variant, types
+                elif isinstance(items, list):
+                    print(f"  ⚠️  field={field} id={id_variant!r} → vide")
             else:
-                print(f"  ⚠️  id={id_variant!r} → anyPlayers vide")
-        else:
-            print(f"  ❌ id={id_variant!r} → {first_err(body)[:150]}")
-    return None, set()
+                msg = first_err(body)
+                if "doesn't exist" not in msg:
+                    print(f"  ❌ field={field} id={id_variant!r} → {msg[:100]}")
+    return None, None, set()
 
 
-def build_game_query(typenames):
-    """Construit la query finale avec fragments sur les types concrets detectes."""
-    # Fragments a essayer : on couvre les noms plausibles. L'API ignore les fragments
-    # pour des types qui ne matchent pas (pas d'erreur).
+def build_game_query(field, typenames):
+    """Construit la query finale avec fragments sur So5Score (ou le type trouve)."""
     frags = []
-    for tn in typenames:
+    # Type principal attendu : So5Score
+    for tn in typenames or ["So5Score"]:
         frags.append("""
             ... on %s {
-              footballPlayingStatusOdds { starterOddsBasisPoints reliability }
-              anyPlayer { __typename ... on Player { slug displayName } }
-              player { slug displayName }
+              id
+              anyPlayer {
+                __typename
+                ... on Player { slug displayName }
+              }
+              anyPlayerGameStats {
+                __typename
+                ... on PlayerGameStats {
+                  footballPlayingStatusOdds {
+                    starterOddsBasisPoints
+                    reliability
+                  }
+                  anyTeam { __typename ... on Club { slug } }
+                }
+              }
             }
         """ % tn)
-    # Fallback : tente aussi les noms communs meme s'ils ne sont pas dans typenames
-    # (au cas ou l'API retourne un type parent seul en discovery)
-    for guess in ["PlayerGameStats", "FootballPlayerGameStats", "AnyPlayer",
-                  "LineupEntry", "GameLineupPlayer"]:
-        if guess not in typenames:
-            frags.append("""
-                ... on %s {
-                  footballPlayingStatusOdds { starterOddsBasisPoints reliability }
-                  anyPlayer { __typename ... on Player { slug displayName } }
-                  player { slug displayName }
-                }
-            """ % guess)
     return """
     query($id: ID!) {
       football {
         game(id: $id) {
-          anyPlayers {
+          %s {
             __typename
             %s
           }
         }
       }
     }
-    """ % "\n".join(frags)
+    """ % (field, "\n".join(frags))
 
 
 def detect_working_field(sample_game_uuid):
-    """Discovery → teste la query finale. Retourne (typenames, id_variant)."""
-    id_variant, typenames = discover_any_player_type(sample_game_uuid)
-    if not id_variant:
-        return None, None
-    # Teste la query avec fragments
-    q = build_game_query(typenames)
+    """Discovery → teste la query finale. Retourne (field, typenames, id_variant)."""
+    field, id_variant, typenames = discover_field_and_type(sample_game_uuid)
+    if not field:
+        return None, None, None
+    q = build_game_query(field, typenames)
     body = gql(q, {"id": id_variant})
     if not ok(body):
-        print(f"  ❌ query avec fragments : {first_err(body)[:200]}")
-        # Retry sans les fragments guess (qui peuvent etre invalides)
-        q_min = """
-        query($id: ID!) {
-          football {
-            game(id: $id) {
-              anyPlayers {
-                __typename
-                %s
-              }
-            }
-          }
-        }
-        """ % "\n".join([
-            """... on %s {
-                 footballPlayingStatusOdds { starterOddsBasisPoints reliability }
-                 anyPlayer { ... on Player { slug displayName } }
-               }""" % tn for tn in typenames
-        ])
-        body = gql(q_min, {"id": id_variant})
-        if not ok(body):
-            print(f"  ❌ query minimale : {first_err(body)[:200]}")
-            return None, None
-        print(f"  ✅ query minimale OK")
-        return typenames, id_variant
-    # Check que les fragments renvoient bien quelque chose d'utile
-    items = (body["data"].get("football") or {}).get("game", {}).get("anyPlayers") or []
-    got_odds = sum(1 for it in items if (it.get("footballPlayingStatusOdds") or {}).get("starterOddsBasisPoints") is not None)
+        print(f"  ❌ query complete : {first_err(body)[:200]}")
+        return None, None, None
+    items = (body["data"].get("football") or {}).get("game", {}).get(field) or []
+    got_odds = sum(
+        1 for it in items
+        if ((it.get("anyPlayerGameStats") or {}).get("footballPlayingStatusOdds") or {})
+           .get("starterOddsBasisPoints") is not None
+    )
     print(f"  ✅ query OK : {len(items)} entries, {got_odds} avec starterOddsBasisPoints")
-    return typenames, id_variant
+    return field, typenames, id_variant
 
 
 # ── introspection utilities ──────────────────────────────────────────────────
@@ -338,20 +326,20 @@ def fetch_upcoming_games():
     return list(uuids)
 
 
-def fetch_game_lineup(game_uuid, typenames, id_format):
-    q = build_game_query(typenames)
+def fetch_game_lineup(game_uuid, field, typenames, id_format):
+    q = build_game_query(field, typenames)
     gid = f"Game:{game_uuid}" if id_format == "prefixed" else game_uuid
     body = gql(q, {"id": gid})
     if not ok(body):
         return game_uuid, {}, first_err(body)
     game = (body["data"].get("football") or {}).get("game") or {}
-    items = game.get("anyPlayers") or []
+    items = game.get(field) or []
     out = {}
     for it in items:
-        # anyPlayer peut etre sous 'anyPlayer' (selon fragment) ou 'player'
-        pl = it.get("anyPlayer") or it.get("player") or {}
+        pl = it.get("anyPlayer") or {}
         slug = pl.get("slug")
-        odds = it.get("footballPlayingStatusOdds") or {}
+        pgs = it.get("anyPlayerGameStats") or {}
+        odds = pgs.get("footballPlayingStatusOdds") or {}
         bp = odds.get("starterOddsBasisPoints")
         if slug and bp is not None:
             out[slug] = {
@@ -361,11 +349,141 @@ def fetch_game_lineup(game_uuid, typenames, id_format):
     return game_uuid, out, None
 
 
+def do_probe(game_uuid, player_slug="desire-doue"):
+    """Probe aggressif pour trouver le chemin jusqu'a footballPlayingStatusOdds.
+
+    On teste :
+      1. Des fields sur Game (au-dela de anyPlayers)
+      2. Des fields sur Player (playerGameStats, nextGameStats, ...)
+      3. Des fields root (anyPlayerGameStats(id:), node(id:), ...)
+    """
+    print("=" * 60)
+    print(f"PROBE — Game {game_uuid[:8]}... | Player {player_slug}")
+    print("=" * 60)
+
+    # 1) Game — teste des fields qui pourraient exposer un acces aux stats
+    print("\n[1] Game fields (qui retournent quelque chose de non-null) :")
+    GAME_PROBES = [
+        "anyPlayers", "playerGameScores", "playerGameScore", "anyPlayerGameScores",
+        "footballPlayerGameStats", "homeLineup", "awayLineup", "anyHomeLineup",
+        "anyAwayLineup", "lineupPlayers", "lineups", "anyLineups", "formation",
+        "homeFormation", "awayFormation", "anyFormation", "footballFormation",
+        "footballGameStats", "anyFootballGameStats", "gameStats", "anyGameStats",
+        "homeTeam", "awayTeam", "anyHomeTeam", "anyAwayTeam", "homeClub", "awayClub",
+        "anyTeams", "teams", "anyParticipants", "participants",
+        "playingStatusOdds", "anyPlayingStatusOdds", "footballPlayingStatusOdds",
+        "fieldStatus", "status", "statusTyped", "scheduledAt", "date",
+    ]
+    for field in GAME_PROBES:
+        q = "query($id: ID!){football{game(id:$id){%s { __typename }}}}" % field
+        body = gql(q, {"id": game_uuid})
+        if ok(body):
+            val = ((body["data"].get("football") or {}).get("game") or {}).get(field)
+            if val is not None:
+                sample = json.dumps(val)[:120] if not isinstance(val, str) else val[:120]
+                print(f"  ✅ game.{field:<35} = {sample}")
+        else:
+            # Cas scalar (pas de sous-sel)
+            q2 = "query($id: ID!){football{game(id:$id){%s}}}" % field
+            body2 = gql(q2, {"id": game_uuid})
+            if ok(body2):
+                val = ((body2["data"].get("football") or {}).get("game") or {}).get(field)
+                if val is not None:
+                    print(f"  ✅ (scalar) game.{field:<30} = {json.dumps(val)[:120]}")
+
+    # 2) Player — teste des fields scope au prochain match
+    print("\n[2] Player fields (cherche PlayerGameStats ou odds direct) :")
+    PLAYER_PROBES = [
+        "playerGameStats", "anyPlayerGameStats", "nextPlayerGameStats",
+        "upcomingPlayerGameStats", "activePlayerGameStats", "nextGameStats",
+        "nextFootballPlayerGameStats", "anyNextGameStats",
+        "footballPlayerGameStats", "gameStats",
+        "nextGame", "nextFootballGame", "upcomingGames", "anyUpcomingGames",
+        "nextFixture", "nextFootballFixture", "anyNextFixture",
+        "playingStatusOdds", "anyPlayingStatusOdds", "footballPlayingStatusOdds",
+        "nextClassicFixturePlayingStatusOdds", "nextFixturePlayingStatusOdds",
+        "nextMidweekFixturePlayingStatusOdds", "anyNextFixturePlayingStatusOdds",
+        "starterOddsBasisPoints",
+        "playingStatus", "playingStatusReliability",
+    ]
+    for field in PLAYER_PROBES:
+        # Tente avec sous-selection __typename
+        q = "query($s: String!){football{player(slug:$s){%s { __typename }}}}" % field
+        body = gql(q, {"s": player_slug})
+        if ok(body):
+            val = ((body["data"].get("football") or {}).get("player") or {}).get(field)
+            if val is not None:
+                sample = json.dumps(val)[:120]
+                print(f"  ✅ player.{field:<40} = {sample}")
+        else:
+            # Tente en scalar
+            q2 = "query($s: String!){football{player(slug:$s){%s}}}" % field
+            body2 = gql(q2, {"s": player_slug})
+            if ok(body2):
+                val = ((body2["data"].get("football") or {}).get("player") or {}).get(field)
+                if val is not None:
+                    print(f"  ✅ (scalar) player.{field:<34} = {json.dumps(val)[:120]}")
+
+    # 3) Player + gameId arg — cherche playerGameStats(gameId:)
+    print("\n[3] Player avec argument gameId :")
+    PARAM_VARIANTS = [
+        ("playerGameStats", "gameId", "ID"),
+        ("playerGameStats", "id", "ID"),
+        ("gameStats", "gameId", "ID"),
+        ("footballPlayerGameStats", "gameId", "ID"),
+        ("anyPlayerGameStats", "gameId", "ID"),
+    ]
+    for field, arg_name, arg_type in PARAM_VARIANTS:
+        q = f'query($s:String!,$g:{arg_type}!){{football{{player(slug:$s){{{field}({arg_name}:$g){{ __typename }}}}}}}}'
+        for gid in [game_uuid, f"Game:{game_uuid}"]:
+            body = gql(q, {"s": player_slug, "g": gid})
+            if ok(body):
+                val = ((body["data"].get("football") or {}).get("player") or {}).get(field)
+                print(f"  ✅ player.{field}({arg_name}:{gid[:12]}..) → {json.dumps(val)[:120]}")
+
+    # 4) node(id) — acces direct par global ID
+    print("\n[4] node(id:) — acces par ID global :")
+    for gid in [f"Game:{game_uuid}", game_uuid]:
+        q = "query($id:ID!){node(id:$id){__typename}}"
+        body = gql(q, {"id": gid})
+        if ok(body):
+            val = body["data"].get("node")
+            print(f"  ✅ node(id={gid[:18]}..) → {json.dumps(val)[:120]}")
+
+    # 5) anyGame / anyPlayerGameStats au root sous football
+    print("\n[5] Fields root sous football :")
+    ROOT_PROBES = [
+        ("anyGame", "id", "ID"),
+        ("anyPlayer", "slug", "String"),
+        ("anyPlayerGameStats", "id", "ID"),
+        ("footballPlayerGameStats", "id", "ID"),
+        ("playerGameStats", "id", "ID"),
+    ]
+    for field, arg, atype in ROOT_PROBES:
+        q = "query($v:%s!){football{%s(%s:$v){__typename}}}" % (atype, field, arg)
+        for val_arg in ([game_uuid, f"Game:{game_uuid}"] if "ID" in atype else [player_slug]):
+            body = gql(q, {"v": val_arg})
+            if ok(body):
+                val = (body["data"].get("football") or {}).get(field)
+                print(f"  ✅ football.{field}({arg}={val_arg[:18]}..) → {json.dumps(val)[:120]}")
+            else:
+                msg = first_err(body)
+                if "doesn't exist" not in msg and "must have a sub-selection" not in msg:
+                    print(f"  ⚠️  football.{field}({arg}={val_arg[:18]}..) : {msg[:120]}")
+
+    print("\n=== FIN PROBE ===")
+    sys.exit(0)
+
+
 def main():
     t0 = time.time()
 
     if INTROSPECT:
         do_introspection()
+
+    if PROBE:
+        game = SINGLE_GAME or "db595776-a88c-4846-ae43-83473161e4d1"
+        do_probe(game)
 
     print("=" * 60)
     print("FETCH TITU% FAST — API Sorare officielle")
@@ -382,21 +500,21 @@ def main():
         print("❌ Aucun game. Abort.")
         sys.exit(1)
 
-    # 2. Detecte types
-    print(f"[2/3] Discovery du type GraphQL sur anyPlayers...")
-    typenames, id_variant = detect_working_field(game_uuids[0])
-    if not typenames:
-        print("\n❌ Discovery KO. Copie la sortie ci-dessus et envoie-la.")
+    # 2. Detecte le field (playerGameScores ?) + typenames (So5Score ?)
+    print(f"[2/3] Discovery du field GraphQL sur Game...")
+    field, typenames, id_variant = detect_working_field(game_uuids[0])
+    if not field:
+        print("\n❌ Discovery KO. Lance : python3 fetch_titu_fast.py --probe")
         sys.exit(2)
     id_format = "prefixed" if id_variant.startswith("Game:") else "raw"
     print()
 
     # 3. Batch parallele
-    print(f"[3/3] Fetch {len(game_uuids)} games (workers={WORKERS}, types={typenames}, id={id_format})...")
+    print(f"[3/3] Fetch {len(game_uuids)} games (workers={WORKERS}, field={field}, types={typenames}, id={id_format})...")
     slug_to_info = {}
     errors = 0
     with ThreadPoolExecutor(max_workers=WORKERS) as ex:
-        futs = {ex.submit(fetch_game_lineup, gid, typenames, id_format): gid for gid in game_uuids}
+        futs = {ex.submit(fetch_game_lineup, gid, field, typenames, id_format): gid for gid in game_uuids}
         for fut in as_completed(futs):
             gid, pct_map, err = fut.result()
             if err:

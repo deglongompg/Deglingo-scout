@@ -1,65 +1,10 @@
 {
-  "Game:63038d34-201e-4614-86a5-bc4fec62f010": {
-    "home": "Real Madrid",
-    "away": "D. Alavés",
-    "date": "2026-04-21",
-    "home_goals": 2,
-    "away_goals": 1,
-    "home_scorers": [],
-    "away_scorers": [],
-    "home_assists": [],
-    "away_assists": []
-  },
-  "Game:a9f722c7-456f-46dd-808c-e5b7b87e0092": {
-    "home": "Girona FC",
-    "away": "Real Betis",
-    "date": "2026-04-21",
-    "home_goals": 2,
-    "away_goals": 3,
-    "home_scorers": [],
-    "away_scorers": [],
-    "home_assists": [],
-    "away_assists": []
-  },
-  "Game:2ea7584d-b8c4-48f1-ad5d-b35ea30bb40f": {
-    "home": "RCD Mallorca",
-    "away": "Valencia CF",
-    "date": "2026-04-21",
-    "home_goals": 1,
-    "away_goals": 1,
-    "home_scorers": [],
-    "away_scorers": [],
-    "home_assists": [],
-    "away_assists": []
-  },
-  "Game:775e14d0-7068-466b-afaa-b66dccefcb51": {
-    "home": "Athletic Club",
-    "away": "CA Osasuna",
-    "date": "2026-04-21",
-    "home_goals": 1,
-    "away_goals": 0,
-    "home_scorers": [],
-    "away_scorers": [],
-    "home_assists": [],
-    "away_assists": []
-  },
   "Game:8811e302-dcb5-4d27-8ba6-d4f9d4d2516c": {
     "home": "Stade de Reims",
     "away": "Red Star FC 93",
     "date": "2026-04-18",
     "home_goals": 3,
     "away_goals": 2,
-    "home_scorers": [],
-    "away_scorers": [],
-    "home_assists": [],
-    "away_assists": []
-  },
-  "Game:466b1f76-f9cf-4b68-9465-de579845f777": {
-    "home": "Brighton & Hove Albion FC",
-    "away": "Chelsea FC",
-    "date": "2026-04-21",
-    "home_goals": 3,
-    "away_goals": 0,
     "home_scorers": [],
     "away_scorers": [],
     "home_assists": [],

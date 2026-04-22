@@ -36,7 +36,7 @@ query GameLineupOdds($id: ID!) {
     game(id: $id) {
       id
       date
-      status
+      statusTyped
       homeTeam { ... on Club { slug code name } }
       awayTeam { ... on Club { slug code name } }
       playerGameScores {
@@ -85,7 +85,7 @@ if not game:
 
 print(f"\n✅ Game trouve :")
 print(f"   {game['homeTeam']['name']} vs {game['awayTeam']['name']}")
-print(f"   {game['date']}  status={game['status']}")
+print(f"   {game['date']}  status={game.get('statusTyped')}")
 print(f"   {len(game.get('playerGameScores', []) or [])} joueurs dans playerGameScores")
 
 # Sauvegarde raw pour inspection

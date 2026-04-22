@@ -256,48 +256,89 @@ def do_introspection():
 
 
 # ── fetch upcoming games ─────────────────────────────────────────────────────
+# Slugification FR name → Sorare slug. Basee sur les slugs que Sorare utilise reellement.
+def slugify_club(name):
+    """Convertit 'Paris Saint-Germain' -> 'psg-paris', 'Real Madrid' -> 'real-madrid', etc."""
+    if not name: return None
+    import unicodedata
+    n = unicodedata.normalize("NFKD", name).encode("ascii", "ignore").decode("ascii")
+    n = n.lower().strip()
+    # Remplacements manuels pour les cas ou Sorare a un slug atypique
+    HARDCODED = {
+        "paris saint-germain": "psg-paris",
+        "fc barcelona": "fc-barcelona",
+        "real madrid": "real-madrid",
+        "real madrid cf": "real-madrid",
+        "atletico de madrid": "atletico-de-madrid",
+        "manchester city fc": "manchester-city-fc",
+        "manchester united fc": "manchester-united-fc",
+        "liverpool fc": "liverpool-fc",
+        "arsenal fc": "arsenal-fc",
+        "chelsea fc": "chelsea-fc",
+        "tottenham hotspur fc": "tottenham-hotspur-fc",
+        "fc bayern munchen": "fc-bayern-munchen",
+        "borussia dortmund": "borussia-dortmund",
+        "rb leipzig": "rb-leipzig",
+        "olympique de marseille": "olympique-de-marseille",
+        "olympique lyonnais": "olympique-lyonnais",
+        "as monaco fc": "as-monaco-fc",
+        "lille osc": "losc-lille",
+        "stade rennais fc 1901": "stade-rennais-fc-1901",
+    }
+    if n in HARDCODED: return HARDCODED[n]
+    # Default : remplace espaces/ponctuation par -
+    import re
+    return re.sub(r"[^a-z0-9]+", "-", n).strip("-")
+
+
 def fetch_upcoming_games():
     uuids = set()
 
-    # A) so5 fixtures (weekend classic)
-    Q_SO5 = """
-    {
-      so5 {
-        inProgressSo5Fixture { slug games { id } }
-        futureSo5Fixtures(first: 3) { nodes { slug games { id } } }
-      }
-    }
-    """
-    body = gql(Q_SO5)
-    if ok(body):
-        so5 = body["data"].get("so5") or {}
-        ip = so5.get("inProgressSo5Fixture") or {}
-        for g in ip.get("games") or []:
-            gid = (g.get("id") or "").split(":")[-1]
-            if gid: uuids.add(gid)
-        print(f"  📅 inProgress {ip.get('slug','-')}: {len(ip.get('games') or [])} games")
-        for fx in (so5.get("futureSo5Fixtures") or {}).get("nodes") or []:
-            for g in fx.get("games") or []:
-                gid = (g.get("id") or "").split(":")[-1]
-                if gid: uuids.add(gid)
-            print(f"  📅 future {fx.get('slug','-')}: {len(fx.get('games') or [])} games")
-    else:
-        print(f"  ⚠️  so5 fixtures: {first_err(body)}")
+    # A) Essaie les variantes so5 fixtures. Pas critique si ca echoue —
+    #    le fallback club.upcomingGames couvre tout.
+    SO5_QUERIES = [
+        "{ so5 { currentOrNextSo5Fixture { slug games { id } } } }",
+        "{ so5 { currentSo5Fixture { slug games { id } } } }",
+        "{ so5 { inProgressOrUpcomingSo5Fixtures(first: 4) { nodes { slug games { id } } } } }",
+        "{ so5 { openSo5Fixtures(first: 4) { nodes { slug games { id } } } } }",
+    ]
+    for q in SO5_QUERIES:
+        body = gql(q)
+        if not ok(body): continue
+        so5d = body["data"].get("so5") or {}
+        before = len(uuids)
+        for val in so5d.values():
+            if val is None: continue
+            if isinstance(val, dict) and "nodes" in val:
+                for fx in val["nodes"] or []:
+                    for g in fx.get("games") or []:
+                        gid = (g.get("id") or "").split(":")[-1]
+                        if gid: uuids.add(gid)
+            elif isinstance(val, dict):
+                for g in val.get("games") or []:
+                    gid = (g.get("id") or "").split(":")[-1]
+                    if gid: uuids.add(gid)
+        added = len(uuids) - before
+        if added:
+            print(f"  📅 so5 fixtures → +{added} games")
+            break
 
-    # B) Complete via club.upcomingGames (pour midweek si so5 ne couvre pas tout)
-    # On lit players.json pour avoir la liste des clubs actifs
+    # B) Complete via club.upcomingGames pour TOUS les clubs de players.json
     try:
         with open(PLAYERS_IN, encoding="utf-8") as f:
             players = json.load(f)
         club_slugs = set()
         for p in players:
+            # Si slug officiel dispo, tant mieux
             cs = p.get("club_slug") or p.get("clubSlug")
+            if cs:
+                club_slugs.add(cs)
+                continue
+            # Sinon slugify le nom
+            cs = slugify_club(p.get("club"))
             if cs: club_slugs.add(cs)
-        # Si pas de club_slug dans players, on utilise des sluggifications connues par ligue
-        # (fallback minimaliste — on reste sur les clubs qui jouent mid-week frequemment)
-        if not club_slugs:
-            club_slugs = {"psg-paris", "real-madrid", "fc-barcelona", "atletico-de-madrid",
-                          "manchester-city-fc", "arsenal-fc", "liverpool-fc", "chelsea-fc"}
+        print(f"  → {len(club_slugs)} clubs uniques dans players.json")
+
         Q_CLUB = """
         query($s: String!) {
           football {
@@ -307,18 +348,24 @@ def fetch_upcoming_games():
           }
         }
         """
-        added = 0
-        for slug in list(club_slugs)[:30]:  # cap au cas ou
-            body = gql(Q_CLUB, {"s": slug})
-            if ok(body):
+        before = len(uuids)
+        errors_clubs = 0
+        with ThreadPoolExecutor(max_workers=6) as ex:
+            def fetch_club(slug):
+                body = gql(Q_CLUB, {"s": slug})
+                if not ok(body): return slug, [], first_err(body)
                 games = ((body["data"].get("football") or {})
                          .get("club") or {}).get("upcomingGames") or []
+                return slug, games, None
+            futs = {ex.submit(fetch_club, s): s for s in club_slugs}
+            for fut in as_completed(futs):
+                slug, games, err = fut.result()
+                if err: errors_clubs += 1; continue
                 for g in games:
                     gid = (g.get("id") or "").split(":")[-1]
-                    if gid and gid not in uuids:
-                        uuids.add(gid); added += 1
-        if added:
-            print(f"  📅 club.upcomingGames: +{added} games mid-week")
+                    if gid: uuids.add(gid)
+        added = len(uuids) - before
+        print(f"  📅 club.upcomingGames → +{added} games ({errors_clubs} clubs inconnus)")
     except Exception as e:
         print(f"  ⚠️  club fallback KO: {e}")
 
@@ -500,13 +547,14 @@ def main():
         print("❌ Aucun game. Abort.")
         sys.exit(1)
 
-    # 2. Detecte le field (playerGameScores ?) + typenames (So5Score ?)
-    print(f"[2/3] Discovery du field GraphQL sur Game...")
-    field, typenames, id_variant = detect_working_field(game_uuids[0])
-    if not field:
-        print("\n❌ Discovery KO. Lance : python3 fetch_titu_fast.py --probe")
-        sys.exit(2)
-    id_format = "prefixed" if id_variant.startswith("Game:") else "raw"
+    # 2. Field + typenames HARDCODES (voir MEMOIRE.md). Discovery uniquement si --probe.
+    # Schema confirme 2026-04-22 :
+    #   game.playerGameScores → [PlayerGameScore]
+    #   PlayerGameScore { anyPlayer, anyPlayerGameStats { footballPlayingStatusOdds } }
+    field = "playerGameScores"
+    typenames = {"PlayerGameScore"}
+    id_format = "raw"  # UUID brut, pas "Game:<uuid>"
+    print(f"[2/3] Field hard-codee : {field} / types={typenames} / id={id_format}")
     print()
 
     # 3. Batch parallele

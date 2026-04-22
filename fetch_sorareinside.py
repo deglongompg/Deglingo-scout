@@ -131,15 +131,18 @@ def get_current_gw_slugs(session):
 
 # ── FETCH LINEUPS ─────────────────────────────────────────────────────────────
 def fetch_lineups(session, gw_slug):
-    """Fetch all lineup predictions for a specific GW with pagination"""
+    """Fetch all lineup predictions for a specific GW with pagination.
+    Le serveur Sorareinside cap a 50 items/page. Fix : demande limit=50 et
+    continue tant qu'on recoit des items (ne pas break sur len<limit)."""
     print(f"\n📡 Fetching linedup-players pour GW: {gw_slug}")
 
     url = f"{PLATFORM_API}/lineups/linedup-players"
     all_items = []
-    limit = 200
+    limit = 50   # Hard cap serveur, pas 200
     offset = 0
+    max_pages = 50  # Safety : ~2500 items max
 
-    while True:
+    for page in range(max_pages):
         r = session.get(url, params={
             "gameweekSlug": gw_slug,
             "limit": limit,
@@ -155,12 +158,17 @@ def fetch_lineups(session, gw_slug):
         if not isinstance(items, list):
             items = []
 
+        if not items:
+            # Plus d'items = fin de pagination
+            break
+
         all_items.extend(items)
         print(f"  offset={offset}: +{len(items)} items (total={len(all_items)})")
 
-        if len(items) < limit:
-            break  # No more pages
-        offset += limit
+        # Continue tant qu'on recoit des items (meme si < limit cote serveur)
+        if len(items) == 0:
+            break
+        offset += len(items)  # Avance du vrai nombre recu
 
     return all_items, "linedup-players"
 

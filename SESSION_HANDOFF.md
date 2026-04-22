@@ -2,6 +2,62 @@
 
 ---
 
+## 🚀 MISE À JOUR 2026-04-22 soir — Titu% FAST via API Sorare officielle
+
+**Contexte** : on a capture via DevTools (page `/football/scores/matches/{uuid}/lineups`)
+le schema GraphQL frontend Sorare. Il expose `anyPlayerGameStats.footballPlayingStatusOdds.starterOddsBasisPoints`
+(+ `reliability` = HIGH/MEDIUM/LOW). Ce champ existe sur TOUS les matchs — weekend ET mid-week
+— contrairement a `nextClassicFixturePlayingStatusOdds` qui renvoie `null` en mid-week.
+
+**Screenshot** : Désiré Doué → `starterOddsBasisPoints: 4000` = 40% (match ce 23/04), confirme
+par l'UI Sorareinside. `reliability: MEDIUM`, `providerIconUrl` pointe vers sorare_inside.png
+(Sorare utilise Sorareinside comme provider sous le capot).
+
+### Nouveaux fichiers
+
+**`fetch_titu_fast.py`** — fetch titu% precis via GraphQL officielle (pas besoin de
+SORAREINSIDE_PASSWORD). Strategie :
+  1. Recupere les Game UUIDs prochains via `so5.inProgressSo5Fixture.games` + `futureSo5Fixtures`
+  2. Pour chaque game, batch parallele (4 workers) pour les `playerGameStats` + `footballPlayingStatusOdds`
+  3. Patch `players.json` avec `sorare_starter_pct` (precis, 0-99) + `sorare_starter_reliability`
+
+Duree attendue : **5-10 sec** (meme ordre que Sorareinside scraping mais plus robuste).
+
+**`debug_titu_via_game.py`** — script introspection GraphQL (a lancer si `fetch_titu_fast.py`
+plante). Sonde Game.{playerGameStats, anyPlayerGameStats, lineup, ...} + introspection pour
+confirmer le bon nom de champ sur ce schema federate.
+
+### MAJ_turbo.sh — etape [2bis/6] basculee
+
+Avant : `fetch_sorareinside.py` (scraping Sorareinside).
+Apres : `fetch_titu_fast.py` en primaire + Sorareinside en fallback.
+
+```bash
+if python3 fetch_titu_fast.py; then
+  echo "[2bis/6] OK (via API Sorare)"
+else
+  # fallback : Sorareinside si cle dispo
+  python3 fetch_sorareinside.py
+fi
+```
+
+### A TESTER SUR MAC
+
+Les noms de champs dans `fetch_titu_fast.py` sont des **GUESSES basees sur le screenshot**.
+Si ca plante, lance :
+```bash
+python3 debug_titu_via_game.py
+```
+→ affiche le bon field name a hard-coder dans `FIELD_CANDIDATES`.
+
+**Commande complete pour tester** :
+```bash
+git pull origin claude/found-it-5pIEA
+python3 fetch_titu_fast.py --dry-run  # voir si ca passe sans patcher
+```
+
+---
+
 ## 🚀 MISE À JOUR 2026-04-22 mardi soir — TURBO MAJ complete + Liga mid-week fix
 
 **État prod `scout.deglingosorare.com` = OK ✅**

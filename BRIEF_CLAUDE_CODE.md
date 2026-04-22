@@ -1,5 +1,35 @@
 # BIBLE DEGLINGO SCOUT V6
-## Dernière mise à jour : 22 avril 2026 (soir) — Turbo + Liga mid-week fix
+## Dernière mise à jour : 22 avril 2026 (soir++) — Titu% FAST via API Sorare officielle
+
+---
+
+## 🆕 Titu% precis sans Sorareinside — `fetch_titu_fast.py`
+
+Depuis 2026-04-22 soir on a decouvert (via DevTools sur `/football/scores/matches/{uuid}/lineups`)
+que l'API Sorare federation expose le MEME champ que Sorareinside sous :
+
+```
+Game.anyPlayerGameStats[i].footballPlayingStatusOdds {
+  starterOddsBasisPoints   # = titu% × 100
+  reliability              # HIGH | MEDIUM | LOW
+}
+```
+
+Ce champ marche **pour tous les matchs** (weekend + mid-week), contrairement a
+`nextClassicFixturePlayingStatusOdds` (null en mid-week).
+
+**Nouveau fetch** : `fetch_titu_fast.py`
+  - Prend les Game UUIDs prochains via `so5.inProgressSo5Fixture` + `futureSo5Fixtures`
+  - Batch parallele GraphQL par game (4 workers) → ~5-10 sec total
+  - Patch `players.json` avec `sorare_starter_pct` (precis) + `sorare_starter_reliability`
+
+**MAJ_turbo.sh** l'a integre en etape [2bis/6], avec fallback auto sur `fetch_sorareinside.py`
+si l'API Sorare plante.
+
+**Si ca plante** : `debug_titu_via_game.py` introspecte le schema GraphQL pour trouver le bon
+nom de champ (`playerGameStats` vs `anyPlayerGameStats` vs autre).
+
+---
 
 ---
 

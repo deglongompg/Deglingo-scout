@@ -26,16 +26,23 @@ python3 fetch_player_status.py
 echo "[2/6] OK"
 echo
 
-# ---- [2bis/6] Titu% precis via Sorareinside (override les approximations enum) ----
-if grep -q "^SORAREINSIDE_PASSWORD=" .env 2>/dev/null; then
-  echo "[2bis/6] TITU% PRECIS via Sorareinside (~5-10s)..."
-  python3 fetch_sorareinside.py || echo "  ⚠️  Sorareinside fetch a echoue (continue avec enum approx)"
-  echo "[2bis/6] OK"
-  echo
+# ---- [2bis/6] Titu% precis via API Sorare officielle (footballPlayingStatusOdds) ----
+# Depuis 2026-04-22 : on utilise le MEME champ que le frontend Sorare
+# (anyPlayerGameStats.footballPlayingStatusOdds.starterOddsBasisPoints).
+# Marche pour matchs weekend ET mid-week. Fallback Sorareinside si echec.
+echo "[2bis/6] TITU% PRECIS via API Sorare officielle (~5-10s)..."
+if python3 fetch_titu_fast.py; then
+  echo "[2bis/6] OK (via API Sorare)"
 else
-  echo "[2bis/6] SKIP Sorareinside (ajoute SORAREINSIDE_PASSWORD=... dans .env pour vrais titu% mid-week)"
-  echo
+  echo "  ⚠️  fetch_titu_fast a echoue — fallback Sorareinside..."
+  if grep -q "^SORAREINSIDE_PASSWORD=" .env 2>/dev/null; then
+    python3 fetch_sorareinside.py || echo "  ⚠️  Sorareinside aussi KO (continue avec enum approx)"
+    echo "[2bis/6] OK (via Sorareinside fallback)"
+  else
+    echo "[2bis/6] SKIP — ajoute SORAREINSIDE_PASSWORD dans .env pour fallback"
+  fi
 fi
+echo
 
 # ---- [3/6] Scores SO5 matchs joues (smart-skip) ----
 echo "[3/6] SCORES SO5 matchs joues (~30-60s)..."

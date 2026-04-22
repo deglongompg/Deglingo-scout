@@ -249,13 +249,34 @@ if __name__ == "__main__":
         print("❌ Impossible de trouver les GW slugs")
         sys.exit(1)
 
-    # Collect all predictions across GWs (current + next)
+    # Tri slugs par date de debut (plus recent d'abord) pour que la GW
+    # la plus proche ecrase les anciennes dans le merge
+    # Format slug: "football-21-24-apr-2026" -> date debut = 21 avr
+    def gw_sort_key(slug):
+        # Extrait les 2 chiffres apres 'football-' pour la date de debut
+        import re
+        m = re.match(r'football-(\d+)-\d+-([a-z]+)-(\d{4})', slug)
+        if not m: return slug
+        months = {"jan":1,"feb":2,"mar":3,"apr":4,"may":5,"jun":6,"jul":7,"aug":8,"sep":9,"oct":10,"nov":11,"dec":12}
+        day = int(m.group(1))
+        mon = months.get(m.group(2), 0)
+        year = int(m.group(3))
+        return (year, mon, day)
+
+    # Trie par date ASCENDANTE : on iterera d'abord les GW anciennes puis les nouvelles
+    # Ainsi les titu% de la GW la plus proche du match ECRASENT les anciennes valeurs
+    gw_slugs_sorted = sorted(gw_slugs, key=gw_sort_key)
+    print(f"  GW slugs tries (ancien -> recent): {gw_slugs_sorted}")
+
+    # Collect all predictions, ordre : ancien -> recent
+    # dict.update() ecrase, donc la GW la plus recente (la derniere traitee) gagne
     all_slug_to_pct = {}
-    for gw_slug in gw_slugs:
+    for gw_slug in gw_slugs_sorted:
         data, source = fetch_lineups(session, gw_slug)
         if data is not None:
             pct_map = parse_lineup_data(data, source)
             all_slug_to_pct.update(pct_map)
+            print(f"  Apres {gw_slug}: {len(all_slug_to_pct)} joueurs cumules")
 
     print(f"\n📊 Total joueurs avec Titu%: {len(all_slug_to_pct)}")
 

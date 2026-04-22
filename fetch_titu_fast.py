@@ -292,42 +292,70 @@ def slugify_club(name):
 
 
 def fetch_upcoming_games():
-    """Recup Game UUIDs via so5.featuredSo5Fixtures (confirme existant dans fetch_sorareinside.py).
-    Couvre weekend + mid-week sur les N prochaines semaines.
-    """
+    """Recup Game UUIDs via so5.featuredSo5Fixtures en 2 steps (slugs → games)."""
     uuids = set()
 
-    # Strategie A : so5.featuredSo5Fixtures → slugs GW → games
+    # Step 1 : liste des GW fixture slugs actifs
     Q1 = """
     {
       so5 {
-        featuredSo5Fixtures {
-          slug
-          startDate
-          endDate
-          games { id date }
-        }
+        featuredSo5Fixtures { slug startDate endDate }
       }
     }
     """
     body = gql(Q1)
-    if ok(body):
-        fixtures = (body["data"].get("so5") or {}).get("featuredSo5Fixtures") or []
-        for fx in fixtures:
-            slug = fx.get("slug", "")
-            if "football" not in slug:
-                continue  # skip NBA/MLB/etc.
-            before = len(uuids)
-            for g in fx.get("games") or []:
-                gid = (g.get("id") or "").split(":")[-1]
-                if gid: uuids.add(gid)
-            added = len(uuids) - before
-            if added:
-                print(f"  📅 so5.featuredSo5Fixtures[{slug}] → +{added} games")
-    else:
+    if not ok(body):
         print(f"  ⚠️  so5.featuredSo5Fixtures: {first_err(body)[:150]}")
+    fixtures = ((body or {}).get("data") or {}).get("so5", {}).get("featuredSo5Fixtures") or []
+    football_slugs = [fx["slug"] for fx in fixtures if "football" in (fx.get("slug") or "")]
+    print(f"  📅 {len(football_slugs)} fixture slugs football : {football_slugs}")
 
-    # Strategie B : fallback club.upcomingGames (seulement si A a echoue)
+    # Step 2 : pour chaque slug, query so5Fixture(slug:) { games { id } }
+    # Essaie plusieurs variantes du field name (so5Fixture / fixture / so5FixtureBySlug)
+    Q_FX_TEMPLATES = [
+        "query($s: String!) { so5 { so5Fixture(slug: $s) { games { id } } } }",
+        "query($s: String!) { so5 { so5FixtureBySlug(slug: $s) { games { id } } } }",
+        "query($s: String!) { so5 { fixture(slug: $s) { games { id } } } }",
+    ]
+    working_template = None
+    for tpl in Q_FX_TEMPLATES:
+        if not football_slugs: break
+        body = gql(tpl, {"s": football_slugs[0]})
+        if ok(body):
+            so5d = body["data"].get("so5") or {}
+            # Trouve la cle (so5Fixture / fixture / so5FixtureBySlug)
+            for k, v in so5d.items():
+                if isinstance(v, dict) and "games" in v:
+                    working_template = tpl
+                    break
+            if working_template: break
+
+    if working_template and football_slugs:
+        print(f"  ✅ template OK : {working_template[:80]}...")
+        with ThreadPoolExecutor(max_workers=4) as ex:
+            def fetch_fx(slug):
+                body = gql(working_template, {"s": slug})
+                if not ok(body): return slug, [], first_err(body)
+                so5d = body["data"].get("so5") or {}
+                for v in so5d.values():
+                    if isinstance(v, dict) and "games" in v:
+                        return slug, v.get("games") or [], None
+                return slug, [], "no games field"
+            futs = {ex.submit(fetch_fx, s): s for s in football_slugs}
+            for fut in as_completed(futs):
+                slug, games, err = fut.result()
+                if err:
+                    print(f"  ⚠️  so5Fixture({slug}): {err[:100]}")
+                    continue
+                before = len(uuids)
+                for g in games:
+                    gid = (g.get("id") or "").split(":")[-1]
+                    if gid: uuids.add(gid)
+                print(f"  📅 {slug} → +{len(uuids) - before} games")
+    else:
+        print(f"  ⚠️  Aucun template so5Fixture n'a marche")
+
+    # Fallback club.upcomingGames (si step 1+2 echoue)
     if not uuids:
         try:
             with open(PLAYERS_IN, encoding="utf-8") as f:
@@ -337,25 +365,14 @@ def fetch_upcoming_games():
                 cs = p.get("club_slug") or p.get("clubSlug") or slugify_club(p.get("club"))
                 if cs: club_slugs.add(cs)
             print(f"  → fallback : {len(club_slugs)} clubs a probe")
-
-            Q_CLUB = """
-            query($s: String!) {
-              football {
-                club(slug: $s) { upcomingGames(first: 3) { id } }
-              }
-            }
-            """
+            Q_CLUB = "query($s: String!) { football { club(slug: $s) { upcomingGames(first: 3) { id } } } }"
             with ThreadPoolExecutor(max_workers=8) as ex:
                 def fetch_club(slug):
                     body = gql(Q_CLUB, {"s": slug})
-                    if not ok(body): return slug, []
-                    games = ((body["data"].get("football") or {})
-                             .get("club") or {}).get("upcomingGames") or []
-                    return slug, games
-                futs = {ex.submit(fetch_club, s): s for s in club_slugs}
-                for fut in as_completed(futs):
-                    slug, games = fut.result()
-                    for g in games:
+                    if not ok(body): return []
+                    return ((body["data"].get("football") or {}).get("club") or {}).get("upcomingGames") or []
+                for fut in as_completed([ex.submit(fetch_club, s) for s in club_slugs]):
+                    for g in fut.result():
                         gid = (g.get("id") or "").split(":")[-1]
                         if gid: uuids.add(gid)
         except Exception as e:

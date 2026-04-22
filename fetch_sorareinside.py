@@ -152,7 +152,9 @@ def fetch_lineups(session, gw_slug):
     WORKERS = 4
     MAX_RETRIES = 3
     TIMEOUT = 60
-    max_pages = 80  # safety ~4000 items max
+    # Sorareinside retourne ~54k items par GW (50 matchs x 18 joueurs x ~60 scenarios).
+    # On monte le safety cap tres haut pour ne jamais couper en plein milieu.
+    max_pages = 2000  # ~100,000 items max
 
     # Pre-copy la session (cookies auth) pour chaque worker
     headers_for_worker = dict(session.headers)
@@ -222,6 +224,10 @@ def fetch_lineups(session, gw_slug):
 
     if failed_offsets:
         print(f"  ⚠️  {len(failed_offsets)} pages en echec definitif: offsets {failed_offsets}")
+    # Warn si on a atteint le safety cap sans voir vraie fin de pagination
+    if not done_paging and next_offset >= max_pages * limit:
+        print(f"  ⚠️  SAFETY CAP atteint ({max_pages * limit} items) — il y a probablement PLUS de data non fetchee !")
+        print(f"      Augmente max_pages dans fetch_sorareinside.py si besoin.")
     return all_items, "linedup-players"
 
 

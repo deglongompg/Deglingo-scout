@@ -257,34 +257,47 @@ if __name__ == "__main__":
         print("❌ Impossible de trouver les GW slugs")
         sys.exit(1)
 
-    # Tri slugs par date de debut (plus recent d'abord) pour que la GW
-    # la plus proche ecrase les anciennes dans le merge
-    # Format slug: "football-21-24-apr-2026" -> date debut = 21 avr
-    def gw_sort_key(slug):
-        # Extrait les 2 chiffres apres 'football-' pour la date de debut
-        import re
-        m = re.match(r'football-(\d+)-\d+-([a-z]+)-(\d{4})', slug)
-        if not m: return slug
-        months = {"jan":1,"feb":2,"mar":3,"apr":4,"may":5,"jun":6,"jul":7,"aug":8,"sep":9,"oct":10,"nov":11,"dec":12}
-        day = int(m.group(1))
-        mon = months.get(m.group(2), 0)
-        year = int(m.group(3))
-        return (year, mon, day)
+    # Parse slug -> (start_date, end_date) pour filtrer les GW passees
+    # Format slug: "football-21-24-apr-2026"
+    import re
+    from datetime import date as _date
+    today = _date.today()
+    months = {"jan":1,"feb":2,"mar":3,"apr":4,"may":5,"jun":6,"jul":7,"aug":8,"sep":9,"oct":10,"nov":11,"dec":12}
 
-    # Trie par date ASCENDANTE : on iterera d'abord les GW anciennes puis les nouvelles
-    # Ainsi les titu% de la GW la plus proche du match ECRASENT les anciennes valeurs
-    gw_slugs_sorted = sorted(gw_slugs, key=gw_sort_key)
-    print(f"  GW slugs tries (ancien -> recent): {gw_slugs_sorted}")
+    def parse_gw(slug):
+        m = re.match(r'football-(\d+)-(\d+)-([a-z]+)-(\d{4})', slug)
+        if not m: return None, None
+        d_start, d_end, mon_s, year_s = int(m.group(1)), int(m.group(2)), m.group(3), int(m.group(4))
+        mon = months.get(mon_s, 0)
+        return _date(year_s, mon, d_start), _date(year_s, mon, d_end)
 
-    # Collect all predictions, ordre : ancien -> recent
-    # dict.update() ecrase, donc la GW la plus recente (la derniere traitee) gagne
+    # Filtre : garde uniquement les GW non encore terminees (end >= today)
+    upcoming = []
+    for slug in gw_slugs:
+        start, end = parse_gw(slug)
+        if not start: continue
+        if end < today:
+            print(f"  ⏩ Skip GW passee: {slug} (end={end} < today={today})")
+            continue
+        upcoming.append((start, end, slug))
+
+    # Trie par date de debut ASCENDANTE : la GW la plus proche en PREMIER
+    upcoming.sort()
+    print(f"  GW a fetcher (ordre = plus proche d'abord): {[s for _,_,s in upcoming]}")
+
+    # Merge avec setdefault : pour chaque joueur, la PREMIERE GW (la plus proche) prime
+    # Ainsi Doue mid-week (40%) n'est PAS ecrase par Doue weekend (70%)
     all_slug_to_pct = {}
-    for gw_slug in gw_slugs_sorted:
+    for start, end, gw_slug in upcoming:
         data, source = fetch_lineups(session, gw_slug)
         if data is not None:
             pct_map = parse_lineup_data(data, source)
-            all_slug_to_pct.update(pct_map)
-            print(f"  Apres {gw_slug}: {len(all_slug_to_pct)} joueurs cumules")
+            new_added = 0
+            for slug, pct in pct_map.items():
+                if slug not in all_slug_to_pct:  # setdefault : 1ere GW gagne
+                    all_slug_to_pct[slug] = pct
+                    new_added += 1
+            print(f"  Apres {gw_slug}: +{new_added} nouveaux (total={len(all_slug_to_pct)})")
 
     print(f"\n📊 Total joueurs avec Titu%: {len(all_slug_to_pct)}")
 

@@ -283,7 +283,9 @@ if __name__ == "__main__":
 
     # Trie par date de debut ASCENDANTE : la GW la plus proche en PREMIER
     upcoming.sort()
-    print(f"  GW a fetcher (ordre = plus proche d'abord): {[s for _,_,s in upcoming]}")
+    # Limite a 2 GWs max (en cours + suivante) — au-dela c'est trop loin, donnees peu fiables
+    upcoming = upcoming[:2]
+    print(f"  GW a fetcher (max 2, ordre = plus proche d'abord): {[s for _,_,s in upcoming]}")
 
     # Merge avec setdefault : pour chaque joueur, la PREMIERE GW (la plus proche) prime
     # Ainsi Doue mid-week (40%) n'est PAS ecrase par Doue weekend (70%)

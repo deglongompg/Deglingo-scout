@@ -1954,8 +1954,8 @@ export default function StellarTab({ players, teams, fixtures, logos = {}, match
                             // Captain : respecte le flag manuel si user a clique le C, sinon auto (plus gros score)
                             const isCap = p && (hasManualCaptain ? !!p.isCaptain : (scores.length === 5 && adjDs === capDs));
                             const isActive = selectedSlot === slot;
-                            // Vraie carte Sorare si connecté
-                            const sorareCard = p ? sorareCardMap[p.slug] : null;
+                            // Vraie carte Sorare si connecte : priorite _cardSlug du pick (Base vs Shiny)
+                            const sorareCard = p ? resolveCardForPick(p) : null;
                             const dsColor2 = adjDs >= 80 ? "#4ADE80" : adjDs >= 65 ? "#C4B5FD" : adjDs >= 50 ? "#FBBF24" : "#F87171";
                             return (
                               <div key={slot} onClick={() => setSelectedSlot(isActive ? null : slot)}

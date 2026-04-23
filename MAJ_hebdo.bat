@@ -18,14 +18,26 @@ if not exist .env (
 
 set START=%TIME%
 
-REM ---- [1/2] GROS REBUILD stats historiques ----
-echo --------- [1/2] STATS JOUEURS complete (5 ligues, ~8 min) ---------
+REM ---- [1/3] UNDERSTAT xG/xGA/PPDA equipes (manuel : fichiers dans understat_data/) ----
+echo --------- [1/3] STATS EQUIPES Understat (xG/xGA/PPDA) ---------
+if exist understat_data\ligue1.json (
+    py fetch_understat.py
+    if errorlevel 1 ( echo [WARN] fetch_understat a echoue - non bloquant )
+) else (
+    echo [INFO] understat_data\*.json absents - skip stats equipes
+    echo [INFO] Pour MAJ : download https://understat.com/league/{Ligue_1,EPL,La_liga,Bundesliga}
+    echo [INFO] puis placer les 4 JSON dans understat_data/ et relancer
+)
+echo.
+
+REM ---- [2/3] GROS REBUILD stats historiques ----
+echo --------- [2/3] STATS JOUEURS complete (5 ligues, ~8 min) ---------
 py fetch_all_players.py ALL --fresh
 if errorlevel 1 ( echo [ERREUR] fetch_all_players.py & pause & exit /b 1 )
 echo.
 
-REM ---- [2/2] PRIX CARTES (optionnel) ----
-echo --------- [2/2] PRIX LIMITED + RARE (~2 min) ---------
+REM ---- [3/3] PRIX CARTES (optionnel) ----
+echo --------- [3/3] PRIX LIMITED + RARE (~2 min) ---------
 if exist fetch_prices.py (
     py fetch_prices.py
     if errorlevel 1 ( echo [WARN] fetch_prices a echoue - non bloquant )

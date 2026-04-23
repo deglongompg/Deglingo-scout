@@ -30,7 +30,7 @@ const SHORT_NAMES = {
 const sn = (name) => SHORT_NAMES[name] || name;
 
 const DAYS_FR = ["MER", "JEU", "VEN", "SAM", "DIM", "LUN", "MAR"];
-const STELLAR_LEAGUES = ["L1", "PL", "Liga"];
+const STELLAR_LEAGUES = ["L1", "PL", "Liga", "Bundes"];
 const EURO_LEAGUES = ["UCL", "UEL", "UECL"];
 // Stats moyennes pour un adversaire européen inconnu (UCL/UEL/UECL)
 const EURO_OPP_FALLBACK = { name: "European Opp", xg_dom: 1.4, xg_ext: 1.2, xga_dom: 1.2, xga_ext: 1.4, ppda_dom: 10, ppda_ext: 10, league: "EUR", cs_pct: 0.25 };
@@ -1463,7 +1463,7 @@ export default function StellarTab({ players, teams, fixtures, logos = {}, match
               {hasMatches && (
                 <div style={{ display: "flex", justifyContent: "center", gap: 3, marginTop: 3 }}>
                   {[...new Set(dayFixtures.map(f => f.league))].map(lg => (
-                    <div key={lg} style={{ width: 6, height: 6, borderRadius: "50%", background: lg === "L1" ? "#4FC3F7" : lg === "PL" ? "#B388FF" : "#FF8A80" }} />
+                    <div key={lg} style={{ width: 6, height: 6, borderRadius: "50%", background: lg === "L1" ? "#4FC3F7" : lg === "PL" ? "#B388FF" : lg === "Bundes" ? "#FFD180" : "#FF8A80" }} />
                   ))}
                 </div>
               )}

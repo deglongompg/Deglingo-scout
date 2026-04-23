@@ -2483,10 +2483,17 @@ export default function StellarTab({ players, teams, fixtures, logos = {}, match
                   const projectedCaptainBonus = captainData ? captainData.rawScore * 0.5 : 0;
                   const stTotalProjected = Math.round(projectedSum + projectedCaptainBonus);
                   const captainName = captainData?.p ? String(captainData.p.name || captainData.p.slug || "?").split(" ").pop() : "?";
-                  const calcDetailParts = playerData.map(x => ({
-                    n: Math.round(x.postBonus),
-                    isCap: !!captainData && (x.p.slug || x.p.name) === (captainData.p.slug || captainData.p.name),
-                  }));
+                  // Format lisible : "Nom raw×bonus%" par joueur, captain mis en evidence.
+                  const calcDetailParts = playerData.map(x => {
+                    const ownedC = resolveCardForPick(x.p);
+                    const bonusPct = (x.p._cardTotalBonus != null ? x.p._cardTotalBonus : (ownedC?.totalBonus || 0));
+                    return {
+                      shortName: String(x.p.name || x.p.slug || "?").split(" ").pop(),
+                      raw: Math.floor(x.rawScore || 0),
+                      bonusPct,
+                      isCap: !!captainData && (x.p.slug || x.p.name) === (captainData.p.slug || captainData.p.name),
+                    };
+                  });
                   // Score affiche (header) = projected (total final estime)
                   const stTotalAdj = stTotalProjected;
                   const palSt = PALIERS.filter(p => stTotalAdj >= p.pts).pop();
@@ -2626,7 +2633,9 @@ export default function StellarTab({ players, teams, fixtures, logos = {}, match
                             {calcDetailParts.map((x, i) => (
                               <span key={i}>
                                 {i > 0 && <span style={{ color: "rgba(255,255,255,0.3)" }}> + </span>}
-                                <span style={{ color: x.isCap ? "#F472B6" : "inherit", fontWeight: x.isCap ? 700 : 400 }}>{x.n}</span>
+                                <span style={{ color: x.isCap ? "#F472B6" : "rgba(255,255,255,0.85)", fontWeight: x.isCap ? 800 : 600 }}>{x.shortName}{x.isCap ? "(C)" : ""}</span>
+                                <span style={{ color: "rgba(255,255,255,0.5)" }}> {x.raw}</span>
+                                {x.bonusPct > 0 && <span style={{ color: "#4ADE80", fontSize: 9 }}>×{100 + x.bonusPct}%</span>}
                               </span>
                             ))}
                             <span style={{ color: "rgba(255,255,255,0.3)" }}> + </span>

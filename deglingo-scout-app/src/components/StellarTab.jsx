@@ -82,10 +82,22 @@ const EDITION_LABELS = {
 const stripAcc = (s) => s.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
 const normClubGlobal = (n) => stripAcc((n || "").replace(/-/g, " ").trim());
 const clubMatchGlobal = (a, b) => {
-  const na = normClubGlobal(a).toLowerCase();
-  const nb = normClubGlobal(b).toLowerCase();
+  const na = normClubGlobal(a).toLowerCase().replace(/\./g, "");
+  const nb = normClubGlobal(b).toLowerCase().replace(/\./g, "");
   if (na === nb) return true;
-  const ALIASES = { "psg": ["paris saint germain", "paris sg"], "marseille": ["olympique de marseille", "om"], "lyon": ["olympique lyonnais", "ol"] };
+  const ALIASES = {
+    psg: ["paris saint germain", "paris sg"],
+    marseille: ["olympique de marseille", "om"],
+    lyon: ["olympique lyonnais", "ol"],
+    // Bundesliga (fixtures.json vs players.json divergent)
+    leipzig: ["rb leipzig", "rasenballsport leipzig"],
+    koln: ["fc cologne", "1 fc koln", "1 fc koeln"],
+    bayern: ["bayern munich", "fc bayern munchen", "fc bayern munich"],
+    monchengladbach: ["borussia monchengladbach", "borussia m gladbach", "borussia mgladbach", "mgladbach"],
+    heidenheim: ["fc heidenheim", "1 fc heidenheim 1846"],
+    mainz: ["mainz 05", "1 fsv mainz 05"],
+    union: ["union berlin", "1 fc union berlin"],
+  };
   for (const [, syns] of Object.entries(ALIASES)) {
     if (syns.some(x => na.includes(x) || x.includes(na)) && syns.some(x => nb.includes(x) || x.includes(nb))) return true;
   }
@@ -1706,7 +1718,7 @@ export default function StellarTab({ players, teams, fixtures, logos = {}, match
                               ) : (
                                 <span className="st-match-time-inline" style={{ visibility: "hidden", fontSize: 8, fontWeight: 900, color: "#A78BFA", fontFamily: "'DM Mono',monospace", flexShrink: 0 }}>{g.time}</span>
                               )}
-                              <span style={{ fontSize: 8, fontWeight: 800, color: lgColor, minWidth: 22 }}>{f.league}</span>
+                              <span style={{ fontSize: 8, fontWeight: 800, color: lgColor, minWidth: 32, paddingRight: 3, flexShrink: 0 }}>{f.league === "Bundes" ? "BL" : f.league}</span>
                               <img src={logos[f.home] ? `/data/logos/${logos[f.home]}` : ""} alt="" style={{ width: 12, height: 12, objectFit: "contain", visibility: logos[f.home] ? "visible" : "hidden" }} />
                               <span className="mc-home" onClick={() => hasHomePlayers && toggleSide("home")} style={{ fontSize: 9, fontWeight: scoreStr ? 700 : 600, color: isOpenHome ? "#C4B5FD" : (scoreStr && sc && sc.home > sc.away ? "#4ADE80" : "#fff"), cursor: hasHomePlayers ? "pointer" : "default", textDecoration: isOpenHome ? "underline" : "none", transition: "color 0.15s", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>{sn(f.home)}</span>
                               {scoreStr ? (

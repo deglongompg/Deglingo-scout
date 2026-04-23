@@ -1,4 +1,4 @@
-# SESSION HANDOFF — 2026-04-23 (jeudi, gros jour fix Stellar)
+# SESSION HANDOFF — 2026-04-23 (jeudi, gros jour fix Stellar + Bundes)
 
 > **Claude Code :** lis `MEMOIRE.md` EN PREMIER pour le schema GraphQL Sorare titu%.
 > Puis ce fichier pour le contexte session courante.
@@ -10,8 +10,9 @@
 
 - **Prod** : https://scout.deglingosorare.com (Cloudflare Pages, auto-deploy via GitHub main)
 - **Legacy** : https://www.deglingosorare.com/scout (mirror `scout-dist/`)
-- **HEAD main** : `ef864da` (fix pitch stellar card exact)
+- **HEAD main** : `e77ca16` (feat Bundesliga Stellar)
 - **Scheduler PC** : installé (2 tâches Task Scheduler — Daily Lu/Ma/Je/Ve/Di + Hebdo Me/Sa à 06:00)
+- **Stellar couverture** : L1, PL, Liga, **Bundes** (ajoute 2026-04-23 post-sortie cartes Sorare)
 
 ---
 
@@ -54,6 +55,17 @@ Vérif math Équipe 1 :
 - **Cache cartes TTL 10 min → 60 min** (commit `459737e`)
 - **"Mes cartes" activé par défaut** si ≥1 carte Stellar (commit `ebc19b3`)
 
+### Feature bonus fin de journee — Bundesliga ajoutee a Stellar
+
+Sorare a sorti les cartes Stellar Bundesliga. Integration immediate
+(commit `e77ca16`) :
+- `STELLAR_LEAGUES = ["L1", "PL", "Liga", "Bundes"]`
+- Dot color calendrier : Bundes = `#FFD180` (jaune-orange)
+- Rien d'autre a toucher : les data Bundes etaient deja dans players.json
+  et fixtures.json (juste filtrees hors Stellar avant).
+- Pipeline daily MAJ_turbo gere automatiquement les scores Bundes a partir
+  de demain matin : bulles vertes / DNP / FT chips / titu% inclus.
+
 ### Bugs corrigés en chemin
 
 - **React #310** (commit `a23993b`) : `useMemo proLeagueCounts` était après les early returns dans RecapTab → ordre des hooks variable → crash "Rendered more hooks than during the previous render". Déplacé avant les early returns.
@@ -63,7 +75,8 @@ Vérif math Équipe 1 :
 
 ## TODO prochaine session
 
-1. **Sorare Pro** — appliquer les mêmes fixes card-specific que Stellar (`resolveCardForPick` pattern). Pour l'instant Pro utilise encore `sorareCardMap[slug]`. Pareil pour les bulles `Math.floor`.
+1. **Verifier demain matin** que le MAJ_turbo auto de 06:00 remplit bien les bulles Bundes (scores SO5 live, FT chips, titu%).
+2. **Sorare Pro** — appliquer les mêmes fixes card-specific que Stellar (`resolveCardForPick` pattern). Pour l'instant Pro utilise encore `sorareCardMap[slug]`. Pareil pour les bulles `Math.floor`.
 2. **Ajouter 4 championnats** : Belgique, Pays-Bas, Japon, Corée (slugs Sorare probables : `jupiler-pro-league-be`, `eredivisie-nl`, `j1-league-jp`, `k-league-1-kr`). Procédure dans `MEMOIRE.md` section "Ajout nouveaux championnats".
 3. **Fix CAP260 avec `sorare_l10` officiel** (pending depuis avant-hier) — écrire `fetch_sorare_l10.py`, ajouter champ `sorare_l10` dans `players.json`, remplacer `p.l10` par `p.sorare_l10` aux lignes 733 et 1403 de `SorareProTab.jsx`. Bug Psal78 : +6% CAP chez nous vs +4% Sorare.
 4. **Seal teams Pro après deadline GW** — détecter `Date.now() > gwInfo.deadline` → bloquer Charger/X/Save

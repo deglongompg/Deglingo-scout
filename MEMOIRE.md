@@ -347,3 +347,33 @@ type maj_log_daily.txt
 ---
 
 **TL;DR** : `game.playerGameScores → PlayerGameScore.anyPlayerGameStats → PlayerGameStats.footballPlayingStatusOdds.starterOddsBasisPoints`. UUID brut. Fragments sur interfaces. Mapping `sorare_club_slugs.json` pour passer par `club.upcomingGames`. Task Scheduler 2 taches : Daily (Lu/Ma/Je/Ve/Di) + Hebdo (Me/Sa).
+
+---
+
+## 🌍 LIGUES STELLAR — a synchroniser quand Sorare sort une nouvelle ligue
+
+### Actuellement actives (2026-04-23)
+
+`STELLAR_LEAGUES = ["L1", "PL", "Liga", "Bundes"]` (dans `StellarTab.jsx:33`)
+
+Bundesliga ajoutee le 2026-04-23 apres sortie Sorare des cartes allemandes Stellar.
+MLS pas encore dans Stellar cote Sorare.
+
+### Ajouter une ligue a Stellar quand Sorare la sort (procedure 3 lignes)
+
+1. `STELLAR_LEAGUES.push("Xxx")` dans `deglingo-scout-app/src/components/StellarTab.jsx`
+2. Ajouter un cas couleur dans le rendu des dots calendrier (`StellarTab.jsx:1466`).
+   Couleurs par ligue : L1=`#4FC3F7`, PL=`#B388FF`, Liga=`#FF8A80`, Bundes=`#FFD180`.
+3. Build + deploy. C'est tout — le reste (fixtures, scores, titu%) tourne deja pour
+   les 5 ligues via fetch_fixtures / fetch_gw_scores / fetch_titu_fast. Les data
+   Bundes etaient deja dans players.json et fixtures.json, juste filtrees hors Stellar.
+
+### Ce qui NE change PAS quand on ajoute une ligue a Stellar
+
+- **Pipeline fetch daily (MAJ_turbo.bat)** : deja les 5 ligues + UCL/UEL/UECL. Pas de
+  modif.
+- **players.json** : tous les joueurs 5 ligues deja la.
+- **Scores SO5** : fetch_gw_scores inclut tous les clubs des fixtures.
+- **Titu%** : fetch_titu_fast via sorare_club_slugs.json (112 clubs).
+- **ALIASES** : dans fetch_gw_scores.py, deja maintenus pour Bundes
+  (`SC Freiburg`, `TSG 1899 Hoffenheim`).

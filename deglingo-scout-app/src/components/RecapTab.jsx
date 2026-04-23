@@ -122,6 +122,26 @@ function buildStellarCardsBySlug() {
 }
 
 /**
+ * Lit le cache Stellar et construit { cardSlug: carte } pour retrouver une carte
+ * specifique (ex: Pedri Base vs Pedri Shiny). Utilise en priorite dans les renders
+ * saved teams via pick._cardSlug (stocke au pick en mode "Mes cartes").
+ */
+function buildStellarCardsByCardSlug() {
+  const out = {};
+  try {
+    const raw = sessionStorage.getItem("sorare_cards_cache");
+    if (!raw) return out;
+    const parsed = JSON.parse(raw);
+    const cards = Array.isArray(parsed?.cards) ? parsed.cards : (Array.isArray(parsed) ? parsed : []);
+    for (const c of cards) {
+      if (!c || !c.isStellar) continue;
+      if (c.cardSlug) out[c.cardSlug] = c;
+    }
+  } catch { /* ignore */ }
+  return out;
+}
+
+/**
  * Regroupe les teams Stellar par date (plus récente en premier).
  * Retourne : [{ dateStr, teams: [...] }, ...]
  */
@@ -142,14 +162,16 @@ function formatStellarDate(dateStr, lang) {
   } catch { return dateStr; }
 }
 
-function computeStellarProjected(team, players, stellarCardsBySlug) {
+function computeStellarProjected(team, players, stellarCardsBySlug, stellarCardsByCardSlug) {
   if (!team?.picks) return 0;
   const POS = ["GK", "DEF", "MIL", "ATT", "FLEX"];
   const todayStrFx = new Date().toISOString().split("T")[0];
   const picks = POS.map(s => team.picks[s]).filter(Boolean);
   const data = picks.map(p => {
     const fresh = players.find(pl => pl.slug === p.slug);
-    const owned = stellarCardsBySlug[p.slug || p.name];
+    // Carte exacte via _cardSlug (Pedri Base vs Pedri Shiny), fallback best
+    const owned = (p._cardSlug && stellarCardsByCardSlug?.[p._cardSlug])
+      || stellarCardsBySlug[p.slug || p.name];
     const bonusPct = (owned && owned.totalBonus > 0) ? owned.totalBonus : 0;
     const mult = 1 + bonusPct / 100;
     const hasReal = fresh && fresh.last_so5_date === p.matchDate && fresh.last_so5_score != null;
@@ -223,6 +245,7 @@ function RecapTabInner({ players, logos, lang }) {
 
   const cardsBySlug = useMemo(() => buildCardsBySlugFromCache(), [store]);
   const stellarCardsBySlug = useMemo(() => buildStellarCardsBySlug(), [store]);
+  const stellarCardsByCardSlug = useMemo(() => buildStellarCardsByCardSlug(), [store]);
 
   const grouped = useMemo(() => store ? groupTeamsByLeague(store) : null, [store]);
   const stellarGroups = useMemo(() => store ? groupStellarByDate(store) : [], [store]);
@@ -246,7 +269,7 @@ function RecapTabInner({ players, logos, lang }) {
       stellarGroups.forEach(({ teams }) => {
         teams.forEach(team => {
           count++;
-          sum += computeStellarProjected(team, players || [], stellarCardsBySlug) || 0;
+          sum += computeStellarProjected(team, players || [], stellarCardsBySlug, stellarCardsByCardSlug) || 0;
         });
       });
       return { count, sum };
@@ -621,7 +644,7 @@ function RecapTabInner({ players, logos, lang }) {
                 // Scores par equipe pour mini recap header Stellar
                 const teamScores = teams.map(team => ({
                   label: team.label || "?",
-                  projectedTotal: computeStellarProjected(team, players || [], stellarCardsBySlug) || 0,
+                  projectedTotal: computeStellarProjected(team, players || [], stellarCardsBySlug, stellarCardsByCardSlug) || 0,
                 }));
                 return (
                   <div key={dateStr} style={{
@@ -678,6 +701,7 @@ function RecapTabInner({ players, logos, lang }) {
                             players={players}
                             logos={logos}
                             cardsBySlug={stellarCardsBySlug}
+                            cardsByCardSlug={stellarCardsByCardSlug}
                             lang={lang}
                             onDelete={(id) => deleteStellar(dateStr, id)}
                           />

@@ -669,6 +669,24 @@ export default function StellarTab({ players, teams, fixtures, logos = {}, match
     return map;
   }, [sorareCards]);
 
+  // Map cardSlug → carte (lookup exact par ID de carte, permet de distinguer
+  // 2 cartes du meme joueur : ex Pedri Base vs Pedri Shiny).
+  const sorareCardByCardSlug = useMemo(() => {
+    const map = {};
+    for (const c of sorareCards) {
+      if (c.cardSlug) map[c.cardSlug] = c;
+    }
+    return map;
+  }, [sorareCards]);
+
+  // Helper : resout la carte a utiliser pour un pick. Priorite a _cardSlug (carte
+  // specifique sauvegardee), fallback sur playerSlug (best card legacy).
+  const resolveCardForPick = (pick) => {
+    if (!pick) return null;
+    if (pick._cardSlug && sorareCardByCardSlug[pick._cardSlug]) return sorareCardByCardSlug[pick._cardSlug];
+    return sorareCardMap[pick.slug || pick.name] || null;
+  };
+
   // Nombre de cartes Stellar possédées
   const stellarCardCount = useMemo(() => sorareCards.filter(c => c.isStellar).length, [sorareCards]);
 
@@ -2368,7 +2386,9 @@ export default function StellarTab({ players, teams, fixtures, logos = {}, match
                   const stPlayers = POS_ORDER.map(s => st.picks[s]).filter(Boolean);
                   const playerData = stPlayers.map(p => {
                     const fresh = players.find(pl => pl.slug === p.slug);
-                    const ownedCard = sorareCardMap[p.slug || p.name];
+                    // Utilise _cardSlug du pick pour retrouver la carte exacte sauvegardee
+                    // (ex: Pedri Base 5% vs Pedri Shiny 10% - 2 cartes distinctes du meme joueur)
+                    const ownedCard = resolveCardForPick(p);
                     const bonusPct = (ownedCard && ownedCard.totalBonus > 0)
                       ? ownedCard.totalBonus
                       : (getEdition(cardEditions[p.slug || p.name] || "base")?.bonus || 0);
@@ -2430,7 +2450,8 @@ export default function StellarTab({ players, teams, fixtures, logos = {}, match
                     const fresh = players.find(pl => pl.slug === raw.slug);
                     const p = fresh ? { ...raw, sorare_starter_pct: fresh.sorare_starter_pct, last_so5_score: fresh.last_so5_score, last_so5_date: fresh.last_so5_date, last_match_home_goals: fresh.last_match_home_goals, last_match_away_goals: fresh.last_match_away_goals } : raw;
                     const pc = PC[p.position];
-                    const ownedCard = sorareCardMap[p.slug || p.name];
+                    // Carte exacte du pick (via _cardSlug), fallback sur meilleure carte
+                    const ownedCard = resolveCardForPick(p) || sorareCardMap[p.slug || p.name];
                     const oppLogo = logos[p.oppName];
                     const playerClubLogo = logos[p.club];
                     const hasRealScore = p.last_so5_date && p.matchDate && p.last_so5_date === p.matchDate && p.last_so5_score != null;

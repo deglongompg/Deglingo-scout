@@ -26,8 +26,15 @@ const STELLAR_PALIERS = [
  *  - lang : "fr" | "en"
  *  - onDelete : (id) => void  (optionnel — bouton X pour supprimer)
  */
-export default function StellarSavedTeamCard({ team, players = [], logos = {}, cardsBySlug = {}, lang = "fr", onDelete }) {
+export default function StellarSavedTeamCard({ team, players = [], logos = {}, cardsBySlug = {}, cardsByCardSlug = {}, lang = "fr", onDelete }) {
   if (!team || !team.picks) return null;
+
+  // Resout la carte d'un pick : priorite _cardSlug (exact), fallback best par player.
+  const resolveCard = (pick) => {
+    if (!pick) return null;
+    if (pick._cardSlug && cardsByCardSlug[pick._cardSlug]) return cardsByCardSlug[pick._cardSlug];
+    return cardsBySlug[pick.slug || pick.name] || null;
+  };
 
   // Helper pour detection "match joue" basee sur teammate data (robuste UTC/local)
   const wasMatchPlayed = (matchDate, club) =>
@@ -38,7 +45,7 @@ export default function StellarSavedTeamCard({ team, players = [], logos = {}, c
   const stPlayers = POS_ORDER.map(s => team.picks[s]).filter(Boolean);
   const playerData = stPlayers.map(p => {
     const fresh = players.find(pl => pl.slug === p.slug);
-    const ownedCard = cardsBySlug[p.slug || p.name];
+    const ownedCard = resolveCard(p);
     const bonusPct = (ownedCard && ownedCard.totalBonus > 0) ? ownedCard.totalBonus : 0;
     const bonusMult = 1 + bonusPct / 100;
     const matchIsPast = wasMatchPlayed(p.matchDate, p.club);
@@ -105,7 +112,7 @@ export default function StellarSavedTeamCard({ team, players = [], logos = {}, c
       last_match_away_goals: fresh.last_match_away_goals,
     } : raw;
     const pc = PC[p.position] || "#94A3B8";
-    const ownedCard = cardsBySlug[p.slug || p.name];
+    const ownedCard = resolveCard(p);
     const oppLogo = logos[p.oppName];
     const playerClubLogo = logos[p.club];
     const hasRealScore = p.last_so5_date && p.matchDate && p.last_so5_date === p.matchDate && p.last_so5_score != null;

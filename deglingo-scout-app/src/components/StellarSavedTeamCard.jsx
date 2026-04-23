@@ -63,22 +63,34 @@ export default function StellarSavedTeamCard({ team, players = [], logos = {}, c
     return { p, rawScore, postBonus, isLive, isDNP };
   });
 
-  let captainData = playerData.find(x => x.p.isCaptain);
-  if (!captainData && team.captain && team.picks[team.captain]) {
-    const capPick = team.picks[team.captain];
-    captainData = playerData.find(x => (x.p.slug || x.p.name) === (capPick.slug || capPick.name));
+  // Determine captain slot (for rendering badge + calcul bonus)
+  let captainSlot = POS_ORDER.find(s => team.picks[s]?.isCaptain);
+  if (!captainSlot && team.captain && team.picks[team.captain]) captainSlot = team.captain;
+  if (!captainSlot && playerData.length === 5) {
+    const best = playerData.reduce((b, x) => x.postBonus > b.postBonus ? x : b, playerData[0]);
+    captainSlot = POS_ORDER.find(s => {
+      const pp = team.picks[s];
+      return pp && (pp.slug || pp.name) === (best.p.slug || best.p.name);
+    });
   }
-  if (!captainData && playerData.length === 5) {
-    captainData = playerData.reduce((best, x) => x.postBonus > best.postBonus ? x : best, playerData[0]);
-  }
+  const captainData = captainSlot
+    ? playerData.find(x => (x.p.slug || x.p.name) === (team.picks[captainSlot]?.slug || team.picks[captainSlot]?.name))
+    : null;
 
+  // Captain bonus sur RAW (formule Sorare officielle, pas post-bonus)
   const liveSum = playerData.filter(x => x.isLive).reduce((s, x) => s + x.postBonus, 0);
-  const liveCaptainBonus = captainData?.isLive ? captainData.postBonus * 0.5 : 0;
+  const liveCaptainBonus = captainData?.isLive ? captainData.rawScore * 0.5 : 0;
   const stTotalLive = Math.round(liveSum + liveCaptainBonus);
 
   const projectedSum = playerData.reduce((s, x) => s + x.postBonus, 0);
-  const projectedCaptainBonus = captainData ? captainData.postBonus * 0.5 : 0;
+  const projectedCaptainBonus = captainData ? captainData.rawScore * 0.5 : 0;
   const stTotalProjected = Math.round(projectedSum + projectedCaptainBonus);
+
+  const captainName = captainData?.p ? String(captainData.p.name || captainData.p.slug || "?").split(" ").pop() : "?";
+  const calcDetailParts = playerData.map(x => ({
+    n: Math.round(x.postBonus),
+    isCap: !!captainData && (x.p.slug || x.p.name) === (captainData.p.slug || captainData.p.name),
+  }));
 
   const renderStellarCard = (slot) => {
     const raw = team.picks[slot];
@@ -139,7 +151,7 @@ export default function StellarSavedTeamCard({ team, players = [], logos = {}, c
             }}>{p.sorare_starter_pct}%</span>
           )}
           {isDNP && <span style={{ position: "absolute", top: 2, right: 2, fontSize: 7, fontWeight: 800, padding: "1px 4px", borderRadius: 3, color: "#fff", zIndex: 2, background: "rgba(153,27,27,0.95)", letterSpacing: "0.5px" }}>DNP</span>}
-          {p.isCaptain && (
+          {(p.isCaptain || slot === captainSlot) && (
             <span style={{
               position: "absolute", top: 3, left: 3, zIndex: 3,
               width: 16, height: 16, borderRadius: "50%",
@@ -222,6 +234,30 @@ export default function StellarSavedTeamCard({ team, players = [], logos = {}, c
             {renderStellarCard("MIL")}
           </div>
         </div>
+        {playerData.length > 0 && (
+          <div style={{
+            marginTop: 8, padding: "6px 8px", borderRadius: 6,
+            background: "rgba(255,255,255,0.03)",
+            border: "1px solid rgba(255,255,255,0.06)",
+            fontSize: 10, fontFamily: "'DM Mono',monospace",
+            color: "rgba(255,255,255,0.75)", textAlign: "center",
+            lineHeight: 1.4,
+          }}>
+            <span>
+              {calcDetailParts.map((x, i) => (
+                <span key={i}>
+                  {i > 0 && <span style={{ color: "rgba(255,255,255,0.3)" }}> + </span>}
+                  <span style={{ color: x.isCap ? "#F472B6" : "inherit", fontWeight: x.isCap ? 700 : 400 }}>{x.n}</span>
+                </span>
+              ))}
+              <span style={{ color: "rgba(255,255,255,0.3)" }}> + </span>
+              <span style={{ color: "#F472B6", fontWeight: 700 }}>{Math.round(projectedCaptainBonus)}</span>
+              <span style={{ color: "rgba(244,114,182,0.7)", fontSize: 9 }}> (cap {captainName})</span>
+              <span style={{ color: "rgba(255,255,255,0.4)" }}> = </span>
+              <span style={{ color: "#C4B5FD", fontWeight: 900 }}>{stTotalProjected}</span>
+            </span>
+          </div>
+        )}
       </div>
       <SkyrocketGauge
         score={stTotalLive}

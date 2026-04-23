@@ -2391,24 +2391,31 @@ export default function StellarTab({ players, teams, fixtures, logos = {}, match
                     }
                     return { p, rawScore, postBonus, isLive, isDNP };
                   });
-                  // Captain = celui marque isCaptain dans les picks, sinon le meilleur post-bonus
-                  let captainData = playerData.find(x => x.p.isCaptain);
-                  if (!captainData && st.captain && st.picks[st.captain]) {
-                    // Fallback legacy : st.captain = slot name
-                    captainData = playerData.find(x => (x.p.slug || x.p.name) === (st.picks[st.captain].slug || st.picks[st.captain].name));
+                  // Captain slot : isCaptain dans pick > st.captain legacy > fallback best postBonus
+                  let captainSlot = POS_ORDER.find(s => st.picks[s]?.isCaptain);
+                  if (!captainSlot && st.captain && st.picks[st.captain]) captainSlot = st.captain;
+                  if (!captainSlot && playerData.length === 5) {
+                    const best = playerData.reduce((b, x) => x.postBonus > b.postBonus ? x : b, playerData[0]);
+                    captainSlot = POS_ORDER.find(s => {
+                      const pp = st.picks[s];
+                      return pp && (pp.slug || pp.name) === (best.p.slug || best.p.name);
+                    });
                   }
-                  if (!captainData && playerData.length === 5) {
-                    captainData = playerData.reduce((best, x) => x.postBonus > best.postBonus ? x : best, playerData[0]);
-                  }
-                  // LIVE : matchs joues uniquement + captain si capitaine joue
-                  // Formule Sorare officielle : captain bonus = POST-BONUS × 0.5 (confirme par comparaison score reel)
+                  const captainData = captainSlot
+                    ? playerData.find(x => (x.p.slug || x.p.name) === (st.picks[captainSlot]?.slug || st.picks[captainSlot]?.name))
+                    : null;
+                  // Formule Sorare officielle : captain bonus = RAW × 0.5 (pas post-bonus × 0.5)
                   const liveSum = playerData.filter(x => x.isLive).reduce((s, x) => s + x.postBonus, 0);
-                  const liveCaptainBonus = captainData?.isLive ? captainData.postBonus * 0.5 : 0;
+                  const liveCaptainBonus = captainData?.isLive ? captainData.rawScore * 0.5 : 0;
                   const stTotalLive = Math.round(liveSum + liveCaptainBonus);
-                  // PROJECTED : tous les matchs (live + predits) + captain bonus complet
                   const projectedSum = playerData.reduce((s, x) => s + x.postBonus, 0);
-                  const projectedCaptainBonus = captainData ? captainData.postBonus * 0.5 : 0;
+                  const projectedCaptainBonus = captainData ? captainData.rawScore * 0.5 : 0;
                   const stTotalProjected = Math.round(projectedSum + projectedCaptainBonus);
+                  const captainName = captainData?.p ? String(captainData.p.name || captainData.p.slug || "?").split(" ").pop() : "?";
+                  const calcDetailParts = playerData.map(x => ({
+                    n: Math.round(x.postBonus),
+                    isCap: !!captainData && (x.p.slug || x.p.name) === (captainData.p.slug || captainData.p.name),
+                  }));
                   // Score affiche (header) = projected (total final estime)
                   const stTotalAdj = stTotalProjected;
                   const palSt = PALIERS.filter(p => stTotalAdj >= p.pts).pop();
@@ -2465,7 +2472,7 @@ export default function StellarTab({ players, teams, fixtures, logos = {}, match
                           )}
                           {isDNP && <span style={{ position: "absolute", top: 2, right: 2, fontSize: 7, fontWeight: 800, padding: "1px 4px", borderRadius: 3, color: "#fff", zIndex: 2, background: "rgba(153,27,27,0.95)", letterSpacing: "0.5px" }}>DNP</span>}
                           {/* Badge Capitaine — pastille rouge rose avec C (style Sorare officiel) */}
-                          {p.isCaptain && (
+                          {(p.isCaptain || slot === captainSlot) && (
                             <span style={{
                               position: "absolute", top: 3, left: 3, zIndex: 3,
                               width: 16, height: 16, borderRadius: "50%",
@@ -2535,6 +2542,27 @@ export default function StellarTab({ players, teams, fixtures, logos = {}, match
                             {renderStellarCard("MIL")}
                           </div>
                         </div>
+                        {playerData.length > 0 && (
+                          <div style={{
+                            marginTop: 8, padding: "6px 8px", borderRadius: 6,
+                            background: "rgba(255,255,255,0.03)",
+                            border: "1px solid rgba(255,255,255,0.06)",
+                            fontSize: 10, fontFamily: "'DM Mono',monospace",
+                            color: "rgba(255,255,255,0.75)", textAlign: "center", lineHeight: 1.4,
+                          }}>
+                            {calcDetailParts.map((x, i) => (
+                              <span key={i}>
+                                {i > 0 && <span style={{ color: "rgba(255,255,255,0.3)" }}> + </span>}
+                                <span style={{ color: x.isCap ? "#F472B6" : "inherit", fontWeight: x.isCap ? 700 : 400 }}>{x.n}</span>
+                              </span>
+                            ))}
+                            <span style={{ color: "rgba(255,255,255,0.3)" }}> + </span>
+                            <span style={{ color: "#F472B6", fontWeight: 700 }}>{Math.round(projectedCaptainBonus)}</span>
+                            <span style={{ color: "rgba(244,114,182,0.7)", fontSize: 9 }}> (cap {captainName})</span>
+                            <span style={{ color: "rgba(255,255,255,0.4)" }}> = </span>
+                            <span style={{ color: "#C4B5FD", fontWeight: 900 }}>{stTotalProjected}</span>
+                          </div>
+                        )}
                       </div>
                       {/* Skyrocket Gauge a droite — LIVE + projection + initial (snapshot save) */}
                       <SkyrocketGauge score={stTotalLive} projectedScore={stTotalProjected} initialScore={st.score} paliers={PALIERS} scaleMode="linear" showRewards={true} topRewardColor="#E5E7EB" />

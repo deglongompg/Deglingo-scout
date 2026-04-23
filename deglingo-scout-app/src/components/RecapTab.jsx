@@ -158,7 +158,7 @@ function computeStellarProjected(team, players, stellarCardsBySlug) {
     if (hasReal) raw = fresh.last_so5_score;
     else if (matchIsPast) raw = 0; // DNP
     else raw = p.ds || 0;
-    return { p, postBonus: raw * mult };
+    return { p, rawScore: raw, postBonus: raw * mult };
   });
   let cap = data.find(x => x.p.isCaptain);
   if (!cap && team.captain && team.picks[team.captain]) {
@@ -169,7 +169,8 @@ function computeStellarProjected(team, players, stellarCardsBySlug) {
     cap = data.reduce((best, x) => x.postBonus > best.postBonus ? x : best, data[0]);
   }
   const sum = data.reduce((s, x) => s + x.postBonus, 0);
-  const capBonus = cap ? cap.postBonus * 0.5 : 0;
+  // Captain bonus = RAW × 0.5 (formule Sorare officielle)
+  const capBonus = cap ? (cap.rawScore != null ? cap.rawScore : (cap.p.ds || 0)) * 0.5 : 0;
   return Math.round(sum + capBonus);
 }
 

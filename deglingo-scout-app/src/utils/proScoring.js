@@ -105,7 +105,7 @@ export function getPowerPct(pick) {
 
 /**
  * Score d'un pick avec bonus power + bonus capitaine.
- * Formule Sorare officielle : post-bonus + (capitaine ? post-bonus × 0.5 : 0)
+ * Formule Sorare officielle : post-bonus + (capitaine ? RAW × 0.5 : 0)
  * @param {boolean} isCap
  * @returns {{ full: number, isLive: boolean }}
  */
@@ -114,14 +114,15 @@ export function getPickScore(pick, isCap) {
   const power = (card?.power && card.power > 1) ? card.power : 1;
   // Match joué : utiliser le vrai score Sorare
   if (pick?.last_so5_date && pick?.matchDate && pick.last_so5_date === pick.matchDate && pick.last_so5_score != null) {
-    const postBonus = pick.last_so5_score * power;
-    const captainBonus = isCap ? postBonus * 0.5 : 0;
+    const raw = pick.last_so5_score;
+    const postBonus = raw * power;
+    const captainBonus = isCap ? raw * 0.5 : 0;
     return { full: postBonus + captainBonus, isLive: true };
   }
   // Projection : utiliser ds
-  const base = pick?.ds || 0;
-  const postBonus = base * power;
-  const captainBonus = isCap ? postBonus * 0.5 : 0;
+  const raw = pick?.ds || 0;
+  const postBonus = raw * power;
+  const captainBonus = isCap ? raw * 0.5 : 0;
   return { full: postBonus + captainBonus, isLive: false };
 }
 

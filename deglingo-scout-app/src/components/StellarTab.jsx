@@ -87,8 +87,8 @@ const clubMatchGlobal = (a, b) => {
   if (na === nb) return true;
   const ALIASES = {
     psg: ["paris saint germain", "paris sg"],
-    marseille: ["olympique de marseille", "om"],
-    lyon: ["olympique lyonnais", "ol"],
+    marseille: ["olympique de marseille"],
+    lyon: ["olympique lyonnais"],
     // Bundesliga (fixtures.json vs players.json divergent)
     leipzig: ["rb leipzig", "rasenballsport leipzig"],
     koln: ["fc cologne", "1 fc koln", "1 fc koeln"],
@@ -98,8 +98,19 @@ const clubMatchGlobal = (a, b) => {
     mainz: ["mainz 05", "1 fsv mainz 05"],
     union: ["union berlin", "1 fc union berlin"],
   };
+  // Match un synonyme : inclusion uniquement pour les syns >= 5 chars.
+  // Les abreviations courtes (OM, OL, PSG) matchent en mot entier seulement
+  // pour eviter les faux positifs ("ol" in "wolfsburg", "om" in "bournemouth").
+  const matchSyn = (name, syn) => {
+    if (name === syn) return true;
+    if (syn.length < 5) {
+      // Mot entier uniquement (bordel par des espaces ou bornes de chaine)
+      return new RegExp(`(^|\\s)${syn}(\\s|$)`).test(name);
+    }
+    return name.includes(syn) || syn.includes(name);
+  };
   for (const [, syns] of Object.entries(ALIASES)) {
-    if (syns.some(x => na.includes(x) || x.includes(na)) && syns.some(x => nb.includes(x) || x.includes(nb))) return true;
+    if (syns.some(x => matchSyn(na, x)) && syns.some(x => matchSyn(nb, x))) return true;
   }
   const words = (s) => s.split(/\s+/).filter(w => w.length > 2);
   const wa = words(na), wb = words(nb);

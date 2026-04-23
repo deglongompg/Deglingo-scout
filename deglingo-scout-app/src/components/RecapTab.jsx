@@ -202,6 +202,9 @@ function RecapTabInner({ players, logos, lang }) {
   const [store, setStore] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  // Filtre primaire : "stellar" ou une ligue Pro ("L1", "PL", "Liga", "Bundes", "MLS")
+  const [activeLeague, setActiveLeague] = useState("stellar");
+  // Sous-filtre rareté (utilisé uniquement si activeLeague != "stellar")
   const [activeRarity, setActiveRarity] = useState("limited");
   // Par défaut : toutes les ligues qui ont au moins une team sont ouvertes.
   const [openLeagues, setOpenLeagues] = useState(null);
@@ -356,7 +359,24 @@ function RecapTabInner({ players, logos, lang }) {
     return <div style={{ padding: 40, textAlign: "center", color: "#F87171", fontFamily: "Outfit" }}>{lang === "fr" ? "Impossible de charger le cloud." : "Cloud unavailable."}</div>;
   }
 
-  const activeStats = stats?.[activeRarity];
+  // Compteurs par ligue Pro (toutes raretés) et par ligue+rareté
+  const proLeagueCounts = useMemo(() => {
+    const out = {};
+    PRO_LEAGUES.forEach(lg => { out[lg] = { limited: 0, rare: 0, total: 0 }; });
+    if (grouped) {
+      ["limited", "rare"].forEach(r => {
+        grouped[r].forEach(({ league, teams }) => {
+          if (!out[league]) return;
+          out[league][r] += teams.length;
+          out[league].total += teams.length;
+        });
+      });
+    }
+    return out;
+  }, [grouped]);
+
+  const isStellarActive = activeLeague === "stellar";
+  const activeStats = isStellarActive ? stats?.stellar : stats?.[activeRarity];
   const totalCount = (stats?.limited.count || 0) + (stats?.rare.count || 0) + (stats?.stellar.count || 0);
   const totalSum = (stats?.limited.sum || 0) + (stats?.rare.sum || 0) + (stats?.stellar.sum || 0);
   const avgScore = totalCount > 0 ? totalSum / totalCount : 0;
@@ -417,40 +437,91 @@ function RecapTabInner({ players, logos, lang }) {
 
       {hasAny && (
         <>
-          {/* Toggle Limited / Rare / Stellar */}
-          <div style={{ display: "flex", gap: 8, marginTop: 18, marginBottom: 14 }}>
-            {["limited", "rare", "stellar"].map(r => {
-              const accent = RARITY_COLOR[r];
-              const active = activeRarity === r;
-              const s = stats[r];
-              const label = r === "limited" ? "Pro Limited" : r === "rare" ? "Pro Rare" : "Stellar";
+          {/* Ligne 1 — filtre principal : [Stellar] + ligues Pro */}
+          <div style={{ display: "flex", gap: 8, marginTop: 18, marginBottom: 8, flexWrap: "wrap" }}>
+            <button key="stellar" onClick={() => setActiveLeague("stellar")} style={{
+              padding: "8px 16px", borderRadius: 10, fontSize: 12, fontWeight: 800, fontFamily: "Outfit",
+              cursor: "pointer", border: "1px solid " + (isStellarActive ? RARITY_COLOR.stellar + "70" : "rgba(255,255,255,0.08)"),
+              background: isStellarActive ? RARITY_COLOR.stellar + "22" : "rgba(255,255,255,0.02)",
+              color: isStellarActive ? RARITY_COLOR.stellar : "rgba(255,255,255,0.45)",
+              display: "inline-flex", alignItems: "center", gap: 8, whiteSpace: "nowrap",
+              letterSpacing: 0.5, textTransform: "uppercase",
+            }}>
+              ✨ Stellar
+              <span style={{ fontSize: 10, opacity: 0.8, padding: "1px 6px", borderRadius: 10, background: isStellarActive ? RARITY_COLOR.stellar + "18" : "rgba(255,255,255,0.05)" }}>{stats.stellar.count}</span>
+            </button>
+            {PRO_LEAGUES.map(lg => {
+              const accent = LEAGUE_COLORS[lg] || "#A5B4FC";
+              const active = activeLeague === lg;
+              const count = proLeagueCounts[lg]?.total || 0;
+              const flag = LEAGUE_FLAG_CODES[lg];
               return (
-                <button key={r} onClick={() => setActiveRarity(r)} style={{
-                  padding: "8px 16px", borderRadius: 10, fontSize: 12, fontWeight: 800, fontFamily: "Outfit",
+                <button key={lg} onClick={() => setActiveLeague(lg)} style={{
+                  padding: "8px 14px", borderRadius: 10, fontSize: 12, fontWeight: 800, fontFamily: "Outfit",
                   cursor: "pointer", border: "1px solid " + (active ? accent + "70" : "rgba(255,255,255,0.08)"),
                   background: active ? accent + "22" : "rgba(255,255,255,0.02)",
                   color: active ? accent : "rgba(255,255,255,0.45)",
                   display: "inline-flex", alignItems: "center", gap: 8, whiteSpace: "nowrap",
                   letterSpacing: 0.5, textTransform: "uppercase",
                 }}>
-                  {label}
-                  <span style={{ fontSize: 10, opacity: 0.8, padding: "1px 6px", borderRadius: 10, background: active ? accent + "18" : "rgba(255,255,255,0.05)" }}>{s.count}</span>
+                  {flag && <img src={`https://flagcdn.com/w20/${flag}.png`} alt="" style={{ width: 16, height: 12, objectFit: "cover", borderRadius: 2 }} />}
+                  {LEAGUE_NAMES[lg] || lg}
+                  <span style={{ fontSize: 10, opacity: 0.8, padding: "1px 6px", borderRadius: 10, background: active ? accent + "18" : "rgba(255,255,255,0.05)" }}>{count}</span>
                 </button>
               );
             })}
           </div>
 
-          {activeStats.count === 0 && (
-            <div style={{ padding: 30, textAlign: "center", color: "rgba(255,255,255,0.35)", fontSize: 11 }}>
-              {lang === "fr"
-                ? `Aucune équipe ${activeRarity === "rare" ? "Rare" : activeRarity === "stellar" ? "Stellar" : "Limited"} sauvegardée.`
-                : `No ${activeRarity} team saved.`}
+          {/* Ligne 2 — sous-filtre rarete (seulement pour les ligues Pro) */}
+          {!isStellarActive && (
+            <div style={{ display: "flex", gap: 8, marginBottom: 14 }}>
+              {["limited", "rare"].map(r => {
+                const accent = RARITY_COLOR[r];
+                const active = activeRarity === r;
+                const count = proLeagueCounts[activeLeague]?.[r] || 0;
+                const label = r === "limited" ? "Limited" : "Rare";
+                return (
+                  <button key={r} onClick={() => setActiveRarity(r)} style={{
+                    padding: "6px 14px", borderRadius: 8, fontSize: 11, fontWeight: 700, fontFamily: "Outfit",
+                    cursor: "pointer", border: "1px solid " + (active ? accent + "70" : "rgba(255,255,255,0.08)"),
+                    background: active ? accent + "22" : "rgba(255,255,255,0.02)",
+                    color: active ? accent : "rgba(255,255,255,0.45)",
+                    display: "inline-flex", alignItems: "center", gap: 6, whiteSpace: "nowrap",
+                    letterSpacing: 0.5, textTransform: "uppercase",
+                  }}>
+                    {label}
+                    <span style={{ fontSize: 9, opacity: 0.8, padding: "1px 5px", borderRadius: 8, background: active ? accent + "18" : "rgba(255,255,255,0.05)" }}>{count}</span>
+                  </button>
+                );
+              })}
             </div>
           )}
 
-          {activeStats.count > 0 && activeRarity !== "stellar" && (
+          {activeStats && activeStats.count === 0 && !isStellarActive && (proLeagueCounts[activeLeague]?.total || 0) === 0 && (
+            <div style={{ padding: 30, textAlign: "center", color: "rgba(255,255,255,0.35)", fontSize: 11 }}>
+              {lang === "fr"
+                ? `Aucune équipe sauvegardée pour ${LEAGUE_NAMES[activeLeague] || activeLeague}.`
+                : `No team saved for ${LEAGUE_NAMES[activeLeague] || activeLeague}.`}
+            </div>
+          )}
+
+          {isStellarActive && stats.stellar.count === 0 && (
+            <div style={{ padding: 30, textAlign: "center", color: "rgba(255,255,255,0.35)", fontSize: 11 }}>
+              {lang === "fr" ? "Aucune équipe Stellar sauvegardée." : "No Stellar team saved."}
+            </div>
+          )}
+
+          {!isStellarActive && (proLeagueCounts[activeLeague]?.[activeRarity] || 0) === 0 && (proLeagueCounts[activeLeague]?.total || 0) > 0 && (
+            <div style={{ padding: 30, textAlign: "center", color: "rgba(255,255,255,0.35)", fontSize: 11 }}>
+              {lang === "fr"
+                ? `Aucune équipe ${activeRarity === "rare" ? "Rare" : "Limited"} pour ${LEAGUE_NAMES[activeLeague] || activeLeague}.`
+                : `No ${activeRarity} team for ${LEAGUE_NAMES[activeLeague] || activeLeague}.`}
+            </div>
+          )}
+
+          {!isStellarActive && (proLeagueCounts[activeLeague]?.[activeRarity] || 0) > 0 && (
             <div style={{ display: "flex", flexDirection: "column", gap: 14 }}>
-              {grouped[activeRarity].map(({ league, gwKey, teams }) => {
+              {grouped[activeRarity].filter(({ league }) => league === activeLeague).map(({ league, gwKey, teams }) => {
                 const accent = LEAGUE_COLORS[league] || "#A5B4FC";
                 const flag = LEAGUE_FLAG_CODES[league];
                 const key = `${activeRarity}_${league}_${gwKey}`;
@@ -541,7 +612,7 @@ function RecapTabInner({ players, logos, lang }) {
             </div>
           )}
 
-          {activeStats.count > 0 && activeRarity === "stellar" && (
+          {isStellarActive && stats.stellar.count > 0 && (
             <div style={{ display: "flex", flexDirection: "column", gap: 14 }}>
               {stellarGroups.map(({ dateStr, teams }) => {
                 const accent = RARITY_COLOR.stellar;

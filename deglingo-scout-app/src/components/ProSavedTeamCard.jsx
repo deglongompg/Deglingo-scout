@@ -51,7 +51,8 @@ export default function ProSavedTeamCard({
     // DNP = match deja joue mais pas de SO5 pour ce joueur (blesse, banc, absent)
     const isDNP = matchWasPlayed && !hasRealScore;
     const rawRealScore = hasRealScore ? p.last_so5_score : null;
-    const playerScore = hasRealScore ? Math.round(rawRealScore) : isDNP ? 0 : Math.round(p.ds || 0);
+    // Score affiche en bulle : FLOOR pour matcher l'affichage Sorare (74.7 -> 74)
+    const playerScore = hasRealScore ? Math.floor(rawRealScore) : isDNP ? 0 : Math.round(p.ds || 0);
     let matchScore = hasRealScore && p.last_match_home_goals != null && p.last_match_away_goals != null
       ? `${p.last_match_home_goals} - ${p.last_match_away_goals}`
       : null;

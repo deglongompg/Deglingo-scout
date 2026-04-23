@@ -1144,7 +1144,7 @@ export default function SorareProTab({ players, teams, fixtures, logos = {}, mat
                             {isOpen && matchPlayers.length > 0 && (
                               <div style={{ background: "rgba(15,5,40,0.95)", border: "1px solid rgba(196,181,253,0.15)", borderTop: "none", borderRadius: "0 0 5px 5px", padding: "4px 0" }}>
                                 {matchPlayers.map((p, pi) => {
-                                  const scp = Math.round(p.last_so5_score);
+                                  const scp = Math.floor(p.last_so5_score);
                                   const col = p.last_so5_score >= 75 ? "#4ADE80" : p.last_so5_score >= 60 ? "#A3E635" : p.last_so5_score >= 50 ? "#FBBF24" : p.last_so5_score >= 40 ? "#FB923C" : "#EF4444";
                                   const pc = PC[p.position] || "#888";
                                   const isHome = normClub(p.club) === normClub(f.home);
@@ -1695,7 +1695,8 @@ export default function SorareProTab({ players, teams, fixtures, logos = {}, mat
                 // DNP = match deja joue mais pas de SO5 pour le joueur (blesse, banc, absent)
                 const isDNP = matchWasPlayed && !hasRealScore;
                 const rawRealScore = hasRealScore ? p.last_so5_score : null;
-                const playerScore = hasRealScore ? Math.round(rawRealScore) : isDNP ? 0 : Math.round(p.ds || 0);
+                // Score affiche en bulle : FLOOR pour matcher Sorare (74.7 -> 74)
+                const playerScore = hasRealScore ? Math.floor(rawRealScore) : isDNP ? 0 : Math.round(p.ds || 0);
                 // Captain bonus = RAW × 0.5 (formule Sorare officielle)
                 const capBase = hasRealScore ? rawRealScore : isDNP ? 0 : (p.ds || 0);
                 const captainBonusPts = isCap ? Math.round(capBase * 0.5) : 0;

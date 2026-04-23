@@ -440,7 +440,7 @@ function StellarCard({ player, logos, size = "md", isValidated = false, gwStart 
   const hasPlayed = player.last_so5_date && gwStart && player.last_so5_date >= gwStart && player.last_so5_score != null;
   const edBonus = edition?.bonus || 0;
   const adjDs = Math.round((player.ds || 0) * (1 + edBonus / 100));
-  const displayScore = isValidated && hasPlayed ? Math.round(player.last_so5_score) : adjDs;
+  const displayScore = isValidated && hasPlayed ? Math.floor(player.last_so5_score) : adjDs;
   const scoreColor = isValidated && hasPlayed
     ? (player.last_so5_score >= 75 ? "#4ADE80" : player.last_so5_score >= 60 ? "#A3E635" : player.last_so5_score >= 50 ? "#FBBF24" : player.last_so5_score >= 40 ? "#FB923C" : "#EF4444")
     : null; // null = garde le dsBg habituel
@@ -1701,7 +1701,7 @@ export default function StellarTab({ players, teams, fixtures, logos = {}, match
                             {isOpen && matchPlayers.length > 0 && (
                               <div style={{ background: "rgba(15,5,40,0.95)", border: "1px solid rgba(196,181,253,0.15)", borderTop: "none", borderRadius: "0 0 6px 6px", padding: "4px 0", backdropFilter: "blur(8px)" }}>
                                 {matchPlayers.map((p, pi) => {
-                                  const sc = Math.round(p.last_so5_score);
+                                  const sc = Math.floor(p.last_so5_score);
                                   const col = p.last_so5_score >= 75 ? "#4ADE80" : p.last_so5_score >= 60 ? "#A3E635" : p.last_so5_score >= 50 ? "#FBBF24" : p.last_so5_score >= 40 ? "#FB923C" : "#EF4444";
                                   const pc = PC[p.position] || "#888";
                                   const isHome = normClub(p.club) === normClub(f.home);
@@ -2439,8 +2439,9 @@ export default function StellarTab({ players, teams, fixtures, logos = {}, match
                     ));
                     const isDNP = matchIsPast && !hasRealScore;
                     // Score affiche = RAW (comme Sorare), bonus appliques au total uniquement
+                    // Score affiche en bulle : FLOOR pour matcher Sorare (74.7 -> 74)
                     const playerScore = hasRealScore
-                      ? Math.round(p.last_so5_score)
+                      ? Math.floor(p.last_so5_score)
                       : isDNP ? 0 : Math.round(p.ds || 0);
                     // Score du match si joue : ordre HOME - AWAY (reel) — fallback co-equipier si DNP
                     let matchScore = hasRealScore && p.last_match_home_goals != null && p.last_match_away_goals != null

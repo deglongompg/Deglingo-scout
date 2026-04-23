@@ -111,7 +111,8 @@ export default function StellarSavedTeamCard({ team, players = [], logos = {}, c
     const hasRealScore = p.last_so5_date && p.matchDate && p.last_so5_date === p.matchDate && p.last_so5_score != null;
     const matchIsPast = wasMatchPlayed(p.matchDate, p.club);
     const isDNP = matchIsPast && !hasRealScore;
-    const playerScore = hasRealScore ? Math.round(p.last_so5_score) : isDNP ? 0 : Math.round(p.ds || 0);
+    // Score affiche en bulle : FLOOR pour matcher l'affichage Sorare (Yamal 74.7 -> 74, pas 75)
+    const playerScore = hasRealScore ? Math.floor(p.last_so5_score) : isDNP ? 0 : Math.round(p.ds || 0);
     let matchScore = hasRealScore && p.last_match_home_goals != null && p.last_match_away_goals != null
       ? `${p.last_match_home_goals} - ${p.last_match_away_goals}`
       : null;

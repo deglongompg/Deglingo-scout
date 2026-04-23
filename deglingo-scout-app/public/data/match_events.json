@@ -1,37 +1,4 @@
 {
-  "Game:83a88146-f9a8-448e-8e7d-8167e8601f5f": {
-    "home": "Rayo Vallecano",
-    "away": "RCD Espanyol de Barcelona",
-    "date": "2026-04-23",
-    "home_goals": 1,
-    "away_goals": 0,
-    "home_scorers": [],
-    "away_scorers": [],
-    "home_assists": [],
-    "away_assists": []
-  },
-  "Game:c3b8a60e-9cff-47ab-a571-6f11a6ac65da": {
-    "home": "Real Oviedo",
-    "away": "Villarreal CF",
-    "date": "2026-04-23",
-    "home_goals": 1,
-    "away_goals": 1,
-    "home_scorers": [],
-    "away_scorers": [],
-    "home_assists": [],
-    "away_assists": []
-  },
-  "Game:c5fc55e1-1d28-4d53-931d-9c8109ddf21f": {
-    "home": "Levante UD",
-    "away": "Sevilla FC",
-    "date": "2026-04-23",
-    "home_goals": 2,
-    "away_goals": 0,
-    "home_scorers": [],
-    "away_scorers": [],
-    "home_assists": [],
-    "away_assists": []
-  },
   "Game:8811e302-dcb5-4d27-8ba6-d4f9d4d2516c": {
     "home": "Stade de Reims",
     "away": "Red Star FC 93",

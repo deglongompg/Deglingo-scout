@@ -94,10 +94,16 @@ export default function StellarSavedTeamCard({ team, players = [], logos = {}, c
   const stTotalProjected = Math.round(projectedSum + projectedCaptainBonus);
 
   const captainName = captainData?.p ? String(captainData.p.name || captainData.p.slug || "?").split(" ").pop() : "?";
-  const calcDetailParts = playerData.map(x => ({
-    n: Math.round(x.postBonus),
-    isCap: !!captainData && (x.p.slug || x.p.name) === (captainData.p.slug || captainData.p.name),
-  }));
+  // Format lisible : "Nom rawX%" par joueur, avec captain mis en evidence.
+  // Ex : "Espí 35×15% + Dela 80×10% + ..." -> plus clair que juste des nombres.
+  const calcDetailParts = playerData.map(x => {
+    const ownedCard = resolveCard(x.p);
+    const bonusPct = ownedCard?.totalBonus || 0;
+    const raw = Math.floor(x.rawScore || 0);
+    const shortName = String(x.p.name || x.p.slug || "?").split(" ").pop();
+    const isCap = !!captainData && (x.p.slug || x.p.name) === (captainData.p.slug || captainData.p.name);
+    return { shortName, raw, bonusPct, isCap };
+  });
 
   const renderStellarCard = (slot) => {
     const raw = team.picks[slot];
@@ -255,7 +261,9 @@ export default function StellarSavedTeamCard({ team, players = [], logos = {}, c
               {calcDetailParts.map((x, i) => (
                 <span key={i}>
                   {i > 0 && <span style={{ color: "rgba(255,255,255,0.3)" }}> + </span>}
-                  <span style={{ color: x.isCap ? "#F472B6" : "inherit", fontWeight: x.isCap ? 700 : 400 }}>{x.n}</span>
+                  <span style={{ color: x.isCap ? "#F472B6" : "rgba(255,255,255,0.85)", fontWeight: x.isCap ? 800 : 600 }}>{x.shortName}{x.isCap ? "(C)" : ""}</span>
+                  <span style={{ color: "rgba(255,255,255,0.5)" }}> {x.raw}</span>
+                  {x.bonusPct > 0 && <span style={{ color: "#4ADE80", fontSize: 9 }}>×{100 + x.bonusPct}%</span>}
                 </span>
               ))}
               <span style={{ color: "rgba(255,255,255,0.3)" }}> + </span>

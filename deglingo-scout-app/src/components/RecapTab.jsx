@@ -269,6 +269,23 @@ function RecapTabInner({ players, logos, lang }) {
     setOpenLeagues(init);
   }, [stats, grouped, openLeagues, stellarGroups]);
 
+  // Compteurs par ligue Pro (toutes raretés) et par ligue+rareté.
+  // Doit être AVANT les early returns pour respecter l'ordre des hooks.
+  const proLeagueCounts = useMemo(() => {
+    const out = {};
+    PRO_LEAGUES.forEach(lg => { out[lg] = { limited: 0, rare: 0, total: 0 }; });
+    if (grouped) {
+      ["limited", "rare"].forEach(r => {
+        grouped[r].forEach(({ league, teams }) => {
+          if (!out[league]) return;
+          out[league][r] += teams.length;
+          out[league].total += teams.length;
+        });
+      });
+    }
+    return out;
+  }, [grouped]);
+
   const toggleLeague = (key) => {
     setOpenLeagues(prev => ({ ...(prev || {}), [key]: !prev?.[key] }));
   };
@@ -358,22 +375,6 @@ function RecapTabInner({ players, logos, lang }) {
   if (error === "fetch_failed" || !store) {
     return <div style={{ padding: 40, textAlign: "center", color: "#F87171", fontFamily: "Outfit" }}>{lang === "fr" ? "Impossible de charger le cloud." : "Cloud unavailable."}</div>;
   }
-
-  // Compteurs par ligue Pro (toutes raretés) et par ligue+rareté
-  const proLeagueCounts = useMemo(() => {
-    const out = {};
-    PRO_LEAGUES.forEach(lg => { out[lg] = { limited: 0, rare: 0, total: 0 }; });
-    if (grouped) {
-      ["limited", "rare"].forEach(r => {
-        grouped[r].forEach(({ league, teams }) => {
-          if (!out[league]) return;
-          out[league][r] += teams.length;
-          out[league].total += teams.length;
-        });
-      });
-    }
-    return out;
-  }, [grouped]);
 
   const isStellarActive = activeLeague === "stellar";
   const activeStats = isStellarActive ? stats?.stellar : stats?.[activeRarity];

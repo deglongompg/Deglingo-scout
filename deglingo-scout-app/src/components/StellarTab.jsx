@@ -990,12 +990,31 @@ export default function StellarTab({ players, teams, fixtures, logos = {}, match
     const key = savedTeamsKey(dateStr);
     const existing = (() => { try { return JSON.parse(localStorage.getItem(key) || "[]"); } catch { return []; } })();
     if (existing.length >= 4) return;
+    // Fige le captain au save : si user a clique C, utilise ce slot ; sinon
+    // prend le slot avec le meilleur postBonus au moment du save. Stocke en
+    // dur team.captain pour que le render ne recalcule plus le captain apres
+    // arrivee des scores SO5 live (bug observe 2026-04-24).
+    const POS_ORDER_CAP = ["GK","DEF","MIL","ATT","FLEX"];
+    let capSlot = POS_ORDER_CAP.find(s => picks[s]?.isCaptain);
+    if (!capSlot) {
+      const filled = POS_ORDER_CAP.filter(s => picks[s]);
+      if (filled.length === 5) {
+        // Meilleur postBonus = meilleur adjDs (D-Score avec bonus edition applique)
+        let bestSlot = filled[0], bestScore = -Infinity;
+        for (const s of filled) {
+          const adj = getAdjDs(picks[s]);
+          if (adj > bestScore) { bestScore = adj; bestSlot = s; }
+        }
+        capSlot = bestSlot;
+      }
+    }
     const newTeam = {
       id: Date.now(),
       savedAt: new Date().toLocaleTimeString("fr-FR", { hour:"2-digit", minute:"2-digit" }),
       picks,
       editions: { ...editions },
       score,
+      captain: capSlot || null,  // fige le captain au save
       label: `Équipe ${existing.length + 1}`,
     };
     const updated = [...existing, newTeam];

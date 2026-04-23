@@ -652,7 +652,9 @@ export default function StellarTab({ players, teams, fixtures, logos = {}, match
   // des le premier render pour eviter le flash "0 cartes" pendant ~10s.
   const [sorareLoading, setSorareLoading] = useState(!!_initialToken && !_cachedCards);
   const [sorareLoadProgress, setSorareLoadProgress] = useState(0); // 0-100 loading bar
-  const [myCardsMode, setMyCardsMode] = useState(false); // vue "Mes cartes" uniquement
+  // "Mes cartes" par defaut si connecte avec cache frais de cartes (cas commun user
+  // revient sur l'app). Sinon false (user pas connecte).
+  const [myCardsMode, setMyCardsMode] = useState(!!_cachedCards && _cachedCards.cards?.length > 0);
   const [bonusEnabled, setBonusEnabled] = useState(false); // Toggle bonus ON/OFF (OFF par défaut)
 
   // Map playerSlug → meilleure carte Stellar (rarity order: limited > rare > super_rare > unique)
@@ -779,7 +781,8 @@ export default function StellarTab({ players, teams, fixtures, logos = {}, match
       if (!silent) setSorareLoadProgress(90);
       setSorareCards(cards);
       setSorareConnected(true);
-      if (isOAuthReturn) setMyCardsMode(true); // Auto switch "Mes cartes" uniquement au retour OAuth, pas au refetch de cache expire
+      // Active "Mes cartes" dès qu'on a au moins une carte Stellar (par defaut pratique).
+      if (cards.some(c => c.isStellar)) setMyCardsMode(true);
       // Cache pour eviter refetch complet a chaque switch de tab
       try {
         sessionStorage.setItem("sorare_cards_cache", JSON.stringify({
@@ -2227,8 +2230,10 @@ export default function StellarTab({ players, teams, fixtures, logos = {}, match
                             const ed = getEdition(cardEditions[slug] || "base");
                             const adjDs = getAdjDs(p);
                             const inTeam = isInTeam(p);
-                            // Badge rareté : priorité à la carte spécifique (_cardRarity), sinon meilleure carte possédée
-                            const ownedCard = sorareCardMap[slug];
+                            // Carte exacte : priorite _cardSlug (expansion "Mes cartes"), sinon best par joueur
+                            const ownedCard = resolveCardForPick(p);
+                            // Bonus precis : priorite _cardTotalBonus de la carte expansee, sinon fallback sur ownedCard
+                            const ownedBonus = (p._cardTotalBonus != null ? p._cardTotalBonus : (ownedCard?.totalBonus || 0));
                             const ownedRarity = p._cardRarity || ownedCard?.rarity || null;
                             const rarityColor = ownedRarity ? (RARITY_COLORS[ownedRarity] || null) : null;
                             const rarityLabel = ownedRarity ? (RARITY_LABELS[ownedRarity] || null) : null;
@@ -2256,9 +2261,9 @@ export default function StellarTab({ players, teams, fixtures, logos = {}, match
                                 {/* [POS][+X%] + logo — badge colles */}
                                 <div style={{ display:"flex", alignItems:"center", gap:3 }}>
                                   <div style={{ display:"flex", alignItems:"center", gap:0, flexShrink:0 }}>
-                                    <span style={{ fontSize:7, fontWeight:900, background:pc, color:"#fff", borderRadius: ownedCard?.totalBonus > 0 ? "3px 0 0 3px" : 3, padding:"2px 4px", lineHeight:1 }}>{p.position}</span>
-                                    {ownedCard && ownedCard.totalBonus > 0 && (
-                                      <span style={{ fontSize:7, fontWeight:900, background:"linear-gradient(135deg,#166534,#15803d)", color:"#fff", borderRadius:"0 3px 3px 0", padding:"2px 4px", lineHeight:1, whiteSpace:"nowrap" }}>+{ownedCard.totalBonus}%</span>
+                                    <span style={{ fontSize:7, fontWeight:900, background:pc, color:"#fff", borderRadius: ownedBonus > 0 ? "3px 0 0 3px" : 3, padding:"2px 4px", lineHeight:1 }}>{p.position}</span>
+                                    {ownedBonus > 0 && (
+                                      <span style={{ fontSize:7, fontWeight:900, background:"linear-gradient(135deg,#166534,#15803d)", color:"#fff", borderRadius:"0 3px 3px 0", padding:"2px 4px", lineHeight:1, whiteSpace:"nowrap" }}>+{ownedBonus}%</span>
                                     )}
                                   </div>
                                   {logos[p.club] && <img src={`/data/logos/${logos[p.club]}`} alt="" style={{ width:14, height:14, objectFit:"contain", flexShrink:0 }} />}

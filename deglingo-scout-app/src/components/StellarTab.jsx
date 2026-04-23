@@ -640,15 +640,17 @@ export default function StellarTab({ players, teams, fixtures, logos = {}, match
       const raw = sessionStorage.getItem("sorare_cards_cache");
       if (!raw) return null;
       const { cards, ts, user } = JSON.parse(raw);
-      // TTL 10 min
-      if (Date.now() - ts < 10 * 60 * 1000) return { cards, user };
+      // TTL 60 min (ajuste de 10 -> 60 : le cache dure toute une session de jeu typique)
+      if (Date.now() - ts < 60 * 60 * 1000) return { cards, user };
     } catch {}
     return null;
   })();
   const [sorareConnected, setSorareConnected] = useState(!!_initialToken);
   const [sorareCards, setSorareCards] = useState(_cachedCards?.cards || []); // { playerSlug, rarity, pictureUrl, cardSlug, cardEditionName, power }
   const [sorareUser, setSorareUser] = useState(_cachedCards?.user || null);
-  const [sorareLoading, setSorareLoading] = useState(false);
+  // Si on a un token mais pas de cache frais, on doit refetch au mount -> montrer loading overlay
+  // des le premier render pour eviter le flash "0 cartes" pendant ~10s.
+  const [sorareLoading, setSorareLoading] = useState(!!_initialToken && !_cachedCards);
   const [sorareLoadProgress, setSorareLoadProgress] = useState(0); // 0-100 loading bar
   const [myCardsMode, setMyCardsMode] = useState(false); // vue "Mes cartes" uniquement
   const [bonusEnabled, setBonusEnabled] = useState(false); // Toggle bonus ON/OFF (OFF par défaut)
@@ -689,7 +691,7 @@ export default function StellarTab({ players, teams, fixtures, logos = {}, match
       }
       if (token) {
         localStorage.setItem("sorare_access_token", token);
-        fetchSorareCards(token);
+        fetchSorareCards(token, false, true); // non-silent + isOAuthReturn (auto-switch myCardsMode)
       }
       return;
     }
@@ -699,21 +701,23 @@ export default function StellarTab({ players, teams, fixtures, logos = {}, match
       return;
     }
 
-    // Vérifier silencieusement si déjà connecté (token dans localStorage)
-    // Skip le fetch si le cache sessionStorage est frais (<10 min) — evite le reload a chaque switch de tab
+    // Verifier si deja connecte (token dans localStorage).
+    // Skip le fetch si le cache sessionStorage est frais (<10 min) — evite le reload a chaque switch de tab.
+    // Si cache expire : on fetch en mode VISIBLE (avec loading overlay) pour que l'user voit
+    // clairement que ca charge au lieu de voir "0 cartes" pendant 10 sec.
     const savedToken = localStorage.getItem("sorare_access_token");
     if (!savedToken) return;
     try {
       const raw = sessionStorage.getItem("sorare_cards_cache");
       if (raw) {
         const { ts } = JSON.parse(raw);
-        if (Date.now() - ts < 10 * 60 * 1000) return; // cache frais, pas besoin de refetch
+        if (Date.now() - ts < 60 * 60 * 1000) return; // TTL 60 min, cache frais = pas de refetch
       }
     } catch {}
-    fetchSorareCards(savedToken, true);
+    fetchSorareCards(savedToken, false);
   }, []);
 
-  const fetchSorareCards = async (token, silent = false) => {
+  const fetchSorareCards = async (token, silent = false, isOAuthReturn = false) => {
     if (!token) return;
     if (!silent) { setSorareLoading(true); setSorareLoadProgress(5); }
     try {
@@ -757,7 +761,7 @@ export default function StellarTab({ players, teams, fixtures, logos = {}, match
       if (!silent) setSorareLoadProgress(90);
       setSorareCards(cards);
       setSorareConnected(true);
-      if (!silent) setMyCardsMode(true); // Auto switch "Mes cartes" seulement lors d'une connexion explicite (pas silent)
+      if (isOAuthReturn) setMyCardsMode(true); // Auto switch "Mes cartes" uniquement au retour OAuth, pas au refetch de cache expire
       // Cache pour eviter refetch complet a chaque switch de tab
       try {
         sessionStorage.setItem("sorare_cards_cache", JSON.stringify({

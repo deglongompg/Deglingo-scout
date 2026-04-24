@@ -1,5 +1,5 @@
 {
-  "generated": "2026-04-24T07:29:09.723348",
+  "generated": "2026-04-24T19:39:09.843134",
   "matchdays": {
     "L1": 29,
     "PL": 36,
@@ -1704,48 +1704,48 @@
       "finished": true
     },
     {
-      "home": "Paris Saint Germain",
-      "away": "Bayern Munich",
+      "home": "Unknown",
+      "away": "Unknown",
       "date": "2026-04-28",
       "kickoff": "19:00",
       "matchday": "SEMI_FINALS",
       "league": "UCL",
       "competition": "UCL",
-      "home_api": "Paris Saint-Germain FC",
-      "away_api": "FC Bayern München"
+      "home_api": null,
+      "away_api": null
     },
     {
-      "home": "Atletico Madrid",
-      "away": "Arsenal",
+      "home": "Unknown",
+      "away": "Unknown",
       "date": "2026-04-29",
       "kickoff": "19:00",
       "matchday": "SEMI_FINALS",
       "league": "UCL",
       "competition": "UCL",
-      "home_api": "Club Atlético de Madrid",
-      "away_api": "Arsenal FC"
+      "home_api": null,
+      "away_api": null
     },
     {
-      "home": "Arsenal",
-      "away": "Atletico Madrid",
+      "home": "Unknown",
+      "away": "Unknown",
       "date": "2026-05-05",
       "kickoff": "19:00",
       "matchday": "SEMI_FINALS",
       "league": "UCL",
       "competition": "UCL",
-      "home_api": "Arsenal FC",
-      "away_api": "Club Atlético de Madrid"
+      "home_api": null,
+      "away_api": null
     },
     {
-      "home": "Bayern Munich",
-      "away": "Paris Saint Germain",
+      "home": "Unknown",
+      "away": "Unknown",
       "date": "2026-05-06",
       "kickoff": "19:00",
       "matchday": "SEMI_FINALS",
       "league": "UCL",
       "competition": "UCL",
-      "home_api": "FC Bayern München",
-      "away_api": "Paris Saint-Germain FC"
+      "home_api": null,
+      "away_api": null
     },
     {
       "home": "Sporting",

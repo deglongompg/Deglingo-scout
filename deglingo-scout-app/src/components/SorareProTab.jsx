@@ -1028,6 +1028,7 @@ export default function SorareProTab({ players, teams, fixtures, logos = {}, mat
             const isPL = lg === "PL";
             const isLiga = lg === "Liga";
             const isBundes = lg === "Bundes";
+            const isChampion = lg === "Champion";
             const whiteLogo = isL1 || isPL || isLiga;
             return (
               <button key={lg} onClick={() => setLeague(lg)} title={lg} style={{
@@ -1047,6 +1048,24 @@ export default function SorareProTab({ players, teams, fixtures, logos = {}, mat
                   objectPosition: "center center",
                   display: "block", pointerEvents: "none",
                 }} />}
+                {isChampion && (
+                  <div style={{
+                    position: "absolute", top: "50%", left: "50%",
+                    transform: "translate(-50%, -50%)",
+                    display: "flex", alignItems: "center", gap: 5,
+                    pointerEvents: "none",
+                  }}>
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" style={{ filter: "drop-shadow(0 1px 3px rgba(0,0,0,0.8))" }}>
+                      <path d="M6 4h12v3a6 6 0 0 1-12 0V4z M4 5h2v2a2 2 0 0 0 2 2V7H4V5z M18 5h2v2h-4v2a2 2 0 0 0 2-2V5z M10 13h4v3h2v2H8v-2h2v-3z" fill="#fff"/>
+                      <path d="M7 4h10v3a5 5 0 0 1-10 0V4z M11 13h2v4h3v2H8v-2h3v-4z" fill="#fff"/>
+                    </svg>
+                    <span style={{
+                      fontFamily: "Outfit", fontWeight: 900, fontSize: 12,
+                      color: "#fff", letterSpacing: "0.08em",
+                      textShadow: "0 1px 3px rgba(0,0,0,0.8)",
+                    }}>CHAMPION</span>
+                  </div>
+                )}
                 {logoUrl && (isLiga ? (
                   <div style={{
                     position: "absolute", top: "50%", left: "50%",

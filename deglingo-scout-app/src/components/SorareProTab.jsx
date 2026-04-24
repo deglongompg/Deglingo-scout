@@ -1821,200 +1821,218 @@ export default function SorareProTab({ players, teams, fixtures, logos = {}, mat
               </div>
             </div>
           </div>
+
+          {/* ═══ RECAP EQUIPES SAUVEGARDEES — Format Pitch Pro ═══ */}
+          {savedTeams.length > 0 && (
+            <div style={{ marginTop: 24, padding: "0 0 20px" }}>
+              <div style={{ fontSize: 13, fontWeight: 900, color: rarityColor, letterSpacing: "0.06em", marginBottom: 12, display: "flex", alignItems: "center", gap: 8 }}>
+                {t(lang, "proRecap")}
+                <span style={{ fontSize: 9, fontWeight: 600, color: "rgba(255,255,255,0.35)" }}>{savedTeams.length}/{maxSaved} · {LEAGUE_NAMES[league] || league} · {rarity === "rare" ? t(lang, "proRare") : t(lang, "proLimited")} · {gwInfo?.displayNumber ? `GW${gwInfo.displayNumber}` : ""}</span>
+              </div>
+              <div className="pro-recap-grid" style={{ display: "grid", gridTemplateColumns: "repeat(2, minmax(0, 480px))", gap: 10, justifyContent: "center", margin: "0 auto", maxWidth: 980 }}>
+                {savedTeams.map((st) => {
+                  const stPlayers = getTeamSlots(league).map(s => st.picks[s]).filter(Boolean);
+                  const stAdjScores = stPlayers.map(p => getAdjDs(p));
+                  const expectedPicks = getExpectedPicks(league);
+                  const stCaptain = st.captain && st.picks[st.captain] ? st.picks[st.captain] : (stAdjScores.length === expectedPicks ? stPlayers[stAdjScores.indexOf(Math.max(...stAdjScores))] : null);
+                  const stCaptainId = stCaptain ? (stCaptain.slug || stCaptain.name) : null;
+                  // Score effectif + flag isLive (match joue ou non)
+                  // Captain bonus = RAW × 0.5 (formule Sorare officielle)
+                  const getScoreInfo = (p, isCap) => {
+                    const fresh = players.find(pl => pl.slug === p.slug);
+                    const card = getCard(p);
+                    const power = (card?.power && card.power > 1) ? card.power : 1;
+                    if (fresh && fresh.last_so5_date === p.matchDate && fresh.last_so5_score != null) {
+                      const raw = fresh.last_so5_score;
+                      const postBonus = raw * power;
+                      const captainBonus = isCap ? raw * 0.5 : 0;
+                      return { full: postBonus + captainBonus, isLive: true };
+                    }
+                    // DNP : match deja joue mais pas de SO5 pour ce joueur -> score reel = 0
+                    const todayStrFx = new Date().toISOString().split("T")[0];
+                    if (p.matchDate && p.matchDate < todayStrFx) {
+                      return { full: 0, isLive: true };
+                    }
+                    return { full: getFullScore(p, isCap), isLive: false };
+                  };
+                  const stPlayerInfos = stPlayers.map(p => ({ p, ...getScoreInfo(p, stCaptainId && (p.slug || p.name) === stCaptainId) }));
+                  const stFullScores = stPlayerInfos.map(x => x.full);
+                  const stLiveScores = stPlayerInfos.filter(x => x.isLive).map(x => x.full);
+                  const stClubCounts = {};
+                  stPlayers.forEach(p => { stClubCounts[p.club] = (stClubCounts[p.club] || 0) + 1; });
+                  const stMultiClub = stPlayers.length === 5 && Object.values(stClubCounts).every(c => c <= 2);
+                  const stSumL10 = stPlayers.reduce((s, p) => s + (p.l10 || 0), 0);
+                  const stCap260 = stPlayers.length === 5 && stSumL10 < 260;
+                  const stCompoPct = (stMultiClub ? 2 : 0) + (stCap260 ? 4 : 0);
+                  const stRawTotal = stFullScores.reduce((s, v) => s + v, 0);
+                  const stTotal = Math.round(stRawTotal * (1 + stCompoPct / 100));
+                  const stBonusPts = Math.round(stRawTotal - stPlayers.reduce((s, p) => s + (p.ds || 0), 0));
+                  // LIVE only (matchs joues)
+                  const stLiveRaw = stLiveScores.reduce((s, v) => s + v, 0);
+                  const stTotalLive = Math.round(stLiveRaw * (1 + stCompoPct / 100));
+                  const palSt = paliers.filter(p => stTotal >= p.pts).pop();
+
+                  const renderCard = (slot) => {
+                    const raw = st.picks[slot];
+                    if (!raw) return null;
+                    // Enrich with fresh data from players.json (titu%, injured, last_so5, etc.)
+                    const fresh = players.find(pl => pl.slug === raw.slug);
+                    const p = fresh ? { ...raw, sorare_starter_pct: fresh.sorare_starter_pct, injured: fresh.injured, suspended: fresh.suspended, last_so5_score: fresh.last_so5_score, last_so5_date: fresh.last_so5_date, last_match_home_goals: fresh.last_match_home_goals, last_match_away_goals: fresh.last_match_away_goals } : raw;
+                    const pc = PC[p.position];
+                    const ownedCard = getCard(p);
+                    const oppLogo = logos[p.oppName];
+                    const playerClubLogo = logos[p.club];
+                    const isCap = stCaptainId && (p.slug || p.name) === stCaptainId;
+                    const predictedScore = Math.round(getFullScore(p, false));
+                    const bonusPct = getPowerPct(p);
+                    const parisTime = p.kickoff && p.matchDate ? utcToParisTime(p.kickoff, p.matchDate) : "";
+                    const dateLabel = p.matchDate ? new Date(p.matchDate + "T12:00:00").toLocaleDateString(lang === "fr" ? "fr-FR" : "en-US", { timeZone: TZ, weekday: "short", day: "numeric" }).toUpperCase().replace(".", "") : "";
+                    // Score affiche par carte = RAW score (comme Sorare), bonus appliques au total uniquement.
+                    const hasRealScore = p.last_so5_date && p.matchDate && p.last_so5_date === p.matchDate && p.last_so5_score != null;
+                    // Detection "match joue" via la presence d'au moins un co-equipier ayant une SO5 a cette date
+                    // (plus robuste que comparer la date a 'aujourd'hui UTC' qui casse entre 22h-02h Paris)
+                    const matchWasPlayed = p.matchDate && p.club && (players || []).some(pl =>
+                      pl.club === p.club && pl.last_so5_date === p.matchDate && pl.last_match_home_goals != null
+                    );
+                    // DNP = match deja joue mais pas de SO5 pour le joueur (blesse, banc, absent)
+                    const isDNP = matchWasPlayed && !hasRealScore;
+                    const rawRealScore = hasRealScore ? p.last_so5_score : null;
+                    // Score affiche en bulle : FLOOR pour matcher Sorare (74.7 -> 74)
+                    const playerScore = hasRealScore ? Math.floor(rawRealScore) : isDNP ? 0 : Math.round(p.ds || 0);
+                    // Captain bonus = RAW × 0.5 (formule Sorare officielle)
+                    const capBase = hasRealScore ? rawRealScore : isDNP ? 0 : (p.ds || 0);
+                    const captainBonusPts = isCap ? Math.round(capBase * 0.5) : 0;
+                    // Score du match : depuis le joueur lui-meme si SO5 OK, sinon depuis un co-equipier fetche (cas DNP)
+                    let matchScore = hasRealScore && p.last_match_home_goals != null && p.last_match_away_goals != null
+                      ? `${p.last_match_home_goals} - ${p.last_match_away_goals}`
+                      : null;
+                    if (!matchScore && isDNP && p.club && p.matchDate) {
+                      const mate = players.find(pl => pl.club === p.club && pl.last_so5_date === p.matchDate && pl.last_match_home_goals != null);
+                      if (mate) matchScore = `${mate.last_match_home_goals} - ${mate.last_match_away_goals}`;
+                    }
+                    // Logos dans l'ordre home -> away (independant du player)
+                    const recapHomeLogo = p.isHome ? playerClubLogo : oppLogo;
+                    const recapAwayLogo = p.isHome ? oppLogo : playerClubLogo;
+                    return (
+                      <div key={slot} style={{ display: "flex", flexDirection: "column", alignItems: "center", flex: 1, minWidth: 0, maxWidth: 120 }}>
+                        <div style={{ width: "100%", aspectRatio: "3/4", borderRadius: 6, overflow: "hidden", margin: "0 auto", position: "relative",
+                          background: ownedCard ? "transparent" : `linear-gradient(155deg, rgba(8,4,28,0.9), ${pc}25)`,
+                          border: ownedCard ? "none" : `1px solid ${pc}30`,
+                        }}>
+                          {ownedCard ? (
+                            <img src={ownedCard.pictureUrl} alt="" style={{ width: "100%", height: "100%", objectFit: "contain" }} />
+                          ) : (
+                            <div style={{ display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", height: "100%", gap: 2 }}>
+                              {playerClubLogo && <img src={`/data/logos/${playerClubLogo}`} alt="" style={{ width: 16, height: 16, objectFit: "contain" }} />}
+                              <span style={{ fontSize: 6, fontWeight: 800, color: pc }}>{slot}</span>
+                            </div>
+                          )}
+                          {isCap && <span style={{ position: "absolute", top: 2, right: 12, width: 12, height: 12, borderRadius: "50%", background: "#FBBF24", color: "#000", fontSize: 7, fontWeight: 900, display: "flex", alignItems: "center", justifyContent: "center", zIndex: 2 }}>C</span>}
+                          {p.sorare_starter_pct != null && !hasRealScore && !isDNP && (
+                            <span style={{ position: "absolute", top: isCap ? 16 : 2, right: 2, fontSize: 7, fontWeight: 700, padding: "1px 3px", borderRadius: 3, color: "#fff", zIndex: 2,
+                              background: p.sorare_starter_pct >= 70 ? "rgba(22,101,52,0.9)" : p.sorare_starter_pct >= 50 ? "rgba(133,77,14,0.9)" : "rgba(153,27,27,0.9)",
+                            }}>{p.sorare_starter_pct}%</span>
+                          )}
+                          {isDNP && <span style={{ position: "absolute", top: 2, right: 2, fontSize: 7, fontWeight: 800, padding: "1px 4px", borderRadius: 3, color: "#fff", zIndex: 2, background: "rgba(153,27,27,0.95)", letterSpacing: "0.5px" }}>DNP</span>}
+                          {bonusPct > 0 && <span style={{ position: "absolute", bottom: 34, right: 4, fontSize: 8, fontWeight: 900, color: "#4ADE80", background: "rgba(0,0,0,0.7)", borderRadius: 3, padding: "1px 4px", zIndex: 3 }}>+{bonusPct}%</span>}
+                          {ownedCard?.isClassic && <span style={{ position: "absolute", top: 2, left: 2, fontSize: 4, fontWeight: 900, color: "#fff", background: "rgba(139,92,246,0.8)", borderRadius: 2, padding: "0px 2px", zIndex: 2 }}>CLASSIC</span>}
+                          {/* D-Score — inside card, bottom right */}
+                          <div style={{ position: "absolute", bottom: 0, right: 8, zIndex: 2,
+                            width: 32, height: 32, borderRadius: "50%",
+                            display: "flex", alignItems: "center", justifyContent: "center",
+                            fontFamily: "'DM Mono',monospace", fontSize: 13, fontWeight: 900,
+                            color: hasRealScore ? "#fff" : isDNP ? "#fff" : dsColor(playerScore),
+                            background: hasRealScore ? dsBg(playerScore) : isDNP ? "rgba(127,29,29,0.9)" : "rgba(0,0,0,0.6)",
+                            border: hasRealScore ? "none" : isDNP ? "1px solid rgba(220,38,38,0.8)" : `1px dashed ${dsColor(playerScore)}60`,
+                            boxShadow: hasRealScore ? `0 0 8px ${dsColor(playerScore)}50` : isDNP ? "0 0 6px rgba(220,38,38,0.4)" : `0 0 6px ${dsColor(playerScore)}30`,
+                          }}>{playerScore}</div>
+                        </div>
+                        {/* Match info box — ordre HOME vs AWAY toujours respecte */}
+                        <div style={{ marginTop: 3, padding: "3px 8px", borderRadius: 6, background: matchScore ? "rgba(15,40,30,0.5)" : "rgba(255,255,255,0.03)", border: `1px solid ${matchScore ? "rgba(74,222,128,0.25)" : "rgba(255,255,255,0.06)"}`, textAlign: "center" }}>
+                          <div style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: 4 }}>
+                            {recapHomeLogo && <img src={`/data/logos/${recapHomeLogo}`} alt="" style={{ width: 14, height: 14, objectFit: "contain" }} />}
+                            {matchScore ? (
+                              <span style={{ fontSize: 11, fontWeight: 900, color: "#4ADE80", fontFamily: "'DM Mono',monospace", letterSpacing: "-0.3px" }}>{matchScore}</span>
+                            ) : (
+                              <span style={{ fontSize: 7, color: "rgba(255,255,255,0.25)" }}>vs</span>
+                            )}
+                            {recapAwayLogo && <img src={`/data/logos/${recapAwayLogo}`} alt="" style={{ width: 14, height: 14, objectFit: "contain" }} />}
+                          </div>
+                          {!matchScore && (
+                            <div style={{ fontSize: 7, fontWeight: 700, color: "#fff", fontFamily: "'DM Mono',monospace", marginTop: 1 }}>
+                              {dateLabel} - {parisTime}
+                            </div>
+                          )}
+                        </div>
+                      </div>
+                    );
+                  };
+
+                  return (
+                    <div key={st.id} style={{ borderRadius: 12, background: "linear-gradient(160deg, rgba(10,5,30,0.95), rgba(20,10,50,0.9))", border: `1px solid ${rarityColor}25`, padding: "10px 10px", backdropFilter: "blur(8px)", display: "flex", gap: 12 }}>
+                      {/* Colonne gauche : header + pitch */}
+                      <div style={{ flex: 1, minWidth: 0 }}>
+                        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 8 }}>
+                          <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
+                            <span style={{ fontSize: 12, fontWeight: 900, color: rarityColor }}>{st.label}</span>
+                            <button onClick={() => loadSavedTeam(st)} style={{ fontSize: 7, fontWeight: 700, padding: "2px 6px", borderRadius: 4, border: `1px solid ${rarityColor}40`, background: `${rarityColor}10`, color: rarityColor, cursor: "pointer", fontFamily: "Outfit" }}>Charger</button>
+                            <button onClick={() => deleteSavedTeam(st.id)} style={{ fontSize: 8, padding: "2px 5px", borderRadius: 4, border: "1px solid rgba(255,255,255,0.08)", background: "rgba(255,255,255,0.03)", color: "rgba(255,255,255,0.3)", cursor: "pointer" }}>x</button>
+                          </div>
+                          <div style={{ display: "flex", alignItems: "center", gap: 4 }}>
+                            {stCap260 && <span style={{ fontSize: 8, fontWeight: 800, padding: "2px 5px", borderRadius: 3, border: "1px solid rgba(139,92,246,0.5)", color: "#A78BFA", background: "rgba(139,92,246,0.1)" }}>CAP</span>}
+                          </div>
+                        </div>
+                        {/* Pitch layout : ATT+FLEX en haut, DEF(s)+GK+MIL(s) en bas. Champion = 7 slots. */}
+                        <div style={{ display: "flex", flexDirection: "column", gap: 6, alignItems: "center" }}>
+                          {league === "Champion" ? (
+                            <>
+                              <div style={{ display: "flex", gap: 6, justifyContent: "center", width: "100%" }}>
+                                {renderCard("ATT")}
+                                {renderCard("FLEX")}
+                              </div>
+                              <div style={{ display: "flex", gap: 4, justifyContent: "center", width: "100%" }}>
+                                {renderCard("DEF1")}
+                                {renderCard("DEF2")}
+                                {renderCard("GK")}
+                                {renderCard("MIL1")}
+                                {renderCard("MIL2")}
+                              </div>
+                            </>
+                          ) : (
+                            <>
+                              <div style={{ display: "flex", gap: 6, justifyContent: "center", width: "100%" }}>
+                                {renderCard("ATT")}
+                                {renderCard("FLEX")}
+                              </div>
+                              <div style={{ display: "flex", gap: 6, justifyContent: "center", width: "100%" }}>
+                                {renderCard("DEF")}
+                                {renderCard("GK")}
+                                {renderCard("MIL")}
+                              </div>
+                            </>
+                          )}
+                        </div>
+                      </div>
+                      {/* Skyrocket Gauge a droite — LIVE + projection + initial + rewards en fond.
+                          Pro Limited : top reward (1000$) en gold. Pro Rare : top reward (4000$) en rouge sang. Rare = +10% sur tous les seuils. */}
+                      <SkyrocketGauge
+                        score={stTotalLive}
+                        projectedScore={stTotal}
+                        initialScore={st.score}
+                        paliers={paliers}
+                        showRewards={true}
+                        scoreMultiplier={rarity === "rare" ? 1.10 : 1.0}
+                        topRewardColor={rarity === "rare" ? "#DC2626" : "#FBBF24"}
+                        rarity={rarity}
+                      />
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+          )}
         </div>
       </div>
-
-      {/* ═══ RECAP EQUIPES SAUVEGARDEES — Format Pitch Pro ═══ */}
-      {savedTeams.length > 0 && (
-        <div style={{ marginTop: 24, padding: "0 0 20px" }}>
-          <div style={{ fontSize: 13, fontWeight: 900, color: rarityColor, letterSpacing: "0.06em", marginBottom: 12, display: "flex", alignItems: "center", gap: 8 }}>
-            {t(lang, "proRecap")}
-            <span style={{ fontSize: 9, fontWeight: 600, color: "rgba(255,255,255,0.35)" }}>{savedTeams.length}/{maxSaved} · {LEAGUE_NAMES[league] || league} · {rarity === "rare" ? t(lang, "proRare") : t(lang, "proLimited")} · {gwInfo?.displayNumber ? `GW${gwInfo.displayNumber}` : ""}</span>
-          </div>
-          <div className="pro-recap-grid" style={{ display: "grid", gridTemplateColumns: "repeat(2, minmax(0, 480px))", gap: 10, justifyContent: "center", margin: "0 auto", maxWidth: 980 }}>
-            {savedTeams.map((st) => {
-              const stPlayers = getTeamSlots(league).map(s => st.picks[s]).filter(Boolean);
-              const stAdjScores = stPlayers.map(p => getAdjDs(p));
-              const expectedPicks = getExpectedPicks(league);
-              const stCaptain = st.captain && st.picks[st.captain] ? st.picks[st.captain] : (stAdjScores.length === expectedPicks ? stPlayers[stAdjScores.indexOf(Math.max(...stAdjScores))] : null);
-              const stCaptainId = stCaptain ? (stCaptain.slug || stCaptain.name) : null;
-              // Score effectif + flag isLive (match joue ou non)
-              // Captain bonus = RAW × 0.5 (formule Sorare officielle)
-              const getScoreInfo = (p, isCap) => {
-                const fresh = players.find(pl => pl.slug === p.slug);
-                const card = getCard(p);
-                const power = (card?.power && card.power > 1) ? card.power : 1;
-                if (fresh && fresh.last_so5_date === p.matchDate && fresh.last_so5_score != null) {
-                  const raw = fresh.last_so5_score;
-                  const postBonus = raw * power;
-                  const captainBonus = isCap ? raw * 0.5 : 0;
-                  return { full: postBonus + captainBonus, isLive: true };
-                }
-                // DNP : match deja joue mais pas de SO5 pour ce joueur -> score reel = 0
-                const todayStrFx = new Date().toISOString().split("T")[0];
-                if (p.matchDate && p.matchDate < todayStrFx) {
-                  return { full: 0, isLive: true };
-                }
-                return { full: getFullScore(p, isCap), isLive: false };
-              };
-              const stPlayerInfos = stPlayers.map(p => ({ p, ...getScoreInfo(p, stCaptainId && (p.slug || p.name) === stCaptainId) }));
-              const stFullScores = stPlayerInfos.map(x => x.full);
-              const stLiveScores = stPlayerInfos.filter(x => x.isLive).map(x => x.full);
-              const stClubCounts = {};
-              stPlayers.forEach(p => { stClubCounts[p.club] = (stClubCounts[p.club] || 0) + 1; });
-              const stMultiClub = stPlayers.length === 5 && Object.values(stClubCounts).every(c => c <= 2);
-              const stSumL10 = stPlayers.reduce((s, p) => s + (p.l10 || 0), 0);
-              const stCap260 = stPlayers.length === 5 && stSumL10 < 260;
-              const stCompoPct = (stMultiClub ? 2 : 0) + (stCap260 ? 4 : 0);
-              const stRawTotal = stFullScores.reduce((s, v) => s + v, 0);
-              const stTotal = Math.round(stRawTotal * (1 + stCompoPct / 100));
-              const stBonusPts = Math.round(stRawTotal - stPlayers.reduce((s, p) => s + (p.ds || 0), 0));
-              // LIVE only (matchs joues)
-              const stLiveRaw = stLiveScores.reduce((s, v) => s + v, 0);
-              const stTotalLive = Math.round(stLiveRaw * (1 + stCompoPct / 100));
-              const palSt = paliers.filter(p => stTotal >= p.pts).pop();
-
-              const renderCard = (slot) => {
-                const raw = st.picks[slot];
-                if (!raw) return null;
-                // Enrich with fresh data from players.json (titu%, injured, last_so5, etc.)
-                const fresh = players.find(pl => pl.slug === raw.slug);
-                const p = fresh ? { ...raw, sorare_starter_pct: fresh.sorare_starter_pct, injured: fresh.injured, suspended: fresh.suspended, last_so5_score: fresh.last_so5_score, last_so5_date: fresh.last_so5_date, last_match_home_goals: fresh.last_match_home_goals, last_match_away_goals: fresh.last_match_away_goals } : raw;
-                const pc = PC[p.position];
-                const ownedCard = getCard(p);
-                const oppLogo = logos[p.oppName];
-                const playerClubLogo = logos[p.club];
-                const isCap = stCaptainId && (p.slug || p.name) === stCaptainId;
-                const predictedScore = Math.round(getFullScore(p, false));
-                const bonusPct = getPowerPct(p);
-                const parisTime = p.kickoff && p.matchDate ? utcToParisTime(p.kickoff, p.matchDate) : "";
-                const dateLabel = p.matchDate ? new Date(p.matchDate + "T12:00:00").toLocaleDateString(lang === "fr" ? "fr-FR" : "en-US", { timeZone: TZ, weekday: "short", day: "numeric" }).toUpperCase().replace(".", "") : "";
-                // Score affiche par carte = RAW score (comme Sorare), bonus appliques au total uniquement.
-                const hasRealScore = p.last_so5_date && p.matchDate && p.last_so5_date === p.matchDate && p.last_so5_score != null;
-                // Detection "match joue" via la presence d'au moins un co-equipier ayant une SO5 a cette date
-                // (plus robuste que comparer la date a 'aujourd'hui UTC' qui casse entre 22h-02h Paris)
-                const matchWasPlayed = p.matchDate && p.club && (players || []).some(pl =>
-                  pl.club === p.club && pl.last_so5_date === p.matchDate && pl.last_match_home_goals != null
-                );
-                // DNP = match deja joue mais pas de SO5 pour le joueur (blesse, banc, absent)
-                const isDNP = matchWasPlayed && !hasRealScore;
-                const rawRealScore = hasRealScore ? p.last_so5_score : null;
-                // Score affiche en bulle : FLOOR pour matcher Sorare (74.7 -> 74)
-                const playerScore = hasRealScore ? Math.floor(rawRealScore) : isDNP ? 0 : Math.round(p.ds || 0);
-                // Captain bonus = RAW × 0.5 (formule Sorare officielle)
-                const capBase = hasRealScore ? rawRealScore : isDNP ? 0 : (p.ds || 0);
-                const captainBonusPts = isCap ? Math.round(capBase * 0.5) : 0;
-                // Score du match : depuis le joueur lui-meme si SO5 OK, sinon depuis un co-equipier fetche (cas DNP)
-                let matchScore = hasRealScore && p.last_match_home_goals != null && p.last_match_away_goals != null
-                  ? `${p.last_match_home_goals} - ${p.last_match_away_goals}`
-                  : null;
-                if (!matchScore && isDNP && p.club && p.matchDate) {
-                  const mate = players.find(pl => pl.club === p.club && pl.last_so5_date === p.matchDate && pl.last_match_home_goals != null);
-                  if (mate) matchScore = `${mate.last_match_home_goals} - ${mate.last_match_away_goals}`;
-                }
-                // Logos dans l'ordre home -> away (independant du player)
-                const recapHomeLogo = p.isHome ? playerClubLogo : oppLogo;
-                const recapAwayLogo = p.isHome ? oppLogo : playerClubLogo;
-                return (
-                  <div key={slot} style={{ display: "flex", flexDirection: "column", alignItems: "center", flex: 1, minWidth: 0, maxWidth: 120 }}>
-                    <div style={{ width: "100%", aspectRatio: "3/4", borderRadius: 6, overflow: "hidden", margin: "0 auto", position: "relative",
-                      background: ownedCard ? "transparent" : `linear-gradient(155deg, rgba(8,4,28,0.9), ${pc}25)`,
-                      border: ownedCard ? "none" : `1px solid ${pc}30`,
-                    }}>
-                      {ownedCard ? (
-                        <img src={ownedCard.pictureUrl} alt="" style={{ width: "100%", height: "100%", objectFit: "contain" }} />
-                      ) : (
-                        <div style={{ display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", height: "100%", gap: 2 }}>
-                          {playerClubLogo && <img src={`/data/logos/${playerClubLogo}`} alt="" style={{ width: 16, height: 16, objectFit: "contain" }} />}
-                          <span style={{ fontSize: 6, fontWeight: 800, color: pc }}>{slot}</span>
-                        </div>
-                      )}
-                      {isCap && <span style={{ position: "absolute", top: 2, right: 12, width: 12, height: 12, borderRadius: "50%", background: "#FBBF24", color: "#000", fontSize: 7, fontWeight: 900, display: "flex", alignItems: "center", justifyContent: "center", zIndex: 2 }}>C</span>}
-                      {p.sorare_starter_pct != null && !hasRealScore && !isDNP && (
-                        <span style={{ position: "absolute", top: isCap ? 16 : 2, right: 2, fontSize: 7, fontWeight: 700, padding: "1px 3px", borderRadius: 3, color: "#fff", zIndex: 2,
-                          background: p.sorare_starter_pct >= 70 ? "rgba(22,101,52,0.9)" : p.sorare_starter_pct >= 50 ? "rgba(133,77,14,0.9)" : "rgba(153,27,27,0.9)",
-                        }}>{p.sorare_starter_pct}%</span>
-                      )}
-                      {isDNP && <span style={{ position: "absolute", top: 2, right: 2, fontSize: 7, fontWeight: 800, padding: "1px 4px", borderRadius: 3, color: "#fff", zIndex: 2, background: "rgba(153,27,27,0.95)", letterSpacing: "0.5px" }}>DNP</span>}
-                      {bonusPct > 0 && <span style={{ position: "absolute", bottom: 34, right: 4, fontSize: 8, fontWeight: 900, color: "#4ADE80", background: "rgba(0,0,0,0.7)", borderRadius: 3, padding: "1px 4px", zIndex: 3 }}>+{bonusPct}%</span>}
-                      {ownedCard?.isClassic && <span style={{ position: "absolute", top: 2, left: 2, fontSize: 4, fontWeight: 900, color: "#fff", background: "rgba(139,92,246,0.8)", borderRadius: 2, padding: "0px 2px", zIndex: 2 }}>CLASSIC</span>}
-                      {/* D-Score — inside card, bottom right */}
-                      <div style={{ position: "absolute", bottom: 0, right: 8, zIndex: 2,
-                        width: 32, height: 32, borderRadius: "50%",
-                        display: "flex", alignItems: "center", justifyContent: "center",
-                        fontFamily: "'DM Mono',monospace", fontSize: 13, fontWeight: 900,
-                        color: hasRealScore ? "#fff" : isDNP ? "#fff" : dsColor(playerScore),
-                        background: hasRealScore ? dsBg(playerScore) : isDNP ? "rgba(127,29,29,0.9)" : "rgba(0,0,0,0.6)",
-                        border: hasRealScore ? "none" : isDNP ? "1px solid rgba(220,38,38,0.8)" : `1px dashed ${dsColor(playerScore)}60`,
-                        boxShadow: hasRealScore ? `0 0 8px ${dsColor(playerScore)}50` : isDNP ? "0 0 6px rgba(220,38,38,0.4)" : `0 0 6px ${dsColor(playerScore)}30`,
-                      }}>{playerScore}</div>
-                    </div>
-                    {/* Match info box — ordre HOME vs AWAY toujours respecte */}
-                    <div style={{ marginTop: 3, padding: "3px 8px", borderRadius: 6, background: matchScore ? "rgba(15,40,30,0.5)" : "rgba(255,255,255,0.03)", border: `1px solid ${matchScore ? "rgba(74,222,128,0.25)" : "rgba(255,255,255,0.06)"}`, textAlign: "center" }}>
-                      <div style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: 4 }}>
-                        {recapHomeLogo && <img src={`/data/logos/${recapHomeLogo}`} alt="" style={{ width: 14, height: 14, objectFit: "contain" }} />}
-                        {matchScore ? (
-                          <span style={{ fontSize: 11, fontWeight: 900, color: "#4ADE80", fontFamily: "'DM Mono',monospace", letterSpacing: "-0.3px" }}>{matchScore}</span>
-                        ) : (
-                          <span style={{ fontSize: 7, color: "rgba(255,255,255,0.25)" }}>vs</span>
-                        )}
-                        {recapAwayLogo && <img src={`/data/logos/${recapAwayLogo}`} alt="" style={{ width: 14, height: 14, objectFit: "contain" }} />}
-                      </div>
-                      {!matchScore && (
-                        <div style={{ fontSize: 7, fontWeight: 700, color: "#fff", fontFamily: "'DM Mono',monospace", marginTop: 1 }}>
-                          {dateLabel} - {parisTime}
-                        </div>
-                      )}
-                    </div>
-                  </div>
-                );
-              };
-
-              return (
-                <div key={st.id} style={{ borderRadius: 12, background: "linear-gradient(160deg, rgba(10,5,30,0.95), rgba(20,10,50,0.9))", border: `1px solid ${rarityColor}25`, padding: "10px 10px", backdropFilter: "blur(8px)", display: "flex", gap: 12 }}>
-                  {/* Colonne gauche : header + pitch */}
-                  <div style={{ flex: 1, minWidth: 0 }}>
-                    <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 8 }}>
-                      <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
-                        <span style={{ fontSize: 12, fontWeight: 900, color: rarityColor }}>{st.label}</span>
-                        <button onClick={() => loadSavedTeam(st)} style={{ fontSize: 7, fontWeight: 700, padding: "2px 6px", borderRadius: 4, border: `1px solid ${rarityColor}40`, background: `${rarityColor}10`, color: rarityColor, cursor: "pointer", fontFamily: "Outfit" }}>Charger</button>
-                        <button onClick={() => deleteSavedTeam(st.id)} style={{ fontSize: 8, padding: "2px 5px", borderRadius: 4, border: "1px solid rgba(255,255,255,0.08)", background: "rgba(255,255,255,0.03)", color: "rgba(255,255,255,0.3)", cursor: "pointer" }}>x</button>
-                      </div>
-                      <div style={{ display: "flex", alignItems: "center", gap: 4 }}>
-                        {stCap260 && <span style={{ fontSize: 8, fontWeight: 800, padding: "2px 5px", borderRadius: 3, border: "1px solid rgba(139,92,246,0.5)", color: "#A78BFA", background: "rgba(139,92,246,0.1)" }}>CAP</span>}
-                      </div>
-                    </div>
-                    {/* Pitch layout : ATT+FLEX en haut, DEF+GK+MIL en bas */}
-                    <div style={{ display: "flex", flexDirection: "column", gap: 6, alignItems: "center" }}>
-                      <div style={{ display: "flex", gap: 6, justifyContent: "center", width: "100%" }}>
-                        {renderCard("ATT")}
-                        {renderCard("FLEX")}
-                      </div>
-                      <div style={{ display: "flex", gap: 6, justifyContent: "center", width: "100%" }}>
-                        {renderCard("DEF")}
-                        {renderCard("GK")}
-                        {renderCard("MIL")}
-                      </div>
-                    </div>
-                  </div>
-                  {/* Skyrocket Gauge a droite — LIVE + projection + initial + rewards en fond.
-                      Pro Limited : top reward (1000$) en gold. Pro Rare : top reward (4000$) en rouge sang. Rare = +10% sur tous les seuils. */}
-                  <SkyrocketGauge
-                    score={stTotalLive}
-                    projectedScore={stTotal}
-                    initialScore={st.score}
-                    paliers={paliers}
-                    showRewards={true}
-                    scoreMultiplier={rarity === "rare" ? 1.10 : 1.0}
-                    topRewardColor={rarity === "rare" ? "#DC2626" : "#FBBF24"}
-                    rarity={rarity}
-                  />
-                </div>
-              );
-            })}
-          </div>
-        </div>
-      )}
     </div>
   );
 }

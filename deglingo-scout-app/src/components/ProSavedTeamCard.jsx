@@ -1,5 +1,5 @@
 import { POSITION_COLORS, dsColor, dsBg } from "../utils/colors";
-import { getPaliers, TEAM_SLOTS, computeTeamScores, getPickCard, getPowerPct, utcToParisTime } from "../utils/proScoring";
+import { getPaliers, TEAM_SLOTS, computeTeamScores, getPickCard, getPowerPct, utcToParisTime, getTeamSlots } from "../utils/proScoring";
 import SkyrocketGauge from "./SkyrocketGauge";
 
 const PC = POSITION_COLORS;
@@ -144,15 +144,33 @@ export default function ProSavedTeamCard({
           </div>
         </div>
         <div style={{ display: "flex", flexDirection: "column", gap: 6, alignItems: "center" }}>
-          <div style={{ display: "flex", gap: 6, justifyContent: "center", width: "100%" }}>
-            {renderCard("ATT")}
-            {renderCard("FLEX")}
-          </div>
-          <div style={{ display: "flex", gap: 6, justifyContent: "center", width: "100%" }}>
-            {renderCard("DEF")}
-            {renderCard("GK")}
-            {renderCard("MIL")}
-          </div>
+          {league === "Champion" ? (
+            <>
+              <div style={{ display: "flex", gap: 6, justifyContent: "center", width: "100%" }}>
+                {renderCard("ATT")}
+                {renderCard("FLEX")}
+              </div>
+              <div style={{ display: "flex", gap: 4, justifyContent: "center", width: "100%" }}>
+                {renderCard("DEF1")}
+                {renderCard("DEF2")}
+                {renderCard("GK")}
+                {renderCard("MIL1")}
+                {renderCard("MIL2")}
+              </div>
+            </>
+          ) : (
+            <>
+              <div style={{ display: "flex", gap: 6, justifyContent: "center", width: "100%" }}>
+                {renderCard("ATT")}
+                {renderCard("FLEX")}
+              </div>
+              <div style={{ display: "flex", gap: 6, justifyContent: "center", width: "100%" }}>
+                {renderCard("DEF")}
+                {renderCard("GK")}
+                {renderCard("MIL")}
+              </div>
+            </>
+          )}
         </div>
       </div>
       {/* Skyrocket Gauge à droite */}

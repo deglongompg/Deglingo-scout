@@ -127,6 +127,8 @@ const proKeyframes = `
 @keyframes proShine { 0%{background-position:0% 50%} 100%{background-position:200% 50%} }
 @keyframes spin { 0%{transform:rotate(0deg)} 100%{transform:rotate(360deg)} }
 @keyframes loadBar { 0%{transform:translateX(-100%)} 50%{transform:translateX(60%)} 100%{transform:translateX(200%)} }
+@keyframes themeFadeIn { 0%{opacity:0} 100%{opacity:0.14} }
+@keyframes neonPulse { 0%,100%{filter:brightness(1)} 50%{filter:brightness(1.15)} }
 .pro-player-list ::-webkit-scrollbar { height: 4px; }
 .pro-player-list ::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.1); border-radius: 4px; }
 .pro-player-list ::-webkit-scrollbar-track { background: transparent; }
@@ -998,6 +1000,9 @@ export default function SorareProTab({ players, teams, fixtures, logos = {}, mat
   const rarityColor = rarity === "rare" ? "#EF4444" : "#F59E0B";
   const rarityBg = rarity === "rare" ? "linear-gradient(135deg, #EF4444, #DC2626)" : "linear-gradient(135deg, #F59E0B, #D97706)";
 
+  const themeAccent = LEAGUE_ACCENT[league] || "#888";
+  const themeBg = LEAGUE_BG_URL[league];
+
   return (
     <div className="sp-root" style={{ position: "relative", minHeight: "80vh", padding: isMobile ? "0 8px 40px" : "0 16px 40px", width: "100%", overflowX: "hidden" }}>
       <style>{`
@@ -1009,8 +1014,46 @@ export default function SorareProTab({ players, teams, fixtures, logos = {}, mat
       `}</style>
       <style>{proKeyframes}</style>
 
+      {/* ═══ Theme layer — bg de la ligue active, blurred + opacity faible ═══ */}
+      {themeBg && (
+        <div
+          key={league}
+          aria-hidden
+          style={{
+            position: "absolute",
+            inset: 0,
+            backgroundImage: `url(${themeBg})`,
+            backgroundSize: "cover",
+            backgroundPosition: "center top",
+            backgroundRepeat: "no-repeat",
+            filter: "blur(40px) saturate(1.4)",
+            opacity: 0.14,
+            pointerEvents: "none",
+            zIndex: 0,
+            animation: "themeFadeIn 0.55s ease-out both",
+          }}
+        />
+      )}
+      {/* Radial glow accent centered top pour renforcer l'ambiance ligue */}
+      <div
+        key={`glow-${league}`}
+        aria-hidden
+        style={{
+          position: "absolute",
+          top: -80,
+          left: "50%",
+          transform: "translateX(-50%)",
+          width: "80%",
+          height: 300,
+          background: `radial-gradient(ellipse at center, ${themeAccent}33, transparent 70%)`,
+          pointerEvents: "none",
+          zIndex: 0,
+          animation: "themeFadeIn 0.55s ease-out both",
+        }}
+      />
+
       {/* ═══ HEADER : Titre + League selector + Rarity toggle ═══ */}
-      <div className="pro-header-row" style={{ display: "flex", alignItems: "center", gap: 12, padding: "8px 0 12px", flexWrap: "wrap" }}>
+      <div className="pro-header-row" style={{ display: "flex", alignItems: "center", gap: 12, padding: "8px 0 12px", flexWrap: "wrap", position: "relative", zIndex: 1 }}>
         <div style={{ display: "flex", alignItems: "center", gap: 6, flexShrink: 0 }}>
           <span style={{ fontSize: 14, fontWeight: 800, color: "rgba(255,255,255,0.5)", letterSpacing: "0.12em" }}>SORARE</span>
           <span style={{ display: "inline-flex", alignItems: "center", justifyContent: "center", padding: "3px 10px", borderRadius: 5, background: rarityBg, boxShadow: `0 0 10px ${rarityColor}40` }}>
@@ -1166,7 +1209,7 @@ export default function SorareProTab({ players, teams, fixtures, logos = {}, mat
       </div>
 
       {/* ═══ MAIN LAYOUT : Left (matches) + Right (builder + players) ═══ */}
-      <div className="pro-main-flex" style={{ display: "flex", gap: 16, alignItems: "flex-start" }}>
+      <div className="pro-main-flex" style={{ display: "flex", gap: 16, alignItems: "flex-start", position: "relative", zIndex: 1 }}>
 
         {/* ── Left column: Decisive Pick + Matches ── */}
         <div className="pro-left-panel" style={{ width: leftCollapsed ? 30 : 280, flexShrink: 0, transition: "width 0.2s", position: "relative", display: isMobile ? "none" : undefined }}>
@@ -1318,7 +1361,7 @@ export default function SorareProTab({ players, teams, fixtures, logos = {}, mat
 
         {/* ── Right column: Builder + Player list ── */}
         <div className="pro-right-col" style={{ flex: 1, minWidth: 0, maxWidth: "100%", overflow: "hidden" }}>
-          <div className="pro-builder-wrap" style={{ borderRadius: 14, background: "rgba(6,3,20,0.95)", border: "none", overflow: "hidden", display: "flex", flexDirection: "column", minHeight: isMobile ? "60vh" : undefined, position: "relative", width: "100%", maxWidth: "100%" }}>
+          <div className="pro-builder-wrap" style={{ borderRadius: 14, background: "rgba(6,3,20,0.88)", border: `1px solid ${themeAccent}55`, overflow: "hidden", display: "flex", flexDirection: "column", minHeight: isMobile ? "60vh" : undefined, position: "relative", width: "100%", maxWidth: "100%", boxShadow: `0 0 30px ${themeAccent}33, 0 0 2px ${themeAccent}aa, inset 0 0 40px ${themeAccent}12`, transition: "border-color 0.4s ease, box-shadow 0.4s ease" }}>
 
             {/* Loading overlay — first connection */}
             {sorareLoading && (

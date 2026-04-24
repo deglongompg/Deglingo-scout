@@ -561,7 +561,9 @@ export default function LandingPage({ players, onEnter, onNavigate }) {
               { code: "Liga",   color: "#EF4444", name: "La Liga",        bg: "https://frontend-assets.sorare.com/football/so5_league/seasonal-spain/picture.jpg?v=1",   logo: "/liga.png" },
               { code: "Bundes", color: "#DC2626", name: "Bundesliga",     bg: "https://frontend-assets.sorare.com/football/so5_league/seasonal-germany/picture.jpg?v=1", logo: "/bundes.png" },
               { code: "MLS",    color: "#3B82F6", name: "MLS",            bg: "https://frontend-assets.sorare.com/football/so5_league/seasonal-us/picture.jpg?v=1",      logo: "/mls.png" },
-            ].map(l => (
+            ].map(l => {
+              const isL1 = l.code === "L1";
+              return (
               <div key={l.code} title={l.name} style={{
                 position: "relative", overflow: "hidden",
                 width: 150, height: 48,
@@ -575,15 +577,20 @@ export default function LandingPage({ players, onEnter, onNavigate }) {
                   objectPosition: "right center",
                   display: "block", pointerEvents: "none",
                 }} />
+                {isL1 && <div style={{
+                  position: "absolute", inset: 0, pointerEvents: "none",
+                  background: "radial-gradient(circle at 8% 92%, rgba(0,0,0,0.9) 0%, rgba(0,0,0,0.6) 20%, transparent 38%)",
+                }} />}
                 <img src={l.logo} alt={l.name} style={{
                   position: "absolute", top: "50%", left: "50%",
                   transform: "translate(-50%, -50%)",
                   height: "72%", width: "auto",
                   objectFit: "contain", pointerEvents: "none",
-                  filter: "drop-shadow(0 1px 3px rgba(0,0,0,0.7))",
+                  filter: `${isL1 ? "brightness(0) invert(1) " : ""}drop-shadow(0 1px 3px rgba(0,0,0,0.7))`,
                 }} />
               </div>
-            ))}
+              );
+            })}
           </div>
 
           {/* Primary CTA — meme format box que les chips ligue (pill + glow) */}

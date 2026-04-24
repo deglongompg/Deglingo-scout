@@ -1024,6 +1024,7 @@ export default function SorareProTab({ players, teams, fixtures, logos = {}, mat
             const accent = LEAGUE_ACCENT[lg] || LEAGUE_COLORS[lg] || "#888";
             const bgUrl = LEAGUE_BG_URL[lg];
             const logoUrl = LEAGUE_LOGO_URL[lg];
+            const isL1 = lg === "L1";
             return (
               <button key={lg} onClick={() => setLeague(lg)} title={lg} style={{
                 position: "relative", overflow: "hidden",
@@ -1042,12 +1043,16 @@ export default function SorareProTab({ players, teams, fixtures, logos = {}, mat
                   objectPosition: "right center",
                   display: "block", pointerEvents: "none",
                 }} />}
+                {isL1 && <div style={{
+                  position: "absolute", inset: 0, pointerEvents: "none",
+                  background: "radial-gradient(circle at 8% 92%, rgba(0,0,0,0.9) 0%, rgba(0,0,0,0.6) 20%, transparent 38%)",
+                }} />}
                 {logoUrl && <img src={logoUrl} alt={lg} style={{
                   position: "absolute", top: "50%", left: "50%",
                   transform: "translate(-50%, -50%)",
                   height: "74%", width: "auto",
                   objectFit: "contain", pointerEvents: "none",
-                  filter: "drop-shadow(0 1px 3px rgba(0,0,0,0.7))",
+                  filter: `${isL1 ? "brightness(0) invert(1) " : ""}drop-shadow(0 1px 3px rgba(0,0,0,0.7))`,
                 }} />}
               </button>
             );

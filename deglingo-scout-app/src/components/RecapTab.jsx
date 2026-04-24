@@ -506,6 +506,7 @@ function RecapTabInner({ players, logos, lang }) {
               const count = proLeagueCounts[lg]?.total || 0;
               const bgUrl = LEAGUE_BG_URL[lg];
               const logoUrl = LEAGUE_LOGO_URL[lg];
+              const isL1 = lg === "L1";
               return (
                 <button key={lg} onClick={() => setActiveLeague(lg)} title={LEAGUE_NAMES[lg] || lg} style={{
                   position: "relative", overflow: "hidden",
@@ -524,12 +525,16 @@ function RecapTabInner({ players, logos, lang }) {
                     objectPosition: "right center",
                     display: "block", pointerEvents: "none",
                   }} />}
+                  {isL1 && <div style={{
+                    position: "absolute", inset: 0, pointerEvents: "none",
+                    background: "radial-gradient(circle at 8% 92%, rgba(0,0,0,0.9) 0%, rgba(0,0,0,0.6) 20%, transparent 38%)",
+                  }} />}
                   {logoUrl && <img src={logoUrl} alt={lg} style={{
                     position: "absolute", top: "50%", left: "50%",
                     transform: "translate(-50%, -50%)",
                     height: "72%", width: "auto",
                     objectFit: "contain", pointerEvents: "none",
-                    filter: "drop-shadow(0 1px 3px rgba(0,0,0,0.7))",
+                    filter: `${isL1 ? "brightness(0) invert(1) " : ""}drop-shadow(0 1px 3px rgba(0,0,0,0.7))`,
                   }} />}
                   <span style={{
                     position: "absolute", top: 4, right: 6, zIndex: 2,

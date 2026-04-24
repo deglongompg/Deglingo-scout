@@ -3,8 +3,36 @@
  * Utilisés par SorareProTab (section Recap) et RecapTab (onglet Mes Teams).
  */
 
-export const PRO_LEAGUES = ["L1", "PL", "Liga", "Bundes", "MLS"];
+export const PRO_LEAGUES = ["L1", "PL", "Liga", "Bundes", "MLS", "Champion"];
+// Standard Sorare Pro SO5 : 5 joueurs (1 GK + 1 DEF + 1 MIL + 1 ATT + 1 FLEX)
 export const TEAM_SLOTS = ["GK", "DEF", "MIL", "ATT", "FLEX"];
+// Champion SO7 : 7 joueurs (1 GK + 2 DEF + 2 MIL + 1 ATT + 1 FLEX)
+export const TEAM_SLOTS_CHAMPION = ["GK", "DEF1", "DEF2", "MIL1", "MIL2", "ATT", "FLEX"];
+
+/** Returns the slots array for a given league (5 slots standard, 7 for Champion). */
+export function getTeamSlots(league) {
+  return league === "Champion" ? TEAM_SLOTS_CHAMPION : TEAM_SLOTS;
+}
+
+/** Number of picks expected in a full team for this league. */
+export function getExpectedPicks(league) {
+  return league === "Champion" ? 7 : 5;
+}
+
+/** L10 cap threshold triggering the +4% bonus (CAP260 standard, CAP370 Champion). */
+export function getCapThreshold(league) {
+  return league === "Champion" ? 370 : 260;
+}
+
+/** Resout la position "logique" d'un slot (DEF1 -> DEF, MIL2 -> MIL, etc). */
+export function getSlotPosition(slot) {
+  if (slot === "DEF1" || slot === "DEF2") return "DEF";
+  if (slot === "MIL1" || slot === "MIL2") return "MIL";
+  return slot;
+}
+
+/** Ligues accessibles depuis le pool Champion (4 grands championnats, pas MLS). */
+export const CHAMPION_SOURCE_LEAGUES = ["L1", "PL", "Liga", "Bundes"];
 
 // GW epoch (aligned sur freeze.js : GW69 = 2026-04-10 14:00 UTC)
 const GW_EPOCH_DATE_MS = new Date("2026-04-10T14:00:00Z").getTime();

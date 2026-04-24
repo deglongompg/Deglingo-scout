@@ -1518,7 +1518,9 @@ export default function SorareProTab({ players, teams, fixtures, logos = {}, mat
                           const slug = p.slug || p.name;
                           const rowKey = p._cardKey || slug;
                           const inTeam = isInTeam(p);
-                          const pc = PC[p.position];
+                          // Position affichee = position CARTE (historique) si dispo, sinon joueur
+                          const dispPos = p._card?.cardPosition || p.cardPosition || p.position;
+                          const pc = PC[dispPos];
                           const opp = logos[p.oppName];
                           const parisTime = p.kickoff && p.matchDate ? utcToParisTime(p.kickoff, p.matchDate) : "";
                           const ga = (p.goals||0) + (p.assists||0);
@@ -1536,7 +1538,7 @@ export default function SorareProTab({ players, teams, fixtures, logos = {}, mat
                               {/* Pos + bonus + classic + logo */}
                               <div style={{ display: "flex", alignItems: "center", gap: 3 }}>
                                 <div style={{ display: "inline-flex", borderRadius: 3, overflow: "hidden", flexShrink: 0 }}>
-                                  <span style={{ fontSize: 7, fontWeight: 900, background: pc, color: "#fff", padding: "2px 4px" }}>{p.position}</span>
+                                  <span style={{ fontSize: 7, fontWeight: 900, background: pc, color: "#fff", padding: "2px 4px" }}>{dispPos}</span>
                                   {ownedCard && getPowerPct(p) > 0 && <span style={{ fontSize: 7, fontWeight: 900, background: "#166534", color: "#4ADE80", padding: "2px 4px" }}>+{getPowerPct(p)}%</span>}
                                 </div>
                                 {logos[p.club] && <img src={`/data/logos/${logos[p.club]}`} alt="" style={{ width: 14, height: 14, objectFit: "contain", flexShrink: 0 }} />}

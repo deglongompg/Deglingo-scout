@@ -250,28 +250,24 @@ export default function StellarSavedTeamCard({ team, players = [], logos = {}, c
         </div>
         {playerData.length > 0 && (
           <div style={{
-            marginTop: 8, padding: "6px 8px", borderRadius: 6,
-            background: "rgba(255,255,255,0.03)",
-            border: "1px solid rgba(255,255,255,0.06)",
+            marginTop: 8, padding: "6px 10px", borderRadius: 6,
+            background: "rgba(255,255,255,0.02)",
+            border: "1px solid rgba(255,255,255,0.05)",
             fontSize: 10, fontFamily: "'DM Mono',monospace",
             color: "rgba(255,255,255,0.75)", textAlign: "center",
-            lineHeight: 1.4,
+            lineHeight: 1.5, letterSpacing: "0.01em",
           }}>
-            <span>
-              {calcDetailParts.map((x, i) => (
-                <span key={i}>
-                  {i > 0 && <span style={{ color: "rgba(255,255,255,0.3)" }}> + </span>}
-                  <span style={{ color: x.isCap ? "#F472B6" : "rgba(255,255,255,0.85)", fontWeight: x.isCap ? 800 : 600 }}>{x.shortName}{x.isCap ? "(C)" : ""}</span>
-                  <span style={{ color: "rgba(255,255,255,0.5)" }}> {x.raw}</span>
-                  {x.bonusPct > 0 && <span style={{ color: "#4ADE80", fontSize: 9 }}>×{100 + x.bonusPct}%</span>}
-                </span>
-              ))}
-              <span style={{ color: "rgba(255,255,255,0.3)" }}> + </span>
-              <span style={{ color: "#F472B6", fontWeight: 700 }}>{Math.round(projectedCaptainBonus)}</span>
-              <span style={{ color: "rgba(244,114,182,0.7)", fontSize: 9 }}> (cap {captainName})</span>
-              <span style={{ color: "rgba(255,255,255,0.4)" }}> = </span>
-              <span style={{ color: "#C4B5FD", fontWeight: 900 }}>{stTotalProjected}</span>
-            </span>
+            {calcDetailParts.map((x, i) => (
+              <span key={i}>
+                {i > 0 && <span style={{ color: "rgba(255,255,255,0.25)" }}>  +  </span>}
+                <span style={{ color: "rgba(255,255,255,0.9)" }}>{x.shortName}{x.isCap ? " (C)" : ""}</span>
+                <span style={{ color: "rgba(255,255,255,0.55)" }}> {x.raw}{x.bonusPct > 0 ? `×${100 + x.bonusPct}%` : ""}</span>
+              </span>
+            ))}
+            <span style={{ color: "rgba(255,255,255,0.25)" }}>  +  </span>
+            <span style={{ color: "rgba(255,255,255,0.9)" }}>cap {Math.round(projectedCaptainBonus)}</span>
+            <span style={{ color: "rgba(255,255,255,0.25)" }}>  =  </span>
+            <span style={{ color: "#fff", fontWeight: 700 }}>{stTotalProjected}</span>
           </div>
         )}
       </div>

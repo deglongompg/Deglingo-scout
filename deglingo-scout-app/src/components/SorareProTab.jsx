@@ -201,13 +201,22 @@ export default function SorareProTab({ players, teams, fixtures, logos = {}, mat
   // Pro-specific: paginated fetch client-side to get ALL Limited/Rare cards
   // Paginates in background — shows cards progressively as they are found
   // Uses localStorage cache to avoid re-paginating on every page load
+  // Mapping position Sorare (string humanise) -> format interne (GK/DEF/MIL/ATT)
+  const SORARE_POS_TO_SHORT = { Goalkeeper: "GK", Defender: "DEF", Midfielder: "MIL", Forward: "ATT" };
+  const toShortPos = (s) => SORARE_POS_TO_SHORT[s] || s || null;
   const parseCard = (c) => {
     if (c.sealed || (c.pictureUrl || "").includes("/sealed/")) return null; // cartes scellees = pas jouables
     const edName = c.cardEditionName || "";
     const r = (c.rarityTyped || "").toLowerCase().replace(/ /g, "_");
+    // Position CARTE (historique, figee a l'emission = position du joueur a l'epoque).
+    // Critique pour les anciennes cartes Pro (ex Cherki 2020 = ATT, 2023 = MIL).
+    const cardPos = toShortPos(c.position);
+    const playerPos = toShortPos(c.player?.position);
     return {
       cardSlug: c.slug, playerSlug: c.player?.slug || null, playerName: c.player?.displayName || null,
-      position: c.player?.position || null, rarity: r, pictureUrl: c.pictureUrl || null,
+      position: playerPos, // legacy : position actuelle du joueur
+      cardPosition: cardPos || playerPos, // position sur la carte (historique)
+      rarity: r, pictureUrl: c.pictureUrl || null,
       cardEditionName: edName, isStellar: false,
       isLimited: r === "limited", isRare: r === "rare",
       cardYear: (() => { const matches = [...(c.slug || "").matchAll(/-(\d{4})-/g)]; return matches.length > 0 ? parseInt(matches[matches.length - 1][1]) : null; })(),
@@ -245,7 +254,7 @@ export default function SorareProTab({ players, teams, fixtures, logos = {}, mat
       }
 
       // First page — also gets user info
-      const firstQ = encodeURIComponent(`{currentUser{slug nickname cards(first:50,sport:FOOTBALL){nodes{slug name rarityTyped pictureUrl power cardEditionName ... on Card{sealed player{slug displayName position}}}pageInfo{hasNextPage endCursor}}}}`);
+      const firstQ = encodeURIComponent(`{currentUser{slug nickname cards(first:50,sport:FOOTBALL){nodes{slug name rarityTyped pictureUrl power cardEditionName ... on Card{sealed position player{slug displayName position}}}pageInfo{hasNextPage endCursor}}}}`);
       const res = await fetch(`/api/sorare/cards?rawq=${firstQ}`, { headers: { "Authorization": `Bearer ${token}` } });
       if (res.status === 401) { localStorage.removeItem("sorare_access_token"); setSorareConnected(false); setSorareCards([]); return; }
       if (!res.ok) { setSorareConnected(false); return; }
@@ -266,7 +275,7 @@ export default function SorareProTab({ players, teams, fixtures, logos = {}, mat
       let cursor = user.cards?.pageInfo?.endCursor;
       let hasNext = user.cards?.pageInfo?.hasNextPage;
       for (let i = 0; i < 200 && hasNext && cursor; i++) {
-        const pageQ = `query($a:String!){currentUser{cards(first:50,sport:FOOTBALL,after:$a){nodes{slug name rarityTyped pictureUrl power cardEditionName ... on Card{sealed player{slug displayName position}}}pageInfo{hasNextPage endCursor}}}}`;
+        const pageQ = `query($a:String!){currentUser{cards(first:50,sport:FOOTBALL,after:$a){nodes{slug name rarityTyped pictureUrl power cardEditionName ... on Card{sealed position player{slug displayName position}}}pageInfo{hasNextPage endCursor}}}}`;
         const pr = await fetch(`/api/sorare/cards?rawq=${encodeURIComponent(pageQ)}&vars=${encodeURIComponent(JSON.stringify({a:cursor}))}`, { headers: { "Authorization": `Bearer ${token}` } });
         if (!pr.ok) break;
         const pd = await pr.json();
@@ -413,7 +422,9 @@ export default function SorareProTab({ players, teams, fixtures, logos = {}, mat
         if (classicCount >= 1) return prev; // refuse — already 1 Classic
       }
 
-      const pos = player.position;
+      // Position de la CARTE (historique) prioritaire sur position joueur (actuelle).
+      // Critique pour vieilles cartes Pro (ex Cherki 2020 = ATT mais player = MIL aujourd'hui).
+      const pos = player._card?.cardPosition || player.cardPosition || player.position;
       let next;
       if (selectedSlot) {
         if (selectedSlot === "FLEX" && pos !== "GK") next = { ...prev, FLEX: player };
@@ -864,9 +875,7 @@ export default function SorareProTab({ players, teams, fixtures, logos = {}, mat
   // ── Filtered player list ──
   const visiblePlayers = useMemo(() => {
     let pool = gwPlayers;
-    if (selectedSlot) {
-      pool = selectedSlot === "FLEX" ? pool.filter(p => ["DEF","MIL","ATT"].includes(p.position)) : pool.filter(p => p.position === selectedSlot);
-    }
+    // Pas de filtre slot ici : se fait APRES expansion pour utiliser cardPosition par carte
     if (filterTitu && (gwInfo?.offsetFromLive || 0) <= 1) pool = pool.filter(p => p.sorare_starter_pct != null && p.sorare_starter_pct >= filterTitu);
     if (selectedMatchFilters.length > 0) {
       pool = pool.filter(p => selectedMatchFilters.some(m => clubMatch(p.club, m.home) || clubMatch(p.club, m.away)));
@@ -892,6 +901,15 @@ export default function SorareProTab({ players, teams, fixtures, logos = {}, mat
       }
     } else {
       expanded = pool;
+    }
+
+    // Filtre slot APRES expansion : utilise la position CARTE (historique) si dispo,
+    // sinon position joueur. Permet de picker Cherki 2020 en ATT meme si Cherki joueur = MIL.
+    if (selectedSlot) {
+      const posOf = (p) => p._card?.cardPosition || p.cardPosition || p.position;
+      expanded = selectedSlot === "FLEX"
+        ? expanded.filter(p => ["DEF","MIL","ATT"].includes(posOf(p)))
+        : expanded.filter(p => posOf(p) === selectedSlot);
     }
 
     // Filtre Dispo: applique APRES expansion pour check par _cardKey individuel

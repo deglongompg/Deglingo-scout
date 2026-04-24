@@ -781,16 +781,24 @@ export default function StellarTab({ players, teams, fixtures, logos = {}, match
       if (!user) { setSorareConnected(false); return; }
       setSorareUser({ slug: user.slug, nickname: user.nickname });
       // cards = AnyCardInterface, rarityTyped + cardEditionName + power
+      // Mapping position Sorare (string humanise) -> format interne (GK/DEF/MIL/ATT)
+      const SORARE_POS_TO_SHORT = { Goalkeeper: "GK", Defender: "DEF", Midfielder: "MIL", Forward: "ATT" };
+      const toShortPos = (s) => SORARE_POS_TO_SHORT[s] || s || null;
       const cards = (user.cards?.nodes || []).map(c => {
         const edName = c.cardEditionName || "";
         const isStellar = edName.startsWith("stellar_");
         const editionBonus = EDITION_BONUS[edName] ?? 0;
         const collectionBonus = c.power != null ? Math.round((c.power - 1) * 100) : 0;
+        // Position CARTE (historique, figee a l'emission) vs position JOUEUR (actuelle).
+        // Prioriser card.position pour Sorare Pro (cartes anciennes avec position d'origine).
+        const cardPos = toShortPos(c.position);
+        const playerPos = toShortPos(c.player?.position);
         return {
           cardSlug:        c.slug,
           playerSlug:      c.player?.slug || null,
           playerName:      c.player?.displayName || null,
-          position:        c.player?.position || null,
+          position:        playerPos, // legacy : position actuelle du joueur
+          cardPosition:    cardPos || playerPos, // position sur la carte (fallback joueur si absent)
           rarity:          (c.rarityTyped || "").toLowerCase().replace(/ /g, "_"),
           pictureUrl:      c.pictureUrl || null,
           cardEditionName: edName,

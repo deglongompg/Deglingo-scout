@@ -427,6 +427,9 @@ function RecapTabInner({ players, logos, lang }) {
 
   const isStellarActive = activeLeague === "stellar";
   const activeStats = isStellarActive ? stats?.stellar : stats?.[activeRarity];
+  // Theme ligue dynamique (meme systeme que SorareProTab)
+  const themeBg = isStellarActive ? "/stellar-bg.png" : LEAGUE_BG_URL[activeLeague];
+  const themeAccent = isStellarActive ? RARITY_COLOR.stellar : (LEAGUE_ACCENT_BG[activeLeague] || "#888");
   const totalCount = (stats?.limited.count || 0) + (stats?.rare.count || 0) + (stats?.stellar.count || 0);
   const totalSum = (stats?.limited.sum || 0) + (stats?.rare.sum || 0) + (stats?.stellar.sum || 0);
   const avgScore = totalCount > 0 ? totalSum / totalCount : 0;
@@ -437,7 +440,54 @@ function RecapTabInner({ players, logos, lang }) {
   const lastSync = d._updatedAt;
 
   return (
-    <div style={{ maxWidth: 1400, margin: "0 auto", padding: "12px 16px", fontFamily: "Outfit" }}>
+    <div style={{ position: "relative", maxWidth: 1400, margin: "0 auto", padding: "12px 16px", fontFamily: "Outfit", minHeight: "80vh" }}>
+      <style>{`
+@keyframes recapThemeFadeIn { 0%{opacity:0} 100%{opacity:1} }
+@keyframes recapThemeBgFadeIn { 0%{opacity:0} 100%{opacity:0.55} }
+      `}</style>
+
+      {/* ═══ Theme layer — bg de la ligue (ou Stellar), texture visible + screen blend ═══ */}
+      {themeBg && (
+        <div
+          key={activeLeague}
+          aria-hidden
+          style={{
+            position: "absolute",
+            inset: 0,
+            backgroundImage: `url(${themeBg})`,
+            backgroundSize: "cover",
+            backgroundPosition: "center top",
+            backgroundRepeat: "no-repeat",
+            filter: "blur(6px) saturate(1.5) brightness(1.1)",
+            opacity: 0.55,
+            mixBlendMode: "screen",
+            pointerEvents: "none",
+            zIndex: 0,
+            animation: "recapThemeBgFadeIn 0.6s ease-out both",
+            maskImage: "linear-gradient(to bottom, rgba(0,0,0,1) 0%, rgba(0,0,0,0.85) 40%, rgba(0,0,0,0.25) 80%, transparent 100%)",
+            WebkitMaskImage: "linear-gradient(to bottom, rgba(0,0,0,1) 0%, rgba(0,0,0,0.85) 40%, rgba(0,0,0,0.25) 80%, transparent 100%)",
+          }}
+        />
+      )}
+      {/* Radial glow accent — halo neon depuis le haut */}
+      <div
+        key={`glow-${activeLeague}`}
+        aria-hidden
+        style={{
+          position: "absolute",
+          top: -120,
+          left: "50%",
+          transform: "translateX(-50%)",
+          width: "90%",
+          height: 420,
+          background: `radial-gradient(ellipse at center, ${themeAccent}55, ${themeAccent}22 35%, transparent 70%)`,
+          pointerEvents: "none",
+          zIndex: 0,
+          animation: "recapThemeFadeIn 0.6s ease-out both",
+        }}
+      />
+
+      <div style={{ position: "relative", zIndex: 1 }}>
       {/* Bandeau user */}
       <div style={{
         background: "linear-gradient(135deg, rgba(99,102,241,0.15), rgba(168,85,247,0.12))",
@@ -837,6 +887,7 @@ function RecapTabInner({ players, logos, lang }) {
           `}</style>
         </>
       )}
+      </div>
     </div>
   );
 }

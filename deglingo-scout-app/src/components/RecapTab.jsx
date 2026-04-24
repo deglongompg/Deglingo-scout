@@ -488,41 +488,6 @@ function RecapTabInner({ players, logos, lang }) {
       />
 
       <div style={{ position: "relative", zIndex: 1 }}>
-      {/* Bandeau user */}
-      <div style={{
-        background: "linear-gradient(135deg, rgba(99,102,241,0.15), rgba(168,85,247,0.12))",
-        border: "1px solid rgba(168,85,247,0.25)", borderRadius: 14, padding: "14px 18px",
-        display: "flex", justifyContent: "space-between", alignItems: "center", flexWrap: "wrap", gap: 12,
-      }}>
-        <div>
-          <div style={{ fontSize: 10, color: "rgba(255,255,255,0.5)", letterSpacing: 1.5, textTransform: "uppercase", marginBottom: 2 }}>
-            {lang === "fr" ? "Mes Teams · Recap centralisé" : "My Teams · Central Recap"}
-          </div>
-          <div style={{ fontSize: 18, fontWeight: 800, color: "#fff" }}>{store.slug}</div>
-          <div style={{ fontSize: 10, color: "rgba(255,255,255,0.35)", marginTop: 2 }}>
-            {lastSync ? `${lang === "fr" ? "Dernière synchro" : "Last sync"}: ${new Date(lastSync).toLocaleString(lang === "fr" ? "fr-FR" : "en-US")}` : (lang === "fr" ? "Aucune synchro encore" : "No sync yet")}
-          </div>
-        </div>
-        {stats && (
-          <div style={{ display: "flex", gap: 14 }}>
-            <div style={{ textAlign: "center", minWidth: 70 }}>
-              <div style={{ fontSize: 22, fontWeight: 900, color: "#fff" }}>{totalCount}</div>
-              <div style={{ fontSize: 9, color: "rgba(255,255,255,0.45)", letterSpacing: 1 }}>{lang === "fr" ? "ÉQUIPES" : "TEAMS"}</div>
-            </div>
-            <div style={{ textAlign: "center", minWidth: 90 }}>
-              <div style={{ fontSize: 22, fontWeight: 900, color: dsColor(avgScore) }}>
-                {formatScore(avgScore)}
-              </div>
-              <div style={{ fontSize: 9, color: "rgba(255,255,255,0.45)", letterSpacing: 1 }}>{lang === "fr" ? "SCORE MOY." : "AVG SCORE"}</div>
-            </div>
-            <div style={{ textAlign: "center", minWidth: 90 }}>
-              <div style={{ fontSize: 22, fontWeight: 900, color: "#E9D5FF" }}>{formatScore(totalSum)}</div>
-              <div style={{ fontSize: 9, color: "rgba(255,255,255,0.45)", letterSpacing: 1 }}>TOTAL</div>
-            </div>
-          </div>
-        )}
-      </div>
-
       {!hasAny && (
         <div style={{ marginTop: 30, textAlign: "center", color: "rgba(255,255,255,0.5)" }}>
           <div style={{ fontSize: 40, marginBottom: 10 }}>📋</div>
@@ -538,7 +503,7 @@ function RecapTabInner({ players, logos, lang }) {
       {hasAny && (
         <>
           {/* Ligne 1 — filtre principal : [Stellar] + ligues Pro */}
-          <div style={{ display: "flex", gap: 8, marginTop: 18, marginBottom: 8, flexWrap: "wrap" }}>
+          <div style={{ display: "flex", gap: 8, marginTop: 0, marginBottom: 8, flexWrap: "wrap" }}>
             <button key="stellar" onClick={() => setActiveLeague("stellar")} style={{
               position: "relative", overflow: "hidden",
               width: 150, height: 50, padding: 0, borderRadius: 99,

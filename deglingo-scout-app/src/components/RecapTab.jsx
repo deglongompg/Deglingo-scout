@@ -2,6 +2,7 @@ import { Component, useEffect, useMemo, useState } from "react";
 import { LEAGUE_COLORS, LEAGUE_NAMES, LEAGUE_FLAG_CODES, dsColor } from "../utils/colors";
 import { fetchCloudStore, pushTeams } from "../utils/cloudSync";
 import { PRO_LEAGUES, computeTeamScores, getGwDisplayNumber } from "../utils/proScoring";
+import { getProGwInfo } from "../utils/freeze";
 import { t } from "../utils/i18n";
 import ProSavedTeamCard from "./ProSavedTeamCard";
 import StellarSavedTeamCard from "./StellarSavedTeamCard";
@@ -276,11 +277,20 @@ function RecapTabInner({ players, logos, lang }) {
   const grouped = useMemo(() => store ? groupTeamsByLeague(store) : null, [store]);
   const stellarGroups = useMemo(() => store ? groupStellarByDate(store) : [], [store]);
 
+  // GW et date Stellar en cours — utilises pour filtrer les compteurs (on ne cumule pas les GW/dates passees)
+  const currentGwKey = useMemo(() => getProGwInfo()?.gwKey || null, []);
+  const currentStellarDate = useMemo(() => {
+    if (!stellarGroups.length) return null;
+    // Date Stellar la plus recente (stellarGroups triee par date desc deja)
+    return stellarGroups[0].dateStr;
+  }, [stellarGroups]);
+
   const stats = useMemo(() => {
     if (!grouped) return null;
     const compute = (rarity) => {
       let count = 0, sum = 0;
-      grouped[rarity].forEach(({ teams }) => {
+      grouped[rarity].forEach(({ gwKey, teams }) => {
+        if (currentGwKey && gwKey !== currentGwKey) return; // GW en cours uniquement
         teams.forEach(team => {
           count++;
           const enriched = enrichTeamWithBestCards(team, cardsBySlug[rarity]);
@@ -292,7 +302,8 @@ function RecapTabInner({ players, logos, lang }) {
     };
     const computeStellar = () => {
       let count = 0, sum = 0;
-      stellarGroups.forEach(({ teams }) => {
+      stellarGroups.forEach(({ dateStr, teams }) => {
+        if (currentStellarDate && dateStr !== currentStellarDate) return; // date en cours uniquement
         teams.forEach(team => {
           count++;
           sum += computeStellarProjected(team, players || [], stellarCardsBySlug, stellarCardsByCardSlug) || 0;
@@ -305,7 +316,7 @@ function RecapTabInner({ players, logos, lang }) {
       rare: compute("rare"),
       stellar: computeStellar(),
     };
-  }, [grouped, stellarGroups, players, cardsBySlug, stellarCardsBySlug]);
+  }, [grouped, stellarGroups, players, cardsBySlug, stellarCardsBySlug, currentGwKey, currentStellarDate]);
 
   // Initialise openLeagues une fois : ouvre toutes les sections (GW, dates) non vides.
   useEffect(() => {
@@ -318,22 +329,23 @@ function RecapTabInner({ players, logos, lang }) {
     setOpenLeagues(init);
   }, [stats, grouped, openLeagues, stellarGroups]);
 
-  // Compteurs par ligue Pro (toutes raretés) et par ligue+rareté.
+  // Compteurs par ligue Pro (toutes raretés) et par ligue+rareté — GW EN COURS uniquement.
   // Doit être AVANT les early returns pour respecter l'ordre des hooks.
   const proLeagueCounts = useMemo(() => {
     const out = {};
     PRO_LEAGUES.forEach(lg => { out[lg] = { limited: 0, rare: 0, total: 0 }; });
     if (grouped) {
       ["limited", "rare"].forEach(r => {
-        grouped[r].forEach(({ league, teams }) => {
+        grouped[r].forEach(({ league, gwKey, teams }) => {
           if (!out[league]) return;
+          if (currentGwKey && gwKey !== currentGwKey) return; // GW en cours uniquement
           out[league][r] += teams.length;
           out[league].total += teams.length;
         });
       });
     }
     return out;
-  }, [grouped]);
+  }, [grouped, currentGwKey]);
 
   const toggleLeague = (key) => {
     setOpenLeagues(prev => ({ ...(prev || {}), [key]: !prev?.[key] }));

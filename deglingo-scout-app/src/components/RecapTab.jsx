@@ -565,9 +565,11 @@ function RecapTabInner({ players, logos, lang }) {
                         <path d="M7 4h10v3a5 5 0 0 1-10 0V4z M11 13h2v4h3v2H8v-2h3v-4z" fill="#fff"/>
                       </svg>
                       <span style={{
-                        fontFamily: "Outfit", fontWeight: 900, fontSize: 13,
-                        color: "#fff", letterSpacing: "0.08em",
+                        fontFamily: "'Barlow Condensed', 'Outfit', sans-serif",
+                        fontWeight: 900, fontStyle: "italic", fontSize: 18,
+                        color: "#fff", letterSpacing: "0.02em",
                         textShadow: "0 1px 3px rgba(0,0,0,0.8)",
+                        lineHeight: 1,
                       }}>CHAMPION</span>
                     </div>
                   )}

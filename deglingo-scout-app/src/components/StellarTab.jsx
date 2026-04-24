@@ -929,13 +929,16 @@ export default function StellarTab({ players, teams, fixtures, logos = {}, match
       .filter(p => selectedMatchFilters.length === 0 || selectedMatchFilters.some(m => clubMatchGlobal(p.club, m.home) || clubMatchGlobal(p.club, m.away)))
       .map(p => {
         // Algo Magique trie TOUJOURS avec bonus (meme si Bonus OFF dans l'affichage)
+        // CRITIQUE : on ne DOIT PAS ecraser p.ds (sinon double bonus au render des saved teams —
+        // la carte recalcule rawScore * bonus, et si p.ds est deja post-bonus => x bonus^2).
+        // On stocke le score adjusted dans _algoDs uniquement pour le tri.
         const slug = p.slug || p.name;
         const ownedCard = sorareCardMap[slug];
         const bonus = ownedCard && ownedCard.totalBonus > 0 ? ownedCard.totalBonus : 0;
-        const adjDs = Math.round((p.ds || 0) * (1 + bonus / 100));
-        return { ...p, ds: adjDs };
+        const _algoDs = Math.round((p.ds || 0) * (1 + bonus / 100));
+        return { ...p, _algoDs };
       })
-      .sort((a, b) => b.ds - a.ds);
+      .sort((a, b) => (b._algoDs || 0) - (a._algoDs || 0));
     if (pool.length < 5) return;
 
     // Conflit : ATT/MIL dont le club = adversaire d'un GK ou DEF déjà choisi (et vice-versa)

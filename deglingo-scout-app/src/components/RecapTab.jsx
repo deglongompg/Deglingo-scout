@@ -39,6 +39,12 @@ const LEAGUE_BG_URL = {
 const LEAGUE_ACCENT_BG = {
   L1: "#3B82F6", PL: "#D946EF", Liga: "#EF4444", Bundes: "#DC2626", MLS: "#3B82F6", Champion: "#EC4899",
 };
+// Position X% du centre visuel du logo dans chaque image Sorare source.
+// Mesures visuelles des banniers officielles (L1="1" compact gauche, PL crown+text
+// large, Liga LALIGA text+EA, Bundes silhouette+text, MLS ecu, Champion coupe+text).
+const LEAGUE_LOGO_X_PCT = {
+  L1: 13, PL: 31, Liga: 40, Bundes: 22, MLS: 17, Champion: 37,
+};
 
 function formatScore(s) {
   if (s == null || Number.isNaN(s)) return "—";
@@ -495,7 +501,7 @@ function RecapTabInner({ players, logos, lang }) {
               return (
                 <button key={lg} onClick={() => setActiveLeague(lg)} title={LEAGUE_NAMES[lg] || lg} style={{
                   position: "relative", overflow: "hidden",
-                  width: 140, height: 46, padding: 0, borderRadius: 99,
+                  width: 150, height: 50, padding: 0, borderRadius: 99,
                   cursor: "pointer",
                   border: "1px solid " + (active ? accent : accent + "55"),
                   backgroundColor: "rgba(10,5,25,0.6)",
@@ -505,7 +511,12 @@ function RecapTabInner({ players, logos, lang }) {
                   transition: "all 0.15s",
                   flexShrink: 0,
                 }}>
-                  {bgUrl && <img src={bgUrl} alt="" style={{ width: "100%", height: "100%", objectFit: "cover", objectPosition: "13% center", display: "block", pointerEvents: "none" }} />}
+                  {/* Fond : texture coloree droite de la banniere Sorare (sans logo) */}
+                  {bgUrl && <img src={bgUrl} alt="" style={{
+                    width: "100%", height: "100%", objectFit: "cover",
+                    objectPosition: "right center",
+                    display: "block", pointerEvents: "none",
+                  }} />}
                   {/* Badge count en haut-droite */}
                   <span style={{
                     position: "absolute", top: 4, right: 6, zIndex: 2,

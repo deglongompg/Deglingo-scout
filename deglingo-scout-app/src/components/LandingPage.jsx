@@ -565,21 +565,19 @@ export default function LandingPage({ players, onEnter, onNavigate }) {
             ].map(l => (
               <div key={l.code} title={l.name} style={{
                 position: "relative", overflow: "hidden",
-                width: 130, height: 46,
+                width: 150, height: 48,
                 padding: 0, borderRadius: 99,
                 border: `1px solid ${l.color}66`,
                 backgroundColor: "rgba(10,5,25,0.6)",
                 boxShadow: `0 0 18px ${l.color}30, 0 0 2px ${l.color}40`,
               }}>
-                {/* Logo officiel Sorare centre dans la chip via object-position */}
-                <img src={l.bg} alt={l.name} style={{
-                  width: "100%", height: "100%",
-                  objectFit: "cover",
-                  // Le logo Sorare est dans les 0-25% gauche de l'image. On cale la vue
-                  // sur cette zone pour que le logo apparaisse centre dans la chip.
-                  objectPosition: "13% center",
-                  display: "block",
+                {/* Fond : texture coloree droite de la banniere Sorare (sans logo) */}
+                <img src={l.bg} alt="" style={{
+                  width: "100%", height: "100%", objectFit: "cover",
+                  objectPosition: "right center",
+                  display: "block", pointerEvents: "none",
                 }} />
+                {/* TODO : logo detoure centre (en attente import user) */}
               </div>
             ))}
           </div>

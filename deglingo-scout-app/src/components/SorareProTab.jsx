@@ -1019,23 +1019,22 @@ export default function SorareProTab({ players, teams, fixtures, logos = {}, mat
             return (
               <button key={lg} onClick={() => setLeague(lg)} title={lg} style={{
                 position: "relative", overflow: "hidden",
-                width: 82, height: 34,
-                padding: 0, borderRadius: 8,
+                width: 120, height: 40, padding: 0, borderRadius: 99,
                 border: isActive ? `2px solid ${accent}` : "1px solid rgba(255,255,255,0.1)",
-                backgroundImage: bgUrl ? `url(${bgUrl})` : "none",
                 backgroundColor: "rgba(20,10,40,0.8)",
-                backgroundSize: "cover", backgroundPosition: "center",
                 cursor: "pointer", fontFamily: "Outfit",
-                transition: "all 0.15s", display: "flex", alignItems: "center", justifyContent: "center",
+                transition: "all 0.15s",
                 boxShadow: isActive ? `0 0 14px ${accent}80, 0 0 2px ${accent}` : "none",
                 opacity: isActive ? 1 : 0.55,
                 filter: isActive ? "none" : "saturate(0.7)",
+                flexShrink: 0,
               }}>
-                {/* Overlay pour contraste du texte */}
-                <div style={{ position: "absolute", inset: 0, background: isActive ? "linear-gradient(90deg, rgba(0,0,0,0.35), rgba(0,0,0,0.15))" : "linear-gradient(90deg, rgba(0,0,0,0.55), rgba(0,0,0,0.4))" }} />
-                <span style={{ position: "relative", fontSize: 11, fontWeight: 900, color: "#fff", letterSpacing: "0.05em", textShadow: "0 1px 2px rgba(0,0,0,0.8)" }}>
-                  {lg === "Champion" ? "CHAMPION" : lg.toUpperCase()}
-                </span>
+                {/* Fond : texture coloree droite de la banniere Sorare (sans logo) */}
+                {bgUrl && <img src={bgUrl} alt="" style={{
+                  width: "100%", height: "100%", objectFit: "cover",
+                  objectPosition: "right center",
+                  display: "block", pointerEvents: "none",
+                }} />}
               </button>
             );
           })}

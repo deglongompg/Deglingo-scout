@@ -523,7 +523,7 @@ function RecapTabInner({ players, logos, lang }) {
                 textShadow: "0 1px 2px rgba(0,0,0,0.8)",
               }}>{stats.stellar.count}</span>
             </button>
-            {PRO_LEAGUES.filter(lg => lg !== "Champion").map(lg => {
+            {PRO_LEAGUES.map(lg => {
               const accent = LEAGUE_ACCENT_BG[lg] || LEAGUE_COLORS[lg] || "#A5B4FC";
               const active = activeLeague === lg;
               const count = proLeagueCounts[lg]?.total || 0;

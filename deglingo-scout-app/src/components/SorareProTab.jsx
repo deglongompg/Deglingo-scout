@@ -1019,7 +1019,7 @@ export default function SorareProTab({ players, teams, fixtures, logos = {}, mat
         </div>
         {/* League buttons */}
         <div className="pro-league-btns" style={{ display: "flex", gap: 5 }}>
-          {PRO_LEAGUES.filter(lg => lg !== "Champion").map(lg => {
+          {PRO_LEAGUES.map(lg => {
             const isActive = league === lg;
             const accent = LEAGUE_ACCENT[lg] || LEAGUE_COLORS[lg] || "#888";
             const bgUrl = LEAGUE_BG_URL[lg];

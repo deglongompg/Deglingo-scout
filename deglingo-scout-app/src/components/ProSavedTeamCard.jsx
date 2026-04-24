@@ -174,7 +174,7 @@ export default function ProSavedTeamCard({
           )}
         </div>
       </div>
-      {/* Skyrocket Gauge à droite — Champion : linear scale, pas de rewards $ */}
+      {/* Skyrocket Gauge à droite — Champion : linear scale 400-650, pas de rewards $ */}
       <SkyrocketGauge
         score={liveTotal}
         projectedScore={projectedTotal}
@@ -182,6 +182,7 @@ export default function ProSavedTeamCard({
         paliers={paliers}
         showRewards={league !== "Champion"}
         scaleMode={league === "Champion" ? "linear" : "control-points"}
+        maxPos={league === "Champion" ? 100 : 90}
         scoreMultiplier={league === "Champion" ? 1.0 : (rarity === "rare" ? 1.10 : 1.0)}
         topRewardColor={league === "Champion" ? null : (rarity === "rare" ? "#DC2626" : "#FBBF24")}
         rarity={rarity}

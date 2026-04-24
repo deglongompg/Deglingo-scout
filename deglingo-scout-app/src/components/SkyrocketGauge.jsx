@@ -104,19 +104,20 @@ function makeValueToPos(scoreMultiplier = 1.0) {
 // Ex Stellar : 280=15% / 320=30% / 360=45% / 400=60% / 440=75% / 480=90%
 // Score sous min palier : rampe lineaire 0 → 15%
 // Score au-dessus du max palier : rampe lineaire 90% → 100% (au prorata, plafond 110% du range)
-function makeLinearValueToPos(sortedPaliers) {
+function makeLinearValueToPos(sortedPaliers, maxPos = 90) {
   if (!sortedPaliers || sortedPaliers.length < 2) {
     return (v) => Math.max(0, Math.min(100, (v / 500) * 100));
   }
   const minPts = sortedPaliers[0].pts;
   const maxPts = sortedPaliers[sortedPaliers.length - 1].pts;
   const MIN_POS = 15;
-  const MAX_POS = 90;
+  const MAX_POS = maxPos;
   const range = maxPts - minPts;
   return function valueToPos(v) {
     if (v <= 0) return 0;
     if (v <= minPts) return (v / minPts) * MIN_POS;
     if (v >= maxPts) {
+      if (MAX_POS >= 100) return 100;
       const overflow = Math.min(1, (v - maxPts) / (range * 0.5));
       return MAX_POS + overflow * (100 - MAX_POS);
     }
@@ -134,11 +135,11 @@ const KEYFRAMES = `
 @keyframes skrGloss { 0%, 100% { opacity: 0.25; } 50% { opacity: 0.5; } }
 `;
 
-export default function SkyrocketGauge({ score = 0, projectedScore = null, initialScore = null, paliers = [], showRewards = false, scoreMultiplier = 1.0, topRewardColor = null, rarity = null, scaleMode = "control-points", height = 280, width = 70 }) {
+export default function SkyrocketGauge({ score = 0, projectedScore = null, initialScore = null, paliers = [], showRewards = false, scoreMultiplier = 1.0, topRewardColor = null, rarity = null, scaleMode = "control-points", maxPos = 90, height = 280, width = 70 }) {
   const palette = getPalette(rarity);
   const sortedPaliers = [...(paliers || [])].sort((a, b) => (a.pts || 0) - (b.pts || 0));
   const valueToPos = scaleMode === "linear"
-    ? makeLinearValueToPos(sortedPaliers)
+    ? makeLinearValueToPos(sortedPaliers, maxPos)
     : makeValueToPos(scoreMultiplier);
   const minPalier = sortedPaliers.length > 0 ? sortedPaliers[0].pts : 200;
   const maxPalier = sortedPaliers.length > 0 ? sortedPaliers[sortedPaliers.length - 1].pts : 500;

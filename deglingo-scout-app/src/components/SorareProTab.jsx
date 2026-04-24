@@ -2089,6 +2089,7 @@ export default function SorareProTab({ players, teams, fixtures, logos = {}, mat
                         paliers={paliers}
                         showRewards={league !== "Champion"}
                         scaleMode={league === "Champion" ? "linear" : "control-points"}
+                        maxPos={league === "Champion" ? 100 : 90}
                         scoreMultiplier={league === "Champion" ? 1.0 : (rarity === "rare" ? 1.10 : 1.0)}
                         topRewardColor={league === "Champion" ? null : (rarity === "rare" ? "#DC2626" : "#FBBF24")}
                         rarity={rarity}

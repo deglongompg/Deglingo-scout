@@ -757,13 +757,24 @@ export default function SorareProTab({ players, teams, fixtures, logos = {}, mat
       .filter(p => selectedMatchFilters.length === 0 || selectedMatchFilters.some(m => clubMatch(p.club, m.home) || clubMatch(p.club, m.away)))
       .map(p => ({ ...p, _algoDs: getAlgoDs(p) }))
       .sort((a, b) => b._algoDs - a._algoDs);
-    if (pool.length < 5) return;
+    const expectedN = getExpectedPicks(league);
+    if (pool.length < expectedN) return;
 
-    const newPicks = { GK: null, DEF: null, MIL: null, ATT: null, FLEX: null };
+    const newPicks = emptyPicks(league);
     const taken = new Set();
     let classicUsed = false;
     const clubCount = {};
     let totalL10 = 0;
+
+    // Helper league-aware : trouve le premier slot vide dont la position matche (DEF -> DEF1/DEF2, MIL -> MIL1/MIL2 en Champion)
+    const findPosSlot = (pos, picks) => {
+      for (const slot of getTeamSlots(league)) {
+        if (slot === "FLEX") continue;
+        if (picks[slot]) continue;
+        if (getSlotPosition(slot) === pos) return slot;
+      }
+      return null;
+    };
 
     const canAdd = (p) => {
       const card = proCardMap[p.slug || p.name];
@@ -796,14 +807,14 @@ export default function SorareProTab({ players, teams, fixtures, logos = {}, mat
       return false;
     };
 
-    // ── STACK path: 1 match selectionne → 5 joueurs du meme club (meilleur des 2 clubs) ──
+    // ── STACK path: 1 match selectionne → N joueurs du meme club (meilleur des 2 clubs) ──
     if (selectedMatchFilters.length === 1) {
       const match = selectedMatchFilters[0];
       const clubs = [match.home, match.away];
       let bestStack = null, bestStackScore = 0;
       for (const stackClub of clubs) {
         const clubPool = pool.filter(p => clubMatch(p.club, stackClub));
-        const stack = { GK: null, DEF: null, MIL: null, ATT: null, FLEX: null };
+        const stack = emptyPicks(league);
         const stackTaken = new Set();
         let stackClassic = false;
         for (const p of clubPool) {
@@ -811,17 +822,18 @@ export default function SorareProTab({ players, teams, fixtures, logos = {}, mat
           const card = proCardMap[p.slug || p.name];
           if (card?.isClassic && stackClassic) continue;
           const pos = p.position;
-          if (stack[pos] === null) { stack[pos] = p; stackTaken.add(p.slug || p.name); if (card?.isClassic) stackClassic = true; }
+          const posSlot = findPosSlot(pos, stack);
+          if (posSlot) { stack[posSlot] = p; stackTaken.add(p.slug || p.name); if (card?.isClassic) stackClassic = true; }
           else if (pos !== "GK" && stack.FLEX === null) { stack.FLEX = p; stackTaken.add(p.slug || p.name); if (card?.isClassic) stackClassic = true; }
-          if (Object.values(stack).filter(Boolean).length >= 5) break;
+          if (Object.values(stack).filter(Boolean).length >= expectedN) break;
         }
-        if (Object.values(stack).filter(Boolean).length >= 5) {
+        if (Object.values(stack).filter(Boolean).length >= expectedN) {
           const total = Object.values(stack).filter(Boolean).reduce((s, p) => s + (p._algoDs || p.ds || 0), 0);
           if (total > bestStackScore) { bestStackScore = total; bestStack = { ...stack }; }
         }
       }
       if (bestStack) {
-        for (const slot of ["GK", "DEF", "MIL", "ATT", "FLEX"]) {
+        for (const slot of getTeamSlots(league)) {
           if (bestStack[slot]) { newPicks[slot] = bestStack[slot]; markAdded(bestStack[slot]); }
         }
         setMyPicks(newPicks);
@@ -831,14 +843,18 @@ export default function SorareProTab({ players, teams, fixtures, logos = {}, mat
 
     // ── CAP260 special path: knapsack-style — maximize D-Score with L10 sum < 260 ──
     if (algoCap260) {
-      // Strategy: pick best captain (highest D-Score), fill 4 slots by best D-Score/L10 ratio
+      // Strategy: pick best captain (highest D-Score), fill remaining slots by best D-Score/L10 ratio
       const capPool = [...pool];
       let bestCombo = null, bestTotal = 0;
-      const SLOTS_ORDER = ["GK", "DEF", "MIL", "ATT", "FLEX"];
+      const SLOTS_ORDER = getTeamSlots(league);
       // Try more captain candidates (top 15) for better search
       const captainCandidates = capPool.slice(0, 15);
       for (const cap of captainCandidates) {
-        const combo = { [cap.position]: cap };
+        const combo = emptyPicks(league);
+        const capSlot = findPosSlot(cap.position, combo);
+        if (capSlot) combo[capSlot] = cap;
+        else if (cap.position !== "GK") combo.FLEX = cap;
+        else continue;
         let usedSlugs = new Set([cap.slug || cap.name]);
         let usedL10 = cap.l10 || 0;
         let usedClubs = { [cap.club]: 1 };
@@ -853,8 +869,9 @@ export default function SorareProTab({ players, teams, fixtures, logos = {}, mat
           const card = proCardMap[p.slug || p.name];
           if (card?.isClassic && classicUsed) continue;
           const pos = p.position;
+          const posSlot = findPosSlot(pos, combo);
           let placed = false;
-          if (!combo[pos]) { combo[pos] = p; placed = true; }
+          if (posSlot) { combo[posSlot] = p; placed = true; }
           else if (pos !== "GK" && !combo.FLEX) { combo.FLEX = p; placed = true; }
           if (placed) {
             usedSlugs.add(p.slug || p.name);
@@ -862,14 +879,14 @@ export default function SorareProTab({ players, teams, fixtures, logos = {}, mat
             usedClubs[p.club] = (usedClubs[p.club] || 0) + 1;
             if (card?.isClassic) classicUsed = true;
           }
-          if (Object.keys(combo).length >= 5) break;
+          if (Object.values(combo).filter(Boolean).length >= expectedN) break;
         }
-        if (Object.keys(combo).length >= 5) {
-          const total = Object.values(combo).reduce((s, p) => s + (p._algoDs || p.ds || 0), 0);
+        if (Object.values(combo).filter(Boolean).length >= expectedN) {
+          const total = Object.values(combo).filter(Boolean).reduce((s, p) => s + (p._algoDs || p.ds || 0), 0);
           if (total > bestTotal) { bestTotal = total; bestCombo = { ...combo }; }
         }
       }
-      if (bestCombo && Object.keys(bestCombo).length >= 5) {
+      if (bestCombo && Object.values(bestCombo).filter(Boolean).length >= expectedN) {
         for (const slot of SLOTS_ORDER) {
           if (bestCombo[slot]) { newPicks[slot] = bestCombo[slot]; markAdded(bestCombo[slot]); }
         }
@@ -877,35 +894,37 @@ export default function SorareProTab({ players, teams, fixtures, logos = {}, mat
     }
 
     // ── Standard path (no CAP or CAP didn't fill) ──
-    if (Object.values(newPicks).filter(Boolean).length < 5) {
+    if (Object.values(newPicks).filter(Boolean).length < expectedN) {
       // GK rare : si 1-2 GK titu >= 70%, placer le meilleur en premier
       const viableGKs = pool.filter(p => p.position === "GK" && !taken.has(p.slug || p.name) && (p.sorare_starter_pct == null || p.sorare_starter_pct >= 70));
       if (viableGKs.length <= 2 && viableGKs.length > 0 && !newPicks.GK) {
         const gk = viableGKs[0];
         if (canAdd(gk)) { newPicks.GK = gk; markAdded(gk); }
       }
-      // Greedy par score decroissant
+      // Greedy par score decroissant (respecte anti-conflit GK/DEF vs ATT/MIL)
       for (const p of pool) {
         if (taken.has(p.slug || p.name)) continue;
         if (!canAdd(p)) continue;
         const pos = p.position;
-        if (newPicks[pos] === null && !hasConflict(p)) { newPicks[pos] = p; markAdded(p); }
+        const posSlot = findPosSlot(pos, newPicks);
+        if (posSlot && !hasConflict(p)) { newPicks[posSlot] = p; markAdded(p); }
         else if (pos !== "GK" && newPicks.FLEX === null && !hasConflict(p)) { newPicks.FLEX = p; markAdded(p); }
-        if (Object.values(newPicks).filter(Boolean).length >= 5) break;
+        if (Object.values(newPicks).filter(Boolean).length >= expectedN) break;
       }
       // Fallback: slots vides → remplir sans check conflit
       for (const p of pool) {
         if (taken.has(p.slug || p.name)) continue;
         if (!canAdd(p)) continue;
         const pos = p.position;
-        if (newPicks[pos] === null) { newPicks[pos] = p; markAdded(p); }
+        const posSlot = findPosSlot(pos, newPicks);
+        if (posSlot) { newPicks[posSlot] = p; markAdded(p); }
         else if (pos !== "GK" && newPicks.FLEX === null) { newPicks.FLEX = p; markAdded(p); }
-        if (Object.values(newPicks).filter(Boolean).length >= 5) break;
+        if (Object.values(newPicks).filter(Boolean).length >= expectedN) break;
       }
     }
     // Fallback final: encore des slots vides → relacher toutes contraintes
     // Sauf CAP260 si toggle actif (on prefere equipe incomplete que CAP depasse)
-    if (Object.values(newPicks).filter(Boolean).length < 5) {
+    if (Object.values(newPicks).filter(Boolean).length < expectedN) {
       for (const p of pool) {
         if (taken.has(p.slug || p.name)) continue;
         const card = proCardMap[p.slug || p.name];
@@ -913,9 +932,10 @@ export default function SorareProTab({ players, teams, fixtures, logos = {}, mat
         // CAP260 toujours respecte si actif
         if (algoCap260 && totalL10 + (p.l10 || 0) >= 260) continue;
         const pos = p.position;
-        if (newPicks[pos] === null) { newPicks[pos] = p; markAdded(p); }
+        const posSlot = findPosSlot(pos, newPicks);
+        if (posSlot) { newPicks[posSlot] = p; markAdded(p); }
         else if (pos !== "GK" && newPicks.FLEX === null) { newPicks.FLEX = p; markAdded(p); }
-        if (Object.values(newPicks).filter(Boolean).length >= 5) break;
+        if (Object.values(newPicks).filter(Boolean).length >= expectedN) break;
       }
     }
     setMyPicks(newPicks);

@@ -422,7 +422,9 @@ export default function SorareProTab({ players, teams, fixtures, logos = {}, mat
 
       // Classic enforcement: max 1 off-season card per team
       const playerCard = getCard(player);
-      if (playerCard?.isClassic) {
+      // Classic enforcement : max 1 off-season card par team, SAUF en Champion
+      // ou toutes les saisons sont autorisees (aucun blocage classique).
+      if (playerCard?.isClassic && league !== "Champion") {
         const classicCount = Object.values(prev).filter(pp => {
           if (!pp) return false;
           const c = getCard(pp);
@@ -713,8 +715,8 @@ export default function SorareProTab({ players, teams, fixtures, logos = {}, mat
 
     const canAdd = (p) => {
       const card = proCardMap[p.slug || p.name];
-      // Classic: count how many classics already in newPicks (bulletproof check)
-      if (card?.isClassic) {
+      // Classic: max 1 off-season (sauf en Champion ou toutes saisons autorisees)
+      if (card?.isClassic && league !== "Champion") {
         const classicCount = Object.values(newPicks).filter(pp => pp && proCardMap[pp.slug || pp.name]?.isClassic).length;
         if (classicCount >= 1) return false;
       }
@@ -855,7 +857,7 @@ export default function SorareProTab({ players, teams, fixtures, logos = {}, mat
       for (const p of pool) {
         if (taken.has(p.slug || p.name)) continue;
         const card = proCardMap[p.slug || p.name];
-        if (card?.isClassic && Object.values(newPicks).filter(pp => pp && proCardMap[pp.slug || pp.name]?.isClassic).length >= 1) continue;
+        if (card?.isClassic && league !== "Champion" && Object.values(newPicks).filter(pp => pp && proCardMap[pp.slug || pp.name]?.isClassic).length >= 1) continue;
         // CAP260 toujours respecte si actif
         if (algoCap260 && totalL10 + (p.l10 || 0) >= 260) continue;
         const pos = p.position;

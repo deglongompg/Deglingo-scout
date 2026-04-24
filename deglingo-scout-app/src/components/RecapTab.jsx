@@ -566,8 +566,8 @@ function RecapTabInner({ players, logos, lang }) {
                       </svg>
                       <span style={{
                         fontFamily: "'Barlow Condensed', 'Outfit', sans-serif",
-                        fontWeight: 900, fontStyle: "italic", fontSize: 18,
-                        color: "#fff", letterSpacing: "0.02em",
+                        fontWeight: 500, fontSize: 17,
+                        color: "#fff", letterSpacing: "0.04em",
                         textShadow: "0 1px 3px rgba(0,0,0,0.8)",
                         lineHeight: 1,
                       }}>CHAMPION</span>

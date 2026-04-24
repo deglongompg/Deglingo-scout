@@ -1,3 +1,33 @@
+# SESSION HANDOFF — 2026-04-24 (vendredi, position carte Pro + Understat)
+
+> Session continue de 2026-04-23. Voir l'historique complet ci-dessous.
+
+## 🆕 Ce qui a été fait 2026-04-24
+
+### Matin — Derniers polishings Stellar
+- Fix captain figé au save (Espí plus écrasé par De la Fuente après scores live) — `ce31130`
+- Détail calcul lisible : `Espí(C) 35×115% + Alvarez 33×105% + ...` au lieu de juste des nombres — `d0a4e4e`
+- Duah → DEF (override + merge_data) — `d0a4e4e`
+
+### Après-midi — Understat + Position carte Pro
+- **Understat integration** : fetch_understat.py + MAJ_hebdo.bat étape [1/3]. 76 équipes xG/xGA/PPDA à jour — `09a323d`
+- **Position par CARTE** (commits `96c3794` + `9fc95d3`) :
+  - Sorare expose `Card.position` (testé via `?test=position` → confirme)
+  - Query cards.js enrichie, parseCard stocke `cardPosition`
+  - SorareProTab : `addToTeam` + slot filter + pool rendu utilisent `cardPosition`
+  - Permet cartes old-school (Cherki 2020 ATT vs 2023 MIL)
+
+## 🎯 TODO prochain (Sorare Pro Champion)
+
+Nouveau challenge : onglet **Champion** pour Sorare Pro compétition SO7 (7 joueurs)
+cross-ligues (L1 + PL + Liga + Bundes). Format :
+- 1 GK, 2 DEF, 2 MIL, 1 ATT, 1 FLEX
+- Design inspire de l'ancien onglet "Best Pick" (RecoTab.jsx — masque depuis 2026-04-22)
+- Pool multi-ligues cartes user des 4 grands championnats
+- 4 équipes sauvegardables comme les autres Pro teams
+
+---
+
 # SESSION HANDOFF — 2026-04-23 (jeudi, gros jour fix Stellar + Bundes)
 
 > **Claude Code :** lis `MEMOIRE.md` EN PREMIER pour le schema GraphQL Sorare titu%.

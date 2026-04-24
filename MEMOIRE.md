@@ -377,3 +377,148 @@ MLS pas encore dans Stellar cote Sorare.
 - **Titu%** : fetch_titu_fast via sorare_club_slugs.json (112 clubs).
 - **ALIASES** : dans fetch_gw_scores.py, deja maintenus pour Bundes
   (`SC Freiburg`, `TSG 1899 Hoffenheim`).
+
+### Aliases Bundes dans clubMatchGlobal (StellarTab.jsx:84)
+
+Les noms fixtures.json (football-data.org) et players.json (Sorare) divergent :
+- RasenBallsport Leipzig / RB Leipzig
+- FC Cologne / 1. FC Köln
+- Bayern Munich / FC Bayern München
+- Borussia M.Gladbach / Borussia Mönchengladbach
+- FC Heidenheim / 1. FC Heidenheim 1846
+- Mainz 05 / 1. FSV Mainz 05
+- Union Berlin / 1. FC Union Berlin
+
+Tous gerés via ALIASES dans clubMatchGlobal. **Règle critique** : les syns
+courts (< 5 chars comme "om"/"ol"/"sg") matchent en **mot entier** uniquement
+(regex `\b...\b`), sinon faux positifs catastrophiques (ex "ol" matchait
+"wolfsburg", "liverpool", "cologne"...).
+
+---
+
+## 🃏 POSITION DE CARTE — Card.position vs Player.position (2026-04-24)
+
+### Le probleme
+
+Sur Sorare, un joueur peut changer de position au fil des saisons (ex Cherki
+2020 = ATT, 2023 = MIL, aujourd'hui = MIL). Chaque carte a sa position d'emission
+figee. Pour Sorare Pro (surtout competitions "old-school" avec anciennes cartes),
+il faut utiliser la position de la CARTE, pas du joueur actuel.
+
+### Le champ Sorare
+
+`Card.position` expose la position d'emission de la carte (confirme via test
+endpoint 2026-04-24). Valeurs : `"Goalkeeper" | "Defender" | "Midfielder" | "Forward"`.
+
+Query (cards.js) :
+```
+... on Card { sealed position player { slug displayName position } }
+```
+
+### Pattern dans le code
+
+Mapping Sorare -> format interne (SorareProTab.jsx + StellarTab.jsx) :
+```js
+const SORARE_POS_TO_SHORT = { Goalkeeper: "GK", Defender: "DEF", Midfielder: "MIL", Forward: "ATT" };
+```
+
+Chaque carte stocke `cardPosition` (fallback playerPosition si absent).
+Dans le rendu (pool, pitch, filtre slot), utiliser :
+```js
+const pos = p._card?.cardPosition || p.cardPosition || p.position;
+```
+
+Fichiers touches (commits `96c3794` + `9fc95d3`) :
+- `functions/api/sorare/cards.js` : query enrichie
+- `StellarTab.jsx` parseCard
+- `SorareProTab.jsx` parseCard + addToTeam + visiblePlayers slot filter + pool rendu
+
+### Cache a vider apres un changement query
+
+```js
+localStorage.removeItem("pro_cards_cache");
+localStorage.removeItem("pro_cards_cache_time");
+sessionStorage.removeItem("sorare_cards_cache");
+```
+
+---
+
+## 🎯 CAPTAIN BONUS — formule Sorare officielle (2026-04-23)
+
+**Captain bonus = `raw × 0.5`** (PAS post-bonus × 0.5). Confirme par math
+Equipe 1 user Sorare (398.66 vs notre 401 avant fix = Yamal captain post-bonus).
+
+Applique partout :
+- `proScoring.js::getPickScore`
+- `SorareProTab.jsx::getFullScore` + inline recap
+- `StellarSavedTeamCard.jsx` + `StellarTab.jsx` inline recap
+- `RecapTab.jsx::computeStellarProjected`
+
+### Captain figé au save (Stellar, commit `ce31130`)
+
+`saveCurrentTeam` calcule `team.captain = slot` au moment du save (isCaptain
+du pick si user a clique C, sinon meilleur adjDs) et le stocke en dur. Le
+render respecte `team.captain` en priorité (avant fallback best postBonus).
+
+**Sans ce fix** : le captain basculait sur le meilleur postBonus apres arrivee
+des scores SO5 live (bug Espi -> De la Fuente observe 2026-04-24).
+
+---
+
+## 📊 SCORES BULLES — Math.floor pour matcher Sorare (2026-04-23)
+
+Sorare tronque les scores affiches dans les bulles (pas round). Ex :
+- Yamal 74.7 → bulle Sorare `74` (pas 75)
+- Hernandez 30.82 → bulle Sorare `30` (pas 31)
+
+Nos bulles utilisent `Math.floor(last_so5_score)` au lieu de `Math.round`.
+Applique dans StellarSavedTeamCard, StellarTab inline, ProSavedTeamCard,
+SorareProTab inline + dropdown matches.
+
+**Totaux** gardent la précision décimale (somme postBonus non-floored).
+
+---
+
+## 🃏 CARTE EXACTE DU PICK — resolveCardForPick (2026-04-23)
+
+Bug : `sorareCardMap[playerSlug]` retournait toujours la MEILLEURE carte par
+joueur. Si user a 2 Pedri (Base 5% + Shiny 10%), le rendu affichait toujours
+la Shiny, meme si user a pick la Base.
+
+Fix (commits `6ad00d3` + `ebc19b3` + `ef864da`) :
+- Nouveau lookup `sorareCardByCardSlug` (index par cardSlug unique)
+- Helper `resolveCardForPick(pick)` : priorite `pick._cardSlug` → fallback best
+- Applique partout ou on affiche l'image / le bonus / le calcul pour un pick Stellar
+
+Le pool en mode "Mes cartes" expand chaque carte avec `_cardSlug`,
+`_cardTotalBonus`, etc. (ligne 2126 StellarTab.jsx).
+
+---
+
+## 📈 UNDERSTAT xG/xGA/PPDA — fetch_understat.py (2026-04-23)
+
+Teams.json contient xg, xga, ppda, goals, ga, matches pour le D-Score contexte.
+Aucun script n'updatait ces stats → frozen depuis debut avril avant le fix.
+
+### Script
+
+`fetch_understat.py` lit les dumps JSON Understat (placés dans `understat_data/`)
+et patch teams.json. Update : xG (per match), xGA (per match), PPDA, goals, ga,
+matches, wins, draws, loses, xpts. Conserve les splits dom/ext existants.
+
+### Procédure manuelle (chaque Mer/Sam avant MAJ_hebdo)
+
+1. Download https://understat.com/league/Ligue_1 (et EPL, La_liga, Bundesliga)
+2. Placer les 4 JSON dans `understat_data/` : ligue1.json, premier_league.json,
+   la_liga.json, bundesliga.json
+3. Relancer `MAJ_hebdo.bat` → etape [1/3] `py fetch_understat.py` tourne auto
+
+### Pas de MLS
+
+Understat ne couvre pas la MLS. teams.json MLS garde les stats frozen ou
+fallback manuel.
+
+### TODO
+
+Scraping automatique Understat pour supprimer le step manuel (extraire le JSON
+encode dans `<script>` de la page league).

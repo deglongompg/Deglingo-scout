@@ -4,12 +4,16 @@ import { dScoreMatch, csProb, findTeam } from "../utils/dscore";
 import { T, t } from "../utils/i18n";
 import { getProGwInfo, getProGwList, loadFrozen, saveFrozen } from "../utils/freeze";
 import { pushTeams, fetchCloudStore, extractProTeams } from "../utils/cloudSync";
+import { getTeamSlots, getExpectedPicks, getCapThreshold, getSlotPosition, CHAMPION_SOURCE_LEAGUES } from "../utils/proScoring";
 import SkyrocketGauge from "./SkyrocketGauge";
 
 const PC = POSITION_COLORS;
-const PRO_LEAGUES = ["L1", "PL", "Liga", "Bundes", "MLS"];
+const PRO_LEAGUES = ["L1", "PL", "Liga", "Bundes", "MLS", "Champion"];
 const TEAM_SLOTS = ["GK", "DEF", "MIL", "ATT", "FLEX"];
-const MAX_SAVED = { L1: 4, PL: 4, Liga: 4, Bundes: 4, MLS: 5 };
+const MAX_SAVED = { L1: 4, PL: 4, Liga: 4, Bundes: 4, MLS: 5, Champion: 4 };
+
+/** Cree un objet picks vide avec les slots correspondants a la ligue (5 ou 7). */
+const emptyPicks = (league) => Object.fromEntries(getTeamSlots(league).map(s => [s, null]));
 
 const SHORT_NAMES = {
   "Wolverhampton Wanderers": "Wolves", "Manchester United": "Man Utd", "Manchester City": "Man City",
@@ -399,10 +403,15 @@ export default function SorareProTab({ players, teams, fixtures, logos = {}, mat
   };
 
   // ── Team builder ──
-  const [myPicks, setMyPicks] = useState({ GK: null, DEF: null, MIL: null, ATT: null, FLEX: null });
+  // Slots dynamiques : 5 pour L1/PL/etc., 7 pour Champion (avec DEF1/DEF2/MIL1/MIL2)
+  const teamSlots = getTeamSlots(league);
+  const [myPicks, setMyPicks] = useState(emptyPicks(league));
   const [editingTeamId, setEditingTeamId] = useState(null); // null = nouvelle equipe ; id = edition d'une saved
-  const resetTeam = () => { setMyPicks({ GK: null, DEF: null, MIL: null, ATT: null, FLEX: null }); setEditingTeamId(null); };
+  const resetTeam = () => { setMyPicks(emptyPicks(league)); setEditingTeamId(null); };
   const removeFromTeam = (slot) => setMyPicks(prev => ({ ...prev, [slot]: null }));
+
+  // Quand on change de ligue, re-init les picks avec les bons slots
+  useEffect(() => { setMyPicks(emptyPicks(league)); setEditingTeamId(null); setSelectedSlot(null); }, [league]);
 
   const addToTeam = (player) => {
     setMyPicks(prev => {
@@ -425,18 +434,22 @@ export default function SorareProTab({ players, teams, fixtures, logos = {}, mat
       // Position de la CARTE (historique) prioritaire sur position joueur (actuelle).
       // Critique pour vieilles cartes Pro (ex Cherki 2020 = ATT mais player = MIL aujourd'hui).
       const pos = player._card?.cardPosition || player.cardPosition || player.position;
+      // Helper : trouve le premier slot vide matchant une position logique donnee.
+      const findEmptySlot = (logicalPos) => teamSlots.find(s => prev[s] === null && getSlotPosition(s) === logicalPos);
       let next;
       if (selectedSlot) {
+        // Slot choisi : si FLEX accepte tout sauf GK, sinon match par position logique
         if (selectedSlot === "FLEX" && pos !== "GK") next = { ...prev, FLEX: player };
-        else if (selectedSlot === pos) next = { ...prev, [pos]: player };
+        else if (getSlotPosition(selectedSlot) === pos) next = { ...prev, [selectedSlot]: player };
         else next = prev;
       } else {
-        if (prev[pos] === null) next = { ...prev, [pos]: player };
+        // Auto-placement : 1er slot naturel libre (DEF1 avant DEF2, MIL1 avant MIL2), sinon FLEX
+        const slotNaturel = findEmptySlot(pos);
+        if (slotNaturel) next = { ...prev, [slotNaturel]: player };
         else if (prev.FLEX === null && pos !== "GK") next = { ...prev, FLEX: player };
-        else next = { ...prev, [pos]: player };
+        else next = prev; // tous les slots pleins : ignore
       }
-      const ORDER = ["GK", "DEF", "MIL", "ATT", "FLEX"];
-      const nextEmpty = ORDER.find(s => next[s] === null);
+      const nextEmpty = teamSlots.find(s => next[s] === null);
       setTimeout(() => setSelectedSlot(nextEmpty || null), 0);
       return next;
     });
@@ -601,10 +614,12 @@ export default function SorareProTab({ players, teams, fixtures, logos = {}, mat
   // ── GW fixtures for selected league ──
   const gwMatches = useMemo(() => {
     if (!gwInfo || !fixtures?.fixtures) return [];
+    // Pour Champion, inclure les matchs des 4 grands championnats
+    const accepts = league === "Champion" ? new Set(CHAMPION_SOURCE_LEAGUES) : new Set([league]);
     // GW boundary = 14:00 UTC (16h Paris). Matchs du jour frontiere :
     // kickoff >= 14:00 UTC = GW suivante, kickoff < 14:00 UTC = GW actuelle
     return fixtures.fixtures.filter(f => {
-      if (f.league !== league) return false;
+      if (!accepts.has(f.league)) return false;
       if (f.date < gwInfo.startDateStr || f.date > gwInfo.endDateStr) return false;
       // Jour de debut GW : exclure les matchs avant 14:00 UTC (ils sont dans la GW precedente)
       if (f.date === gwInfo.startDateStr && f.kickoff && f.kickoff < "14:00") return false;
@@ -616,9 +631,12 @@ export default function SorareProTab({ players, teams, fixtures, logos = {}, mat
 
   // ── Player scoring for selected league + GW ──
   // Build club → fixture mapping from gwMatches (supports multi-GW, not just player_fixtures)
+  // Pour Champion : pool cross-ligues (union L1 + PL + Liga + Bundes)
   const gwPlayers = useMemo(() => {
     if (!gwInfo) return [];
-    const lgTeams = teams.filter(t => t.league === league);
+    const isChampion = league === "Champion";
+    const sourceLeagues = isChampion ? CHAMPION_SOURCE_LEAGUES : [league];
+    const lgTeams = teams.filter(t => sourceLeagues.includes(t.league));
     const result = [];
 
     // Build club → fixture from gwMatches (all fixtures in this GW date range)
@@ -629,7 +647,7 @@ export default function SorareProTab({ players, teams, fixtures, logos = {}, mat
     }
 
     for (const p of players) {
-      if (p.league !== league) continue;
+      if (!sourceLeagues.includes(p.league)) continue;
       if (p.injured || p.suspended) continue;
 
       // Match player club to fixture via clubMatch (handles name variants)
@@ -654,7 +672,16 @@ export default function SorareProTab({ players, teams, fixtures, logos = {}, mat
 
       result.push({ ...p, ds, oppName: fx.opp, isHome: fx.isHome, kickoff: fx.kickoff || "", matchDate: fx.date, csPercent });
     }
-    return result.sort((a, b) => b.ds - a.ds);
+    // Dedupe par slug : quelques joueurs sont tagges dans plusieurs ligues dans players.json
+    // (ex jahmai-simpson-pusey PL+autre). Garde la premiere occurrence.
+    const seen = new Set();
+    const deduped = result.filter(p => {
+      const key = p.slug || p.name;
+      if (seen.has(key)) return false;
+      seen.add(key);
+      return true;
+    });
+    return deduped.sort((a, b) => b.ds - a.ds);
   }, [gwInfo, players, teams, gwMatches, league, proCardMap]);
 
   // ── Decisive Pick Top 3 ──
@@ -845,7 +872,7 @@ export default function SorareProTab({ players, teams, fixtures, logos = {}, mat
 
   // ── Score calculation — Sorare Pro formula ──
   // Score = sum( ds × power × (1.5 if captain) ) × (1 + compo_bonus%)
-  const pickedPlayers = TEAM_SLOTS.map(s => myPicks[s]).filter(Boolean);
+  const pickedPlayers = teamSlots.map(s => myPicks[s]).filter(Boolean);
   const filledCount = pickedPlayers.length;
   // Captain: user-selected or auto (highest adjusted DS)
   const adjScores = pickedPlayers.map(p => getAdjDs(p));
@@ -862,9 +889,11 @@ export default function SorareProTab({ players, teams, fixtures, logos = {}, mat
   // Bonus de composition
   const clubCounts = {};
   pickedPlayers.forEach(p => { clubCounts[p.club] = (clubCounts[p.club] || 0) + 1; });
-  const isMultiClub = filledCount === 5 && Object.values(clubCounts).every(c => c <= 2);
+  const expectedPicks = getExpectedPicks(league);
+  const capThreshold = getCapThreshold(league);
+  const isMultiClub = filledCount === expectedPicks && Object.values(clubCounts).every(c => c <= 2);
   const sumL10 = pickedPlayers.reduce((s, p) => s + (p.l10 || 0), 0);
-  const isCap260 = filledCount === 5 && sumL10 < 260;
+  const isCap260 = filledCount === expectedPicks && sumL10 < capThreshold;
   const compoBonusPct = (isMultiClub ? 2 : 0) + (isCap260 ? 4 : 0);
 
   const rawTotal = fullScores.reduce((s, v) => s + v, 0);
@@ -905,11 +934,13 @@ export default function SorareProTab({ players, teams, fixtures, logos = {}, mat
 
     // Filtre slot APRES expansion : utilise la position CARTE (historique) si dispo,
     // sinon position joueur. Permet de picker Cherki 2020 en ATT meme si Cherki joueur = MIL.
+    // Pour Champion : DEF1/DEF2 -> pos DEF, MIL1/MIL2 -> pos MIL via getSlotPosition.
     if (selectedSlot) {
       const posOf = (p) => p._card?.cardPosition || p.cardPosition || p.position;
+      const targetPos = getSlotPosition(selectedSlot);
       expanded = selectedSlot === "FLEX"
         ? expanded.filter(p => ["DEF","MIL","ATT"].includes(posOf(p)))
-        : expanded.filter(p => posOf(p) === selectedSlot);
+        : expanded.filter(p => posOf(p) === targetPos);
     }
 
     // Filtre Dispo: applique APRES expansion pour check par _cardKey individuel
@@ -1239,7 +1270,7 @@ export default function SorareProTab({ players, teams, fixtures, logos = {}, mat
                 </button>
                 <div style={{ fontSize: 6, color: "rgba(255,255,255,0.45)", lineHeight: 1.3 }}>
                   <div>MC = max 2/{lang === "fr" ? "club" : "club"} (+2%)</div>
-                  <div>CAP = L10 total &lt; 260 (+4%)</div>
+                  <div>CAP = L10 total &lt; {capThreshold} (+4%)</div>
                 </div>
                 <button onClick={generateMagicTeam} style={{ padding: "5px 10px", borderRadius: 6, border: "none", cursor: "pointer", fontFamily: "Outfit", background: rarityBg, color: "#fff", fontSize: 9, fontWeight: 800 }}>
                   {t(lang, "proAlgo")}
@@ -1248,8 +1279,8 @@ export default function SorareProTab({ players, teams, fixtures, logos = {}, mat
                   <button onClick={resetTeam} style={{ fontSize: 7, fontWeight: 700, padding: "2px 6px", borderRadius: 4, border: "1px solid rgba(255,255,255,0.1)", background: "rgba(255,255,255,0.05)", color: "rgba(255,255,255,0.4)", cursor: "pointer", fontFamily: "Outfit" }}>{t(lang, "proReset")}</button>
                 )}
                 {filledCount > 0 && (
-                  <div style={{ fontSize: 8, fontWeight: 700, fontFamily: "'DM Mono',monospace", color: filledCount === 5 && sumL10 < 260 ? "#A78BFA" : sumL10 >= 260 ? "#EF4444" : "rgba(255,255,255,0.4)" }}>
-                    L10: {Math.round(sumL10)}/260
+                  <div style={{ fontSize: 8, fontWeight: 700, fontFamily: "'DM Mono',monospace", color: filledCount === expectedPicks && sumL10 < capThreshold ? "#A78BFA" : sumL10 >= capThreshold ? "#EF4444" : "rgba(255,255,255,0.4)" }}>
+                    L10: {Math.round(sumL10)}/{capThreshold}
                   </div>
                 )}
                 {isMobile && savedTeams.length > 0 && (
@@ -1278,7 +1309,7 @@ export default function SorareProTab({ players, teams, fixtures, logos = {}, mat
               {/* Pitch (left) */}
               <div className="pro-pitch" style={{ width: isMobile ? "100%" : 370, flexShrink: 0, display: "flex", flexDirection: "column", alignItems: "center", borderRight: isMobile ? "none" : "1px solid rgba(255,255,255,0.06)", borderBottom: isMobile ? "1px solid rgba(255,255,255,0.06)" : "none", background: "rgba(0,0,0,0.15)" }}>
                 {/* Score bar */}
-                {filledCount === 5 && (
+                {filledCount === expectedPicks && (
                   <div className="pro-score-bar" style={{ padding: "6px 14px", borderBottom: "1px solid rgba(255,255,255,0.05)", display: "flex", alignItems: "center", justifyContent: "space-between", width: "100%" }}>
                     <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
                       <div style={{ fontSize: 8, color: "rgba(255,255,255,0.35)", fontWeight: 600 }}>{t(lang, "proScore")}</div>
@@ -1289,7 +1320,7 @@ export default function SorareProTab({ players, teams, fixtures, logos = {}, mat
                     </div>
                     <div style={{ display: "flex", alignItems: "center", gap: 4 }}>
                       <span style={{ fontSize: 7, fontWeight: 800, padding: "2px 5px", borderRadius: 4, border: `1px solid ${isMultiClub ? "rgba(74,222,128,0.5)" : "rgba(255,255,255,0.1)"}`, background: isMultiClub ? "rgba(74,222,128,0.15)" : "transparent", color: isMultiClub ? "#4ADE80" : "rgba(255,255,255,0.2)" }}>MC +2%</span>
-                      <span style={{ fontSize: 7, fontWeight: 800, padding: "2px 5px", borderRadius: 4, border: `1px solid ${isCap260 ? "rgba(139,92,246,0.5)" : "rgba(255,255,255,0.1)"}`, background: isCap260 ? "rgba(139,92,246,0.15)" : "transparent", color: isCap260 ? "#A78BFA" : "rgba(255,255,255,0.2)" }}>CAP +4%</span>
+                      <span style={{ fontSize: 7, fontWeight: 800, padding: "2px 5px", borderRadius: 4, border: `1px solid ${isCap260 ? "rgba(139,92,246,0.5)" : "rgba(255,255,255,0.1)"}`, background: isCap260 ? "rgba(139,92,246,0.15)" : "transparent", color: isCap260 ? "#A78BFA" : "rgba(255,255,255,0.2)" }}>CAP{capThreshold} +4%</span>
                       {palier && <span style={{ fontSize: 8, fontWeight: 700, color: palier.color }}>{palier.reward}</span>}
                       {compoBonusPct > 0 && <span style={{ fontSize: 9, fontWeight: 700, color: "#4ADE80" }}>+{compoBonusPct}%</span>}
                       <span style={{ fontSize: 20, fontWeight: 900, fontFamily: "'DM Mono',monospace", color: palier ? palier.color : rarityColor }}>{totalScore}</span>
@@ -1297,13 +1328,16 @@ export default function SorareProTab({ players, teams, fixtures, logos = {}, mat
                   </div>
                 )}
 
-                {/* 5 card slots */}
+                {/* Card slots : 5 pour SO5 (2+3) ou 7 pour Champion SO7 (4+3) */}
                 <div style={{ padding: isMobile ? "6px 12px" : "6px 8px", flex: "0 0 auto", display: "flex", flexDirection: "column", gap: 4, alignItems: "center", width: "100%", boxSizing: "border-box" }}>
-                  {[["ATT", "FLEX"], ["DEF", "GK", "MIL"]].map((row, rowIdx) => (
+                  {(league === "Champion"
+                      ? [["MIL1", "ATT", "FLEX", "MIL2"], ["DEF1", "GK", "DEF2"]]
+                      : [["ATT", "FLEX"], ["DEF", "GK", "MIL"]]).map((row, rowIdx) => (
                     <div key={rowIdx} style={{ display: "flex", gap: isMobile ? 3 : 6, justifyContent: "center", alignItems: "flex-start" }}>
                       {row.map(slot => {
                         const p = myPicks[slot];
-                        const sc = POS_SLOT_COLORS[slot];
+                        // Pour Champion DEF1/DEF2/MIL1/MIL2, mapper vers la position logique pour la couleur
+                        const sc = POS_SLOT_COLORS[getSlotPosition(slot)];
                         const isActive = selectedSlot === slot;
                         const card = p ? getCard(p) : null;
                         const dsVal = p ? getAdjDs(p) : 0;
@@ -1321,11 +1355,16 @@ export default function SorareProTab({ players, teams, fixtures, logos = {}, mat
                             background: card ? "transparent" : p ? `linear-gradient(160deg, #0d0826, ${sc}30)` : isActive ? `${sc}18` : "rgba(255,255,255,0.025)",
                             border: card ? "none" : isCaptain ? `2px solid #FBBF24` : `1.5px solid ${isActive ? sc + "CC" : p ? sc + "55" : "rgba(255,255,255,0.08)"}`,
                             display: "flex", flexDirection: "column", alignItems: "center", gap: 4,
-                            padding: card ? 0 : "6px 4px", position: "relative", width: isMobile ? 65 : (card || p) ? 120 : 105, height: isMobile ? 87 : (card || p) ? 166 : 140, flexShrink: 0,
-                            marginTop: slot === "GK" && !isMobile ? 12 : 0,
+                            // Champion : cartes plus petites pour que 4 tiennent en haut (120 * 0.72 = 86 environ)
+                            padding: card ? 0 : "6px 4px", position: "relative",
+                            width: isMobile ? 65 : league === "Champion" ? ((card || p) ? 82 : 78) : ((card || p) ? 120 : 105),
+                            height: isMobile ? 87 : league === "Champion" ? ((card || p) ? 118 : 108) : ((card || p) ? 166 : 140),
+                            flexShrink: 0,
+                            // GK descend de 12px en SO5. En Champion, ATT + FLEX surélevés de 10px (user demande).
+                            marginTop: slot === "GK" && !isMobile ? 12 : (league === "Champion" && (slot === "ATT" || slot === "FLEX") && !isMobile ? -8 : 0),
                           }}>
                             {/* Captain badge — click to toggle */}
-                            {p && filledCount === 5 && (
+                            {p && filledCount === expectedPicks && (
                               <button onClick={e => { e.stopPropagation(); setCaptainSlot(captainSlot === slot ? null : slot); }} style={{ position: "absolute", top: card ? 4 : 2, right: card ? 20 : 2, zIndex: 3, width: 18, height: 18, borderRadius: "50%", border: isCaptain ? "2px solid #FBBF24" : "1px solid rgba(255,255,255,0.2)", background: isCaptain ? "#FBBF24" : "rgba(0,0,0,0.5)", color: isCaptain ? "#000" : "rgba(255,255,255,0.4)", fontSize: 9, fontWeight: 900, cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", padding: 0 }}>C</button>
                             )}
                             {card ? (
@@ -1343,7 +1382,7 @@ export default function SorareProTab({ players, teams, fixtures, logos = {}, mat
                               </>
                             ) : p ? (
                               <>
-                                <span style={{ fontSize: 7, fontWeight: 900, color: "#fff", background: sc, borderRadius: 4, padding: "2px 6px" }}>{slot}</span>
+                                <span style={{ fontSize: 7, fontWeight: 900, color: "#fff", background: sc, borderRadius: 4, padding: "2px 6px" }}>{getSlotPosition(slot)}</span>
                                 {logos[p.club] && <img src={`/data/logos/${logos[p.club]}`} alt="" style={{ width: 26, height: 26, objectFit: "contain" }} />}
                                 <div style={{ fontSize: 9, fontWeight: 800, color: "#fff", textAlign: "center", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap", width: "100%" }}>{p.name.split(" ").pop()}</div>
                                 <div style={{ fontSize: 15, fontWeight: 900, color: dsCol, fontFamily: "'DM Mono',monospace" }}>{dsVal}</div>
@@ -1351,7 +1390,7 @@ export default function SorareProTab({ players, teams, fixtures, logos = {}, mat
                               </>
                             ) : (
                               <>
-                                <span style={{ fontSize: 7, fontWeight: 900, color: "#fff", background: sc, borderRadius: 4, padding: "2px 6px" }}>{slot}</span>
+                                <span style={{ fontSize: 7, fontWeight: 900, color: "#fff", background: sc, borderRadius: 4, padding: "2px 6px" }}>{getSlotPosition(slot)}</span>
                                 <div style={{ flex: 1, display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", gap: 3 }}>
                                   <div style={{ fontSize: 18, opacity: 0.15, color: sc }}>+</div>
                                   <div style={{ fontSize: 6, color: "rgba(255,255,255,0.2)", fontStyle: "italic" }}>{isActive ? "Clique un joueur" : "Vide"}</div>
@@ -1386,7 +1425,7 @@ export default function SorareProTab({ players, teams, fixtures, logos = {}, mat
                       <div key={st.id} style={{ borderRadius: 6, background: `${rarityColor}08`, border: `1px solid ${rarityColor}25`, padding: "4px 8px", display: "flex", alignItems: "center", gap: 5 }}>
                         <span style={{ fontSize: 8, fontWeight: 800, color: rarityColor, flexShrink: 0 }}>{st.label}</span>
                         <div style={{ flex: 1, fontSize: 7, color: "rgba(255,255,255,0.4)", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
-                          {TEAM_SLOTS.map(s => st.picks[s]?.name?.split(" ").pop()).filter(Boolean).join(" · ")}
+                          {getTeamSlots(league).map(s => st.picks[s]?.name?.split(" ").pop()).filter(Boolean).join(" · ")}
                         </div>
                         <span style={{ fontSize: 9, fontWeight: 900, color: rarityColor, fontFamily: "'DM Mono',monospace", flexShrink: 0 }}>{st.score}</span>
                         <button onClick={() => loadSavedTeam(st)} style={{ fontSize: 7, fontWeight: 700, padding: "2px 5px", borderRadius: 3, border: `1px solid ${rarityColor}40`, background: `${rarityColor}10`, color: rarityColor, cursor: "pointer", fontFamily: "Outfit", flexShrink: 0 }}>Charger</button>
@@ -1650,9 +1689,10 @@ export default function SorareProTab({ players, teams, fixtures, logos = {}, mat
           </div>
           <div className="pro-recap-grid" style={{ display: "grid", gridTemplateColumns: "repeat(2, minmax(0, 480px))", gap: 10, justifyContent: "center", margin: "0 auto", maxWidth: 980 }}>
             {savedTeams.map((st) => {
-              const stPlayers = TEAM_SLOTS.map(s => st.picks[s]).filter(Boolean);
+              const stPlayers = getTeamSlots(league).map(s => st.picks[s]).filter(Boolean);
               const stAdjScores = stPlayers.map(p => getAdjDs(p));
-              const stCaptain = st.captain && st.picks[st.captain] ? st.picks[st.captain] : (stAdjScores.length === 5 ? stPlayers[stAdjScores.indexOf(Math.max(...stAdjScores))] : null);
+              const expectedPicks = getExpectedPicks(league);
+              const stCaptain = st.captain && st.picks[st.captain] ? st.picks[st.captain] : (stAdjScores.length === expectedPicks ? stPlayers[stAdjScores.indexOf(Math.max(...stAdjScores))] : null);
               const stCaptainId = stCaptain ? (stCaptain.slug || stCaptain.name) : null;
               // Score effectif + flag isLive (match joue ou non)
               // Captain bonus = RAW × 0.5 (formule Sorare officielle)

@@ -552,16 +552,15 @@ export default function LandingPage({ players, onEnter, onNavigate }) {
             <span style={{ color: "rgba(255,255,255,0.5)" }}>{t.heroSub2}</span>
           </p>
 
-          {/* League chips — 6 competitions (5 ligues + Champion cross-ligues) */}
-          {/* Backgrounds officiels Sorare frontend-assets */}
+          {/* League chips — 5 ligues (Champion arrive plus tard) */}
+          {/* Fond : banniere Sorare (texture droite). Logo : PNG detoure centre. */}
           <div className="landing-leagues" style={{ display: "flex", gap: 8, justifyContent: "center", flexWrap: "wrap", marginBottom: 24 }}>
             {[
-              { code: "L1",       color: "#3B82F6", name: "Ligue 1",        bg: "https://frontend-assets.sorare.com/football/so5_league/seasonal-france/picture.jpg?v=1" },
-              { code: "PL",       color: "#D946EF", name: "Premier League", bg: "https://frontend-assets.sorare.com/football/so5_league/seasonal-england/picture.jpg?v=1" },
-              { code: "Liga",     color: "#EF4444", name: "La Liga",        bg: "https://frontend-assets.sorare.com/football/so5_league/seasonal-spain/picture.jpg?v=1" },
-              { code: "Bundes",   color: "#DC2626", name: "Bundesliga",     bg: "https://frontend-assets.sorare.com/football/so5_league/seasonal-germany/picture.jpg?v=1" },
-              { code: "MLS",      color: "#3B82F6", name: "MLS",            bg: "https://frontend-assets.sorare.com/football/so5_league/seasonal-us/picture.jpg?v=1" },
-              { code: "Champion", color: "#EC4899", name: "Champion",       bg: "https://frontend-assets.sorare.com/football/so5_league/seasonal-champions/picture.jpg?v=1" },
+              { code: "L1",     color: "#3B82F6", name: "Ligue 1",        bg: "https://frontend-assets.sorare.com/football/so5_league/seasonal-france/picture.jpg?v=1",  logo: "/L1.png" },
+              { code: "PL",     color: "#D946EF", name: "Premier League", bg: "https://frontend-assets.sorare.com/football/so5_league/seasonal-england/picture.jpg?v=1", logo: "/pl.png" },
+              { code: "Liga",   color: "#EF4444", name: "La Liga",        bg: "https://frontend-assets.sorare.com/football/so5_league/seasonal-spain/picture.jpg?v=1",   logo: "/liga.png" },
+              { code: "Bundes", color: "#DC2626", name: "Bundesliga",     bg: "https://frontend-assets.sorare.com/football/so5_league/seasonal-germany/picture.jpg?v=1", logo: "/bundes.png" },
+              { code: "MLS",    color: "#3B82F6", name: "MLS",            bg: "https://frontend-assets.sorare.com/football/so5_league/seasonal-us/picture.jpg?v=1",      logo: "/mls.png" },
             ].map(l => (
               <div key={l.code} title={l.name} style={{
                 position: "relative", overflow: "hidden",
@@ -571,13 +570,18 @@ export default function LandingPage({ players, onEnter, onNavigate }) {
                 backgroundColor: "rgba(10,5,25,0.6)",
                 boxShadow: `0 0 18px ${l.color}30, 0 0 2px ${l.color}40`,
               }}>
-                {/* Fond : texture coloree droite de la banniere Sorare (sans logo) */}
                 <img src={l.bg} alt="" style={{
                   width: "100%", height: "100%", objectFit: "cover",
                   objectPosition: "right center",
                   display: "block", pointerEvents: "none",
                 }} />
-                {/* TODO : logo detoure centre (en attente import user) */}
+                <img src={l.logo} alt={l.name} style={{
+                  position: "absolute", top: "50%", left: "50%",
+                  transform: "translate(-50%, -50%)",
+                  height: "72%", width: "auto",
+                  objectFit: "contain", pointerEvents: "none",
+                  filter: "drop-shadow(0 1px 3px rgba(0,0,0,0.7))",
+                }} />
               </div>
             ))}
           </div>

@@ -36,6 +36,13 @@ const LEAGUE_BG_URL = {
   MLS:      "https://frontend-assets.sorare.com/football/so5_league/seasonal-us/picture.jpg?v=1",
   Champion: "https://frontend-assets.sorare.com/football/so5_league/seasonal-champions/picture.jpg?v=1",
 };
+const LEAGUE_LOGO_URL = {
+  L1:     "/L1.png",
+  PL:     "/pl.png",
+  Liga:   "/liga.png",
+  Bundes: "/bundes.png",
+  MLS:    "/mls.png",
+};
 const LEAGUE_ACCENT_BG = {
   L1: "#3B82F6", PL: "#D946EF", Liga: "#EF4444", Bundes: "#DC2626", MLS: "#3B82F6", Champion: "#EC4899",
 };
@@ -493,11 +500,12 @@ function RecapTabInner({ players, logos, lang }) {
               ✨ Stellar
               <span style={{ fontSize: 10, opacity: 0.8, padding: "1px 6px", borderRadius: 10, background: isStellarActive ? RARITY_COLOR.stellar + "18" : "rgba(255,255,255,0.05)" }}>{stats.stellar.count}</span>
             </button>
-            {PRO_LEAGUES.map(lg => {
+            {PRO_LEAGUES.filter(lg => lg !== "Champion").map(lg => {
               const accent = LEAGUE_ACCENT_BG[lg] || LEAGUE_COLORS[lg] || "#A5B4FC";
               const active = activeLeague === lg;
               const count = proLeagueCounts[lg]?.total || 0;
               const bgUrl = LEAGUE_BG_URL[lg];
+              const logoUrl = LEAGUE_LOGO_URL[lg];
               return (
                 <button key={lg} onClick={() => setActiveLeague(lg)} title={LEAGUE_NAMES[lg] || lg} style={{
                   position: "relative", overflow: "hidden",
@@ -511,13 +519,18 @@ function RecapTabInner({ players, logos, lang }) {
                   transition: "all 0.15s",
                   flexShrink: 0,
                 }}>
-                  {/* Fond : texture coloree droite de la banniere Sorare (sans logo) */}
                   {bgUrl && <img src={bgUrl} alt="" style={{
                     width: "100%", height: "100%", objectFit: "cover",
                     objectPosition: "right center",
                     display: "block", pointerEvents: "none",
                   }} />}
-                  {/* Badge count en haut-droite */}
+                  {logoUrl && <img src={logoUrl} alt={lg} style={{
+                    position: "absolute", top: "50%", left: "50%",
+                    transform: "translate(-50%, -50%)",
+                    height: "72%", width: "auto",
+                    objectFit: "contain", pointerEvents: "none",
+                    filter: "drop-shadow(0 1px 3px rgba(0,0,0,0.7))",
+                  }} />}
                   <span style={{
                     position: "absolute", top: 4, right: 6, zIndex: 2,
                     fontSize: 10, fontWeight: 900, color: "#fff",

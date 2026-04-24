@@ -19,6 +19,13 @@ const LEAGUE_BG_URL = {
   MLS:      "https://frontend-assets.sorare.com/football/so5_league/seasonal-us/picture.jpg?v=1",
   Champion: "https://frontend-assets.sorare.com/football/so5_league/seasonal-champions/picture.jpg?v=1",
 };
+const LEAGUE_LOGO_URL = {
+  L1:     "/L1.png",
+  PL:     "/pl.png",
+  Liga:   "/liga.png",
+  Bundes: "/bundes.png",
+  MLS:    "/mls.png",
+};
 
 // Couleurs dominantes des backgrounds Sorare (pour bordure active + glow)
 const LEAGUE_ACCENT = {
@@ -1012,10 +1019,11 @@ export default function SorareProTab({ players, teams, fixtures, logos = {}, mat
         </div>
         {/* League buttons */}
         <div className="pro-league-btns" style={{ display: "flex", gap: 5 }}>
-          {PRO_LEAGUES.map(lg => {
+          {PRO_LEAGUES.filter(lg => lg !== "Champion").map(lg => {
             const isActive = league === lg;
             const accent = LEAGUE_ACCENT[lg] || LEAGUE_COLORS[lg] || "#888";
             const bgUrl = LEAGUE_BG_URL[lg];
+            const logoUrl = LEAGUE_LOGO_URL[lg];
             return (
               <button key={lg} onClick={() => setLeague(lg)} title={lg} style={{
                 position: "relative", overflow: "hidden",
@@ -1029,11 +1037,17 @@ export default function SorareProTab({ players, teams, fixtures, logos = {}, mat
                 filter: isActive ? "none" : "saturate(0.7)",
                 flexShrink: 0,
               }}>
-                {/* Fond : texture coloree droite de la banniere Sorare (sans logo) */}
                 {bgUrl && <img src={bgUrl} alt="" style={{
                   width: "100%", height: "100%", objectFit: "cover",
                   objectPosition: "right center",
                   display: "block", pointerEvents: "none",
+                }} />}
+                {logoUrl && <img src={logoUrl} alt={lg} style={{
+                  position: "absolute", top: "50%", left: "50%",
+                  transform: "translate(-50%, -50%)",
+                  height: "74%", width: "auto",
+                  objectFit: "contain", pointerEvents: "none",
+                  filter: "drop-shadow(0 1px 3px rgba(0,0,0,0.7))",
                 }} />}
               </button>
             );

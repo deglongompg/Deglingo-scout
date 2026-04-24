@@ -1047,11 +1047,11 @@ export default function SorareProTab({ players, teams, fixtures, logos = {}, mat
                 }} />}
                 {isL1 && <div style={{
                   position: "absolute", inset: 0, pointerEvents: "none",
-                  background: "radial-gradient(circle at 8% 92%, rgba(0,0,0,0.9) 0%, rgba(0,0,0,0.6) 20%, transparent 38%)",
+                  background: "radial-gradient(ellipse 65% 110% at 18% 75%, rgba(0,0,0,1) 0%, rgba(0,0,0,0.92) 35%, rgba(0,0,0,0.55) 55%, transparent 75%)",
                 }} />}
                 {isPL && <div style={{
                   position: "absolute", inset: 0, pointerEvents: "none",
-                  background: "linear-gradient(90deg, rgba(20,10,40,0.92) 0%, rgba(20,10,40,0.75) 25%, rgba(20,10,40,0.35) 50%, transparent 70%)",
+                  background: "linear-gradient(90deg, rgba(20,10,40,1) 0%, rgba(20,10,40,1) 38%, rgba(20,10,40,0.85) 58%, rgba(20,10,40,0.4) 78%, transparent 92%)",
                 }} />}
                 {logoUrl && <img src={logoUrl} alt={lg} style={{
                   position: "absolute", top: "50%", left: "50%",

@@ -27,6 +27,19 @@ class RecapErrorBoundary extends Component {
 
 const RARITY_COLOR = { limited: "#60A5FA", rare: "#F472B6", stellar: "#C4B5FD" };
 
+// Bannieres officielles Sorare pour les boutons ligue (meme que SorareProTab + LandingPage)
+const LEAGUE_BG_URL = {
+  L1:       "https://frontend-assets.sorare.com/football/so5_league/seasonal-france/picture.jpg?v=1",
+  PL:       "https://frontend-assets.sorare.com/football/so5_league/seasonal-england/picture.jpg?v=1",
+  Liga:     "https://frontend-assets.sorare.com/football/so5_league/seasonal-spain/picture.jpg?v=1",
+  Bundes:   "https://frontend-assets.sorare.com/football/so5_league/seasonal-germany/picture.jpg?v=1",
+  MLS:      "https://frontend-assets.sorare.com/football/so5_league/seasonal-us/picture.jpg?v=1",
+  Champion: "https://frontend-assets.sorare.com/football/so5_league/seasonal-champions/picture.jpg?v=1",
+};
+const LEAGUE_ACCENT_BG = {
+  L1: "#3B82F6", PL: "#D946EF", Liga: "#EF4444", Bundes: "#DC2626", MLS: "#3B82F6", Champion: "#EC4899",
+};
+
 function formatScore(s) {
   if (s == null || Number.isNaN(s)) return "—";
   return Math.round(Number(s));
@@ -475,22 +488,33 @@ function RecapTabInner({ players, logos, lang }) {
               <span style={{ fontSize: 10, opacity: 0.8, padding: "1px 6px", borderRadius: 10, background: isStellarActive ? RARITY_COLOR.stellar + "18" : "rgba(255,255,255,0.05)" }}>{stats.stellar.count}</span>
             </button>
             {PRO_LEAGUES.map(lg => {
-              const accent = LEAGUE_COLORS[lg] || "#A5B4FC";
+              const accent = LEAGUE_ACCENT_BG[lg] || LEAGUE_COLORS[lg] || "#A5B4FC";
               const active = activeLeague === lg;
               const count = proLeagueCounts[lg]?.total || 0;
-              const flag = LEAGUE_FLAG_CODES[lg];
+              const bgUrl = LEAGUE_BG_URL[lg];
               return (
-                <button key={lg} onClick={() => setActiveLeague(lg)} style={{
-                  padding: "8px 14px", borderRadius: 10, fontSize: 12, fontWeight: 800, fontFamily: "Outfit",
-                  cursor: "pointer", border: "1px solid " + (active ? accent + "70" : "rgba(255,255,255,0.08)"),
-                  background: active ? accent + "22" : "rgba(255,255,255,0.02)",
-                  color: active ? accent : "rgba(255,255,255,0.45)",
-                  display: "inline-flex", alignItems: "center", gap: 8, whiteSpace: "nowrap",
-                  letterSpacing: 0.5, textTransform: "uppercase",
+                <button key={lg} onClick={() => setActiveLeague(lg)} title={LEAGUE_NAMES[lg] || lg} style={{
+                  position: "relative", overflow: "hidden",
+                  width: 140, height: 46, padding: 0, borderRadius: 99,
+                  cursor: "pointer",
+                  border: "1px solid " + (active ? accent : accent + "55"),
+                  backgroundColor: "rgba(10,5,25,0.6)",
+                  boxShadow: active ? `0 0 20px ${accent}80, 0 0 2px ${accent}` : `0 0 12px ${accent}25`,
+                  opacity: active ? 1 : 0.6,
+                  filter: active ? "none" : "saturate(0.7)",
+                  transition: "all 0.15s",
+                  flexShrink: 0,
                 }}>
-                  {flag && <img src={`https://flagcdn.com/w20/${flag}.png`} alt="" style={{ width: 16, height: 12, objectFit: "cover", borderRadius: 2 }} />}
-                  {LEAGUE_NAMES[lg] || lg}
-                  <span style={{ fontSize: 10, opacity: 0.8, padding: "1px 6px", borderRadius: 10, background: active ? accent + "18" : "rgba(255,255,255,0.05)" }}>{count}</span>
+                  {bgUrl && <img src={bgUrl} alt="" style={{ width: "100%", height: "100%", objectFit: "cover", objectPosition: "13% center", display: "block", pointerEvents: "none" }} />}
+                  {/* Badge count en haut-droite */}
+                  <span style={{
+                    position: "absolute", top: 4, right: 6, zIndex: 2,
+                    fontSize: 10, fontWeight: 900, color: "#fff",
+                    padding: "1px 6px", borderRadius: 8,
+                    background: active ? accent : "rgba(0,0,0,0.65)",
+                    border: `1px solid ${active ? "#fff" : accent + "80"}`,
+                    textShadow: "0 1px 2px rgba(0,0,0,0.8)",
+                  }}>{count}</span>
                 </button>
               );
             })}

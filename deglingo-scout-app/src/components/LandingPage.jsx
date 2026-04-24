@@ -563,6 +563,8 @@ export default function LandingPage({ players, onEnter, onNavigate }) {
               { code: "MLS",    color: "#3B82F6", name: "MLS",            bg: "https://frontend-assets.sorare.com/football/so5_league/seasonal-us/picture.jpg?v=1",      logo: "/mls.png" },
             ].map(l => {
               const isL1 = l.code === "L1";
+              const isPL = l.code === "PL";
+              const whiteLogo = isL1 || isPL;
               return (
               <div key={l.code} title={l.name} style={{
                 position: "relative", overflow: "hidden",
@@ -581,12 +583,16 @@ export default function LandingPage({ players, onEnter, onNavigate }) {
                   position: "absolute", inset: 0, pointerEvents: "none",
                   background: "radial-gradient(circle at 8% 92%, rgba(0,0,0,0.9) 0%, rgba(0,0,0,0.6) 20%, transparent 38%)",
                 }} />}
+                {isPL && <div style={{
+                  position: "absolute", inset: 0, pointerEvents: "none",
+                  background: "linear-gradient(90deg, rgba(10,5,25,0.92) 0%, rgba(10,5,25,0.75) 25%, rgba(10,5,25,0.35) 50%, transparent 70%)",
+                }} />}
                 <img src={l.logo} alt={l.name} style={{
                   position: "absolute", top: "50%", left: "50%",
                   transform: "translate(-50%, -50%)",
                   height: "72%", width: "auto",
                   objectFit: "contain", pointerEvents: "none",
-                  filter: `${isL1 ? "brightness(0) invert(1) " : ""}drop-shadow(0 1px 3px rgba(0,0,0,0.7))`,
+                  filter: `${whiteLogo ? "brightness(0) invert(1) " : ""}drop-shadow(0 1px 3px rgba(0,0,0,0.7))`,
                 }} />
               </div>
               );

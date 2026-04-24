@@ -255,6 +255,9 @@ export default function SorareProTab({ players, teams, fixtures, logos = {}, mat
       isLimited: r === "limited", isRare: r === "rare",
       cardYear: (() => { const matches = [...(c.slug || "").matchAll(/-(\d{4})-/g)]; return matches.length > 0 ? parseInt(matches[matches.length - 1][1]) : null; })(),
       power: c.power,
+      clubSlug: c.player?.activeClub?.slug || null,
+      clubName: c.player?.activeClub?.name || null,
+      leagueSlug: c.player?.activeClub?.domesticLeague?.slug || null,
     };
   };
   const isLR = (c) => { const r = (c.rarityTyped || "").toLowerCase(); return r === "limited" || r === "rare"; };
@@ -264,8 +267,8 @@ export default function SorareProTab({ players, teams, fixtures, logos = {}, mat
     if (!silent) setSorareLoading(true);
     try {
       // Check localStorage cache first (valid for 1 hour)
-      const cacheKey = "pro_cards_cache";
-      const cacheTimeKey = "pro_cards_cache_time";
+      const cacheKey = "pro_cards_cache_v2"; // v2: adds club/league info for Serie A filter
+      const cacheTimeKey = "pro_cards_cache_time_v2";
       const cached = localStorage.getItem(cacheKey);
       const cachedTime = parseInt(localStorage.getItem(cacheTimeKey) || "0");
       if (cached && Date.now() - cachedTime < 3600000) {
@@ -288,7 +291,7 @@ export default function SorareProTab({ players, teams, fixtures, logos = {}, mat
       }
 
       // First page — also gets user info
-      const firstQ = encodeURIComponent(`{currentUser{slug nickname cards(first:50,sport:FOOTBALL){nodes{slug name rarityTyped pictureUrl power cardEditionName ... on Card{sealed position player{slug displayName position}}}pageInfo{hasNextPage endCursor}}}}`);
+      const firstQ = encodeURIComponent(`{currentUser{slug nickname cards(first:50,sport:FOOTBALL){nodes{slug name rarityTyped pictureUrl power cardEditionName ... on Card{sealed position player{slug displayName position activeClub{slug name domesticLeague{slug}}}}}pageInfo{hasNextPage endCursor}}}}`);
       const res = await fetch(`/api/sorare/cards?rawq=${firstQ}`, { headers: { "Authorization": `Bearer ${token}` } });
       if (res.status === 401) { localStorage.removeItem("sorare_access_token"); setSorareConnected(false); setSorareCards([]); return; }
       if (!res.ok) { setSorareConnected(false); return; }
@@ -309,7 +312,7 @@ export default function SorareProTab({ players, teams, fixtures, logos = {}, mat
       let cursor = user.cards?.pageInfo?.endCursor;
       let hasNext = user.cards?.pageInfo?.hasNextPage;
       for (let i = 0; i < 200 && hasNext && cursor; i++) {
-        const pageQ = `query($a:String!){currentUser{cards(first:50,sport:FOOTBALL,after:$a){nodes{slug name rarityTyped pictureUrl power cardEditionName ... on Card{sealed position player{slug displayName position}}}pageInfo{hasNextPage endCursor}}}}`;
+        const pageQ = `query($a:String!){currentUser{cards(first:50,sport:FOOTBALL,after:$a){nodes{slug name rarityTyped pictureUrl power cardEditionName ... on Card{sealed position player{slug displayName position activeClub{slug name domesticLeague{slug}}}}}pageInfo{hasNextPage endCursor}}}}`;
         const pr = await fetch(`/api/sorare/cards?rawq=${encodeURIComponent(pageQ)}&vars=${encodeURIComponent(JSON.stringify({a:cursor}))}`, { headers: { "Authorization": `Bearer ${token}` } });
         if (!pr.ok) break;
         const pd = await pr.json();
@@ -737,26 +740,33 @@ export default function SorareProTab({ players, teams, fixtures, logos = {}, mat
     return deduped.sort((a, b) => b.ds - a.ds);
   }, [gwInfo, players, teams, gwMatches, league, proCardMap]);
 
-  // ── Orphans Serie A (Italien) : cartes possedees mais joueur absent de players.json.
+  // ── Orphans Serie A (Italien) : cartes possedees dont le club joue en Serie A.
   // Sorare a perdu la licence Serie A mais les cartes anciennes restent jouables en Champion.
-  // On les rend selectionnables sans stats (ds=0, pas de match info).
+  // Filtre strict : activeClub.domesticLeague.slug === "serie-a" OU nom du club = club italien.
   const italianOrphans = useMemo(() => {
     if (league !== "Champion" || !sorareConnected) return [];
     const knownSlugs = new Set((players || []).map(p => p.slug));
     const out = [];
     const seen = new Set();
+    const isSerieA = (c) => {
+      // Source primaire : domesticLeague slug depuis l'API Sorare
+      if (c.leagueSlug) return /serie[_-]?a/i.test(c.leagueSlug) && !/serie[_-]?b/i.test(c.leagueSlug);
+      // Fallback : pas de leagueSlug (ancien cache ou field absent) -> on exclut
+      return false;
+    };
     for (const c of sorareCards) {
       if (c.isStellar) continue;
       if (rarity === "limited" && !c.isLimited && !(includeRare && c.isRare)) continue;
       if (rarity === "rare" && !c.isRare) continue;
       const slug = c.playerSlug;
       if (!slug || knownSlugs.has(slug) || seen.has(slug)) continue;
+      if (!isSerieA(c)) continue;
       seen.add(slug);
       out.push({
         slug,
         name: c.playerName || slug,
         position: c.position || c.cardPosition || "ATT",
-        club: "Serie A",
+        club: c.clubName || "Serie A",
         league: "Champion",
         ds: 0, l2: null, l5: null, l10: null, aa2: null, aa5: null, aa10: null, l40: null, aa40: null,
         avg_dom: null, avg_ext: null,

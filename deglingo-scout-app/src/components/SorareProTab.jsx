@@ -9,6 +9,26 @@ import SkyrocketGauge from "./SkyrocketGauge";
 
 const PC = POSITION_COLORS;
 const PRO_LEAGUES = ["L1", "PL", "Liga", "Bundes", "MLS", "Champion"];
+
+// Backgrounds officiels Sorare pour les boutons ligue (frontend-assets.sorare.com)
+const LEAGUE_BG_URL = {
+  L1:       "https://frontend-assets.sorare.com/football/so5_league/seasonal-france/picture.jpg?v=1",
+  PL:       "https://frontend-assets.sorare.com/football/so5_league/seasonal-england/picture.jpg?v=1",
+  Liga:     "https://frontend-assets.sorare.com/football/so5_league/seasonal-spain/picture.jpg?v=1",
+  Bundes:   "https://frontend-assets.sorare.com/football/so5_league/seasonal-germany/picture.jpg?v=1",
+  MLS:      "https://frontend-assets.sorare.com/football/so5_league/seasonal-mls/picture.jpg?v=1",
+  Champion: "https://frontend-assets.sorare.com/football/so5_league/seasonal-champions/picture.jpg?v=1",
+};
+
+// Couleurs dominantes des backgrounds Sorare (pour bordure active + glow)
+const LEAGUE_ACCENT = {
+  L1:       "#3B82F6", // bleu
+  PL:       "#D946EF", // magenta/violet
+  Liga:     "#EF4444", // rouge orange
+  Bundes:   "#DC2626", // rouge profond
+  MLS:      "#22C55E", // vert (fallback, image peut varier)
+  Champion: "#EC4899", // fuchsia
+};
 const TEAM_SLOTS = ["GK", "DEF", "MIL", "ATT", "FLEX"];
 const MAX_SAVED = { L1: 4, PL: 4, Liga: 4, Bundes: 4, MLS: 5, Champion: 4 };
 
@@ -991,19 +1011,34 @@ export default function SorareProTab({ players, teams, fixtures, logos = {}, mat
           </span>
         </div>
         {/* League buttons */}
-        <div className="pro-league-btns" style={{ display: "flex", gap: 4 }}>
-          {PRO_LEAGUES.map(lg => (
-            <button key={lg} onClick={() => setLeague(lg)} style={{
-              padding: "6px 12px", borderRadius: 8, border: league === lg ? `2px solid ${LEAGUE_COLORS[lg]}` : "1px solid rgba(255,255,255,0.1)",
-              background: league === lg ? `${LEAGUE_COLORS[lg]}20` : "rgba(255,255,255,0.03)",
-              color: league === lg ? LEAGUE_COLORS[lg] : "rgba(255,255,255,0.4)",
-              fontSize: 10, fontWeight: 800, cursor: "pointer", fontFamily: "Outfit", transition: "all 0.15s",
-              display: "flex", alignItems: "center", gap: 4,
-            }}>
-              <img src={`https://flagcdn.com/w20/${LEAGUE_FLAG_CODES[lg]}.png`} alt="" style={{ width: 14, height: 10, objectFit: "cover", borderRadius: 1 }} />
-              {lg}
-            </button>
-          ))}
+        <div className="pro-league-btns" style={{ display: "flex", gap: 5 }}>
+          {PRO_LEAGUES.map(lg => {
+            const isActive = league === lg;
+            const accent = LEAGUE_ACCENT[lg] || LEAGUE_COLORS[lg] || "#888";
+            const bgUrl = LEAGUE_BG_URL[lg];
+            return (
+              <button key={lg} onClick={() => setLeague(lg)} title={lg} style={{
+                position: "relative", overflow: "hidden",
+                width: 82, height: 34,
+                padding: 0, borderRadius: 8,
+                border: isActive ? `2px solid ${accent}` : "1px solid rgba(255,255,255,0.1)",
+                backgroundImage: bgUrl ? `url(${bgUrl})` : "none",
+                backgroundColor: "rgba(20,10,40,0.8)",
+                backgroundSize: "cover", backgroundPosition: "center",
+                cursor: "pointer", fontFamily: "Outfit",
+                transition: "all 0.15s", display: "flex", alignItems: "center", justifyContent: "center",
+                boxShadow: isActive ? `0 0 14px ${accent}80, 0 0 2px ${accent}` : "none",
+                opacity: isActive ? 1 : 0.55,
+                filter: isActive ? "none" : "saturate(0.7)",
+              }}>
+                {/* Overlay pour contraste du texte */}
+                <div style={{ position: "absolute", inset: 0, background: isActive ? "linear-gradient(90deg, rgba(0,0,0,0.35), rgba(0,0,0,0.15))" : "linear-gradient(90deg, rgba(0,0,0,0.55), rgba(0,0,0,0.4))" }} />
+                <span style={{ position: "relative", fontSize: 11, fontWeight: 900, color: "#fff", letterSpacing: "0.05em", textShadow: "0 1px 2px rgba(0,0,0,0.8)" }}>
+                  {lg === "Champion" ? "CHAMPION" : lg.toUpperCase()}
+                </span>
+              </button>
+            );
+          })}
         </div>
         {/* Rarity toggle */}
         <div style={{ display: "flex", gap: 2, background: "rgba(255,255,255,0.05)", borderRadius: 8, padding: 2 }}>

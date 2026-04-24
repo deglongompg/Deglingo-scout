@@ -552,25 +552,32 @@ export default function LandingPage({ players, onEnter, onNavigate }) {
             <span style={{ color: "rgba(255,255,255,0.5)" }}>{t.heroSub2}</span>
           </p>
 
-          {/* League chips — 5 ligues couvertes */}
+          {/* League chips — 6 competitions (5 ligues + Champion cross-ligues) */}
+          {/* Backgrounds officiels Sorare frontend-assets */}
           <div className="landing-leagues" style={{ display: "flex", gap: 8, justifyContent: "center", flexWrap: "wrap", marginBottom: 24 }}>
             {[
-              { code: "L1", flag: "fr", color: "#4FC3F7", name: "Ligue 1" },
-              { code: "PL", flag: "gb-eng", color: "#B388FF", name: "Premier League" },
-              { code: "Liga", flag: "es", color: "#FF8A80", name: "La Liga" },
-              { code: "Bundes", flag: "de", color: "#FFD180", name: "Bundesliga" },
-              { code: "MLS", flag: "us", color: "#66BB6A", name: "MLS" },
+              { code: "L1",       color: "#3B82F6", name: "Ligue 1",        bg: "https://frontend-assets.sorare.com/football/so5_league/seasonal-france/picture.jpg?v=1" },
+              { code: "PL",       color: "#D946EF", name: "Premier League", bg: "https://frontend-assets.sorare.com/football/so5_league/seasonal-england/picture.jpg?v=1" },
+              { code: "Liga",     color: "#EF4444", name: "La Liga",        bg: "https://frontend-assets.sorare.com/football/so5_league/seasonal-spain/picture.jpg?v=1" },
+              { code: "Bundes",   color: "#DC2626", name: "Bundesliga",     bg: "https://frontend-assets.sorare.com/football/so5_league/seasonal-germany/picture.jpg?v=1" },
+              { code: "MLS",      color: "#3B82F6", name: "MLS",            bg: "https://frontend-assets.sorare.com/football/so5_league/seasonal-us/picture.jpg?v=1" },
+              { code: "Champion", color: "#EC4899", name: "Champion",       bg: "https://frontend-assets.sorare.com/football/so5_league/seasonal-champions/picture.jpg?v=1" },
             ].map(l => (
               <div key={l.code} title={l.name} style={{
-                display: "inline-flex", alignItems: "center", gap: 7,
-                padding: "6px 12px", borderRadius: 99,
-                background: "rgba(255,255,255,0.04)",
-                border: `1px solid ${l.color}44`,
-                backdropFilter: "blur(10px)", WebkitBackdropFilter: "blur(10px)",
-                boxShadow: `0 0 16px ${l.color}18`,
+                position: "relative", overflow: "hidden",
+                width: 112, height: 34,
+                padding: 0, borderRadius: 99,
+                border: `1px solid ${l.color}66`,
+                backgroundImage: `url(${l.bg})`,
+                backgroundSize: "cover", backgroundPosition: "center",
+                backgroundColor: "rgba(10,5,25,0.6)",
+                boxShadow: `0 0 18px ${l.color}30, 0 0 2px ${l.color}40`,
+                display: "flex", alignItems: "center", justifyContent: "center",
               }}>
-                <img src={`https://flagcdn.com/20x15/${l.flag}.png`} alt={l.name} style={{ width: 16, height: 12, borderRadius: 2, objectFit: "cover", display: "block" }} />
-                <span style={{ fontSize: 11, fontWeight: 700, color: l.color, letterSpacing: "0.02em" }}>{l.name}</span>
+                <div style={{ position: "absolute", inset: 0, background: "linear-gradient(90deg, rgba(0,0,0,0.4), rgba(0,0,0,0.15))" }} />
+                <span style={{ position: "relative", fontSize: 11, fontWeight: 800, color: "#fff", letterSpacing: "0.04em", textShadow: "0 1px 3px rgba(0,0,0,0.9)" }}>
+                  {l.name}
+                </span>
               </div>
             ))}
           </div>

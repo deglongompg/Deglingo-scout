@@ -16,7 +16,7 @@ const LEAGUE_BG_URL = {
   PL:       "https://frontend-assets.sorare.com/football/so5_league/seasonal-england/picture.jpg?v=1",
   Liga:     "https://frontend-assets.sorare.com/football/so5_league/seasonal-spain/picture.jpg?v=1",
   Bundes:   "https://frontend-assets.sorare.com/football/so5_league/seasonal-germany/picture.jpg?v=1",
-  MLS:      "https://frontend-assets.sorare.com/football/so5_league/seasonal-mls/picture.jpg?v=1",
+  MLS:      "https://frontend-assets.sorare.com/football/so5_league/seasonal-us/picture.jpg?v=1",
   Champion: "https://frontend-assets.sorare.com/football/so5_league/seasonal-champions/picture.jpg?v=1",
 };
 

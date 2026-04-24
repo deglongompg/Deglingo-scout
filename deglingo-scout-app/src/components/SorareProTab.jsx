@@ -1157,59 +1157,6 @@ export default function SorareProTab({ players, teams, fixtures, logos = {}, mat
             </button>
           ))}
         </div>
-        {/* Separateur + Hot Streak paliers */}
-        <div className="pro-paliers" style={{ display: "flex", alignItems: "center", gap: 4 }}>
-          <span style={{ width: 1, height: 18, background: "rgba(255,255,255,0.12)", flexShrink: 0 }} />
-          <span style={{ fontSize: 8, fontWeight: 800, color: "#EF4444", letterSpacing: "0.08em", flexShrink: 0 }}>HOT STREAK</span>
-          {paliers.map((p, i) => {
-            const reached = totalScore >= p.pts;
-            return (
-              <div key={i} style={{ padding: "4px 8px", borderRadius: 6, textAlign: "center", border: `1px solid ${reached ? p.color + "80" : "rgba(255,255,255,0.08)"}`, background: reached ? `${p.color}18` : "rgba(255,255,255,0.02)" }}>
-                <div style={{ fontSize: 11, fontWeight: 800, color: reached ? p.color : "rgba(255,255,255,0.3)", fontFamily: "'DM Mono',monospace" }}>{p.pts}</div>
-                <div style={{ fontSize: 7, color: reached ? "rgba(255,255,255,0.7)" : "rgba(255,255,255,0.2)" }}>{p.reward}</div>
-              </div>
-            );
-          })}
-          {league === "MLS" && (
-            <div style={{ padding: "4px 8px", borderRadius: 6, border: `1px solid ${totalScore >= GRAND_PRIX.pts ? "rgba(192,192,192,0.6)" : "rgba(255,255,255,0.06)"}`, background: totalScore >= GRAND_PRIX.pts ? "rgba(192,192,192,0.1)" : "rgba(255,255,255,0.01)" }}>
-              <div style={{ fontSize: 11, fontWeight: 800, color: totalScore >= GRAND_PRIX.pts ? "#C0C0C0" : "rgba(255,255,255,0.2)", fontFamily: "'DM Mono',monospace" }}>{GRAND_PRIX.pts}</div>
-              <div style={{ fontSize: 6, color: "rgba(255,255,255,0.15)" }}>GP</div>
-            </div>
-          )}
-        </div>
-        {/* GW selector + countdown — fin de ligne */}
-        {gwList.length > 0 && (
-          <div className="pro-gw-btns" style={{ marginLeft: "auto", display: "flex", alignItems: "center", gap: 4, flexShrink: 0 }}>
-            {gwList.map((gw, i) => {
-              const isActive = selectedGwIdx === i;
-              const isCurrent = gw.isLive;
-              const isPast = gw.isPast;
-              const startD = gw.gwStart.getDate();
-              const endD = gw.gwEnd.getDate();
-              const month = gw.gwStart.toLocaleDateString(lang === "fr" ? "fr-FR" : "en-US", { month: "short" }).toUpperCase().replace(".", "");
-              return (
-                <button key={i} onClick={() => setSelectedGwIdx(i)} style={{
-                  padding: "3px 8px", borderRadius: 6, cursor: "pointer", fontFamily: "Outfit", border: "none",
-                  background: isActive ? `${rarityColor}30` : "rgba(255,255,255,0.04)",
-                  outline: isActive ? `2px solid ${rarityColor}` : "none",
-                  opacity: isPast && !isActive ? 0.55 : 1,
-                  transition: "all 0.15s",
-                }}>
-                  <div style={{ fontSize: 7, fontWeight: 800, color: isActive ? rarityColor : isPast ? "rgba(255,255,255,0.45)" : "rgba(255,255,255,0.35)" }}>
-                    GW{gw.displayNumber || "?"}{isCurrent ? " LIVE" : isPast ? " FIN" : ""}
-                  </div>
-                  <div style={{ fontSize: 10, fontWeight: 700, color: isActive ? "#fff" : "rgba(255,255,255,0.4)", fontFamily: "'DM Mono',monospace" }}>
-                    {startD}-{endD}
-                  </div>
-                  <div style={{ fontSize: 6, color: "rgba(255,255,255,0.25)" }}>{month}</div>
-                </button>
-              );
-            })}
-            {(gwInfo?.offsetFromLive || 0) <= 1 && !gwInfo?.isPast && (
-              <span style={{ fontSize: 12, fontWeight: 900, color: rarityColor, fontFamily: "'DM Mono',monospace", marginLeft: 4 }}>{countdown}</span>
-            )}
-          </div>
-        )}
       </div>
 
       {/* ═══ MAIN LAYOUT : Left (matches) + Right (builder + players) ═══ */}
@@ -1219,6 +1166,39 @@ export default function SorareProTab({ players, teams, fixtures, logos = {}, mat
         <div className="pro-left-panel" style={{ width: leftCollapsed ? 30 : 280, flexShrink: 0, transition: "width 0.2s", position: "relative", display: isMobile ? "none" : undefined }}>
           <button onClick={() => setLeftCollapsed(v => !v)} style={{ position: "absolute", top: 0, right: -12, zIndex: 5, width: 24, height: 24, borderRadius: "50%", border: "1px solid rgba(255,255,255,0.15)", background: "rgba(6,3,20,0.9)", color: "rgba(255,255,255,0.5)", fontSize: 11, cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center" }}>{leftCollapsed ? "▶" : "◀"}</button>
           {leftCollapsed ? null : (<>
+          {/* GW selector — wrappable au-dessus du calendrier */}
+          {gwList.length > 0 && (
+            <div className="pro-gw-btns" style={{ display: "flex", alignItems: "center", gap: 4, flexWrap: "wrap", marginBottom: 8 }}>
+              {gwList.map((gw, i) => {
+                const isActive = selectedGwIdx === i;
+                const isCurrent = gw.isLive;
+                const isPast = gw.isPast;
+                const startD = gw.gwStart.getDate();
+                const endD = gw.gwEnd.getDate();
+                const month = gw.gwStart.toLocaleDateString(lang === "fr" ? "fr-FR" : "en-US", { month: "short" }).toUpperCase().replace(".", "");
+                return (
+                  <button key={i} onClick={() => setSelectedGwIdx(i)} style={{
+                    padding: "3px 8px", borderRadius: 6, cursor: "pointer", fontFamily: "Outfit", border: "none",
+                    background: isActive ? `${rarityColor}30` : "rgba(255,255,255,0.04)",
+                    outline: isActive ? `2px solid ${rarityColor}` : "none",
+                    opacity: isPast && !isActive ? 0.55 : 1,
+                    transition: "all 0.15s",
+                  }}>
+                    <div style={{ fontSize: 7, fontWeight: 800, color: isActive ? rarityColor : isPast ? "rgba(255,255,255,0.45)" : "rgba(255,255,255,0.35)" }}>
+                      GW{gw.displayNumber || "?"}{isCurrent ? " LIVE" : isPast ? " FIN" : ""}
+                    </div>
+                    <div style={{ fontSize: 10, fontWeight: 700, color: isActive ? "#fff" : "rgba(255,255,255,0.4)", fontFamily: "'DM Mono',monospace" }}>
+                      {startD}-{endD}
+                    </div>
+                    <div style={{ fontSize: 6, color: "rgba(255,255,255,0.25)" }}>{month}</div>
+                  </button>
+                );
+              })}
+              {(gwInfo?.offsetFromLive || 0) <= 1 && !gwInfo?.isPast && (
+                <span style={{ fontSize: 12, fontWeight: 900, color: rarityColor, fontFamily: "'DM Mono',monospace", marginLeft: 4 }}>{countdown}</span>
+              )}
+            </div>
+          )}
           {/* GW Matches */}
           <div style={{ fontSize: 9, fontWeight: 700, color: "#fff", marginBottom: 4 }}>{t(lang, "proMatchClick")}</div>
           {gwMatches.length === 0 ? (

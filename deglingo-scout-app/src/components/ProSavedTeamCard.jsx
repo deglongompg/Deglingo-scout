@@ -64,8 +64,9 @@ export default function ProSavedTeamCard({
     const recapHomeLogo = p.isHome ? playerClubLogo : oppLogo;
     const recapAwayLogo = p.isHome ? oppLogo : playerClubLogo;
 
+    const cardMaxWidth = league === "Champion" ? 78 : 120;
     return (
-      <div key={slot} style={{ display: "flex", flexDirection: "column", alignItems: "center", flex: 1, minWidth: 0, maxWidth: 120 }}>
+      <div key={slot} style={{ display: "flex", flexDirection: "column", alignItems: "center", flex: 1, minWidth: 0, maxWidth: cardMaxWidth }}>
         <div style={{
           width: "100%", aspectRatio: "3/4", borderRadius: 6, overflow: "hidden", margin: "0 auto", position: "relative",
           background: ownedCard ? "transparent" : `linear-gradient(155deg, rgba(8,4,28,0.9), ${pc}25)`,
@@ -146,16 +147,16 @@ export default function ProSavedTeamCard({
         <div style={{ display: "flex", flexDirection: "column", gap: 6, alignItems: "center" }}>
           {league === "Champion" ? (
             <>
-              <div style={{ display: "flex", gap: 6, justifyContent: "center", width: "100%" }}>
+              <div style={{ display: "flex", gap: 5, justifyContent: "center", width: "100%" }}>
+                {renderCard("MIL1")}
                 {renderCard("ATT")}
                 {renderCard("FLEX")}
-              </div>
-              <div style={{ display: "flex", gap: 4, justifyContent: "center", width: "100%" }}>
-                {renderCard("DEF1")}
-                {renderCard("DEF2")}
-                {renderCard("GK")}
-                {renderCard("MIL1")}
                 {renderCard("MIL2")}
+              </div>
+              <div style={{ display: "flex", gap: 5, justifyContent: "center", width: "100%" }}>
+                {renderCard("DEF1")}
+                {renderCard("GK")}
+                {renderCard("DEF2")}
               </div>
             </>
           ) : (

@@ -565,8 +565,9 @@ export default function LandingPage({ players, onEnter, onNavigate }) {
               const isL1 = l.code === "L1";
               const isPL = l.code === "PL";
               const isLiga = l.code === "Liga";
+              const isBundes = l.code === "Bundes";
               const whiteLogo = isL1 || isPL || isLiga;
-              const maskLeft = isPL || isLiga;
+              const maskLeft = isPL || isLiga || isBundes;
               return (
               <div key={l.code} title={l.name} style={{
                 position: "relative", overflow: "hidden",
@@ -606,6 +607,15 @@ export default function LandingPage({ players, onEnter, onNavigate }) {
                       textShadow: "0 1px 3px rgba(0,0,0,0.7)",
                     }}>Liga</span>
                   </div>
+                ) : isBundes ? (
+                  <img src={l.logo} alt={l.name} style={{
+                    position: "absolute", top: "50%", left: "50%",
+                    transform: "translate(-50%, -50%)",
+                    height: "76%", width: "auto",
+                    objectFit: "contain", pointerEvents: "none",
+                    filter: "invert(1) drop-shadow(0 1px 3px rgba(0,0,0,0.7))",
+                    mixBlendMode: "screen",
+                  }} />
                 ) : (
                   <img src={l.logo} alt={l.name} style={{
                     position: "absolute", top: "50%", left: "50%",

@@ -1027,8 +1027,9 @@ export default function SorareProTab({ players, teams, fixtures, logos = {}, mat
             const isL1 = lg === "L1";
             const isPL = lg === "PL";
             const isLiga = lg === "Liga";
+            const isBundes = lg === "Bundes";
             const whiteLogo = isL1 || isPL || isLiga;
-            const maskLeft = isPL || isLiga;
+            const maskLeft = isPL || isLiga || isBundes;
             return (
               <button key={lg} onClick={() => setLeague(lg)} title={lg} style={{
                 position: "relative", overflow: "hidden",
@@ -1072,6 +1073,15 @@ export default function SorareProTab({ players, teams, fixtures, logos = {}, mat
                       textShadow: "0 1px 3px rgba(0,0,0,0.7)",
                     }}>Liga</span>
                   </div>
+                ) : isBundes ? (
+                  <img src={logoUrl} alt={lg} style={{
+                    position: "absolute", top: "50%", left: "50%",
+                    transform: "translate(-50%, -50%)",
+                    height: "80%", width: "auto",
+                    objectFit: "contain", pointerEvents: "none",
+                    filter: "invert(1) drop-shadow(0 1px 3px rgba(0,0,0,0.7))",
+                    mixBlendMode: "screen",
+                  }} />
                 ) : (
                   <img src={logoUrl} alt={lg} style={{
                     position: "absolute", top: "50%", left: "50%",

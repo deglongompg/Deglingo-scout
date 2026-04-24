@@ -496,11 +496,16 @@ export default function SorareProTab({ players, teams, fixtures, logos = {}, mat
   // Filtre "Dispo" : carte deja utilisee dans une saved team (= indisponible pour nouvelle team).
   // Discrimine par _cardKey ET par power (bonus), car 2 cartes du meme joueur ont rarement le meme bonus.
   // En mode edition, l'equipe en cours d'edition est exclue du check.
+  // Champion : inclut aussi les saved teams L1/PL/Liga/Bundes (meme rarity + GW) car Champion
+  // se construit en DERNIER et ne peut pas reutiliser les cartes deja posees dans ces ligues.
   const isUsedInOtherTeam = (p) => {
     const cardKey = p._cardKey;
     const id = p.slug || p.name;
     const pPower = p._card?.power != null ? p._card.power : (proCardMap[id]?.power != null ? proCardMap[id].power : null);
-    const otherTeams = savedTeams.filter(t => t.id !== editingTeamId);
+    const otherTeams = [
+      ...savedTeams.filter(t => t.id !== editingTeamId),
+      ...crossLeagueSavedTeams,
+    ];
 
     let totalUsedCount = 0;
     for (const t of otherTeams) {
@@ -525,6 +530,22 @@ export default function SorareProTab({ players, teams, fixtures, logos = {}, mat
   const savedTeamsKey = gwInfo ? `pro_saved_${league}_${rarity}_${gwInfo.gwKey}` : null;
   const [savedTeams, setSavedTeams] = useState([]);
   const maxSaved = MAX_SAVED[league] || 4;
+
+  // Cross-league saved teams pour Champion : cartes deja posees dans L1/PL/Liga/Bundes
+  // (meme rarity + meme GW) ne sont plus dispo car Champion se construit en dernier.
+  const [crossLeagueTick, setCrossLeagueTick] = useState(0);
+  const crossLeagueSavedTeams = useMemo(() => {
+    if (league !== "Champion" || !gwInfo) return [];
+    const all = [];
+    for (const lg of CHAMPION_SOURCE_LEAGUES) {
+      const key = `pro_saved_${lg}_${rarity}_${gwInfo.gwKey}`;
+      try {
+        const data = JSON.parse(localStorage.getItem(key) || "[]");
+        if (Array.isArray(data)) all.push(...data);
+      } catch { /* noop */ }
+    }
+    return all;
+  }, [league, rarity, gwInfo?.gwKey, crossLeagueTick]);
 
   useEffect(() => {
     if (!savedTeamsKey) return;
@@ -725,6 +746,7 @@ export default function SorareProTab({ players, teams, fixtures, logos = {}, mat
   const generateMagicTeam = () => {
     const usedIds = new Set([
       ...savedTeams.flatMap(t => Object.values(t.picks).filter(Boolean).map(pp => pp.slug || pp.name)),
+      ...crossLeagueSavedTeams.flatMap(t => Object.values(t.picks).filter(Boolean).map(pp => pp.slug || pp.name)),
       ...Object.values(myPicks).filter(Boolean).map(pp => pp.slug || pp.name),
     ]);
     const pool = gwPlayers
@@ -991,7 +1013,7 @@ export default function SorareProTab({ players, teams, fixtures, logos = {}, mat
     }
 
     return expanded;
-  }, [gwPlayers, selectedSlot, hideUsed, filterTitu, selectedMatchFilters, myCardsMode, sorareConnected, proCardMap, proAllCards, myPicks, savedTeams, seasonFilter, sorareCards, rarity, includeRare, editingTeamId]);
+  }, [gwPlayers, selectedSlot, hideUsed, filterTitu, selectedMatchFilters, myCardsMode, sorareConnected, proCardMap, proAllCards, myPicks, savedTeams, crossLeagueSavedTeams, seasonFilter, sorareCards, rarity, includeRare, editingTeamId]);
 
   // Reset match filters on league change
   useEffect(() => { setSelectedMatchFilters([]); }, [league]);

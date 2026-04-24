@@ -510,7 +510,7 @@ function RecapTabInner({ players, logos, lang }) {
               const isPL = lg === "PL";
               const isLiga = lg === "Liga";
               const isBundes = lg === "Bundes";
-              const whiteLogo = isL1 || isPL || isLiga;
+              const whiteLogo = isL1 || isPL || isLiga || isBundes;
               return (
                 <button key={lg} onClick={() => setActiveLeague(lg)} title={LEAGUE_NAMES[lg] || lg} style={{
                   position: "relative", overflow: "hidden",
@@ -546,15 +546,6 @@ function RecapTabInner({ players, logos, lang }) {
                         textShadow: "0 1px 3px rgba(0,0,0,0.7)",
                       }}>Liga</span>
                     </div>
-                  ) : isBundes ? (
-                    <img src={logoUrl} alt={lg} style={{
-                      position: "absolute", top: "50%", left: "50%",
-                      transform: "translate(-50%, -50%)",
-                      height: "78%", width: "auto",
-                      objectFit: "contain", pointerEvents: "none",
-                      filter: "invert(1) drop-shadow(0 1px 3px rgba(0,0,0,0.7))",
-                      mixBlendMode: "screen",
-                    }} />
                   ) : (
                     <img src={logoUrl} alt={lg} style={{
                       position: "absolute", top: "50%", left: "50%",

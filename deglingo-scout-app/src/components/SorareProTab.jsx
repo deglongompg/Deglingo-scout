@@ -1028,7 +1028,7 @@ export default function SorareProTab({ players, teams, fixtures, logos = {}, mat
             const isPL = lg === "PL";
             const isLiga = lg === "Liga";
             const isBundes = lg === "Bundes";
-            const whiteLogo = isL1 || isPL || isLiga || isBundes;
+            const whiteLogo = isL1 || isPL || isLiga;
             return (
               <button key={lg} onClick={() => setLeague(lg)} title={lg} style={{
                 position: "relative", overflow: "hidden",

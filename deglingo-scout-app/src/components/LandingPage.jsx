@@ -566,7 +566,7 @@ export default function LandingPage({ players, onEnter, onNavigate }) {
               const isPL = l.code === "PL";
               const isLiga = l.code === "Liga";
               const isBundes = l.code === "Bundes";
-              const whiteLogo = isL1 || isPL || isLiga || isBundes;
+              const whiteLogo = isL1 || isPL || isLiga;
               return (
               <div key={l.code} title={l.name} style={{
                 position: "relative", overflow: "hidden",

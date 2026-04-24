@@ -490,15 +490,38 @@ function RecapTabInner({ players, logos, lang }) {
           {/* Ligne 1 — filtre principal : [Stellar] + ligues Pro */}
           <div style={{ display: "flex", gap: 8, marginTop: 18, marginBottom: 8, flexWrap: "wrap" }}>
             <button key="stellar" onClick={() => setActiveLeague("stellar")} style={{
-              padding: "8px 16px", borderRadius: 10, fontSize: 12, fontWeight: 800, fontFamily: "Outfit",
-              cursor: "pointer", border: "1px solid " + (isStellarActive ? RARITY_COLOR.stellar + "70" : "rgba(255,255,255,0.08)"),
-              background: isStellarActive ? RARITY_COLOR.stellar + "22" : "rgba(255,255,255,0.02)",
-              color: isStellarActive ? RARITY_COLOR.stellar : "rgba(255,255,255,0.45)",
-              display: "inline-flex", alignItems: "center", gap: 8, whiteSpace: "nowrap",
-              letterSpacing: 0.5, textTransform: "uppercase",
+              position: "relative", overflow: "hidden",
+              width: 150, height: 50, padding: 0, borderRadius: 99,
+              cursor: "pointer",
+              border: "1px solid " + (isStellarActive ? RARITY_COLOR.stellar + "80" : RARITY_COLOR.stellar + "40"),
+              backgroundColor: "rgba(10,5,25,0.6)",
+              boxShadow: isStellarActive ? `0 0 22px ${RARITY_COLOR.stellar}90, 0 0 2px ${RARITY_COLOR.stellar}` : `0 0 12px ${RARITY_COLOR.stellar}30`,
+              opacity: isStellarActive ? 1 : 0.6,
+              filter: isStellarActive ? "none" : "saturate(0.7)",
+              transition: "all 0.15s",
+              flexShrink: 0,
             }}>
-              ✨ Stellar
-              <span style={{ fontSize: 10, opacity: 0.8, padding: "1px 6px", borderRadius: 10, background: isStellarActive ? RARITY_COLOR.stellar + "18" : "rgba(255,255,255,0.05)" }}>{stats.stellar.count}</span>
+              <img src="/stellar-bg.png" alt="" style={{
+                width: "100%", height: "100%", objectFit: "cover",
+                objectPosition: "center center",
+                display: "block", pointerEvents: "none",
+              }} />
+              <span style={{
+                position: "absolute", top: "50%", left: "50%",
+                transform: "translate(-50%, -50%)",
+                fontFamily: "Outfit", fontWeight: 900, fontSize: 13,
+                color: "#fff", letterSpacing: "0.08em", textTransform: "uppercase",
+                textShadow: "0 1px 4px rgba(0,0,0,0.9)",
+                pointerEvents: "none", whiteSpace: "nowrap",
+              }}>✨ Stellar</span>
+              <span style={{
+                position: "absolute", top: 4, right: 6, zIndex: 2,
+                fontSize: 10, fontWeight: 900, color: "#fff",
+                padding: "1px 6px", borderRadius: 8,
+                background: isStellarActive ? RARITY_COLOR.stellar : "rgba(0,0,0,0.65)",
+                border: `1px solid ${isStellarActive ? "#fff" : RARITY_COLOR.stellar + "80"}`,
+                textShadow: "0 1px 2px rgba(0,0,0,0.8)",
+              }}>{stats.stellar.count}</span>
             </button>
             {PRO_LEAGUES.filter(lg => lg !== "Champion").map(lg => {
               const accent = LEAGUE_ACCENT_BG[lg] || LEAGUE_COLORS[lg] || "#A5B4FC";
@@ -510,7 +533,7 @@ function RecapTabInner({ players, logos, lang }) {
               const isPL = lg === "PL";
               const isLiga = lg === "Liga";
               const isBundes = lg === "Bundes";
-              const whiteLogo = isL1 || isPL || isLiga || isBundes;
+              const whiteLogo = isL1 || isPL || isLiga;
               return (
                 <button key={lg} onClick={() => setActiveLeague(lg)} title={LEAGUE_NAMES[lg] || lg} style={{
                   position: "relative", overflow: "hidden",

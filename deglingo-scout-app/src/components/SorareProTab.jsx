@@ -85,8 +85,18 @@ const PALIERS_OTHER_RARE = [
   { pts: 510, reward: "$2 000", color: "#EF4444", fire: true },
 ];
 const GRAND_PRIX = { pts: 480, reward: "200k Ess (shared)", color: "silver", silver: true };
+// Champion : pas de rewards dollar (gains = cartes), echelle 400->650 equidistante.
+const PALIERS_CHAMPION = [
+  { pts: 400, reward: "", color: "#64748B" },
+  { pts: 450, reward: "", color: "#60A5FA" },
+  { pts: 500, reward: "", color: "#A78BFA" },
+  { pts: 550, reward: "", color: "#C084FC" },
+  { pts: 600, reward: "", color: "#F472B6" },
+  { pts: 650, reward: "", color: "#EF4444" },
+];
 
 const getPaliers = (league, rarity) => {
+  if (league === "Champion") return PALIERS_CHAMPION;
   const isEU = EU_LEAGUES.includes(league);
   if (rarity === "rare") return isEU ? PALIERS_EU_RARE : PALIERS_OTHER_RARE;
   return isEU ? PALIERS_EU_LIMITED : PALIERS_OTHER_LIMITED;

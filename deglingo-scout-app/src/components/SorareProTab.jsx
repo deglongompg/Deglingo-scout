@@ -737,6 +737,40 @@ export default function SorareProTab({ players, teams, fixtures, logos = {}, mat
     return deduped.sort((a, b) => b.ds - a.ds);
   }, [gwInfo, players, teams, gwMatches, league, proCardMap]);
 
+  // ── Orphans Serie A (Italien) : cartes possedees mais joueur absent de players.json.
+  // Sorare a perdu la licence Serie A mais les cartes anciennes restent jouables en Champion.
+  // On les rend selectionnables sans stats (ds=0, pas de match info).
+  const italianOrphans = useMemo(() => {
+    if (league !== "Champion" || !sorareConnected) return [];
+    const knownSlugs = new Set((players || []).map(p => p.slug));
+    const out = [];
+    const seen = new Set();
+    for (const c of sorareCards) {
+      if (c.isStellar) continue;
+      if (rarity === "limited" && !c.isLimited && !(includeRare && c.isRare)) continue;
+      if (rarity === "rare" && !c.isRare) continue;
+      const slug = c.playerSlug;
+      if (!slug || knownSlugs.has(slug) || seen.has(slug)) continue;
+      seen.add(slug);
+      out.push({
+        slug,
+        name: c.playerName || slug,
+        position: c.position || c.cardPosition || "ATT",
+        club: "Serie A",
+        league: "Champion",
+        ds: 0, l2: null, l5: null, l10: null, aa2: null, aa5: null, aa10: null, l40: null, aa40: null,
+        avg_dom: null, avg_ext: null,
+        titu_pct: null, reg10: null,
+        sorare_starter_pct: null,
+        injured: false, suspended: false,
+        matchDate: null, oppName: null, isHome: null, kickoff: "",
+        csPercent: null,
+        _italianOrphan: true,
+      });
+    }
+    return out;
+  }, [league, sorareConnected, sorareCards, players, rarity, includeRare]);
+
   // ── Decisive Pick Top 3 ──
   const decisiveTop3 = useMemo(() => {
     return gwPlayers.filter(p => p.position !== "GK" && p.appearances >= 3).slice(0, 3);
@@ -977,7 +1011,10 @@ export default function SorareProTab({ players, teams, fixtures, logos = {}, mat
 
   // ── Filtered player list ──
   const visiblePlayers = useMemo(() => {
-    let pool = gwPlayers;
+    // En Champion, on ajoute les cartes Serie A orphelines (jouables mais hors players.json)
+    let pool = league === "Champion" && italianOrphans.length > 0
+      ? [...gwPlayers, ...italianOrphans]
+      : gwPlayers;
     // Pas de filtre slot ici : se fait APRES expansion pour utiliser cardPosition par carte
     if (filterTitu && (gwInfo?.offsetFromLive || 0) <= 1) pool = pool.filter(p => p.sorare_starter_pct != null && p.sorare_starter_pct >= filterTitu);
     if (selectedMatchFilters.length > 0) {
@@ -1033,7 +1070,7 @@ export default function SorareProTab({ players, teams, fixtures, logos = {}, mat
     }
 
     return expanded;
-  }, [gwPlayers, selectedSlot, hideUsed, filterTitu, selectedMatchFilters, myCardsMode, sorareConnected, proCardMap, proAllCards, myPicks, savedTeams, crossLeagueSavedTeams, seasonFilter, sorareCards, rarity, includeRare, editingTeamId]);
+  }, [gwPlayers, italianOrphans, league, selectedSlot, hideUsed, filterTitu, selectedMatchFilters, myCardsMode, sorareConnected, proCardMap, proAllCards, myPicks, savedTeams, crossLeagueSavedTeams, seasonFilter, sorareCards, rarity, includeRare, editingTeamId]);
 
   // Reset match filters on league change
   useEffect(() => { setSelectedMatchFilters([]); }, [league]);

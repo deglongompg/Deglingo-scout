@@ -127,7 +127,8 @@ const proKeyframes = `
 @keyframes proShine { 0%{background-position:0% 50%} 100%{background-position:200% 50%} }
 @keyframes spin { 0%{transform:rotate(0deg)} 100%{transform:rotate(360deg)} }
 @keyframes loadBar { 0%{transform:translateX(-100%)} 50%{transform:translateX(60%)} 100%{transform:translateX(200%)} }
-@keyframes themeFadeIn { 0%{opacity:0} 100%{opacity:0.14} }
+@keyframes themeFadeIn { 0%{opacity:0} 100%{opacity:1} }
+@keyframes themeBgFadeIn { 0%{opacity:0} 100%{opacity:0.55} }
 @keyframes neonPulse { 0%,100%{filter:brightness(1)} 50%{filter:brightness(1.15)} }
 .pro-player-list ::-webkit-scrollbar { height: 4px; }
 .pro-player-list ::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.1); border-radius: 4px; }
@@ -1014,7 +1015,7 @@ export default function SorareProTab({ players, teams, fixtures, logos = {}, mat
       `}</style>
       <style>{proKeyframes}</style>
 
-      {/* ═══ Theme layer — bg de la ligue active, blurred + opacity faible ═══ */}
+      {/* ═══ Theme layer — bg de la ligue, texture visible + screen blend ═══ */}
       {themeBg && (
         <div
           key={league}
@@ -1026,29 +1027,32 @@ export default function SorareProTab({ players, teams, fixtures, logos = {}, mat
             backgroundSize: "cover",
             backgroundPosition: "center top",
             backgroundRepeat: "no-repeat",
-            filter: "blur(40px) saturate(1.4)",
-            opacity: 0.14,
+            filter: "blur(6px) saturate(1.5) brightness(1.1)",
+            opacity: 0.55,
+            mixBlendMode: "screen",
             pointerEvents: "none",
             zIndex: 0,
-            animation: "themeFadeIn 0.55s ease-out both",
+            animation: "themeBgFadeIn 0.6s ease-out both",
+            maskImage: "linear-gradient(to bottom, rgba(0,0,0,1) 0%, rgba(0,0,0,0.85) 40%, rgba(0,0,0,0.25) 80%, transparent 100%)",
+            WebkitMaskImage: "linear-gradient(to bottom, rgba(0,0,0,1) 0%, rgba(0,0,0,0.85) 40%, rgba(0,0,0,0.25) 80%, transparent 100%)",
           }}
         />
       )}
-      {/* Radial glow accent centered top pour renforcer l'ambiance ligue */}
+      {/* Radial glow accent — halo néon depuis le haut */}
       <div
         key={`glow-${league}`}
         aria-hidden
         style={{
           position: "absolute",
-          top: -80,
+          top: -120,
           left: "50%",
           transform: "translateX(-50%)",
-          width: "80%",
-          height: 300,
-          background: `radial-gradient(ellipse at center, ${themeAccent}33, transparent 70%)`,
+          width: "90%",
+          height: 420,
+          background: `radial-gradient(ellipse at center, ${themeAccent}55, ${themeAccent}22 35%, transparent 70%)`,
           pointerEvents: "none",
           zIndex: 0,
-          animation: "themeFadeIn 0.55s ease-out both",
+          animation: "themeFadeIn 0.6s ease-out both",
         }}
       />
 

@@ -556,18 +556,17 @@ export default function LandingPage({ players, onEnter, onNavigate }) {
           {/* Fond : banniere Sorare (texture droite). Logo : PNG detoure centre. */}
           <div className="landing-leagues" style={{ display: "flex", gap: 8, justifyContent: "center", flexWrap: "wrap", marginBottom: 24 }}>
             {[
-              { code: "L1",     color: "#3B82F6", name: "Ligue 1",        bg: "https://frontend-assets.sorare.com/football/so5_league/seasonal-france/picture.jpg?v=1",  logo: "/L1.png" },
-              { code: "PL",     color: "#D946EF", name: "Premier League", bg: "https://frontend-assets.sorare.com/football/so5_league/seasonal-england/picture.jpg?v=1", logo: "/pl.png" },
-              { code: "Liga",   color: "#EF4444", name: "La Liga",        bg: "https://frontend-assets.sorare.com/football/so5_league/seasonal-spain/picture.jpg?v=1",   logo: "/liga.png" },
-              { code: "Bundes", color: "#DC2626", name: "Bundesliga",     bg: "https://frontend-assets.sorare.com/football/so5_league/seasonal-germany/picture.jpg?v=1", logo: "/bundes.png" },
-              { code: "MLS",    color: "#3B82F6", name: "MLS",            bg: "https://frontend-assets.sorare.com/football/so5_league/seasonal-us/picture.jpg?v=1",      logo: "/mls.png" },
+              { code: "L1",     color: "#3B82F6", name: "Ligue 1",        bg: "/L1-bg.png",   logo: "/L1.png" },
+              { code: "PL",     color: "#D946EF", name: "Premier League", bg: "/pl-bg.png",   logo: "/pl.png" },
+              { code: "Liga",   color: "#EF4444", name: "La Liga",        bg: "/liga-bg.png", logo: "/liga.png" },
+              { code: "Bundes", color: "#DC2626", name: "Bundesliga",     bg: "/bundes-bg.png", logo: "/bundes.png" },
+              { code: "MLS",    color: "#3B82F6", name: "MLS",            bg: "/mls-bg.png", logo: "/mls.png" },
             ].map(l => {
               const isL1 = l.code === "L1";
               const isPL = l.code === "PL";
               const isLiga = l.code === "Liga";
               const isBundes = l.code === "Bundes";
               const whiteLogo = isL1 || isPL || isLiga;
-              const maskLeft = isPL || isLiga || isBundes;
               return (
               <div key={l.code} title={l.name} style={{
                 position: "relative", overflow: "hidden",
@@ -579,17 +578,9 @@ export default function LandingPage({ players, onEnter, onNavigate }) {
               }}>
                 <img src={l.bg} alt="" style={{
                   width: "100%", height: "100%", objectFit: "cover",
-                  objectPosition: "right center",
+                  objectPosition: "center center",
                   display: "block", pointerEvents: "none",
                 }} />
-                {isL1 && <div style={{
-                  position: "absolute", inset: 0, pointerEvents: "none",
-                  background: "radial-gradient(ellipse 65% 110% at 18% 75%, rgba(0,0,0,1) 0%, rgba(0,0,0,0.92) 35%, rgba(0,0,0,0.55) 55%, transparent 75%)",
-                }} />}
-                {maskLeft && <div style={{
-                  position: "absolute", inset: 0, pointerEvents: "none",
-                  background: "linear-gradient(90deg, rgba(10,5,25,1) 0%, rgba(10,5,25,1) 38%, rgba(10,5,25,0.85) 58%, rgba(10,5,25,0.4) 78%, transparent 92%)",
-                }} />}
                 {isLiga ? (
                   <div style={{
                     position: "absolute", top: "50%", left: "50%",

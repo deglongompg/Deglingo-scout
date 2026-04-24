@@ -29,12 +29,12 @@ const RARITY_COLOR = { limited: "#60A5FA", rare: "#F472B6", stellar: "#C4B5FD" }
 
 // Bannieres officielles Sorare pour les boutons ligue (meme que SorareProTab + LandingPage)
 const LEAGUE_BG_URL = {
-  L1:       "https://frontend-assets.sorare.com/football/so5_league/seasonal-france/picture.jpg?v=1",
-  PL:       "https://frontend-assets.sorare.com/football/so5_league/seasonal-england/picture.jpg?v=1",
-  Liga:     "https://frontend-assets.sorare.com/football/so5_league/seasonal-spain/picture.jpg?v=1",
-  Bundes:   "https://frontend-assets.sorare.com/football/so5_league/seasonal-germany/picture.jpg?v=1",
-  MLS:      "https://frontend-assets.sorare.com/football/so5_league/seasonal-us/picture.jpg?v=1",
-  Champion: "https://frontend-assets.sorare.com/football/so5_league/seasonal-champions/picture.jpg?v=1",
+  L1:       "/L1-bg.png",
+  PL:       "/pl-bg.png",
+  Liga:     "/liga-bg.png",
+  Bundes:   "/bundes-bg.png",
+  MLS:      "/mls-bg.png",
+  Champion: "/champion-bg.png",
 };
 const LEAGUE_LOGO_URL = {
   L1:     "/L1.png",
@@ -511,7 +511,6 @@ function RecapTabInner({ players, logos, lang }) {
               const isLiga = lg === "Liga";
               const isBundes = lg === "Bundes";
               const whiteLogo = isL1 || isPL || isLiga;
-              const maskLeft = isPL || isLiga || isBundes;
               return (
                 <button key={lg} onClick={() => setActiveLeague(lg)} title={LEAGUE_NAMES[lg] || lg} style={{
                   position: "relative", overflow: "hidden",
@@ -527,16 +526,8 @@ function RecapTabInner({ players, logos, lang }) {
                 }}>
                   {bgUrl && <img src={bgUrl} alt="" style={{
                     width: "100%", height: "100%", objectFit: "cover",
-                    objectPosition: "right center",
+                    objectPosition: "center center",
                     display: "block", pointerEvents: "none",
-                  }} />}
-                  {isL1 && <div style={{
-                    position: "absolute", inset: 0, pointerEvents: "none",
-                    background: "radial-gradient(ellipse 65% 110% at 18% 75%, rgba(0,0,0,1) 0%, rgba(0,0,0,0.92) 35%, rgba(0,0,0,0.55) 55%, transparent 75%)",
-                  }} />}
-                  {maskLeft && <div style={{
-                    position: "absolute", inset: 0, pointerEvents: "none",
-                    background: "linear-gradient(90deg, rgba(10,5,25,1) 0%, rgba(10,5,25,1) 38%, rgba(10,5,25,0.85) 58%, rgba(10,5,25,0.4) 78%, transparent 92%)",
                   }} />}
                   {logoUrl && (isLiga ? (
                     <div style={{

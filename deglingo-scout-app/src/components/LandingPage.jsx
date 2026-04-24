@@ -564,7 +564,9 @@ export default function LandingPage({ players, onEnter, onNavigate }) {
             ].map(l => {
               const isL1 = l.code === "L1";
               const isPL = l.code === "PL";
-              const whiteLogo = isL1 || isPL;
+              const isLiga = l.code === "Liga";
+              const whiteLogo = isL1 || isPL || isLiga;
+              const maskLeft = isPL || isLiga;
               return (
               <div key={l.code} title={l.name} style={{
                 position: "relative", overflow: "hidden",
@@ -583,17 +585,36 @@ export default function LandingPage({ players, onEnter, onNavigate }) {
                   position: "absolute", inset: 0, pointerEvents: "none",
                   background: "radial-gradient(ellipse 65% 110% at 18% 75%, rgba(0,0,0,1) 0%, rgba(0,0,0,0.92) 35%, rgba(0,0,0,0.55) 55%, transparent 75%)",
                 }} />}
-                {isPL && <div style={{
+                {maskLeft && <div style={{
                   position: "absolute", inset: 0, pointerEvents: "none",
                   background: "linear-gradient(90deg, rgba(10,5,25,1) 0%, rgba(10,5,25,1) 38%, rgba(10,5,25,0.85) 58%, rgba(10,5,25,0.4) 78%, transparent 92%)",
                 }} />}
-                <img src={l.logo} alt={l.name} style={{
-                  position: "absolute", top: "50%", left: "50%",
-                  transform: "translate(-50%, -50%)",
-                  height: "72%", width: "auto",
-                  objectFit: "contain", pointerEvents: "none",
-                  filter: `${whiteLogo ? "brightness(0) invert(1) " : ""}drop-shadow(0 1px 3px rgba(0,0,0,0.7))`,
-                }} />
+                {isLiga ? (
+                  <div style={{
+                    position: "absolute", top: "50%", left: "50%",
+                    transform: "translate(-50%, -50%)",
+                    display: "flex", alignItems: "center", gap: 6,
+                    pointerEvents: "none",
+                  }}>
+                    <img src={l.logo} alt="" style={{
+                      height: 30, width: "auto", objectFit: "contain",
+                      filter: "brightness(0) invert(1) drop-shadow(0 1px 3px rgba(0,0,0,0.7))",
+                    }} />
+                    <span style={{
+                      fontFamily: "Outfit", fontWeight: 900, fontSize: 14,
+                      color: "#fff", letterSpacing: "0.03em",
+                      textShadow: "0 1px 3px rgba(0,0,0,0.7)",
+                    }}>Liga</span>
+                  </div>
+                ) : (
+                  <img src={l.logo} alt={l.name} style={{
+                    position: "absolute", top: "50%", left: "50%",
+                    transform: "translate(-50%, -50%)",
+                    height: "72%", width: "auto",
+                    objectFit: "contain", pointerEvents: "none",
+                    filter: `${whiteLogo ? "brightness(0) invert(1) " : ""}drop-shadow(0 1px 3px rgba(0,0,0,0.7))`,
+                  }} />
+                )}
               </div>
               );
             })}

@@ -608,6 +608,45 @@ Valeurs possibles :
 
 ---
 
+## 🚨 BUG fixtures LIVE disparus (fix 2026-04-26 SOIR) — CRITIQUE
+
+### Symptome
+
+Pendant qu'un match est en cours (Arsenal-Newcastle, Angers-PSG samedi soir),
+il **disparait du calendrier** Stellar/Pro apres MAJ_turbo. Le user voit le live
+sur Sorare mais pas sur Scout.
+
+### Cause racine
+
+football-data.org status flow : `SCHEDULED → TIMED → IN_PLAY → PAUSED → FINISHED`
+
+`fetch_fixtures.py` interrogeait :
+- `fetch_upcoming_fixtures` : `status=SCHEDULED,TIMED` → match LIVE exclu
+- `fetch_recent_finished` : `status=FINISHED` → match LIVE pas encore fini → exclu
+- Tombent dans le **trou** → disparaissent
+
+### Fix
+
+Ajouter `IN_PLAY,PAUSED` au filtre upcoming :
+```python
+data = fetch(f"/competitions/{comp_code}/matches?status=SCHEDULED,TIMED,IN_PLAY,PAUSED&dateFrom={date_from}&dateTo={date_to}")
+```
+
+A appliquer sur :
+- `fetch_upcoming_fixtures()` ligne ~330
+- `fetch_euro_fixtures()` ligne ~375 (Champions League / coupes Europe)
+
+### Verification rapide
+
+Apres MAJ_turbo, verifier que les matchs LIVE sont bien dans `fixtures.json` :
+```python
+fx = json.load(open('deglingo-scout-app/public/data/fixtures.json'))
+today = [f for f in fx['fixtures'] if f['date'] == '2026-04-26']
+print(f'Matchs aujourd\\'hui : {len(today)}')
+```
+
+---
+
 ## 🐛 BUG fixtures dedup (fix 2026-04-26) — CRITIQUE
 
 ### Symptome

@@ -371,7 +371,8 @@ def fetch_euro_fixtures(comp_code, comp_label, days_ahead=14):
     date_from_str = today.strftime("%Y-%m-%d")
     date_to_str = date_to.strftime("%Y-%m-%d")
 
-    data = fetch(f"/competitions/{comp_code}/matches?status=SCHEDULED,TIMED&dateFrom={date_from_str}&dateTo={date_to_str}")
+    # Inclus IN_PLAY/PAUSED pour ne pas perdre les matchs LIVE (cf. fetch_upcoming_fixtures)
+    data = fetch(f"/competitions/{comp_code}/matches?status=SCHEDULED,TIMED,IN_PLAY,PAUSED&dateFrom={date_from_str}&dateTo={date_to_str}")
     if not data or "matches" not in data:
         print(f"  ⚠️ Pas de matchs trouvés")
         return []

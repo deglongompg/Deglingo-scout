@@ -516,7 +516,9 @@ function RecapTabInner({ players, logos, lang }) {
         <>
           {/* Ligne 1 — filtre principal : [Stellar] + ligues Pro */}
           <div style={{ display: "flex", gap: 8, marginTop: 0, marginBottom: 8, flexWrap: "wrap" }}>
-            <button key="stellar" onClick={() => setActiveLeague("stellar")} style={{
+            <button key="stellar" onClick={() => setActiveLeague("stellar")}
+              className={`aurora-chip${isStellarActive ? " is-active" : ""}`}
+              style={{
               position: "relative", overflow: "hidden",
               width: 150, height: 50, padding: 0, borderRadius: 99,
               cursor: "pointer",
@@ -525,8 +527,8 @@ function RecapTabInner({ players, logos, lang }) {
               boxShadow: isStellarActive ? `0 0 22px ${RARITY_COLOR.stellar}90, 0 0 2px ${RARITY_COLOR.stellar}` : `0 0 12px ${RARITY_COLOR.stellar}30`,
               opacity: isStellarActive ? 1 : 0.6,
               filter: isStellarActive ? "none" : "saturate(0.7)",
-              transition: "all 0.15s",
               flexShrink: 0,
+              "--chip-accent": RARITY_COLOR.stellar,
             }}>
               <img src="/stellar-bg.png" alt="" style={{
                 width: "100%", height: "100%", objectFit: "cover",
@@ -563,7 +565,9 @@ function RecapTabInner({ players, logos, lang }) {
               const isChampion = lg === "Champion";
               const whiteLogo = isL1 || isPL || isLiga;
               return (
-                <button key={lg} onClick={() => setActiveLeague(lg)} title={LEAGUE_NAMES[lg] || lg} style={{
+                <button key={lg} onClick={() => setActiveLeague(lg)} title={LEAGUE_NAMES[lg] || lg}
+                  className={`aurora-chip${active ? " is-active" : ""}`}
+                  style={{
                   position: "relative", overflow: "hidden",
                   width: 150, height: 50, padding: 0, borderRadius: 99,
                   cursor: "pointer",
@@ -572,8 +576,8 @@ function RecapTabInner({ players, logos, lang }) {
                   boxShadow: active ? `0 0 20px ${accent}80, 0 0 2px ${accent}` : `0 0 12px ${accent}25`,
                   opacity: active ? 1 : 0.6,
                   filter: active ? "none" : "saturate(0.7)",
-                  transition: "all 0.15s",
                   flexShrink: 0,
+                  "--chip-accent": accent,
                 }}>
                   {bgUrl && <img src={bgUrl} alt="" style={{
                     width: "100%", height: "100%", objectFit: "cover",

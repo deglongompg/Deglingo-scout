@@ -149,21 +149,23 @@ gw_cutoff_hhmm_utc = _gw_start_utc.strftime("%H:%M")
 print(f"Debut GW    : {_gw_start_paris.strftime('%Y-%m-%d %H:%M')} (Paris) = {gw_cutoff_date_utc} {gw_cutoff_hhmm_utc} (UTC)")
 
 def is_played(fx_date, kickoff):
-    """Retourne True si le match est terminé (date+kickoff en UTC, comparé à now UTC)."""
+    """Retourne True si le match a DEMARRE (live ou termine).
+    On NE filtre PAS sur match termine (kickoff+2h) — sinon les matchs LIVE
+    (en cours, 1ere mi-temps) sont skippes alors qu'ils ont des scores live
+    sur Sorare. Le smart-skip via last_match_status='playing' force le refetch.
+    """
     if not fx_date:
         return False
-    # Utilise datetime objects pour eviter les bugs de tz string-comparison
     try:
         if kickoff and kickoff != "99:99":
             ko_dt = datetime.fromisoformat(f"{fx_date}T{kickoff}:00").replace(tzinfo=timezone.utc)
         else:
-            # Date sans heure : on assume qu'il faut attendre 23:59 UTC pour que ce soit "joue"
+            # Date sans heure : on attend 23:59 UTC
             ko_dt = datetime.fromisoformat(f"{fx_date}T23:59:00").replace(tzinfo=timezone.utc)
-        ko_end_dt = ko_dt + timedelta(hours=2)
     except Exception:
         return False
-    in_gw   = ko_dt   >= _gw_start_utc
-    started = ko_end_dt <= _utc_now
+    in_gw   = ko_dt >= _gw_start_utc
+    started = ko_dt <= _utc_now  # Match a DEMARRE (live ou fini), pas "ko + 2h"
     return in_gw and started
 
 # Source 1 : fixtures list (home_api / away_api = noms api Sorare/foot-data)

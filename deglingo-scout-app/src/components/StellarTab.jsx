@@ -211,6 +211,7 @@ const starsKeyframes = `
 @keyframes starPulseBig { 0%,100%{opacity:0.4;transform:scale(0.9);box-shadow:0 0 3px 1px rgba(255,255,255,0.5)} 50%{opacity:1;transform:scale(1.5);box-shadow:0 0 8px 4px rgba(255,255,255,0.9), 0 0 18px 8px rgba(196,181,253,0.5)} }
 @keyframes nebulaPulse { 0%,100%{opacity:0.1} 50%{opacity:0.2} }
 @keyframes silverShine { 0%{background-position:0% 50%} 100%{background-position:200% 50%} }
+@keyframes stellarLivePulse { 0%,100%{opacity:0.85;box-shadow:0 0 4px rgba(248,113,113,0.4)} 50%{opacity:1;box-shadow:0 0 10px rgba(248,113,113,0.85)} }
 @keyframes spin { 0%{transform:rotate(0deg)} 100%{transform:rotate(360deg)} }
 @keyframes loadBar { 0%{transform:translateX(-100%)} 50%{transform:translateX(60%)} 100%{transform:translateX(200%)} }
 /* Auto-zoom selon la taille d'ecran — evite de passer en 125% manuellement sur grand ecran */
@@ -1816,6 +1817,11 @@ export default function StellarTab({ players, teams, fixtures, logos = {}, match
                         const hasHomePlayers = scoreStr && playersOf(f.home).length > 0;
                         const hasAwayPlayers = scoreStr && playersOf(f.away).length > 0;
                         const matchPlayers = activeSide ? playersOf(activeSide === "home" ? f.home : f.away) : [];
+                        // Detecte LIVE vs FT via last_match_status d'un joueur du match
+                        const matchStatus = scoreStr ? (
+                          (playersOf(f.home)[0]?.last_match_status) || (playersOf(f.away)[0]?.last_match_status) || "played"
+                        ) : null;
+                        const isLive = matchStatus === "playing";
                         const toggleSide = (side) => {
                           if (expandedFixture?.key === matchKey && expandedFixture?.side === side) setExpandedFixture(null);
                           else setExpandedFixture({ key: matchKey, side });
@@ -1831,11 +1837,15 @@ export default function StellarTab({ players, teams, fixtures, logos = {}, match
                                 return [...prev, { home: f.home, away: f.away }];
                               });
                             }} style={{ display: "grid", gridTemplateColumns: "32px 22px 12px minmax(0,1fr) 32px minmax(0,1fr) 12px", alignItems: "center", columnGap: 4, padding: "4px 6px", cursor: "pointer",
-                              background: selectedMatchFilters.some(m => m.home === f.home && m.away === f.away) ? "rgba(139,92,246,0.35)" : isOpen ? "rgba(50,20,100,0.6)" : scoreStr ? "rgba(35,20,75,0.6)" : "rgba(30,10,70,0.45)",
-                              border: `1px solid ${selectedMatchFilters.some(m => m.home === f.home && m.away === f.away) ? "rgba(167,139,250,0.6)" : isOpen ? "rgba(196,181,253,0.3)" : scoreStr ? "rgba(196,181,253,0.28)" : "rgba(140,100,255,0.12)"}`,
+                              background: selectedMatchFilters.some(m => m.home === f.home && m.away === f.away) ? "rgba(139,92,246,0.35)" : isOpen ? "rgba(50,20,100,0.6)" : isLive ? "rgba(60,20,30,0.6)" : scoreStr ? "rgba(35,20,75,0.6)" : "rgba(30,10,70,0.45)",
+                              border: `1px solid ${selectedMatchFilters.some(m => m.home === f.home && m.away === f.away) ? "rgba(167,139,250,0.6)" : isOpen ? "rgba(196,181,253,0.3)" : isLive ? "rgba(248,113,113,0.45)" : scoreStr ? "rgba(196,181,253,0.28)" : "rgba(140,100,255,0.12)"}`,
                               borderRadius: isOpen ? "6px 6px 0 0" : 6, backdropFilter: "blur(6px)", transition: "all 0.15s" }}>
                               {scoreStr ? (
-                                <span style={{ fontSize: 8, fontWeight: 900, color: "#C4B5FD", fontFamily: "'DM Mono',monospace", flexShrink: 0, padding: "1px 4px", background: "rgba(196,181,253,0.15)", border: "1px solid rgba(196,181,253,0.4)", borderRadius: 3, textAlign: "center" }}>FT</span>
+                                isLive ? (
+                                  <span style={{ fontSize: 7, fontWeight: 900, color: "#F87171", fontFamily: "'DM Mono',monospace", flexShrink: 0, padding: "1px 3px", background: "rgba(248,113,113,0.15)", border: "1px solid rgba(248,113,113,0.5)", borderRadius: 3, textAlign: "center", letterSpacing: "0.05em", animation: "stellarLivePulse 1.6s ease-in-out infinite" }}>● LIVE</span>
+                                ) : (
+                                  <span style={{ fontSize: 8, fontWeight: 900, color: "#C4B5FD", fontFamily: "'DM Mono',monospace", flexShrink: 0, padding: "1px 4px", background: "rgba(196,181,253,0.15)", border: "1px solid rgba(196,181,253,0.4)", borderRadius: 3, textAlign: "center" }}>FT</span>
+                                )
                               ) : (
                                 <span className="st-match-time-inline" style={{ visibility: "hidden", fontSize: 8, fontWeight: 900, color: "#A78BFA", fontFamily: "'DM Mono',monospace", flexShrink: 0 }}>{g.time}</span>
                               )}

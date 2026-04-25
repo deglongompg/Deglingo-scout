@@ -169,6 +169,7 @@ const proKeyframes = `
 @keyframes themeFadeIn { 0%{opacity:0} 100%{opacity:1} }
 @keyframes themeBgFadeIn { 0%{opacity:0} 100%{opacity:0.55} }
 @keyframes neonPulse { 0%,100%{filter:brightness(1)} 50%{filter:brightness(1.15)} }
+@keyframes stellarLivePulse { 0%,100%{opacity:0.85;box-shadow:0 0 4px rgba(248,113,113,0.4)} 50%{opacity:1;box-shadow:0 0 10px rgba(248,113,113,0.85)} }
 .pro-player-list ::-webkit-scrollbar { height: 4px; }
 .pro-player-list ::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.1); border-radius: 4px; }
 .pro-player-list ::-webkit-scrollbar-track { background: transparent; }
@@ -1424,6 +1425,10 @@ export default function SorareProTab({ players, teams, fixtures, logos = {}, mat
                         };
                         const homeWin = scoreStr && sc && sc.home > sc.away;
                         const awayWin = scoreStr && sc && sc.away > sc.home;
+                        const matchStatus = scoreStr ? (
+                          (playersOf(f.home)[0]?.last_match_status) || (playersOf(f.away)[0]?.last_match_status) || "played"
+                        ) : null;
+                        const isLive = matchStatus === "playing";
                         return (
                           <div key={fi} style={{ marginBottom: 2 }}>
                             <div onClick={() => {
@@ -1434,12 +1439,16 @@ export default function SorareProTab({ players, teams, fixtures, logos = {}, mat
                             }} style={{
                               display: "flex", alignItems: "center", gap: 4, padding: "4px 6px",
                               borderRadius: isOpen ? "5px 5px 0 0" : 5, cursor: "pointer",
-                              background: isActive ? `${rarityColor}25` : scoreStr ? `${themeAccent}18` : "rgba(20,10,40,0.5)",
-                              border: `1px solid ${isActive ? rarityColor + "60" : scoreStr ? `${themeAccent}45` : "rgba(255,255,255,0.06)"}`,
+                              background: isActive ? `${rarityColor}25` : isLive ? "rgba(60,20,30,0.55)" : scoreStr ? `${themeAccent}18` : "rgba(20,10,40,0.5)",
+                              border: `1px solid ${isActive ? rarityColor + "60" : isLive ? "rgba(248,113,113,0.45)" : scoreStr ? `${themeAccent}45` : "rgba(255,255,255,0.06)"}`,
                               transition: "all 0.15s",
                             }}>
                               {scoreStr ? (
-                                <span style={{ fontSize: 8, fontWeight: 900, color: themeAccent, fontFamily: "'DM Mono',monospace", width: 32, padding: "1px 3px", background: `${themeAccent}22`, border: `1px solid ${themeAccent}55`, borderRadius: 3, textAlign: "center" }}>FT</span>
+                                isLive ? (
+                                  <span style={{ fontSize: 7, fontWeight: 900, color: "#F87171", fontFamily: "'DM Mono',monospace", width: 32, padding: "1px 3px", background: "rgba(248,113,113,0.15)", border: "1px solid rgba(248,113,113,0.5)", borderRadius: 3, textAlign: "center", letterSpacing: "0.04em", animation: "stellarLivePulse 1.6s ease-in-out infinite" }}>● LIVE</span>
+                                ) : (
+                                  <span style={{ fontSize: 8, fontWeight: 900, color: themeAccent, fontFamily: "'DM Mono',monospace", width: 32, padding: "1px 3px", background: `${themeAccent}22`, border: `1px solid ${themeAccent}55`, borderRadius: 3, textAlign: "center" }}>FT</span>
+                                )
                               ) : (
                                 <span style={{ fontSize: 8, fontWeight: 800, color: "#A78BFA", fontFamily: "'DM Mono',monospace", width: 32 }}>{parisTime}</span>
                               )}

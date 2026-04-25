@@ -10,28 +10,6 @@
     "home_assists": [],
     "away_assists": []
   },
-  "Game:8f226000-00f4-4181-a567-e29d3aa2881f": {
-    "home": "Angers SCO",
-    "away": "Le Havre AC",
-    "date": "2026-04-18",
-    "home_goals": 1,
-    "away_goals": 1,
-    "home_scorers": [],
-    "away_scorers": [],
-    "home_assists": [],
-    "away_assists": []
-  },
-  "Game:f6dbc28b-ff3c-497c-9a2a-4d0e0e835fc0": {
-    "home": "Olympique Lyonnais",
-    "away": "AJ Auxerre",
-    "date": "2026-04-25",
-    "home_goals": 3,
-    "away_goals": 2,
-    "home_scorers": [],
-    "away_scorers": [],
-    "home_assists": [],
-    "away_assists": []
-  },
   "Game:ba10a178-b60d-4ee9-9a8b-870c10142b1b": {
     "home": "LOSC Lille",
     "away": "OGC Nice",
@@ -49,6 +27,28 @@
     "date": "2026-04-19",
     "home_goals": 1,
     "away_goals": 3,
+    "home_scorers": [],
+    "away_scorers": [],
+    "home_assists": [],
+    "away_assists": []
+  },
+  "Game:8f226000-00f4-4181-a567-e29d3aa2881f": {
+    "home": "Angers SCO",
+    "away": "Le Havre AC",
+    "date": "2026-04-18",
+    "home_goals": 1,
+    "away_goals": 1,
+    "home_scorers": [],
+    "away_scorers": [],
+    "home_assists": [],
+    "away_assists": []
+  },
+  "Game:f6dbc28b-ff3c-497c-9a2a-4d0e0e835fc0": {
+    "home": "Olympique Lyonnais",
+    "away": "AJ Auxerre",
+    "date": "2026-04-25",
+    "home_goals": 3,
+    "away_goals": 2,
     "home_scorers": [],
     "away_scorers": [],
     "home_assists": [],
@@ -113,7 +113,7 @@
     "home": "Arsenal FC",
     "away": "Newcastle United FC",
     "date": "2026-04-25",
-    "home_goals": 0,
+    "home_goals": 1,
     "away_goals": 0,
     "home_scorers": [],
     "away_scorers": [],
@@ -263,23 +263,23 @@
     "home_assists": [],
     "away_assists": []
   },
-  "Game:83a88146-f9a8-448e-8e7d-8167e8601f5f": {
-    "home": "Rayo Vallecano",
-    "away": "RCD Espanyol de Barcelona",
-    "date": "2026-04-23",
-    "home_goals": 1,
-    "away_goals": 0,
-    "home_scorers": [],
-    "away_scorers": [],
-    "home_assists": [],
-    "away_assists": []
-  },
   "Game:186f5b5d-f233-4fcc-8494-eb2aad6e6896": {
     "home": "D. Alavés",
     "away": "RCD Mallorca",
     "date": "2026-04-25",
     "home_goals": 2,
     "away_goals": 1,
+    "home_scorers": [],
+    "away_scorers": [],
+    "home_assists": [],
+    "away_assists": []
+  },
+  "Game:83a88146-f9a8-448e-8e7d-8167e8601f5f": {
+    "home": "Rayo Vallecano",
+    "away": "RCD Espanyol de Barcelona",
+    "date": "2026-04-23",
+    "home_goals": 1,
+    "away_goals": 0,
     "home_scorers": [],
     "away_scorers": [],
     "home_assists": [],
@@ -340,12 +340,12 @@
     "home_assists": [],
     "away_assists": []
   },
-  "Game:7a56dd78-6979-4446-834c-17a211f95d9d": {
-    "home": "1. FSV Mainz 05",
-    "away": "FC Bayern München",
+  "Game:1ed0f293-a47e-45c3-9b41-a087c57329b6": {
+    "home": "FC Augsburg",
+    "away": "Eintracht Frankfurt",
     "date": "2026-04-25",
-    "home_goals": 3,
-    "away_goals": 4,
+    "home_goals": 1,
+    "away_goals": 1,
     "home_scorers": [],
     "away_scorers": [],
     "home_assists": [],
@@ -362,23 +362,23 @@
     "home_assists": [],
     "away_assists": []
   },
-  "Game:1ed0f293-a47e-45c3-9b41-a087c57329b6": {
-    "home": "FC Augsburg",
-    "away": "Eintracht Frankfurt",
-    "date": "2026-04-25",
-    "home_goals": 1,
-    "away_goals": 1,
-    "home_scorers": [],
-    "away_scorers": [],
-    "home_assists": [],
-    "away_assists": []
-  },
   "Game:38a514d1-3153-49f8-b33a-5547395c3e9c": {
     "home": "Sport-Club Freiburg",
     "away": "1. FC Heidenheim 1846",
     "date": "2026-04-19",
     "home_goals": 2,
     "away_goals": 1,
+    "home_scorers": [],
+    "away_scorers": [],
+    "home_assists": [],
+    "away_assists": []
+  },
+  "Game:7a56dd78-6979-4446-834c-17a211f95d9d": {
+    "home": "1. FSV Mainz 05",
+    "away": "FC Bayern München",
+    "date": "2026-04-25",
+    "home_goals": 3,
+    "away_goals": 4,
     "home_scorers": [],
     "away_scorers": [],
     "home_assists": [],

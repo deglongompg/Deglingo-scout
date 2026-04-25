@@ -43,7 +43,7 @@ SCORE_FRAGMENT = """{
         score
         detailedScore { stat statValue category }
         game {
-          id date homeScore awayScore
+          id date homeScore awayScore statusTyped
           homeTeam { name }
           awayTeam { name }
         }
@@ -79,6 +79,7 @@ def parse_score_data(p):
         "last_so5_decisives":    decisives,  # [{stat, value, positive}] pour icones UI
         "last_match_home_goals": game.get("homeScore"),
         "last_match_away_goals": game.get("awayScore"),
+        "last_match_status":     game.get("statusTyped"),  # 'playing' (LIVE) | 'played' (FT) | 'scheduled' | 'on_hold' | 'canceled'
         "game_id":               game.get("id"),
         "game_home_team":        (game.get("homeTeam") or {}).get("name", ""),
         "game_away_team":        (game.get("awayTeam") or {}).get("name", ""),
@@ -270,9 +271,11 @@ for p in players:
     latest = latest_match_for_player_club(p.get("club", ""))
     last_so5 = p.get("last_so5_date")
     # Skip si data deja a jour : last_so5_date >= dernier match joue
-    # Skip si data deja a jour ET on a deja les decisives (sinon force refetch)
-    has_decisives_field = "last_so5_decisives" in p
-    if latest and last_so5 and last_so5 >= latest and has_decisives_field:
+    # Skip si data deja a jour ET on a deja decisives + status (sinon force refetch)
+    # NB: status="playing" doit aussi declencher refetch (live -> potentiellement update)
+    has_full_data = "last_so5_decisives" in p and "last_match_status" in p
+    is_live = p.get("last_match_status") == "playing"
+    if latest and last_so5 and last_so5 >= latest and has_full_data and not is_live:
         skipped_fresh += 1
         continue
     targets.append(p)
@@ -364,6 +367,7 @@ for path in OUT_PATHS:
             if s["last_match_home_goals"] is not None:
                 p["last_match_home_goals"] = s["last_match_home_goals"]
                 p["last_match_away_goals"] = s["last_match_away_goals"]
+                p["last_match_status"]     = s.get("last_match_status")
             else:
                 p.setdefault("last_match_home_goals", None)
                 p.setdefault("last_match_away_goals", None)

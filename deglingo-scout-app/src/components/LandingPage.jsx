@@ -574,9 +574,9 @@ export default function LandingPage({ players, onEnter, onNavigate }) {
                     try { sessionStorage.setItem("pro_preselect_league", l.code); } catch (_) {}
                     if (onNavigate) onNavigate("pro"); else onEnter();
                   };
-              // Inclinaison subtile des chips (suit l'eventail des cartes mais 2x moins prononce)
-              const chipRotation = [-2, -0.7, 0, 0.7, 2][i];
-              const chipTranslateY = [4, 2, 0, 2, 4][i];
+              // Inclinaison subtile des chips (suit l'eventail des cartes, plus marquee aux extremites)
+              const chipRotation = [-3.2, -0.9, 0, 0.9, 3.2][i];
+              const chipTranslateY = [6, 2, 0, 2, 6][i];
               return (
                 <div key={l.code} style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 12 }}>
                   <button type="button" title={l.name} onClick={handleClick}
@@ -637,12 +637,11 @@ export default function LandingPage({ players, onEnter, onNavigate }) {
                   {/* Carte Stellar du joueur emblematique de la ligue (mode stellar pour homogeneite) */}
                   {player && (
                     <button type="button" onClick={handleClick} title={player.name}
-                      className="aurora-chip"
+                      className="aurora-chip aurora-shape-image"
                       style={{
                         position: "relative",
                         background: "transparent", border: "none", padding: 0, cursor: "pointer",
                         display: "block", marginTop: 4,
-                        borderRadius: 12,
                         "--chip-accent": l.color,
                       }}>
                       <SorareCard

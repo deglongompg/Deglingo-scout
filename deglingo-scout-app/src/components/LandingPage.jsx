@@ -710,19 +710,18 @@ export default function LandingPage({ players, onEnter, onNavigate }) {
             className="aurora-chip landing-db-cta"
             style={{
               position: "relative", overflow: "hidden",
-              padding: "16px 44px", borderRadius: 99,
-              cursor: "pointer", fontSize: 15, fontWeight: 800, fontFamily: "Outfit",
-              color: "#fff", letterSpacing: "0.06em", textTransform: "uppercase",
+              padding: "18px 52px", borderRadius: 99,
+              cursor: "pointer", fontSize: 19, fontWeight: 800, fontFamily: "Outfit",
+              color: "#fff", letterSpacing: "0.07em", textTransform: "uppercase",
               border: "1px solid rgba(196,181,253,0.55)",
               background: "linear-gradient(135deg, #7C3AED 0%, #A78BFA 40%, #EC4899 100%)",
               boxShadow: "0 0 24px rgba(167,139,250,0.5), 0 0 2px rgba(236,72,153,0.5), inset 0 1px 0 rgba(255,255,255,0.18)",
-              display: "inline-flex", alignItems: "center", gap: 12,
+              display: "inline-flex", alignItems: "center", justifyContent: "center",
               "--chip-accent": "#C4B5FD",
             }}>
             {/* Sparkle scintillant qui glisse en boucle */}
             <span aria-hidden className="landing-db-sparkle" />
             <span style={{ position: "relative", zIndex: 4 }}>Database</span>
-            <span style={{ position: "relative", zIndex: 4, display: "inline-flex" }}><IconArrow color="#fff" size={18} /></span>
           </button>
         </div>
 

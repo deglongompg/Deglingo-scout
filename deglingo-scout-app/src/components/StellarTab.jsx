@@ -1374,7 +1374,7 @@ export default function StellarTab({ players, teams, fixtures, logos = {}, match
       <div className="st-info-row" style={{ display: "flex", alignItems: "stretch", padding: "4px 0 10px", gap: 10 }}>
 
         {/* Titre STELLAR — gauche, avec bg image stellar-bg pour cohesion avec Mes Teams chip */}
-        <div className="st-info-bloc-title" style={{ position: "relative", overflow: "hidden", flexShrink: 0, borderRadius: 12, padding: "8px 14px", border: "1px solid rgba(196,181,253,0.25)", display: "flex", flexDirection: "column", justifyContent: "center", boxShadow: "0 0 18px rgba(196,181,253,0.15), inset 0 0 24px rgba(196,181,253,0.04)" }}>
+        <div className="st-info-bloc-title" style={{ position: "relative", overflow: "hidden", flex: "1 1 0", minWidth: 0, borderRadius: 12, padding: "8px 14px", border: "1px solid rgba(196,181,253,0.25)", display: "flex", flexDirection: "column", justifyContent: "center", boxShadow: "0 0 18px rgba(196,181,253,0.15), inset 0 0 24px rgba(196,181,253,0.04)" }}>
           {/* Background image stellar */}
           <img src="/stellar-bg.png" alt="" style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover", objectPosition: "center center", pointerEvents: "none", zIndex: 0 }} />
           {/* Voile sombre pour lisibilite du texte */}
@@ -1388,7 +1388,7 @@ export default function StellarTab({ players, teams, fixtures, logos = {}, match
                 backgroundClip: "text", animation: "silverShine 4s linear infinite",
                 filter: "drop-shadow(0 1px 4px rgba(0,0,0,0.6))",
               }}>STELLAR</h1>
-              <img src="/Stellar.png" alt="" style={{ width: 42, height: 42, objectFit: "contain", mixBlendMode: "screen", animation: "holoShift 3s linear infinite", flexShrink: 0 }} />
+              <img src="/Stellar-logo-transparent.png" alt="" style={{ width: 48, height: 48, objectFit: "contain", animation: "holoShift 3s linear infinite", flexShrink: 0, filter: "drop-shadow(0 2px 8px rgba(196,181,253,0.5))" }} />
             </div>
           </div>
         </div>
@@ -1415,18 +1415,22 @@ export default function StellarTab({ players, teams, fixtures, logos = {}, match
         </a>
 
         {/* Paliers — avec titre ÉQUIPES PAR CRÉNEAU */}
-        <div className="st-info-bloc-paliers" style={{ flexShrink: 0, display: "flex", flexDirection: "column", justifyContent: "center", gap: 6, background: "rgba(8,4,25,0.60)", backdropFilter: "blur(10px)", borderRadius: 12, padding: "8px 10px", border: "1px solid rgba(196,181,253,0.12)" }}>
-          <div>
+        <div className="st-info-bloc-paliers" style={{ position: "relative", overflow: "hidden", flex: "1 1 0", minWidth: 0, display: "flex", flexDirection: "column", justifyContent: "center", gap: 6, borderRadius: 12, padding: "8px 10px", border: "1px solid rgba(196,181,253,0.25)", boxShadow: "0 0 18px rgba(196,181,253,0.15), inset 0 0 24px rgba(196,181,253,0.04)" }}>
+          {/* Background image stellar */}
+          <img src="/stellar-bg.png" alt="" style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover", objectPosition: "center center", pointerEvents: "none", zIndex: 0 }} />
+          {/* Voile sombre pour lisibilite */}
+          <div aria-hidden style={{ position: "absolute", inset: 0, background: "linear-gradient(135deg, rgba(8,4,25,0.70), rgba(8,4,25,0.55) 50%, rgba(8,4,25,0.70))", pointerEvents: "none", zIndex: 1 }} />
+          <div style={{ position: "relative", zIndex: 2 }}>
             <div style={{ fontSize: 9, fontWeight: 800, color: "#C4B5FD", marginBottom: 2 }}>⏰ {S.stellarCreneauTitle}</div>
-            <div style={{ fontSize: 8.5, color: "rgba(255,255,255,0.45)", lineHeight: 1.4 }}>
+            <div style={{ fontSize: 8.5, color: "rgba(255,255,255,0.55)", lineHeight: 1.4, textShadow: "0 1px 3px rgba(0,0,0,0.7)" }}>
               {S.stellarCreneauDesc} <span style={{ color: "#A78BFA", fontWeight: 700 }}>{S.stellarCreneauDesc2}</span>{S.stellarCreneauDesc3}
             </div>
           </div>
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(6, 1fr)", gap: 5 }}>
+          <div style={{ position: "relative", zIndex: 2, display: "grid", gridTemplateColumns: "repeat(6, 1fr)", gap: 5 }}>
             {PALIERS.map((p, i) => (
-              <div key={i} style={{ background: `${p.color}18`, border: `1px solid ${p.color}40`, borderRadius: 6, padding: "4px 6px", textAlign: "center" }}>
+              <div key={i} style={{ background: `${p.color}28`, border: `1px solid ${p.color}55`, borderRadius: 6, padding: "4px 6px", textAlign: "center", backdropFilter: "blur(4px)" }}>
                 <div style={{ fontSize: 12, fontWeight: 800, color: p.color, fontFamily: "'DM Mono',monospace" }}>{p.pts}</div>
-                <div style={{ fontSize: 7, color: "rgba(255,255,255,0.55)", whiteSpace: "nowrap" }}>{p.reward}</div>
+                <div style={{ fontSize: 7, color: "rgba(255,255,255,0.65)", whiteSpace: "nowrap" }}>{p.reward}</div>
               </div>
             ))}
           </div>
@@ -1436,27 +1440,32 @@ export default function StellarTab({ players, teams, fixtures, logos = {}, match
         <a href="http://sorare.pxf.io/Deglingo" target="_blank" rel="noopener noreferrer"
           className="st-cta-banner"
           style={{
-            flex: 1, display: "flex", alignItems: "center", justifyContent: "space-between",
-            background: "linear-gradient(135deg, rgba(139,92,246,0.12), rgba(109,40,217,0.08))",
-            border: "1px solid rgba(167,139,250,0.35)", borderRadius: 12,
+            position: "relative", overflow: "hidden",
+            flex: "1 1 0", minWidth: 0, display: "flex", alignItems: "center", justifyContent: "space-between",
+            border: "1px solid rgba(196,181,253,0.25)", borderRadius: 12,
             padding: "10px 16px", textDecoration: "none",
-            boxShadow: "0 0 18px rgba(139,92,246,0.12)", transition: "all 0.2s",
+            boxShadow: "0 0 18px rgba(196,181,253,0.15), inset 0 0 24px rgba(196,181,253,0.04)", transition: "all 0.2s",
           }}
-          onMouseEnter={e => { e.currentTarget.style.boxShadow = "0 0 28px rgba(139,92,246,0.28)"; e.currentTarget.style.borderColor = "rgba(167,139,250,0.6)"; }}
-          onMouseLeave={e => { e.currentTarget.style.boxShadow = "0 0 18px rgba(139,92,246,0.12)"; e.currentTarget.style.borderColor = "rgba(167,139,250,0.35)"; }}
+          onMouseEnter={e => { e.currentTarget.style.boxShadow = "0 0 28px rgba(139,92,246,0.32), inset 0 0 24px rgba(196,181,253,0.04)"; e.currentTarget.style.borderColor = "rgba(167,139,250,0.6)"; }}
+          onMouseLeave={e => { e.currentTarget.style.boxShadow = "0 0 18px rgba(196,181,253,0.15), inset 0 0 24px rgba(196,181,253,0.04)"; e.currentTarget.style.borderColor = "rgba(196,181,253,0.25)"; }}
         >
-          <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+          {/* Background image stellar */}
+          <img src="/stellar-bg.png" alt="" style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover", objectPosition: "center center", pointerEvents: "none", zIndex: 0 }} />
+          {/* Voile sombre pour lisibilite */}
+          <div aria-hidden style={{ position: "absolute", inset: 0, background: "linear-gradient(135deg, rgba(8,4,25,0.65), rgba(8,4,25,0.45) 50%, rgba(8,4,25,0.65))", pointerEvents: "none", zIndex: 1 }} />
+          <div style={{ position: "relative", zIndex: 2, display: "flex", alignItems: "center", gap: 10 }}>
             <span style={{ fontSize: 18 }}>🎁</span>
             <div>
-              <div style={{ fontSize: 11, fontWeight: 800, color: "#C4B5FD", letterSpacing: "0.03em" }}>
+              <div style={{ fontSize: 11, fontWeight: 800, color: "#C4B5FD", letterSpacing: "0.03em", textShadow: "0 1px 3px rgba(0,0,0,0.7)" }}>
                 {lang === "fr" ? "Viens ouvrir tes premiers packs gratuitement" : "Open your first card packs for free"}
               </div>
-              <div style={{ fontSize: 9, color: "rgba(255,255,255,0.5)", marginTop: 1 }}>
+              <div style={{ fontSize: 9, color: "rgba(255,255,255,0.65)", marginTop: 1, textShadow: "0 1px 3px rgba(0,0,0,0.7)" }}>
                 {lang === "fr" ? "Sorare Stellar est 100% gratuit — joue dès ce soir" : "Sorare Stellar is 100% free — play tonight"}
               </div>
             </div>
           </div>
           <div style={{
+            position: "relative", zIndex: 2,
             fontSize: 10, fontWeight: 800, color: "#fff", whiteSpace: "nowrap",
             background: "linear-gradient(135deg, #8B5CF6, #6D28D9)", borderRadius: 8,
             padding: "6px 12px", boxShadow: "0 0 10px rgba(139,92,246,0.4)", flexShrink: 0, marginLeft: 8,

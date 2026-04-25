@@ -31,16 +31,5 @@
     "away_scorers": [],
     "home_assists": [],
     "away_assists": []
-  },
-  "Game:00d70e6a-ebce-428a-bac0-5572356743c5": {
-    "home": "Wolverhampton Wanderers FC",
-    "away": "Tottenham Hotspur FC",
-    "date": "2026-04-25",
-    "home_goals": 0,
-    "away_goals": 1,
-    "home_scorers": [],
-    "away_scorers": [],
-    "home_assists": [],
-    "away_assists": []
   }
 }

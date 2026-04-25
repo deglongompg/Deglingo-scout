@@ -1,5 +1,49 @@
-import { useMemo, useState } from "react";
+import { useMemo, useState, useEffect, useRef } from "react";
 import { dScoreMatch } from "../utils/dscore";
+
+// Trainee d'etoiles stellaires qui suit la souris (landing uniquement)
+function StellarTrail() {
+  const layerRef = useRef(null);
+  useEffect(() => {
+    const layer = layerRef.current;
+    if (!layer) return;
+    let lastSpawn = 0;
+    let lastX = 0, lastY = 0;
+    const onMove = (e) => {
+      // Ignore touch events — uniquement souris
+      if (e.pointerType && e.pointerType !== "mouse") return;
+      const now = performance.now();
+      if (now - lastSpawn < 26) return;
+      // Vitesse de la souris (px depuis dernier spawn)
+      const speed = Math.hypot(e.clientX - lastX, e.clientY - lastY);
+      if (speed < 2) return;
+      lastSpawn = now; lastX = e.clientX; lastY = e.clientY;
+
+      const sparkle = Math.random() < 0.18;
+      const size = sparkle ? 12 + Math.random() * 8 : 4 + Math.random() * 6;
+      const hue = 250 + Math.random() * 60; // violet -> rose-cyan
+      const dx = (Math.random() - 0.5) * 28;
+      const dy = 12 + Math.random() * 24;
+      const life = 900 + Math.random() * 500;
+
+      const el = document.createElement("div");
+      el.className = "stellar-trail-particle" + (sparkle ? " is-sparkle" : "");
+      el.style.left = e.clientX + "px";
+      el.style.top = e.clientY + "px";
+      el.style.width = size + "px";
+      el.style.height = size + "px";
+      el.style.setProperty("--dx", dx + "px");
+      el.style.setProperty("--dy", dy + "px");
+      el.style.setProperty("--hue", String(Math.round(hue)));
+      el.style.setProperty("--life", life + "ms");
+      layer.appendChild(el);
+      el.addEventListener("animationend", () => el.remove(), { once: true });
+    };
+    window.addEventListener("pointermove", onMove, { passive: true });
+    return () => window.removeEventListener("pointermove", onMove);
+  }, []);
+  return <div ref={layerRef} className="stellar-trail-layer" aria-hidden />;
+}
 
 // Cartes Sorare — Stellar Shiny (common, edition stellar_shiny_base) + Pro (limited, holo doré)
 // Ordre = ordre des pastilles ligues sur la landing (Stellar / L1 / PL / Liga / Bundes)
@@ -470,6 +514,8 @@ export default function LandingPage({ players, onEnter, onNavigate }) {
       position: "relative",
       zoom: 1.25,
     }}>
+      {/* Stellar mouse trail — particules qui suivent la souris */}
+      <StellarTrail />
       {/* Galaxy background */}
       <div style={{
         position: "absolute", inset: 0, zIndex: 0,

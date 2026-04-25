@@ -531,43 +531,45 @@ export default function LandingPage({ players, onEnter, onNavigate }) {
       {/* Content */}
       <div style={{ position: "relative", zIndex: 2, flex: 1, display: "flex", flexDirection: "column", alignItems: "center" }}>
 
-        {/* ==== Bouton DATABASE — tout en haut, au-dessus du header ==== */}
-        <div style={{ display: "flex", justifyContent: "center", padding: "18px 24px 4px", width: "100%" }}>
+        {/* ==== HEADER ==== logo+titre / bouton Database / toggle langue, alignes sur 1 ligne */}
+        <div style={{ padding: "14px 24px 0", display: "grid", gridTemplateColumns: "1fr auto 1fr", alignItems: "center", gap: 12, alignSelf: "stretch", maxWidth: 1200, width: "100%", margin: "0 auto" }}>
+          {/* Gauche : logo + DEGLINGO SCOUT */}
+          <div style={{ display: "flex", alignItems: "center", gap: 12, minWidth: 0 }}>
+            <img src="/logo.png" alt="Deglingo Scout" style={{ width: 40, height: 40, objectFit: "contain", flexShrink: 0 }} />
+            <div style={{ minWidth: 0 }}>
+              <div style={{
+                fontSize: 17, fontWeight: 900, letterSpacing: "-0.5px",
+                background: "linear-gradient(90deg,#C0C0C0,#A8E8D0,#B0C4E8,#D4B0E8,#fff,#D4B0E8,#B0C4E8,#C0C0C0)",
+                backgroundSize: "200% 100%",
+                WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent", backgroundClip: "text",
+                animation: "silverShine 3s linear infinite",
+              }}>DEGLINGO SCOUT</div>
+              <div style={{ fontSize: 9, color: "rgba(255,255,255,0.35)", letterSpacing: "2px", textTransform: "uppercase" }}>Sorare Analytics</div>
+            </div>
+          </div>
+          {/* Centre : bouton Database (taille -20% par rapport a la version haute) */}
           <button onClick={() => onNavigate ? onNavigate("db") : onEnter()}
             className="aurora-chip landing-db-cta"
             style={{
               position: "relative", overflow: "hidden",
-              padding: "18px 52px", borderRadius: 99,
-              cursor: "pointer", fontSize: 19, fontWeight: 800, fontFamily: "Outfit",
+              padding: "13px 38px", borderRadius: 99,
+              cursor: "pointer", fontSize: 14, fontWeight: 800, fontFamily: "Outfit",
               color: "#fff", letterSpacing: "0.07em", textTransform: "uppercase",
               border: "1px solid rgba(196,181,253,0.55)",
               background: "linear-gradient(135deg, #7C3AED 0%, #A78BFA 40%, #EC4899 100%)",
               boxShadow: "0 0 24px rgba(167,139,250,0.5), 0 0 2px rgba(236,72,153,0.5), inset 0 1px 0 rgba(255,255,255,0.18)",
               display: "inline-flex", alignItems: "center", justifyContent: "center",
+              justifySelf: "center",
               "--chip-accent": "#C4B5FD",
             }}>
             <span aria-hidden className="landing-db-sparkle" />
             <span style={{ position: "relative", zIndex: 4 }}>Database</span>
           </button>
-        </div>
-
-        {/* ==== HEADER ==== */}
-        <div style={{ padding: "14px 24px 0", display: "flex", alignItems: "center", gap: 12, alignSelf: "stretch", maxWidth: 1200, width: "100%", margin: "0 auto" }}>
-          <img src="/logo.png" alt="Deglingo Scout" style={{ width: 40, height: 40, objectFit: "contain" }} />
-          <div style={{ flex: 1 }}>
-            <div style={{
-              fontSize: 17, fontWeight: 900, letterSpacing: "-0.5px",
-              background: "linear-gradient(90deg,#C0C0C0,#A8E8D0,#B0C4E8,#D4B0E8,#fff,#D4B0E8,#B0C4E8,#C0C0C0)",
-              backgroundSize: "200% 100%",
-              WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent", backgroundClip: "text",
-              animation: "silverShine 3s linear infinite",
-            }}>DEGLINGO SCOUT</div>
-            <div style={{ fontSize: 9, color: "rgba(255,255,255,0.35)", letterSpacing: "2px", textTransform: "uppercase" }}>Sorare Analytics</div>
-          </div>
-          {/* Lang toggle */}
+          {/* Droite : toggle FR/EN */}
           <button
             onClick={() => setLang(l => l === "fr" ? "en" : "fr")}
             style={{
+              justifySelf: "end",
               background: "rgba(255,255,255,0.06)", border: "1px solid rgba(255,255,255,0.15)",
               borderRadius: 10, padding: "5px 12px", cursor: "pointer",
               fontSize: 11, fontWeight: 800, color: "rgba(255,255,255,0.75)",

@@ -13,10 +13,14 @@ Usage:
   python3 fetch_all_players.py ALL --legacy  # Mode ancien (1 player / query) si batch plante
 """
 
-import requests, json, time, math, sys, os
+import requests, json, time, math, sys, os, io
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from datetime import datetime
 from dotenv import load_dotenv
+
+# Force UTF-8 stdout pour Windows console cp1252 (sinon crash sur emoji)
+sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding='utf-8', errors='replace')
+sys.stderr = io.TextIOWrapper(sys.stderr.buffer, encoding='utf-8', errors='replace')
 
 load_dotenv()
 

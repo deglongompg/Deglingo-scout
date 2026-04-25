@@ -5,7 +5,7 @@ STATUS_FILE  = "player_status.json"
 PRICES_FILE  = "player_prices.json"
 
 # ── Sauvegarde des champs à préserver depuis players.json existant ──────────
-GW_FIELDS     = ["last_so5_score", "last_so5_date",
+GW_FIELDS     = ["last_so5_score", "last_so5_date", "last_so5_decisives",
                   "last_match_home_goals", "last_match_away_goals",
                   "game_id", "game_home_team", "game_away_team"]
 STATUS_FIELDS = ["injured", "suspended", "sorare_proj", "sorare_starter_pct"]

@@ -105,6 +105,36 @@ const getPaliers = (league, rarity) => {
 /* ─── Club matching ─── */
 const stripAcc = (s) => s.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
 const normClub = (n) => stripAcc((n || "").replace(/-/g, " ").trim());
+/* ─── Decisive stats Sorare -> icones (dropdown joueurs match) ─── */
+const DECISIVE_ICONS = {
+  goals:              { emoji: "⚽",  label: "But",            positive: true  },
+  goal_assist:        { emoji: "🅰",   label: "Passe déc.",     positive: true  },
+  assist_penalty_won: { emoji: "🎯",  label: "Péno provoqué",  positive: true  },
+  clearance_off_line: { emoji: "🛡",   label: "Sauvetage ligne",positive: true  },
+  last_man_tackle:    { emoji: "🚧",  label: "Tacle décisif",  positive: true  },
+  penalty_save:       { emoji: "🧤",  label: "Péno arrêté",    positive: true  },
+  red_card:           { emoji: "🟥",  label: "Carton rouge",   positive: false },
+  own_goals:          { emoji: "💥",  label: "CSC",            positive: false },
+  penalty_conceded:   { emoji: "⚖",  label: "Péno concédé",   positive: false },
+  error_lead_to_goal: { emoji: "⚠",   label: "Erreur but",     positive: false },
+};
+function renderDecisives(decisives) {
+  if (!decisives || decisives.length === 0) return null;
+  return decisives.map((d, idx) => {
+    const meta = DECISIVE_ICONS[d.stat];
+    if (!meta) return null;
+    const color = meta.positive ? "#4ADE80" : "#F87171";
+    const v = d.value || 1;
+    return (
+      <span key={idx} title={`${meta.label}${v > 1 ? ` ×${v}` : ""}`}
+        style={{ display: "inline-flex", alignItems: "center", gap: 1, fontSize: 11, color, lineHeight: 1, fontFamily: "Outfit", fontWeight: 700 }}>
+        <span style={{ fontSize: 12 }}>{meta.emoji}</span>
+        {v > 1 && <span style={{ fontSize: 9, fontFamily: "'DM Mono',monospace" }}>×{v}</span>}
+      </span>
+    );
+  }).filter(Boolean);
+}
+
 const CLUB_ALIASES = [
   ["bayern munchen", "bayern munich"], ["rasenballsport leipzig", "rb leipzig"],
   ["bayer 04 leverkusen", "bayer leverkusen"], ["monchengladbach", "m.gladbach"],
@@ -1447,7 +1477,8 @@ export default function SorareProTab({ players, teams, fixtures, logos = {}, mat
                                     <div key={pi} style={{ display: "flex", alignItems: "center", gap: 6, padding: "3px 8px", borderBottom: pi < matchPlayers.length - 1 ? "1px solid rgba(255,255,255,0.04)" : "none" }}>
                                       <span style={{ fontSize: 7, fontWeight: 800, background: pc, borderRadius: 2, padding: "1px 4px", color: "#fff", minWidth: 22, textAlign: "center" }}>{p.position}</span>
                                       {logos[p.club] && <img src={`/data/logos/${logos[p.club]}`} alt="" style={{ width: 10, height: 10, objectFit: "contain" }} />}
-                                      <span style={{ fontSize: 10, color: "rgba(255,255,255,0.8)", flex: 1, whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>{p.name.split(" ").pop()}</span>
+                                      <span style={{ fontSize: 10, color: "rgba(255,255,255,0.8)", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis", flexShrink: 0 }}>{p.name.split(" ").pop()}</span>
+                                      <span style={{ display: "inline-flex", alignItems: "center", gap: 4, marginLeft: 4, flex: 1 }}>{renderDecisives(p.last_so5_decisives)}</span>
                                       <span style={{ fontSize: 8, color: "rgba(255,255,255,0.3)" }}>{isHome ? "H" : "A"}</span>
                                       <span style={{ fontSize: 12, fontWeight: 900, color: col, fontFamily: "'DM Mono',monospace", minWidth: 28, textAlign: "right" }}>{scp}</span>
                                     </div>

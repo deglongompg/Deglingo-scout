@@ -33,10 +33,15 @@ OUT_PATHS = [
     "public/data/players.json",
 ]
 
-# ── Query score joueur (avec game id) — fragment utilise dans batchs GraphQL ──
+# ── Query score joueur (avec game id + actions decisives) — fragment utilise dans batchs GraphQL ──
+# detailedScore retourne TOUTES les stats du match. On filtre cote parsing pour ne garder
+# que les decisive stats (category=POSITIVE_DECISIVE_STAT|NEGATIVE_DECISIVE_STAT) avec value!=0.
+# Ainsi on peut afficher des icones (but, passe dec, sauvetage ligne, peno arrete, etc.)
+# dans le dropdown joueur du calendrier.
 SCORE_FRAGMENT = """{
       so5Scores(last: 1) {
         score
+        detailedScore { stat statValue category }
         game {
           id date homeScore awayScore
           homeTeam { name }
@@ -47,7 +52,7 @@ SCORE_FRAGMENT = """{
 
 
 def parse_score_data(p):
-    """Parse la reponse player.so5Scores -> dict score + metadata match."""
+    """Parse la reponse player.so5Scores -> dict score + metadata match + decisive stats."""
     if not p:
         return None
     scores = p.get("so5Scores") or []
@@ -55,9 +60,23 @@ def parse_score_data(p):
     gw_score = last_s.get("score")
     game     = last_s.get("game") or {}
     gw_date  = (game.get("date") or "")[:10] or None
+
+    # Extract decisive stats (POSITIVE/NEGATIVE_DECISIVE_STAT only, value != 0)
+    decisives = []
+    for s in (last_s.get("detailedScore") or []):
+        cat = s.get("category", "")
+        val = s.get("statValue") or 0
+        if val != 0 and "DECISIVE" in cat:
+            decisives.append({
+                "stat": s.get("stat", ""),
+                "value": int(val) if val == int(val) else val,
+                "positive": cat == "POSITIVE_DECISIVE_STAT",
+            })
+
     return {
         "last_so5_score":        round(gw_score, 2) if gw_score is not None else None,
         "last_so5_date":         gw_date,
+        "last_so5_decisives":    decisives,  # [{stat, value, positive}] pour icones UI
         "last_match_home_goals": game.get("homeScore"),
         "last_match_away_goals": game.get("awayScore"),
         "game_id":               game.get("id"),
@@ -251,7 +270,9 @@ for p in players:
     latest = latest_match_for_player_club(p.get("club", ""))
     last_so5 = p.get("last_so5_date")
     # Skip si data deja a jour : last_so5_date >= dernier match joue
-    if latest and last_so5 and last_so5 >= latest:
+    # Skip si data deja a jour ET on a deja les decisives (sinon force refetch)
+    has_decisives_field = "last_so5_decisives" in p
+    if latest and last_so5 and last_so5 >= latest and has_decisives_field:
         skipped_fresh += 1
         continue
     targets.append(p)
@@ -263,7 +284,7 @@ print(f"Joueurs a fetcher : {len(targets)}")
 # ── FETCH SCORES JOUEURS (batch GraphQL + parallele) ──────────────────────────
 from concurrent.futures import ThreadPoolExecutor, as_completed
 
-BATCH_SIZE = 150 if API_KEY else 50   # complexity limit 30000 avec key vs 500 sans
+BATCH_SIZE = 70 if API_KEY else 50   # complexity limit 30000 (avec detailedScore: ~410/player)
 WORKERS = 4
 
 scores_map = {}
@@ -335,9 +356,11 @@ for path in OUT_PATHS:
             if s["last_so5_score"] is not None:
                 p["last_so5_score"] = s["last_so5_score"]
                 p["last_so5_date"]  = s["last_so5_date"]
+                p["last_so5_decisives"] = s.get("last_so5_decisives", [])
             else:
                 p.setdefault("last_so5_score", None)
                 p.setdefault("last_so5_date",  None)
+                p.setdefault("last_so5_decisives", [])
             if s["last_match_home_goals"] is not None:
                 p["last_match_home_goals"] = s["last_match_home_goals"]
                 p["last_match_away_goals"] = s["last_match_away_goals"]

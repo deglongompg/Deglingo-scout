@@ -1,10 +1,54 @@
 {
-  "Game:8811e302-dcb5-4d27-8ba6-d4f9d4d2516c": {
-    "home": "Stade de Reims",
-    "away": "Red Star FC 93",
-    "date": "2026-04-18",
+  "Game:aa918586-5781-4838-aad9-486277b9fda8": {
+    "home": "RB Leipzig",
+    "away": "1. FC Union Berlin",
+    "date": "2026-04-24",
+    "home_goals": 3,
+    "away_goals": 1,
+    "home_scorers": [],
+    "away_scorers": [],
+    "home_assists": [],
+    "away_assists": []
+  },
+  "Game:f092a83f-3e8d-46c4-9658-6a07926f6168": {
+    "home": "Stade Brestois 29",
+    "away": "RC Lens",
+    "date": "2026-04-24",
+    "home_goals": 3,
+    "away_goals": 3,
+    "home_scorers": [],
+    "away_scorers": [],
+    "home_assists": [],
+    "away_assists": []
+  },
+  "Game:ba4b32be-9316-4c0a-8469-1d20b2b30396": {
+    "home": "Red Star FC 93",
+    "away": "En Avant Guingamp",
+    "date": "2026-04-24",
     "home_goals": 3,
     "away_goals": 2,
+    "home_scorers": [],
+    "away_scorers": [],
+    "home_assists": [],
+    "away_assists": []
+  },
+  "Game:caf0ae30-12c8-4dda-8002-7fe7906c1f7e": {
+    "home": "Sunderland AFC",
+    "away": "Nottingham Forest FC",
+    "date": "2026-04-24",
+    "home_goals": 0,
+    "away_goals": 5,
+    "home_scorers": [],
+    "away_scorers": [],
+    "home_assists": [],
+    "away_assists": []
+  },
+  "Game:1877f344-f271-4837-a431-4896d873ed9b": {
+    "home": "Real Betis",
+    "away": "Real Madrid",
+    "date": "2026-04-24",
+    "home_goals": 1,
+    "away_goals": 1,
     "home_scorers": [],
     "away_scorers": [],
     "home_assists": [],

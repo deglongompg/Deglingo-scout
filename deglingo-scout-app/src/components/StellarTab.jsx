@@ -5,6 +5,7 @@ import { T, t } from "../utils/i18n";
 import { getDailyLockKey, loadFrozen, saveFrozen } from "../utils/freeze";
 import { pushTeams, fetchCloudStore, extractStellarTeams } from "../utils/cloudSync";
 import SkyrocketGauge from "./SkyrocketGauge";
+import StellarHotStreak from "./StellarHotStreak";
 
 const PC = POSITION_COLORS;
 
@@ -1496,6 +1497,11 @@ export default function StellarTab({ players, teams, fixtures, logos = {}, match
 
 {/* Bouton CONNECT déplacé dans l'overlay flou du builder */}
 
+      </div>
+
+      {/* ═══ HOT STREAK tracker (6 paliers + sync clipboard depuis Sorare) ═══ */}
+      <div style={{ marginBottom: 12 }}>
+        <StellarHotStreak lang={lang} themeAccent="#A78BFA" />
       </div>
 
       {/* ═══ CALENDRIER + bouton semaine suivante ═══ */}

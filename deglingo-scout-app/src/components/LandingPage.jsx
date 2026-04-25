@@ -1,38 +1,39 @@
 import { useMemo, useState } from "react";
 import { dScoreMatch } from "../utils/dscore";
 
-// Cartes Sorare — Stellar (common, fond galaxy) + Pro (rare, holo doré)
-// Ordre = ordre des pastilles ligues sur la landing (Stellar / L1 / PL / Liga / Bundes / MLS)
+// Cartes Sorare — Stellar Shiny (common, edition stellar_shiny_base) + Pro (limited, holo doré)
+// Ordre = ordre des pastilles ligues sur la landing (Stellar / L1 / PL / Liga / Bundes)
+// Toutes les cartes stellar = edition Shiny (label SHINY, halo cyan sur fond galaxy)
 const SHOWCASE_CARDS = [
   {
     name: "Kylian Mbappé", pos: "ATT", league: "Stellar",
-    stellar: "https://assets.sorare.com/cardsamplepicture/7ac68f27-df55-4780-8cfe-e9db4e6aa0fa/picture/tinified-f602555563a6fb31be3bbd87cc71965d.png",
+    // stellar_shiny_base (ca8c1ef9, 1/50 — confirmed via cardEditionName)
+    stellar: "https://assets.sorare.com/cardsamplepicture/ca8c1ef9-efcb-4169-8f44-4b424d7e60ac/picture/tinified-aac0bc26702999abfb30c4ba8e20feab.png",
     pro:     "https://assets.sorare.com/card/0745baf1-be7d-4450-a434-b0dac9c46719/picture/tinified-4a44d355d026bad26b0442dacb77dcd3.png",
   },
   {
     name: "Ousmane Dembélé", pos: "ATT", league: "L1",
-    stellar: "https://assets.sorare.com/cardsamplepicture/f103a860-8b47-4b6b-96fe-d1b48bc3083d/picture/tinified-699c67b478227097061191ddc149fc07.png",
+    // stellar_shiny_base (49211bf3 — PSG galaxy)
+    stellar: "https://assets.sorare.com/cardsamplepicture/49211bf3-6526-4fb1-b45e-d278630b37f4/picture/tinified-e20bcbe43fbf32c16ff44a31381b7790.png",
     pro:     "https://assets.sorare.com/card/50b142ee-a741-49ba-97e5-7dce14130af3/picture/tinified-2eae4553c2dd7e62a2f09051c4013ac6.png",
   },
   {
     name: "Cole Palmer", pos: "MIL", league: "PL",
-    stellar: "https://assets.sorare.com/cardsamplepicture/57f8457c-b51f-418e-aeef-a313cc9ed4d8/picture/tinified-f8ce522ce51c40f7028ca76b39730572.png",
+    // stellar_shiny_base (f8fe8242 — Chelsea galaxy)
+    stellar: "https://assets.sorare.com/cardsamplepicture/f8fe8242-47e2-48de-b9e4-86ec8fe9f141/picture/tinified-563029baed6c09bb2a81ee3d56fd8518.png",
     pro:     "https://assets.sorare.com/card/84a09895-5e8b-4b88-be16-e68fc98235aa/picture/tinified-0a6f73f93c4e4a64badbf07d3d6aa2cd.png",
   },
   {
     name: "Lamine Yamal", pos: "ATT", league: "Liga",
+    // stellar_shiny_base (468e803d — Barca galaxy)
     stellar: "https://assets.sorare.com/cardsamplepicture/468e803d-7580-4a1e-a7a6-dae371e8cf1d/picture/tinified-38989f6f9e634eec76cc25acaba03084.png",
     pro:     "https://assets.sorare.com/card/16db3f08-f9e4-40b5-ba74-da2620d8ef8f/picture/tinified-dcc4912c32f04c442a3035d03953b3b3.png",
   },
   {
     name: "Michael Olise", pos: "MIL", league: "Bundes",
-    stellar: "https://assets.sorare.com/cardsamplepicture/93fd7ea9-b477-4248-b4ec-c55c48a5b8ba/picture/tinified-dfe11e6ad7f3a9bc26029e066b2a56b7.png",
+    // stellar_shiny_base (b5ca6832 — Bayern galaxy, NEW Bundes Stellar arrivee 2026)
+    stellar: "https://assets.sorare.com/cardsamplepicture/b5ca6832-a5fa-4416-9fa0-54b871a19b72/picture/tinified-c757014efca631787a11956462b67901.png",
     pro:     "https://assets.sorare.com/card/bcbebe89-e685-473c-aa97-75b3902b3433/picture/tinified-8dda7821cf00ffc763b5dc7eac31e951.png",
-  },
-  {
-    name: "Lionel Messi", pos: "ATT", league: "MLS",
-    stellar: "https://assets.sorare.com/cardsamplepicture/b77d8d7a-af48-4bde-a7d9-32c96c86e87c/picture/tinified-1c16ec31bb180a03723e0e1cde41f627.png",
-    pro:     "https://assets.sorare.com/card/f8174531-3d85-4621-98c3-7d2e294d6135/picture/tinified-76673ef2bb643aa65bc1f7bf7d17f9b8.png",
   },
 ];
 const CARD_PLAYERS = SHOWCASE_CARDS.map(c => c.name);

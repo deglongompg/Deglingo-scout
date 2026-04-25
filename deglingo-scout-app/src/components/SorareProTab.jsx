@@ -175,7 +175,16 @@ export default function SorareProTab({ players, teams, fixtures, logos = {}, mat
   const isMobile = typeof window !== "undefined" && window.innerWidth <= 768;
 
   // ── UI State ──
-  const [league, setLeague] = useState("L1");
+  const [league, setLeague] = useState(() => {
+    try {
+      const pre = sessionStorage.getItem("pro_preselect_league");
+      if (pre) {
+        sessionStorage.removeItem("pro_preselect_league");
+        if (["L1","PL","Liga","Bundes","MLS","Champion"].includes(pre)) return pre;
+      }
+    } catch (_) {}
+    return "L1";
+  });
   const [rarity, setRarity] = useState("limited");
   const [selectedSlot, setSelectedSlot] = useState(null);
   const [hideUsed, setHideUsed] = useState(true);

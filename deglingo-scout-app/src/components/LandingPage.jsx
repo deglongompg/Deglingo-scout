@@ -552,9 +552,37 @@ export default function LandingPage({ players, onEnter, onNavigate }) {
             <span style={{ color: "rgba(255,255,255,0.5)" }}>{t.heroSub2}</span>
           </p>
 
-          {/* League chips — 5 ligues (Champion arrive plus tard) */}
+          {/* League chips — Stellar + 5 ligues Pro (clickables → tab + ligue preselectionnee) */}
           {/* Fond : banniere Sorare (texture droite). Logo : PNG detoure centre. */}
           <div className="landing-leagues" style={{ display: "flex", gap: 8, justifyContent: "center", flexWrap: "wrap", marginBottom: 24 }}>
+            {/* Pastille STELLAR — navigue vers l'onglet Stellar */}
+            <button key="stellar" type="button" title="Sorare Stellar"
+              onClick={() => onNavigate ? onNavigate("stellar") : onEnter()}
+              className="aurora-chip"
+              style={{
+                position: "relative", overflow: "hidden",
+                width: 150, height: 48, padding: 0, borderRadius: 99,
+                cursor: "pointer",
+                border: "1px solid rgba(196,181,253,0.45)",
+                backgroundColor: "rgba(10,5,25,0.6)",
+                boxShadow: "0 0 18px rgba(196,181,253,0.30), 0 0 2px rgba(196,181,253,0.40)",
+                "--chip-accent": "#C4B5FD",
+              }}>
+              <img src="/stellar-bg.png" alt="" style={{
+                width: "100%", height: "100%", objectFit: "cover",
+                objectPosition: "center center",
+                display: "block", pointerEvents: "none",
+              }} />
+              <span style={{
+                position: "absolute", top: "50%", left: "50%",
+                transform: "translate(-50%, -50%)",
+                fontFamily: "Outfit", fontWeight: 900, fontSize: 13,
+                color: "#fff", letterSpacing: "0.08em", textTransform: "uppercase",
+                textShadow: "0 1px 4px rgba(0,0,0,0.9)",
+                pointerEvents: "none", whiteSpace: "nowrap",
+              }}>✨ Stellar</span>
+            </button>
+
             {[
               { code: "L1",     color: "#3B82F6", name: "Ligue 1",        bg: "/L1-bg.png",   logo: "/L1.png" },
               { code: "PL",     color: "#D946EF", name: "Premier League", bg: "/pl-bg.png",   logo: "/pl.png" },
@@ -568,14 +596,22 @@ export default function LandingPage({ players, onEnter, onNavigate }) {
               const isBundes = l.code === "Bundes";
               const whiteLogo = isL1 || isPL || isLiga;
               return (
-              <div key={l.code} title={l.name} style={{
-                position: "relative", overflow: "hidden",
-                width: 150, height: 48,
-                padding: 0, borderRadius: 99,
-                border: `1px solid ${l.color}66`,
-                backgroundColor: "rgba(10,5,25,0.6)",
-                boxShadow: `0 0 18px ${l.color}30, 0 0 2px ${l.color}40`,
-              }}>
+              <button key={l.code} type="button" title={l.name}
+                onClick={() => {
+                  try { sessionStorage.setItem("pro_preselect_league", l.code); } catch (_) {}
+                  if (onNavigate) onNavigate("pro"); else onEnter();
+                }}
+                className="aurora-chip"
+                style={{
+                  position: "relative", overflow: "hidden",
+                  width: 150, height: 48,
+                  padding: 0, borderRadius: 99,
+                  cursor: "pointer",
+                  border: `1px solid ${l.color}66`,
+                  backgroundColor: "rgba(10,5,25,0.6)",
+                  boxShadow: `0 0 18px ${l.color}30, 0 0 2px ${l.color}40`,
+                  "--chip-accent": l.color,
+                }}>
                 <img src={l.bg} alt="" style={{
                   width: "100%", height: "100%", objectFit: "cover",
                   objectPosition: "center center",
@@ -607,7 +643,7 @@ export default function LandingPage({ players, onEnter, onNavigate }) {
                     filter: `${whiteLogo ? "brightness(0) invert(1) " : ""}drop-shadow(0 1px 3px rgba(0,0,0,0.7))`,
                   }} />
                 )}
-              </div>
+              </button>
               );
             })}
           </div>

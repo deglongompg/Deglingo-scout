@@ -1477,8 +1477,7 @@ export default function SorareProTab({ players, teams, fixtures, logos = {}, mat
                                       <span style={{ fontSize: 7, fontWeight: 800, background: pc, borderRadius: 2, padding: "1px 4px", color: "#fff", minWidth: 22, textAlign: "center" }}>{p.position}</span>
                                       {logos[p.club] && <img src={`/data/logos/${logos[p.club]}`} alt="" style={{ width: 10, height: 10, objectFit: "contain" }} />}
                                       <span style={{ fontSize: 10, color: "rgba(255,255,255,0.8)", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis", flexShrink: 0 }}>{p.name.split(" ").pop()}</span>
-                                      <span style={{ display: "inline-flex", alignItems: "center", gap: 4, marginLeft: 4, flex: 1 }}>{renderDecisives(p.last_so5_decisives)}</span>
-                                      <span style={{ fontSize: 8, color: "rgba(255,255,255,0.3)" }}>{isHome ? "H" : "A"}</span>
+                                      <span style={{ display: "flex", alignItems: "center", justifyContent: "flex-end", gap: 0, marginLeft: "auto", flexShrink: 0 }}>{renderDecisives(p.last_so5_decisives)}</span>
                                       <span style={{ fontSize: 12, fontWeight: 900, color: col, fontFamily: "'DM Mono',monospace", minWidth: 28, textAlign: "right" }}>{scp}</span>
                                     </div>
                                   );

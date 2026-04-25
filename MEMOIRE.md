@@ -522,3 +522,159 @@ fallback manuel.
 
 Scraping automatique Understat pour supprimer le step manuel (extraire le JSON
 encode dans `<script>` de la page league).
+
+---
+
+## 🎯 DECISIVE SCORES — actions decisives Sorare (decouvert 2026-04-26)
+
+### Le champ `detailedScore`
+
+L'API Sorare expose toutes les stats du match d'un joueur via :
+
+```graphql
+so5Scores(last: 1) {
+  score
+  detailedScore { stat statValue category }
+}
+```
+
+`stat` = nom de la stat (string), `statValue` = valeur (Float), `category` = enum :
+- `POSITIVE_DECISIVE_STAT` (boost score) : goals, goal_assist, assist_penalty_won,
+  clearance_off_line, last_man_tackle, penalty_save
+- `NEGATIVE_DECISIVE_STAT` (penalise) : red_card, own_goals, penalty_conceded,
+  error_lead_to_goal
+- Autres categories : GENERAL, DEFENDING, POSSESSION, PASSING, ATTACKING (pas de filtre)
+
+### Mapping stat → emoji (UI dropdown joueurs match)
+
+```js
+goals              → ⚽ But
+goal_assist        → 👟 Passe dec.
+assist_penalty_won → 🎯 Peno provoque
+clearance_off_line → 🛡 Sauvetage ligne
+last_man_tackle    → 🚧 Tacle decisif
+penalty_save       → 🧤 Peno arrete
+red_card           → 🟥 Rouge
+own_goals          → 💥 CSC
+penalty_conceded   → ⚖ Peno concede
+error_lead_to_goal → ⚠ Erreur but
+```
+
+**Convention UI** : icone repete N fois pour la valeur (2 buts = ⚽⚽, pas ⚽×2).
+Render dans dropdown match aligne a droite (avant le score), couleur verte
+positive / rouge negative.
+
+### Stockage players.json
+
+`fetch_gw_scores.py` filtre les decisives (`category` contient "DECISIVE", `value!=0`)
+et stocke comme :
+```json
+"last_so5_decisives": [{"stat": "goal_assist", "value": 2, "positive": true}]
+```
+
+### Cout API : BATCH_SIZE 70 max
+
+L'ajout de `detailedScore` double la complexity de la query. Avec batch=150
+on hit la limite Sorare 30000 (61801 calculee). **BATCH_SIZE=70** est le max safe.
+
+---
+
+## 🔴 LIVE vs FT — game.statusTyped (decouvert 2026-04-26)
+
+### Le champ
+
+```graphql
+game { statusTyped }
+```
+
+Valeurs possibles :
+- `playing` = match en cours (LIVE — score evolutif)
+- `played` = match termine (FT — score final)
+- `scheduled` = pas encore joue
+- `on_hold` = suspendu
+- `canceled` = annule
+
+### Stockage + smart-skip
+
+`fetch_gw_scores.py` stocke `last_match_status` dans players.json. Le smart-skip
+**force le refetch** si status='playing' (les scores live evoluent — ne pas skipper).
+
+### UI
+
+- Match `playing` → badge `● LIVE` rouge anime (animation `stellarLivePulse` 1.6s)
+  + bg/border rouge sombre
+- Match `played` → badge `FT` violet (Stellar) ou themeAccent (Pro)
+- Detection : lit `last_match_status` du 1er joueur du match via `playersOf()`
+
+---
+
+## 🐛 BUG fixtures dedup (fix 2026-04-26) — CRITIQUE
+
+### Symptome
+
+`MAJ_turbo` n'affichait pas les scores des matchs du jour pour certaines ligues
+(L1, Bundesliga). Ex : OL 3-2 Auxerre invisible alors que match termine.
+
+### Cause racine
+
+`fetch_fixtures.py` ligne 599 deduplicait `upcoming` vs `finished` **par date seule** :
+```python
+upcoming_dates = {f["date"] for f in fixtures}
+finished = [f for f in finished if f["date"] not in upcoming_dates]
+```
+
+Probleme : si PSG-Angers est UPCOMING aujourd'hui (17h) et OL-Auxerre FINISHED
+aujourd'hui (13h, deja joue), les 2 ont meme date '2026-04-25'. Le dedup virait
+**OL-Auxerre** car sa date etait dans upcoming_dates.
+
+Cascade :
+- OL-Auxerre absent de fixtures.json
+- `latest_played_per_club["Olympique Lyonnais"]` = 19/04 (PSG-OL ancien match)
+- Smart-skip dans fetch_gw_scores : Tolisso `last_so5_date=2026-04-19 >= latest=2026-04-19` → SKIP
+- Aucun score d'aujourd'hui pour Lyon
+
+### Fix
+
+Dedup par tuple `(date, home_api, away_api)` au lieu de juste `date`.
+Resultat : 593 joueurs patches (vs 65 avant), 9 matchs resumes (vs 0).
+
+---
+
+## 📛 NOMS DE CLUBS — clubMatch normClub aggressive (fix 2026-04-26)
+
+### Symptome
+
+Dropdown joueurs ne s'ouvrait pas pour Bayern, Leverkusen, Mönchengladbach
+(Bundesliga). Players.json a "FC Bayern München" mais fixtures.json a "Bayern Munich"
+(traduction English) → mismatch.
+
+### Fix dans `clubMatch` (StellarTab.jsx local)
+
+`normClub` strip aggressivement :
+- Codes club : FC, AFC, CF, SC, AC, AS, RC, SSC, VfL, VfB, TSG, FSV
+- Annees fondation : `\b(18|19|20)\d{2}\b` (1846, 1899, 1910...)
+- Chiffres isoles : `\b\d{1,2}\b` (le '04' de Bayer 04 Leverkusen)
+- Dots/dashes
+
+Aliases ajoutes :
+- `munchen ↔ munich` (Bayern, Borussia... allemands)
+- `monchengladbach ↔ gladbach`
+- `sporting clube de portugal ↔ sporting cp`
+- `paris saint germain ↔ paris sg`
+
+---
+
+## 🐍 fetch_all_players.py — Unicode crash Windows (fix 2026-04-26)
+
+**Symptome** : `UnicodeEncodeError: 'charmap' codec can't encode character '\U0001f511'`
+sur le print "🔑 API Key détectée — mode TURBO". Plantait MAJ_hebdo auto 05:30.
+
+**Fix** : ajouter en haut de fetch_all_players.py :
+```python
+import io
+sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding='utf-8', errors='replace')
+sys.stderr = io.TextIOWrapper(sys.stderr.buffer, encoding='utf-8', errors='replace')
+```
+
+Pattern a appliquer a tout futur script Python qui print des emojis sur Windows.
+

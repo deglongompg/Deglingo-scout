@@ -1,5 +1,5 @@
 {
-  "generated": "2026-04-26T01:19:28.036921",
+  "generated": "2026-04-26T01:24:53.416267",
   "matchdays": {
     "L1": 29,
     "PL": 36,
@@ -11,6 +11,16 @@
     "MLS": "MLS"
   },
   "fixtures": [
+    {
+      "home": "Angers",
+      "away": "Paris Saint Germain",
+      "date": "2026-04-25",
+      "kickoff": "17:00",
+      "matchday": 31,
+      "league": "L1",
+      "home_api": "Angers SCO",
+      "away_api": "Paris Saint-Germain FC"
+    },
     {
       "home": "Toulouse",
       "away": "Monaco",
@@ -402,6 +412,16 @@
       "home_api": "Olympique Lyonnais",
       "away_api": "AJ Auxerre",
       "finished": true
+    },
+    {
+      "home": "Arsenal",
+      "away": "Newcastle United",
+      "date": "2026-04-25",
+      "kickoff": "16:30",
+      "matchday": 34,
+      "league": "PL",
+      "home_api": "Arsenal FC",
+      "away_api": "Newcastle United FC"
     },
     {
       "home": "Manchester United",
@@ -810,6 +830,16 @@
       "home_api": "Wolverhampton Wanderers FC",
       "away_api": "Tottenham Hotspur FC",
       "finished": true
+    },
+    {
+      "home": "Valencia",
+      "away": "Girona",
+      "date": "2026-04-25",
+      "kickoff": "16:30",
+      "matchday": 32,
+      "league": "Liga",
+      "home_api": "Valencia CF",
+      "away_api": "Girona FC"
     },
     {
       "home": "Atletico Madrid",
@@ -1413,6 +1443,16 @@
       "home_api": "Getafe CF",
       "away_api": "FC Barcelona",
       "finished": true
+    },
+    {
+      "home": "Hamburger SV",
+      "away": "Hoffenheim",
+      "date": "2026-04-25",
+      "kickoff": "16:30",
+      "matchday": 31,
+      "league": "Bundes",
+      "home_api": "Hamburger SV",
+      "away_api": "TSG 1899 Hoffenheim"
     },
     {
       "home": "VfB Stuttgart",

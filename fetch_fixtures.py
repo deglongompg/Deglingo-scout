@@ -325,7 +325,9 @@ def fetch_upcoming_fixtures(comp_code, our_league, days_ahead=21):
     date_from = today.strftime("%Y-%m-%d")
     date_to = (today + timedelta(days=days_ahead)).strftime("%Y-%m-%d")
 
-    data = fetch(f"/competitions/{comp_code}/matches?status=SCHEDULED,TIMED&dateFrom={date_from}&dateTo={date_to}")
+    # Inclus IN_PLAY/PAUSED pour eviter que les matchs LIVE disparaissent du calendrier
+    # (status football-data : SCHEDULED → TIMED → IN_PLAY → PAUSED → FINISHED)
+    data = fetch(f"/competitions/{comp_code}/matches?status=SCHEDULED,TIMED,IN_PLAY,PAUSED&dateFrom={date_from}&dateTo={date_to}")
     if not data or "matches" not in data:
         print(f"  ⚠️ Pas de matchs trouvés")
         return []

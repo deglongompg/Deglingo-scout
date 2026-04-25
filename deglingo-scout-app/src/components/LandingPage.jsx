@@ -20,11 +20,12 @@ function StellarTrail() {
       lastSpawn = now; lastX = e.clientX; lastY = e.clientY;
 
       const sparkle = Math.random() < 0.18;
-      const size = sparkle ? 12 + Math.random() * 8 : 4 + Math.random() * 6;
+      const size = sparkle ? 10 + Math.random() * 6 : 3 + Math.random() * 5;
       const hue = 250 + Math.random() * 60; // violet -> rose-cyan
-      const dx = (Math.random() - 0.5) * 28;
-      const dy = 12 + Math.random() * 24;
-      const life = 900 + Math.random() * 500;
+      // Drift tres reduit pour rester pres du curseur
+      const dx = (Math.random() - 0.5) * 8;
+      const dy = (Math.random() - 0.5) * 8;
+      const life = 600 + Math.random() * 350;
 
       const el = document.createElement("div");
       el.className = "stellar-trail-particle" + (sparkle ? " is-sparkle" : "");

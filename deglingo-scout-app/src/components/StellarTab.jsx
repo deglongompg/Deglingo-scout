@@ -573,11 +573,7 @@ function StellarCard({ player, logos, size = "md", isValidated = false, gwStart 
           {logos[player.oppName] && <img src={`/data/logos/${logos[player.oppName]}`} alt="" style={{ width: 10, height: 10, objectFit: "contain", flexShrink: 0 }} />}
           <span className="bp-opp-name" style={{ fontWeight: 600, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap", minWidth: 0 }}>{sn(player.oppName)}</span>
           {hasPlayed && player.last_match_home_goals != null ? (
-            <span style={{ fontSize: 7, fontWeight: 800, fontFamily: "'DM Mono',monospace", marginLeft: 2, flexShrink: 0, whiteSpace: "nowrap",
-              color: player.isHome
-                ? (player.last_match_home_goals > player.last_match_away_goals ? "#4ADE80" : player.last_match_home_goals === player.last_match_away_goals ? "#FBBF24" : "#EF4444")
-                : (player.last_match_away_goals > player.last_match_home_goals ? "#4ADE80" : player.last_match_away_goals === player.last_match_home_goals ? "#FBBF24" : "#EF4444")
-            }}>
+            <span style={{ fontSize: 7, fontWeight: 800, fontFamily: "'DM Mono',monospace", marginLeft: 2, flexShrink: 0, whiteSpace: "nowrap", color: "#fff" }}>
               {player.isHome ? `${player.last_match_home_goals}-${player.last_match_away_goals}` : `${player.last_match_away_goals}-${player.last_match_home_goals}`}
             </span>
           ) : player.sorare_starter_pct != null && (
@@ -2681,14 +2677,14 @@ export default function StellarTab({ players, teams, fixtures, logos = {}, match
                         </div>
                         {/* Match info box — ordre HOME vs AWAY toujours respecte */}
                         <div style={{ marginTop: 3, padding: "3px 8px", borderRadius: 6, background: matchScore ? "rgba(35,20,75,0.55)" : "rgba(255,255,255,0.03)", border: `1px solid ${matchScore ? "rgba(196,181,253,0.28)" : "rgba(255,255,255,0.06)"}`, textAlign: "center" }}>
-                          <div style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: 4 }}>
-                            {homeLogo && <img src={`/data/logos/${homeLogo}`} alt="" style={{ width: 14, height: 14, objectFit: "contain" }} />}
+                          <div style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: 4, flexWrap: "nowrap" }}>
+                            {homeLogo && <img src={`/data/logos/${homeLogo}`} alt="" style={{ width: 14, height: 14, objectFit: "contain", flexShrink: 0 }} />}
                             {matchScore ? (
-                              <span style={{ fontSize: 11, fontWeight: 900, color: "#C4B5FD", fontFamily: "'DM Mono',monospace", letterSpacing: "-0.3px" }}>{matchScore}</span>
+                              <span style={{ fontSize: 11, fontWeight: 900, color: "#fff", fontFamily: "'DM Mono',monospace", letterSpacing: "-0.3px", whiteSpace: "nowrap", flexShrink: 0 }}>{matchScore}</span>
                             ) : (
                               <span style={{ fontSize: 7, color: "rgba(255,255,255,0.25)" }}>vs</span>
                             )}
-                            {awayLogo && <img src={`/data/logos/${awayLogo}`} alt="" style={{ width: 14, height: 14, objectFit: "contain" }} />}
+                            {awayLogo && <img src={`/data/logos/${awayLogo}`} alt="" style={{ width: 14, height: 14, objectFit: "contain", flexShrink: 0 }} />}
                           </div>
                           {!matchScore && (
                             <div style={{ fontSize: 7, fontWeight: 700, color: "#fff", fontFamily: "'DM Mono',monospace", marginTop: 1 }}>

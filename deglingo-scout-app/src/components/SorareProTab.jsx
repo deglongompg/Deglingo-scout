@@ -2088,15 +2088,15 @@ export default function SorareProTab({ players, teams, fixtures, logos = {}, mat
                           }}>{playerScore}</div>
                         </div>
                         {/* Match info box — ordre HOME vs AWAY toujours respecte */}
-                        <div style={{ marginTop: 3, padding: "3px 8px", borderRadius: 6, background: matchScore ? "rgba(15,40,30,0.5)" : "rgba(255,255,255,0.03)", border: `1px solid ${matchScore ? "rgba(74,222,128,0.25)" : "rgba(255,255,255,0.06)"}`, textAlign: "center" }}>
-                          <div style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: 4 }}>
-                            {recapHomeLogo && <img src={`/data/logos/${recapHomeLogo}`} alt="" style={{ width: 14, height: 14, objectFit: "contain" }} />}
+                        <div style={{ marginTop: 3, padding: "3px 8px", borderRadius: 6, background: matchScore ? "rgba(35,20,75,0.55)" : "rgba(255,255,255,0.03)", border: `1px solid ${matchScore ? "rgba(196,181,253,0.28)" : "rgba(255,255,255,0.06)"}`, textAlign: "center" }}>
+                          <div style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: 4, flexWrap: "nowrap" }}>
+                            {recapHomeLogo && <img src={`/data/logos/${recapHomeLogo}`} alt="" style={{ width: 14, height: 14, objectFit: "contain", flexShrink: 0 }} />}
                             {matchScore ? (
-                              <span style={{ fontSize: 11, fontWeight: 900, color: "#4ADE80", fontFamily: "'DM Mono',monospace", letterSpacing: "-0.3px" }}>{matchScore}</span>
+                              <span style={{ fontSize: 11, fontWeight: 900, color: "#fff", fontFamily: "'DM Mono',monospace", letterSpacing: "-0.3px", whiteSpace: "nowrap", flexShrink: 0 }}>{matchScore}</span>
                             ) : (
                               <span style={{ fontSize: 7, color: "rgba(255,255,255,0.25)" }}>vs</span>
                             )}
-                            {recapAwayLogo && <img src={`/data/logos/${recapAwayLogo}`} alt="" style={{ width: 14, height: 14, objectFit: "contain" }} />}
+                            {recapAwayLogo && <img src={`/data/logos/${recapAwayLogo}`} alt="" style={{ width: 14, height: 14, objectFit: "contain", flexShrink: 0 }} />}
                           </div>
                           {!matchScore && (
                             <div style={{ fontSize: 7, fontWeight: 700, color: "#fff", fontFamily: "'DM Mono',monospace", marginTop: 1 }}>

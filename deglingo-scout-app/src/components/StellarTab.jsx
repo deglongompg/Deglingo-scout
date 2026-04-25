@@ -1646,15 +1646,31 @@ export default function StellarTab({ players, teams, fixtures, logos = {}, match
               // Build club→score map from players who already played this GW
               // Normalise les noms (ex: "Paris Saint-Germain" → "Paris Saint Germain")
               const stripAcc = (s) => s.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
-              const normClub = (n) => stripAcc((n || "").replace(/-/g, " ").trim());
+              // Normalise agressivement : retire codes (FC/VfL/VfB/TSG/FSV…), annees,
+              // chiffres isoles, points/dashes pour matcher "FC Bayern Munchen" vs "Bayern Munich"
+              // et "Bayer 04 Leverkusen" vs "Bayer Leverkusen", "1. FC Heidenheim 1846" vs "FC Heidenheim", etc.
+              const normClub = (n) => {
+                let s = stripAcc((n || "").toLowerCase());
+                s = s.replace(/[-.]/g, " ");
+                s = s.replace(/\b(fc|afc|cf|sc|ac|as|rc|ssc|vfl|vfb|tsg|fsv)\b/g, " ");
+                s = s.replace(/\b(18|19|20)\d{2}\b/g, " "); // annees fondation (1846, 1910, 1899...)
+                s = s.replace(/\b\d{1,2}\b/g, " "); // chiffres isoles ("04" dans Bayer 04 Leverkusen)
+                s = s.replace(/\s+/g, " ").trim();
+                return s;
+              };
               const ALIASES = [
                 ["rennais","rennes"],
                 ["celta","celta vigo"],
                 ["cologne","koln"],
+                ["munchen","munich"], // Bayern München (Sorare) vs Bayern Munich (foot-data display)
+                ["monchengladbach","gladbach"], // Borussia Mönchengladbach vs Borussia M.Gladbach
+                ["sporting clube de portugal","sporting cp"],
+                ["paris saint germain","paris sg"],
               ];
               const clubMatch = (a, b) => {
-                const na = normClub(a).toLowerCase();
-                const nb = normClub(b).toLowerCase();
+                const na = normClub(a);
+                const nb = normClub(b);
+                if (!na || !nb) return false;
                 if (na === nb || na.includes(nb) || nb.includes(na)) return true;
                 for (const [x, y] of ALIASES) {
                   if ((na.includes(x) && nb.includes(y)) || (na.includes(y) && nb.includes(x))) return true;

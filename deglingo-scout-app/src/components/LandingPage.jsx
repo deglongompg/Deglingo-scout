@@ -7,30 +7,20 @@ function StellarTrail() {
   useEffect(() => {
     const layer = layerRef.current;
     if (!layer) return;
-    let lastSpawn = 0;
-    let lastX = 0, lastY = 0;
-    const onMove = (e) => {
-      // Ignore touch events — uniquement souris
-      if (e.pointerType && e.pointerType !== "mouse") return;
-      const now = performance.now();
-      if (now - lastSpawn < 26) return;
-      // Vitesse de la souris (px depuis dernier spawn)
-      const speed = Math.hypot(e.clientX - lastX, e.clientY - lastY);
-      if (speed < 2) return;
-      lastSpawn = now; lastX = e.clientX; lastY = e.clientY;
+    let lastX = null, lastY = null;
+    let pending = 0;
 
+    function spawn(x, y) {
       const sparkle = Math.random() < 0.18;
-      const size = sparkle ? 10 + Math.random() * 6 : 3 + Math.random() * 5;
+      const size = sparkle ? 12 + Math.random() * 8 : 4 + Math.random() * 6;
       const hue = 250 + Math.random() * 60; // violet -> rose-cyan
-      // Drift tres reduit pour rester pres du curseur
-      const dx = (Math.random() - 0.5) * 8;
-      const dy = (Math.random() - 0.5) * 8;
-      const life = 600 + Math.random() * 350;
-
+      const dx = (Math.random() - 0.5) * 28;
+      const dy = 12 + Math.random() * 24;
+      const life = 900 + Math.random() * 500;
       const el = document.createElement("div");
       el.className = "stellar-trail-particle" + (sparkle ? " is-sparkle" : "");
-      el.style.left = e.clientX + "px";
-      el.style.top = e.clientY + "px";
+      el.style.left = x + "px";
+      el.style.top = y + "px";
       el.style.width = size + "px";
       el.style.height = size + "px";
       el.style.setProperty("--dx", dx + "px");
@@ -39,7 +29,31 @@ function StellarTrail() {
       el.style.setProperty("--life", life + "ms");
       layer.appendChild(el);
       el.addEventListener("animationend", () => el.remove(), { once: true });
+    }
+
+    const onMove = (e) => {
+      if (e.pointerType && e.pointerType !== "mouse") return;
+      const x = e.clientX, y = e.clientY;
+      // Premier event : spawn juste sur le curseur
+      if (lastX === null) {
+        spawn(x, y);
+        lastX = x; lastY = y;
+        return;
+      }
+      // Interpolation : spawn une particule tous les ~6px le long du chemin
+      // pour que la trainee soit toujours collee au curseur, meme en mvt rapide
+      const dx = x - lastX, dy = y - lastY;
+      const dist = Math.hypot(dx, dy);
+      if (dist < 1) return;
+      const STEP = 6;
+      const steps = Math.min(8, Math.max(1, Math.floor(dist / STEP)));
+      for (let i = 1; i <= steps; i++) {
+        const t = i / steps;
+        spawn(lastX + dx * t, lastY + dy * t);
+      }
+      lastX = x; lastY = y;
     };
+
     window.addEventListener("pointermove", onMove, { passive: true });
     return () => window.removeEventListener("pointermove", onMove);
   }, []);

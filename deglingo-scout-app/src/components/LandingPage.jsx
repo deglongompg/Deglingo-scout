@@ -531,6 +531,26 @@ export default function LandingPage({ players, onEnter, onNavigate }) {
       {/* Content */}
       <div style={{ position: "relative", zIndex: 2, flex: 1, display: "flex", flexDirection: "column", alignItems: "center" }}>
 
+        {/* ==== Bouton DATABASE — tout en haut, au-dessus du header ==== */}
+        <div style={{ display: "flex", justifyContent: "center", padding: "18px 24px 4px", width: "100%" }}>
+          <button onClick={() => onNavigate ? onNavigate("db") : onEnter()}
+            className="aurora-chip landing-db-cta"
+            style={{
+              position: "relative", overflow: "hidden",
+              padding: "18px 52px", borderRadius: 99,
+              cursor: "pointer", fontSize: 19, fontWeight: 800, fontFamily: "Outfit",
+              color: "#fff", letterSpacing: "0.07em", textTransform: "uppercase",
+              border: "1px solid rgba(196,181,253,0.55)",
+              background: "linear-gradient(135deg, #7C3AED 0%, #A78BFA 40%, #EC4899 100%)",
+              boxShadow: "0 0 24px rgba(167,139,250,0.5), 0 0 2px rgba(236,72,153,0.5), inset 0 1px 0 rgba(255,255,255,0.18)",
+              display: "inline-flex", alignItems: "center", justifyContent: "center",
+              "--chip-accent": "#C4B5FD",
+            }}>
+            <span aria-hidden className="landing-db-sparkle" />
+            <span style={{ position: "relative", zIndex: 4 }}>Database</span>
+          </button>
+        </div>
+
         {/* ==== HEADER ==== */}
         <div style={{ padding: "14px 24px 0", display: "flex", alignItems: "center", gap: 12, alignSelf: "stretch", maxWidth: 1200, width: "100%", margin: "0 auto" }}>
           <img src="/logo.png" alt="Deglingo Scout" style={{ width: 40, height: 40, objectFit: "contain" }} />
@@ -704,26 +724,6 @@ export default function LandingPage({ players, onEnter, onNavigate }) {
 
         </section>
 
-        {/* ==== Bouton DATABASE — sous les cartes, bloom premium ==== */}
-        <div style={{ display: "flex", justifyContent: "center", padding: "32px 24px 8px" }}>
-          <button onClick={() => onNavigate ? onNavigate("db") : onEnter()}
-            className="aurora-chip landing-db-cta"
-            style={{
-              position: "relative", overflow: "hidden",
-              padding: "18px 52px", borderRadius: 99,
-              cursor: "pointer", fontSize: 19, fontWeight: 800, fontFamily: "Outfit",
-              color: "#fff", letterSpacing: "0.07em", textTransform: "uppercase",
-              border: "1px solid rgba(196,181,253,0.55)",
-              background: "linear-gradient(135deg, #7C3AED 0%, #A78BFA 40%, #EC4899 100%)",
-              boxShadow: "0 0 24px rgba(167,139,250,0.5), 0 0 2px rgba(236,72,153,0.5), inset 0 1px 0 rgba(255,255,255,0.18)",
-              display: "inline-flex", alignItems: "center", justifyContent: "center",
-              "--chip-accent": "#C4B5FD",
-            }}>
-            {/* Sparkle scintillant qui glisse en boucle */}
-            <span aria-hidden className="landing-db-sparkle" />
-            <span style={{ position: "relative", zIndex: 4 }}>Database</span>
-          </button>
-        </div>
 
         {/* ==== AFFILIATE BOXES (enriched with bullets) ==== */}
         <section style={{ width: "100%", padding: "50px 24px 20px" }}>

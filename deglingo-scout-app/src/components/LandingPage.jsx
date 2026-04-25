@@ -2,36 +2,37 @@ import { useMemo, useState } from "react";
 import { dScoreMatch } from "../utils/dscore";
 
 // Cartes Sorare — Stellar (common, fond galaxy) + Pro (rare, holo doré)
+// Ordre = ordre des pastilles ligues sur la landing (Stellar / L1 / PL / Liga / Bundes / MLS)
 const SHOWCASE_CARDS = [
   {
-    name: "Bruno Fernandes", pos: "MIL",
-    // Stellar Nights common (d3b53aae — 4/50, xp=0, rarest non-legacy)
-    stellar: "https://assets.sorare.com/cardsamplepicture/d3b53aae-683a-4449-979c-44a20b6ba026/picture/tinified-81ea65f729863eb53d1d21ebbe510b49.png",
-    pro:     "https://assets.sorare.com/card/1290539a-668e-4678-8714-dc0329fe8cf2/picture/tinified-00ca880406af133021da0474a0e3362d.png",
-  },
-  {
-    name: "Lamine Yamal", pos: "ATT",
-    // Stellar Nights common (468e803d — 2/50, fond galaxy violet confirmé visuellement)
-    stellar: "https://assets.sorare.com/cardsamplepicture/468e803d-7580-4a1e-a7a6-dae371e8cf1d/picture/tinified-38989f6f9e634eec76cc25acaba03084.png",
-    pro:     "https://assets.sorare.com/card/16db3f08-f9e4-40b5-ba74-da2620d8ef8f/picture/tinified-dcc4912c32f04c442a3035d03953b3b3.png",
-  },
-  {
-    name: "Kylian Mbappé", pos: "ATT",
-    // Stellar Nights common (7ac68f27 — confirmé par slug utilisateur)
+    name: "Kylian Mbappé", pos: "ATT", league: "Stellar",
     stellar: "https://assets.sorare.com/cardsamplepicture/7ac68f27-df55-4780-8cfe-e9db4e6aa0fa/picture/tinified-f602555563a6fb31be3bbd87cc71965d.png",
     pro:     "https://assets.sorare.com/card/0745baf1-be7d-4450-a434-b0dac9c46719/picture/tinified-4a44d355d026bad26b0442dacb77dcd3.png",
   },
   {
-    name: "Cole Palmer", pos: "MIL",
-    // Stellar Nights common (c00654f5 — 2/50, rarest = Stellar confirmé)
+    name: "Ousmane Dembélé", pos: "ATT", league: "L1",
+    stellar: "https://assets.sorare.com/cardsamplepicture/f103a860-8b47-4b6b-96fe-d1b48bc3083d/picture/tinified-699c67b478227097061191ddc149fc07.png",
+    pro:     "https://assets.sorare.com/card/50b142ee-a741-49ba-97e5-7dce14130af3/picture/tinified-2eae4553c2dd7e62a2f09051c4013ac6.png",
+  },
+  {
+    name: "Cole Palmer", pos: "MIL", league: "PL",
     stellar: "https://assets.sorare.com/cardsamplepicture/57f8457c-b51f-418e-aeef-a313cc9ed4d8/picture/tinified-f8ce522ce51c40f7028ca76b39730572.png",
     pro:     "https://assets.sorare.com/card/84a09895-5e8b-4b88-be16-e68fc98235aa/picture/tinified-0a6f73f93c4e4a64badbf07d3d6aa2cd.png",
   },
   {
-    name: "Ousmane Dembélé", pos: "ATT",
-    // Stellar Nights common (f103a860 — 2/50, xp=0, rarest non-legacy)
-    stellar: "https://assets.sorare.com/cardsamplepicture/f103a860-8b47-4b6b-96fe-d1b48bc3083d/picture/tinified-699c67b478227097061191ddc149fc07.png",
-    pro:     "https://assets.sorare.com/card/50b142ee-a741-49ba-97e5-7dce14130af3/picture/tinified-2eae4553c2dd7e62a2f09051c4013ac6.png",
+    name: "Lamine Yamal", pos: "ATT", league: "Liga",
+    stellar: "https://assets.sorare.com/cardsamplepicture/468e803d-7580-4a1e-a7a6-dae371e8cf1d/picture/tinified-38989f6f9e634eec76cc25acaba03084.png",
+    pro:     "https://assets.sorare.com/card/16db3f08-f9e4-40b5-ba74-da2620d8ef8f/picture/tinified-dcc4912c32f04c442a3035d03953b3b3.png",
+  },
+  {
+    name: "Michael Olise", pos: "MIL", league: "Bundes",
+    stellar: "https://assets.sorare.com/cardsamplepicture/93fd7ea9-b477-4248-b4ec-c55c48a5b8ba/picture/tinified-dfe11e6ad7f3a9bc26029e066b2a56b7.png",
+    pro:     "https://assets.sorare.com/card/bcbebe89-e685-473c-aa97-75b3902b3433/picture/tinified-8dda7821cf00ffc763b5dc7eac31e951.png",
+  },
+  {
+    name: "Lionel Messi", pos: "ATT", league: "MLS",
+    stellar: "https://assets.sorare.com/cardsamplepicture/b77d8d7a-af48-4bde-a7d9-32c96c86e87c/picture/tinified-1c16ec31bb180a03723e0e1cde41f627.png",
+    pro:     "https://assets.sorare.com/card/f8174531-3d85-4621-98c3-7d2e294d6135/picture/tinified-76673ef2bb643aa65bc1f7bf7d17f9b8.png",
   },
 ];
 const CARD_PLAYERS = SHOWCASE_CARDS.map(c => c.name);
@@ -456,7 +457,7 @@ export default function LandingPage({ players, onEnter, onNavigate }) {
   const showcasePlayers = useMemo(() => {
     return SHOWCASE_CARDS.map(c => {
       const pl = players?.find(p => p.name === c.name) || {};
-      return { ...pl, name: c.name, position: c.pos, sorare_stellar_url: c.stellar, sorare_pro_url: c.pro };
+      return { ...pl, name: c.name, position: c.pos, league: c.league, sorare_stellar_url: c.stellar, sorare_pro_url: c.pro };
     });
   }, [players]);
 
@@ -552,114 +553,103 @@ export default function LandingPage({ players, onEnter, onNavigate }) {
             <span style={{ color: "rgba(255,255,255,0.5)" }}>{t.heroSub2}</span>
           </p>
 
-          {/* League chips — Stellar + 5 ligues Pro (clickables → tab + ligue preselectionnee) */}
-          {/* Fond : banniere Sorare (texture droite). Logo : PNG detoure centre. */}
-          <div className="landing-leagues" style={{ display: "flex", gap: 8, justifyContent: "center", flexWrap: "wrap", marginBottom: 24 }}>
-            {/* Pastille STELLAR — navigue vers l'onglet Stellar */}
-            <button key="stellar" type="button" title="Sorare Stellar"
-              onClick={() => onNavigate ? onNavigate("stellar") : onEnter()}
-              className="aurora-chip"
-              style={{
-                position: "relative", overflow: "hidden",
-                width: 150, height: 48, padding: 0, borderRadius: 99,
-                cursor: "pointer",
-                border: "1px solid rgba(196,181,253,0.45)",
-                backgroundColor: "rgba(10,5,25,0.6)",
-                boxShadow: "0 0 18px rgba(196,181,253,0.30), 0 0 2px rgba(196,181,253,0.40)",
-                "--chip-accent": "#C4B5FD",
-              }}>
-              <img src="/stellar-bg.png" alt="" style={{
-                width: "100%", height: "100%", objectFit: "cover",
-                objectPosition: "center center",
-                display: "block", pointerEvents: "none",
-              }} />
-              <span style={{
-                position: "absolute", top: "50%", left: "50%",
-                transform: "translate(-50%, -50%)",
-                fontFamily: "Outfit", fontWeight: 900, fontSize: 13,
-                color: "#fff", letterSpacing: "0.08em", textTransform: "uppercase",
-                textShadow: "0 1px 4px rgba(0,0,0,0.9)",
-                pointerEvents: "none", whiteSpace: "nowrap",
-              }}>✨ Stellar</span>
-            </button>
-
+          {/* League chips + cards — 6 colonnes (Stellar + 5 ligues), pastille + carte joueur de la ligue */}
+          <div className="landing-leagues" style={{ display: "flex", gap: 8, justifyContent: "center", flexWrap: "wrap", marginBottom: 16, perspective: 1000 }}>
             {[
-              { code: "L1",     color: "#3B82F6", name: "Ligue 1",        bg: "/L1-bg.png",   logo: "/L1.png" },
-              { code: "PL",     color: "#D946EF", name: "Premier League", bg: "/pl-bg.png",   logo: "/pl.png" },
-              { code: "Liga",   color: "#EF4444", name: "La Liga",        bg: "/liga-bg.png", logo: "/liga.png" },
-              { code: "Bundes", color: "#DC2626", name: "Bundesliga",     bg: "/bundes-bg.png", logo: "/bundes.png" },
-              { code: "MLS",    color: "#3B82F6", name: "MLS",            bg: "/mls-bg.png", logo: "/mls.png" },
+              { code: "Stellar", color: "#C4B5FD", name: "Sorare Stellar", bg: "/stellar-bg.png", isStellar: true },
+              { code: "L1",      color: "#3B82F6", name: "Ligue 1",        bg: "/L1-bg.png",   logo: "/L1.png" },
+              { code: "PL",      color: "#D946EF", name: "Premier League", bg: "/pl-bg.png",   logo: "/pl.png" },
+              { code: "Liga",    color: "#EF4444", name: "La Liga",        bg: "/liga-bg.png", logo: "/liga.png" },
+              { code: "Bundes",  color: "#DC2626", name: "Bundesliga",     bg: "/bundes-bg.png", logo: "/bundes.png" },
+              { code: "MLS",     color: "#3B82F6", name: "MLS",            bg: "/mls-bg.png", logo: "/mls.png" },
             ].map(l => {
+              const isStellar = l.code === "Stellar";
               const isL1 = l.code === "L1";
               const isPL = l.code === "PL";
               const isLiga = l.code === "Liga";
-              const isBundes = l.code === "Bundes";
               const whiteLogo = isL1 || isPL || isLiga;
+              const player = showcasePlayers.find(p => p.league === l.code);
+              const handleClick = isStellar
+                ? () => onNavigate ? onNavigate("stellar") : onEnter()
+                : () => {
+                    try { sessionStorage.setItem("pro_preselect_league", l.code); } catch (_) {}
+                    if (onNavigate) onNavigate("pro"); else onEnter();
+                  };
               return (
-              <button key={l.code} type="button" title={l.name}
-                onClick={() => {
-                  try { sessionStorage.setItem("pro_preselect_league", l.code); } catch (_) {}
-                  if (onNavigate) onNavigate("pro"); else onEnter();
-                }}
-                className="aurora-chip"
-                style={{
-                  position: "relative", overflow: "hidden",
-                  width: 150, height: 48,
-                  padding: 0, borderRadius: 99,
-                  cursor: "pointer",
-                  border: `1px solid ${l.color}66`,
-                  backgroundColor: "rgba(10,5,25,0.6)",
-                  boxShadow: `0 0 18px ${l.color}30, 0 0 2px ${l.color}40`,
-                  "--chip-accent": l.color,
-                }}>
-                <img src={l.bg} alt="" style={{
-                  width: "100%", height: "100%", objectFit: "cover",
-                  objectPosition: "center center",
-                  display: "block", pointerEvents: "none",
-                }} />
-                {isLiga ? (
-                  <div style={{
-                    position: "absolute", top: "50%", left: "50%",
-                    transform: "translate(-50%, -50%)",
-                    display: "flex", alignItems: "center", gap: 6,
-                    pointerEvents: "none",
-                  }}>
-                    <img src={l.logo} alt="" style={{
-                      height: 30, width: "auto", objectFit: "contain",
-                      filter: "brightness(0) invert(1) drop-shadow(0 1px 3px rgba(0,0,0,0.7))",
+                <div key={l.code} style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 12 }}>
+                  <button type="button" title={l.name} onClick={handleClick}
+                    className="aurora-chip"
+                    style={{
+                      position: "relative", overflow: "hidden",
+                      width: 150, height: 48, padding: 0, borderRadius: 99,
+                      cursor: "pointer",
+                      border: `1px solid ${isStellar ? "rgba(196,181,253,0.45)" : l.color + "66"}`,
+                      backgroundColor: "rgba(10,5,25,0.6)",
+                      boxShadow: `0 0 18px ${l.color}30, 0 0 2px ${l.color}40`,
+                      "--chip-accent": l.color,
+                    }}>
+                    <img src={l.bg} alt="" style={{
+                      width: "100%", height: "100%", objectFit: "cover",
+                      objectPosition: "center center",
+                      display: "block", pointerEvents: "none",
                     }} />
-                    <span style={{
-                      fontFamily: "Outfit", fontWeight: 900, fontSize: 14,
-                      color: "#fff", letterSpacing: "0.03em",
-                      textShadow: "0 1px 3px rgba(0,0,0,0.7)",
-                    }}>Liga</span>
-                  </div>
-                ) : (
-                  <img src={l.logo} alt={l.name} style={{
-                    position: "absolute", top: "50%", left: "50%",
-                    transform: "translate(-50%, -50%)",
-                    height: isPL ? "95%" : "72%", width: "auto",
-                    objectFit: "contain", pointerEvents: "none",
-                    filter: `${whiteLogo ? "brightness(0) invert(1) " : ""}drop-shadow(0 1px 3px rgba(0,0,0,0.7))`,
-                  }} />
-                )}
-              </button>
+                    {isStellar ? (
+                      <span style={{
+                        position: "absolute", top: "50%", left: "50%",
+                        transform: "translate(-50%, -50%)",
+                        fontFamily: "Outfit", fontWeight: 900, fontSize: 13,
+                        color: "#fff", letterSpacing: "0.08em", textTransform: "uppercase",
+                        textShadow: "0 1px 4px rgba(0,0,0,0.9)",
+                        pointerEvents: "none", whiteSpace: "nowrap",
+                      }}>✨ Stellar</span>
+                    ) : isLiga ? (
+                      <div style={{
+                        position: "absolute", top: "50%", left: "50%",
+                        transform: "translate(-50%, -50%)",
+                        display: "flex", alignItems: "center", gap: 6,
+                        pointerEvents: "none",
+                      }}>
+                        <img src={l.logo} alt="" style={{
+                          height: 30, width: "auto", objectFit: "contain",
+                          filter: "brightness(0) invert(1) drop-shadow(0 1px 3px rgba(0,0,0,0.7))",
+                        }} />
+                        <span style={{
+                          fontFamily: "Outfit", fontWeight: 900, fontSize: 14,
+                          color: "#fff", letterSpacing: "0.03em",
+                          textShadow: "0 1px 3px rgba(0,0,0,0.7)",
+                        }}>Liga</span>
+                      </div>
+                    ) : (
+                      <img src={l.logo} alt={l.name} style={{
+                        position: "absolute", top: "50%", left: "50%",
+                        transform: "translate(-50%, -50%)",
+                        height: isPL ? "95%" : "72%", width: "auto",
+                        objectFit: "contain", pointerEvents: "none",
+                        filter: `${whiteLogo ? "brightness(0) invert(1) " : ""}drop-shadow(0 1px 3px rgba(0,0,0,0.7))`,
+                      }} />
+                    )}
+                  </button>
+                  {/* Carte joueur de la ligue */}
+                  {player && (
+                    <button type="button" onClick={handleClick} title={player.name}
+                      style={{
+                        background: "transparent", border: "none", padding: 0, cursor: "pointer",
+                        display: "block",
+                      }}>
+                      <SorareCard
+                        player={player}
+                        idx={0}
+                        mode={isStellar ? "stellar" : "pro"}
+                        style={{ width: 138, transform: "none", transition: "transform 0.3s ease, box-shadow 0.4s ease" }}
+                      />
+                    </button>
+                  )}
+                </div>
               );
             })}
           </div>
 
         </section>
-
-        {/* ==== CARDS SHOWCASE ==== */}
-        <div className="landing-cards" style={{
-          display: "flex", gap: 12, justifyContent: "center",
-          alignItems: "flex-end", padding: "12px 24px 0",
-          perspective: 1000,
-        }}>
-          {showcasePlayers.map((player, idx) => (
-            <SorareCard key={idx} player={player} idx={idx} mode={cardMode} />
-          ))}
-        </div>
 
         {/* ==== Bouton DATABASE — sous les cartes, bloom premium ==== */}
         <div style={{ display: "flex", justifyContent: "center", padding: "32px 24px 8px" }}>

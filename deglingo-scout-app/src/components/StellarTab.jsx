@@ -80,9 +80,10 @@ const EDITION_LABELS = {
 
 /* ─── Mapping stats decisives Sorare -> icones (dropdown joueurs match) ─── */
 // Source : detailedScore Sorare API, category POSITIVE/NEGATIVE_DECISIVE_STAT
+// Affiche l'icone autant de fois que la valeur (2 buts = ⚽⚽, 3 passes = 👟👟👟)
 const DECISIVE_ICONS = {
   goals:              { emoji: "⚽",  label: "But",            positive: true  },
-  goal_assist:        { emoji: "🅰",   label: "Passe déc.",     positive: true  },
+  goal_assist:        { emoji: "👟",  label: "Passe déc.",     positive: true  },
   assist_penalty_won: { emoji: "🎯",  label: "Péno provoqué",  positive: true  },
   clearance_off_line: { emoji: "🛡",   label: "Sauvetage ligne",positive: true  },
   last_man_tackle:    { emoji: "🚧",  label: "Tacle décisif",  positive: true  },
@@ -97,13 +98,11 @@ function renderDecisives(decisives) {
   return decisives.map((d, idx) => {
     const meta = DECISIVE_ICONS[d.stat];
     if (!meta) return null;
-    const color = meta.positive ? "#4ADE80" : "#F87171";
-    const v = d.value || 1;
+    const v = Math.max(1, d.value || 1);
     return (
       <span key={idx} title={`${meta.label}${v > 1 ? ` ×${v}` : ""}`}
-        style={{ display: "inline-flex", alignItems: "center", gap: 1, fontSize: 11, color, lineHeight: 1, fontFamily: "Outfit", fontWeight: 700 }}>
-        <span style={{ fontSize: 12 }}>{meta.emoji}</span>
-        {v > 1 && <span style={{ fontSize: 9, fontFamily: "'DM Mono',monospace" }}>×{v}</span>}
+        style={{ display: "inline-flex", alignItems: "center", gap: 0, fontSize: 12, lineHeight: 1 }}>
+        {Array.from({ length: v }).map((_, i) => <span key={i}>{meta.emoji}</span>)}
       </span>
     );
   }).filter(Boolean);

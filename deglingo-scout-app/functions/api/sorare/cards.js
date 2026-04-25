@@ -57,20 +57,27 @@ export async function onRequestGet({ request }) {
       });
     }
 
-    // Pagination — collect ALL cards, filter after
-    // BUMP : 40 -> 100 pages (2000 -> 5000 cartes max) pour supporter les gros porteurs.
-    // 100 pages * ~300ms = ~30s, dans le budget Cloudflare Pages.
+    // Pagination — collect ALL cards, filter after.
+    // Limit a 60 pages (3000 cartes max) pour rester dans le budget Cloudflare Pages 30s
+    // 60 * ~400ms ~= 24s. Au-dela : risque timeout 500.
+    // Garde-fou explicite avec deadline (abort si > 25s).
+    const startTime = Date.now();
+    const DEADLINE_MS = 25000;
     let allCards = [...(user.cards?.nodes || [])];
     let cursor = user.cards?.pageInfo?.endCursor;
     let hasNext = user.cards?.pageInfo?.hasNextPage;
+    let pagesDone = 1;
+    let timedOut = false;
 
-    for (let i = 0; i < 99 && hasNext && cursor; i++) {
+    for (let i = 0; i < 59 && hasNext && cursor; i++) {
+      if (Date.now() - startTime > DEADLINE_MS) { timedOut = true; break; }
       const dn = await gql(token, QP, { a: cursor });
       if (dn.errors || !dn.data?.currentUser?.cards?.nodes?.length) break;
       const nodes = dn.data.currentUser.cards.nodes;
       allCards = allCards.concat(nodes);
       hasNext = dn.data.currentUser.cards.pageInfo?.hasNextPage;
       cursor = dn.data.currentUser.cards.pageInfo?.endCursor;
+      pagesDone++;
     }
 
     // Filter: keep limited, rare, super_rare, unique + stellar editions
@@ -84,7 +91,14 @@ export async function onRequestGet({ request }) {
 
     return new Response(JSON.stringify({
       data: { currentUser: { slug: user.slug, nickname: user.nickname, cards: { nodes: filtered } } },
-      _meta: { total: allCards.length, kept: filtered.length },
+      _meta: {
+        total: allCards.length,
+        kept: filtered.length,
+        pages: pagesDone,
+        elapsedMs: Date.now() - startTime,
+        timedOut,
+        hasMore: hasNext && !!cursor,
+      },
     }), {
       status: 200, headers: { "Content-Type": "application/json", "Access-Control-Allow-Origin": "*" },
     });

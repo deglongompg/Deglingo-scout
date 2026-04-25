@@ -1,9 +1,31 @@
 {
-  "Game:e4dd177a-57da-4215-bbe4-22ee7809e690": {
-    "home": "Valencia CF",
-    "away": "Girona FC",
+  "Game:1463aeb4-68cf-42ab-b222-d90fdaff2c8b": {
+    "home": "Angers SCO",
+    "away": "Paris Saint-Germain",
     "date": "2026-04-25",
     "home_goals": 0,
+    "away_goals": 3,
+    "home_scorers": [],
+    "away_scorers": [],
+    "home_assists": [],
+    "away_assists": []
+  },
+  "Game:ac35396c-d187-4fb2-96e9-36647ee23397": {
+    "home": "Toulouse FC",
+    "away": "AS Monaco",
+    "date": "2026-04-25",
+    "home_goals": 2,
+    "away_goals": 2,
+    "home_scorers": [],
+    "away_scorers": [],
+    "home_assists": [],
+    "away_assists": []
+  },
+  "Game:6a981d36-550a-48ee-8a6c-a4aa87dd26ab": {
+    "home": "Arsenal FC",
+    "away": "Newcastle United FC",
+    "date": "2026-04-25",
+    "home_goals": 1,
     "away_goals": 0,
     "home_scorers": [],
     "away_scorers": [],
@@ -21,12 +43,34 @@
     "home_assists": [],
     "away_assists": []
   },
-  "Game:6a981d36-550a-48ee-8a6c-a4aa87dd26ab": {
-    "home": "Arsenal FC",
-    "away": "Newcastle United FC",
+  "Game:07e7e5b2-076f-4208-b531-d0924a01aa90": {
+    "home": "Atlético de Madrid",
+    "away": "Athletic Club",
+    "date": "2026-04-25",
+    "home_goals": 3,
+    "away_goals": 2,
+    "home_scorers": [],
+    "away_scorers": [],
+    "home_assists": [],
+    "away_assists": []
+  },
+  "Game:e4dd177a-57da-4215-bbe4-22ee7809e690": {
+    "home": "Valencia CF",
+    "away": "Girona FC",
+    "date": "2026-04-25",
+    "home_goals": 2,
+    "away_goals": 1,
+    "home_scorers": [],
+    "away_scorers": [],
+    "home_assists": [],
+    "away_assists": []
+  },
+  "Game:8b097168-55ab-447d-9496-6bf30b8f284c": {
+    "home": "Hamburger SV",
+    "away": "TSG Hoffenheim",
     "date": "2026-04-25",
     "home_goals": 1,
-    "away_goals": 0,
+    "away_goals": 2,
     "home_scorers": [],
     "away_scorers": [],
     "home_assists": [],

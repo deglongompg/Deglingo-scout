@@ -1,5 +1,5 @@
 {
-  "generated": "2026-04-26T01:44:32.511676",
+  "generated": "2026-04-26T05:31:35.140543",
   "matchdays": {
     "L1": 29,
     "PL": 36,
@@ -11,26 +11,6 @@
     "MLS": "MLS"
   },
   "fixtures": [
-    {
-      "home": "Angers",
-      "away": "Paris Saint Germain",
-      "date": "2026-04-25",
-      "kickoff": "17:00",
-      "matchday": 31,
-      "league": "L1",
-      "home_api": "Angers SCO",
-      "away_api": "Paris Saint-Germain FC"
-    },
-    {
-      "home": "Toulouse",
-      "away": "Monaco",
-      "date": "2026-04-25",
-      "kickoff": "19:05",
-      "matchday": 31,
-      "league": "L1",
-      "home_api": "Toulouse FC",
-      "away_api": "AS Monaco FC"
-    },
     {
       "home": "Lorient",
       "away": "Strasbourg",
@@ -414,14 +394,26 @@
       "finished": true
     },
     {
-      "home": "Arsenal",
-      "away": "Newcastle United",
+      "home": "Angers",
+      "away": "Paris Saint Germain",
       "date": "2026-04-25",
-      "kickoff": "16:30",
-      "matchday": 34,
-      "league": "PL",
-      "home_api": "Arsenal FC",
-      "away_api": "Newcastle United FC"
+      "kickoff": "17:00",
+      "matchday": 31,
+      "league": "L1",
+      "home_api": "Angers SCO",
+      "away_api": "Paris Saint-Germain FC",
+      "finished": true
+    },
+    {
+      "home": "Toulouse",
+      "away": "Monaco",
+      "date": "2026-04-25",
+      "kickoff": "19:05",
+      "matchday": 31,
+      "league": "L1",
+      "home_api": "Toulouse FC",
+      "away_api": "AS Monaco FC",
+      "finished": true
     },
     {
       "home": "Manchester United",
@@ -832,24 +824,15 @@
       "finished": true
     },
     {
-      "home": "Valencia",
-      "away": "Girona",
+      "home": "Arsenal",
+      "away": "Newcastle United",
       "date": "2026-04-25",
       "kickoff": "16:30",
-      "matchday": 32,
-      "league": "Liga",
-      "home_api": "Valencia CF",
-      "away_api": "Girona FC"
-    },
-    {
-      "home": "Atletico Madrid",
-      "away": "Athletic Club",
-      "date": "2026-04-25",
-      "kickoff": "19:00",
-      "matchday": 32,
-      "league": "Liga",
-      "home_api": "Club Atlético de Madrid",
-      "away_api": "Athletic Club"
+      "matchday": 34,
+      "league": "PL",
+      "home_api": "Arsenal FC",
+      "away_api": "Newcastle United FC",
+      "finished": true
     },
     {
       "home": "Rayo Vallecano",
@@ -1445,14 +1428,26 @@
       "finished": true
     },
     {
-      "home": "Hamburger SV",
-      "away": "Hoffenheim",
+      "home": "Valencia",
+      "away": "Girona",
       "date": "2026-04-25",
       "kickoff": "16:30",
-      "matchday": 31,
-      "league": "Bundes",
-      "home_api": "Hamburger SV",
-      "away_api": "TSG 1899 Hoffenheim"
+      "matchday": 32,
+      "league": "Liga",
+      "home_api": "Valencia CF",
+      "away_api": "Girona FC",
+      "finished": true
+    },
+    {
+      "home": "Atletico Madrid",
+      "away": "Athletic Club",
+      "date": "2026-04-25",
+      "kickoff": "19:00",
+      "matchday": 32,
+      "league": "Liga",
+      "home_api": "Club Atlético de Madrid",
+      "away_api": "Athletic Club",
+      "finished": true
     },
     {
       "home": "VfB Stuttgart",
@@ -1907,6 +1902,17 @@
       "league": "Bundes",
       "home_api": "1. FC Heidenheim 1846",
       "away_api": "FC St. Pauli 1910",
+      "finished": true
+    },
+    {
+      "home": "Hamburger SV",
+      "away": "Hoffenheim",
+      "date": "2026-04-25",
+      "kickoff": "16:30",
+      "matchday": 31,
+      "league": "Bundes",
+      "home_api": "Hamburger SV",
+      "away_api": "TSG 1899 Hoffenheim",
       "finished": true
     },
     {
@@ -2598,16 +2604,6 @@
       "away_api": "LA Galaxy"
     },
     {
-      "home": "Minnesota United",
-      "away": "Los Angeles FC",
-      "date": "2026-04-25",
-      "kickoff": "20:45",
-      "matchday": "MLS",
-      "league": "MLS",
-      "home_api": "Minnesota United",
-      "away_api": "Los Angeles FC"
-    },
-    {
       "home": "Los Angeles FC",
       "away": "Deportivo Toluca FC",
       "date": "2026-04-30",
@@ -2638,6 +2634,16 @@
       "away_api": "Los Angeles FC"
     },
     {
+      "home": "St. Louis City SC",
+      "away": "Los Angeles FC",
+      "date": "2026-05-14",
+      "kickoff": "00:30",
+      "matchday": "MLS",
+      "league": "MLS",
+      "home_api": "St. Louis City SC",
+      "away_api": "Los Angeles FC"
+    },
+    {
       "home": "New England Revolution",
       "away": "Minnesota United",
       "date": "2026-05-16",
@@ -2648,14 +2654,14 @@
       "away_api": "Minnesota United"
     },
     {
-      "home": "CF Montreal",
-      "away": "New York City FC",
-      "date": "2026-04-25",
-      "kickoff": "18:30",
+      "home": "Minnesota United",
+      "away": "Real Salt Lake",
+      "date": "2026-05-23",
+      "kickoff": "20:30",
       "matchday": "MLS",
       "league": "MLS",
-      "home_api": "CF Montreal",
-      "away_api": "New York City FC"
+      "home_api": "Minnesota United",
+      "away_api": "Real Salt Lake"
     },
     {
       "home": "CF Montreal",
@@ -2676,6 +2682,16 @@
       "league": "MLS",
       "home_api": "CF Montreal",
       "away_api": "Portland Timbers"
+    },
+    {
+      "home": "DC United",
+      "away": "CF Montreal",
+      "date": "2026-05-23",
+      "kickoff": "23:30",
+      "matchday": "MLS",
+      "league": "MLS",
+      "home_api": "DC United",
+      "away_api": "CF Montreal"
     },
     {
       "home": "Nashville SC",
@@ -2735,6 +2751,16 @@
       "matchday": "MLS",
       "league": "MLS",
       "home_api": "New York Red Bulls",
+      "away_api": "New York City FC"
+    },
+    {
+      "home": "Nashville SC",
+      "away": "New York City FC",
+      "date": "2026-05-24",
+      "kickoff": "00:30",
+      "matchday": "MLS",
+      "league": "MLS",
+      "home_api": "Nashville SC",
       "away_api": "New York City FC"
     },
     {
@@ -2836,16 +2862,6 @@
       "league": "MLS",
       "home_api": "Sporting Kansas City ",
       "away_api": "Seattle Sounders FC"
-    },
-    {
-      "home": "St. Louis City SC",
-      "away": "Los Angeles FC",
-      "date": "2026-05-14",
-      "kickoff": "00:30",
-      "matchday": "MLS",
-      "league": "MLS",
-      "home_api": "St. Louis City SC",
-      "away_api": "Los Angeles FC"
     },
     {
       "home": "Chicago Fire FC",

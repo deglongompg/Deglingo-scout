@@ -7,25 +7,19 @@ function StellarTrail() {
   useEffect(() => {
     const layer = layerRef.current;
     if (!layer) return;
-    let lastSpawn = 0;
-    const onMove = (e) => {
-      if (e.pointerType && e.pointerType !== "mouse") return;
-      const now = performance.now();
-      if (now - lastSpawn < 22) return;
-      lastSpawn = now;
-
+    function spawnAt(x, y) {
       const sparkle = Math.random() < 0.18;
       const size = sparkle ? 12 + Math.random() * 8 : 4 + Math.random() * 6;
       const hue = 250 + Math.random() * 60;
+      // Drift symetrique autour du curseur (haut/bas/gauche/droite equiprobables)
+      // -> centre de masse visuel = curseur, plus de decalage bas-droite
       const dx = (Math.random() - 0.5) * 28;
-      const dy = 12 + Math.random() * 24;
+      const dy = (Math.random() - 0.5) * 28;
       const life = 900 + Math.random() * 500;
-
       const el = document.createElement("div");
       el.className = "stellar-trail-particle" + (sparkle ? " is-sparkle" : "");
-      // Spawn EXACTEMENT sur le curseur — aucun offset, aucune interpolation
-      el.style.left = e.clientX + "px";
-      el.style.top = e.clientY + "px";
+      el.style.left = x + "px";
+      el.style.top = y + "px";
       el.style.width = size + "px";
       el.style.height = size + "px";
       el.style.setProperty("--dx", dx + "px");
@@ -34,6 +28,12 @@ function StellarTrail() {
       el.style.setProperty("--life", life + "ms");
       layer.appendChild(el);
       el.addEventListener("animationend", () => el.remove(), { once: true });
+    }
+    const onMove = (e) => {
+      if (e.pointerType && e.pointerType !== "mouse") return;
+      // Spawn IMMEDIAT sans throttle — chaque pointermove genere une particule
+      // a la position EXACTE du curseur (delai uniquement du au refresh frame)
+      spawnAt(e.clientX, e.clientY);
     };
     window.addEventListener("pointermove", onMove, { passive: true });
     return () => window.removeEventListener("pointermove", onMove);

@@ -553,16 +553,15 @@ export default function LandingPage({ players, onEnter, onNavigate }) {
             <span style={{ color: "rgba(255,255,255,0.5)" }}>{t.heroSub2}</span>
           </p>
 
-          {/* League chips + cards — 6 colonnes (Stellar + 5 ligues), pastille + carte joueur de la ligue */}
-          <div className="landing-leagues" style={{ display: "flex", gap: 8, justifyContent: "center", flexWrap: "wrap", marginBottom: 16, perspective: 1000 }}>
+          {/* League chips + cards — 5 colonnes (Stellar + 4 ligues EU), cartes Stellar uniquement */}
+          <div className="landing-leagues" style={{ display: "flex", gap: 8, justifyContent: "center", alignItems: "flex-start", flexWrap: "wrap", marginBottom: 16, perspective: 1200 }}>
             {[
               { code: "Stellar", color: "#C4B5FD", name: "Sorare Stellar", bg: "/stellar-bg.png", isStellar: true },
               { code: "L1",      color: "#3B82F6", name: "Ligue 1",        bg: "/L1-bg.png",   logo: "/L1.png" },
               { code: "PL",      color: "#D946EF", name: "Premier League", bg: "/pl-bg.png",   logo: "/pl.png" },
               { code: "Liga",    color: "#EF4444", name: "La Liga",        bg: "/liga-bg.png", logo: "/liga.png" },
               { code: "Bundes",  color: "#DC2626", name: "Bundesliga",     bg: "/bundes-bg.png", logo: "/bundes.png" },
-              { code: "MLS",     color: "#3B82F6", name: "MLS",            bg: "/mls-bg.png", logo: "/mls.png" },
-            ].map(l => {
+            ].map((l, i) => {
               const isStellar = l.code === "Stellar";
               const isL1 = l.code === "L1";
               const isPL = l.code === "PL";
@@ -629,18 +628,17 @@ export default function LandingPage({ players, onEnter, onNavigate }) {
                       }} />
                     )}
                   </button>
-                  {/* Carte joueur de la ligue */}
+                  {/* Carte Stellar du joueur emblematique de la ligue (mode stellar pour homogeneite) */}
                   {player && (
                     <button type="button" onClick={handleClick} title={player.name}
                       style={{
                         background: "transparent", border: "none", padding: 0, cursor: "pointer",
-                        display: "block",
+                        display: "block", marginTop: 4,
                       }}>
                       <SorareCard
                         player={player}
-                        idx={0}
-                        mode={isStellar ? "stellar" : "pro"}
-                        style={{ width: 138, transform: "none", transition: "transform 0.3s ease, box-shadow 0.4s ease" }}
+                        idx={i}
+                        mode="stellar"
                       />
                     </button>
                   )}

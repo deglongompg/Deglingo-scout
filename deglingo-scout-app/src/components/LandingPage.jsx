@@ -636,6 +636,7 @@ export default function LandingPage({ players, onEnter, onNavigate }) {
                     )}
                   </button>
                   {/* Carte Stellar du joueur emblematique de la ligue (mode stellar pour homogeneite) */}
+                  {/* Bundes : glow blanc cassé (raccord avec le fond clair du chip Bundesliga) */}
                   {player && (
                     <button type="button" onClick={handleClick} title={player.name}
                       className="aurora-chip aurora-shape-image"
@@ -643,7 +644,7 @@ export default function LandingPage({ players, onEnter, onNavigate }) {
                         position: "relative",
                         background: "transparent", border: "none", padding: 0, cursor: "pointer",
                         display: "block", marginTop: 4,
-                        "--chip-accent": l.color,
+                        "--chip-accent": l.code === "Bundes" ? "rgba(255,255,255,0.95)" : l.color,
                       }}>
                       <SorareCard
                         player={player}

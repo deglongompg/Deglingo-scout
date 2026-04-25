@@ -1405,19 +1405,19 @@ export default function SorareProTab({ players, teams, fixtures, logos = {}, mat
                             }} style={{
                               display: "flex", alignItems: "center", gap: 4, padding: "4px 6px",
                               borderRadius: isOpen ? "5px 5px 0 0" : 5, cursor: "pointer",
-                              background: isActive ? `${rarityColor}25` : scoreStr ? "rgba(15,40,30,0.5)" : "rgba(20,10,40,0.5)",
-                              border: `1px solid ${isActive ? rarityColor + "60" : scoreStr ? "rgba(74,222,128,0.25)" : "rgba(255,255,255,0.06)"}`,
+                              background: isActive ? `${rarityColor}25` : scoreStr ? `${themeAccent}18` : "rgba(20,10,40,0.5)",
+                              border: `1px solid ${isActive ? rarityColor + "60" : scoreStr ? `${themeAccent}45` : "rgba(255,255,255,0.06)"}`,
                               transition: "all 0.15s",
                             }}>
                               {scoreStr ? (
-                                <span style={{ fontSize: 8, fontWeight: 900, color: "#4ADE80", fontFamily: "'DM Mono',monospace", width: 32, padding: "1px 3px", background: "rgba(74,222,128,0.15)", border: "1px solid rgba(74,222,128,0.4)", borderRadius: 3, textAlign: "center" }}>FT</span>
+                                <span style={{ fontSize: 8, fontWeight: 900, color: themeAccent, fontFamily: "'DM Mono',monospace", width: 32, padding: "1px 3px", background: `${themeAccent}22`, border: `1px solid ${themeAccent}55`, borderRadius: 3, textAlign: "center" }}>FT</span>
                               ) : (
                                 <span style={{ fontSize: 8, fontWeight: 800, color: "#A78BFA", fontFamily: "'DM Mono',monospace", width: 32 }}>{parisTime}</span>
                               )}
                               {logos[f.home] && <img src={`/data/logos/${logos[f.home]}`} alt="" style={{ width: 12, height: 12, objectFit: "contain" }} />}
                               <span onClick={(e) => { if (hasHomePlayers) { e.stopPropagation(); toggleSide("home"); } }} style={{
                                 fontSize: 9, fontWeight: scoreStr ? 700 : 600,
-                                color: isOpenHome ? "#C4B5FD" : (homeWin ? "#4ADE80" : "#fff"),
+                                color: isOpenHome ? "#C4B5FD" : (homeWin ? themeAccent : "#fff"),
                                 flex: 1, textAlign: "right", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap",
                                 cursor: hasHomePlayers ? "pointer" : "default",
                                 textDecoration: isOpenHome ? "underline" : "none",
@@ -1429,7 +1429,7 @@ export default function SorareProTab({ players, teams, fixtures, logos = {}, mat
                               )}
                               <span onClick={(e) => { if (hasAwayPlayers) { e.stopPropagation(); toggleSide("away"); } }} style={{
                                 fontSize: 9, fontWeight: scoreStr ? 700 : 600,
-                                color: isOpenAway ? "#C4B5FD" : (awayWin ? "#4ADE80" : "#fff"),
+                                color: isOpenAway ? "#C4B5FD" : (awayWin ? themeAccent : "#fff"),
                                 flex: 1, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap",
                                 cursor: hasAwayPlayers ? "pointer" : "default",
                                 textDecoration: isOpenAway ? "underline" : "none",

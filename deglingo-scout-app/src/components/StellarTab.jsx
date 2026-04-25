@@ -1373,15 +1373,20 @@ export default function StellarTab({ players, teams, fixtures, logos = {}, match
       {/* ═══ LIGNE UNIQUE : STELLAR + PALIERS + CTA + MES CARTES ═══ */}
       <div className="st-info-row" style={{ display: "flex", alignItems: "stretch", padding: "4px 0 10px", gap: 10 }}>
 
-        {/* Titre STELLAR — gauche */}
-        <div className="st-info-bloc-title" style={{ flexShrink: 0, background: "rgba(8,4,25,0.60)", backdropFilter: "blur(10px)", borderRadius: 12, padding: "8px 14px", border: "1px solid rgba(196,181,253,0.12)", display: "flex", flexDirection: "column", justifyContent: "center" }}>
-          <div style={{ display: "flex", flexDirection: "column", gap: 0 }}>
-            <div style={{ fontSize: 20, fontWeight: 800, letterSpacing: "0.18em", color: "#fff", textTransform: "uppercase", lineHeight: 1, marginBottom: -8 }}>SORARE</div>
+        {/* Titre STELLAR — gauche, avec bg image stellar-bg pour cohesion avec Mes Teams chip */}
+        <div className="st-info-bloc-title" style={{ position: "relative", overflow: "hidden", flexShrink: 0, borderRadius: 12, padding: "8px 14px", border: "1px solid rgba(196,181,253,0.25)", display: "flex", flexDirection: "column", justifyContent: "center", boxShadow: "0 0 18px rgba(196,181,253,0.15), inset 0 0 24px rgba(196,181,253,0.04)" }}>
+          {/* Background image stellar */}
+          <img src="/stellar-bg.png" alt="" style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover", objectPosition: "center center", pointerEvents: "none", zIndex: 0 }} />
+          {/* Voile sombre pour lisibilite du texte */}
+          <div aria-hidden style={{ position: "absolute", inset: 0, background: "linear-gradient(135deg, rgba(8,4,25,0.55), rgba(8,4,25,0.35) 50%, rgba(8,4,25,0.55))", pointerEvents: "none", zIndex: 1 }} />
+          <div style={{ position: "relative", zIndex: 2, display: "flex", flexDirection: "column", gap: 0 }}>
+            <div style={{ fontSize: 20, fontWeight: 800, letterSpacing: "0.18em", color: "#fff", textTransform: "uppercase", lineHeight: 1, marginBottom: -8, textShadow: "0 1px 4px rgba(0,0,0,0.8)" }}>SORARE</div>
             <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
               <h1 style={{ fontSize: 24, fontWeight: 900, margin: 0, letterSpacing: "-0.5px",
                 background: "linear-gradient(135deg, #C4B5FD, #A78BFA, #8B5CF6, #7C3AED, #A78BFA, #C4B5FD)",
                 backgroundSize: "200% auto", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent",
                 backgroundClip: "text", animation: "silverShine 4s linear infinite",
+                filter: "drop-shadow(0 1px 4px rgba(0,0,0,0.6))",
               }}>STELLAR</h1>
               <img src="/Stellar.png" alt="" style={{ width: 42, height: 42, objectFit: "contain", mixBlendMode: "screen", animation: "holoShift 3s linear infinite", flexShrink: 0 }} />
             </div>

@@ -1481,8 +1481,8 @@ export default function StellarTab({ players, teams, fixtures, logos = {}, match
       {/* ═══ CALENDRIER + bouton semaine suivante ═══ */}
       <div className="st-calendar-wrap" style={{ display: "grid", gridTemplateColumns: "auto repeat(7, 1fr) auto", gap: 4, marginBottom: 14, alignItems: "stretch" }}>
         {/* Bouton semaine précédente (ne touche pas selectedDays pour preserver selection cross-semaines) */}
-        <button onClick={() => setWeekOffset(w => w - 1)}
-          style={{ background: "rgba(255,255,255,0.06)", border: "1px solid rgba(255,255,255,0.12)", borderRadius: 10, color: "#C4B5FD", cursor: "pointer", fontSize: 13, fontWeight: 700, fontFamily: "Outfit", display: "flex", alignItems: "center", justifyContent: "center", padding: "0 10px" }}>◀</button>
+        <button onClick={() => setWeekOffset(w => w - 1)} title="Semaine précédente"
+          style={{ background: "rgba(255,255,255,0.06)", border: "1px solid rgba(255,255,255,0.12)", borderRadius: 6, color: "#C4B5FD", cursor: "pointer", fontSize: 12, fontWeight: 700, fontFamily: "Outfit", display: "flex", alignItems: "center", justifyContent: "center", padding: "0 4px", width: 22, alignSelf: "stretch" }}>◀</button>
         {weekDays.map((day, i) => {
           const dateStr = isoDate(day);
           const dayFixtures = fixturesByDate[dateStr] || [];
@@ -1538,8 +1538,8 @@ export default function StellarTab({ players, teams, fixtures, logos = {}, match
           );
         })}
         {/* Bouton semaine suivante (ne touche pas selectedDays pour preserver selection cross-semaines) */}
-        <button onClick={() => setWeekOffset(w => w + 1)}
-          style={{ background: "rgba(255,255,255,0.06)", border: "1px solid rgba(255,255,255,0.12)", borderRadius: 10, color: "#C4B5FD", cursor: "pointer", fontSize: 13, fontWeight: 700, fontFamily: "Outfit", display: "flex", alignItems: "center", justifyContent: "center", padding: "0 10px" }}>▶</button>
+        <button onClick={() => setWeekOffset(w => w + 1)} title="Semaine suivante"
+          style={{ background: "rgba(255,255,255,0.06)", border: "1px solid rgba(255,255,255,0.12)", borderRadius: 6, color: "#C4B5FD", cursor: "pointer", fontSize: 12, fontWeight: 700, fontFamily: "Outfit", display: "flex", alignItems: "center", justifyContent: "center", padding: "0 4px", width: 22, alignSelf: "stretch" }}>▶</button>
       </div>
       <div style={{ textAlign: "center", fontSize: 8, color: "rgba(255,255,255,0.2)", marginTop: -8, marginBottom: 10 }}>
         {lang === "fr" ? "Clic = ajouter un jour (meme d'une autre semaine) · Double-clic = jour unique · Max 4 jours · Clic sur un match = filtrer" : "Click = add day (even across weeks) · Double-click = single day · Max 4 days · Click a match = filter"}

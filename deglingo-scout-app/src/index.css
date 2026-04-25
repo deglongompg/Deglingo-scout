@@ -35,6 +35,8 @@ select option {
 
 /* ═══ Aurora Bloom — premium glass hover sur les chips ligues ═══ */
 .aurora-chip {
+  --base-rotation: 0deg;
+  --base-translateY: 0px;
   transition:
     opacity 320ms ease-out,
     transform 380ms cubic-bezier(0.16, 1, 0.3, 1),
@@ -79,7 +81,7 @@ select option {
   opacity: 0.75;
 }
 .aurora-chip:hover {
-  transform: translateY(-1px) scale(1.04);
+  transform: rotate(var(--base-rotation)) translateY(calc(var(--base-translateY) - 3px)) scale(1.04);
   box-shadow:
     0 0 24px var(--chip-accent, rgba(196,181,253,0.7)),
     0 0 2px var(--chip-accent, rgba(196,181,253,0.7)),
@@ -91,10 +93,10 @@ select option {
   filter: saturate(1.05) brightness(1.08) !important;
 }
 .aurora-chip.is-active:hover {
-  transform: translateY(-1px) scale(1.025);
+  transform: rotate(var(--base-rotation)) translateY(calc(var(--base-translateY) - 2px)) scale(1.025);
 }
 .aurora-chip:active {
-  transform: scale(0.98);
+  transform: rotate(var(--base-rotation)) translateY(var(--base-translateY)) scale(0.98);
   transition: transform 80ms ease-out;
 }
 

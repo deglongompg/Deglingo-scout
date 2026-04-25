@@ -574,6 +574,9 @@ export default function LandingPage({ players, onEnter, onNavigate }) {
                     try { sessionStorage.setItem("pro_preselect_league", l.code); } catch (_) {}
                     if (onNavigate) onNavigate("pro"); else onEnter();
                   };
+              // Inclinaison subtile des chips (suit l'eventail des cartes mais 2x moins prononce)
+              const chipRotation = [-2, -0.7, 0, 0.7, 2][i];
+              const chipTranslateY = [4, 2, 0, 2, 4][i];
               return (
                 <div key={l.code} style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 12 }}>
                   <button type="button" title={l.name} onClick={handleClick}
@@ -585,7 +588,10 @@ export default function LandingPage({ players, onEnter, onNavigate }) {
                       border: `1px solid ${isStellar ? "rgba(196,181,253,0.45)" : l.color + "66"}`,
                       backgroundColor: "rgba(10,5,25,0.6)",
                       boxShadow: `0 0 18px ${l.color}30, 0 0 2px ${l.color}40`,
+                      transform: `rotate(${chipRotation}deg) translateY(${chipTranslateY}px)`,
                       "--chip-accent": l.color,
+                      "--base-rotation": `${chipRotation}deg`,
+                      "--base-translateY": `${chipTranslateY}px`,
                     }}>
                     <img src={l.bg} alt="" style={{
                       width: "100%", height: "100%", objectFit: "cover",
@@ -631,9 +637,13 @@ export default function LandingPage({ players, onEnter, onNavigate }) {
                   {/* Carte Stellar du joueur emblematique de la ligue (mode stellar pour homogeneite) */}
                   {player && (
                     <button type="button" onClick={handleClick} title={player.name}
+                      className="aurora-chip"
                       style={{
+                        position: "relative",
                         background: "transparent", border: "none", padding: 0, cursor: "pointer",
                         display: "block", marginTop: 4,
+                        borderRadius: 12,
+                        "--chip-accent": l.color,
                       }}>
                       <SorareCard
                         player={player}

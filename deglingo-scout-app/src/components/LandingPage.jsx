@@ -1,7 +1,10 @@
 import { useMemo, useState, useEffect, useRef } from "react";
+import { createPortal } from "react-dom";
 import { dScoreMatch } from "../utils/dscore";
 
-// Trainee d'etoiles stellaires qui suit la souris (landing uniquement)
+// Trainee d'etoiles stellaires qui suit la souris (landing uniquement).
+// IMPORTANT : monte via portal sur document.body pour echapper au zoom: 1.25
+// du parent LandingPage (qui scale les positions des enfants fixed et cree un offset).
 function StellarTrail() {
   const layerRef = useRef(null);
   useEffect(() => {
@@ -11,8 +14,6 @@ function StellarTrail() {
       const sparkle = Math.random() < 0.18;
       const size = sparkle ? 12 + Math.random() * 8 : 4 + Math.random() * 6;
       const hue = 250 + Math.random() * 60;
-      // Drift symetrique autour du curseur (haut/bas/gauche/droite equiprobables)
-      // -> centre de masse visuel = curseur, plus de decalage bas-droite
       const dx = (Math.random() - 0.5) * 28;
       const dy = (Math.random() - 0.5) * 28;
       const life = 900 + Math.random() * 500;
@@ -31,14 +32,15 @@ function StellarTrail() {
     }
     const onMove = (e) => {
       if (e.pointerType && e.pointerType !== "mouse") return;
-      // Spawn IMMEDIAT sans throttle — chaque pointermove genere une particule
-      // a la position EXACTE du curseur (delai uniquement du au refresh frame)
       spawnAt(e.clientX, e.clientY);
     };
     window.addEventListener("pointermove", onMove, { passive: true });
     return () => window.removeEventListener("pointermove", onMove);
   }, []);
-  return <div ref={layerRef} className="stellar-trail-layer" aria-hidden />;
+  return createPortal(
+    <div ref={layerRef} className="stellar-trail-layer" aria-hidden />,
+    document.body,
+  );
 }
 
 // Cartes Sorare — Stellar Shiny (common, edition stellar_shiny_base) + Pro (limited, holo doré)

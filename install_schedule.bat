@@ -1,8 +1,8 @@
 @echo off
 REM ================================================================
 REM   install_schedule.bat - Configure l'automatisation complete
-REM   - Tache DAILY    : MAJ_turbo.bat lundi/mardi/jeudi/vendredi/dimanche 06h00
-REM   - Tache HEBDO    : MAJ_hebdo.bat mercredi + samedi 06h00 (post-GW)
+REM   - Tache DAILY    : MAJ_turbo.bat lundi/mardi/jeudi/vendredi/dimanche 05h30
+REM   - Tache HEBDO    : MAJ_hebdo.bat mercredi + samedi 05h30 (post-GW)
 REM
 REM   Lancer UNE SEULE FOIS, en tant qu'administrateur (clic droit)
 REM ================================================================
@@ -23,7 +23,7 @@ echo.
 
 REM Heure par defaut 06:00 (modifiable : install_schedule.bat 07:30)
 set "HEURE=%1"
-if "%HEURE%"=="" set "HEURE=06:00"
+if "%HEURE%"=="" set "HEURE=05:30"
 echo Heure de lancement  : %HEURE%
 echo.
 

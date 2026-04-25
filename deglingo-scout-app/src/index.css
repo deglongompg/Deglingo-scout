@@ -97,3 +97,37 @@ select option {
   transform: scale(0.98);
   transition: transform 80ms ease-out;
 }
+
+/* ═══ Database CTA — sparkle qui glisse en boucle ═══ */
+.landing-db-cta {
+  --shine-x: -150%;
+}
+.landing-db-sparkle {
+  position: absolute;
+  top: -50%;
+  left: var(--shine-x, -150%);
+  width: 60%;
+  height: 200%;
+  background: linear-gradient(
+    115deg,
+    transparent 30%,
+    rgba(255,255,255,0.55) 50%,
+    transparent 70%
+  );
+  transform: skewX(-20deg);
+  pointer-events: none;
+  z-index: 3;
+  animation: dbShine 3.6s ease-in-out infinite;
+  filter: blur(1px);
+}
+@keyframes dbShine {
+  0%   { left: -150%; }
+  60%  { left: 150%; }
+  100% { left: 150%; }
+}
+.landing-db-cta:hover {
+  background: linear-gradient(135deg, #8B5CF6 0%, #C4B5FD 40%, #F472B6 100%) !important;
+}
+.landing-db-cta:hover .landing-db-sparkle {
+  animation-duration: 1.6s;
+}

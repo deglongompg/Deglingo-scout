@@ -648,23 +648,6 @@ export default function LandingPage({ players, onEnter, onNavigate }) {
             })}
           </div>
 
-          {/* Primary CTA — meme format box que les chips ligue (pill + glow) */}
-          <div style={{ display: "flex", justifyContent: "center" }}>
-            <button onClick={() => onNavigate ? onNavigate("db") : onEnter()}
-              style={{
-                position: "relative", overflow: "hidden",
-                padding: "14px 36px", borderRadius: 99,
-                cursor: "pointer", fontSize: 14, fontWeight: 800, fontFamily: "Outfit",
-                color: "#fff", letterSpacing: "0.04em",
-                border: "1px solid rgba(196,181,253,0.5)",
-                background: "linear-gradient(135deg, #7C3AED 0%, #A78BFA 40%, #EC4899 100%)",
-                boxShadow: "0 0 24px rgba(167,139,250,0.5), 0 0 2px rgba(236,72,153,0.5)",
-                display: "inline-flex", alignItems: "center", gap: 10,
-              }}>
-              <span>{t.ctaEnter}</span>
-              <span style={{ display: "inline-flex" }}><IconArrow color="#fff" size={16} /></span>
-            </button>
-          </div>
         </section>
 
         {/* ==== CARDS SHOWCASE ==== */}
@@ -676,6 +659,28 @@ export default function LandingPage({ players, onEnter, onNavigate }) {
           {showcasePlayers.map((player, idx) => (
             <SorareCard key={idx} player={player} idx={idx} mode={cardMode} />
           ))}
+        </div>
+
+        {/* ==== Bouton DATABASE — sous les cartes, bloom premium ==== */}
+        <div style={{ display: "flex", justifyContent: "center", padding: "32px 24px 8px" }}>
+          <button onClick={() => onNavigate ? onNavigate("db") : onEnter()}
+            className="aurora-chip landing-db-cta"
+            style={{
+              position: "relative", overflow: "hidden",
+              padding: "16px 44px", borderRadius: 99,
+              cursor: "pointer", fontSize: 15, fontWeight: 800, fontFamily: "Outfit",
+              color: "#fff", letterSpacing: "0.06em", textTransform: "uppercase",
+              border: "1px solid rgba(196,181,253,0.55)",
+              background: "linear-gradient(135deg, #7C3AED 0%, #A78BFA 40%, #EC4899 100%)",
+              boxShadow: "0 0 24px rgba(167,139,250,0.5), 0 0 2px rgba(236,72,153,0.5), inset 0 1px 0 rgba(255,255,255,0.18)",
+              display: "inline-flex", alignItems: "center", gap: 12,
+              "--chip-accent": "#C4B5FD",
+            }}>
+            {/* Sparkle scintillant qui glisse en boucle */}
+            <span aria-hidden className="landing-db-sparkle" />
+            <span style={{ position: "relative", zIndex: 4 }}>Database</span>
+            <span style={{ position: "relative", zIndex: 4, display: "inline-flex" }}><IconArrow color="#fff" size={18} /></span>
+          </button>
         </div>
 
         {/* ==== AFFILIATE BOXES (enriched with bullets) ==== */}

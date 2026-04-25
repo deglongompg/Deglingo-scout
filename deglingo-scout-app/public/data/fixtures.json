@@ -1,5 +1,5 @@
 {
-  "generated": "2026-04-26T00:08:00.319974",
+  "generated": "2026-04-26T01:19:28.036921",
   "matchdays": {
     "L1": 29,
     "PL": 36,
@@ -11,16 +11,6 @@
     "MLS": "MLS"
   },
   "fixtures": [
-    {
-      "home": "Angers",
-      "away": "Paris Saint Germain",
-      "date": "2026-04-25",
-      "kickoff": "17:00",
-      "matchday": 31,
-      "league": "L1",
-      "home_api": "Angers SCO",
-      "away_api": "Paris Saint-Germain FC"
-    },
     {
       "home": "Toulouse",
       "away": "Monaco",
@@ -412,16 +402,6 @@
       "home_api": "Olympique Lyonnais",
       "away_api": "AJ Auxerre",
       "finished": true
-    },
-    {
-      "home": "Arsenal",
-      "away": "Newcastle United",
-      "date": "2026-04-25",
-      "kickoff": "16:30",
-      "matchday": 34,
-      "league": "PL",
-      "home_api": "Arsenal FC",
-      "away_api": "Newcastle United FC"
     },
     {
       "home": "Manchester United",
@@ -821,14 +801,15 @@
       "finished": true
     },
     {
-      "home": "Valencia",
-      "away": "Girona",
+      "home": "Wolverhampton Wanderers",
+      "away": "Tottenham",
       "date": "2026-04-25",
-      "kickoff": "16:30",
-      "matchday": 32,
-      "league": "Liga",
-      "home_api": "Valencia CF",
-      "away_api": "Girona FC"
+      "kickoff": "14:00",
+      "matchday": 34,
+      "league": "PL",
+      "home_api": "Wolverhampton Wanderers FC",
+      "away_api": "Tottenham Hotspur FC",
+      "finished": true
     },
     {
       "home": "Atletico Madrid",
@@ -1423,14 +1404,15 @@
       "finished": true
     },
     {
-      "home": "Hamburger SV",
-      "away": "Hoffenheim",
+      "home": "Getafe",
+      "away": "Barcelona",
       "date": "2026-04-25",
-      "kickoff": "16:30",
-      "matchday": 31,
-      "league": "Bundes",
-      "home_api": "Hamburger SV",
-      "away_api": "TSG 1899 Hoffenheim"
+      "kickoff": "14:15",
+      "matchday": 32,
+      "league": "Liga",
+      "home_api": "Getafe CF",
+      "away_api": "FC Barcelona",
+      "finished": true
     },
     {
       "home": "VfB Stuttgart",
@@ -1888,48 +1870,48 @@
       "finished": true
     },
     {
-      "home": "Unknown",
-      "away": "Unknown",
+      "home": "Paris Saint Germain",
+      "away": "Bayern Munich",
       "date": "2026-04-28",
       "kickoff": "19:00",
       "matchday": "SEMI_FINALS",
       "league": "UCL",
       "competition": "UCL",
-      "home_api": null,
-      "away_api": null
+      "home_api": "Paris Saint-Germain FC",
+      "away_api": "FC Bayern München"
     },
     {
-      "home": "Unknown",
-      "away": "Unknown",
+      "home": "Atletico Madrid",
+      "away": "Arsenal",
       "date": "2026-04-29",
       "kickoff": "19:00",
       "matchday": "SEMI_FINALS",
       "league": "UCL",
       "competition": "UCL",
-      "home_api": null,
-      "away_api": null
+      "home_api": "Club Atlético de Madrid",
+      "away_api": "Arsenal FC"
     },
     {
-      "home": "Unknown",
-      "away": "Unknown",
+      "home": "Arsenal",
+      "away": "Atletico Madrid",
       "date": "2026-05-05",
       "kickoff": "19:00",
       "matchday": "SEMI_FINALS",
       "league": "UCL",
       "competition": "UCL",
-      "home_api": null,
-      "away_api": null
+      "home_api": "Arsenal FC",
+      "away_api": "Club Atlético de Madrid"
     },
     {
-      "home": "Unknown",
-      "away": "Unknown",
+      "home": "Bayern Munich",
+      "away": "Paris Saint Germain",
       "date": "2026-05-06",
       "kickoff": "19:00",
       "matchday": "SEMI_FINALS",
       "league": "UCL",
       "competition": "UCL",
-      "home_api": null,
-      "away_api": null
+      "home_api": "FC Bayern München",
+      "away_api": "Paris Saint-Germain FC"
     },
     {
       "home": "Sporting",
@@ -2046,16 +2028,6 @@
       "away_api": "ACF Fiorentina"
     },
     {
-      "home": "Toronto FC",
-      "away": "Atlanta United",
-      "date": "2026-04-25",
-      "kickoff": "17:00",
-      "matchday": "MLS",
-      "league": "MLS",
-      "home_api": "Toronto FC",
-      "away_api": "Atlanta United"
-    },
-    {
       "home": "Atlanta United",
       "away": "CF Montreal",
       "date": "2026-05-02",
@@ -2093,6 +2065,16 @@
       "matchday": "MLS",
       "league": "MLS",
       "home_api": "Columbus Crew",
+      "away_api": "Atlanta United"
+    },
+    {
+      "home": "Nashville SC",
+      "away": "Atlanta United",
+      "date": "2026-07-18",
+      "kickoff": "00:00",
+      "matchday": "MLS",
+      "league": "MLS",
+      "home_api": "Nashville SC",
       "away_api": "Atlanta United"
     },
     {
@@ -2833,6 +2815,16 @@
       "matchday": "MLS",
       "league": "MLS",
       "home_api": "Chicago Fire FC",
+      "away_api": "Toronto FC"
+    },
+    {
+      "home": "CF Montreal",
+      "away": "Toronto FC",
+      "date": "2026-07-16",
+      "kickoff": "23:30",
+      "matchday": "MLS",
+      "league": "MLS",
+      "home_api": "CF Montreal",
       "away_api": "Toronto FC"
     }
   ],

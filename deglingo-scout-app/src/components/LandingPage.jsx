@@ -19,8 +19,8 @@ const SHOWCASE_CARDS = [
   },
   {
     name: "Cole Palmer", pos: "MIL", league: "PL",
-    // stellar_shiny_base (f8fe8242 — Chelsea galaxy)
-    stellar: "https://assets.sorare.com/cardsamplepicture/f8fe8242-47e2-48de-b9e4-86ec8fe9f141/picture/tinified-563029baed6c09bb2a81ee3d56fd8518.png",
+    // stellar_full_art_base = LEGENDARY (0aedf313, 10/season — full art galaxy + yeux brillants + label LEGENDARY)
+    stellar: "https://assets.sorare.com/cardsamplepicture/0aedf313-78f2-47dd-9be7-fece470afd76/picture/tinified-dec8ae4d50202fe8e3ca88bc0e08f3b7.png",
     pro:     "https://assets.sorare.com/card/84a09895-5e8b-4b88-be16-e68fc98235aa/picture/tinified-0a6f73f93c4e4a64badbf07d3d6aa2cd.png",
   },
   {
@@ -590,7 +590,7 @@ export default function LandingPage({ players, onEnter, onNavigate }) {
                       backgroundColor: "rgba(10,5,25,0.6)",
                       boxShadow: `0 0 18px ${l.color}30, 0 0 2px ${l.color}40`,
                       transform: `rotate(${chipRotation}deg) translateY(${chipTranslateY}px)`,
-                      "--chip-accent": l.color,
+                      "--chip-accent": l.code === "Bundes" ? "rgba(255,255,255,0.95)" : l.color,
                       "--base-rotation": `${chipRotation}deg`,
                       "--base-translateY": `${chipTranslateY}px`,
                     }}>

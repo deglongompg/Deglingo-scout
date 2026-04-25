@@ -595,9 +595,11 @@ def main():
         time.sleep(6.5)
         # Dernière journée terminée (résultats récents pour Stellar)
         finished = fetch_recent_finished(comp_code, our_league, days_back=8)
-        # Ne pas doublon : exclure si une date est déjà dans les fixtures à venir
-        upcoming_dates = {f["date"] for f in fixtures}
-        finished = [f for f in finished if f["date"] not in upcoming_dates]
+        # Dedup par (date, home_api, away_api) — pas juste par date.
+        # Why: si PSG-Angers est UPCOMING aujourd'hui et OL-Auxerre FINISHED aujourd'hui,
+        # un dedup par date virait OL-Auxerre du fixtures.json -> scores invisibles.
+        upcoming_keys = {(f["date"], f.get("home_api",""), f.get("away_api","")) for f in fixtures}
+        finished = [f for f in finished if (f["date"], f.get("home_api",""), f.get("away_api","")) not in upcoming_keys]
         all_fixtures.extend(finished)
         time.sleep(6.5)
 

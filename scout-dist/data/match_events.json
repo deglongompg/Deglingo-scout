@@ -1,1 +1,101 @@
-{}
+{
+  "Game:2b7a03f2-1428-4ac5-ab37-3acb1a6e76f4": {
+    "home": "1. FC Köln",
+    "away": "Bayer 04 Leverkusen",
+    "date": "2026-04-25",
+    "home_goals": 1,
+    "away_goals": 2,
+    "home_scorers": [],
+    "away_scorers": [],
+    "home_assists": [],
+    "away_assists": []
+  },
+  "Game:7a56dd78-6979-4446-834c-17a211f95d9d": {
+    "home": "1. FSV Mainz 05",
+    "away": "FC Bayern München",
+    "date": "2026-04-25",
+    "home_goals": 3,
+    "away_goals": 4,
+    "home_scorers": [],
+    "away_scorers": [],
+    "home_assists": [],
+    "away_assists": []
+  },
+  "Game:d716828d-5c50-41b3-8cb2-8f6056178b93": {
+    "home": "VfL Wolfsburg",
+    "away": "Borussia Mönchengladbach",
+    "date": "2026-04-25",
+    "home_goals": 0,
+    "away_goals": 0,
+    "home_scorers": [],
+    "away_scorers": [],
+    "home_assists": [],
+    "away_assists": []
+  },
+  "Game:1ed0f293-a47e-45c3-9b41-a087c57329b6": {
+    "home": "FC Augsburg",
+    "away": "Eintracht Frankfurt",
+    "date": "2026-04-25",
+    "home_goals": 1,
+    "away_goals": 1,
+    "home_scorers": [],
+    "away_scorers": [],
+    "home_assists": [],
+    "away_assists": []
+  },
+  "Game:e07c54af-73f9-40e6-bf94-fea1f1215e5d": {
+    "home": "1. FC Heidenheim 1846",
+    "away": "FC St. Pauli",
+    "date": "2026-04-25",
+    "home_goals": 2,
+    "away_goals": 0,
+    "home_scorers": [],
+    "away_scorers": [],
+    "home_assists": [],
+    "away_assists": []
+  },
+  "Game:dcbae5ee-25e1-48df-838c-763966ce247a": {
+    "home": "Fulham FC",
+    "away": "Aston Villa FC",
+    "date": "2026-04-25",
+    "home_goals": 1,
+    "away_goals": 0,
+    "home_scorers": [],
+    "away_scorers": [],
+    "home_assists": [],
+    "away_assists": []
+  },
+  "Game:186f5b5d-f233-4fcc-8494-eb2aad6e6896": {
+    "home": "D. Alavés",
+    "away": "RCD Mallorca",
+    "date": "2026-04-25",
+    "home_goals": 2,
+    "away_goals": 1,
+    "home_scorers": [],
+    "away_scorers": [],
+    "home_assists": [],
+    "away_assists": []
+  },
+  "Game:f6dbc28b-ff3c-497c-9a2a-4d0e0e835fc0": {
+    "home": "Olympique Lyonnais",
+    "away": "AJ Auxerre",
+    "date": "2026-04-25",
+    "home_goals": 3,
+    "away_goals": 2,
+    "home_scorers": [],
+    "away_scorers": [],
+    "home_assists": [],
+    "away_assists": []
+  },
+  "Game:ba4b32be-9316-4c0a-8469-1d20b2b30396": {
+    "home": "Red Star FC 93",
+    "away": "En Avant Guingamp",
+    "date": "2026-04-24",
+    "home_goals": 3,
+    "away_goals": 2,
+    "home_scorers": [],
+    "away_scorers": [],
+    "home_assists": [],
+    "away_assists": []
+  }
+}

@@ -1801,23 +1801,23 @@ export default function StellarTab({ players, teams, fixtures, logos = {}, match
                                 return [...prev, { home: f.home, away: f.away }];
                               });
                             }} style={{ display: "grid", gridTemplateColumns: "32px 22px 12px minmax(0,1fr) 32px minmax(0,1fr) 12px", alignItems: "center", columnGap: 4, padding: "4px 6px", cursor: "pointer",
-                              background: selectedMatchFilters.some(m => m.home === f.home && m.away === f.away) ? "rgba(139,92,246,0.35)" : isOpen ? "rgba(50,20,100,0.6)" : scoreStr ? "rgba(15,40,30,0.55)" : "rgba(30,10,70,0.45)",
-                              border: `1px solid ${selectedMatchFilters.some(m => m.home === f.home && m.away === f.away) ? "rgba(167,139,250,0.6)" : isOpen ? "rgba(196,181,253,0.3)" : scoreStr ? "rgba(74,222,128,0.25)" : "rgba(140,100,255,0.12)"}`,
+                              background: selectedMatchFilters.some(m => m.home === f.home && m.away === f.away) ? "rgba(139,92,246,0.35)" : isOpen ? "rgba(50,20,100,0.6)" : scoreStr ? "rgba(35,20,75,0.6)" : "rgba(30,10,70,0.45)",
+                              border: `1px solid ${selectedMatchFilters.some(m => m.home === f.home && m.away === f.away) ? "rgba(167,139,250,0.6)" : isOpen ? "rgba(196,181,253,0.3)" : scoreStr ? "rgba(196,181,253,0.28)" : "rgba(140,100,255,0.12)"}`,
                               borderRadius: isOpen ? "6px 6px 0 0" : 6, backdropFilter: "blur(6px)", transition: "all 0.15s" }}>
                               {scoreStr ? (
-                                <span style={{ fontSize: 8, fontWeight: 900, color: "#4ADE80", fontFamily: "'DM Mono',monospace", flexShrink: 0, padding: "1px 4px", background: "rgba(74,222,128,0.15)", border: "1px solid rgba(74,222,128,0.4)", borderRadius: 3, textAlign: "center" }}>FT</span>
+                                <span style={{ fontSize: 8, fontWeight: 900, color: "#C4B5FD", fontFamily: "'DM Mono',monospace", flexShrink: 0, padding: "1px 4px", background: "rgba(196,181,253,0.15)", border: "1px solid rgba(196,181,253,0.4)", borderRadius: 3, textAlign: "center" }}>FT</span>
                               ) : (
                                 <span className="st-match-time-inline" style={{ visibility: "hidden", fontSize: 8, fontWeight: 900, color: "#A78BFA", fontFamily: "'DM Mono',monospace", flexShrink: 0 }}>{g.time}</span>
                               )}
                               <span style={{ fontSize: 8, fontWeight: 800, color: lgColor, minWidth: 32, paddingRight: 3, flexShrink: 0 }}>{f.league === "Bundes" ? "BL" : f.league}</span>
                               <img src={logos[f.home] ? `/data/logos/${logos[f.home]}` : ""} alt="" style={{ width: 12, height: 12, objectFit: "contain", visibility: logos[f.home] ? "visible" : "hidden" }} />
-                              <span className="mc-home" onClick={() => hasHomePlayers && toggleSide("home")} style={{ fontSize: 9, fontWeight: scoreStr ? 700 : 600, color: isOpenHome ? "#C4B5FD" : (scoreStr && sc && sc.home > sc.away ? "#4ADE80" : "#fff"), cursor: hasHomePlayers ? "pointer" : "default", textDecoration: isOpenHome ? "underline" : "none", transition: "color 0.15s", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>{sn(f.home)}</span>
+                              <span className="mc-home" onClick={() => hasHomePlayers && toggleSide("home")} style={{ fontSize: 9, fontWeight: scoreStr ? 700 : 600, color: isOpenHome ? "#C4B5FD" : (scoreStr && sc && sc.home > sc.away ? "#C4B5FD" : "#fff"), cursor: hasHomePlayers ? "pointer" : "default", textDecoration: isOpenHome ? "underline" : "none", transition: "color 0.15s", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>{sn(f.home)}</span>
                               {scoreStr ? (
                                 <span className="mc-vs" style={{ fontSize: 11, fontWeight: 900, color: "#fff", fontFamily: "'DM Mono',monospace", textAlign: "center", whiteSpace: "nowrap", letterSpacing: "-0.5px" }}>{scoreStr}</span>
                               ) : (
                                 <span className="mc-vs" style={{ fontSize: 8, color: "rgba(255,255,255,0.25)", whiteSpace: "nowrap", textAlign: "center" }}>vs</span>
                               )}
-                              <span className="mc-away" onClick={() => hasAwayPlayers && toggleSide("away")} style={{ fontSize: 9, fontWeight: scoreStr ? 700 : 600, color: isOpenAway ? "#C4B5FD" : (scoreStr && sc && sc.away > sc.home ? "#4ADE80" : hasAwayPlayers ? "#fff" : "rgba(255,255,255,0.35)"), cursor: hasAwayPlayers ? "pointer" : "default", textDecoration: isOpenAway ? "underline" : "none", transition: "color 0.15s", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>{sn(f.away)}</span>
+                              <span className="mc-away" onClick={() => hasAwayPlayers && toggleSide("away")} style={{ fontSize: 9, fontWeight: scoreStr ? 700 : 600, color: isOpenAway ? "#C4B5FD" : (scoreStr && sc && sc.away > sc.home ? "#C4B5FD" : hasAwayPlayers ? "#fff" : "rgba(255,255,255,0.35)"), cursor: hasAwayPlayers ? "pointer" : "default", textDecoration: isOpenAway ? "underline" : "none", transition: "color 0.15s", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>{sn(f.away)}</span>
                               <img src={logos[f.away] ? `/data/logos/${logos[f.away]}` : ""} alt="" style={{ width: 12, height: 12, objectFit: "contain", visibility: logos[f.away] ? "visible" : "hidden" }} />
                             </div>
 
@@ -2640,11 +2640,11 @@ export default function StellarTab({ players, teams, fixtures, logos = {}, match
                           }}>{playerScore}</div>
                         </div>
                         {/* Match info box — ordre HOME vs AWAY toujours respecte */}
-                        <div style={{ marginTop: 3, padding: "3px 8px", borderRadius: 6, background: matchScore ? "rgba(15,40,30,0.5)" : "rgba(255,255,255,0.03)", border: `1px solid ${matchScore ? "rgba(74,222,128,0.25)" : "rgba(255,255,255,0.06)"}`, textAlign: "center" }}>
+                        <div style={{ marginTop: 3, padding: "3px 8px", borderRadius: 6, background: matchScore ? "rgba(35,20,75,0.55)" : "rgba(255,255,255,0.03)", border: `1px solid ${matchScore ? "rgba(196,181,253,0.28)" : "rgba(255,255,255,0.06)"}`, textAlign: "center" }}>
                           <div style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: 4 }}>
                             {homeLogo && <img src={`/data/logos/${homeLogo}`} alt="" style={{ width: 14, height: 14, objectFit: "contain" }} />}
                             {matchScore ? (
-                              <span style={{ fontSize: 11, fontWeight: 900, color: "#4ADE80", fontFamily: "'DM Mono',monospace", letterSpacing: "-0.3px" }}>{matchScore}</span>
+                              <span style={{ fontSize: 11, fontWeight: 900, color: "#C4B5FD", fontFamily: "'DM Mono',monospace", letterSpacing: "-0.3px" }}>{matchScore}</span>
                             ) : (
                               <span style={{ fontSize: 7, color: "rgba(255,255,255,0.25)" }}>vs</span>
                             )}

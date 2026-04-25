@@ -764,24 +764,44 @@ export default function StellarTab({ players, teams, fixtures, logos = {}, match
     if (!token) return;
     if (!silent) { setSorareLoading(true); setSorareLoadProgress(5); }
     try {
-      const res = await fetch("/api/sorare/cards", {
-        headers: { "Authorization": `Bearer ${token}` },
-      });
-      if (!silent) setSorareLoadProgress(40);
-      if (res.status === 401) {
-        localStorage.removeItem("sorare_access_token");
-        sessionStorage.removeItem("sorare_cards_cache");
-        setSorareConnected(false); setSorareCards([]);
-        return;
+      // Chain pagination cote client : Cloudflare limite a 50 subrequests/invocation,
+      // donc la function paginate 40 pages max et renvoie nextCursor s'il en reste.
+      // On enchaine les appels jusqu'a 6x = ~12000 cartes max (couvre meme les gros porteurs).
+      let allRawNodes = [];
+      let userInfo = null;
+      let cursor = null;
+      let chainCount = 0;
+      const MAX_CHAIN = 6;
+
+      while (chainCount < MAX_CHAIN) {
+        const url = cursor
+          ? `/api/sorare/cards?cursor=${encodeURIComponent(cursor)}`
+          : "/api/sorare/cards";
+        const res = await fetch(url, {
+          headers: { "Authorization": `Bearer ${token}` },
+        });
+        if (res.status === 401) {
+          localStorage.removeItem("sorare_access_token");
+          sessionStorage.removeItem("sorare_cards_cache");
+          setSorareConnected(false); setSorareCards([]);
+          return;
+        }
+        if (!res.ok) { setSorareConnected(false); return; }
+        const data = await res.json();
+        const u = data?.data?.currentUser;
+        if (!u) { setSorareConnected(false); return; }
+        if (!userInfo && u.slug) userInfo = { slug: u.slug, nickname: u.nickname };
+        allRawNodes = allRawNodes.concat(u.cards?.nodes || []);
+        cursor = u.cards?.nextCursor || null;
+        chainCount++;
+        if (!silent) setSorareLoadProgress(Math.min(85, 20 + chainCount * 12));
+        if (!u.cards?.hasMore || !cursor) break;
       }
-      if (!res.ok) { setSorareConnected(false); return; }
-      const data = await res.json();
-      if (!silent) setSorareLoadProgress(70);
-      const user = data?.data?.currentUser;
-      if (!user) { setSorareConnected(false); return; }
-      setSorareUser({ slug: user.slug, nickname: user.nickname });
-      // cards = AnyCardInterface, rarityTyped + cardEditionName + power
-      // Mapping position Sorare (string humanise) -> format interne (GK/DEF/MIL/ATT)
+
+      if (!userInfo) { setSorareConnected(false); return; }
+      setSorareUser(userInfo);
+      const user = { ...userInfo, cards: { nodes: allRawNodes } };
+
       const SORARE_POS_TO_SHORT = { Goalkeeper: "GK", Defender: "DEF", Midfielder: "MIL", Forward: "ATT" };
       const toShortPos = (s) => SORARE_POS_TO_SHORT[s] || s || null;
       const cards = (user.cards?.nodes || []).map(c => {

@@ -1274,7 +1274,7 @@ export default function SorareProTab({ players, teams, fixtures, logos = {}, mat
 
         {/* ── Left column: Decisive Pick + Matches ── */}
         <div className="pro-left-panel" style={{ width: leftCollapsed ? 30 : 280, flexShrink: 0, transition: "width 0.2s", position: "relative", display: isMobile ? "none" : undefined }}>
-          <button onClick={() => setLeftCollapsed(v => !v)} style={{ position: "absolute", top: 0, right: -12, zIndex: 5, width: 24, height: 24, borderRadius: "50%", border: "1px solid rgba(255,255,255,0.15)", background: "rgba(6,3,20,0.9)", color: "rgba(255,255,255,0.5)", fontSize: 11, cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center" }}>{leftCollapsed ? "▶" : "◀"}</button>
+          <button onClick={() => setLeftCollapsed(v => !v)} title={leftCollapsed ? "Déplier le panneau" : "Replier le panneau"} style={{ position: "absolute", top: 0, right: -7, zIndex: 5, width: 14, height: 56, borderRadius: 6, border: "1px solid rgba(255,255,255,0.15)", background: "rgba(6,3,20,0.9)", color: "rgba(255,255,255,0.5)", fontSize: 11, cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", padding: 0 }}>{leftCollapsed ? "▶" : "◀"}</button>
           {leftCollapsed ? null : (<>
           {/* GW selector — wrappable au-dessus du calendrier */}
           {gwList.length > 0 && (

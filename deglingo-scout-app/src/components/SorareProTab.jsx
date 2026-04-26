@@ -2132,42 +2132,103 @@ export default function SorareProTab({ players, teams, fixtures, logos = {}, mat
                             }}>{p.sorare_starter_pct}%</span>
                           )}
                           {isDNP && <span style={{ position: "absolute", top: 2, right: 2, fontSize: 7, fontWeight: 800, padding: "1px 4px", borderRadius: 3, color: "#fff", zIndex: 2, background: "rgba(153,27,27,0.95)", letterSpacing: "0.5px" }}>DNP</span>}
-                          {bonusPct > 0 && <span style={{ position: "absolute", bottom: 34, right: 4, fontSize: 8, fontWeight: 900, color: "#4ADE80", background: "rgba(0,0,0,0.7)", borderRadius: 3, padding: "1px 4px", zIndex: 3 }}>+{bonusPct}%</span>}
                           {ownedCard?.isClassic && <span style={{ position: "absolute", top: 2, left: 2, fontSize: 4, fontWeight: 900, color: "#fff", background: "rgba(139,92,246,0.8)", borderRadius: 2, padding: "0px 2px", zIndex: 2 }}>CLASSIC</span>}
-                          {/* Decisives mini-icones (buts, passes D...) centrees sur le bord bas de la carte */}
+                          {/* Decisives : ballon dans cercle gold premium, deborde sur le bord bas */}
                           {hasRealScore && (() => {
-                            const icons = flattenDecisivesPositive(p.last_so5_decisives, 4);
+                            const icons = flattenDecisivesPositive(p.last_so5_decisives, 3);
                             if (icons.length === 0) return null;
+                            const size = icons.length === 1 ? 22 : icons.length === 2 ? 26 : 30;
                             return (
-                              <div style={{ position: "absolute", bottom: 0, left: "50%", transform: "translate(-50%, 50%)", zIndex: 3, display: "flex", gap: 0, lineHeight: 1, filter: "drop-shadow(0 2px 3px rgba(0,0,0,0.9))" }}>
-                                {icons.map((emoji, i) => <span key={i} style={{ fontSize: 11 }}>{emoji}</span>)}
+                              <div style={{
+                                position: "absolute", bottom: 0, left: "50%", transform: "translate(-50%, 50%)",
+                                zIndex: 4,
+                                width: size, height: size, borderRadius: "50%",
+                                background: "radial-gradient(circle at 35% 30%, #2A1A00 0%, #0D0700 100%)",
+                                border: "1.5px solid #FFD700",
+                                boxShadow: "0 0 10px rgba(255,215,0,0.8), inset 0 0 4px rgba(255,215,0,0.35)",
+                                display: "flex", alignItems: "center", justifyContent: "center", gap: 0,
+                                fontSize: icons.length === 1 ? 12 : icons.length === 2 ? 10 : 9,
+                                lineHeight: 1,
+                                filter: "drop-shadow(0 1px 2px rgba(0,0,0,0.8))",
+                              }}>
+                                {icons.map((emoji, i) => <span key={i}>{emoji}</span>)}
                               </div>
                             );
                           })()}
-                          {/* D-Score — inside card, bottom right */}
-                          <div style={{ position: "absolute", bottom: 0, right: 8, zIndex: 2,
-                            width: 32, height: 32, borderRadius: "50%",
-                            display: "flex", alignItems: "center", justifyContent: "center",
-                            fontFamily: "'DM Mono',monospace", fontSize: 13, fontWeight: 900,
-                            color: hasRealScore ? "#fff" : isDNP ? "#fff" : dsColor(playerScore),
-                            background: hasRealScore ? dsBg(playerScore) : isDNP ? "rgba(127,29,29,0.9)" : "rgba(0,0,0,0.6)",
-                            border: hasRealScore ? "none" : isDNP ? "1px solid rgba(220,38,38,0.8)" : `1px dashed ${dsColor(playerScore)}60`,
-                            boxShadow: hasRealScore ? `0 0 8px ${dsColor(playerScore)}50` : isDNP ? "0 0 6px rgba(220,38,38,0.4)" : `0 0 6px ${dsColor(playerScore)}30`,
-                          }}>{playerScore}</div>
+                          {/* Stack vertical : bonus +X% colle juste au-dessus de la pointe hex / bubble */}
+                          <div style={{
+                            position: "absolute", bottom: 0, right: 4, zIndex: 3,
+                            display: "flex", flexDirection: "column", alignItems: "center", gap: 1,
+                          }}>
+                            {bonusPct > 0 && (
+                              <span style={{
+                                fontSize: 8, fontWeight: 900,
+                                color: "#1A0F00",
+                                fontFamily: "Outfit", letterSpacing: "0.04em",
+                                background: "linear-gradient(135deg, #FFE066 0%, #FFD700 50%, #DAA520 100%)",
+                                border: "1px solid rgba(255,255,255,0.5)",
+                                borderRadius: 3,
+                                padding: "2px 5px",
+                                boxShadow: "0 0 8px rgba(255,215,0,0.55), inset 0 1px 0 rgba(255,255,255,0.5)",
+                                whiteSpace: "nowrap", lineHeight: 1,
+                              }}>+{bonusPct}%</span>
+                            )}
+                            {hasRealScore ? (
+                              <div style={{
+                                width: 36, height: 36,
+                                background: "linear-gradient(135deg, #DAA520 0%, #FFD700 20%, #FFFACD 40%, #FFD700 60%, #B8860B 85%, #DAA520 100%)",
+                                clipPath: "polygon(50% 0%, 95% 25%, 95% 75%, 50% 100%, 5% 75%, 5% 25%)",
+                                filter: "drop-shadow(0 0 8px rgba(255,215,0,0.65))",
+                                display: "flex", alignItems: "center", justifyContent: "center",
+                              }}>
+                                <div style={{
+                                  width: "calc(100% - 4px)", height: "calc(100% - 4px)",
+                                  background: dsBg(playerScore),
+                                  clipPath: "polygon(50% 0%, 95% 25%, 95% 75%, 50% 100%, 5% 75%, 5% 25%)",
+                                  display: "flex", alignItems: "center", justifyContent: "center",
+                                  fontFamily: "'DM Mono',monospace", fontSize: 13, fontWeight: 900,
+                                  color: "#fff",
+                                  textShadow: "0 1px 2px rgba(0,0,0,0.85), 0 0 4px rgba(0,0,0,0.6)",
+                                }}>{playerScore}</div>
+                              </div>
+                            ) : (
+                              <div style={{
+                                width: 32, height: 32, borderRadius: "50%",
+                                display: "flex", alignItems: "center", justifyContent: "center",
+                                fontFamily: "'DM Mono',monospace", fontSize: 13, fontWeight: 900,
+                                color: isDNP ? "#fff" : dsColor(playerScore),
+                                background: isDNP ? "rgba(127,29,29,0.9)" : "rgba(0,0,0,0.6)",
+                                border: isDNP ? "1px solid rgba(220,38,38,0.8)" : `1px dashed ${dsColor(playerScore)}60`,
+                                boxShadow: isDNP ? "0 0 6px rgba(220,38,38,0.4)" : `0 0 6px ${dsColor(playerScore)}30`,
+                              }}>{playerScore}</div>
+                            )}
+                          </div>
                         </div>
-                        {/* Match info box — ordre HOME vs AWAY toujours respecte */}
-                        <div style={{ marginTop: 3, padding: "3px 8px", borderRadius: 6, background: matchScore ? "rgba(35,20,75,0.55)" : "rgba(255,255,255,0.03)", border: `1px solid ${matchScore ? "rgba(196,181,253,0.28)" : "rgba(255,255,255,0.06)"}`, textAlign: "center" }}>
-                          <div style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: 4, flexWrap: "nowrap" }}>
+                        {/* Match info box : gold premium avec etincelles si match joue, neutre sinon */}
+                        <div style={{
+                          marginTop: 6, padding: "3px 14px", borderRadius: 4, position: "relative",
+                          background: matchScore ? "linear-gradient(135deg, #2A1A00 0%, #0D0700 100%)" : "rgba(255,255,255,0.03)",
+                          border: matchScore ? "1px solid #DAA520" : "1px solid rgba(255,255,255,0.06)",
+                          boxShadow: matchScore ? "0 0 8px rgba(255,215,0,0.35), inset 0 0 6px rgba(255,215,0,0.1)" : "none",
+                          textAlign: "center",
+                        }}>
+                          {matchScore && (
+                            <>
+                              <span style={{ position: "absolute", left: 4, top: "50%", transform: "translateY(-50%)", fontSize: 7, color: "#FFD700", lineHeight: 1, textShadow: "0 0 3px rgba(255,215,0,0.8)" }}>✦</span>
+                              <span style={{ position: "absolute", right: 4, top: "50%", transform: "translateY(-50%)", fontSize: 7, color: "#FFD700", lineHeight: 1, textShadow: "0 0 3px rgba(255,215,0,0.8)" }}>✦</span>
+                            </>
+                          )}
+                          <div style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: 4, flexWrap: "nowrap", whiteSpace: "nowrap" }}>
                             {recapHomeLogo && <img src={`/data/logos/${recapHomeLogo}`} alt="" style={{ width: 14, height: 14, objectFit: "contain", flexShrink: 0 }} />}
                             {matchScore ? (
-                              <span style={{ fontSize: 11, fontWeight: 900, color: "#fff", fontFamily: "'DM Mono',monospace", letterSpacing: "-0.3px", whiteSpace: "nowrap", flexShrink: 0 }}>{matchScore}</span>
+                              <span style={{ fontSize: 11, fontWeight: 900, color: "#FFD700", fontFamily: "'DM Mono',monospace", letterSpacing: "-0.3px", whiteSpace: "nowrap", flexShrink: 0, textShadow: "0 0 6px rgba(255,215,0,0.6), 0 1px 2px rgba(0,0,0,0.8)" }}>{matchScore}</span>
                             ) : (
-                              <span style={{ fontSize: 7, color: "rgba(255,255,255,0.25)" }}>vs</span>
+                              <span style={{ fontSize: 7, color: "rgba(255,255,255,0.25)", flexShrink: 0 }}>vs</span>
                             )}
                             {recapAwayLogo && <img src={`/data/logos/${recapAwayLogo}`} alt="" style={{ width: 14, height: 14, objectFit: "contain", flexShrink: 0 }} />}
                           </div>
                           {!matchScore && (
-                            <div style={{ fontSize: 7, fontWeight: 700, color: "#fff", fontFamily: "'DM Mono',monospace", marginTop: 1 }}>
+                            <div style={{ fontSize: 7, fontWeight: 700, color: "#fff", fontFamily: "'DM Mono',monospace", marginTop: 1, whiteSpace: "nowrap" }}>
                               {dateLabel} - {parisTime}
                             </div>
                           )}

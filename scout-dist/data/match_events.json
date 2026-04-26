@@ -1,59 +1,4 @@
 {
-  "Game:3c1eda90-203d-4f08-ab88-ad25f1c9d4e4": {
-    "home": "Le Havre AC",
-    "away": "FC Metz",
-    "date": "2026-04-26",
-    "home_goals": 4,
-    "away_goals": 4,
-    "home_scorers": [],
-    "away_scorers": [],
-    "home_assists": [],
-    "away_assists": []
-  },
-  "Game:c23c4079-8132-42b2-9617-7a848ded5106": {
-    "home": "Stade Rennais F.C.",
-    "away": "FC Nantes",
-    "date": "2026-04-26",
-    "home_goals": 2,
-    "away_goals": 1,
-    "home_scorers": [],
-    "away_scorers": [],
-    "home_assists": [],
-    "away_assists": []
-  },
-  "Game:ba4b32be-9316-4c0a-8469-1d20b2b30396": {
-    "home": "Red Star FC 93",
-    "away": "En Avant Guingamp",
-    "date": "2026-04-24",
-    "home_goals": 3,
-    "away_goals": 2,
-    "home_scorers": [],
-    "away_scorers": [],
-    "home_assists": [],
-    "away_assists": []
-  },
-  "Game:8ed87cab-5bae-4ffc-b2f5-eaf0f7d09d02": {
-    "home": "CA Osasuna",
-    "away": "Sevilla FC",
-    "date": "2026-04-26",
-    "home_goals": 0,
-    "away_goals": 0,
-    "home_scorers": [],
-    "away_scorers": [],
-    "home_assists": [],
-    "away_assists": []
-  },
-  "Game:e0a4faf5-e4a6-43df-9dfb-a0d014d69db7": {
-    "home": "Borussia Dortmund",
-    "away": "Sport-Club Freiburg",
-    "date": "2026-04-26",
-    "home_goals": 4,
-    "away_goals": 0,
-    "home_scorers": [],
-    "away_scorers": [],
-    "home_assists": [],
-    "away_assists": []
-  },
   "Game:427be455-b125-4b47-8b93-381a9eb2d0a8": {
     "home": "Charlotte FC",
     "away": "Philadelphia Union",
@@ -82,6 +27,28 @@
     "date": "2026-04-18",
     "home_goals": 0,
     "away_goals": 2,
+    "home_scorers": [],
+    "away_scorers": [],
+    "home_assists": [],
+    "away_assists": []
+  },
+  "Game:ba4b32be-9316-4c0a-8469-1d20b2b30396": {
+    "home": "Red Star FC 93",
+    "away": "En Avant Guingamp",
+    "date": "2026-04-24",
+    "home_goals": 3,
+    "away_goals": 2,
+    "home_scorers": [],
+    "away_scorers": [],
+    "home_assists": [],
+    "away_assists": []
+  },
+  "Game:8ed87cab-5bae-4ffc-b2f5-eaf0f7d09d02": {
+    "home": "CA Osasuna",
+    "away": "Sevilla FC",
+    "date": "2026-04-26",
+    "home_goals": 0,
+    "away_goals": 0,
     "home_scorers": [],
     "away_scorers": [],
     "home_assists": [],

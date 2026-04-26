@@ -127,6 +127,7 @@ export function enrichPick(pick, players) {
     last_match_home_goals: fresh.last_match_home_goals,
     last_match_away_goals: fresh.last_match_away_goals,
     last_match_status: fresh.last_match_status,
+    last_so5_decisives: fresh.last_so5_decisives,
   };
 }
 

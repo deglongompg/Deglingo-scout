@@ -5,6 +5,7 @@ import { T, t } from "../utils/i18n";
 import { getProGwInfo, getProGwList, loadFrozen, saveFrozen } from "../utils/freeze";
 import { pushTeams, fetchCloudStore, extractProTeams } from "../utils/cloudSync";
 import { getTeamSlots, getExpectedPicks, getCapThreshold, getSlotPosition, CHAMPION_SOURCE_LEAGUES } from "../utils/proScoring";
+import { flattenDecisivesPositive } from "../utils/decisives";
 import SkyrocketGauge from "./SkyrocketGauge";
 
 const PC = POSITION_COLORS;
@@ -2074,7 +2075,7 @@ export default function SorareProTab({ players, teams, fixtures, logos = {}, mat
                     if (!raw) return null;
                     // Enrich with fresh data from players.json (titu%, injured, last_so5, etc.)
                     const fresh = players.find(pl => pl.slug === raw.slug);
-                    const p = fresh ? { ...raw, sorare_starter_pct: fresh.sorare_starter_pct, injured: fresh.injured, suspended: fresh.suspended, last_so5_score: fresh.last_so5_score, last_so5_date: fresh.last_so5_date, last_match_home_goals: fresh.last_match_home_goals, last_match_away_goals: fresh.last_match_away_goals } : raw;
+                    const p = fresh ? { ...raw, sorare_starter_pct: fresh.sorare_starter_pct, injured: fresh.injured, suspended: fresh.suspended, last_so5_score: fresh.last_so5_score, last_so5_date: fresh.last_so5_date, last_match_home_goals: fresh.last_match_home_goals, last_match_away_goals: fresh.last_match_away_goals, last_match_status: fresh.last_match_status, last_so5_decisives: fresh.last_so5_decisives } : raw;
                     const pc = PC[p.position];
                     const ownedCard = getCard(p);
                     const oppLogo = logos[p.oppName];
@@ -2133,6 +2134,16 @@ export default function SorareProTab({ players, teams, fixtures, logos = {}, mat
                           {isDNP && <span style={{ position: "absolute", top: 2, right: 2, fontSize: 7, fontWeight: 800, padding: "1px 4px", borderRadius: 3, color: "#fff", zIndex: 2, background: "rgba(153,27,27,0.95)", letterSpacing: "0.5px" }}>DNP</span>}
                           {bonusPct > 0 && <span style={{ position: "absolute", bottom: 34, right: 4, fontSize: 8, fontWeight: 900, color: "#4ADE80", background: "rgba(0,0,0,0.7)", borderRadius: 3, padding: "1px 4px", zIndex: 3 }}>+{bonusPct}%</span>}
                           {ownedCard?.isClassic && <span style={{ position: "absolute", top: 2, left: 2, fontSize: 4, fontWeight: 900, color: "#fff", background: "rgba(139,92,246,0.8)", borderRadius: 2, padding: "0px 2px", zIndex: 2 }}>CLASSIC</span>}
+                          {/* Decisives mini-icones (buts, passes D...) centrees sur le bord bas de la carte */}
+                          {hasRealScore && (() => {
+                            const icons = flattenDecisivesPositive(p.last_so5_decisives, 4);
+                            if (icons.length === 0) return null;
+                            return (
+                              <div style={{ position: "absolute", bottom: 0, left: "50%", transform: "translateX(-50%)", zIndex: 3, display: "flex", gap: 0, lineHeight: 1, filter: "drop-shadow(0 1px 2px rgba(0,0,0,0.85))" }}>
+                                {icons.map((emoji, i) => <span key={i} style={{ fontSize: 11 }}>{emoji}</span>)}
+                              </div>
+                            );
+                          })()}
                           {/* D-Score — inside card, bottom right */}
                           <div style={{ position: "absolute", bottom: 0, right: 8, zIndex: 2,
                             width: 32, height: 32, borderRadius: "50%",

@@ -1,5 +1,6 @@
 import { POSITION_COLORS, dsColor, dsBg } from "../utils/colors";
 import { utcToParisTime } from "../utils/proScoring";
+import { flattenDecisivesPositive } from "../utils/decisives";
 import SkyrocketGauge from "./SkyrocketGauge";
 
 const PC = POSITION_COLORS;
@@ -117,6 +118,7 @@ export default function StellarSavedTeamCard({ team, players = [], logos = {}, c
       last_match_home_goals: fresh.last_match_home_goals,
       last_match_away_goals: fresh.last_match_away_goals,
       last_match_status: fresh.last_match_status,
+      last_so5_decisives: fresh.last_so5_decisives,
     } : raw;
     const pc = PC[p.position] || "#94A3B8";
     const ownedCard = resolveCard(p);
@@ -181,6 +183,15 @@ export default function StellarSavedTeamCard({ team, players = [], logos = {}, c
           {ownedCard && ownedCard.totalBonus > 0 && (
             <span style={{ position: "absolute", bottom: 34, right: 4, fontSize: 8, fontWeight: 900, color: "#4ADE80", background: "rgba(0,0,0,0.7)", borderRadius: 3, padding: "1px 4px", zIndex: 3 }}>+{ownedCard.totalBonus}%</span>
           )}
+          {hasRealScore && (() => {
+            const icons = flattenDecisivesPositive(p.last_so5_decisives, 4);
+            if (icons.length === 0) return null;
+            return (
+              <div style={{ position: "absolute", bottom: 0, left: "50%", transform: "translateX(-50%)", zIndex: 3, display: "flex", gap: 0, lineHeight: 1, filter: "drop-shadow(0 1px 2px rgba(0,0,0,0.85))" }}>
+                {icons.map((emoji, i) => <span key={i} style={{ fontSize: 11 }}>{emoji}</span>)}
+              </div>
+            );
+          })()}
           <div style={{
             position: "absolute", bottom: 0, right: 8, zIndex: 2,
             width: 32, height: 32, borderRadius: "50%",

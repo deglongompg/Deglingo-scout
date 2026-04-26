@@ -1074,7 +1074,7 @@ export default function StellarTab({ players, teams, fixtures, logos = {}, match
       editions: { ...editions },
       score,
       captain: capSlot || null,  // fige le captain au save
-      label: `Équipe ${existing.length + 1}`,
+      label: lang === "fr" ? `Équipe ${existing.length + 1}` : `Team ${existing.length + 1}`,
     };
     const updated = [...existing, newTeam];
     localStorage.setItem(key, JSON.stringify(updated));
@@ -1097,7 +1097,7 @@ export default function StellarTab({ players, teams, fixtures, logos = {}, match
     const firstMatchDate = sortedDays.find(d => (fixturesByDate[d] || []).length > 0);
     const dateStr = firstMatchDate || sortedDays[0] || isoDate(new Date());
     const key = savedTeamsKey(dateStr);
-    const updated = savedTeams.filter(t => t.id !== id).map((t, i) => ({ ...t, label: `Équipe ${i + 1}` }));
+    const updated = savedTeams.filter(t => t.id !== id).map((t, i) => ({ ...t, label: lang === "fr" ? `Équipe ${i + 1}` : `Team ${i + 1}` }));
     localStorage.setItem(key, JSON.stringify(updated));
     setSavedTeams(updated);
     if (sorareConnected) pushTeams("stellar", { dateStr }, updated);
@@ -1529,7 +1529,7 @@ export default function StellarTab({ players, teams, fixtures, logos = {}, match
       {/* ═══ CALENDRIER + bouton semaine suivante ═══ */}
       <div className="st-calendar-wrap" style={{ display: "grid", gridTemplateColumns: "auto repeat(7, 1fr) auto", gap: 4, marginBottom: 14, alignItems: "stretch" }}>
         {/* Bouton semaine précédente (ne touche pas selectedDays pour preserver selection cross-semaines) */}
-        <button onClick={() => setWeekOffset(w => w - 1)} title="Semaine précédente"
+        <button onClick={() => setWeekOffset(w => w - 1)} title={lang === "fr" ? "Semaine précédente" : "Previous week"}
           style={{ background: "rgba(255,255,255,0.06)", border: "1px solid rgba(255,255,255,0.12)", borderRadius: 6, color: "#C4B5FD", cursor: "pointer", fontSize: 12, fontWeight: 700, fontFamily: "Outfit", display: "flex", alignItems: "center", justifyContent: "center", padding: "0 4px", width: 22, alignSelf: "stretch" }}>◀</button>
         {weekDays.map((day, i) => {
           const dateStr = isoDate(day);
@@ -1586,7 +1586,7 @@ export default function StellarTab({ players, teams, fixtures, logos = {}, match
           );
         })}
         {/* Bouton semaine suivante (ne touche pas selectedDays pour preserver selection cross-semaines) */}
-        <button onClick={() => setWeekOffset(w => w + 1)} title="Semaine suivante"
+        <button onClick={() => setWeekOffset(w => w + 1)} title={lang === "fr" ? "Semaine suivante" : "Next week"}
           style={{ background: "rgba(255,255,255,0.06)", border: "1px solid rgba(255,255,255,0.12)", borderRadius: 6, color: "#C4B5FD", cursor: "pointer", fontSize: 12, fontWeight: 700, fontFamily: "Outfit", display: "flex", alignItems: "center", justifyContent: "center", padding: "0 4px", width: 22, alignSelf: "stretch" }}>▶</button>
       </div>
       <div style={{ textAlign: "center", fontSize: 8, color: "rgba(255,255,255,0.2)", marginTop: -8, marginBottom: 10 }}>
@@ -1609,7 +1609,7 @@ export default function StellarTab({ players, teams, fixtures, logos = {}, match
 {/* Badge freeze supprime — plus de picks auto dans Stellar */}
                 {/* Bouton collapse colonne gauche */}
                 <button onClick={() => setLeftCollapsed(v => !v)}
-                  title={leftCollapsed ? "Afficher les matchs" : "Réduire"}
+                  title={leftCollapsed ? (lang === "fr" ? "Afficher les matchs" : "Show matches") : (lang === "fr" ? "Réduire" : "Collapse")}
                   style={{ marginLeft: "auto", flexShrink: 0, width: 22, height: 22, borderRadius: 6, background: "rgba(196,181,253,0.08)", border: "1px solid rgba(196,181,253,0.18)", color: "#A78BFA", cursor: "pointer", fontSize: 11, fontWeight: 900, display: "flex", alignItems: "center", justifyContent: "center", fontFamily: "Outfit" }}>
                   {leftCollapsed ? "▶" : "◀"}
                 </button>
@@ -2704,7 +2704,7 @@ export default function StellarTab({ players, teams, fixtures, logos = {}, match
                         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 8 }}>
                           <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
                             <span style={{ fontSize: 12, fontWeight: 900, color: "#C4B5FD" }}>{st.label}</span>
-                            <button onClick={() => loadSavedTeam(st)} style={{ fontSize: 7, fontWeight: 700, padding: "2px 6px", borderRadius: 4, border: "1px solid rgba(196,181,253,0.4)", background: "rgba(196,181,253,0.1)", color: "#C4B5FD", cursor: "pointer", fontFamily: "Outfit" }}>Charger</button>
+                            <button onClick={() => loadSavedTeam(st)} style={{ fontSize: 7, fontWeight: 700, padding: "2px 6px", borderRadius: 4, border: "1px solid rgba(196,181,253,0.4)", background: "rgba(196,181,253,0.1)", color: "#C4B5FD", cursor: "pointer", fontFamily: "Outfit" }}>{lang === "fr" ? "Charger" : "Load"}</button>
                             <button onClick={() => deleteSavedTeam(st.id)} style={{ fontSize: 8, padding: "2px 5px", borderRadius: 4, border: "1px solid rgba(255,255,255,0.08)", background: "rgba(255,255,255,0.03)", color: "rgba(255,255,255,0.3)", cursor: "pointer" }}>x</button>
                           </div>
                         </div>

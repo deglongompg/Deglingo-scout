@@ -15,7 +15,7 @@ class RecapErrorBoundary extends Component {
     if (this.state.err) {
       return (
         <div style={{ padding: 30, textAlign: "center", color: "#F87171", fontFamily: "Outfit" }}>
-          <div style={{ fontSize: 14, fontWeight: 800 }}>Erreur d'affichage Mes Teams</div>
+          <div style={{ fontSize: 14, fontWeight: 800 }}>{this.props.lang === "fr" ? "Erreur d'affichage Mes Teams" : "Failed to display My Teams"}</div>
           <div style={{ fontSize: 11, color: "rgba(255,255,255,0.5)", marginTop: 6, maxWidth: 600, margin: "6px auto 0" }}>
             {String(this.state.err?.message || this.state.err)}
           </div>
@@ -875,7 +875,7 @@ function RecapTabInner({ players, logos, lang }) {
 
 export default function RecapTab(props) {
   return (
-    <RecapErrorBoundary>
+    <RecapErrorBoundary lang={props.lang}>
       <RecapTabInner {...props} />
     </RecapErrorBoundary>
   );

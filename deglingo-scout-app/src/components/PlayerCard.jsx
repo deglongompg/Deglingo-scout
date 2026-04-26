@@ -2,7 +2,7 @@ import { dsColor, dsBg, POSITION_COLORS, getArchetypeColor, getAAProfile } from 
 import RadarChart from "./RadarChart";
 import MiniGraph from "./MiniGraph";
 
-export default function PlayerCard({ player, onClose, logos = {}, radarMax }) {
+export default function PlayerCard({ player, onClose, logos = {}, radarMax, lang = "fr" }) {
   const p = player;
   const posCol = POSITION_COLORS[p.position] || "#6B7280";
   const archCol = getArchetypeColor(p.archetype);
@@ -58,7 +58,7 @@ export default function PlayerCard({ player, onClose, logos = {}, radarMax }) {
             { label: "AA5", value: p.aa5, color: "#A5B4FC" },
             { label: "Floor", value: p.floor, color: dsColor(p.floor) },
             { label: "MAX", value: p.ceiling, color: dsColor(p.ceiling) },
-            { label: "Rég%", value: `${p.regularite}%`, color: "#fff" },
+            { label: lang === "fr" ? "Rég%" : "Reg%", value: `${p.regularite}%`, color: "#fff" },
           ].map(s => (
             <div key={s.label} style={{
               background: "rgba(255,255,255,0.03)", borderRadius: 8, padding: "6px 2px",
@@ -96,13 +96,18 @@ export default function PlayerCard({ player, onClose, logos = {}, radarMax }) {
             <RadarChart player={p} size={160} maxValues={radarMax} />
           </div>
           <div style={{ flex: "1 1 auto", minWidth: 0 }}>
-            <div style={{ fontSize: 11, color: "rgba(255,255,255,0.5)", marginBottom: 8, fontWeight: 600 }}>Comment il fait son AA ?</div>
+            <div style={{ fontSize: 11, color: "rgba(255,255,255,0.5)", marginBottom: 8, fontWeight: 600 }}>{lang === "fr" ? "Comment il fait son AA ?" : "How does he get his AA?"}</div>
             {(() => {
-              const cats = [
+              const cats = lang === "fr" ? [
                 { key: "aa_defending", label: "🛡️ Défense", desc: "Tacles, blocks, clean sheet", color: "#3B82F6" },
                 { key: "aa_passing", label: "🎯 Passes", desc: "Passes réussies, longues, clés", color: "#8B5CF6" },
                 { key: "aa_possession", label: "⚡ Possession", desc: "Interceptions, duels, récups", color: "#06B6D4" },
                 { key: "aa_attacking", label: "🔥 Attaque", desc: "Tirs, dribbles, entrées surface", color: "#EF4444" },
+              ] : [
+                { key: "aa_defending", label: "🛡️ Defense", desc: "Tackles, blocks, clean sheet", color: "#3B82F6" },
+                { key: "aa_passing", label: "🎯 Passing", desc: "Completed, long, key passes", color: "#8B5CF6" },
+                { key: "aa_possession", label: "⚡ Possession", desc: "Interceptions, duels, recoveries", color: "#06B6D4" },
+                { key: "aa_attacking", label: "🔥 Attack", desc: "Shots, dribbles, box entries", color: "#EF4444" },
               ];
               const rawTotal = cats.reduce((s, c) => s + (c.allowNeg ? (p[c.key] || 0) : Math.max(0, p[c.key] || 0)), 0);
               const aa5 = p.aa5 || 0;
@@ -129,11 +134,11 @@ export default function PlayerCard({ player, onClose, logos = {}, radarMax }) {
             })()}
             <div style={{ marginTop: 8, padding: "6px 8px", background: "rgba(99,102,241,0.08)", borderRadius: 8, border: "1px solid rgba(99,102,241,0.15)" }}>
               <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-                <span style={{ fontSize: 10, color: "rgba(255,255,255,0.5)" }}>AA5 = Score complet / match</span>
+                <span style={{ fontSize: 10, color: "rgba(255,255,255,0.5)" }}>{lang === "fr" ? "AA5 = Score complet / match" : "AA5 = Full score / match"}</span>
                 <span style={{ fontSize: 14, fontWeight: 700, color: "#A5B4FC", fontFamily: "DM Mono" }}>{p.aa5}</span>
               </div>
               <div style={{ fontSize: 8, color: "rgba(255,255,255,0.25)", marginTop: 2 }}>
-                Score Sorare ≈ 35 base + décisif + AA
+                {lang === "fr" ? "Score Sorare ≈ 35 base + décisif + AA" : "Sorare score ≈ 35 base + decisive + AA"}
               </div>
             </div>
           </div>

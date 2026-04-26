@@ -378,7 +378,7 @@ function genVerdict(p, opp, isHome, d, pTeam, lang = "fr") {
 }
 
 /* ── Fight Animation ── */
-function FightAnimation({ phase, winner, name1, name2, d1, d2, club1, club2, logos = {} }) {
+function FightAnimation({ phase, winner, name1, name2, d1, d2, club1, club2, logos = {}, lang = "fr" }) {
   if (phase === 0) return null;
   return (
     <div style={{
@@ -427,7 +427,7 @@ function FightAnimation({ phase, winner, name1, name2, d1, d2, club1, club2, log
         {phase === 3 && (
           <div>
             <div style={{ fontFamily: "Outfit", fontSize: 28, fontWeight: 900, color: "#4ADE80", textShadow: "0 0 20px rgba(74,222,128,0.5)" }}>🏆 K.O. !</div>
-            <div style={{ fontSize: 14, color: "rgba(255,255,255,0.5)", marginTop: 6 }}>{winner === 1 ? name1 : name2} gagne {Math.max(d1, d2)} a {Math.min(d1, d2)}</div>
+            <div style={{ fontSize: 14, color: "rgba(255,255,255,0.5)", marginTop: 6 }}>{winner === 1 ? name1 : name2} {lang === "fr" ? "gagne" : "wins"} {Math.max(d1, d2)} {lang === "fr" ? "à" : "to"} {Math.min(d1, d2)}</div>
           </div>
         )}
       </div>
@@ -509,7 +509,7 @@ export default function FightTab({ players, teams, fixtures, logos = {}, lang = 
 @media(max-width:600px){.fight-cards{grid-template-columns:1fr!important}.fight-verdicts{grid-template-columns:1fr!important}}
       `}</style>
 
-      {animPhase > 0 && <FightAnimation phase={animPhase} winner={d1 >= d2 ? 1 : 2} name1={pn1} name2={pn2} d1={d1} d2={d2} club1={sel1?.club} club2={sel2?.club} logos={logos} />}
+      {animPhase > 0 && <FightAnimation phase={animPhase} winner={d1 >= d2 ? 1 : 2} name1={pn1} name2={pn2} d1={d1} d2={d2} club1={sel1?.club} club2={sel2?.club} logos={logos} lang={lang} />}
 
       {/* Title */}
       <div style={{ textAlign: "center", marginBottom: 14 }}>

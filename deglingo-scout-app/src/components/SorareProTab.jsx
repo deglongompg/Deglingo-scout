@@ -697,7 +697,7 @@ export default function SorareProTab({ players, teams, fixtures, logos = {}, mat
         ? { ...t, picks: { ...myPicks }, score: totalScore, captain: captainSlot }
         : t);
     } else {
-      const newTeam = { id: Date.now(), picks: { ...myPicks }, score: totalScore, captain: captainSlot, label: `Equipe ${existing.length + 1}` };
+      const newTeam = { id: Date.now(), picks: { ...myPicks }, score: totalScore, captain: captainSlot, label: lang === "fr" ? `Equipe ${existing.length + 1}` : `Team ${existing.length + 1}` };
       updated = [...existing, newTeam];
     }
     localStorage.setItem(savedTeamsKey, JSON.stringify(updated));
@@ -709,7 +709,7 @@ export default function SorareProTab({ players, teams, fixtures, logos = {}, mat
 
   const deleteSavedTeam = (id) => {
     if (!savedTeamsKey) return;
-    const updated = savedTeams.filter(t => t.id !== id).map((t, i) => ({ ...t, label: `Equipe ${i + 1}` }));
+    const updated = savedTeams.filter(t => t.id !== id).map((t, i) => ({ ...t, label: lang === "fr" ? `Equipe ${i + 1}` : `Team ${i + 1}` }));
     localStorage.setItem(savedTeamsKey, JSON.stringify(updated));
     setSavedTeams(updated);
     if (sorareConnected && gwInfo) pushTeams("pro", { league, rarity, gwKey: gwInfo.gwKey }, updated);
@@ -1340,7 +1340,7 @@ export default function SorareProTab({ players, teams, fixtures, logos = {}, mat
                     transition: "all 0.15s",
                   }}>
                     <div style={{ fontSize: 7, fontWeight: 800, color: isActive ? rarityColor : isPast ? "rgba(255,255,255,0.45)" : "rgba(255,255,255,0.35)" }}>
-                      GW{gw.displayNumber || "?"}{isCurrent ? " LIVE" : isPast ? " FIN" : ""}
+                      GW{gw.displayNumber || "?"}{isCurrent ? " LIVE" : isPast ? (lang === "fr" ? " FIN" : " END") : ""}
                     </div>
                     <div style={{ fontSize: 10, fontWeight: 700, color: isActive ? "#fff" : "rgba(255,255,255,0.4)", fontFamily: "'DM Mono',monospace" }}>
                       {startD}-{endD}
@@ -1678,7 +1678,7 @@ export default function SorareProTab({ players, teams, fixtures, logos = {}, mat
                                 <span style={{ fontSize: 7, fontWeight: 900, color: "#fff", background: sc, borderRadius: 4, padding: "2px 6px" }}>{getSlotPosition(slot)}</span>
                                 <div style={{ flex: 1, display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", gap: 3 }}>
                                   <div style={{ fontSize: 18, opacity: 0.15, color: sc }}>+</div>
-                                  <div style={{ fontSize: 6, color: "rgba(255,255,255,0.2)", fontStyle: "italic" }}>{isActive ? "Clique un joueur" : "Vide"}</div>
+                                  <div style={{ fontSize: 6, color: "rgba(255,255,255,0.2)", fontStyle: "italic" }}>{isActive ? (lang === "fr" ? "Clique un joueur" : "Click a player") : (lang === "fr" ? "Vide" : "Empty")}</div>
                                 </div>
                               </>
                             )}
@@ -1713,7 +1713,7 @@ export default function SorareProTab({ players, teams, fixtures, logos = {}, mat
                           {getTeamSlots(league).map(s => st.picks[s]?.name?.split(" ").pop()).filter(Boolean).join(" · ")}
                         </div>
                         <span style={{ fontSize: 9, fontWeight: 900, color: rarityColor, fontFamily: "'DM Mono',monospace", flexShrink: 0 }}>{st.score}</span>
-                        <button onClick={() => loadSavedTeam(st)} style={{ fontSize: 7, fontWeight: 700, padding: "2px 5px", borderRadius: 3, border: `1px solid ${rarityColor}40`, background: `${rarityColor}10`, color: rarityColor, cursor: "pointer", fontFamily: "Outfit", flexShrink: 0 }}>Charger</button>
+                        <button onClick={() => loadSavedTeam(st)} style={{ fontSize: 7, fontWeight: 700, padding: "2px 5px", borderRadius: 3, border: `1px solid ${rarityColor}40`, background: `${rarityColor}10`, color: rarityColor, cursor: "pointer", fontFamily: "Outfit", flexShrink: 0 }}>{lang === "fr" ? "Charger" : "Load"}</button>
                         <button onClick={() => deleteSavedTeam(st.id)} style={{ fontSize: 8, padding: "2px 4px", borderRadius: 3, border: "1px solid rgba(255,255,255,0.08)", background: "rgba(255,255,255,0.03)", color: "rgba(255,255,255,0.3)", cursor: "pointer", flexShrink: 0 }}>x</button>
                       </div>
                     ) : (
@@ -2116,7 +2116,7 @@ export default function SorareProTab({ players, teams, fixtures, logos = {}, mat
                         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 8 }}>
                           <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
                             <span style={{ fontSize: 12, fontWeight: 900, color: rarityColor }}>{st.label}</span>
-                            <button onClick={() => loadSavedTeam(st)} style={{ fontSize: 7, fontWeight: 700, padding: "2px 6px", borderRadius: 4, border: `1px solid ${rarityColor}40`, background: `${rarityColor}10`, color: rarityColor, cursor: "pointer", fontFamily: "Outfit" }}>Charger</button>
+                            <button onClick={() => loadSavedTeam(st)} style={{ fontSize: 7, fontWeight: 700, padding: "2px 6px", borderRadius: 4, border: `1px solid ${rarityColor}40`, background: `${rarityColor}10`, color: rarityColor, cursor: "pointer", fontFamily: "Outfit" }}>{lang === "fr" ? "Charger" : "Load"}</button>
                             <button onClick={() => deleteSavedTeam(st.id)} style={{ fontSize: 8, padding: "2px 5px", borderRadius: 4, border: "1px solid rgba(255,255,255,0.08)", background: "rgba(255,255,255,0.03)", color: "rgba(255,255,255,0.3)", cursor: "pointer" }}>x</button>
                           </div>
                           <div style={{ display: "flex", alignItems: "center", gap: 4 }}>

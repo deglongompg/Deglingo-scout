@@ -376,14 +376,14 @@ function PlayerCard({ player, isSelected, onClick, logos = {}, badge, isCaptain,
           {(player.injured || player.suspended) && (
             <div style={{ position: "absolute", top: 5, left: 5, zIndex: 10, display: "flex", gap: 2 }}>
               {player.injured && (
-                <svg width="14" height="14" viewBox="0 0 12 12" title="Blessé">
+                <svg width="14" height="14" viewBox="0 0 12 12" title={lang === "fr" ? "Blessé" : "Injured"}>
                   <rect width="12" height="12" rx="2" fill="#EF4444"/>
                   <rect x="5" y="2" width="2" height="8" rx="0.5" fill="#fff"/>
                   <rect x="2" y="5" width="8" height="2" rx="0.5" fill="#fff"/>
                 </svg>
               )}
               {player.suspended && (
-                <svg width="10" height="14" viewBox="0 0 8 12" title="Suspendu">
+                <svg width="10" height="14" viewBox="0 0 8 12" title={lang === "fr" ? "Suspendu" : "Suspended"}>
                   <rect x="0.5" y="0.5" width="7" height="11" rx="1.5" fill="#EF4444" stroke="rgba(0,0,0,0.25)" strokeWidth="0.5"/>
                 </svg>
               )}
@@ -490,7 +490,7 @@ function DetailPanel({ player, logos = {}, allPicks = [], lang = "fr" }) {
           <div style={{ fontSize: "11px", color: "rgba(255,255,255,0.4)", marginBottom: "6px", display: "flex", alignItems: "center", gap: "4px", flexWrap: "wrap" }}>{logos[player.club] && <img src={`/data/logos/${logos[player.club]}`} alt="" style={{ width: 13, height: 13, objectFit: "contain" }} />}{player.club} · {player.archetype} · {player.isHome ? "🏠 DOM" : "✈️ EXT"} vs {logos[player.oppName] && <img src={`/data/logos/${logos[player.oppName]}`} alt="" style={{ width: 13, height: 13, objectFit: "contain" }} />}{player.oppName}</div>
           <div style={{ display: "flex", gap: "4px", flexWrap: "wrap" }}>
             {(() => { const pr = getAAProfile(player); return <span title={pr.desc} style={{ fontSize: "9px", fontWeight: 600, color: pr.color, background: `${pr.color}15`, border: `1px solid ${pr.color}25`, padding: "2px 6px", borderRadius: "3px" }}>{pr.emoji} {pr.label}</span>; })()}
-            {(() => { const pr = getAAProfile(player); return pr.label === "Pivot" ? <span title="AA5 structurellement bas (~3) — dépend du décisif (but/passe D) pour >60pts" style={{ fontSize: "9px", fontWeight: 600, color: "#F59E0B", background: "#F59E0B15", border: "1px solid #F59E0B25", padding: "2px 6px", borderRadius: "3px" }}>⚠️ Anti-Meta</span> : null; })()}
+            {(() => { const pr = getAAProfile(player); return pr.label === "Pivot" ? <span title={lang === "fr" ? "AA5 structurellement bas (~3) — dépend du décisif (but/passe D) pour >60pts" : "Structurally low AA5 (~3) — depends on decisive contribution (goal/assist) to exceed 60 pts"} style={{ fontSize: "9px", fontWeight: 600, color: "#F59E0B", background: "#F59E0B15", border: "1px solid #F59E0B25", padding: "2px 6px", borderRadius: "3px" }}>⚠️ Anti-Meta</span> : null; })()}
             {tags.map(t => <span key={t} style={{ fontSize: "9px", fontWeight: 600, color: dsc, background: `${dsc}15`, border: `1px solid ${dsc}25`, padding: "2px 6px", borderRadius: "3px" }}>{t}</span>)}
           </div>
         </div>

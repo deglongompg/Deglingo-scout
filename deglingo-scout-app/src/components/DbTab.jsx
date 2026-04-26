@@ -404,7 +404,7 @@ export default function DbTab({ players, teams, fixtures, logos = {}, lang = "fr
       {/* D-Score legend */}
       <div style={{ marginBottom: 10, padding: "8px 14px 8px 14px", background: "linear-gradient(135deg, rgba(99,102,241,0.06), rgba(192,132,252,0.04))", border: "1px solid rgba(99,102,241,0.1)", borderRadius: 10, position: "relative" }}>
         <div style={{ position: "absolute", top: 7, right: 12, display: "flex", flexDirection: "column", alignItems: "flex-end", gap: 3 }}>
-          <span style={{ fontSize: 9, color: "#F87171", fontWeight: 700, background: "rgba(239,68,68,0.12)", padding: "2px 8px", borderRadius: 20 }}>🚀 BETA GRATUITE</span>
+          <span style={{ fontSize: 9, color: "#F87171", fontWeight: 700, background: "rgba(239,68,68,0.12)", padding: "2px 8px", borderRadius: 20 }}>🚀 {lang === "fr" ? "BETA GRATUITE" : "FREE BETA"}</span>
           <span style={{ fontSize: 8, color: "rgba(255,255,255,0.35)", display: "flex", gap: 5 }}>
             <span style={{ color: "#A5B4FC" }}>50% {lang==="en"?"foot expertise":"expertise foot"}</span>
             <span style={{ color: "#4ADE80" }}>20% data</span>
@@ -423,7 +423,7 @@ export default function DbTab({ players, teams, fixtures, logos = {}, lang = "fr
         <div style={{ display: "flex", alignItems: "center", gap: 10, flexWrap: "wrap", fontSize: 10, color: "rgba(255,255,255,0.45)" }}>
           <span style={{ color: "rgba(255,255,255,0.5)" }}>{__("Socle (forme L5 + AA + floor + régularité)", "Base (L5 form + AA + floor + consistency)")} <span style={{ color: "rgba(255,255,255,0.2)" }}>›</span> {__("Contexte (adversaire, PPDA, xGA, style de jeu)", "Context (opponent, PPDA, xGA, play style)")} <span style={{ color: "rgba(255,255,255,0.2)" }}>›</span> {__("Momentum (tendance L2, séries)", "Momentum (L2 trend, streaks)")} <span style={{ color: "rgba(255,255,255,0.2)" }}>›</span> {__("Dom/Ext", "H/A")}</span>
           <span style={{ color: "rgba(255,255,255,0.2)" }}>·</span>
-          <span>{filtered.length === enriched.filter(p => ["GK","DEF","MIL","ATT"].includes(p.position)).length ? `${filtered.length} joueurs` : `${filtered.length} / ${enriched.filter(p => ["GK","DEF","MIL","ATT"].includes(p.position)).length} joueurs`}</span>
+          <span>{(() => { const totalCount = enriched.filter(p => ["GK","DEF","MIL","ATT"].includes(p.position)).length; const word = lang === "fr" ? "joueurs" : "players"; return filtered.length === totalCount ? `${filtered.length} ${word}` : `${filtered.length} / ${totalCount} ${word}`; })()}</span>
           <span style={{ display: "inline-flex", alignItems: "center", gap: 3 }}>
             <span style={{ display: "inline-block", width: 9, height: 9, borderRadius: 3, background: "linear-gradient(135deg,#4ADE80,#22C55E)", boxShadow: "0 0 6px #4ADE80" }} />
             {__("L2 explosion", "L2 explosion")}
@@ -845,7 +845,7 @@ export default function DbTab({ players, teams, fixtures, logos = {}, lang = "fr
         </div>
       )}
 
-      {selectedPlayer && <PlayerCard player={selectedPlayer} onClose={() => setSelectedPlayer(null)} logos={logos} radarMax={radarMax} />}
+      {selectedPlayer && <PlayerCard player={selectedPlayer} onClose={() => setSelectedPlayer(null)} logos={logos} radarMax={radarMax} lang={lang} />}
     </div>
   );
 }

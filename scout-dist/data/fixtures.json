@@ -1,5 +1,5 @@
 {
-  "generated": "2026-04-26T23:30:10.171921",
+  "generated": "2026-04-26T23:40:13.708212",
   "matchdays": {
     "L1": 34,
     "PL": 37,
@@ -1631,16 +1631,6 @@
       "finished": true
     },
     {
-      "home": "VfB Stuttgart",
-      "away": "Werder Bremen",
-      "date": "2026-04-26",
-      "kickoff": "13:30",
-      "matchday": 31,
-      "league": "Bundes",
-      "home_api": "VfB Stuttgart",
-      "away_api": "SV Werder Bremen"
-    },
-    {
       "home": "Borussia Dortmund",
       "away": "Freiburg",
       "date": "2026-04-26",
@@ -2083,6 +2073,17 @@
       "league": "Bundes",
       "home_api": "Hamburger SV",
       "away_api": "TSG 1899 Hoffenheim",
+      "finished": true
+    },
+    {
+      "home": "VfB Stuttgart",
+      "away": "Werder Bremen",
+      "date": "2026-04-26",
+      "kickoff": "13:30",
+      "matchday": 31,
+      "league": "Bundes",
+      "home_api": "VfB Stuttgart",
+      "away_api": "SV Werder Bremen",
       "finished": true
     },
     {

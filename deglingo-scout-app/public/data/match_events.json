@@ -1,4 +1,37 @@
 {
+  "Game:3c1eda90-203d-4f08-ab88-ad25f1c9d4e4": {
+    "home": "Le Havre AC",
+    "away": "FC Metz",
+    "date": "2026-04-26",
+    "home_goals": 2,
+    "away_goals": 1,
+    "home_scorers": [],
+    "away_scorers": [],
+    "home_assists": [],
+    "away_assists": []
+  },
+  "Game:e4d2583d-97a8-4279-8fc3-e94ff7ddc0ee": {
+    "home": "Paris FC",
+    "away": "LOSC Lille",
+    "date": "2026-04-26",
+    "home_goals": 0,
+    "away_goals": 0,
+    "home_scorers": [],
+    "away_scorers": [],
+    "home_assists": [],
+    "away_assists": []
+  },
+  "Game:c23c4079-8132-42b2-9617-7a848ded5106": {
+    "home": "Stade Rennais F.C.",
+    "away": "FC Nantes",
+    "date": "2026-04-26",
+    "home_goals": 1,
+    "away_goals": 0,
+    "home_scorers": [],
+    "away_scorers": [],
+    "home_assists": [],
+    "away_assists": []
+  },
   "Game:c3feeaeb-e9f6-452d-a028-0b49eb760dae": {
     "home": "Real Oviedo",
     "away": "Elche CF",
@@ -10,12 +43,67 @@
     "home_assists": [],
     "away_assists": []
   },
-  "Game:881359f0-6a57-462f-8f7a-af1ba0c15f15": {
-    "home": "Rayo Vallecano",
-    "away": "Real Sociedad",
-    "date": "2026-04-26",
+  "Game:ba4b32be-9316-4c0a-8469-1d20b2b30396": {
+    "home": "Red Star FC 93",
+    "away": "En Avant Guingamp",
+    "date": "2026-04-24",
     "home_goals": 3,
-    "away_goals": 3,
+    "away_goals": 2,
+    "home_scorers": [],
+    "away_scorers": [],
+    "home_assists": [],
+    "away_assists": []
+  },
+  "Game:e0a4faf5-e4a6-43df-9dfb-a0d014d69db7": {
+    "home": "Borussia Dortmund",
+    "away": "Sport-Club Freiburg",
+    "date": "2026-04-26",
+    "home_goals": 0,
+    "away_goals": 0,
+    "home_scorers": [],
+    "away_scorers": [],
+    "home_assists": [],
+    "away_assists": []
+  },
+  "Game:6ffc4ac3-ea3c-49de-9de7-ae730ecbbcb2": {
+    "home": "Toronto FC",
+    "away": "Atlanta United",
+    "date": "2026-04-25",
+    "home_goals": 1,
+    "away_goals": 2,
+    "home_scorers": [],
+    "away_scorers": [],
+    "home_assists": [],
+    "away_assists": []
+  },
+  "Game:427be455-b125-4b47-8b93-381a9eb2d0a8": {
+    "home": "Charlotte FC",
+    "away": "Philadelphia Union",
+    "date": "2026-04-04",
+    "home_goals": 2,
+    "away_goals": 1,
+    "home_scorers": [],
+    "away_scorers": [],
+    "home_assists": [],
+    "away_assists": []
+  },
+  "Game:5f3988b8-99ad-4952-ad62-2f4ac2da8b8d": {
+    "home": "FC Cincinnati",
+    "away": "New York Red Bulls",
+    "date": "2026-04-25",
+    "home_goals": 2,
+    "away_goals": 0,
+    "home_scorers": [],
+    "away_scorers": [],
+    "home_assists": [],
+    "away_assists": []
+  },
+  "Game:f828945f-dffe-4bd7-9286-b85a2993b63e": {
+    "home": "Columbus Crew",
+    "away": "Philadelphia Union",
+    "date": "2026-04-25",
+    "home_goals": 2,
+    "away_goals": 0,
     "home_scorers": [],
     "away_scorers": [],
     "home_assists": [],
@@ -32,22 +120,99 @@
     "home_assists": [],
     "away_assists": []
   },
-  "Game:2916d0e6-382c-4e0a-8367-fc58418a8052": {
-    "home": "FC Lorient",
-    "away": "RC Strasbourg Alsace",
-    "date": "2026-04-26",
-    "home_goals": 2,
-    "away_goals": 3,
+  "Game:8c5149be-1875-4050-8cb1-5c80b5a2a761": {
+    "home": "DC United",
+    "away": "Orlando City SC",
+    "date": "2026-04-25",
+    "home_goals": 3,
+    "away_goals": 2,
     "home_scorers": [],
     "away_scorers": [],
     "home_assists": [],
     "away_assists": []
   },
-  "Game:ba4b32be-9316-4c0a-8469-1d20b2b30396": {
-    "home": "Red Star FC 93",
-    "away": "En Avant Guingamp",
-    "date": "2026-04-24",
+  "Game:b42ee448-8927-49bc-bda5-353e7607f7d3": {
+    "home": "Inter Miami CF",
+    "away": "New England Revolution",
+    "date": "2026-04-25",
+    "home_goals": 1,
+    "away_goals": 1,
+    "home_scorers": [],
+    "away_scorers": [],
+    "home_assists": [],
+    "away_assists": []
+  },
+  "Game:6abd84fe-87ba-4bc8-a418-8593de226e1a": {
+    "home": "CA River Plate",
+    "away": "CA Aldosivi",
+    "date": "2026-04-26",
     "home_goals": 3,
+    "away_goals": 1,
+    "home_scorers": [],
+    "away_scorers": [],
+    "home_assists": [],
+    "away_assists": []
+  },
+  "Game:892fbeb4-8676-4252-a842-a9586dba321a": {
+    "home": "Columbus Crew",
+    "away": "LA Galaxy",
+    "date": "2026-04-23",
+    "home_goals": 2,
+    "away_goals": 1,
+    "home_scorers": [],
+    "away_scorers": [],
+    "home_assists": [],
+    "away_assists": []
+  },
+  "Game:05aff601-0f9b-4e2f-bcee-1af4baff8789": {
+    "home": "Minnesota United",
+    "away": "Los Angeles FC",
+    "date": "2026-04-25",
+    "home_goals": 0,
+    "away_goals": 1,
+    "home_scorers": [],
+    "away_scorers": [],
+    "home_assists": [],
+    "away_assists": []
+  },
+  "Game:bd5b8114-66aa-424d-972d-6bc009a6509e": {
+    "home": "CF Montreal",
+    "away": "New York City FC",
+    "date": "2026-04-25",
+    "home_goals": 1,
+    "away_goals": 0,
+    "home_scorers": [],
+    "away_scorers": [],
+    "home_assists": [],
+    "away_assists": []
+  },
+  "Game:367ed2f3-4dfc-4b26-b6cf-4dd4d42322e7": {
+    "home": "Atlanta United",
+    "away": "Nashville SC",
+    "date": "2026-04-18",
+    "home_goals": 0,
+    "away_goals": 2,
+    "home_scorers": [],
+    "away_scorers": [],
+    "home_assists": [],
+    "away_assists": []
+  },
+  "Game:d67472a8-7195-46f2-abbd-8a4e86e1bec6": {
+    "home": "Cruz Azul FC",
+    "away": "Los Angeles FC",
+    "date": "2026-04-15",
+    "home_goals": 1,
+    "away_goals": 1,
+    "home_scorers": [],
+    "away_scorers": [],
+    "home_assists": [],
+    "away_assists": []
+  },
+  "Game:1c5ec81c-e6c5-439c-920a-e86960102297": {
+    "home": "Real Salt Lake",
+    "away": "Inter Miami CF",
+    "date": "2026-04-23",
+    "home_goals": 0,
     "away_goals": 2,
     "home_scorers": [],
     "away_scorers": [],

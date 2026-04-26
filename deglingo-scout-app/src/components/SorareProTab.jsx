@@ -2174,22 +2174,17 @@ export default function SorareProTab({ players, teams, fixtures, logos = {}, mat
                               }}>+{bonusPct}%</span>
                             )}
                             {hasRealScore ? (
-                              <div style={{
-                                width: 36, height: 36,
-                                background: "linear-gradient(135deg, #DAA520 0%, #FFD700 20%, #FFFACD 40%, #FFD700 60%, #B8860B 85%, #DAA520 100%)",
-                                clipPath: "polygon(50% 0%, 95% 25%, 95% 75%, 50% 100%, 5% 75%, 5% 25%)",
-                                filter: "drop-shadow(0 0 8px rgba(255,215,0,0.65))",
-                                display: "flex", alignItems: "center", justifyContent: "center",
-                              }}>
-                                <div style={{
-                                  width: "calc(100% - 4px)", height: "calc(100% - 4px)",
-                                  background: dsBg(playerScore),
-                                  clipPath: "polygon(50% 0%, 95% 25%, 95% 75%, 50% 100%, 5% 75%, 5% 25%)",
-                                  display: "flex", alignItems: "center", justifyContent: "center",
-                                  fontFamily: "'DM Mono',monospace", fontSize: 13, fontWeight: 900,
-                                  color: "#fff",
-                                  textShadow: "0 1px 2px rgba(0,0,0,0.85), 0 0 4px rgba(0,0,0,0.6)",
-                                }}>{playerScore}</div>
+                              <div className="hex-premium">
+                                <div className="hex-premium__outer">
+                                  <div className="hex-premium__inner-wrapper">
+                                    <div className="hex-premium__inner" style={{ background: dsBg(playerScore) }} />
+                                    <div className="hex-premium__highlight" />
+                                    <div className="hex-premium__glass-reflection" />
+                                    <div className="hex-premium__edge-shine" />
+                                    <div className="hex-premium__shine" />
+                                  </div>
+                                </div>
+                                <div className="hex-premium__score">{playerScore}</div>
                               </div>
                             ) : (
                               <div style={{

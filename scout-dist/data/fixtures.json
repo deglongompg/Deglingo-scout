@@ -1,5 +1,5 @@
 {
-  "generated": "2026-04-27T01:52:25.123667",
+  "generated": "2026-04-27T05:31:33.729127",
   "matchdays": {
     "L1": 34,
     "PL": 37,
@@ -11,16 +11,6 @@
     "MLS": "MLS"
   },
   "fixtures": [
-    {
-      "home": "Marseille",
-      "away": "Nice",
-      "date": "2026-04-26",
-      "kickoff": "18:45",
-      "matchday": 31,
-      "league": "L1",
-      "home_api": "Olympique de Marseille",
-      "away_api": "OGC Nice"
-    },
     {
       "home": "Nantes",
       "away": "Marseille",
@@ -496,6 +486,17 @@
       "league": "L1",
       "home_api": "Stade Rennais F.C.",
       "away_api": "FC Nantes",
+      "finished": true
+    },
+    {
+      "home": "Marseille",
+      "away": "Nice",
+      "date": "2026-04-26",
+      "kickoff": "18:45",
+      "matchday": 31,
+      "league": "L1",
+      "home_api": "Olympique de Marseille",
+      "away_api": "OGC Nice",
       "finished": true
     },
     {
@@ -1016,26 +1017,6 @@
       "home_api": "Arsenal FC",
       "away_api": "Newcastle United FC",
       "finished": true
-    },
-    {
-      "home": "Osasuna",
-      "away": "Sevilla",
-      "date": "2026-04-26",
-      "kickoff": "16:30",
-      "matchday": 32,
-      "league": "Liga",
-      "home_api": "CA Osasuna",
-      "away_api": "Sevilla FC"
-    },
-    {
-      "home": "Villarreal",
-      "away": "Celta Vigo",
-      "date": "2026-04-26",
-      "kickoff": "19:00",
-      "matchday": 32,
-      "league": "Liga",
-      "home_api": "Villarreal CF",
-      "away_api": "RC Celta"
     },
     {
       "home": "Espanyol",
@@ -1632,6 +1613,28 @@
       "league": "Liga",
       "home_api": "Real Oviedo",
       "away_api": "Elche CF",
+      "finished": true
+    },
+    {
+      "home": "Osasuna",
+      "away": "Sevilla",
+      "date": "2026-04-26",
+      "kickoff": "16:30",
+      "matchday": 32,
+      "league": "Liga",
+      "home_api": "CA Osasuna",
+      "away_api": "Sevilla FC",
+      "finished": true
+    },
+    {
+      "home": "Villarreal",
+      "away": "Celta Vigo",
+      "date": "2026-04-26",
+      "kickoff": "19:00",
+      "matchday": 32,
+      "league": "Liga",
+      "home_api": "Villarreal CF",
+      "away_api": "RC Celta",
       "finished": true
     },
     {

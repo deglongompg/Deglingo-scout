@@ -2113,7 +2113,7 @@ export default function SorareProTab({ players, teams, fixtures, logos = {}, mat
                     const recapAwayLogo = p.isHome ? oppLogo : playerClubLogo;
                     return (
                       <div key={slot} style={{ display: "flex", flexDirection: "column", alignItems: "center", flex: 1, minWidth: 0, maxWidth: league === "Champion" ? 78 : 120 }}>
-                        <div style={{ width: "100%", aspectRatio: "3/4", borderRadius: 6, overflow: "hidden", margin: "0 auto", position: "relative",
+                        <div style={{ width: "100%", aspectRatio: "3/4", borderRadius: 6, margin: "0 auto", position: "relative",
                           background: ownedCard ? "transparent" : `linear-gradient(155deg, rgba(8,4,28,0.9), ${pc}25)`,
                           border: ownedCard ? "none" : `1px solid ${pc}30`,
                         }}>
@@ -2139,7 +2139,7 @@ export default function SorareProTab({ players, teams, fixtures, logos = {}, mat
                             const icons = flattenDecisivesPositive(p.last_so5_decisives, 4);
                             if (icons.length === 0) return null;
                             return (
-                              <div style={{ position: "absolute", bottom: 0, left: "50%", transform: "translateX(-50%)", zIndex: 3, display: "flex", gap: 0, lineHeight: 1, filter: "drop-shadow(0 1px 2px rgba(0,0,0,0.85))" }}>
+                              <div style={{ position: "absolute", bottom: 0, left: "50%", transform: "translate(-50%, 50%)", zIndex: 3, display: "flex", gap: 0, lineHeight: 1, filter: "drop-shadow(0 2px 3px rgba(0,0,0,0.9))" }}>
                                 {icons.map((emoji, i) => <span key={i} style={{ fontSize: 11 }}>{emoji}</span>)}
                               </div>
                             );

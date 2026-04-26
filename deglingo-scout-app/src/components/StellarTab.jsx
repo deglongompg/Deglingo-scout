@@ -128,6 +128,9 @@ const clubMatchGlobal = (a, b) => {
     heidenheim: ["fc heidenheim", "1 fc heidenheim 1846"],
     mainz: ["mainz 05", "1 fsv mainz 05"],
     union: ["union berlin", "1 fc union berlin"],
+    // Liga (fixtures.json display name vs players.json official name)
+    celta: ["celta vigo", "rc celta", "rc celta de vigo"],
+    freiburg: ["sport club freiburg", "sc freiburg"],
   };
   // Match un synonyme : inclusion uniquement pour les syns >= 5 chars.
   // Les abreviations courtes (OM, OL, PSG) matchent en mot entier seulement
@@ -1352,8 +1355,11 @@ export default function StellarTab({ players, teams, fixtures, logos = {}, match
       if (fx && selectedDateStrs.has(fx.date)) {
         oppName = fx.opp; isHome = fx.isHome; kickoff = fx.kickoff || fx.time || ""; matchDate = fx.date;
       } else {
-        // 2) Fallback club-based
-        const cf = clubFxMap[p.club];
+        // 2) Fallback club-based — exact d'abord, puis fuzzy via clubMatchGlobal.
+        // Why fuzzy : fixtures.json utilise les display names ("Marseille", "Celta Vigo")
+        // mais players.json a les noms officiels ("Olympique de Marseille", "RC Celta") ->
+        // exact match echoue et l'utilisateur ne voit pas ses joueurs sur les matchs a venir.
+        const cf = clubFxMap[p.club] || Object.entries(clubFxMap).find(([k]) => clubMatchGlobal(k, p.club))?.[1];
         if (!cf) continue;
         oppName = cf.opp; isHome = cf.isHome; kickoff = cf.kickoff; matchDate = cf.date;
       }

@@ -175,7 +175,12 @@ export function getPickScore(pick, isCap) {
  * - bonusPts : total bonus points vs base ds brut
  */
 export function computeTeamScores(team, players) {
-  const picks = TEAM_SLOTS.map(slot => {
+  // Detect Champion via slot keys in team.picks (DEF1/DEF2/MIL1/MIL2 = Champion, GK/DEF/MIL/ATT/FLEX = others).
+  // Avoids needing to pass league explicitly and works for any saved team format.
+  const pickKeys = team.picks ? Object.keys(team.picks) : [];
+  const isChampionShape = pickKeys.some(k => k === "DEF1" || k === "DEF2" || k === "MIL1" || k === "MIL2");
+  const slots = isChampionShape ? TEAM_SLOTS_CHAMPION : TEAM_SLOTS;
+  const picks = slots.map(slot => {
     const raw = team.picks?.[slot];
     return raw ? { ...enrichPick(raw, players), _slot: slot } : null;
   }).filter(Boolean);
@@ -192,9 +197,10 @@ export function computeTeamScores(team, players) {
 
   const clubCounts = {};
   picks.forEach(p => { clubCounts[p.club] = (clubCounts[p.club] || 0) + 1; });
-  const multiClub = picks.length === 5 && Object.values(clubCounts).every(c => c <= 2);
+  const expectedSize = isChampionShape ? 7 : 5;
+  const multiClub = picks.length === expectedSize && Object.values(clubCounts).every(c => c <= 2);
   const sumL10 = picks.reduce((s, p) => s + (p.l10 || 0), 0);
-  const cap260 = picks.length === 5 && sumL10 < 260;
+  const cap260 = picks.length === expectedSize && sumL10 < 260;
   const compoPct = (multiClub ? 2 : 0) + (cap260 ? 4 : 0);
 
   const rawBase = picks.reduce((s, p) => s + (p.ds || 0), 0);

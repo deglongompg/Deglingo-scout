@@ -193,21 +193,21 @@ export default function StellarSavedTeamCard({ team, players = [], logos = {}, c
         </div>
         <div style={{
           marginTop: 3, padding: "3px 8px", borderRadius: 6,
-          background: matchScore ? "rgba(15,40,30,0.5)" : "rgba(255,255,255,0.03)",
-          border: `1px solid ${matchScore ? "rgba(74,222,128,0.25)" : "rgba(255,255,255,0.06)"}`,
+          background: "rgba(255,255,255,0.03)",
+          border: "1px solid rgba(255,255,255,0.06)",
           textAlign: "center",
         }}>
-          <div style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: 4 }}>
-            {homeLogo && <img src={`/data/logos/${homeLogo}`} alt="" style={{ width: 14, height: 14, objectFit: "contain" }} />}
+          <div style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: 4, flexWrap: "nowrap", whiteSpace: "nowrap" }}>
+            {homeLogo && <img src={`/data/logos/${homeLogo}`} alt="" style={{ width: 14, height: 14, objectFit: "contain", flexShrink: 0 }} />}
             {matchScore ? (
-              <span style={{ fontSize: 11, fontWeight: 900, color: "#4ADE80", fontFamily: "'DM Mono',monospace", letterSpacing: "-0.3px" }}>{matchScore}</span>
+              <span style={{ fontSize: 11, fontWeight: 900, color: "#fff", fontFamily: "'DM Mono',monospace", letterSpacing: "-0.3px", whiteSpace: "nowrap", flexShrink: 0 }}>{matchScore}</span>
             ) : (
-              <span style={{ fontSize: 7, color: "rgba(255,255,255,0.25)" }}>vs</span>
+              <span style={{ fontSize: 7, color: "rgba(255,255,255,0.25)", flexShrink: 0 }}>vs</span>
             )}
-            {awayLogo && <img src={`/data/logos/${awayLogo}`} alt="" style={{ width: 14, height: 14, objectFit: "contain" }} />}
+            {awayLogo && <img src={`/data/logos/${awayLogo}`} alt="" style={{ width: 14, height: 14, objectFit: "contain", flexShrink: 0 }} />}
           </div>
           {!matchScore && (
-            <div style={{ fontSize: 7, fontWeight: 700, color: "#fff", fontFamily: "'DM Mono',monospace", marginTop: 1 }}>
+            <div style={{ fontSize: 7, fontWeight: 700, color: "#fff", fontFamily: "'DM Mono',monospace", marginTop: 1, whiteSpace: "nowrap" }}>
               {dateLabel}{parisTime ? ` - ${parisTime}` : ""}
             </div>
           )}

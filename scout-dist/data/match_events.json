@@ -9,5 +9,104 @@
     "away_scorers": [],
     "home_assists": [],
     "away_assists": []
+  },
+  "Game:01f08c1b-306b-4e51-a793-b0a40a98a9cb": {
+    "home": "Austin FC",
+    "away": "Houston Dynamo FC",
+    "date": "2026-04-26",
+    "home_goals": 2,
+    "away_goals": 0,
+    "home_scorers": [],
+    "away_scorers": [],
+    "home_assists": [],
+    "away_assists": []
+  },
+  "Game:881645f7-d575-4e84-b26b-f66129daa9b1": {
+    "home": "Nashville SC",
+    "away": "Charlotte FC",
+    "date": "2026-04-26",
+    "home_goals": 4,
+    "away_goals": 2,
+    "home_scorers": [],
+    "away_scorers": [],
+    "home_assists": [],
+    "away_assists": []
+  },
+  "Game:427be455-b125-4b47-8b93-381a9eb2d0a8": {
+    "home": "Charlotte FC",
+    "away": "Philadelphia Union",
+    "date": "2026-04-04",
+    "home_goals": 2,
+    "away_goals": 1,
+    "home_scorers": [],
+    "away_scorers": [],
+    "home_assists": [],
+    "away_assists": []
+  },
+  "Game:31f6db4e-d285-4e55-827e-a800439e6764": {
+    "home": "Chicago Fire FC",
+    "away": "Sporting Kansas City ",
+    "date": "2026-04-26",
+    "home_goals": 5,
+    "away_goals": 0,
+    "home_scorers": [],
+    "away_scorers": [],
+    "home_assists": [],
+    "away_assists": []
+  },
+  "Game:07cb0899-5020-4264-bd73-e85f7fba1b84": {
+    "home": "Seattle Sounders FC",
+    "away": "FC Dallas",
+    "date": "2026-04-26",
+    "home_goals": 2,
+    "away_goals": 1,
+    "home_scorers": [],
+    "away_scorers": [],
+    "home_assists": [],
+    "away_assists": []
+  },
+  "Game:367ed2f3-4dfc-4b26-b6cf-4dd4d42322e7": {
+    "home": "Atlanta United",
+    "away": "Nashville SC",
+    "date": "2026-04-18",
+    "home_goals": 0,
+    "away_goals": 2,
+    "home_scorers": [],
+    "away_scorers": [],
+    "home_assists": [],
+    "away_assists": []
+  },
+  "Game:dbea96b5-cc6d-401a-8853-c65f54776fc0": {
+    "home": "Vancouver Whitecaps FC",
+    "away": "Colorado Rapids",
+    "date": "2026-04-26",
+    "home_goals": 3,
+    "away_goals": 1,
+    "home_scorers": [],
+    "away_scorers": [],
+    "home_assists": [],
+    "away_assists": []
+  },
+  "Game:8de9fae5-8a2c-4da8-b828-c222bdc24306": {
+    "home": "San Diego FC",
+    "away": "Portland Timbers",
+    "date": "2026-04-26",
+    "home_goals": 1,
+    "away_goals": 2,
+    "home_scorers": [],
+    "away_scorers": [],
+    "home_assists": [],
+    "away_assists": []
+  },
+  "Game:1d3ca917-7227-4044-b2f0-6f04a13d376d": {
+    "home": "St. Louis City SC",
+    "away": "San Jose Earthquakes",
+    "date": "2026-04-26",
+    "home_goals": 2,
+    "away_goals": 3,
+    "home_scorers": [],
+    "away_scorers": [],
+    "home_assists": [],
+    "away_assists": []
   }
 }

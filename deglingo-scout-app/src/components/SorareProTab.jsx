@@ -114,6 +114,7 @@ const DECISIVE_ICONS = {
   clearance_off_line: { emoji: "🛡",   label: "Sauvetage ligne",positive: true  },
   last_man_tackle:    { emoji: "🚧",  label: "Tacle décisif",  positive: true  },
   penalty_save:       { emoji: "🧤",  label: "Péno arrêté",    positive: true  },
+  clean_sheet_60:     { emoji: "🧱",  label: "Clean sheet 60'",positive: true  },
   red_card:           { emoji: "🟥",  label: "Carton rouge",   positive: false },
   own_goals:          { emoji: "💥",  label: "CSC",            positive: false },
   penalty_conceded:   { emoji: "⚖",  label: "Péno concédé",   positive: false },

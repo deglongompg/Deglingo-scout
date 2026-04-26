@@ -275,9 +275,13 @@ for p in players:
     # Skip si data deja a jour : last_so5_date >= dernier match joue
     # Skip si data deja a jour ET on a deja decisives + status (sinon force refetch)
     # NB: status="playing" doit aussi declencher refetch (live -> potentiellement update)
+    # NB: status="scheduled" sur un match commence (latest >= today UTC) doit AUSSI forcer
+    #     refetch — sinon on ne detecte jamais la transition scheduled->playing/played
+    #     (cas Bundes 2026-04-27 Dortmund-Freiburg 17:30 UTC qui restait "scheduled").
     has_full_data = "last_so5_decisives" in p and "last_match_status" in p
     is_live = p.get("last_match_status") == "playing"
-    if latest and last_so5 and last_so5 >= latest and has_full_data and not is_live:
+    is_stale_scheduled = p.get("last_match_status") == "scheduled" and latest and latest <= _utc_now.strftime("%Y-%m-%d")
+    if latest and last_so5 and last_so5 >= latest and has_full_data and not is_live and not is_stale_scheduled:
         skipped_fresh += 1
         continue
     targets.append(p)

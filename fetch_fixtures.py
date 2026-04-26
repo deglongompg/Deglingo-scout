@@ -526,7 +526,12 @@ def get_manual_euro_fixtures():
 
 
 def fetch_mls_fixtures():
-    """Fetch MLS fixtures from Sorare API (club by club, upcomingGames)."""
+    """Fetch MLS fixtures from Sorare API via club.games(startDate,endDate).
+
+    Why games() vs upcomingGames(): upcomingGames ne renvoie que le futur (statusTyped=playing
+    devient invisible des coup d'envoi+1 sec). On veut aussi les matchs du jour LIVE et
+    ceux deja joues dans la fenetre GW pour afficher les scores dans le calendrier.
+    """
     import urllib.request
     SORARE_URL = "https://api.sorare.com/federation/graphql"
     sorare_key = os.environ.get("SORARE_API_KEY", "")
@@ -540,39 +545,53 @@ def fetch_mls_fixtures():
             return json.loads(r.read())
 
     print("\n--- MLS (via Sorare API) ---")
+    # Fenetre : 8j passes -> 21j futurs (couvre rattrapages + multi-GW)
+    today = datetime.utcnow().date()
+    start_date = (today - timedelta(days=8)).strftime("%Y-%m-%d")
+    end_date = (today + timedelta(days=21)).strftime("%Y-%m-%d")
+
     # 1. Get all MLS clubs
     d = sorare_gql('{football{competition(slug:"mlspa"){clubs{nodes{name slug}}}}}')
     clubs = d.get("data", {}).get("football", {}).get("competition", {}).get("clubs", {}).get("nodes", [])
-    print(f"  {len(clubs)} clubs MLS")
+    print(f"  {len(clubs)} clubs MLS · fenetre {start_date} -> {end_date}")
 
     seen = set()  # avoid duplicate matches
     fixtures = []
+    played_count = 0
     for i, club in enumerate(clubs):
         try:
-            d2 = sorare_gql(f'{{football{{club(slug:"{club["slug"]}"){{name upcomingGames(first:5){{id date homeTeam{{name}} awayTeam{{name}}}}}}}}}}')
-            games = d2.get("data", {}).get("football", {}).get("club", {}).get("upcomingGames", [])
+            q = (f'{{football{{club(slug:"{club["slug"]}"){{name '
+                 f'games(startDate:"{start_date}",endDate:"{end_date}"){{nodes{{'
+                 f'id date statusTyped homeTeam{{name}} awayTeam{{name}} homeGoals awayGoals}}}}}}}}}}')
+            d2 = sorare_gql(q)
+            games = (d2.get("data", {}).get("football", {}).get("club", {}) or {}).get("games", {}).get("nodes", []) or []
             for g in games:
                 date = (g.get("date") or "")[:10]
-                home = g.get("homeTeam", {}).get("name", "")
-                away = g.get("awayTeam", {}).get("name", "")
+                home = (g.get("homeTeam") or {}).get("name", "")
+                away = (g.get("awayTeam") or {}).get("name", "")
                 key = f"{date}_{home}_{away}"
                 if key in seen or not home or not away:
                     continue
                 seen.add(key)
-                # Extraire heure UTC depuis la date ISO
                 kickoff = (g.get("date") or "")[11:16] or ""
-                fixtures.append({
+                status = g.get("statusTyped", "")
+                is_finished = status == "played"
+                fx = {
                     "home": home, "away": away, "date": date,
                     "kickoff": kickoff, "matchday": "MLS",
                     "league": "MLS", "home_api": home, "away_api": away,
-                })
+                }
+                if is_finished:
+                    fx["finished"] = True
+                    played_count += 1
+                fixtures.append(fx)
             if (i + 1) % 10 == 0:
-                print(f"  [{i+1}/{len(clubs)}] {len(fixtures)} matchs trouvés...")
+                print(f"  [{i+1}/{len(clubs)}] {len(fixtures)} matchs trouves ({played_count} joues)...")
         except Exception as e:
-            print(f"  ⚠️ Erreur {club['name']}: {e}")
+            print(f"  WARN Erreur {club['name']}: {e}")
         time.sleep(0.15)
 
-    print(f"  ✅ {len(fixtures)} matchs MLS trouvés")
+    print(f"  OK {len(fixtures)} matchs MLS trouves ({played_count} joues + {len(fixtures)-played_count} a venir/live)")
     return fixtures
 
 

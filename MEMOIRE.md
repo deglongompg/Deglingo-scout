@@ -717,3 +717,179 @@ sys.stderr = io.TextIOWrapper(sys.stderr.buffer, encoding='utf-8', errors='repla
 
 Pattern a appliquer a tout futur script Python qui print des emojis sur Windows.
 
+---
+
+# 📅 SESSION 2026-04-27 — Bundesliga live + Champion 7-slots + UX Sorare Pro
+
+## 🛑 SACRED — `last_match_status === "scheduled"` doit bloquer affichage score (front + back)
+
+### Symptome
+
+Bundesliga 27/04 — Dortmund-Freiburg affichait `0-0 FT` dans le calendrier
+alors que le coup d'envoi etait dans 1h. Les joueurs avaient `last_so5_score=0`,
+`last_match_home_goals=0`, `last_match_away_goals=0`, `last_match_status="scheduled"`.
+
+Sorare API **precharge** les matchs futurs avec ces zeros + status="scheduled" avant
+le coup d'envoi. Le front-end testait `last_match_home_goals != null` (0 != null = true)
+-> faux match termine 0-0.
+
+### Fix front (5 endroits)
+
+Toujours combiner `last_match_home_goals != null` avec `last_match_status !== "scheduled"`.
+Et `hasRealScore` doit aussi tester `!== "scheduled"` car `last_so5_score=0` n'est pas null.
+
+- `SorareProTab.jsx` : `clubScoresByDate` (calendrier) + `hasRealScore` + 2 teammate lookups
+- `StellarTab.jsx` : `hasPlayed` + 3 teammate lookups + `hasRealScore`
+- `ProSavedTeamCard.jsx` : `hasRealScore` + 2 teammate lookups
+- `StellarSavedTeamCard.jsx` : `hasRealScore` + 2 teammate lookups + merge `last_match_status` dans le `p` enrichi
+- `proScoring.js::enrichPick()` : propage `last_match_status` aux saved teams
+
+### Fix back — smart-skip de fetch_gw_scores.py
+
+Probleme amont : la 1ere `MAJ_turbo` faite avant le coup d'envoi sauvegardait
+status="scheduled". Sur la MAJ suivante, le smart-skip skippait ces joueurs car
+`last_so5_date >= latest_played` ET `is_live=false` (status != "playing"). La transition
+`scheduled -> playing -> played` n'etait jamais detectee.
+
+Fix dans `fetch_gw_scores.py` :
+```python
+is_stale_scheduled = p.get("last_match_status") == "scheduled" \
+    and latest and latest <= _utc_now.strftime("%Y-%m-%d")
+if latest and last_so5 and last_so5 >= latest and has_full_data \
+   and not is_live and not is_stale_scheduled:
+    skipped_fresh += 1
+    continue
+```
+
+Maintenant : un match commence (kickoff <= now UTC) avec status="scheduled" stale
+est force-refetche systematiquement.
+
+---
+
+## 🏆 SACRED — Champion 7-slot shape (computeTeamScores)
+
+### Symptome
+
+Dans Mes Teams Champion, Hakimi affichait `0` (DNP) alors qu'en Mes Teams Ligue 1
+il affichait `41`. Meme joueur, meme data fresh. La diff : Champion utilise
+`["GK","DEF1","DEF2","MIL1","MIL2","ATT","FLEX"]` mais `computeTeamScores` iterait
+sur `TEAM_SLOTS = ["GK","DEF","MIL","ATT","FLEX"]`. Donc les picks aux slots
+DEF1/DEF2/MIL1/MIL2 n'etaient JAMAIS enrichis -> rendu en DNP via `raw` brut.
+
+### Fix dans proScoring.js
+
+Auto-detect du shape via les keys de `team.picks` :
+```js
+const isChampionShape = pickKeys.some(k =>
+  k === "DEF1" || k === "DEF2" || k === "MIL1" || k === "MIL2"
+);
+const slots = isChampionShape ? TEAM_SLOTS_CHAMPION : TEAM_SLOTS;
+```
+
+Aussi : `multiClub` / `cap260` attendent **7** picks en Champion, pas 5.
+
+---
+
+## ⚽ MLS fixtures — `games(startDate,endDate)` pas `upcomingGames`
+
+### Symptome
+
+Calendrier MLS quasi vide en GW73 (1 match au lieu de 14+). Aucun score affiche.
+fetch_gw_scores ne voyait aucun club MLS comme "played" -> aucune note recuperee.
+
+### Cause
+
+`fetch_mls_fixtures()` utilisait `club.upcomingGames(first:5)` qui ne renvoie QUE
+les matchs futurs. Les matchs deja joues + live disparaissaient.
+
+### Fix
+
+Schema Sorare :
+- `lastFiveGames` existe sur **Team** (pas Club, slug different)
+- `games(startDate, endDate)` existe sur Club -> connection avec `nodes[]`
+- `pastGames` / `playedGames` / `recentGames` / `liveGames` n'existent PAS
+
+Nouvelle requete :
+```graphql
+club(slug:"...") {
+  games(startDate:"YYYY-MM-DD", endDate:"YYYY-MM-DD") {
+    nodes { id date statusTyped homeTeam{name} awayTeam{name} homeGoals awayGoals }
+  }
+}
+```
+
+Fenetre 8j passes -> 21j futurs. Flag `finished:True` si `statusTyped="played"`.
+Resultat : 96 matchs vs ~30 avant (40 joues + 56 a venir/live).
+
+---
+
+## 🎨 UX Sorare Pro — Builder + Database collapse + responsive header
+
+### Toggle MASQUER/AFFICHER builder + base
+
+State `builderCollapsed` persiste en `localStorage.pro_builder_collapsed`.
+Bouton compact `▲ BUILDER` / `▼ BUILDER` place dans le header sur la **meme ligne**
+que Limited/Rare. Quand collapsed :
+- `pro-builder-wrap` disparait
+- Titre `RECAP EQUIPES 4/4 · Ligue 1 · ...` cache (redondant)
+- `marginTop: 0` -> les saved teams alignent leur top exactement avec le top des
+  box calendrier
+
+Le calendrier a gauche reste independant (toggle separe `leftCollapsed`).
+
+### Header responsive — single-row sur tous les viewports
+
+Media queries dans le bloc CSS de SorareProTab.jsx :
+```css
+@media(max-width:1280px){ .pro-league-btns button { width: 92px; } }
+@media(max-width:1100px){ .pro-league-btns button { width: 78px; } /* + paddings reduits */ }
+@media(max-width:960px) { .pro-league-btns button { width: 64px; } }
+@media(max-width:768px) { /* mobile vertical */ }
+```
+
+Classes ajoutees pour cibler : `.pro-sorare-badge`, `.pro-rarity-toggle`,
+`.pro-builder-toggle`. Tout le header tient sur une ligne de 1440 a 768px.
+
+### Hauteurs alignees calendrier + collapse button
+
+GW box = 36px de haut. Le bouton ◀/▶ collapse calendrier passe de 44px -> 36px
+pour matcher exactement. Width 14->16 pour clic plus large. Animation
+`leftCollapsePulse 2.4s` (brightness 1->1.25) pour attirer l'oeil. Border + bg
++ glow renforces (themeAccent pleine opacite au lieu de 28%/55%).
+
+---
+
+## 🌐 Audit i18n FR/EN — strings manquantes corrigees
+
+Strings rendues bilingues dans 7 composants :
+- **StellarTab** : Semaine precedente/suivante, Afficher matchs/Reduire, Charger,
+  template "Equipe N"
+- **SorareProTab** : "Equipe N", " FIN", "Clique un joueur"/"Vide", 2× Charger
+- **RecoTab** : tooltips `Blesse`/`Suspendu`, tooltip Anti-Meta AA5
+- **DbTab** : `🚀 BETA GRATUITE` -> `🚀 FREE BETA`, pluralisation joueurs/players
+- **PlayerCard** (modal) : ajout prop `lang`, 4 categories radar (Defense/Defense,
+  Passes/Passing, Possession, Attaque/Attack) + descs, "Comment il fait son AA ?",
+  "AA5 = Score complet/match", "Score Sorare ≈ 35 base + decisif + AA"
+- **FightTab** : ajout prop `lang` a `FightAnimation`, message K.O. "X gagne A à B"
+- **RecapTab** : `RecapErrorBoundary` recoit `lang` et traduit "Erreur d'affichage Mes Teams"
+
+Strings volontairement laissees telles quelles : `Slot {N}`, `● LIVE`,
+`Deglingo Fight`, `Radar All Around` (universels / brand).
+
+---
+
+## 🎯 Saved teams scores — blanc + 1 ligne (pas vert + wrap)
+
+Bug `Mes Teams` Champion : scores match (0-3 PSG-Angers) affiches en `#4ADE80` (vert)
+avec fond verdatre + risque wrap sur 2 lignes (cartes Champion etroites 78px).
+
+Les fichiers `ProSavedTeamCard.jsx` + `StellarSavedTeamCard.jsx` ont :
+- `color: "#4ADE80"` -> `color: "#fff"`
+- `background: "rgba(15,40,30,0.5)"` -> `"rgba(255,255,255,0.03)"` (neutre)
+- `border: "rgba(74,222,128,0.25)"` -> `"rgba(255,255,255,0.06)"` (neutre)
+- Ajout `flexWrap: "nowrap"`, `whiteSpace: "nowrap"`, `flexShrink: 0` sur les logos
+  + score pour empecher le wrap
+
+Note : ces composants sont **distincts** de StellarTab/SorareProTab — ils sont rendus
+dans Mes Teams via RecapTab.jsx.
+

@@ -1,5 +1,5 @@
 {
-  "generated": "2026-04-27T00:08:54.562840",
+  "generated": "2026-04-27T00:27:09.738812",
   "matchdays": {
     "L1": 34,
     "PL": 37,
@@ -1015,16 +1015,6 @@
       "finished": true
     },
     {
-      "home": "Real Oviedo",
-      "away": "Elche",
-      "date": "2026-04-26",
-      "kickoff": "14:15",
-      "matchday": 32,
-      "league": "Liga",
-      "home_api": "Real Oviedo",
-      "away_api": "Elche CF"
-    },
-    {
       "home": "Osasuna",
       "away": "Sevilla",
       "date": "2026-04-26",
@@ -1628,6 +1618,17 @@
       "league": "Liga",
       "home_api": "Rayo Vallecano de Madrid",
       "away_api": "Real Sociedad de Fútbol",
+      "finished": true
+    },
+    {
+      "home": "Real Oviedo",
+      "away": "Elche",
+      "date": "2026-04-26",
+      "kickoff": "14:15",
+      "matchday": 32,
+      "league": "Liga",
+      "home_api": "Real Oviedo",
+      "away_api": "Elche CF",
       "finished": true
     },
     {

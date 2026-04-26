@@ -126,6 +126,7 @@ export function enrichPick(pick, players) {
     last_so5_date: fresh.last_so5_date,
     last_match_home_goals: fresh.last_match_home_goals,
     last_match_away_goals: fresh.last_match_away_goals,
+    last_match_status: fresh.last_match_status,
   };
 }
 

@@ -1413,6 +1413,9 @@ export default function SorareProTab({ players, teams, fixtures, logos = {}, mat
             const clubScoresByDate = {};
             for (const p of players || []) {
               if (!p.last_so5_date || p.last_match_home_goals == null) continue;
+              // Skip "scheduled" : Sorare a precharge le match avec hg=0/ag=0 mais le coup d'envoi n'a pas eu lieu.
+              // Sans ce filtre on affichait "0-0 FT" sur des matchs pas encore commences (cas Bundes 2026-04-26).
+              if (p.last_match_status === "scheduled") continue;
               const key = `${normClub(p.club)}|${p.last_so5_date}`;
               if (!clubScoresByDate[key]) {
                 clubScoresByDate[key] = { home: p.last_match_home_goals, away: p.last_match_away_goals };
@@ -2082,11 +2085,11 @@ export default function SorareProTab({ players, teams, fixtures, logos = {}, mat
                     const parisTime = p.kickoff && p.matchDate ? utcToParisTime(p.kickoff, p.matchDate) : "";
                     const dateLabel = p.matchDate ? new Date(p.matchDate + "T12:00:00").toLocaleDateString(lang === "fr" ? "fr-FR" : "en-US", { timeZone: TZ, weekday: "short", day: "numeric" }).toUpperCase().replace(".", "") : "";
                     // Score affiche par carte = RAW score (comme Sorare), bonus appliques au total uniquement.
-                    const hasRealScore = p.last_so5_date && p.matchDate && p.last_so5_date === p.matchDate && p.last_so5_score != null;
+                    const hasRealScore = p.last_so5_date && p.matchDate && p.last_so5_date === p.matchDate && p.last_so5_score != null && p.last_match_status !== "scheduled";
                     // Detection "match joue" via la presence d'au moins un co-equipier ayant une SO5 a cette date
                     // (plus robuste que comparer la date a 'aujourd'hui UTC' qui casse entre 22h-02h Paris)
                     const matchWasPlayed = p.matchDate && p.club && (players || []).some(pl =>
-                      pl.club === p.club && pl.last_so5_date === p.matchDate && pl.last_match_home_goals != null
+                      pl.club === p.club && pl.last_so5_date === p.matchDate && pl.last_match_home_goals != null && pl.last_match_status !== "scheduled"
                     );
                     // DNP = match deja joue mais pas de SO5 pour le joueur (blesse, banc, absent)
                     const isDNP = matchWasPlayed && !hasRealScore;
@@ -2101,7 +2104,7 @@ export default function SorareProTab({ players, teams, fixtures, logos = {}, mat
                       ? `${p.last_match_home_goals} - ${p.last_match_away_goals}`
                       : null;
                     if (!matchScore && isDNP && p.club && p.matchDate) {
-                      const mate = players.find(pl => pl.club === p.club && pl.last_so5_date === p.matchDate && pl.last_match_home_goals != null);
+                      const mate = players.find(pl => pl.club === p.club && pl.last_so5_date === p.matchDate && pl.last_match_home_goals != null && pl.last_match_status !== "scheduled");
                       if (mate) matchScore = `${mate.last_match_home_goals} - ${mate.last_match_away_goals}`;
                     }
                     // Logos dans l'ordre home -> away (independant du player)

@@ -43,10 +43,10 @@ export default function ProSavedTeamCard({
     const dateLabel = p.matchDate
       ? new Date(p.matchDate + "T12:00:00").toLocaleDateString(lang === "fr" ? "fr-FR" : "en-US", { weekday: "short", day: "numeric" }).toUpperCase().replace(".", "")
       : "";
-    const hasRealScore = p.last_so5_date && p.matchDate && p.last_so5_date === p.matchDate && p.last_so5_score != null;
+    const hasRealScore = p.last_so5_date && p.matchDate && p.last_so5_date === p.matchDate && p.last_so5_score != null && p.last_match_status !== "scheduled";
     // Detection "match joue" via teammate (robuste au fuseau UTC vs local)
     const matchWasPlayed = p.matchDate && p.club && (players || []).some(pl =>
-      pl.club === p.club && pl.last_so5_date === p.matchDate && pl.last_match_home_goals != null
+      pl.club === p.club && pl.last_so5_date === p.matchDate && pl.last_match_home_goals != null && pl.last_match_status !== "scheduled"
     );
     // DNP = match deja joue mais pas de SO5 pour ce joueur (blesse, banc, absent)
     const isDNP = matchWasPlayed && !hasRealScore;
@@ -58,7 +58,7 @@ export default function ProSavedTeamCard({
       : null;
     // Si DNP : essaie le score du match via un co-equipier qui a joue
     if (!matchScore && isDNP && p.club && p.matchDate) {
-      const mate = (players || []).find(pl => pl.club === p.club && pl.last_so5_date === p.matchDate && pl.last_match_home_goals != null);
+      const mate = (players || []).find(pl => pl.club === p.club && pl.last_so5_date === p.matchDate && pl.last_match_home_goals != null && pl.last_match_status !== "scheduled");
       if (mate) matchScore = `${mate.last_match_home_goals} - ${mate.last_match_away_goals}`;
     }
     const recapHomeLogo = p.isHome ? playerClubLogo : oppLogo;

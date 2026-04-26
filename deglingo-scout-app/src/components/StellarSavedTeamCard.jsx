@@ -39,7 +39,7 @@ export default function StellarSavedTeamCard({ team, players = [], logos = {}, c
   // Helper pour detection "match joue" basee sur teammate data (robuste UTC/local)
   const wasMatchPlayed = (matchDate, club) =>
     !!(matchDate && club && (players || []).some(pl =>
-      pl.club === club && pl.last_so5_date === matchDate && pl.last_match_home_goals != null
+      pl.club === club && pl.last_so5_date === matchDate && pl.last_match_home_goals != null && pl.last_match_status !== "scheduled"
     ));
 
   const stPlayers = POS_ORDER.map(s => team.picks[s]).filter(Boolean);
@@ -116,12 +116,13 @@ export default function StellarSavedTeamCard({ team, players = [], logos = {}, c
       last_so5_date: fresh.last_so5_date,
       last_match_home_goals: fresh.last_match_home_goals,
       last_match_away_goals: fresh.last_match_away_goals,
+      last_match_status: fresh.last_match_status,
     } : raw;
     const pc = PC[p.position] || "#94A3B8";
     const ownedCard = resolveCard(p);
     const oppLogo = logos[p.oppName];
     const playerClubLogo = logos[p.club];
-    const hasRealScore = p.last_so5_date && p.matchDate && p.last_so5_date === p.matchDate && p.last_so5_score != null;
+    const hasRealScore = p.last_so5_date && p.matchDate && p.last_so5_date === p.matchDate && p.last_so5_score != null && p.last_match_status !== "scheduled";
     const matchIsPast = wasMatchPlayed(p.matchDate, p.club);
     const isDNP = matchIsPast && !hasRealScore;
     // Score affiche en bulle : FLOOR pour matcher l'affichage Sorare (Yamal 74.7 -> 74, pas 75)
@@ -130,7 +131,7 @@ export default function StellarSavedTeamCard({ team, players = [], logos = {}, c
       ? `${p.last_match_home_goals} - ${p.last_match_away_goals}`
       : null;
     if (!matchScore && isDNP && p.club && p.matchDate) {
-      const mate = (players || []).find(pl => pl.club === p.club && pl.last_so5_date === p.matchDate && pl.last_match_home_goals != null);
+      const mate = (players || []).find(pl => pl.club === p.club && pl.last_so5_date === p.matchDate && pl.last_match_home_goals != null && pl.last_match_status !== "scheduled");
       if (mate) matchScore = `${mate.last_match_home_goals} - ${mate.last_match_away_goals}`;
     }
     const homeLogo = p.isHome ? playerClubLogo : oppLogo;

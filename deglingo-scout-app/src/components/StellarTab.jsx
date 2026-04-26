@@ -492,7 +492,7 @@ function StellarCard({ player, logos, size = "md", isValidated = false, gwStart 
   const W = sm ? 78 : 96;
   const H = sm ? 108 : 130;
 
-  const hasPlayed = player.last_so5_date && gwStart && player.last_so5_date >= gwStart && player.last_so5_score != null;
+  const hasPlayed = player.last_so5_date && gwStart && player.last_so5_date >= gwStart && player.last_so5_score != null && player.last_match_status !== "scheduled";
   const edBonus = edition?.bonus || 0;
   const adjDs = Math.round((player.ds || 0) * (1 + edBonus / 100));
   const displayScore = isValidated && hasPlayed ? Math.floor(player.last_so5_score) : adjDs;
@@ -2539,7 +2539,7 @@ export default function StellarTab({ players, teams, fixtures, logos = {}, match
                       : (getEdition(cardEditions[p.slug || p.name] || "base")?.bonus || 0);
                     const bonusMult = 1 + bonusPct / 100;
                     const matchIsPast = !!(p.matchDate && p.club && (players || []).some(pl =>
-                      pl.club === p.club && pl.last_so5_date === p.matchDate && pl.last_match_home_goals != null
+                      pl.club === p.club && pl.last_so5_date === p.matchDate && pl.last_match_home_goals != null && pl.last_match_status !== "scheduled"
                     ));
                     let rawScore, postBonus, isLive, isDNP;
                     if (fresh && fresh.last_so5_date === p.matchDate && fresh.last_so5_score != null) {
@@ -2606,9 +2606,9 @@ export default function StellarTab({ players, teams, fixtures, logos = {}, match
                     const ownedCard = resolveCardForPick(p) || sorareCardMap[p.slug || p.name];
                     const oppLogo = logos[p.oppName];
                     const playerClubLogo = logos[p.club];
-                    const hasRealScore = p.last_so5_date && p.matchDate && p.last_so5_date === p.matchDate && p.last_so5_score != null;
+                    const hasRealScore = p.last_so5_date && p.matchDate && p.last_so5_date === p.matchDate && p.last_so5_score != null && p.last_match_status !== "scheduled";
                     const matchIsPast = !!(p.matchDate && p.club && (players || []).some(pl =>
-                      pl.club === p.club && pl.last_so5_date === p.matchDate && pl.last_match_home_goals != null
+                      pl.club === p.club && pl.last_so5_date === p.matchDate && pl.last_match_home_goals != null && pl.last_match_status !== "scheduled"
                     ));
                     const isDNP = matchIsPast && !hasRealScore;
                     // Score affiche = RAW (comme Sorare), bonus appliques au total uniquement
@@ -2621,7 +2621,7 @@ export default function StellarTab({ players, teams, fixtures, logos = {}, match
                       ? `${p.last_match_home_goals} - ${p.last_match_away_goals}`
                       : null;
                     if (!matchScore && isDNP && p.club && p.matchDate) {
-                      const mate = (players || []).find(pl => pl.club === p.club && pl.last_so5_date === p.matchDate && pl.last_match_home_goals != null);
+                      const mate = (players || []).find(pl => pl.club === p.club && pl.last_so5_date === p.matchDate && pl.last_match_home_goals != null && pl.last_match_status !== "scheduled");
                       if (mate) matchScore = `${mate.last_match_home_goals} - ${mate.last_match_away_goals}`;
                     }
                     // Logos dans l'ordre home -> away (independant du player)

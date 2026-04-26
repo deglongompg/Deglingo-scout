@@ -171,9 +171,27 @@ const proKeyframes = `
 @keyframes themeBgFadeIn { 0%{opacity:0} 100%{opacity:0.55} }
 @keyframes neonPulse { 0%,100%{filter:brightness(1)} 50%{filter:brightness(1.15)} }
 @keyframes stellarLivePulse { 0%,100%{opacity:0.85;box-shadow:0 0 4px rgba(248,113,113,0.4)} 50%{opacity:1;box-shadow:0 0 10px rgba(248,113,113,0.85)} }
+@keyframes leftCollapsePulse { 0%,100%{filter:brightness(1) saturate(1)} 50%{filter:brightness(1.25) saturate(1.2)} }
 .pro-player-list ::-webkit-scrollbar { height: 4px; }
 .pro-player-list ::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.1); border-radius: 4px; }
 .pro-player-list ::-webkit-scrollbar-track { background: transparent; }
+/* Tablette / petits laptops (~13" MacBook Pro) : compresse le header pour tenir sur 1 ligne */
+@media(max-width:1280px){
+  .pro-header-row { gap: 8px !important; }
+  .pro-header-row .pro-league-btns { gap: 3px !important; }
+  .pro-league-btns button { width: 92px !important; height: 36px !important; }
+}
+@media(max-width:1100px){
+  .pro-header-row { gap: 6px !important; }
+  .pro-league-btns button { width: 78px !important; height: 32px !important; }
+  .pro-rarity-toggle button { padding: 4px 10px !important; font-size: 10px !important; }
+  .pro-builder-toggle { padding: 4px 9px !important; font-size: 9px !important; }
+  .pro-sorare-badge { gap: 3px !important; }
+  .pro-sorare-badge > span:first-child { font-size: 13px !important; }
+}
+@media(max-width:960px){
+  .pro-league-btns button { width: 64px !important; }
+}
 @media(max-width:768px){
   .pro-main-flex { flex-direction: column !important; gap: 8px !important; }
   .pro-left-panel { display: none !important; }
@@ -220,6 +238,12 @@ export default function SorareProTab({ players, teams, fixtures, logos = {}, mat
   const [selectedSlot, setSelectedSlot] = useState(null);
   const [hideUsed, setHideUsed] = useState(true);
   const [leftCollapsed, setLeftCollapsed] = useState(false);
+  const [builderCollapsed, setBuilderCollapsed] = useState(() => {
+    try { return localStorage.getItem("pro_builder_collapsed") === "true"; } catch { return false; }
+  });
+  useEffect(() => {
+    try { localStorage.setItem("pro_builder_collapsed", String(builderCollapsed)); } catch { /* noop */ }
+  }, [builderCollapsed]);
   const [filterTitu, setFilterTitu] = useState(0);
   const [selectedMatchFilters, setSelectedMatchFilters] = useState([]);
   const [includeRare, setIncludeRare] = useState(false);
@@ -1197,7 +1221,7 @@ export default function SorareProTab({ players, teams, fixtures, logos = {}, mat
 
       {/* ═══ HEADER : Titre + League selector + Rarity toggle ═══ */}
       <div className="pro-header-row" style={{ display: "flex", alignItems: "center", gap: 12, padding: "8px 0 12px", flexWrap: "wrap", position: "relative", zIndex: 1 }}>
-        <div style={{ display: "flex", alignItems: "center", gap: 6, flexShrink: 0 }}>
+        <div className="pro-sorare-badge" style={{ display: "flex", alignItems: "center", gap: 6, flexShrink: 0 }}>
           <span style={{ fontSize: 14, fontWeight: 800, color: "rgba(255,255,255,0.5)", letterSpacing: "0.12em" }}>SORARE</span>
           <span style={{ display: "inline-flex", alignItems: "center", justifyContent: "center", padding: "3px 10px", borderRadius: 5, background: rarityBg, boxShadow: `0 0 10px ${rarityColor}40` }}>
             <span style={{ fontSize: 14, fontWeight: 900, color: "#fff", letterSpacing: "0.06em" }}>PRO</span>
@@ -1221,7 +1245,7 @@ export default function SorareProTab({ players, teams, fixtures, logos = {}, mat
                 className={`aurora-chip${isActive ? " is-active" : ""}`}
                 style={{
                 position: "relative", overflow: "hidden",
-                width: 120, height: 40, padding: 0, borderRadius: 99,
+                width: 105, height: 40, padding: 0, borderRadius: 99,
                 border: isActive ? `2px solid ${accent}` : "1px solid rgba(255,255,255,0.1)",
                 backgroundColor: "rgba(20,10,40,0.8)",
                 cursor: "pointer", fontFamily: "Outfit",
@@ -1287,7 +1311,7 @@ export default function SorareProTab({ players, teams, fixtures, logos = {}, mat
           })}
         </div>
         {/* Rarity toggle */}
-        <div style={{ display: "flex", gap: 2, background: "rgba(255,255,255,0.05)", borderRadius: 8, padding: 2 }}>
+        <div className="pro-rarity-toggle" style={{ display: "flex", gap: 2, background: "rgba(255,255,255,0.05)", borderRadius: 8, padding: 2 }}>
           {["limited", "rare"].map(r => (
             <button key={r} onClick={() => setRarity(r)} style={{
               padding: "5px 14px", borderRadius: 6, border: "none", cursor: "pointer", fontFamily: "Outfit",
@@ -1298,6 +1322,29 @@ export default function SorareProTab({ players, teams, fixtures, logos = {}, mat
             </button>
           ))}
         </div>
+        {/* Toggle masquer / afficher Builder + Base — meme ligne que Limited/Rare */}
+        <button
+          className="pro-builder-toggle"
+          onClick={() => setBuilderCollapsed(v => !v)}
+          title={builderCollapsed ? (lang === "fr" ? "Afficher le builder + base" : "Show builder + database") : (lang === "fr" ? "Masquer le builder + base" : "Hide builder + database")}
+          style={{
+            display: "flex", alignItems: "center", gap: 6,
+            padding: "5px 12px", borderRadius: 99,
+            border: `1px solid ${themeAccent}55`,
+            background: `linear-gradient(180deg, ${themeAccent}28, ${themeAccent}14)`,
+            backdropFilter: "blur(8px)",
+            color: themeAccent, fontSize: 10, fontWeight: 800,
+            fontFamily: "Outfit", letterSpacing: "0.04em",
+            cursor: "pointer",
+            boxShadow: `0 0 8px ${themeAccent}30, inset 0 1px 0 rgba(255,255,255,0.08)`,
+            transition: "all 0.18s",
+          }}
+          onMouseEnter={e => { e.currentTarget.style.background = `linear-gradient(180deg, ${themeAccent}40, ${themeAccent}20)`; e.currentTarget.style.borderColor = `${themeAccent}90`; }}
+          onMouseLeave={e => { e.currentTarget.style.background = `linear-gradient(180deg, ${themeAccent}28, ${themeAccent}14)`; e.currentTarget.style.borderColor = `${themeAccent}55`; }}
+        >
+          <span style={{ fontSize: 12, lineHeight: 1 }}>{builderCollapsed ? "▼" : "▲"}</span>
+          <span>{builderCollapsed ? (lang === "fr" ? "BUILDER" : "BUILDER") : (lang === "fr" ? "BUILDER" : "BUILDER")}</span>
+        </button>
       </div>
 
       {/* ═══ MAIN LAYOUT : Left (matches) + Right (builder + players) ═══ */}
@@ -1305,20 +1352,22 @@ export default function SorareProTab({ players, teams, fixtures, logos = {}, mat
 
         {/* ── Left column: Decisive Pick + Matches ── */}
         <div className="pro-left-panel" style={{ width: leftCollapsed ? 30 : 280, flexShrink: 0, transition: "width 0.2s", position: "relative", display: isMobile ? "none" : undefined }}>
-          <button onClick={() => setLeftCollapsed(v => !v)} title={leftCollapsed ? "Déplier le panneau" : "Replier le panneau"} style={{
-            position: "absolute", top: 0, right: -7, zIndex: 5,
-            width: 14, height: 44, borderRadius: 6, padding: 0,
-            border: `1px solid ${themeAccent}55`,
-            background: `linear-gradient(180deg, ${themeAccent}28, ${themeAccent}14)`,
+          <button onClick={() => setLeftCollapsed(v => !v)} title={leftCollapsed ? (lang === "fr" ? "Déplier le panneau" : "Expand panel") : (lang === "fr" ? "Replier le panneau" : "Collapse panel")} style={{
+            position: "absolute", top: 0, right: -8, zIndex: 5,
+            width: 16, height: 36, borderRadius: 6, padding: 0,
+            border: `1px solid ${themeAccent}`,
+            background: `linear-gradient(180deg, ${themeAccent}66, ${themeAccent}33)`,
             backdropFilter: "blur(8px)",
-            color: `${themeAccent}`,
-            fontSize: 11, cursor: "pointer",
+            color: "#fff",
+            fontSize: 12, fontWeight: 900, cursor: "pointer",
             display: "flex", alignItems: "center", justifyContent: "center",
-            boxShadow: `0 0 8px ${themeAccent}30, inset 0 1px 0 rgba(255,255,255,0.08)`,
+            boxShadow: `0 0 18px ${themeAccent}, 0 0 6px ${themeAccent}cc, inset 0 1px 0 rgba(255,255,255,0.25)`,
+            textShadow: `0 0 4px ${themeAccent}, 0 1px 2px rgba(0,0,0,0.6)`,
             transition: "all 0.18s",
+            animation: "leftCollapsePulse 2.4s ease-in-out infinite",
           }}
-          onMouseEnter={e => { e.currentTarget.style.background = `linear-gradient(180deg, ${themeAccent}40, ${themeAccent}20)`; e.currentTarget.style.borderColor = `${themeAccent}90`; e.currentTarget.style.boxShadow = `0 0 14px ${themeAccent}55, inset 0 1px 0 rgba(255,255,255,0.12)`; }}
-          onMouseLeave={e => { e.currentTarget.style.background = `linear-gradient(180deg, ${themeAccent}28, ${themeAccent}14)`; e.currentTarget.style.borderColor = `${themeAccent}55`; e.currentTarget.style.boxShadow = `0 0 8px ${themeAccent}30, inset 0 1px 0 rgba(255,255,255,0.08)`; }}
+          onMouseEnter={e => { e.currentTarget.style.background = `linear-gradient(180deg, ${themeAccent}99, ${themeAccent}55)`; e.currentTarget.style.boxShadow = `0 0 24px ${themeAccent}, 0 0 10px ${themeAccent}, inset 0 1px 0 rgba(255,255,255,0.35)`; e.currentTarget.style.transform = "scale(1.08)"; }}
+          onMouseLeave={e => { e.currentTarget.style.background = `linear-gradient(180deg, ${themeAccent}66, ${themeAccent}33)`; e.currentTarget.style.boxShadow = `0 0 18px ${themeAccent}, 0 0 6px ${themeAccent}cc, inset 0 1px 0 rgba(255,255,255,0.25)`; e.currentTarget.style.transform = "scale(1)"; }}
           >{leftCollapsed ? "▶" : "◀"}</button>
           {leftCollapsed ? null : (<>
           {/* GW selector — wrappable au-dessus du calendrier */}
@@ -1508,6 +1557,7 @@ export default function SorareProTab({ players, teams, fixtures, logos = {}, mat
 
         {/* ── Right column: Builder + Player list ── */}
         <div className="pro-right-col" style={{ flex: 1, minWidth: 0, maxWidth: "100%", overflow: "hidden" }}>
+          {!builderCollapsed && (
           <div className="pro-builder-wrap" style={{ borderRadius: 14, background: "rgba(6,3,20,0.88)", border: `1px solid ${themeAccent}55`, overflow: "hidden", display: "flex", flexDirection: "column", minHeight: isMobile ? "60vh" : undefined, position: "relative", width: "100%", maxWidth: "100%", boxShadow: `0 0 30px ${themeAccent}33, 0 0 2px ${themeAccent}aa, inset 0 0 40px ${themeAccent}12`, transition: "border-color 0.4s ease, box-shadow 0.4s ease" }}>
 
             {/* Loading overlay — first connection */}
@@ -1962,14 +2012,17 @@ export default function SorareProTab({ players, teams, fixtures, logos = {}, mat
               </div>
             </div>
           </div>
+          )}
 
           {/* ═══ RECAP EQUIPES SAUVEGARDEES — Format Pitch Pro ═══ */}
           {savedTeams.length > 0 && (
-            <div style={{ marginTop: 24, padding: "0 0 20px" }}>
-              <div style={{ fontSize: 13, fontWeight: 900, color: rarityColor, letterSpacing: "0.06em", marginBottom: 12, display: "flex", alignItems: "center", gap: 8 }}>
-                {t(lang, "proRecap")}
-                <span style={{ fontSize: 9, fontWeight: 600, color: "rgba(255,255,255,0.35)" }}>{savedTeams.length}/{maxSaved} · {LEAGUE_NAMES[league] || league} · {rarity === "rare" ? t(lang, "proRare") : t(lang, "proLimited")} · {gwInfo?.displayNumber ? `GW${gwInfo.displayNumber}` : ""}</span>
-              </div>
+            <div style={{ marginTop: builderCollapsed ? 0 : 24, padding: "0 0 20px" }}>
+              {!builderCollapsed && (
+                <div style={{ fontSize: 13, fontWeight: 900, color: rarityColor, letterSpacing: "0.06em", marginBottom: 12, display: "flex", alignItems: "center", gap: 8 }}>
+                  {t(lang, "proRecap")}
+                  <span style={{ fontSize: 9, fontWeight: 600, color: "rgba(255,255,255,0.35)" }}>{savedTeams.length}/{maxSaved} · {LEAGUE_NAMES[league] || league} · {rarity === "rare" ? t(lang, "proRare") : t(lang, "proLimited")} · {gwInfo?.displayNumber ? `GW${gwInfo.displayNumber}` : ""}</span>
+                </div>
+              )}
               <div className="pro-recap-grid" style={{ display: "grid", gridTemplateColumns: "repeat(2, minmax(0, 480px))", gap: 10, justifyContent: "center", margin: "0 auto", maxWidth: 980 }}>
                 {savedTeams.map((st) => {
                   const stPlayers = getTeamSlots(league).map(s => st.picks[s]).filter(Boolean);

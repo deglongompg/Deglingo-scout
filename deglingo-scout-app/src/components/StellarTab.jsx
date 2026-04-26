@@ -1277,9 +1277,10 @@ export default function StellarTab({ players, teams, fixtures, logos = {}, match
         }
 
         const lgTeams = teams.filter(t => t.league === p.league);
-        const oppStats = lgTeams.find(t => t.name === fxOpp);
+        // Fallback fuzzy via clubMatchGlobal pour gerer "RC Celta" (players.json) <-> "Celta Vigo" (teams.json)
+        const oppStats = lgTeams.find(t => t.name === fxOpp) || lgTeams.find(t => clubMatchGlobal(t.name, fxOpp));
         if (!oppStats) continue;
-        const pTeam = findTeam(lgTeams, p.club);
+        const pTeam = findTeam(lgTeams, p.club) || lgTeams.find(t => clubMatchGlobal(t.name, p.club));
         const ds = dScoreMatch(p, oppStats, fxIsHome, pTeam);
         if (ds < 20) continue;
         if (p.injured || p.suspended) continue;
@@ -1365,8 +1366,9 @@ export default function StellarTab({ players, teams, fixtures, logos = {}, match
       }
 
       const lgTeams = (teams || []).filter(t => t.league === p.league);
-      const oppStats = lgTeams.find(t => t.name === oppName);
-      const pTeam = findTeam(lgTeams, p.club);
+      // Fallback fuzzy via clubMatchGlobal pour les divergences fixtures.json <-> players.json/teams.json
+      const oppStats = lgTeams.find(t => t.name === oppName) || lgTeams.find(t => clubMatchGlobal(t.name, oppName));
+      const pTeam = findTeam(lgTeams, p.club) || lgTeams.find(t => clubMatchGlobal(t.name, p.club));
       const ds = oppStats ? dScoreMatch(p, oppStats, isHome, pTeam) : (p.l10 || 50);
       let csPercent = null;
       if (["GK", "DEF"].includes(p.position) && oppStats) {

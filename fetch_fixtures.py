@@ -38,6 +38,20 @@ COMPETITIONS = {
     "BL1": "Bundes",  # Bundesliga
 }
 
+# Mapping noms football-data → noms canoniques Sorare (= ceux dans players.json).
+# Build with build_club_aliases.py (compare fixtures.home_api/away_api to sorare_club_slugs.json keys).
+# Source de verite : players.json/Sorare. fixtures.json doit ecrire les MEMES noms en home_api/away_api
+# pour que le front-end matche les joueurs sans logique fuzzy fragile.
+try:
+    with open(os.path.join(os.path.dirname(os.path.abspath(__file__)), "club_aliases.json"), encoding="utf-8") as f:
+        CLUB_ALIASES = json.load(f)
+except Exception:
+    CLUB_ALIASES = {}
+
+def to_sorare_canonical(name):
+    """Convertit un nom de club football-data (ou autre source) vers le nom canonique Sorare."""
+    return CLUB_ALIASES.get(name, name)
+
 # Compétitions européennes (fetch par plage de dates, pas par journée)
 EURO_COMPETITIONS = {
     "CL":   "UCL",   # Champions League
@@ -310,7 +324,7 @@ def fetch_recent_finished(comp_code, our_league, days_back=8):
         fixtures.append({
             "home": home, "away": away, "date": date, "kickoff": kickoff,
             "matchday": m.get("matchday", ""), "league": our_league,
-            "home_api": m["homeTeam"]["name"], "away_api": m["awayTeam"]["name"],
+            "home_api": to_sorare_canonical(m["homeTeam"]["name"]), "away_api": to_sorare_canonical(m["awayTeam"]["name"]),
             "finished": True,
         })
         print(f"    {home} vs {away} ({date})")
@@ -357,8 +371,8 @@ def fetch_upcoming_fixtures(comp_code, our_league, days_ahead=21):
             "kickoff": kickoff,
             "matchday": m.get("matchday", ""),
             "league": our_league,
-            "home_api": m["homeTeam"]["name"],
-            "away_api": m["awayTeam"]["name"],
+            "home_api": to_sorare_canonical(m["homeTeam"]["name"]),
+            "away_api": to_sorare_canonical(m["awayTeam"]["name"]),
         })
 
     return fixtures
@@ -399,8 +413,8 @@ def fetch_euro_fixtures(comp_code, comp_label, days_ahead=14):
             "matchday": stage,
             "league": comp_label,          # "UCL", "UEL", "UECL"
             "competition": comp_label,     # flag explicite pour StellarTab
-            "home_api": m["homeTeam"]["name"],
-            "away_api": m["awayTeam"]["name"],
+            "home_api": to_sorare_canonical(m["homeTeam"]["name"]),
+            "away_api": to_sorare_canonical(m["awayTeam"]["name"]),
         })
         print(f"    {home} vs {away} ({date} {kickoff})")
 
@@ -519,6 +533,11 @@ def get_manual_euro_fixtures():
         {"home": "Mainz",          "away": "Strasbourg",    "date": "2026-04-09", "kickoff": "19:00", "matchday": "QUARTER_FINALS", "league": "UECL", "competition": "UECL", "home_api": "1. FSV Mainz 05",    "away_api": "RC Strasbourg"},
         {"home": "Crystal Palace", "away": "Fiorentina",    "date": "2026-04-09", "kickoff": "19:00", "matchday": "QUARTER_FINALS", "league": "UECL", "competition": "UECL", "home_api": "Crystal Palace FC",  "away_api": "ACF Fiorentina"},
     ]
+    # Normalise les home_api/away_api vers les noms canoniques Sorare
+    # (les clubs qu'on a dans players.json : Real Madrid CF -> Real Madrid, etc.)
+    for f in fixtures:
+        if f.get("home_api"): f["home_api"] = to_sorare_canonical(f["home_api"])
+        if f.get("away_api"): f["away_api"] = to_sorare_canonical(f["away_api"])
     print(f"\n📋 Manual euro fixtures: {len(fixtures)} matchs (UEL + UECL QF Leg 1)")
     for f in fixtures:
         print(f"  [{f['league']}] {f['home']} vs {f['away']} ({f['date']} {f['kickoff']} UTC)")

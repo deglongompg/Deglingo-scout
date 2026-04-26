@@ -893,3 +893,71 @@ Les fichiers `ProSavedTeamCard.jsx` + `StellarSavedTeamCard.jsx` ont :
 Note : ces composants sont **distincts** de StellarTab/SorareProTab — ils sont rendus
 dans Mes Teams via RecapTab.jsx.
 
+---
+
+## 🏷️ SACRED — Club aliases : noms canoniques Sorare partout
+
+### Probleme historique
+
+3 sources de noms de clubs differents qu'il faut faire matcher :
+- `players.json` `club` = nom canonique Sorare ("RC Celta", "Sport-Club Freiburg",
+  "Olympique de Marseille", "Real Madrid")
+- `fixtures.json` `home_api`/`away_api` = nom football-data API ("RC Celta de Vigo",
+  "SC Freiburg", "Marseille", "Real Madrid CF")
+- `fixtures.json` `home`/`away` = display name normalise ("Celta Vigo", "Freiburg",
+  "Marseille", "Real Madrid")
+- `teams.json` `name` = display name simplifie ("Celta Vigo", "Villarreal")
+
+A chaque mismatch (Freiburg, Celta, OM... session 2026-04-27), un joueur disparaissait
+des dropdowns / saved teams / recap. Solution : patch d'alias 1-by-1 dans
+`clubMatchGlobal` ALIASES = pansement.
+
+### Fix permanent 2026-04-27
+
+1. **`sorare_club_slugs.json`** (existait deja, 112 clubs) = source de verite des noms canoniques
+2. **`build_club_aliases.py`** (nouveau) genere `club_aliases.json` :
+   - Lit fixtures.json `home_api`/`away_api`
+   - Compare aux clubs Sorare canoniques
+   - Auto-match par norm equality + similarity ratio >= 0.70
+   - Manual overrides pour les cas <0.70 ("Lille OSC" -> "LOSC Lille",
+     "Real Betis Balompié" -> "Real Betis", etc.)
+   - Resultat : 15 conversions L1/PL/Liga/Bundes (MLS deja Sorare canonical)
+3. **`fetch_fixtures.py`** charge `club_aliases.json` au demarrage et expose
+   `to_sorare_canonical(name)` :
+   ```python
+   try:
+       with open("club_aliases.json", encoding="utf-8") as f:
+           CLUB_ALIASES = json.load(f)
+   except Exception:
+       CLUB_ALIASES = {}
+   def to_sorare_canonical(name):
+       return CLUB_ALIASES.get(name, name)
+   ```
+   Applique sur tous les `home_api`/`away_api` ecrits dans fixtures.json
+   (fetch_upcoming_fixtures, fetch_recent_finished, fetch_euro_fixtures).
+4. **MLS** non concerne — fetch_mls_fixtures utilise deja l'API Sorare donc les noms
+   sont deja canoniques.
+
+### Resultat
+
+`fixtures.json` `home_api`/`away_api` = **EXACTEMENT** le meme nom que `players.json`
+`club`. Le front-end peut faire du strict equality. Les fallbacks fuzzy
+`clubMatchGlobal` restent en filet de securite mais ne sont plus la
+ligne de defense principale.
+
+### Quand relancer build_club_aliases.py
+
+- Promotion / relegation (nouveau club apparait dans une ligue)
+- Apres `fetch_all_players.py` qui ajoute des nouveaux clubs
+- "club inconnu" dans les logs ou un joueur n'apparait pas dans Stellar pour un
+  match donne
+- Sorare renomme un club (rare)
+
+Le script log les non-resolus. S'il y en a un avec ratio < 0.70 qui devrait etre
+mappe, ajouter dans `MANUAL_OVERRIDES` en haut du script et relancer.
+
+**How to apply:** ne **JAMAIS** ajouter d'alias 1-by-1 dans `clubMatchGlobal` JSX. Ajouter dans
+`build_club_aliases.py::MANUAL_OVERRIDES` ou laisser l'auto-match si la similarity
+le permet. Puis relancer le script + fetch_fixtures.py + commit le `club_aliases.json`
+mis a jour.
+

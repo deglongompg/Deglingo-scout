@@ -1,5 +1,5 @@
 {
-  "generated": "2026-04-26T22:01:42.481076",
+  "generated": "2026-04-26T23:06:22.254330",
   "matchdays": {
     "L1": 34,
     "PL": 37,
@@ -1014,16 +1014,6 @@
       "finished": true
     },
     {
-      "home": "Rayo Vallecano",
-      "away": "Real Sociedad",
-      "date": "2026-04-26",
-      "kickoff": "12:00",
-      "matchday": 32,
-      "league": "Liga",
-      "home_api": "Rayo Vallecano de Madrid",
-      "away_api": "Real Sociedad de Fútbol"
-    },
-    {
       "home": "Real Oviedo",
       "away": "Elche",
       "date": "2026-04-26",
@@ -1626,6 +1616,17 @@
       "league": "Liga",
       "home_api": "Club Atlético de Madrid",
       "away_api": "Athletic Club",
+      "finished": true
+    },
+    {
+      "home": "Rayo Vallecano",
+      "away": "Real Sociedad",
+      "date": "2026-04-26",
+      "kickoff": "12:00",
+      "matchday": 32,
+      "league": "Liga",
+      "home_api": "Rayo Vallecano de Madrid",
+      "away_api": "Real Sociedad de Fútbol",
       "finished": true
     },
     {

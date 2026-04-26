@@ -1,5 +1,5 @@
 {
-  "generated": "2026-04-27T01:11:12.412367",
+  "generated": "2026-04-27T01:32:34.818146",
   "matchdays": {
     "L1": 34,
     "PL": 37,
@@ -11,36 +11,6 @@
     "MLS": "MLS"
   },
   "fixtures": [
-    {
-      "home": "Le Havre",
-      "away": "Metz",
-      "date": "2026-04-26",
-      "kickoff": "15:15",
-      "matchday": 31,
-      "league": "L1",
-      "home_api": "Le Havre AC",
-      "away_api": "FC Metz"
-    },
-    {
-      "home": "Paris FC",
-      "away": "Lille",
-      "date": "2026-04-26",
-      "kickoff": "15:15",
-      "matchday": 31,
-      "league": "L1",
-      "home_api": "Paris FC",
-      "away_api": "Lille OSC"
-    },
-    {
-      "home": "Rennes",
-      "away": "Nantes",
-      "date": "2026-04-26",
-      "kickoff": "15:15",
-      "matchday": 31,
-      "league": "L1",
-      "home_api": "Stade Rennais FC 1901",
-      "away_api": "FC Nantes"
-    },
     {
       "home": "Marseille",
       "away": "Nice",
@@ -68,7 +38,7 @@
       "kickoff": "15:00",
       "matchday": 32,
       "league": "L1",
-      "home_api": "Paris Saint-Germain FC",
+      "home_api": "Paris Saint-Germain",
       "away_api": "FC Lorient"
     },
     {
@@ -79,7 +49,7 @@
       "matchday": 32,
       "league": "L1",
       "home_api": "FC Metz",
-      "away_api": "AS Monaco FC"
+      "away_api": "AS Monaco"
     },
     {
       "home": "Nice",
@@ -89,7 +59,7 @@
       "matchday": 32,
       "league": "L1",
       "home_api": "OGC Nice",
-      "away_api": "Racing Club de Lens"
+      "away_api": "RC Lens"
     },
     {
       "home": "Lille",
@@ -98,7 +68,7 @@
       "kickoff": "13:00",
       "matchday": 32,
       "league": "L1",
-      "home_api": "Lille OSC",
+      "home_api": "LOSC Lille",
       "away_api": "Le Havre AC"
     },
     {
@@ -139,7 +109,7 @@
       "matchday": 32,
       "league": "L1",
       "home_api": "Olympique Lyonnais",
-      "away_api": "Stade Rennais FC 1901"
+      "away_api": "Stade Rennais F.C."
     },
     {
       "home": "Lens",
@@ -148,7 +118,7 @@
       "kickoff": "18:45",
       "matchday": 33,
       "league": "L1",
-      "home_api": "Racing Club de Lens",
+      "home_api": "RC Lens",
       "away_api": "FC Nantes"
     },
     {
@@ -178,8 +148,8 @@
       "kickoff": "19:00",
       "matchday": 33,
       "league": "L1",
-      "home_api": "AS Monaco FC",
-      "away_api": "Lille OSC"
+      "home_api": "AS Monaco",
+      "away_api": "LOSC Lille"
     },
     {
       "home": "Metz",
@@ -208,7 +178,7 @@
       "kickoff": "19:00",
       "matchday": 33,
       "league": "L1",
-      "home_api": "Paris Saint-Germain FC",
+      "home_api": "Paris Saint-Germain",
       "away_api": "Stade Brestois 29"
     },
     {
@@ -228,7 +198,7 @@
       "kickoff": "19:00",
       "matchday": 33,
       "league": "L1",
-      "home_api": "Stade Rennais FC 1901",
+      "home_api": "Stade Rennais F.C.",
       "away_api": "Paris FC"
     },
     {
@@ -248,8 +218,8 @@
       "kickoff": "19:00",
       "matchday": 29,
       "league": "L1",
-      "home_api": "Racing Club de Lens",
-      "away_api": "Paris Saint-Germain FC"
+      "home_api": "RC Lens",
+      "away_api": "Paris Saint-Germain"
     },
     {
       "home": "Lorient",
@@ -279,7 +249,7 @@
       "matchday": 34,
       "league": "L1",
       "home_api": "Paris FC",
-      "away_api": "Paris Saint-Germain FC"
+      "away_api": "Paris Saint-Germain"
     },
     {
       "home": "Nice",
@@ -299,7 +269,7 @@
       "matchday": 34,
       "league": "L1",
       "home_api": "Olympique Lyonnais",
-      "away_api": "Racing Club de Lens"
+      "away_api": "RC Lens"
     },
     {
       "home": "Marseille",
@@ -309,7 +279,7 @@
       "matchday": 34,
       "league": "L1",
       "home_api": "Olympique de Marseille",
-      "away_api": "Stade Rennais FC 1901"
+      "away_api": "Stade Rennais F.C."
     },
     {
       "home": "Lille",
@@ -318,7 +288,7 @@
       "kickoff": "19:00",
       "matchday": 34,
       "league": "L1",
-      "home_api": "Lille OSC",
+      "home_api": "LOSC Lille",
       "away_api": "AJ Auxerre"
     },
     {
@@ -329,7 +299,7 @@
       "matchday": 34,
       "league": "L1",
       "home_api": "RC Strasbourg Alsace",
-      "away_api": "AS Monaco FC"
+      "away_api": "AS Monaco"
     },
     {
       "home": "Brest",
@@ -370,7 +340,7 @@
       "kickoff": "19:05",
       "matchday": 30,
       "league": "L1",
-      "home_api": "Lille OSC",
+      "home_api": "LOSC Lille",
       "away_api": "OGC Nice",
       "finished": true
     },
@@ -381,7 +351,7 @@
       "kickoff": "13:00",
       "matchday": 30,
       "league": "L1",
-      "home_api": "AS Monaco FC",
+      "home_api": "AS Monaco",
       "away_api": "AJ Auxerre",
       "finished": true
     },
@@ -415,7 +385,7 @@
       "matchday": 30,
       "league": "L1",
       "home_api": "RC Strasbourg Alsace",
-      "away_api": "Stade Rennais FC 1901",
+      "away_api": "Stade Rennais F.C.",
       "finished": true
     },
     {
@@ -425,7 +395,7 @@
       "kickoff": "18:45",
       "matchday": 30,
       "league": "L1",
-      "home_api": "Paris Saint-Germain FC",
+      "home_api": "Paris Saint-Germain",
       "away_api": "Olympique Lyonnais",
       "finished": true
     },
@@ -436,7 +406,7 @@
       "kickoff": "17:00",
       "matchday": 26,
       "league": "L1",
-      "home_api": "Paris Saint-Germain FC",
+      "home_api": "Paris Saint-Germain",
       "away_api": "FC Nantes",
       "finished": true
     },
@@ -448,7 +418,7 @@
       "matchday": 31,
       "league": "L1",
       "home_api": "Stade Brestois 29",
-      "away_api": "Racing Club de Lens",
+      "away_api": "RC Lens",
       "finished": true
     },
     {
@@ -470,7 +440,7 @@
       "matchday": 31,
       "league": "L1",
       "home_api": "Angers SCO",
-      "away_api": "Paris Saint-Germain FC",
+      "away_api": "Paris Saint-Germain",
       "finished": true
     },
     {
@@ -481,7 +451,7 @@
       "matchday": 31,
       "league": "L1",
       "home_api": "Toulouse FC",
-      "away_api": "AS Monaco FC",
+      "away_api": "AS Monaco",
       "finished": true
     },
     {
@@ -493,6 +463,39 @@
       "league": "L1",
       "home_api": "FC Lorient",
       "away_api": "RC Strasbourg Alsace",
+      "finished": true
+    },
+    {
+      "home": "Le Havre",
+      "away": "Metz",
+      "date": "2026-04-26",
+      "kickoff": "15:15",
+      "matchday": 31,
+      "league": "L1",
+      "home_api": "Le Havre AC",
+      "away_api": "FC Metz",
+      "finished": true
+    },
+    {
+      "home": "Paris FC",
+      "away": "Lille",
+      "date": "2026-04-26",
+      "kickoff": "15:15",
+      "matchday": 31,
+      "league": "L1",
+      "home_api": "Paris FC",
+      "away_api": "LOSC Lille",
+      "finished": true
+    },
+    {
+      "home": "Rennes",
+      "away": "Nantes",
+      "date": "2026-04-26",
+      "kickoff": "15:15",
+      "matchday": 31,
+      "league": "L1",
+      "home_api": "Stade Rennais F.C.",
+      "away_api": "FC Nantes",
       "finished": true
     },
     {
@@ -1032,7 +1035,7 @@
       "matchday": 32,
       "league": "Liga",
       "home_api": "Villarreal CF",
-      "away_api": "RC Celta de Vigo"
+      "away_api": "RC Celta"
     },
     {
       "home": "Espanyol",
@@ -1072,7 +1075,7 @@
       "matchday": 34,
       "league": "Liga",
       "home_api": "Valencia CF",
-      "away_api": "Club Atlético de Madrid"
+      "away_api": "Atlético de Madrid"
     },
     {
       "home": "Alaves",
@@ -1081,7 +1084,7 @@
       "kickoff": "16:30",
       "matchday": 34,
       "league": "Liga",
-      "home_api": "Deportivo Alavés",
+      "home_api": "D. Alavés",
       "away_api": "Athletic Club"
     },
     {
@@ -1101,7 +1104,7 @@
       "kickoff": "12:00",
       "matchday": 34,
       "league": "Liga",
-      "home_api": "RC Celta de Vigo",
+      "home_api": "RC Celta",
       "away_api": "Elche CF"
     },
     {
@@ -1112,7 +1115,7 @@
       "matchday": 34,
       "league": "Liga",
       "home_api": "Getafe CF",
-      "away_api": "Rayo Vallecano de Madrid"
+      "away_api": "Rayo Vallecano"
     },
     {
       "home": "Real Betis",
@@ -1121,7 +1124,7 @@
       "kickoff": "16:30",
       "matchday": 34,
       "league": "Liga",
-      "home_api": "Real Betis Balompié",
+      "home_api": "Real Betis",
       "away_api": "Real Oviedo"
     },
     {
@@ -1132,7 +1135,7 @@
       "matchday": 34,
       "league": "Liga",
       "home_api": "RCD Espanyol de Barcelona",
-      "away_api": "Real Madrid CF"
+      "away_api": "Real Madrid"
     },
     {
       "home": "Sevilla",
@@ -1142,7 +1145,7 @@
       "matchday": 34,
       "league": "Liga",
       "home_api": "Sevilla FC",
-      "away_api": "Real Sociedad de Fútbol"
+      "away_api": "Real Sociedad"
     },
     {
       "home": "Levante",
@@ -1162,7 +1165,7 @@
       "matchday": 35,
       "league": "Liga",
       "home_api": "Elche CF",
-      "away_api": "Deportivo Alavés"
+      "away_api": "D. Alavés"
     },
     {
       "home": "Sevilla",
@@ -1181,8 +1184,8 @@
       "kickoff": "16:30",
       "matchday": 35,
       "league": "Liga",
-      "home_api": "Club Atlético de Madrid",
-      "away_api": "RC Celta de Vigo"
+      "home_api": "Atlético de Madrid",
+      "away_api": "RC Celta"
     },
     {
       "home": "Real Sociedad",
@@ -1191,8 +1194,8 @@
       "kickoff": "19:00",
       "matchday": 35,
       "league": "Liga",
-      "home_api": "Real Sociedad de Fútbol",
-      "away_api": "Real Betis Balompié"
+      "home_api": "Real Sociedad",
+      "away_api": "Real Betis"
     },
     {
       "home": "Mallorca",
@@ -1232,7 +1235,7 @@
       "matchday": 35,
       "league": "Liga",
       "home_api": "FC Barcelona",
-      "away_api": "Real Madrid CF"
+      "away_api": "Real Madrid"
     },
     {
       "home": "Rayo Vallecano",
@@ -1241,7 +1244,7 @@
       "kickoff": "19:00",
       "matchday": 35,
       "league": "Liga",
-      "home_api": "Rayo Vallecano de Madrid",
+      "home_api": "Rayo Vallecano",
       "away_api": "Girona FC"
     },
     {
@@ -1251,7 +1254,7 @@
       "kickoff": "17:00",
       "matchday": 36,
       "league": "Liga",
-      "home_api": "RC Celta de Vigo",
+      "home_api": "RC Celta",
       "away_api": "Levante UD"
     },
     {
@@ -1261,7 +1264,7 @@
       "kickoff": "18:00",
       "matchday": 36,
       "league": "Liga",
-      "home_api": "Real Betis Balompié",
+      "home_api": "Real Betis",
       "away_api": "Elche CF"
     },
     {
@@ -1272,7 +1275,7 @@
       "matchday": 36,
       "league": "Liga",
       "home_api": "CA Osasuna",
-      "away_api": "Club Atlético de Madrid"
+      "away_api": "Atlético de Madrid"
     },
     {
       "home": "Espanyol",
@@ -1301,7 +1304,7 @@
       "kickoff": "19:30",
       "matchday": 36,
       "league": "Liga",
-      "home_api": "Deportivo Alavés",
+      "home_api": "D. Alavés",
       "away_api": "FC Barcelona"
     },
     {
@@ -1322,7 +1325,7 @@
       "matchday": 36,
       "league": "Liga",
       "home_api": "Valencia CF",
-      "away_api": "Rayo Vallecano de Madrid"
+      "away_api": "Rayo Vallecano"
     },
     {
       "home": "Girona",
@@ -1332,7 +1335,7 @@
       "matchday": 36,
       "league": "Liga",
       "home_api": "Girona FC",
-      "away_api": "Real Sociedad de Fútbol"
+      "away_api": "Real Sociedad"
     },
     {
       "home": "Real Madrid",
@@ -1341,7 +1344,7 @@
       "kickoff": "19:30",
       "matchday": 36,
       "league": "Liga",
-      "home_api": "Real Madrid CF",
+      "home_api": "Real Madrid",
       "away_api": "Real Oviedo"
     },
     {
@@ -1352,7 +1355,7 @@
       "matchday": 37,
       "league": "Liga",
       "home_api": "Athletic Club",
-      "away_api": "RC Celta de Vigo"
+      "away_api": "RC Celta"
     },
     {
       "home": "Atletico Madrid",
@@ -1361,7 +1364,7 @@
       "kickoff": "00:00",
       "matchday": 37,
       "league": "Liga",
-      "home_api": "Club Atlético de Madrid",
+      "home_api": "Atlético de Madrid",
       "away_api": "Girona FC"
     },
     {
@@ -1372,7 +1375,7 @@
       "matchday": 37,
       "league": "Liga",
       "home_api": "FC Barcelona",
-      "away_api": "Real Betis Balompié"
+      "away_api": "Real Betis"
     },
     {
       "home": "Elche",
@@ -1401,7 +1404,7 @@
       "kickoff": "00:00",
       "matchday": 37,
       "league": "Liga",
-      "home_api": "Rayo Vallecano de Madrid",
+      "home_api": "Rayo Vallecano",
       "away_api": "Villarreal CF"
     },
     {
@@ -1411,7 +1414,7 @@
       "kickoff": "00:00",
       "matchday": 37,
       "league": "Liga",
-      "home_api": "Real Sociedad de Fútbol",
+      "home_api": "Real Sociedad",
       "away_api": "Valencia CF"
     },
     {
@@ -1422,7 +1425,7 @@
       "matchday": 37,
       "league": "Liga",
       "home_api": "Real Oviedo",
-      "away_api": "Deportivo Alavés"
+      "away_api": "D. Alavés"
     },
     {
       "home": "Osasuna",
@@ -1442,7 +1445,7 @@
       "matchday": 37,
       "league": "Liga",
       "home_api": "Sevilla FC",
-      "away_api": "Real Madrid CF"
+      "away_api": "Real Madrid"
     },
     {
       "home": "Athletic Club",
@@ -1473,8 +1476,8 @@
       "kickoff": "19:30",
       "matchday": 33,
       "league": "Liga",
-      "home_api": "Real Madrid CF",
-      "away_api": "Deportivo Alavés",
+      "home_api": "Real Madrid",
+      "away_api": "D. Alavés",
       "finished": true
     },
     {
@@ -1485,7 +1488,7 @@
       "matchday": 33,
       "league": "Liga",
       "home_api": "Girona FC",
-      "away_api": "Real Betis Balompié",
+      "away_api": "Real Betis",
       "finished": true
     },
     {
@@ -1496,7 +1499,7 @@
       "matchday": 33,
       "league": "Liga",
       "home_api": "Elche CF",
-      "away_api": "Club Atlético de Madrid",
+      "away_api": "Atlético de Madrid",
       "finished": true
     },
     {
@@ -1506,7 +1509,7 @@
       "kickoff": "18:00",
       "matchday": 33,
       "league": "Liga",
-      "home_api": "Real Sociedad de Fútbol",
+      "home_api": "Real Sociedad",
       "away_api": "Getafe CF",
       "finished": true
     },
@@ -1518,7 +1521,7 @@
       "matchday": 33,
       "league": "Liga",
       "home_api": "FC Barcelona",
-      "away_api": "RC Celta de Vigo",
+      "away_api": "RC Celta",
       "finished": true
     },
     {
@@ -1539,7 +1542,7 @@
       "kickoff": "18:00",
       "matchday": 33,
       "league": "Liga",
-      "home_api": "Rayo Vallecano de Madrid",
+      "home_api": "Rayo Vallecano",
       "away_api": "RCD Espanyol de Barcelona",
       "finished": true
     },
@@ -1561,8 +1564,8 @@
       "kickoff": "19:00",
       "matchday": 32,
       "league": "Liga",
-      "home_api": "Real Betis Balompié",
-      "away_api": "Real Madrid CF",
+      "home_api": "Real Betis",
+      "away_api": "Real Madrid",
       "finished": true
     },
     {
@@ -1572,7 +1575,7 @@
       "kickoff": "12:00",
       "matchday": 32,
       "league": "Liga",
-      "home_api": "Deportivo Alavés",
+      "home_api": "D. Alavés",
       "away_api": "RCD Mallorca",
       "finished": true
     },
@@ -1605,7 +1608,7 @@
       "kickoff": "19:00",
       "matchday": 32,
       "league": "Liga",
-      "home_api": "Club Atlético de Madrid",
+      "home_api": "Atlético de Madrid",
       "away_api": "Athletic Club",
       "finished": true
     },
@@ -1616,8 +1619,8 @@
       "kickoff": "12:00",
       "matchday": 32,
       "league": "Liga",
-      "home_api": "Rayo Vallecano de Madrid",
-      "away_api": "Real Sociedad de Fútbol",
+      "home_api": "Rayo Vallecano",
+      "away_api": "Real Sociedad",
       "finished": true
     },
     {
@@ -1632,23 +1635,13 @@
       "finished": true
     },
     {
-      "home": "Borussia Dortmund",
-      "away": "Freiburg",
-      "date": "2026-04-26",
-      "kickoff": "15:30",
-      "matchday": 31,
-      "league": "Bundes",
-      "home_api": "Borussia Dortmund",
-      "away_api": "SC Freiburg"
-    },
-    {
       "home": "Hoffenheim",
       "away": "VfB Stuttgart",
       "date": "2026-05-02",
       "kickoff": "13:30",
       "matchday": 32,
       "league": "Bundes",
-      "home_api": "TSG 1899 Hoffenheim",
+      "home_api": "TSG Hoffenheim",
       "away_api": "VfB Stuttgart"
     },
     {
@@ -1708,7 +1701,7 @@
       "kickoff": "13:30",
       "matchday": 32,
       "league": "Bundes",
-      "home_api": "FC St. Pauli 1910",
+      "home_api": "FC St. Pauli",
       "away_api": "1. FSV Mainz 05"
     },
     {
@@ -1728,7 +1721,7 @@
       "kickoff": "17:30",
       "matchday": 32,
       "league": "Bundes",
-      "home_api": "SC Freiburg",
+      "home_api": "Sport-Club Freiburg",
       "away_api": "VfL Wolfsburg"
     },
     {
@@ -1758,7 +1751,7 @@
       "kickoff": "13:30",
       "matchday": 33,
       "league": "Bundes",
-      "home_api": "TSG 1899 Hoffenheim",
+      "home_api": "TSG Hoffenheim",
       "away_api": "SV Werder Bremen"
     },
     {
@@ -1779,7 +1772,7 @@
       "matchday": 33,
       "league": "Bundes",
       "home_api": "RB Leipzig",
-      "away_api": "FC St. Pauli 1910"
+      "away_api": "FC St. Pauli"
     },
     {
       "home": "Wolfsburg",
@@ -1799,7 +1792,7 @@
       "matchday": 33,
       "league": "Bundes",
       "home_api": "Hamburger SV",
-      "away_api": "SC Freiburg"
+      "away_api": "Sport-Club Freiburg"
     },
     {
       "home": "FC Cologne",
@@ -1848,7 +1841,7 @@
       "kickoff": "13:30",
       "matchday": 34,
       "league": "Bundes",
-      "home_api": "SC Freiburg",
+      "home_api": "Sport-Club Freiburg",
       "away_api": "RB Leipzig"
     },
     {
@@ -1868,7 +1861,7 @@
       "kickoff": "13:30",
       "matchday": 34,
       "league": "Bundes",
-      "home_api": "FC St. Pauli 1910",
+      "home_api": "FC St. Pauli",
       "away_api": "VfL Wolfsburg"
     },
     {
@@ -1889,7 +1882,7 @@
       "matchday": 34,
       "league": "Bundes",
       "home_api": "Borussia Mönchengladbach",
-      "away_api": "TSG 1899 Hoffenheim"
+      "away_api": "TSG Hoffenheim"
     },
     {
       "home": "Bayern Munich",
@@ -1940,7 +1933,7 @@
       "kickoff": "13:30",
       "matchday": 30,
       "league": "Bundes",
-      "home_api": "TSG 1899 Hoffenheim",
+      "home_api": "TSG Hoffenheim",
       "away_api": "Borussia Dortmund",
       "finished": true
     },
@@ -1973,7 +1966,7 @@
       "kickoff": "13:30",
       "matchday": 30,
       "league": "Bundes",
-      "home_api": "SC Freiburg",
+      "home_api": "Sport-Club Freiburg",
       "away_api": "1. FC Heidenheim 1846",
       "finished": true
     },
@@ -2062,7 +2055,7 @@
       "matchday": 31,
       "league": "Bundes",
       "home_api": "1. FC Heidenheim 1846",
-      "away_api": "FC St. Pauli 1910",
+      "away_api": "FC St. Pauli",
       "finished": true
     },
     {
@@ -2073,7 +2066,7 @@
       "matchday": 31,
       "league": "Bundes",
       "home_api": "Hamburger SV",
-      "away_api": "TSG 1899 Hoffenheim",
+      "away_api": "TSG Hoffenheim",
       "finished": true
     },
     {
@@ -2085,6 +2078,17 @@
       "league": "Bundes",
       "home_api": "VfB Stuttgart",
       "away_api": "SV Werder Bremen",
+      "finished": true
+    },
+    {
+      "home": "Borussia Dortmund",
+      "away": "Freiburg",
+      "date": "2026-04-26",
+      "kickoff": "15:30",
+      "matchday": 31,
+      "league": "Bundes",
+      "home_api": "Borussia Dortmund",
+      "away_api": "Sport-Club Freiburg",
       "finished": true
     },
     {
@@ -2152,7 +2156,7 @@
       "matchday": "QUARTER_FINALS",
       "league": "UCL",
       "competition": "UCL",
-      "home_api": "Real Madrid CF",
+      "home_api": "Real Madrid",
       "away_api": "FC Bayern München",
       "score_home": 1,
       "score_away": 2
@@ -2176,8 +2180,8 @@
       "matchday": "QUARTER_FINALS",
       "league": "UEL",
       "competition": "UEL",
-      "home_api": "SC Freiburg",
-      "away_api": "RC Celta de Vigo"
+      "home_api": "Sport-Club Freiburg",
+      "away_api": "RC Celta"
     },
     {
       "home": "Bologna",

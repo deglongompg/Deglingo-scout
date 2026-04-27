@@ -123,7 +123,7 @@ export default function ProSavedTeamCard({
             const isRareBonus = rarity === "rare";
             return (
               <span style={{
-                position: "absolute", bottom: 0, left: -2, zIndex: 3,
+                position: "absolute", top: 0, left: -2, zIndex: 3,
                 fontSize: 8, fontWeight: 900,
                 color: isRareBonus ? "#1A1A1F" : "#fff",
                 fontFamily: "Outfit", letterSpacing: "0.04em",

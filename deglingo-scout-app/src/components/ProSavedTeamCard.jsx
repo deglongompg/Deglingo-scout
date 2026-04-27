@@ -114,7 +114,7 @@ export default function ProSavedTeamCard({
                 lineHeight: 1,
                 filter: "drop-shadow(0 1px 2px rgba(0,0,0,0.8))",
               }}>
-                {icons.map((emoji, i) => <span key={i}>{emoji}</span>)}
+                {icons.map((emoji, i) => <span key={i} style={{ display: "inline-block", transform: emoji === "👟" ? "translateY(-1.5px)" : "none", lineHeight: 1 }}>{emoji}</span>)}
               </div>
             );
           })()}

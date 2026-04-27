@@ -192,8 +192,8 @@ export default function SkyrocketGauge({ score = 0, projectedScore = null, initi
         )}
       </div>
 
-      {/* Body — wrappee dans gauge-premium pour bevel gold + reflets premium */}
-      <div className="gauge-premium" style={{ minHeight: height + 4 }}>
+      {/* Body — wrappee dans gauge-premium pour bevel gold/silver + reflets premium */}
+      <div className={`gauge-premium${rarity === "rare" ? " gauge-premium--silver" : ""}`} style={{ minHeight: height + 4 }}>
       <div style={{
         position: "relative", width: "100%", height: "100%", minHeight: height,
         borderRadius: "8px 8px 4px 4px",

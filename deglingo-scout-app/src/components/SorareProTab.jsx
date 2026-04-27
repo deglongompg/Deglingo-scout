@@ -2177,7 +2177,7 @@ export default function SorareProTab({ players, teams, fixtures, logos = {}, mat
                               }}>+{bonusPct}%</span>
                             )}
                             {hasRealScore ? (
-                              <div className="hex-premium">
+                              <div className={`hex-premium${rarity === "rare" ? " hex-premium--silver" : ""}`}>
                                 <div className="hex-premium__outer">
                                   <div className="hex-premium__inner-wrapper">
                                     <div className="hex-premium__inner" style={{ background: dsBg(playerScore) }} />
@@ -2204,7 +2204,7 @@ export default function SorareProTab({ players, teams, fixtures, logos = {}, mat
                         </div>
                         {/* Match info box : premium gold avec bevel + reflets si match joue, neutre sinon */}
                         {matchScore ? (
-                          <div className="matchscore-premium">
+                          <div className={`matchscore-premium${rarity === "rare" ? " matchscore-premium--silver" : ""}`}>
                             <div className="matchscore-premium__inner">
                               <div className="matchscore-premium__highlight" />
                               <div className="matchscore-premium__edge-shine" />

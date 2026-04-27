@@ -249,6 +249,32 @@ select option {
             drop-shadow(0 2px 4px rgba(0,0,0,0.3));
   }
 }
+/* Pulse silver/blanc pour cartes Pro Rare (matche le rouge du theme Rare mieux que le gold) */
+@keyframes hexGlowPulseSilver {
+  0%, 100% {
+    filter: drop-shadow(0 0 6px rgba(229,231,235,0.45))
+            drop-shadow(0 0 12px rgba(229,231,235,0.22))
+            drop-shadow(0 2px 4px rgba(0,0,0,0.3));
+  }
+  50% {
+    filter: drop-shadow(0 0 10px rgba(229,231,235,0.65))
+            drop-shadow(0 0 20px rgba(229,231,235,0.32))
+            drop-shadow(0 2px 4px rgba(0,0,0,0.3));
+  }
+}
+/* Bevel silver/chrome reutilisable (30 stops steel -> bright cream) */
+.bevel-silver {
+  background: linear-gradient(125deg,
+    #1a1a1f 0%, #2c2e34 5%, #4a4d55 10%, #6c6f7a 15%,
+    #8a9098 18%, #b8bcc4 21%, #e0e2e8 24%, #fafafe 26%,
+    #e0e2e8 28%, #b8bcc4 31%, #8a9098 34%, #6c6f7a 38%,
+    #4a4d55 42%, #2c2e34 46%, #15161a 50%, #2c2e34 54%,
+    #4a4d55 58%, #6c6f7a 62%, #8a9098 66%, #b8bcc4 69%,
+    #e0e2e8 72%, #fafafe 74%, #e0e2e8 76%, #b8bcc4 79%,
+    #8a9098 82%, #6c6f7a 85%, #4a4d55 90%, #2c2e34 95%,
+    #1a1a1f 100%
+  ) !important;
+}
 .hex-premium {
   position: relative;
   width: 34px;
@@ -338,6 +364,20 @@ select option {
   animation: hexShineSweep 5s ease-in-out infinite;
   animation-delay: 1s;
   pointer-events: none;
+}
+/* Variante silver/chrome pour cartes Pro Rare */
+.hex-premium--silver { animation-name: hexGlowPulseSilver; }
+.hex-premium--silver .hex-premium__outer {
+  background: linear-gradient(125deg,
+    #1a1a1f 0%, #2c2e34 5%, #4a4d55 10%, #6c6f7a 15%,
+    #8a9098 18%, #b8bcc4 21%, #e0e2e8 24%, #fafafe 26%,
+    #e0e2e8 28%, #b8bcc4 31%, #8a9098 34%, #6c6f7a 38%,
+    #4a4d55 42%, #2c2e34 46%, #15161a 50%, #2c2e34 54%,
+    #4a4d55 58%, #6c6f7a 62%, #8a9098 66%, #b8bcc4 69%,
+    #e0e2e8 72%, #fafafe 74%, #e0e2e8 76%, #b8bcc4 79%,
+    #8a9098 82%, #6c6f7a 85%, #4a4d55 90%, #2c2e34 95%,
+    #1a1a1f 100%
+  );
 }
 .hex-premium__score {
   position: absolute;
@@ -454,6 +494,28 @@ select option {
   text-shadow: 0 0 6px rgba(255,215,0,0.55), 0 1px 2px rgba(0,0,0,0.85);
   line-height: 1;
   flex-shrink: 0;
+}
+/* Variante silver/chrome pour matchscore Pro Rare (bevel + texte score + sparkles + animation) */
+.matchscore-premium--silver {
+  animation-name: hexGlowPulseSilver;
+  background: linear-gradient(125deg,
+    #1a1a1f 0%, #2c2e34 5%, #4a4d55 10%, #6c6f7a 15%,
+    #8a9098 18%, #b8bcc4 21%, #e0e2e8 24%, #fafafe 26%,
+    #e0e2e8 28%, #b8bcc4 31%, #8a9098 34%, #6c6f7a 38%,
+    #4a4d55 42%, #2c2e34 46%, #15161a 50%, #2c2e34 54%,
+    #4a4d55 58%, #6c6f7a 62%, #8a9098 66%, #b8bcc4 69%,
+    #e0e2e8 72%, #fafafe 74%, #e0e2e8 76%, #b8bcc4 79%,
+    #8a9098 82%, #6c6f7a 85%, #4a4d55 90%, #2c2e34 95%,
+    #1a1a1f 100%
+  );
+}
+.matchscore-premium--silver .matchscore-premium__sparkle {
+  color: #E5E7EB;
+  text-shadow: 0 0 3px rgba(229,231,235,0.85);
+}
+.matchscore-premium--silver .matchscore-premium__score-text {
+  color: #E5E7EB;
+  text-shadow: 0 0 6px rgba(229,231,235,0.55), 0 1px 2px rgba(0,0,0,0.85);
 }
 
 /* ─── Premium card frame (saved team cards bevel gold + glass reflections) ─── */
@@ -586,4 +648,21 @@ select option {
   mix-blend-mode: soft-light;
   pointer-events: none;
   z-index: 100;
+}
+/* Variante silver/chrome pour gauge Pro Rare */
+.gauge-premium--silver {
+  background: linear-gradient(125deg,
+    #1a1a1f 0%, #2c2e34 5%, #4a4d55 10%, #6c6f7a 15%,
+    #8a9098 18%, #b8bcc4 21%, #e0e2e8 24%, #fafafe 26%,
+    #e0e2e8 28%, #b8bcc4 31%, #8a9098 34%, #6c6f7a 38%,
+    #4a4d55 42%, #2c2e34 46%, #15161a 50%, #2c2e34 54%,
+    #4a4d55 58%, #6c6f7a 62%, #8a9098 66%, #b8bcc4 69%,
+    #e0e2e8 72%, #fafafe 74%, #e0e2e8 76%, #b8bcc4 79%,
+    #8a9098 82%, #6c6f7a 85%, #4a4d55 90%, #2c2e34 95%,
+    #1a1a1f 100%
+  );
+  filter:
+    drop-shadow(0 0 6px rgba(229,231,235,0.4))
+    drop-shadow(0 0 14px rgba(229,231,235,0.2))
+    drop-shadow(0 2px 4px rgba(0,0,0,0.3));
 }

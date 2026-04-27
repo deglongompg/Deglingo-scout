@@ -2135,19 +2135,25 @@ export default function SorareProTab({ players, teams, fixtures, logos = {}, mat
                           )}
                           {isDNP && <span style={{ position: "absolute", top: 2, right: 2, fontSize: 7, fontWeight: 800, padding: "1px 4px", borderRadius: 3, color: "#fff", zIndex: 2, background: "rgba(153,27,27,0.95)", letterSpacing: "0.5px" }}>DNP</span>}
                           {ownedCard?.isClassic && <span style={{ position: "absolute", top: 2, left: 2, fontSize: 4, fontWeight: 900, color: "#fff", background: "rgba(139,92,246,0.8)", borderRadius: 2, padding: "0px 2px", zIndex: 2 }}>CLASSIC</span>}
-                          {/* Decisives : ballon dans cercle gold premium, deborde sur le bord bas */}
+                          {/* Decisives : ballon dans cercle gold/silver selon rarity, deborde sur le bord bas */}
                           {hasRealScore && (() => {
                             const icons = flattenDecisivesPositive(p.last_so5_decisives, 3);
                             if (icons.length === 0) return null;
                             const size = icons.length === 1 ? 22 : icons.length === 2 ? 26 : 30;
+                            const isRare = rarity === "rare";
+                            const ringColor = isRare ? "#E5E7EB" : "#FFD700";
+                            const ringGlow = isRare ? "229,231,235" : "255,215,0";
+                            const innerBg = isRare
+                              ? "radial-gradient(circle at 35% 30%, #1A1A1F 0%, #0A0A0E 100%)"
+                              : "radial-gradient(circle at 35% 30%, #2A1A00 0%, #0D0700 100%)";
                             return (
                               <div style={{
                                 position: "absolute", bottom: 0, left: "50%", transform: "translate(-50%, 50%)",
                                 zIndex: 4,
                                 width: size, height: size, borderRadius: "50%",
-                                background: "radial-gradient(circle at 35% 30%, #2A1A00 0%, #0D0700 100%)",
-                                border: "1.5px solid #FFD700",
-                                boxShadow: "0 0 10px rgba(255,215,0,0.8), inset 0 0 4px rgba(255,215,0,0.35)",
+                                background: innerBg,
+                                border: `1.5px solid ${ringColor}`,
+                                boxShadow: `0 0 10px rgba(${ringGlow},0.8), inset 0 0 4px rgba(${ringGlow},0.35)`,
                                 display: "flex", alignItems: "center", justifyContent: "center", gap: 0,
                                 fontSize: icons.length === 1 ? 12 : icons.length === 2 ? 10 : 9,
                                 lineHeight: 1,

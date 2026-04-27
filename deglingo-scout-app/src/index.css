@@ -523,6 +523,7 @@ select option {
    matchscore-premium. Pas de shine sweep, pas de pulse anime (carte trop grande). */
 .card-premium {
   position: relative;
+  z-index: 2;
   width: 100%;
   aspect-ratio: 3/4;
   margin: 0 auto;

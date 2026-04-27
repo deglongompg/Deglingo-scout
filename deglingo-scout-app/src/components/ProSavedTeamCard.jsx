@@ -68,7 +68,7 @@ export default function ProSavedTeamCard({
     const cardMaxWidth = league === "Champion" ? 78 : 120;
     return (
       <div key={slot} style={{ display: "flex", flexDirection: "column", alignItems: "center", flex: 1, minWidth: 0, maxWidth: cardMaxWidth }}>
-        <div className="card-premium">
+        <div className={`card-premium${rarity === "rare" ? " card-premium--silver" : ""}`}>
         <div className="card-premium__inner" style={{
           background: ownedCard ? "transparent" : `linear-gradient(155deg, rgba(8,4,28,0.9), ${pc}25)`,
         }}>

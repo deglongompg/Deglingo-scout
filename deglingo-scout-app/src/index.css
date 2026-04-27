@@ -517,6 +517,24 @@ select option {
   pointer-events: none;
   z-index: 1;
 }
+/* Modifier silver/white shiny pour cartes Rare (le rouge/rose des Rare matche
+   mal avec le gold — silver donne un look chrome/mercure plus coherent) */
+.card-premium--silver {
+  background: linear-gradient(125deg,
+    #1a1a1f 0%, #2c2e34 5%, #4a4d55 10%, #6c6f7a 15%,
+    #8a9098 18%, #b8bcc4 21%, #e0e2e8 24%, #fafafe 26%,
+    #e0e2e8 28%, #b8bcc4 31%, #8a9098 34%, #6c6f7a 38%,
+    #4a4d55 42%, #2c2e34 46%, #15161a 50%, #2c2e34 54%,
+    #4a4d55 58%, #6c6f7a 62%, #8a9098 66%, #b8bcc4 69%,
+    #e0e2e8 72%, #fafafe 74%, #e0e2e8 76%, #b8bcc4 79%,
+    #8a9098 82%, #6c6f7a 85%, #4a4d55 90%, #2c2e34 95%,
+    #1a1a1f 100%
+  );
+  filter:
+    drop-shadow(0 0 6px rgba(229,231,235,0.4))
+    drop-shadow(0 0 12px rgba(229,231,235,0.2))
+    drop-shadow(0 2px 4px rgba(0,0,0,0.3));
+}
 
 /* ─── Premium gauge frame (SkyrocketGauge bevel gold + glass reflections) ─── */
 .gauge-premium {

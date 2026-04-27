@@ -2113,7 +2113,7 @@ export default function SorareProTab({ players, teams, fixtures, logos = {}, mat
                     const recapAwayLogo = p.isHome ? oppLogo : playerClubLogo;
                     return (
                       <div key={slot} style={{ display: "flex", flexDirection: "column", alignItems: "center", flex: 1, minWidth: 0, maxWidth: league === "Champion" ? 78 : 120 }}>
-                        <div className="card-premium">
+                        <div className={`card-premium${rarity === "rare" ? " card-premium--silver" : ""}`}>
                         <div className="card-premium__inner" style={{
                           background: ownedCard ? "transparent" : `linear-gradient(155deg, rgba(8,4,28,0.9), ${pc}25)`,
                         }}>

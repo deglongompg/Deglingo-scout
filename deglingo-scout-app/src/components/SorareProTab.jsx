@@ -2165,7 +2165,7 @@ export default function SorareProTab({ players, teams, fixtures, logos = {}, mat
                           })()}
                           {/* Stack vertical : bonus +X% colle juste au-dessus de la pointe hex / bubble */}
                           <div style={{
-                            position: "absolute", bottom: 0, right: 0, zIndex: 3,
+                            position: "absolute", bottom: 0, right: -2, zIndex: 3,
                             display: "flex", flexDirection: "column", alignItems: "center", gap: 1,
                           }}>
                             {bonusPct > 0 && (() => {

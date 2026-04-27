@@ -2168,20 +2168,29 @@ export default function SorareProTab({ players, teams, fixtures, logos = {}, mat
                             position: "absolute", bottom: 0, right: 2, zIndex: 3,
                             display: "flex", flexDirection: "column", alignItems: "center", gap: 1,
                           }}>
-                            {bonusPct > 0 && (
-                              <span style={{
-                                fontSize: 8, fontWeight: 900,
-                                color: "#fff",
-                                fontFamily: "Outfit", letterSpacing: "0.04em",
-                                background: "linear-gradient(135deg, #FFE066 0%, #FFD700 50%, #DAA520 100%)",
-                                border: "1px solid rgba(255,255,255,0.5)",
-                                borderRadius: 3,
-                                padding: "2px 5px",
-                                boxShadow: "0 0 8px rgba(255,215,0,0.55), inset 0 1px 0 rgba(255,255,255,0.5)",
-                                textShadow: "0 1px 2px rgba(0,0,0,0.55), 0 0 3px rgba(0,0,0,0.4)",
-                                whiteSpace: "nowrap", lineHeight: 1,
-                              }}>+{bonusPct}%</span>
-                            )}
+                            {bonusPct > 0 && (() => {
+                              const isRareBonus = rarity === "rare";
+                              return (
+                                <span style={{
+                                  fontSize: 8, fontWeight: 900,
+                                  color: isRareBonus ? "#1A1A1F" : "#fff",
+                                  fontFamily: "Outfit", letterSpacing: "0.04em",
+                                  background: isRareBonus
+                                    ? "linear-gradient(135deg, #FAFAFE 0%, #E0E2E8 50%, #B8BCC4 100%)"
+                                    : "linear-gradient(135deg, #FFE066 0%, #FFD700 50%, #DAA520 100%)",
+                                  border: "1px solid rgba(255,255,255,0.5)",
+                                  borderRadius: 3,
+                                  padding: "2px 5px",
+                                  boxShadow: isRareBonus
+                                    ? "0 0 8px rgba(229,231,235,0.6), inset 0 1px 0 rgba(255,255,255,0.7)"
+                                    : "0 0 8px rgba(255,215,0,0.55), inset 0 1px 0 rgba(255,255,255,0.5)",
+                                  textShadow: isRareBonus
+                                    ? "0 1px 0 rgba(255,255,255,0.4)"
+                                    : "0 1px 2px rgba(0,0,0,0.55), 0 0 3px rgba(0,0,0,0.4)",
+                                  whiteSpace: "nowrap", lineHeight: 1,
+                                }}>+{bonusPct}%</span>
+                              );
+                            })()}
                             {hasRealScore ? (
                               <div className={`hex-premium${rarity === "rare" ? " hex-premium--silver" : ""}`}>
                                 <div className="hex-premium__outer">
@@ -2240,19 +2249,7 @@ export default function SorareProTab({ players, teams, fixtures, logos = {}, mat
                   };
 
                   return (
-                    <div key={st.id} style={{
-                      borderRadius: 12,
-                      background: rarity === "rare"
-                        ? "linear-gradient(160deg, rgba(220,225,235,0.16), rgba(180,188,200,0.08))"
-                        : "linear-gradient(160deg, rgba(10,5,30,0.95), rgba(20,10,50,0.9))",
-                      border: rarity === "rare"
-                        ? "1.5px solid rgba(229,231,235,0.55)"
-                        : `1px solid ${rarityColor}25`,
-                      padding: "10px 10px", backdropFilter: "blur(8px)", display: "flex", gap: 12,
-                      boxShadow: rarity === "rare"
-                        ? "0 0 14px rgba(229,231,235,0.2), inset 0 0 30px rgba(229,231,235,0.05)"
-                        : "none",
-                    }}>
+                    <div key={st.id} style={{ borderRadius: 12, background: "linear-gradient(160deg, rgba(10,5,30,0.95), rgba(20,10,50,0.9))", border: `1px solid ${rarityColor}25`, padding: "10px 10px", backdropFilter: "blur(8px)", display: "flex", gap: 12 }}>
                       {/* Colonne gauche : header + pitch */}
                       <div style={{ flex: 1, minWidth: 0 }}>
                         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 8 }}>

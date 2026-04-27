@@ -45,13 +45,13 @@ echo [5/5] Git commit + push...
 git add scout-dist deglingo-scout-app/public/data public/data deglingo-scout-app/src deglingo-scout-app/index.html
 git diff --cached --quiet
 if errorlevel 1 (
-    git commit -m "chore(daily): MAJ scores + rebuild" -m "Co-Authored-By: Claude Opus 4.7 (1M context) <noreply@anthropic.com>"
+    git commit -m "chore daily: MAJ scores + rebuild"
     if errorlevel 1 ( echo ERREUR - git commit & pause & exit /b 1 )
     git push
     if errorlevel 1 ( echo ERREUR - git push & pause & exit /b 1 )
     echo [5/5] OK - Push GitHub (Wix auto-deploy dans 1-2 min)
 ) else (
-    echo [5/5] Rien a commit (deja a jour).
+    echo [5/5] Rien a commit - deja a jour
 )
 echo.
 

@@ -51,7 +51,7 @@ echo [4/4] Git commit + push...
 git add scout-dist deglingo-scout-app/src deglingo-scout-app/index.html deglingo-scout-app/public
 git diff --cached --quiet
 if errorlevel 1 (
-    git commit -m "deploy: sync scout-dist mirror + updates" -m "Co-Authored-By: Claude Opus 4.7 (1M context) <noreply@anthropic.com>"
+    git commit -m "deploy: sync scout-dist mirror + updates"
     if errorlevel 1 (
         echo.
         echo ERREUR - Git commit echoue !
@@ -67,7 +67,7 @@ if errorlevel 1 (
     )
     echo Git push OK !
 ) else (
-    echo Rien a commit (scout-dist deja synchro).
+    echo Rien a commit - scout-dist deja synchro
 )
 echo.
 

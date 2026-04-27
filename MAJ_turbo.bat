@@ -95,7 +95,7 @@ REM Commit + push (seulement si changements)
 git add scout-dist deglingo-scout-app/public/data public/data deglingo-scout-app/src deglingo-scout-app/index.html sorare_club_slugs.json 2>nul
 git diff --cached --quiet
 if errorlevel 1 (
-    git commit -m "chore(turbo): MAJ quotidienne - fixtures + titu%% + scores + rebuild" -m "Co-Authored-By: Claude Opus 4.7 (1M context) <noreply@anthropic.com>"
+    git commit -m "chore turbo: MAJ quotidienne - fixtures + titu + scores + rebuild"
     if errorlevel 1 ( echo [ERREUR] git commit & pause & exit /b 1 )
     git push
     if errorlevel 1 ( echo [ERREUR] git push & pause & exit /b 1 )

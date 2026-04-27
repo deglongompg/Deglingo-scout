@@ -137,7 +137,6 @@ export default function ProSavedTeamCard({
                     <div className="hex-premium__highlight" />
                     <div className="hex-premium__glass-reflection" />
                     <div className="hex-premium__edge-shine" />
-                    <div className="hex-premium__shine" />
                   </div>
                 </div>
                 <div className="hex-premium__score">{playerScore}</div>
@@ -155,35 +154,33 @@ export default function ProSavedTeamCard({
             )}
           </div>
         </div>
-        {/* Match info box : gold premium avec etincelles si match joue, neutre sinon */}
-        <div style={{
-          marginTop: 6, padding: "3px 14px", borderRadius: 4, position: "relative",
-          background: matchScore ? "linear-gradient(135deg, #2A1A00 0%, #0D0700 100%)" : "rgba(255,255,255,0.03)",
-          border: matchScore ? "1px solid #DAA520" : "1px solid rgba(255,255,255,0.06)",
-          boxShadow: matchScore ? "0 0 8px rgba(255,215,0,0.35), inset 0 0 6px rgba(255,215,0,0.1)" : "none",
-          textAlign: "center",
-        }}>
-          {matchScore && (
-            <>
-              <span style={{ position: "absolute", left: 4, top: "50%", transform: "translateY(-50%)", fontSize: 7, color: "#FFD700", lineHeight: 1, textShadow: "0 0 3px rgba(255,215,0,0.8)" }}>✦</span>
-              <span style={{ position: "absolute", right: 4, top: "50%", transform: "translateY(-50%)", fontSize: 7, color: "#FFD700", lineHeight: 1, textShadow: "0 0 3px rgba(255,215,0,0.8)" }}>✦</span>
-            </>
-          )}
-          <div style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: 4, flexWrap: "nowrap", whiteSpace: "nowrap" }}>
-            {recapHomeLogo && <img src={`/data/logos/${recapHomeLogo}`} alt="" style={{ width: 14, height: 14, objectFit: "contain", flexShrink: 0 }} />}
-            {matchScore ? (
-              <span style={{ fontSize: 11, fontWeight: 900, color: "#FFD700", fontFamily: "'DM Mono',monospace", letterSpacing: "-0.3px", whiteSpace: "nowrap", flexShrink: 0, textShadow: "0 0 6px rgba(255,215,0,0.6), 0 1px 2px rgba(0,0,0,0.8)" }}>{matchScore}</span>
-            ) : (
-              <span style={{ fontSize: 7, color: "rgba(255,255,255,0.25)", flexShrink: 0 }}>vs</span>
-            )}
-            {recapAwayLogo && <img src={`/data/logos/${recapAwayLogo}`} alt="" style={{ width: 14, height: 14, objectFit: "contain", flexShrink: 0 }} />}
+        {/* Match info box : premium gold avec bevel + reflets si match joue, neutre sinon */}
+        {matchScore ? (
+          <div className="matchscore-premium">
+            <div className="matchscore-premium__inner">
+              <div className="matchscore-premium__highlight" />
+              <div className="matchscore-premium__edge-shine" />
+              <div className="matchscore-premium__content">
+                <span className="matchscore-premium__sparkle">✦</span>
+                {recapHomeLogo && <img src={`/data/logos/${recapHomeLogo}`} alt="" style={{ width: 14, height: 14, objectFit: "contain", flexShrink: 0 }} />}
+                <span className="matchscore-premium__score-text">{matchScore}</span>
+                {recapAwayLogo && <img src={`/data/logos/${recapAwayLogo}`} alt="" style={{ width: 14, height: 14, objectFit: "contain", flexShrink: 0 }} />}
+                <span className="matchscore-premium__sparkle">✦</span>
+              </div>
+            </div>
           </div>
-          {!matchScore && (
-            <div style={{ fontSize: 7, fontWeight: 700, color: "#fff", fontFamily: "'DM Mono',monospace", marginTop: 1, whiteSpace: "nowrap" }}>
+        ) : (
+          <div style={{ marginTop: 6, padding: "3px 8px", borderRadius: 6, background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.06)", textAlign: "center" }}>
+            <div style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: 4, flexWrap: "nowrap", whiteSpace: "nowrap" }}>
+              {recapHomeLogo && <img src={`/data/logos/${recapHomeLogo}`} alt="" style={{ width: 14, height: 14, objectFit: "contain", flexShrink: 0 }} />}
+              <span style={{ fontSize: 7, color: "rgba(255,255,255,0.25)", flexShrink: 0 }}>vs</span>
+              {recapAwayLogo && <img src={`/data/logos/${recapAwayLogo}`} alt="" style={{ width: 14, height: 14, objectFit: "contain", flexShrink: 0 }} />}
+            </div>
+            <div style={{ fontSize: 7, fontWeight: 700, color: "#fff", fontFamily: "'DM Mono',monospace", marginTop: 1, whiteSpace: "nowrap", textAlign: "center" }}>
               {dateLabel}{parisTime ? ` - ${parisTime}` : ""}
             </div>
-          )}
-        </div>
+          </div>
+        )}
       </div>
     );
   };

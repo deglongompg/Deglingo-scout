@@ -192,12 +192,12 @@ export default function SkyrocketGauge({ score = 0, projectedScore = null, initi
         )}
       </div>
 
-      {/* Body */}
+      {/* Body — wrappee dans gauge-premium pour bevel gold + reflets premium */}
+      <div className="gauge-premium" style={{ minHeight: height + 4 }}>
       <div style={{
         position: "relative", width: "100%", height: "100%", minHeight: height,
-        borderRadius: "10px 10px 6px 6px",
+        borderRadius: "8px 8px 4px 4px",
         background: palette.bg,
-        border: `1px solid ${palette.border}`,
         overflow: "hidden",
         boxShadow: palette.boxShadow,
       }}>
@@ -386,6 +386,9 @@ export default function SkyrocketGauge({ score = 0, projectedScore = null, initi
             </React.Fragment>
           );
         })}
+      </div>
+        <div className="gauge-premium__highlight" />
+        <div className="gauge-premium__edge-shine" />
       </div>
     </div>
   );

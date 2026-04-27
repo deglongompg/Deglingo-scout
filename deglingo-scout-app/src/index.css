@@ -275,53 +275,54 @@ select option {
   inset: 2px;
   clip-path: polygon(50% 0%, 93.3% 25%, 93.3% 75%, 50% 100%, 6.7% 75%, 6.7% 25%);
   overflow: hidden;
-  background: rgba(0, 0, 0, 0.25);
-  backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(8px);
+  /* Pas de tint sombre/blur pour laisser le dsBg ressortir vivement */
 }
 .hex-premium__inner {
   position: absolute;
   inset: 0;
+  /* Boost saturation/contrast pour rendre les vert/jaune/rouge plus marques */
+  filter: saturate(1.35) contrast(1.1);
 }
 .hex-premium__highlight {
   position: absolute;
   top: 0; left: 0; right: 0;
-  height: 55%;
+  height: 50%;
   background: linear-gradient(170deg,
-    rgba(255,255,255,0.85) 0%,
-    rgba(255,255,255,0.5)  20%,
-    rgba(255,255,255,0.25) 40%,
-    rgba(255,255,255,0.1)  60%,
-    rgba(255,255,255,0.02) 80%,
+    rgba(255,255,255,0.55) 0%,
+    rgba(255,255,255,0.3)  25%,
+    rgba(255,255,255,0.12) 50%,
+    rgba(255,255,255,0.04) 75%,
     rgba(255,255,255,0)    100%
   );
   clip-path: polygon(50% 0%, 93.3% 25%, 78% 58%, 22% 58%, 6.7% 25%);
   pointer-events: none;
+  mix-blend-mode: soft-light;
 }
 .hex-premium__glass-reflection {
   position: absolute;
   top: 15%; left: 10%;
-  width: 30%; height: 35%;
+  width: 28%; height: 32%;
   background: linear-gradient(135deg,
-    rgba(255,255,255,0.6) 0%,
-    rgba(255,255,255,0.3) 50%,
+    rgba(255,255,255,0.4) 0%,
+    rgba(255,255,255,0.18) 50%,
     rgba(255,255,255,0)   100%
   );
   border-radius: 50%;
-  filter: blur(6px);
+  filter: blur(5px);
   pointer-events: none;
 }
 .hex-premium__edge-shine {
   position: absolute;
   inset: -2%;
   background:
-    radial-gradient(ellipse at 50% 0%,   rgba(255,255,255,0.4) 0%, transparent 50%),
-    radial-gradient(ellipse at 93% 25%,  rgba(255,255,255,0.3) 0%, transparent 40%),
-    radial-gradient(ellipse at 93% 75%,  rgba(255,255,255,0.2) 0%, transparent 40%),
-    radial-gradient(ellipse at 50% 100%, rgba(255,255,255,0.25) 0%, transparent 50%),
-    radial-gradient(ellipse at 7% 75%,   rgba(255,255,255,0.2) 0%, transparent 40%),
-    radial-gradient(ellipse at 7% 25%,   rgba(255,255,255,0.3) 0%, transparent 40%);
+    radial-gradient(ellipse at 50% 0%,   rgba(255,255,255,0.28) 0%, transparent 50%),
+    radial-gradient(ellipse at 93% 25%,  rgba(255,255,255,0.2)  0%, transparent 40%),
+    radial-gradient(ellipse at 93% 75%,  rgba(255,255,255,0.12) 0%, transparent 40%),
+    radial-gradient(ellipse at 50% 100%, rgba(255,255,255,0.16) 0%, transparent 50%),
+    radial-gradient(ellipse at 7% 75%,   rgba(255,255,255,0.12) 0%, transparent 40%),
+    radial-gradient(ellipse at 7% 25%,   rgba(255,255,255,0.2)  0%, transparent 40%);
   pointer-events: none;
+  mix-blend-mode: soft-light;
 }
 .hex-premium__shine {
   position: absolute;
@@ -353,4 +354,156 @@ select option {
   letter-spacing: -0.8px;
   line-height: 1;
   z-index: 10;
+}
+
+/* ─── Premium match score box (rectangulaire, meme style que hex) ─── */
+.matchscore-premium {
+  position: relative;
+  margin-top: 6px;
+  width: 100%;
+  align-self: stretch;
+  box-sizing: border-box;
+  height: 24px;
+  border-radius: 6px;
+  background: linear-gradient(125deg,
+    #1a0f05 0%, #3d2814 5%, #6b4e2a 10%, #9d7a4a 15%,
+    #c9a561 18%, #e8d4a8 21%, #fff5dc 24%, #fffef5 26%,
+    #fff5dc 28%, #e8d4a8 31%, #c9a561 34%, #9d7a4a 38%,
+    #6b4e2a 42%, #4a3520 46%, #2d1f12 50%, #4a3520 54%,
+    #6b4e2a 58%, #9d7a4a 62%, #c9a561 66%, #e8d4a8 69%,
+    #fff5dc 72%, #fffef5 74%, #fff5dc 76%, #e8d4a8 79%,
+    #c9a561 82%, #9d7a4a 85%, #6b4e2a 90%, #3d2814 95%,
+    #1a0f05 100%
+  );
+  animation: hexGlowPulse 3s ease-in-out infinite;
+}
+.matchscore-premium__inner {
+  position: absolute;
+  inset: 1.5px;
+  border-radius: 4.5px;
+  background: linear-gradient(135deg, #1A0F00 0%, #0D0700 100%);
+  overflow: hidden;
+}
+.matchscore-premium__highlight {
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 55%;
+  background: linear-gradient(180deg,
+    rgba(255,255,255,0.5) 0%,
+    rgba(255,255,255,0.25) 35%,
+    rgba(255,255,255,0.08) 70%,
+    rgba(255,255,255,0)    100%
+  );
+  mix-blend-mode: soft-light;
+  pointer-events: none;
+  z-index: 1;
+}
+.matchscore-premium__edge-shine {
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(ellipse at 0% 50%,   rgba(255,255,255,0.28) 0%, transparent 30%),
+    radial-gradient(ellipse at 100% 50%, rgba(255,255,255,0.28) 0%, transparent 30%),
+    radial-gradient(ellipse at 50% 0%,   rgba(255,255,255,0.2)  0%, transparent 50%),
+    radial-gradient(ellipse at 50% 100%, rgba(255,255,255,0.14) 0%, transparent 50%);
+  mix-blend-mode: soft-light;
+  pointer-events: none;
+  z-index: 1;
+}
+.matchscore-premium__shine {
+  position: absolute;
+  top: -100%; left: -100%;
+  width: 300%; height: 300%;
+  background: linear-gradient(135deg,
+    transparent 40%,
+    rgba(255,255,255,0)   45%,
+    rgba(255,255,255,0.6) 50%,
+    rgba(255,255,255,0)   55%,
+    transparent 60%
+  );
+  animation: hexShineSweep 5s ease-in-out infinite;
+  animation-delay: 1s;
+  pointer-events: none;
+  z-index: 2;
+}
+.matchscore-premium__content {
+  position: relative;
+  z-index: 3;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  height: 100%;
+  padding: 0 10px;
+  white-space: nowrap;
+  flex-wrap: nowrap;
+}
+.matchscore-premium__sparkle {
+  font-size: 8px;
+  color: #FFD700;
+  text-shadow: 0 0 3px rgba(255,215,0,0.85);
+  line-height: 1;
+  flex-shrink: 0;
+}
+.matchscore-premium__score-text {
+  font-size: 11px;
+  font-weight: 900;
+  color: #FFD700;
+  font-family: 'Roboto Condensed', 'DM Mono', monospace;
+  letter-spacing: -0.3px;
+  text-shadow: 0 0 6px rgba(255,215,0,0.55), 0 1px 2px rgba(0,0,0,0.85);
+  line-height: 1;
+  flex-shrink: 0;
+}
+
+/* ─── Premium gauge frame (SkyrocketGauge bevel gold + glass reflections) ─── */
+.gauge-premium {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  border-radius: 10px 10px 6px 6px;
+  padding: 2px;
+  background: linear-gradient(125deg,
+    #1a0f05 0%, #3d2814 5%, #6b4e2a 10%, #9d7a4a 15%,
+    #c9a561 18%, #e8d4a8 21%, #fff5dc 24%, #fffef5 26%,
+    #fff5dc 28%, #e8d4a8 31%, #c9a561 34%, #9d7a4a 38%,
+    #6b4e2a 42%, #4a3520 46%, #2d1f12 50%, #4a3520 54%,
+    #6b4e2a 58%, #9d7a4a 62%, #c9a561 66%, #e8d4a8 69%,
+    #fff5dc 72%, #fffef5 74%, #fff5dc 76%, #e8d4a8 79%,
+    #c9a561 82%, #9d7a4a 85%, #6b4e2a 90%, #3d2814 95%,
+    #1a0f05 100%
+  );
+  box-sizing: border-box;
+  /* Glow gold statique (sans pulse — moins agressif sur grandes surfaces que hex) */
+  filter:
+    drop-shadow(0 0 6px rgba(255,215,0,0.35))
+    drop-shadow(0 0 14px rgba(255,215,0,0.18))
+    drop-shadow(0 2px 4px rgba(0,0,0,0.3));
+}
+.gauge-premium__highlight {
+  position: absolute;
+  top: 2px; left: 2px; right: 2px;
+  height: 28%;
+  border-radius: 8px 8px 0 0;
+  background: linear-gradient(180deg,
+    rgba(255,255,255,0.4) 0%,
+    rgba(255,255,255,0.18) 40%,
+    rgba(255,255,255,0.04) 75%,
+    rgba(255,255,255,0)    100%
+  );
+  mix-blend-mode: soft-light;
+  pointer-events: none;
+  z-index: 100;
+}
+.gauge-premium__edge-shine {
+  position: absolute;
+  inset: 2px;
+  border-radius: 8px 8px 4px 4px;
+  background:
+    radial-gradient(ellipse at 0% 50%,   rgba(255,255,255,0.18) 0%, transparent 35%),
+    radial-gradient(ellipse at 100% 50%, rgba(255,255,255,0.18) 0%, transparent 35%),
+    radial-gradient(ellipse at 50% 0%,   rgba(255,255,255,0.15) 0%, transparent 35%);
+  mix-blend-mode: soft-light;
+  pointer-events: none;
+  z-index: 100;
 }

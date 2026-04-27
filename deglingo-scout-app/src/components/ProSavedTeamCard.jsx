@@ -118,58 +118,56 @@ export default function ProSavedTeamCard({
               </div>
             );
           })()}
-          {/* Stack vertical : bonus +X% colle juste au-dessus de la pointe hex / bubble */}
-          <div style={{
-            position: "absolute", bottom: 0, right: -2, zIndex: 3,
-            display: "flex", flexDirection: "column", alignItems: "center", gap: 1,
-          }}>
-            {bonusPct > 0 && (() => {
-              const isRareBonus = rarity === "rare";
-              return (
-                <span style={{
-                  fontSize: 8, fontWeight: 900,
-                  color: isRareBonus ? "#1A1A1F" : "#fff",
-                  fontFamily: "Outfit", letterSpacing: "0.04em",
-                  background: isRareBonus
-                    ? "linear-gradient(135deg, #FAFAFE 0%, #E0E2E8 50%, #B8BCC4 100%)"
-                    : "linear-gradient(135deg, #FFE066 0%, #FFD700 50%, #DAA520 100%)",
-                  border: "1px solid rgba(255,255,255,0.5)",
-                  borderRadius: 3,
-                  padding: "2px 5px",
-                  boxShadow: isRareBonus
-                    ? "0 0 8px rgba(229,231,235,0.6), inset 0 1px 0 rgba(255,255,255,0.7)"
-                    : "0 0 8px rgba(255,215,0,0.55), inset 0 1px 0 rgba(255,255,255,0.5)",
-                  textShadow: isRareBonus
-                    ? "0 1px 0 rgba(255,255,255,0.4)"
-                    : "0 1px 2px rgba(0,0,0,0.55), 0 0 3px rgba(0,0,0,0.4)",
-                  whiteSpace: "nowrap", lineHeight: 1,
-                }}>+{bonusPct}%</span>
-              );
-            })()}
-            {hasRealScore ? (
-              <div className={`hex-premium${rarity === "rare" ? " hex-premium--silver" : ""}`}>
-                <div className="hex-premium__outer">
-                  <div className="hex-premium__inner-wrapper">
-                    <div className="hex-premium__inner" style={{ background: dsBg(playerScore) }} />
-                    <div className="hex-premium__highlight" />
-                    <div className="hex-premium__glass-reflection" />
-                    <div className="hex-premium__edge-shine" />
-                  </div>
+          {/* Bonus +X% : ancre bottom-left card (corner-to-corner) */}
+          {bonusPct > 0 && (() => {
+            const isRareBonus = rarity === "rare";
+            return (
+              <span style={{
+                position: "absolute", bottom: 0, left: -2, zIndex: 3,
+                fontSize: 8, fontWeight: 900,
+                color: isRareBonus ? "#1A1A1F" : "#fff",
+                fontFamily: "Outfit", letterSpacing: "0.04em",
+                background: isRareBonus
+                  ? "linear-gradient(135deg, #FAFAFE 0%, #E0E2E8 50%, #B8BCC4 100%)"
+                  : "linear-gradient(135deg, #FFE066 0%, #FFD700 50%, #DAA520 100%)",
+                border: "1px solid rgba(255,255,255,0.5)",
+                borderRadius: 3,
+                padding: "2px 5px",
+                boxShadow: isRareBonus
+                  ? "0 0 8px rgba(229,231,235,0.6), inset 0 1px 0 rgba(255,255,255,0.7)"
+                  : "0 0 8px rgba(255,215,0,0.55), inset 0 1px 0 rgba(255,255,255,0.5)",
+                textShadow: isRareBonus
+                  ? "0 1px 0 rgba(255,255,255,0.4)"
+                  : "0 1px 2px rgba(0,0,0,0.55), 0 0 3px rgba(0,0,0,0.4)",
+                whiteSpace: "nowrap", lineHeight: 1,
+              }}>+{bonusPct}%</span>
+            );
+          })()}
+          {/* Score : bottom-right card */}
+          {hasRealScore ? (
+            <div className={`hex-premium${rarity === "rare" ? " hex-premium--silver" : ""}`} style={{ position: "absolute", bottom: 0, right: -2, zIndex: 3 }}>
+              <div className="hex-premium__outer">
+                <div className="hex-premium__inner-wrapper">
+                  <div className="hex-premium__inner" style={{ background: dsBg(playerScore) }} />
+                  <div className="hex-premium__highlight" />
+                  <div className="hex-premium__glass-reflection" />
+                  <div className="hex-premium__edge-shine" />
                 </div>
-                <div className="hex-premium__score">{playerScore}</div>
               </div>
-            ) : (
-              <div style={{
-                width: 32, height: 32, borderRadius: "50%",
-                display: "flex", alignItems: "center", justifyContent: "center",
-                fontFamily: "'DM Mono',monospace", fontSize: 13, fontWeight: 900,
-                color: isDNP ? "#fff" : dsColor(playerScore),
-                background: isDNP ? "rgba(127,29,29,0.9)" : "rgba(0,0,0,0.6)",
-                border: isDNP ? "1px solid rgba(220,38,38,0.8)" : `1px dashed ${dsColor(playerScore)}60`,
-                boxShadow: isDNP ? "0 0 6px rgba(220,38,38,0.4)" : `0 0 6px ${dsColor(playerScore)}30`,
-              }}>{playerScore}</div>
-            )}
-          </div>
+              <div className="hex-premium__score">{playerScore}</div>
+            </div>
+          ) : (
+            <div style={{
+              position: "absolute", bottom: 0, right: -2, zIndex: 3,
+              width: 32, height: 32, borderRadius: "50%",
+              display: "flex", alignItems: "center", justifyContent: "center",
+              fontFamily: "'DM Mono',monospace", fontSize: 13, fontWeight: 900,
+              color: isDNP ? "#fff" : dsColor(playerScore),
+              background: isDNP ? "rgba(127,29,29,0.9)" : "rgba(0,0,0,0.6)",
+              border: isDNP ? "1px solid rgba(220,38,38,0.8)" : `1px dashed ${dsColor(playerScore)}60`,
+              boxShadow: isDNP ? "0 0 6px rgba(220,38,38,0.4)" : `0 0 6px ${dsColor(playerScore)}30`,
+            }}>{playerScore}</div>
+          )}
         </div>
         </div>
         {/* Match info box : premium gold avec bevel + reflets si match joue, neutre sinon */}

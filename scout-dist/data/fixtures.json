@@ -1,13 +1,13 @@
 {
-  "generated": "2026-04-27T16:31:44.699398",
+  "generated": "2026-04-27T19:09:18.353506",
   "matchdays": {
     "L1": 34,
     "PL": 37,
     "Liga": 37,
     "Bundes": 34,
     "UCL": "QUARTER_FINALS",
-    "UEL": "QUARTER_FINALS",
-    "UECL": "QUARTER_FINALS",
+    "UEL": "SEMI_FINALS",
+    "UECL": "SEMI_FINALS",
     "MLS": "MLS"
   },
   "fixtures": [
@@ -2108,6 +2108,50 @@
       "competition": "UECL",
       "home_api": "Crystal Palace FC",
       "away_api": "ACF Fiorentina"
+    },
+    {
+      "home": "Nottm Forest",
+      "away": "Aston Villa",
+      "date": "2026-04-30",
+      "kickoff": "19:00",
+      "matchday": "SEMI_FINALS",
+      "league": "UEL",
+      "competition": "UEL",
+      "home_api": "Nottingham Forest FC",
+      "away_api": "Aston Villa FC"
+    },
+    {
+      "home": "Braga",
+      "away": "Freiburg",
+      "date": "2026-04-30",
+      "kickoff": "19:00",
+      "matchday": "SEMI_FINALS",
+      "league": "UEL",
+      "competition": "UEL",
+      "home_api": "SC Braga",
+      "away_api": "Sport-Club Freiburg"
+    },
+    {
+      "home": "Rayo Vallecano",
+      "away": "Strasbourg",
+      "date": "2026-04-30",
+      "kickoff": "19:00",
+      "matchday": "SEMI_FINALS",
+      "league": "UECL",
+      "competition": "UECL",
+      "home_api": "Rayo Vallecano",
+      "away_api": "RC Strasbourg"
+    },
+    {
+      "home": "Shakhtar",
+      "away": "Crystal Palace",
+      "date": "2026-04-30",
+      "kickoff": "19:00",
+      "matchday": "SEMI_FINALS",
+      "league": "UECL",
+      "competition": "UECL",
+      "home_api": "Shakhtar Donetsk",
+      "away_api": "Crystal Palace FC"
     },
     {
       "home": "Atlanta United",

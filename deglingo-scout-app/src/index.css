@@ -456,6 +456,68 @@ select option {
   flex-shrink: 0;
 }
 
+/* ─── Premium card frame (saved team cards bevel gold + glass reflections) ─── */
+/* Encadre la carte Sorare 3/4 ratio avec le meme bevel 30 stops + reflets que
+   matchscore-premium. Pas de shine sweep, pas de pulse anime (carte trop grande). */
+.card-premium {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 3/4;
+  margin: 0 auto;
+  border-radius: 6px;
+  padding: 2px;
+  background: linear-gradient(125deg,
+    #1a0f05 0%, #3d2814 5%, #6b4e2a 10%, #9d7a4a 15%,
+    #c9a561 18%, #e8d4a8 21%, #fff5dc 24%, #fffef5 26%,
+    #fff5dc 28%, #e8d4a8 31%, #c9a561 34%, #9d7a4a 38%,
+    #6b4e2a 42%, #4a3520 46%, #2d1f12 50%, #4a3520 54%,
+    #6b4e2a 58%, #9d7a4a 62%, #c9a561 66%, #e8d4a8 69%,
+    #fff5dc 72%, #fffef5 74%, #fff5dc 76%, #e8d4a8 79%,
+    #c9a561 82%, #9d7a4a 85%, #6b4e2a 90%, #3d2814 95%,
+    #1a0f05 100%
+  );
+  box-sizing: border-box;
+  filter:
+    drop-shadow(0 0 6px rgba(255,215,0,0.32))
+    drop-shadow(0 0 12px rgba(255,215,0,0.16))
+    drop-shadow(0 2px 4px rgba(0,0,0,0.3));
+}
+.card-premium__inner {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  border-radius: 4.5px;
+  overflow: visible;
+}
+.card-premium__highlight {
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 30%;
+  border-radius: 4.5px 4.5px 0 0;
+  background: linear-gradient(180deg,
+    rgba(255,255,255,0.35) 0%,
+    rgba(255,255,255,0.15) 40%,
+    rgba(255,255,255,0.04) 75%,
+    rgba(255,255,255,0)    100%
+  );
+  mix-blend-mode: soft-light;
+  pointer-events: none;
+  z-index: 1;
+}
+.card-premium__edge-shine {
+  position: absolute;
+  inset: 0;
+  border-radius: 4.5px;
+  background:
+    radial-gradient(ellipse at 0% 50%,   rgba(255,255,255,0.2)  0%, transparent 35%),
+    radial-gradient(ellipse at 100% 50%, rgba(255,255,255,0.2)  0%, transparent 35%),
+    radial-gradient(ellipse at 50% 0%,   rgba(255,255,255,0.15) 0%, transparent 40%),
+    radial-gradient(ellipse at 50% 100%, rgba(255,255,255,0.1)  0%, transparent 40%);
+  mix-blend-mode: soft-light;
+  pointer-events: none;
+  z-index: 1;
+}
+
 /* ─── Premium gauge frame (SkyrocketGauge bevel gold + glass reflections) ─── */
 .gauge-premium {
   position: relative;

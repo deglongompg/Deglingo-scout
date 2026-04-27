@@ -68,11 +68,12 @@ export default function ProSavedTeamCard({
     const cardMaxWidth = league === "Champion" ? 78 : 120;
     return (
       <div key={slot} style={{ display: "flex", flexDirection: "column", alignItems: "center", flex: 1, minWidth: 0, maxWidth: cardMaxWidth }}>
-        <div style={{
-          width: "100%", aspectRatio: "3/4", borderRadius: 6, margin: "0 auto", position: "relative",
+        <div className="card-premium">
+        <div className="card-premium__inner" style={{
           background: ownedCard ? "transparent" : `linear-gradient(155deg, rgba(8,4,28,0.9), ${pc}25)`,
-          border: ownedCard ? "none" : `1px solid ${pc}30`,
         }}>
+        <div className="card-premium__highlight" />
+        <div className="card-premium__edge-shine" />
           {ownedCard ? (
             <img src={ownedCard.pictureUrl} alt="" style={{ width: "100%", height: "100%", objectFit: "contain" }} />
           ) : (
@@ -154,6 +155,7 @@ export default function ProSavedTeamCard({
               }}>{playerScore}</div>
             )}
           </div>
+        </div>
         </div>
         {/* Match info box : premium gold avec bevel + reflets si match joue, neutre sinon */}
         {matchScore ? (

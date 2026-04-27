@@ -2240,7 +2240,19 @@ export default function SorareProTab({ players, teams, fixtures, logos = {}, mat
                   };
 
                   return (
-                    <div key={st.id} style={{ borderRadius: 12, background: "linear-gradient(160deg, rgba(10,5,30,0.95), rgba(20,10,50,0.9))", border: `1px solid ${rarityColor}25`, padding: "10px 10px", backdropFilter: "blur(8px)", display: "flex", gap: 12 }}>
+                    <div key={st.id} style={{
+                      borderRadius: 12,
+                      background: rarity === "rare"
+                        ? "linear-gradient(160deg, rgba(220,225,235,0.16), rgba(180,188,200,0.08))"
+                        : "linear-gradient(160deg, rgba(10,5,30,0.95), rgba(20,10,50,0.9))",
+                      border: rarity === "rare"
+                        ? "1.5px solid rgba(229,231,235,0.55)"
+                        : `1px solid ${rarityColor}25`,
+                      padding: "10px 10px", backdropFilter: "blur(8px)", display: "flex", gap: 12,
+                      boxShadow: rarity === "rare"
+                        ? "0 0 14px rgba(229,231,235,0.2), inset 0 0 30px rgba(229,231,235,0.05)"
+                        : "none",
+                    }}>
                       {/* Colonne gauche : header + pitch */}
                       <div style={{ flex: 1, minWidth: 0 }}>
                         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 8 }}>

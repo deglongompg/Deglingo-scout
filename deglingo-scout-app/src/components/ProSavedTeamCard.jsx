@@ -194,10 +194,23 @@ export default function ProSavedTeamCard({
     );
   };
 
+  // Container team box : silver/pearl pour Rare (fond pearl + bordure silver visible),
+  // dark navy classique pour Limited
+  const isRareBox = rarity === "rare";
+  const containerBg = isRareBox
+    ? "linear-gradient(160deg, rgba(220,225,235,0.16), rgba(180,188,200,0.08))"
+    : "linear-gradient(160deg, rgba(10,5,30,0.95), rgba(20,10,50,0.9))";
+  const containerBorder = isRareBox
+    ? "1.5px solid rgba(229,231,235,0.55)"
+    : `1px solid ${rColor}25`;
+  const containerShadow = isRareBox
+    ? "0 0 14px rgba(229,231,235,0.2), inset 0 0 30px rgba(229,231,235,0.05)"
+    : "none";
   return (
     <div style={{
-      borderRadius: 12, background: "linear-gradient(160deg, rgba(10,5,30,0.95), rgba(20,10,50,0.9))",
-      border: `1px solid ${rColor}25`, padding: "10px 10px", backdropFilter: "blur(8px)",
+      borderRadius: 12, background: containerBg,
+      border: containerBorder, padding: "10px 10px", backdropFilter: "blur(8px)",
+      boxShadow: containerShadow,
       display: "flex", gap: 12,
     }}>
       {/* Colonne gauche : header + pitch */}

@@ -232,9 +232,11 @@ export function computeTeamScores(team, players) {
   const rawFull = infos.reduce((s, x) => s + x.full, 0);
   const liveRaw = infos.filter(x => x.isLive).reduce((s, x) => s + x.full, 0);
 
-  const projectedTotal = Math.round(rawFull * (1 + compoPct / 100));
-  const liveTotal = Math.round(liveRaw * (1 + compoPct / 100));
-  const bonusPts = Math.round(rawFull - rawBase);
+  // Math.floor (pas round) pour matcher exactement Sorare. Sorare tronque la
+  // partie decimale du total final au lieu d'arrondir : 277.93 -> 277, pas 278.
+  const projectedTotal = Math.floor(rawFull * (1 + compoPct / 100));
+  const liveTotal = Math.floor(liveRaw * (1 + compoPct / 100));
+  const bonusPts = Math.floor(rawFull - rawBase);
 
   return { picks, infos, captainId, multiClub, cap260, compoPct, projectedTotal, liveTotal, bonusPts };
 }

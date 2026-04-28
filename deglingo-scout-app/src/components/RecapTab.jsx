@@ -2,7 +2,6 @@ import { Component, useEffect, useMemo, useState } from "react";
 import { LEAGUE_COLORS, LEAGUE_NAMES, LEAGUE_FLAG_CODES, dsColor } from "../utils/colors";
 import { fetchCloudStore, pushTeams } from "../utils/cloudSync";
 import { PRO_LEAGUES, computeTeamScores, getGwDisplayNumber } from "../utils/proScoring";
-import { getProGwInfo } from "../utils/freeze";
 import { t } from "../utils/i18n";
 import ProSavedTeamCard from "./ProSavedTeamCard";
 import StellarSavedTeamCard from "./StellarSavedTeamCard";
@@ -277,35 +276,15 @@ function RecapTabInner({ players, logos, lang }) {
   const grouped = useMemo(() => store ? groupTeamsByLeague(store) : null, [store]);
   const stellarGroups = useMemo(() => store ? groupStellarByDate(store) : [], [store]);
 
-  // GW et date Stellar en cours — utilises pour filtrer les compteurs (on ne cumule pas les GW/dates passees)
-  // Pro : si l'utilisateur n'a pas (encore) de teams en GW live, fallback sur la GW la plus
-  // recente avec teams sauvegardees. Sinon, juste apres une GW transition, l'UI affiche
-  // 0 teams alors que les teams de la GW precedente (scores finaux) sont encore pertinentes.
-  const currentGwKey = useMemo(() => {
-    const liveGw = getProGwInfo()?.gwKey || null;
-    if (!grouped) return liveGw;
-    const allKeys = new Set();
-    ["limited", "rare"].forEach(r => {
-      grouped[r].forEach(({ gwKey }) => allKeys.add(gwKey));
-    });
-    // Si teams existent dans la GW live -> on garde la live
-    if (liveGw && allKeys.has(liveGw)) return liveGw;
-    // Sinon -> derniere GW avec teams sauvegardees (tri desc par gwKey string)
-    if (allKeys.size > 0) return [...allKeys].sort().reverse()[0];
-    return liveGw;
-  }, [grouped]);
-  const currentStellarDate = useMemo(() => {
-    if (!stellarGroups.length) return null;
-    // Date Stellar la plus recente (stellarGroups triee par date desc deja)
-    return stellarGroups[0].dateStr;
-  }, [stellarGroups]);
+  // (currentGwKey/currentStellarDate retires : Mes Teams affiche TOUTES les GW/dates,
+  // navigation independante de Sorare Pro — chaque section saved teams a son propre header GW)
 
   const stats = useMemo(() => {
     if (!grouped) return null;
     const compute = (rarity) => {
       let count = 0, sum = 0;
-      grouped[rarity].forEach(({ gwKey, teams }) => {
-        if (currentGwKey && gwKey !== currentGwKey) return; // GW en cours uniquement
+      grouped[rarity].forEach(({ teams }) => {
+        // Mes Teams : on compte TOUTES les GW sauvees (navigation independante de Sorare Pro)
         teams.forEach(team => {
           count++;
           const enriched = enrichTeamWithBestCards(team, cardsBySlug[rarity]);
@@ -317,8 +296,8 @@ function RecapTabInner({ players, logos, lang }) {
     };
     const computeStellar = () => {
       let count = 0, sum = 0;
-      stellarGroups.forEach(({ dateStr, teams }) => {
-        if (currentStellarDate && dateStr !== currentStellarDate) return; // date en cours uniquement
+      stellarGroups.forEach(({ teams }) => {
+        // Idem : toutes les dates Stellar sauvees
         teams.forEach(team => {
           count++;
           sum += computeStellarProjected(team, players || [], stellarCardsBySlug, stellarCardsByCardSlug) || 0;
@@ -331,7 +310,7 @@ function RecapTabInner({ players, logos, lang }) {
       rare: compute("rare"),
       stellar: computeStellar(),
     };
-  }, [grouped, stellarGroups, players, cardsBySlug, stellarCardsBySlug, currentGwKey, currentStellarDate]);
+  }, [grouped, stellarGroups, players, cardsBySlug, stellarCardsBySlug]);
 
   // Initialise openLeagues une fois : ouvre toutes les sections (GW, dates) non vides.
   useEffect(() => {
@@ -351,16 +330,16 @@ function RecapTabInner({ players, logos, lang }) {
     PRO_LEAGUES.forEach(lg => { out[lg] = { limited: 0, rare: 0, total: 0 }; });
     if (grouped) {
       ["limited", "rare"].forEach(r => {
-        grouped[r].forEach(({ league, gwKey, teams }) => {
+        grouped[r].forEach(({ league, teams }) => {
           if (!out[league]) return;
-          if (currentGwKey && gwKey !== currentGwKey) return; // GW en cours uniquement
+          // Mes Teams : count toutes GW (navigation independante de Sorare Pro)
           out[league][r] += teams.length;
           out[league].total += teams.length;
         });
       });
     }
     return out;
-  }, [grouped, currentGwKey]);
+  }, [grouped]);
 
   const toggleLeague = (key) => {
     setOpenLeagues(prev => ({ ...(prev || {}), [key]: !prev?.[key] }));

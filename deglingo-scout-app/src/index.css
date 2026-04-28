@@ -365,6 +365,86 @@ select option {
   animation-delay: 1s;
   pointer-events: none;
 }
+/* ─── Rectangle premium variant (test L1 limited) ─── */
+/* Memes effets que hex (bevel 30 stops + highlight + edge-shine + pulse glow)
+   mais en forme rectangle arrondi au lieu d'hexagone */
+.rect-premium {
+  position: relative;
+  width: 32px;
+  height: 22px;
+  animation: hexGlowPulse 3s ease-in-out infinite;
+}
+.rect-premium__outer {
+  position: absolute;
+  inset: 0;
+  border-radius: 4px;
+  background: linear-gradient(125deg,
+    #1a0f05 0%, #3d2814 5%, #6b4e2a 10%, #9d7a4a 15%,
+    #c9a561 18%, #e8d4a8 21%, #fff5dc 24%, #fffef5 26%,
+    #fff5dc 28%, #e8d4a8 31%, #c9a561 34%, #9d7a4a 38%,
+    #6b4e2a 42%, #4a3520 46%, #2d1f12 50%, #4a3520 54%,
+    #6b4e2a 58%, #9d7a4a 62%, #c9a561 66%, #e8d4a8 69%,
+    #fff5dc 72%, #fffef5 74%, #fff5dc 76%, #e8d4a8 79%,
+    #c9a561 82%, #9d7a4a 85%, #6b4e2a 90%, #3d2814 95%,
+    #1a0f05 100%
+  );
+}
+.rect-premium__inner-wrapper {
+  position: absolute;
+  inset: 2px;
+  border-radius: 2.5px;
+  overflow: hidden;
+  background: rgba(0, 0, 0, 0.25);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+}
+.rect-premium__inner {
+  position: absolute;
+  inset: 0;
+}
+.rect-premium__highlight {
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 55%;
+  border-radius: 2.5px 2.5px 0 0;
+  background: linear-gradient(170deg,
+    rgba(255,255,255,0.85) 0%,
+    rgba(255,255,255,0.5)  20%,
+    rgba(255,255,255,0.25) 40%,
+    rgba(255,255,255,0.1)  60%,
+    rgba(255,255,255,0.02) 80%,
+    rgba(255,255,255,0)    100%
+  );
+  pointer-events: none;
+}
+.rect-premium__edge-shine {
+  position: absolute;
+  inset: 0;
+  border-radius: 2.5px;
+  background:
+    radial-gradient(ellipse at 50% 0%,   rgba(255,255,255,0.4) 0%, transparent 50%),
+    radial-gradient(ellipse at 100% 50%, rgba(255,255,255,0.3) 0%, transparent 40%),
+    radial-gradient(ellipse at 50% 100%, rgba(255,255,255,0.25) 0%, transparent 50%),
+    radial-gradient(ellipse at 0% 50%,   rgba(255,255,255,0.3) 0%, transparent 40%);
+  pointer-events: none;
+}
+.rect-premium__score {
+  position: absolute;
+  top: 50%; left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 12px;
+  font-weight: 900;
+  color: #fff;
+  text-shadow:
+    0 1px 2px rgba(0,0,0,0.5),
+    0 2px 4px rgba(0,0,0,0.25),
+    0 0 1px rgba(0,0,0,0.4);
+  font-family: 'Roboto Condensed', 'Arial Narrow', 'DM Mono', monospace;
+  letter-spacing: -0.8px;
+  line-height: 1;
+  z-index: 10;
+}
+
 /* Variante silver/chrome pour cartes Pro Rare */
 .hex-premium--silver { animation-name: hexGlowPulseSilver; }
 .hex-premium--silver .hex-premium__outer {

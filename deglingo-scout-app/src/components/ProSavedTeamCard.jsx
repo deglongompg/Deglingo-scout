@@ -159,8 +159,20 @@ export default function ProSavedTeamCard({
               </div>
             );
           })()}
-          {/* Score : bottom-right card */}
+          {/* Score : bottom-right card — rectangle test pour L1+Limited, hex sinon */}
           {hasRealScore ? (
+            (league === "L1" && rarity === "limited") ? (
+              <div className="rect-premium" style={{ position: "absolute", bottom: 0, right: 0, zIndex: 3 }}>
+                <div className="rect-premium__outer">
+                  <div className="rect-premium__inner-wrapper">
+                    <div className="rect-premium__inner" style={{ background: dsBg(playerScore) }} />
+                    <div className="rect-premium__highlight" />
+                    <div className="rect-premium__edge-shine" />
+                  </div>
+                </div>
+                <div className="rect-premium__score">{playerScore}</div>
+              </div>
+            ) : (
             <div className={`hex-premium${rarity === "rare" ? " hex-premium--silver" : ""}`} style={{ position: "absolute", bottom: 0, right: -2, zIndex: 3 }}>
               <div className="hex-premium__outer">
                 <div className="hex-premium__inner-wrapper">
@@ -172,6 +184,7 @@ export default function ProSavedTeamCard({
               </div>
               <div className="hex-premium__score">{playerScore}</div>
             </div>
+            )
           ) : (
             <div style={{
               position: "absolute", bottom: 0, right: -2, zIndex: 3,

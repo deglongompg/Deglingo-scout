@@ -239,12 +239,10 @@ export default function SorareProTab({ players, teams, fixtures, logos = {}, mat
   const [selectedSlot, setSelectedSlot] = useState(null);
   const [hideUsed, setHideUsed] = useState(true);
   const [leftCollapsed, setLeftCollapsed] = useState(false);
-  const [builderCollapsed, setBuilderCollapsed] = useState(() => {
-    try { return localStorage.getItem("pro_builder_collapsed") === "true"; } catch { return false; }
-  });
-  useEffect(() => {
-    try { localStorage.setItem("pro_builder_collapsed", String(builderCollapsed)); } catch { /* noop */ }
-  }, [builderCollapsed]);
+  // Builder visible par defaut a chaque page load. Toggle in-memory uniquement
+  // (pas de persistance localStorage) — on veut que les nouveaux visiteurs ET les
+  // returning users voient toujours le builder en premier.
+  const [builderCollapsed, setBuilderCollapsed] = useState(false);
   const [filterTitu, setFilterTitu] = useState(0);
   const [selectedMatchFilters, setSelectedMatchFilters] = useState([]);
   const [includeRare, setIncludeRare] = useState(false);

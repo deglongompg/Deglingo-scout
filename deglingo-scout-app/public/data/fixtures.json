@@ -1,5 +1,5 @@
 {
-  "generated": "2026-04-29T00:08:48.038087",
+  "generated": "2026-04-29T07:12:10.517450",
   "matchdays": {
     "L1": 34,
     "PL": 37,
@@ -610,6 +610,16 @@
       "league": "PL",
       "home_api": "Tottenham Hotspur FC",
       "away_api": "Leeds United FC"
+    },
+    {
+      "home": "Manchester City",
+      "away": "Crystal Palace",
+      "date": "2026-05-13",
+      "kickoff": "19:00",
+      "matchday": 31,
+      "league": "PL",
+      "home_api": "Manchester City FC",
+      "away_api": "Crystal Palace FC"
     },
     {
       "home": "Aston Villa",
@@ -1802,48 +1812,37 @@
       "finished": true
     },
     {
-      "home": "Paris Saint Germain",
-      "away": "Bayern Munich",
-      "date": "2026-04-28",
-      "kickoff": "19:00",
-      "matchday": "SEMI_FINALS",
-      "league": "UCL",
-      "competition": "UCL",
-      "home_api": "Paris Saint-Germain",
-      "away_api": "FC Bayern München"
-    },
-    {
-      "home": "Atletico Madrid",
-      "away": "Arsenal",
+      "home": "Unknown",
+      "away": "Unknown",
       "date": "2026-04-29",
       "kickoff": "19:00",
       "matchday": "SEMI_FINALS",
       "league": "UCL",
       "competition": "UCL",
-      "home_api": "Atlético de Madrid",
-      "away_api": "Arsenal FC"
+      "home_api": null,
+      "away_api": null
     },
     {
-      "home": "Arsenal",
-      "away": "Atletico Madrid",
+      "home": "Unknown",
+      "away": "Unknown",
       "date": "2026-05-05",
       "kickoff": "19:00",
       "matchday": "SEMI_FINALS",
       "league": "UCL",
       "competition": "UCL",
-      "home_api": "Arsenal FC",
-      "away_api": "Atlético de Madrid"
+      "home_api": null,
+      "away_api": null
     },
     {
-      "home": "Bayern Munich",
-      "away": "Paris Saint Germain",
+      "home": "Unknown",
+      "away": "Unknown",
       "date": "2026-05-06",
       "kickoff": "19:00",
       "matchday": "SEMI_FINALS",
       "league": "UCL",
       "competition": "UCL",
-      "home_api": "FC Bayern München",
-      "away_api": "Paris Saint-Germain"
+      "home_api": null,
+      "away_api": null
     },
     {
       "home": "Sporting",

@@ -2,6 +2,7 @@ import { Component, useEffect, useMemo, useState } from "react";
 import { LEAGUE_COLORS, LEAGUE_NAMES, LEAGUE_FLAG_CODES, dsColor } from "../utils/colors";
 import { fetchCloudStore, pushTeams } from "../utils/cloudSync";
 import { PRO_LEAGUES, computeTeamScores, getGwDisplayNumber } from "../utils/proScoring";
+import { getProGwInfo } from "../utils/freeze";
 import { t } from "../utils/i18n";
 import ProSavedTeamCard from "./ProSavedTeamCard";
 import StellarSavedTeamCard from "./StellarSavedTeamCard";
@@ -276,15 +277,21 @@ function RecapTabInner({ players, logos, lang }) {
   const grouped = useMemo(() => store ? groupTeamsByLeague(store) : null, [store]);
   const stellarGroups = useMemo(() => store ? groupStellarByDate(store) : [], [store]);
 
-  // (currentGwKey/currentStellarDate retires : Mes Teams affiche TOUTES les GW/dates,
-  // navigation independante de Sorare Pro — chaque section saved teams a son propre header GW)
+  // GW Pro live (pour les COUNTS dans les chips uniquement — le DISPLAY montre toutes les GW)
+  // Date Stellar live (idem)
+  const currentGwKey = useMemo(() => getProGwInfo()?.gwKey || null, []);
+  const currentStellarDate = useMemo(() => {
+    if (!stellarGroups.length) return null;
+    return stellarGroups[0].dateStr;
+  }, [stellarGroups]);
 
   const stats = useMemo(() => {
     if (!grouped) return null;
     const compute = (rarity) => {
       let count = 0, sum = 0;
-      grouped[rarity].forEach(({ teams }) => {
-        // Mes Teams : on compte TOUTES les GW sauvees (navigation independante de Sorare Pro)
+      grouped[rarity].forEach(({ gwKey, teams }) => {
+        // Compteurs chips Mes Teams : GW live uniquement (le DISPLAY montre toutes GW)
+        if (currentGwKey && gwKey !== currentGwKey) return;
         teams.forEach(team => {
           count++;
           const enriched = enrichTeamWithBestCards(team, cardsBySlug[rarity]);
@@ -296,8 +303,8 @@ function RecapTabInner({ players, logos, lang }) {
     };
     const computeStellar = () => {
       let count = 0, sum = 0;
-      stellarGroups.forEach(({ teams }) => {
-        // Idem : toutes les dates Stellar sauvees
+      stellarGroups.forEach(({ dateStr, teams }) => {
+        if (currentStellarDate && dateStr !== currentStellarDate) return;
         teams.forEach(team => {
           count++;
           sum += computeStellarProjected(team, players || [], stellarCardsBySlug, stellarCardsByCardSlug) || 0;
@@ -310,7 +317,7 @@ function RecapTabInner({ players, logos, lang }) {
       rare: compute("rare"),
       stellar: computeStellar(),
     };
-  }, [grouped, stellarGroups, players, cardsBySlug, stellarCardsBySlug]);
+  }, [grouped, stellarGroups, players, cardsBySlug, stellarCardsBySlug, currentGwKey, currentStellarDate]);
 
   // Initialise openLeagues une fois : ouvre toutes les sections (GW, dates) non vides.
   useEffect(() => {
@@ -330,9 +337,25 @@ function RecapTabInner({ players, logos, lang }) {
     PRO_LEAGUES.forEach(lg => { out[lg] = { limited: 0, rare: 0, total: 0 }; });
     if (grouped) {
       ["limited", "rare"].forEach(r => {
+        grouped[r].forEach(({ league, gwKey, teams }) => {
+          if (!out[league]) return;
+          // Chips Mes Teams : compte GW live uniquement
+          if (currentGwKey && gwKey !== currentGwKey) return;
+          out[league][r] += teams.length;
+          out[league].total += teams.length;
+        });
+      });
+    }
+    return out;
+  }, [grouped, currentGwKey]);
+  // Counts ALL-GW (sans filtre) — pour determiner si on doit afficher la section display
+  const proLeagueCountsAll = useMemo(() => {
+    const out = {};
+    PRO_LEAGUES.forEach(lg => { out[lg] = { limited: 0, rare: 0, total: 0 }; });
+    if (grouped) {
+      ["limited", "rare"].forEach(r => {
         grouped[r].forEach(({ league, teams }) => {
           if (!out[league]) return;
-          // Mes Teams : count toutes GW (navigation independante de Sorare Pro)
           out[league][r] += teams.length;
           out[league].total += teams.length;
         });
@@ -662,7 +685,7 @@ function RecapTabInner({ players, logos, lang }) {
             </div>
           )}
 
-          {activeStats && activeStats.count === 0 && !isStellarActive && (proLeagueCounts[activeLeague]?.total || 0) === 0 && (
+          {activeStats && activeStats.count === 0 && !isStellarActive && (proLeagueCountsAll[activeLeague]?.total || 0) === 0 && (
             <div style={{ padding: 30, textAlign: "center", color: "rgba(255,255,255,0.35)", fontSize: 11 }}>
               {lang === "fr"
                 ? `Aucune équipe sauvegardée pour ${LEAGUE_NAMES[activeLeague] || activeLeague}.`
@@ -676,7 +699,7 @@ function RecapTabInner({ players, logos, lang }) {
             </div>
           )}
 
-          {!isStellarActive && (proLeagueCounts[activeLeague]?.[activeRarity] || 0) === 0 && (proLeagueCounts[activeLeague]?.total || 0) > 0 && (
+          {!isStellarActive && (proLeagueCountsAll[activeLeague]?.[activeRarity] || 0) === 0 && (proLeagueCountsAll[activeLeague]?.total || 0) > 0 && (
             <div style={{ padding: 30, textAlign: "center", color: "rgba(255,255,255,0.35)", fontSize: 11 }}>
               {lang === "fr"
                 ? `Aucune équipe ${activeRarity === "rare" ? "Rare" : "Limited"} pour ${LEAGUE_NAMES[activeLeague] || activeLeague}.`
@@ -684,7 +707,7 @@ function RecapTabInner({ players, logos, lang }) {
             </div>
           )}
 
-          {!isStellarActive && (proLeagueCounts[activeLeague]?.[activeRarity] || 0) > 0 && (
+          {!isStellarActive && (proLeagueCountsAll[activeLeague]?.[activeRarity] || 0) > 0 && (
             <div style={{ display: "flex", flexDirection: "column", gap: 14 }}>
               {grouped[activeRarity].filter(({ league }) => league === activeLeague).map(({ league, gwKey, teams }) => {
                 const accent = LEAGUE_COLORS[league] || "#A5B4FC";

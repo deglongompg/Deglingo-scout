@@ -1,8 +1,41 @@
 // ── Freeze helpers — verrouille les recommandations à des horaires fixes ──
 
-/** Paris time (UTC+2 — simplifié, suffisant pour GW) */
+/** Composants Paris d'une Date via Intl (gere CEST/CET + machine timezone n'importe ou) */
+function parisParts(d = new Date()) {
+  const s = d.toLocaleString("sv", { timeZone: "Europe/Paris" }); // "2026-04-28 18:00:00"
+  const [dPart, tPart] = s.split(" ");
+  const [y, m, da] = dPart.split("-").map(Number);
+  const [h, mi] = tPart.split(":").map(Number);
+  const dow = new Date(Date.UTC(y, m - 1, da)).getUTCDay(); // 0=dim,2=mar,5=ven
+  return { year: y, month: m, day: da, hour: h, minute: mi, dayOfWeek: dow };
+}
+
+/**
+ * Construit une Date UTC representant "year-month-day hourPa Paris".
+ * Approxime l'offset Paris (+2h CEST en ete, +1h CET en hiver) en regardant
+ * l'offset reel de cette date precise via toLocaleString.
+ */
+function parisToUtc(year, month, day, hour, minute = 0) {
+  // 1. Construit une Date UTC naive (year-month-day hour:minute UTC)
+  const naiveUtc = new Date(Date.UTC(year, month - 1, day, hour, minute));
+  // 2. Que serait l'heure de cette UTC date en Paris ? Compare pour trouver l'offset.
+  const naiveParisStr = naiveUtc.toLocaleString("sv", { timeZone: "Europe/Paris" });
+  const [, tPart] = naiveParisStr.split(" ");
+  const naiveParisHour = parseInt(tPart.split(":")[0]);
+  // 3. Offset = (heure Paris affichee) - (heure UTC naive). Ex: si UTC 16h s'affiche 18h Paris -> offset +2h.
+  const offsetH = naiveParisHour - hour;
+  // 4. Pour avoir 16h Paris on construit Date UTC 16h - offsetH.
+  // Mais offsetH peut etre negatif si on est tombe sur un wrap minuit. Normalise via le mod.
+  const safeOffset = ((offsetH % 24) + 24) % 24;
+  return new Date(Date.UTC(year, month - 1, day, hour - safeOffset, minute));
+}
+
+/** Paris time (kept pour retrocompat — utilise maintenant parisParts en interne) */
 export function getParisNow() {
-  return new Date(Date.now() + 2 * 60 * 60 * 1000);
+  // Ne pas utiliser pour comparer avec setHours/getHours (machine-tz dependent).
+  // Prefere parisParts() qui retourne les composants Paris correctement.
+  const p = parisParts(new Date());
+  return new Date(Date.UTC(p.year, p.month - 1, p.day, p.hour, p.minute));
 }
 
 /**
@@ -15,29 +48,29 @@ export function getParisNow() {
  * Format clé : "2026-04-11T16:00"
  */
 export function getGwLockKey() {
-  const now = getParisNow();
-
-  // Cherche le dernier Vendredi à 16h (7 jours max)
+  const p = parisParts(new Date()); // { year, month, day, hour, dayOfWeek }
+  // Cherche le dernier Vendredi 16h Paris dans les 7 derniers jours
   for (let daysBack = 0; daysBack <= 7; daysBack++) {
-    const fri = new Date(now);
-    fri.setDate(fri.getDate() - daysBack);
-    fri.setHours(16, 0, 0, 0);
-
-    if (fri.getDay() !== 5) continue; // pas un vendredi
-    if (fri > now) continue;          // pas encore passé
-
-    // Mardi suivant = Vendredi + 4 jours, 16h
-    const unlock = new Date(fri);
-    unlock.setDate(unlock.getDate() + 4);
-    unlock.setHours(16, 0, 0, 0);
-
-    // Sommes-nous dans la fenêtre [Vendredi 16h → Mardi 16h] ?
-    if (now < unlock) {
-      return fri.toISOString().slice(0, 10) + "T16:00";
-    } else {
-      // Le Mardi de unlock est déjà passé → picks live
-      return null;
-    }
+    const candDate = new Date(Date.UTC(p.year, p.month - 1, p.day - daysBack));
+    const candDow = candDate.getUTCDay();
+    if (candDow !== 5) continue;
+    // Si daysBack=0 et qu'on est avant 16h Paris -> pas encore passé
+    if (daysBack === 0 && p.hour < 16) continue;
+    // unlock = Mardi suivant = Vendredi + 4j a 16h Paris
+    const unlockDate = new Date(Date.UTC(
+      candDate.getUTCFullYear(),
+      candDate.getUTCMonth(),
+      candDate.getUTCDate() + 4
+    ));
+    const unlockY = unlockDate.getUTCFullYear();
+    const unlockM = unlockDate.getUTCMonth() + 1;
+    const unlockD = unlockDate.getUTCDate();
+    // Comparaison Paris-aware : (year*1e6 + month*1e4 + day*100 + hour) >= unlock
+    const nowKey = p.year * 1e6 + p.month * 1e4 + p.day * 100 + p.hour;
+    const unlockKey = unlockY * 1e6 + unlockM * 1e4 + unlockD * 100 + 16;
+    if (nowKey >= unlockKey) return null; // deja passé Mardi 16h Paris
+    const ymd = `${candDate.getUTCFullYear()}-${String(candDate.getUTCMonth() + 1).padStart(2, "0")}-${String(candDate.getUTCDate()).padStart(2, "0")}`;
+    return ymd + "T16:00";
   }
   return null;
 }
@@ -48,11 +81,9 @@ export function getGwLockKey() {
  * Format : "2026-04-05"
  */
 export function getDailyLockKey() {
-  const now = getParisNow();
-  const hh = now.getUTCHours();
-  const mm = now.getUTCMinutes();
-  if (hh > 12 || (hh === 12 && mm >= 0)) {
-    return now.toISOString().slice(0, 10);
+  const p = parisParts(new Date());
+  if (p.hour >= 12) {
+    return `${p.year}-${String(p.month).padStart(2, "0")}-${String(p.day).padStart(2, "0")}`;
   }
   return null;
 }
@@ -65,38 +96,43 @@ export function getDailyLockKey() {
  * Retourne { gwKey, gwStart, gwEnd, gwNumber, startDateStr, endDateStr } ou null.
  */
 export function getProGwInfo() {
-  const now = getParisNow();
+  // Logique 100% Paris-aware via parisParts (Intl). Marche depuis n'importe quelle
+  // timezone machine. Transition GW : Mardi 16h Paris (gw2->gw1) et Vendredi 16h Paris (gw1->gw2).
+  const p = parisParts(new Date());
+  const nowKey = p.year * 1e6 + p.month * 1e4 + p.day * 100 + p.hour;
 
-  // Cherche le dernier Vendredi ou Mardi à 16h (7 jours max)
   for (let daysBack = 0; daysBack <= 7; daysBack++) {
-    const candidate = new Date(now);
-    candidate.setDate(candidate.getDate() - daysBack);
-    candidate.setHours(16, 0, 0, 0);
+    const candDate = new Date(Date.UTC(p.year, p.month - 1, p.day - daysBack));
+    const candDow = candDate.getUTCDay();
+    if (candDow !== 5 && candDow !== 2) continue;
+    // Si on est sur ce meme jour aujourd'hui ET avant 16h Paris -> pas encore passé
+    if (daysBack === 0 && p.hour < 16) continue;
 
-    const dayOfWeek = candidate.getDay(); // 0=dim, 2=mar, 5=ven
-    if (dayOfWeek !== 5 && dayOfWeek !== 2) continue;
-    if (candidate > now) continue;
+    const candY = candDate.getUTCFullYear();
+    const candM = candDate.getUTCMonth() + 1;
+    const candD = candDate.getUTCDate();
 
-    // Calcul de la fin de la GW
-    const gwEnd = new Date(candidate);
-    if (dayOfWeek === 5) {
-      // GW1 : Vendredi 16h → Mardi 16h (+4 jours)
-      gwEnd.setDate(gwEnd.getDate() + 4);
-    } else {
-      // GW2 : Mardi 16h → Vendredi 16h (+3 jours)
-      gwEnd.setDate(gwEnd.getDate() + 3);
-    }
-    gwEnd.setHours(16, 0, 0, 0);
+    // gwEnd = candidate + 4j (Ven->Mar) ou +3j (Mar->Ven)
+    const offsetDays = candDow === 5 ? 4 : 3;
+    const endDate = new Date(Date.UTC(candY, candM - 1, candD + offsetDays));
+    const endY = endDate.getUTCFullYear();
+    const endM = endDate.getUTCMonth() + 1;
+    const endD = endDate.getUTCDate();
 
-    if (now >= gwEnd) continue; // cette fenêtre est finie
+    // Cette fenetre est-elle finie ? (now Paris >= end Paris 16h)
+    const endKey = endY * 1e6 + endM * 1e4 + endD * 100 + 16;
+    if (nowKey >= endKey) continue;
 
-    const gwNumber = dayOfWeek === 5 ? 1 : 2;
-    const gwKey = `pro_${candidate.toISOString().slice(0, 10)}_gw${gwNumber}`;
-    // Dates pour filtrer les fixtures (jour du début → jour de fin)
-    const startDateStr = candidate.toISOString().slice(0, 10);
-    const endDateStr = gwEnd.toISOString().slice(0, 10);
+    const gwNumber = candDow === 5 ? 1 : 2;
+    // Construit Date UTC representant "16h Paris" pour cohérence avec gwStart/gwEnd
+    const gwStart = parisToUtc(candY, candM, candD, 16);
+    const gwEnd = parisToUtc(endY, endM, endD, 16);
 
-    return { gwKey, gwStart: candidate, gwEnd, gwNumber, startDateStr, endDateStr };
+    const startDateStr = `${candY}-${String(candM).padStart(2, "0")}-${String(candD).padStart(2, "0")}`;
+    const endDateStr = `${endY}-${String(endM).padStart(2, "0")}-${String(endD).padStart(2, "0")}`;
+    const gwKey = `pro_${startDateStr}_gw${gwNumber}`;
+
+    return { gwKey, gwStart, gwEnd, gwNumber, startDateStr, endDateStr };
   }
   return null;
 }
@@ -124,22 +160,23 @@ export function getProGwList(count = 5) {
   current.offsetFromLive = 0;
 
   // GW precedente (pour consultation apres deadline) : se termine quand la current commence
-  const prevEnd = new Date(current.gwStart);
-  const prevStart = new Date(prevEnd);
-  const prevEndDay = prevEnd.getDay();
-  // Si current commence un mardi → la precedente commence un vendredi (4 jours avant)
-  // Si current commence un vendredi → la precedente commence un mardi (3 jours avant)
-  const daysBack = prevEndDay === 2 ? 4 : prevEndDay === 5 ? 3 : 4;
-  prevStart.setDate(prevStart.getDate() - daysBack);
-  prevStart.setHours(16, 0, 0, 0);
-  const prevGwNumber = prevEndDay === 5 ? 2 : 1; // si current=ven→prev=mar(gw2), si current=mar→prev=ven(gw1)
+  // Utilise UTC operations sur les Dates parisToUtc (= UTC representant 16h Paris).
+  const prevEnd = current.gwStart;
+  const prevEndDow = prevEnd.getUTCDay(); // UTC day = Paris day (cf parisToUtc)
+  const daysBack = prevEndDow === 2 ? 4 : prevEndDow === 5 ? 3 : 4;
+  // Construit prevStart Paris = prevEnd Paris - daysBack jours, a 16h Paris
+  const prevStartParts = parisParts(new Date(prevEnd.getTime() - daysBack * 86400000));
+  const prevStart = parisToUtc(prevStartParts.year, prevStartParts.month, prevStartParts.day, 16);
+  const prevGwNumber = prevEndDow === 5 ? 2 : 1;
+  const prevStartStr = `${prevStartParts.year}-${String(prevStartParts.month).padStart(2, "0")}-${String(prevStartParts.day).padStart(2, "0")}`;
+  const prevEndStr = current.startDateStr;
   const prev = {
-    gwKey: `pro_${prevStart.toISOString().slice(0, 10)}_gw${prevGwNumber}`,
+    gwKey: `pro_${prevStartStr}_gw${prevGwNumber}`,
     gwStart: prevStart,
     gwEnd: prevEnd,
     gwNumber: prevGwNumber,
-    startDateStr: prevStart.toISOString().slice(0, 10),
-    endDateStr: prevEnd.toISOString().slice(0, 10),
+    startDateStr: prevStartStr,
+    endDateStr: prevEndStr,
     displayNumber: currentGwNumber - 1,
     isLive: false,
     isPast: true,
@@ -147,27 +184,23 @@ export function getProGwList(count = 5) {
   };
 
   const list = [prev, current];
-  let cursor = new Date(current.gwEnd);
+  let cursorParts = parisParts(current.gwEnd);
   for (let i = 1; i < count; i++) {
-    // La GW suivante commence exactement quand la precedente finit
-    const gwStart = new Date(cursor);
-    const dayOfWeek = gwStart.getDay(); // 0=dim, 2=mar, 5=ven
-    // Si on est a un Mardi 16h → prochaine fin = Vendredi 16h (+3j)
-    // Si on est a un Vendredi 16h → prochaine fin = Mardi 16h (+4j)
-    const daysToAdd = dayOfWeek === 2 ? 3 : dayOfWeek === 5 ? 4 : 3; // fallback 3
-    const gwEnd = new Date(gwStart);
-    gwEnd.setDate(gwEnd.getDate() + daysToAdd);
-    gwEnd.setHours(16, 0, 0, 0);
-    const gwNumber = dayOfWeek === 5 ? 1 : 2;
-    const gwKey = `pro_${gwStart.toISOString().slice(0, 10)}_gw${gwNumber}`;
-    const startDateStr = gwStart.toISOString().slice(0, 10);
-    const endDateStr = gwEnd.toISOString().slice(0, 10);
+    const gwStart = parisToUtc(cursorParts.year, cursorParts.month, cursorParts.day, 16);
+    const startDow = gwStart.getUTCDay();
+    const daysToAdd = startDow === 2 ? 3 : startDow === 5 ? 4 : 3;
+    const endParts = parisParts(new Date(gwStart.getTime() + daysToAdd * 86400000));
+    const gwEnd = parisToUtc(endParts.year, endParts.month, endParts.day, 16);
+    const gwNumber = startDow === 5 ? 1 : 2;
+    const startDateStr = `${cursorParts.year}-${String(cursorParts.month).padStart(2, "0")}-${String(cursorParts.day).padStart(2, "0")}`;
+    const endDateStr = `${endParts.year}-${String(endParts.month).padStart(2, "0")}-${String(endParts.day).padStart(2, "0")}`;
+    const gwKey = `pro_${startDateStr}_gw${gwNumber}`;
     list.push({
       gwKey, gwStart, gwEnd, gwNumber, startDateStr, endDateStr,
       displayNumber: currentGwNumber + i,
       isLive: false, offsetFromLive: i,
     });
-    cursor = gwEnd;
+    cursorParts = endParts;
   }
   return list;
 }

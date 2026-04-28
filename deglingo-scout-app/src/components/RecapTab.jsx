@@ -278,7 +278,22 @@ function RecapTabInner({ players, logos, lang }) {
   const stellarGroups = useMemo(() => store ? groupStellarByDate(store) : [], [store]);
 
   // GW et date Stellar en cours — utilises pour filtrer les compteurs (on ne cumule pas les GW/dates passees)
-  const currentGwKey = useMemo(() => getProGwInfo()?.gwKey || null, []);
+  // Pro : si l'utilisateur n'a pas (encore) de teams en GW live, fallback sur la GW la plus
+  // recente avec teams sauvegardees. Sinon, juste apres une GW transition, l'UI affiche
+  // 0 teams alors que les teams de la GW precedente (scores finaux) sont encore pertinentes.
+  const currentGwKey = useMemo(() => {
+    const liveGw = getProGwInfo()?.gwKey || null;
+    if (!grouped) return liveGw;
+    const allKeys = new Set();
+    ["limited", "rare"].forEach(r => {
+      grouped[r].forEach(({ gwKey }) => allKeys.add(gwKey));
+    });
+    // Si teams existent dans la GW live -> on garde la live
+    if (liveGw && allKeys.has(liveGw)) return liveGw;
+    // Sinon -> derniere GW avec teams sauvegardees (tri desc par gwKey string)
+    if (allKeys.size > 0) return [...allKeys].sort().reverse()[0];
+    return liveGw;
+  }, [grouped]);
   const currentStellarDate = useMemo(() => {
     if (!stellarGroups.length) return null;
     // Date Stellar la plus recente (stellarGroups triee par date desc deja)

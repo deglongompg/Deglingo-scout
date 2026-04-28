@@ -133,7 +133,48 @@ const KEYFRAMES = `
 @keyframes skrWaveSlide2 { 0% { transform: translateX(-50%); } 100% { transform: translateX(0); } }
 @keyframes skrBubbleRise { 0% { transform: translateY(0) scale(0.6); opacity: 0; } 15% { opacity: 0.5; } 80% { opacity: 0.3; } 100% { transform: translateY(-70px) scale(1); opacity: 0; } }
 @keyframes skrGloss { 0%, 100% { opacity: 0.25; } 50% { opacity: 0.5; } }
+@keyframes skrOverflowBubble { 0% { transform: translate(0, 0) scale(0.5); opacity: 0; } 20% { opacity: 0.85; } 100% { transform: translate(var(--dx), var(--dy)) scale(1.1); opacity: 0; } }
+@keyframes skrBoilPulse { 0%, 100% { filter: brightness(1) saturate(1); } 50% { filter: brightness(1.15) saturate(1.2); } }
 `;
+
+// Generate bulles array dynamiquement selon intensite (score / palier max)
+// Plus on s'approche du palier max, plus on a de bulles, plus elles sont rapides/grosses
+function generateBubbles(intensity, palette, seed = 0) {
+  const baseCount = 5;
+  const maxCount = 22;
+  const count = Math.round(baseCount + Math.min(1, intensity) * (maxCount - baseCount));
+  const bubbles = [];
+  // PRNG deterministe pour positions stables (pas de re-render aleatoire)
+  let s = seed * 9301 + 49297;
+  const rng = () => { s = (s * 9301 + 49297) % 233280; return s / 233280; };
+  for (let i = 0; i < count; i++) {
+    const left = (rng() * 80 + 10).toFixed(1);  // 10-90%
+    const size = 1.5 + rng() * 3 + intensity * 1.5;  // taille augmente avec intensite
+    const dur = 6 - intensity * 2.5 + rng() * 1.5;   // duree diminue (plus rapide)
+    const delay = rng() * dur;
+    bubbles.push({ left, size: size.toFixed(1), dur: dur.toFixed(1), delay: delay.toFixed(1) });
+  }
+  return bubbles;
+}
+
+// Overflow bubbles — sortent du tube par le haut quand score > maxPalier
+function generateOverflowBubbles(overflowAmt, seed = 100) {
+  if (overflowAmt <= 0) return [];
+  const count = Math.min(14, Math.round(overflowAmt * 14));
+  const bubbles = [];
+  let s = seed * 9301 + 49297;
+  const rng = () => { s = (s * 9301 + 49297) % 233280; return s / 233280; };
+  for (let i = 0; i < count; i++) {
+    const left = (rng() * 100).toFixed(1);
+    const dx = ((rng() - 0.5) * 80).toFixed(1);
+    const dy = (-30 - rng() * 50).toFixed(1);
+    const size = 2 + rng() * 4;
+    const dur = 1.8 + rng() * 1.4;
+    const delay = rng() * 2;
+    bubbles.push({ left, dx, dy, size: size.toFixed(1), dur: dur.toFixed(1), delay: delay.toFixed(1) });
+  }
+  return bubbles;
+}
 
 export default function SkyrocketGauge({ score = 0, projectedScore = null, initialScore = null, paliers = [], showRewards = false, scoreMultiplier = 1.0, topRewardColor = null, rarity = null, scaleMode = "control-points", maxPos = 90, height = 280, width = 70 }) {
   const palette = getPalette(rarity);

@@ -117,7 +117,7 @@ export default function ProSavedTeamCard({
               </div>
             );
           })()}
-          {/* Top-right : Captain a gauche du bonus (flex row-reverse) */}
+          {/* Top-right : Captain a gauche du bonus (flex row-reverse) — theme rouge pour Rare, gold pour Limited */}
           {(isCap || bonusPct > 0) && (() => {
             const isRareBonus = rarity === "rare";
             return (
@@ -128,16 +128,16 @@ export default function ProSavedTeamCard({
                 {bonusPct > 0 && (
                   <span style={{
                     fontSize: 7, fontWeight: 700,
-                    color: isRareBonus ? "#1A1A1F" : "#fff",
+                    color: isRareBonus ? "#7F1D1D" : "#fff",
                     fontFamily: "Outfit", letterSpacing: "0.04em",
                     background: isRareBonus
-                      ? "linear-gradient(135deg, #FAFAFE 0%, #E0E2E8 50%, #B8BCC4 100%)"
+                      ? "linear-gradient(135deg, #FECACA 0%, #FCA5A5 50%, #F87171 100%)"
                       : "linear-gradient(135deg, #FFE066 0%, #FFD700 50%, #DAA520 100%)",
                     border: "1px solid rgba(255,255,255,0.5)",
                     borderRadius: 3,
                     padding: "1px 3px",
                     boxShadow: isRareBonus
-                      ? "0 0 6px rgba(229,231,235,0.5), inset 0 1px 0 rgba(255,255,255,0.6)"
+                      ? "0 0 6px rgba(248,113,113,0.55), inset 0 1px 0 rgba(255,255,255,0.6)"
                       : "0 0 6px rgba(255,215,0,0.5), inset 0 1px 0 rgba(255,255,255,0.4)",
                     textShadow: isRareBonus
                       ? "0 1px 0 rgba(255,255,255,0.4)"
@@ -148,10 +148,12 @@ export default function ProSavedTeamCard({
                 {isCap && (
                   <span style={{
                     width: 12, height: 12, borderRadius: "50%",
-                    background: "#FBBF24", color: "#000",
+                    background: isRareBonus ? "#DC2626" : "#FBBF24",
+                    color: isRareBonus ? "#fff" : "#000",
                     fontSize: 7, fontWeight: 900,
                     display: "flex", alignItems: "center", justifyContent: "center",
                     flexShrink: 0,
+                    boxShadow: isRareBonus ? "0 0 5px rgba(220,38,38,0.6)" : "none",
                   }}>C</span>
                 )}
               </div>

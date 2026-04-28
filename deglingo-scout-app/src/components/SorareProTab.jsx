@@ -2027,9 +2027,9 @@ export default function SorareProTab({ players, teams, fixtures, logos = {}, mat
               )}
               <div className="pro-recap-grid" style={{
                 display: "grid",
-                gridTemplateColumns: league === "Champion" ? "minmax(0, 720px)" : "repeat(2, minmax(0, 480px))",
+                gridTemplateColumns: league === "Champion" ? "repeat(2, minmax(0, 545px))" : "repeat(2, minmax(0, 480px))",
                 gap: 10, justifyContent: "center", margin: "0 auto",
-                maxWidth: league === "Champion" ? 740 : 980,
+                maxWidth: league === "Champion" ? 1110 : 980,
               }}>
                 {savedTeams.map((st) => {
                   const stPlayers = getTeamSlots(league).map(s => st.picks[s]).filter(Boolean);

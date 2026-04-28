@@ -147,20 +147,27 @@ export function getPowerPct(pick) {
 /**
  * Score d'un pick avec bonus power + bonus capitaine.
  * Formule Sorare officielle : post-bonus + (capitaine ? RAW × 0.5 : 0)
+ *
+ * IMPORTANT — RAW est FLOOR avant calcul. Sorare affiche les scores SO5 en
+ * entiers (la bulle Sorare montre 71 pour un raw "71.7") et applique le power
+ * + captain mult sur cette valeur entiere. Notre fetch stocke les decimales,
+ * donc on doit floor avant le calcul pour matcher (sinon +3 a 5 pts d'ecart
+ * cumule sur les 5 cartes).
+ *
  * @param {boolean} isCap
  * @returns {{ full: number, isLive: boolean }}
  */
 export function getPickScore(pick, isCap) {
   const card = getPickCard(pick);
   const power = (card?.power && card.power > 1) ? card.power : 1;
-  // Match joué : utiliser le vrai score Sorare
+  // Match joué : utiliser le vrai score Sorare (floor pour matcher l'affichage Sorare)
   if (pick?.last_so5_date && pick?.matchDate && pick.last_so5_date === pick.matchDate && pick.last_so5_score != null) {
-    const raw = pick.last_so5_score;
+    const raw = Math.floor(pick.last_so5_score);
     const postBonus = raw * power;
     const captainBonus = isCap ? raw * 0.5 : 0;
     return { full: postBonus + captainBonus, isLive: true };
   }
-  // Projection : utiliser ds
+  // Projection : utiliser ds (deja entier)
   const raw = pick?.ds || 0;
   const postBonus = raw * power;
   const captainBonus = isCap ? raw * 0.5 : 0;
@@ -228,39 +235,6 @@ export function computeTeamScores(team, players) {
   const projectedTotal = Math.round(rawFull * (1 + compoPct / 100));
   const liveTotal = Math.round(liveRaw * (1 + compoPct / 100));
   const bonusPts = Math.round(rawFull - rawBase);
-
-  // ===== DEBUG TEMPORAIRE (a retirer apres diagnostic 4 pts ecart) =====
-  // Ouvrir la console sur Mes Teams, chercher "[DEBUG_SCORE]" et copier le bloc.
-  if (typeof window !== "undefined") {
-    // eslint-disable-next-line no-console
-    console.log("[DEBUG_SCORE]", team.label, {
-      captainSlot, captainId,
-      picks_detail: infos.map(x => {
-        const card = getPickCard(x.p);
-        const pw = (card?.power && card.power > 1) ? card.power : 1;
-        const liveRaw_pick = x.p?.last_so5_score;
-        const ds_pick = x.p?.ds;
-        const usedRaw = x.isLive ? liveRaw_pick : ds_pick;
-        const postBonus = (usedRaw || 0) * pw;
-        const capBonus = x.isCap ? (usedRaw || 0) * 0.5 : 0;
-        return {
-          slot: x.p._slot, name: x.p.name,
-          ds: ds_pick, last_so5: liveRaw_pick,
-          last_date: x.p?.last_so5_date, matchDate: x.p?.matchDate,
-          power: pw, isCap: x.isCap, isLive: x.isLive,
-          usedRaw, postBonus: Math.round(postBonus * 100) / 100,
-          capBonus: Math.round(capBonus * 100) / 100,
-          full: Math.round(x.full * 100) / 100,
-          l10: x.p?.l10, club: x.p?.club,
-        };
-      }),
-      multiClub, cap260, compoPct, sumL10: Math.round(sumL10 * 100) / 100,
-      rawBase, rawFull: Math.round(rawFull * 100) / 100,
-      liveRaw: Math.round(liveRaw * 100) / 100,
-      projectedTotal, liveTotal, bonusPts,
-    });
-  }
-  // ===== FIN DEBUG =====
 
   return { picks, infos, captainId, multiClub, cap260, compoPct, projectedTotal, liveTotal, bonusPts };
 }

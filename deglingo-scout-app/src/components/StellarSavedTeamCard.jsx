@@ -169,7 +169,7 @@ export default function StellarSavedTeamCard({ team, players = [], logos = {}, c
             }}>{p.sorare_starter_pct}%</span>
           )}
           {isDNP && <span style={{ position: "absolute", top: 2, right: 2, fontSize: 7, fontWeight: 800, padding: "1px 4px", borderRadius: 3, color: "#fff", zIndex: 2, background: "rgba(153,27,27,0.95)", letterSpacing: "0.5px" }}>DNP</span>}
-          {/* Top-right : Captain Stellar (rose) a gauche du bonus gold (flex row-reverse) */}
+          {/* Top-right : Captain + Bonus en violet clair (matche le fond holo Stellar) */}
           {((p.isCaptain || slot === captainSlot) || (ownedCard && ownedCard.totalBonus > 0)) && (
             <div style={{
               position: "absolute", top: 2, right: 2, zIndex: 3,
@@ -178,25 +178,25 @@ export default function StellarSavedTeamCard({ team, players = [], logos = {}, c
               {ownedCard && ownedCard.totalBonus > 0 && (
                 <span style={{
                   fontSize: 7, fontWeight: 700,
-                  color: "#fff",
+                  color: "#3B0764",
                   fontFamily: "Outfit", letterSpacing: "0.04em",
-                  background: "linear-gradient(135deg, #FFE066 0%, #FFD700 50%, #DAA520 100%)",
+                  background: "linear-gradient(135deg, #EDE9FE 0%, #C4B5FD 50%, #A78BFA 100%)",
                   border: "1px solid rgba(255,255,255,0.5)",
                   borderRadius: 3,
                   padding: "1px 3px",
-                  boxShadow: "0 0 6px rgba(255,215,0,0.5), inset 0 1px 0 rgba(255,255,255,0.4)",
-                  textShadow: "0 1px 1px rgba(0,0,0,0.5)",
+                  boxShadow: "0 0 6px rgba(167,139,250,0.6), inset 0 1px 0 rgba(255,255,255,0.6)",
+                  textShadow: "0 1px 0 rgba(255,255,255,0.4)",
                   whiteSpace: "nowrap", lineHeight: 1,
                 }}>+{ownedCard.totalBonus}%</span>
               )}
               {(p.isCaptain || slot === captainSlot) && (
                 <span style={{
                   width: 12, height: 12, borderRadius: "50%",
-                  background: "linear-gradient(135deg, #F472B6, #E11D48)",
-                  color: "#fff", fontSize: 7, fontWeight: 900,
+                  background: "linear-gradient(135deg, #DDD6FE, #A78BFA)",
+                  color: "#3B0764", fontSize: 7, fontWeight: 900,
                   display: "flex", alignItems: "center", justifyContent: "center",
                   fontFamily: "'Outfit', sans-serif",
-                  boxShadow: "0 0 5px rgba(225,29,72,0.7)",
+                  boxShadow: "0 0 5px rgba(167,139,250,0.7)",
                   border: "1px solid rgba(255,255,255,0.9)",
                   flexShrink: 0,
                 }}>C</span>

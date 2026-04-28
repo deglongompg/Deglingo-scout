@@ -130,8 +130,8 @@ export function enrichPick(pick, players) {
     last_so5_decisives: fresh.last_so5_decisives,
     // Refresh l10 pour matcher le L10 OFFICIEL Sorare actualise (CAP260 calcul correct)
     l10: fresh.l10,
-    // Refresh aussi ds car il peut bouger entre la save et la lecture (forme du joueur)
-    ds: fresh.ds,
+    // NE PAS refresh ds : le ds frais peut faire basculer le captain auto sur les saves
+    // anciennes (team.captain=null fallback). On garde le ds figé au save → captain stable.
   };
 }
 

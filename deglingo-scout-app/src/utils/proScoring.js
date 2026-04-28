@@ -187,8 +187,24 @@ export function computeTeamScores(team, players) {
     return raw ? { ...enrichPick(raw, players), _slot: slot } : null;
   }).filter(Boolean);
 
-  const captainSlot = team.captain;
-  const captainPick = captainSlot && team.picks?.[captainSlot] ? picks.find(p => p._slot === captainSlot) : null;
+  // Captain : team.captain peut etre null pour les saves "auto-captain"
+  // (l'utilisateur n'a pas clique explicitement sur le badge C → on stockait null).
+  // Fallback : on calcule l'auto-captain (highest DS x power) sur les picks effectifs.
+  // Retrocompatibilite avec les saves existantes — sinon le captain bonus est perdu.
+  let captainSlot = team.captain;
+  let captainPick = captainSlot && team.picks?.[captainSlot] ? picks.find(p => p._slot === captainSlot) : null;
+  if (!captainPick && picks.length > 0) {
+    const adjScores = picks.map(p => {
+      const card = getPickCard(p);
+      const power = (card?.power && card.power > 1) ? card.power : 1;
+      return (p.ds || 0) * power;
+    });
+    const idx = adjScores.indexOf(Math.max(...adjScores));
+    if (idx >= 0) {
+      captainPick = picks[idx];
+      captainSlot = captainPick._slot;
+    }
+  }
   const captainId = captainPick ? (captainPick.slug || captainPick.name) : null;
 
   const infos = picks.map(p => {

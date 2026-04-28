@@ -713,14 +713,21 @@ export default function SorareProTab({ players, teams, fixtures, standings = nul
       return;
     }
 
+    // Captain effectif : si l'utilisateur n'a pas clique sur badge C, captainSlot est null
+    // mais captainId pointe vers l'auto-captain (highest DS). Resolveur le slot pour persister.
+    // Sinon le captain est perdu a la relecture (Mes Teams sans 'C', score sans bonus capitaine).
+    const effectiveCaptainSlot = captainSlot
+      || (captainId ? teamSlots.find(s => myPicks[s] && (myPicks[s].slug || myPicks[s].name) === captainId) : null)
+      || null;
+
     let updated;
     if (isEditing) {
       // Mode edition: ecrase l'equipe existante en gardant son id + label
       updated = existing.map(t => t.id === editingTeamId
-        ? { ...t, picks: { ...myPicks }, score: totalScore, captain: captainSlot }
+        ? { ...t, picks: { ...myPicks }, score: totalScore, captain: effectiveCaptainSlot }
         : t);
     } else {
-      const newTeam = { id: Date.now(), picks: { ...myPicks }, score: totalScore, captain: captainSlot, label: lang === "fr" ? `Equipe ${existing.length + 1}` : `Team ${existing.length + 1}` };
+      const newTeam = { id: Date.now(), picks: { ...myPicks }, score: totalScore, captain: effectiveCaptainSlot, label: lang === "fr" ? `Equipe ${existing.length + 1}` : `Team ${existing.length + 1}` };
       updated = [...existing, newTeam];
     }
     localStorage.setItem(savedTeamsKey, JSON.stringify(updated));

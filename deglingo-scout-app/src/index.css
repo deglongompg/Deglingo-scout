@@ -446,25 +446,37 @@ select option {
 }
 
 /* ─── Circle premium variant (test PL limited + Stellar) ─── */
+/* Pour les cercles : conic-gradient gold+white (pas de black qui ferait
+   apparaitre l'illusion d'une sphere ecrasee gauche/droite) */
 .circle-premium {
   position: relative;
-  width: 34px;
-  height: 34px;
+  width: 32px;
+  height: 32px;
   animation: hexGlowPulse 3s ease-in-out infinite;
 }
 .circle-premium__outer {
   position: absolute;
   inset: 0;
   border-radius: 50%;
-  background: linear-gradient(125deg,
-    #1a0f05 0%, #3d2814 5%, #6b4e2a 10%, #9d7a4a 15%,
-    #c9a561 18%, #e8d4a8 21%, #fff5dc 24%, #fffef5 26%,
-    #fff5dc 28%, #e8d4a8 31%, #c9a561 34%, #9d7a4a 38%,
-    #6b4e2a 42%, #4a3520 46%, #2d1f12 50%, #4a3520 54%,
-    #6b4e2a 58%, #9d7a4a 62%, #c9a561 66%, #e8d4a8 69%,
-    #fff5dc 72%, #fffef5 74%, #fff5dc 76%, #e8d4a8 79%,
-    #c9a561 82%, #9d7a4a 85%, #6b4e2a 90%, #3d2814 95%,
-    #1a0f05 100%
+  background: conic-gradient(
+    from 145deg,
+    #B8860B 0%,
+    #DAA520 6%,
+    #FFD700 12%,
+    #FFFACD 18%,
+    #FFFFFF 22%,
+    #FFFACD 26%,
+    #FFD700 32%,
+    #DAA520 42%,
+    #C9A561 50%,
+    #DAA520 58%,
+    #FFD700 68%,
+    #FFFACD 74%,
+    #FFFFFF 78%,
+    #FFFACD 82%,
+    #FFD700 88%,
+    #DAA520 94%,
+    #B8860B 100%
   );
 }
 .circle-premium__inner-wrapper {
@@ -497,11 +509,10 @@ select option {
 .circle-premium__edge-shine {
   position: absolute;
   inset: 0;
+  border-radius: 50%;
   background:
-    radial-gradient(ellipse at 50% 0%,   rgba(255,255,255,0.4)  0%, transparent 50%),
-    radial-gradient(ellipse at 100% 50%, rgba(255,255,255,0.3)  0%, transparent 40%),
-    radial-gradient(ellipse at 50% 100%, rgba(255,255,255,0.25) 0%, transparent 50%),
-    radial-gradient(ellipse at 0% 50%,   rgba(255,255,255,0.3)  0%, transparent 40%);
+    radial-gradient(ellipse at 50% 0%,   rgba(255,255,255,0.35) 0%, transparent 55%),
+    radial-gradient(ellipse at 50% 100%, rgba(255,255,255,0.18) 0%, transparent 55%);
   pointer-events: none;
 }
 .circle-premium__score {

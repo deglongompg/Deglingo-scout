@@ -128,6 +128,10 @@ export function enrichPick(pick, players) {
     last_match_away_goals: fresh.last_match_away_goals,
     last_match_status: fresh.last_match_status,
     last_so5_decisives: fresh.last_so5_decisives,
+    // Refresh l10 pour matcher le L10 OFFICIEL Sorare actualise (CAP260 calcul correct)
+    l10: fresh.l10,
+    // Refresh aussi ds car il peut bouger entre la save et la lecture (forme du joueur)
+    ds: fresh.ds,
   };
 }
 

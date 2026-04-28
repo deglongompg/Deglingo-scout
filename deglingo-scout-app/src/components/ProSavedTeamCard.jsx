@@ -65,7 +65,7 @@ export default function ProSavedTeamCard({
     const recapHomeLogo = p.isHome ? playerClubLogo : oppLogo;
     const recapAwayLogo = p.isHome ? oppLogo : playerClubLogo;
 
-    const cardMaxWidth = league === "Champion" ? 78 : 120;
+    const cardMaxWidth = league === "Champion" ? 105 : 120;
     return (
       <div key={slot} style={{ display: "flex", flexDirection: "column", alignItems: "center", flex: 1, minWidth: 0, maxWidth: cardMaxWidth }}>
         <div className={`card-premium${rarity === "rare" ? " card-premium--silver" : ""}`}>

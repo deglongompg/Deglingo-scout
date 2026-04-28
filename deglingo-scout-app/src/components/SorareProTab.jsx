@@ -2025,7 +2025,12 @@ export default function SorareProTab({ players, teams, fixtures, logos = {}, mat
                   <span style={{ fontSize: 9, fontWeight: 600, color: "rgba(255,255,255,0.35)" }}>{savedTeams.length}/{maxSaved} · {LEAGUE_NAMES[league] || league} · {rarity === "rare" ? t(lang, "proRare") : t(lang, "proLimited")} · {gwInfo?.displayNumber ? `GW${gwInfo.displayNumber}` : ""}</span>
                 </div>
               )}
-              <div className="pro-recap-grid" style={{ display: "grid", gridTemplateColumns: "repeat(2, minmax(0, 480px))", gap: 10, justifyContent: "center", margin: "0 auto", maxWidth: 980 }}>
+              <div className="pro-recap-grid" style={{
+                display: "grid",
+                gridTemplateColumns: league === "Champion" ? "minmax(0, 720px)" : "repeat(2, minmax(0, 480px))",
+                gap: 10, justifyContent: "center", margin: "0 auto",
+                maxWidth: league === "Champion" ? 740 : 980,
+              }}>
                 {savedTeams.map((st) => {
                   const stPlayers = getTeamSlots(league).map(s => st.picks[s]).filter(Boolean);
                   const stAdjScores = stPlayers.map(p => getAdjDs(p));

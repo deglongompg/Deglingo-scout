@@ -1571,13 +1571,18 @@ export default function SorareProTab({ players, teams, fixtures, standings = nul
 
           {/* ─── Classement officiel de la ligue (football-data.org) ─── */}
           {currentStandings.length > 0 && (() => {
-            // Tiers europeens + relegation par ligue (saison 2025-26).
-            // Cf https://fr.wikipedia.org/wiki/Championnat_de_France_de_football_2025-2026 etc.
+            // Tiers europeens + relegation par ligue — saison 2025-26 (verifie 2026-04-28).
+            // L1 : 5e UEFA, 3 places UCL directes + 1 barrage (nouveau format suisse)
+            // PL  : 5 places UCL (4 standard + 1 European Performance Spot Angleterre)
+            // Liga: 5 places UCL (4 standard + 1 European Performance Spot Espagne)
+            // Bundes : 4 places UCL (5e possible si Bayern/Freiburg performent vs Atleti/Rayo)
+            // Les places EL/ECL via vainqueurs de coupes nationales (FA Cup, Copa del Rey, DFB-Pokal,
+            // Coupe de France) ne sont PAS modelisees ici : elles peuvent decaler de 1 cran.
             const LEAGUE_TIERS = {
-              L1:     { ucl: [1,2,3], uclPlay: [4],   uel: [5],     uecl: [6], relPlay: [16], rel: [17,18] },
-              PL:     { ucl: [1,2,3,4],                uel: [5],     uecl: [6],                rel: [18,19,20] },
-              Liga:   { ucl: [1,2,3,4],                uel: [5,6],   uecl: [7],                rel: [18,19,20] },
-              Bundes: { ucl: [1,2,3,4],                uel: [5],     uecl: [6], relPlay: [16], rel: [17,18] },
+              L1:     { ucl: [1,2,3],     uclPlay: [4], uel: [5], uecl: [6], relPlay: [16], rel: [17,18] },
+              PL:     { ucl: [1,2,3,4,5],               uel: [6], uecl: [7],                 rel: [18,19,20] },
+              Liga:   { ucl: [1,2,3,4,5],               uel: [6], uecl: [7],                 rel: [18,19,20] },
+              Bundes: { ucl: [1,2,3,4],                 uel: [5], uecl: [6], relPlay: [16], rel: [17,18] },
             };
             const TIER_COLORS = {
               ucl:     "#22C55E",  // vert plein — Champions League directe
@@ -1635,18 +1640,23 @@ export default function SorareProTab({ players, teams, fixtures, standings = nul
                   const tierColor = tier ? TIER_COLORS[tier] : "rgba(255,255,255,0.5)";
                   const nextTier = tierOf(row.rank + 1);
                   const isLastInTier = !!tier && tier !== nextTier;
-                  const sepStyle = isLastInTier
-                    ? { borderBottom: `2px solid ${tierColor}55`, marginBottom: 2, paddingBottom: 4 }
-                    : {};
                   const gd = row.gd > 0 ? `+${row.gd}` : `${row.gd}`;
+                  // Tout en padding/border longhand pour eviter le warning React
+                  // "mixing shorthand and non-shorthand styling" (cf bug rerender).
                   return (
                     <div key={row.rank} title={tier ? tierLabels[tier] : undefined} style={{
                       display: "grid", gridTemplateColumns: "14px 14px 1fr 16px 16px 16px 22px 22px", columnGap: 3, alignItems: "center",
-                      padding: "3px 2px", borderRadius: 3,
+                      paddingTop: 3, paddingRight: 2, paddingBottom: isLastInTier ? 4 : 3, paddingLeft: 2,
+                      borderRadius: 3,
                       background: isHi ? `${rarityColor}25` : "transparent",
-                      border: isHi ? `1px solid ${rarityColor}55` : "1px solid transparent",
+                      borderTop: "1px solid transparent",
+                      borderRight: isHi ? `1px solid ${rarityColor}55` : "1px solid transparent",
+                      borderLeft: isHi ? `1px solid ${rarityColor}55` : "1px solid transparent",
+                      borderBottom: isLastInTier
+                        ? `2px solid ${tierColor}55`
+                        : isHi ? `1px solid ${rarityColor}55` : "1px solid transparent",
+                      marginBottom: isLastInTier ? 2 : 0,
                       transition: "background 0.15s",
-                      ...sepStyle,
                     }}>
                       {/* Pastille rang : carre 14x14 avec chiffre centre via flex */}
                       <div style={{ width: 14, height: 14, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 8, fontWeight: 900, color: tier ? "#fff" : "rgba(255,255,255,0.55)", background: tier ? tierColor : "transparent", fontFamily: "'DM Mono',monospace", borderRadius: 3, lineHeight: 1 }}>{row.rank}</div>

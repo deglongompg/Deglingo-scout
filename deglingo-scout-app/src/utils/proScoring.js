@@ -232,7 +232,8 @@ export function computeTeamScores(team, players) {
   const expectedSize = isChampionShape ? 7 : 5;
   const multiClub = picks.length === expectedSize && Object.values(clubCounts).every(c => c <= 2);
   const sumL10 = picks.reduce((s, p) => s + (p.l10 || 0), 0);
-  const cap260 = picks.length === expectedSize && sumL10 < 260;
+  // Sorare utilise <= 260 (pas <), confirme par sumL10=260 exact qui declenche CAP chez Sorare
+  const cap260 = picks.length === expectedSize && sumL10 <= 260;
   const compoPct = (multiClub ? 2 : 0) + (cap260 ? 4 : 0);
 
   const rawBase = picks.reduce((s, p) => s + (p.ds || 0), 0);

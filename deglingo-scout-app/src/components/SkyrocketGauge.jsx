@@ -135,6 +135,7 @@ const KEYFRAMES = `
 @keyframes skrGloss { 0%, 100% { opacity: 0.25; } 50% { opacity: 0.5; } }
 @keyframes skrOverflowBubble { 0% { transform: translate(0, 0) scale(0.5); opacity: 0; } 20% { opacity: 0.85; } 100% { transform: translate(var(--dx), var(--dy)) scale(1.1); opacity: 0; } }
 @keyframes skrBoilPulse { 0%, 100% { filter: brightness(1) saturate(1); } 50% { filter: brightness(1.15) saturate(1.2); } }
+@keyframes skrJackpotBlink { 0%, 100% { opacity: 0.35; transform: translateY(0) scale(1); text-shadow: 0 0 8px currentColor; } 50% { opacity: 0.85; transform: translateY(-2px) scale(1.04); text-shadow: 0 0 18px currentColor, 0 0 28px currentColor; } }
 `;
 
 // Generate bulles array dynamiquement selon intensite (score / palier max)
@@ -194,6 +195,17 @@ export default function SkyrocketGauge({ score = 0, projectedScore = null, initi
   const nextPalier = sortedPaliers.find(p => (p.pts || 0) > score);
   const ptsToNext = nextPalier ? Math.max(0, nextPalier.pts - score) : 0;
 
+  // Bulles dynamiques : intensite = ratio score / palier le plus haut (typiquement 460 ou 510)
+  // Plus on s'approche du top palier, plus la jauge bouillonne (count, taille, vitesse).
+  // Si score > top palier (overflow), bulles supplementaires sortent par le haut.
+  const intensity = maxPalier > 0 ? score / maxPalier : 0;
+  const bubbles = generateBubbles(Math.max(0, Math.min(1, intensity)), palette, Math.round(score));
+  const hasReachedTop = score >= maxPalier && showRewards;
+  const overflowAmt = Math.max(0, intensity - 1);  // 0 si score <= maxPalier, 1 = +100% au-dessus
+  const overflowBubbles = generateOverflowBubbles(hasReachedTop ? Math.max(0.4, overflowAmt) : 0, Math.round(score));
+  // Top palier reward (= "$1 000" typiquement) — affiche en transparence clignotant quand atteint
+  const topPalierReward = sortedPaliers.length > 0 ? sortedPaliers[sortedPaliers.length - 1].reward : null;
+
   return (
     <div style={{ width, position: "relative", paddingTop: 36, paddingBottom: 4, flexShrink: 0 }}>
       <style>{KEYFRAMES}</style>
@@ -234,13 +246,48 @@ export default function SkyrocketGauge({ score = 0, projectedScore = null, initi
       </div>
 
       {/* Body — wrappee dans gauge-premium pour bevel gold/silver + reflets premium */}
-      <div className={`gauge-premium${rarity === "rare" ? " gauge-premium--silver" : ""}`} style={{ minHeight: height + 4 }}>
+      <div className={`gauge-premium${rarity === "rare" ? " gauge-premium--silver" : ""}`} style={{ minHeight: height + 4, position: "relative" }}>
+      {/* Overflow bubbles — sortent par le haut du tube quand score > maxPalier (debordement) */}
+      {overflowBubbles.length > 0 && (
+        <div style={{
+          position: "absolute", top: -25, left: 0, right: 0, height: 60,
+          pointerEvents: "none", zIndex: 10, overflow: "visible",
+        }}>
+          {overflowBubbles.map((b, i) => (
+            <div key={i} style={{
+              position: "absolute", left: `${b.left}%`, top: 25,
+              width: `${b.size}px`, height: `${b.size}px`, borderRadius: "50%",
+              background: `radial-gradient(circle, ${palette.top} 0%, ${palette.glow} 50%, transparent 80%)`,
+              filter: `drop-shadow(0 0 4px ${palette.glow})`,
+              "--dx": `${b.dx}px`,
+              "--dy": `${b.dy}px`,
+              animation: `skrOverflowBubble ${b.dur}s ease-out infinite`,
+              animationDelay: `${b.delay}s`,
+              pointerEvents: "none",
+            }} />
+          ))}
+        </div>
+      )}
+      {/* Texte $1 000 (top reward) — clignotant en transparence quand atteint */}
+      {hasReachedTop && topPalierReward && (
+        <div style={{
+          position: "absolute", top: -8, left: 0, right: 0,
+          textAlign: "center", zIndex: 11, pointerEvents: "none",
+          fontFamily: "'Outfit', sans-serif", fontWeight: 900,
+          fontSize: 14, letterSpacing: 0.4,
+          color: palette.top,
+          animation: "skrJackpotBlink 1.6s ease-in-out infinite",
+          whiteSpace: "nowrap",
+        }}>{topPalierReward}</div>
+      )}
       <div style={{
         position: "relative", width: "100%", height: "100%", minHeight: height,
-        borderRadius: "8px 8px 4px 4px",
+        // Tube "ouvert" en haut quand on atteint le top palier (debordement visible)
+        borderRadius: hasReachedTop ? "0 0 4px 4px" : "8px 8px 4px 4px",
         background: palette.bg,
         overflow: "hidden",
         boxShadow: palette.boxShadow,
+        animation: hasReachedTop ? "skrBoilPulse 2s ease-in-out infinite" : undefined,
       }}>
         {/* Fill projection (zone ghost entre live et projected) — derriere, vide et subtil */}
         {hasProjection && (
@@ -268,49 +315,17 @@ export default function SkyrocketGauge({ score = 0, projectedScore = null, initi
             animation: "skrGloss 4s ease-in-out infinite",
             pointerEvents: "none",
           }} />
-          {/* Bulles qui montent */}
-          <div style={{
-            position: "absolute", left: "25%", bottom: 0, width: 4, height: 4, borderRadius: "50%",
-            background: `radial-gradient(circle, ${palette.top} 0%, transparent 70%)`,
-            animation: "skrBubbleRise 5s ease-in infinite",
-            animationDelay: "0s",
-            pointerEvents: "none",
-          }} />
-          <div style={{
-            position: "absolute", left: "65%", bottom: 0, width: 3, height: 3, borderRadius: "50%",
-            background: `radial-gradient(circle, ${palette.top} 0%, transparent 70%)`,
-            animation: "skrBubbleRise 6s ease-in infinite",
-            animationDelay: "1.2s",
-            pointerEvents: "none",
-          }} />
-          <div style={{
-            position: "absolute", left: "45%", bottom: 0, width: 2, height: 2, borderRadius: "50%",
-            background: `radial-gradient(circle, ${palette.top} 0%, transparent 70%)`,
-            animation: "skrBubbleRise 4.5s ease-in infinite",
-            animationDelay: "2.2s",
-            pointerEvents: "none",
-          }} />
-          <div style={{
-            position: "absolute", left: "78%", bottom: 0, width: 3, height: 3, borderRadius: "50%",
-            background: `radial-gradient(circle, ${palette.top} 0%, transparent 70%)`,
-            animation: "skrBubbleRise 5.5s ease-in infinite",
-            animationDelay: "0.6s",
-            pointerEvents: "none",
-          }} />
-          <div style={{
-            position: "absolute", left: "15%", bottom: 0, width: 2, height: 2, borderRadius: "50%",
-            background: `radial-gradient(circle, ${palette.top} 0%, transparent 70%)`,
-            animation: "skrBubbleRise 4s ease-in infinite",
-            animationDelay: "3.2s",
-            pointerEvents: "none",
-          }} />
-          <div style={{
-            position: "absolute", left: "55%", bottom: 0, width: 2.5, height: 2.5, borderRadius: "50%",
-            background: `radial-gradient(circle, ${palette.top} 0%, transparent 70%)`,
-            animation: "skrBubbleRise 5.8s ease-in infinite",
-            animationDelay: "4s",
-            pointerEvents: "none",
-          }} />
+          {/* Bulles qui montent — count/taille/vitesse proportionnels au score */}
+          {bubbles.map((b, i) => (
+            <div key={i} style={{
+              position: "absolute", left: `${b.left}%`, bottom: 0,
+              width: `${b.size}px`, height: `${b.size}px`, borderRadius: "50%",
+              background: `radial-gradient(circle, ${palette.top} 0%, transparent 70%)`,
+              animation: `skrBubbleRise ${b.dur}s ease-in infinite`,
+              animationDelay: `${b.delay}s`,
+              pointerEvents: "none",
+            }} />
+          ))}
         </div>
 
         {/* Surface liquide ondulee — SVG waves animes */}

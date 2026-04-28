@@ -2204,7 +2204,7 @@ export default function SorareProTab({ players, teams, fixtures, logos = {}, mat
                               </div>
                             );
                           })()}
-                          {/* Score : bottom-right card — rectangle test pour L1+Limited, hex sinon */}
+                          {/* Score : bottom-right card — TEST 3 formes : L1+Limited=rect, PL+Limited=cercle, sinon hex */}
                           {hasRealScore ? (
                             (league === "L1" && rarity === "limited") ? (
                               <div className="rect-premium" style={{ position: "absolute", bottom: 0, right: 0, zIndex: 3 }}>
@@ -2216,6 +2216,17 @@ export default function SorareProTab({ players, teams, fixtures, logos = {}, mat
                                   </div>
                                 </div>
                                 <div className="rect-premium__score">{playerScore}</div>
+                              </div>
+                            ) : (league === "PL" && rarity === "limited") ? (
+                              <div className="circle-premium" style={{ position: "absolute", bottom: 0, right: 0, zIndex: 3 }}>
+                                <div className="circle-premium__outer">
+                                  <div className="circle-premium__inner-wrapper">
+                                    <div className="circle-premium__inner" style={{ background: dsBg(playerScore) }} />
+                                    <div className="circle-premium__highlight" />
+                                    <div className="circle-premium__edge-shine" />
+                                  </div>
+                                </div>
+                                <div className="circle-premium__score">{playerScore}</div>
                               </div>
                             ) : (
                             <div className={`hex-premium${rarity === "rare" ? " hex-premium--silver" : ""}`} style={{ position: "absolute", bottom: 0, right: -2, zIndex: 3 }}>

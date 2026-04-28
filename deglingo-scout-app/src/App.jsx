@@ -45,6 +45,7 @@ export default function App() {
   const [players, setPlayers] = useState(null);
   const [teams, setTeams] = useState(null);
   const [fixtures, setFixtures] = useState(null);
+  const [standings, setStandings] = useState(null);
   const [logos, setLogos] = useState({});
   const [matchEvents, setMatchEvents] = useState({});
   const [loading, setLoading] = useState(true);
@@ -59,8 +60,9 @@ export default function App() {
       fetch(`/data/fixtures.json${cb}`).then(r => r.ok ? r.json() : null).catch(() => null),
       fetch(`/data/club_logos.json${cb}`).then(r => r.ok ? r.json() : {}).catch(() => ({})),
       fetch(`/data/match_events.json${cb}`).then(r => r.ok ? r.json() : {}).catch(() => ({})),
+      fetch(`/data/standings.json${cb}`).then(r => r.ok ? r.json() : null).catch(() => null),
     ])
-      .then(([p, t, f, l, me]) => { setPlayers(p); setTeams(t); setFixtures(f); setLogos(l || {}); setMatchEvents(me || {}); setLoading(false); })
+      .then(([p, t, f, l, me, st]) => { setPlayers(p); setTeams(t); setFixtures(f); setLogos(l || {}); setMatchEvents(me || {}); setStandings(st); setLoading(false); })
       .catch(e => { setError(e.message); setLoading(false); });
   }, []);
 
@@ -289,7 +291,7 @@ export default function App() {
         {tab === "fight" && <FightTab players={players} teams={teams} fixtures={fixtures} logos={logos} lang={lang} />}
         {tab === "reco" && <div style={{ display: "flex", justifyContent: "center" }}><RecoTab players={players} teams={teams} fixtures={fixtures} logos={logos} lang={lang} /></div>}
         {tab === "stellar" && <StellarTab players={players} teams={teams} fixtures={fixtures} logos={logos} matchEvents={matchEvents} onFight={() => setTab("fight")} lang={lang} />}
-        {tab === "pro" && <SorareProTab players={players} teams={teams} fixtures={fixtures} logos={logos} matchEvents={matchEvents} lang={lang} />}
+        {tab === "pro" && <SorareProTab players={players} teams={teams} fixtures={fixtures} standings={standings} logos={logos} matchEvents={matchEvents} lang={lang} />}
         {tab === "recap" && <RecapTab players={players} logos={logos} lang={lang} />}
       </main>
 

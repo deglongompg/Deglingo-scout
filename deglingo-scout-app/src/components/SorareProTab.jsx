@@ -219,7 +219,7 @@ const proKeyframes = `
 /* ═══════════════════════════════════════════════════════════════════
    SORARE PRO TAB — Main Component
    ═══════════════════════════════════════════════════════════════════ */
-export default function SorareProTab({ players, teams, fixtures, logos = {}, matchEvents = {}, lang = "fr" }) {
+export default function SorareProTab({ players, teams, fixtures, standings = null, logos = {}, matchEvents = {}, lang = "fr" }) {
   const S = T[lang] ?? T.fr;
 
   const isMobile = typeof window !== "undefined" && window.innerWidth <= 768;
@@ -1158,6 +1158,20 @@ export default function SorareProTab({ players, teams, fixtures, logos = {}, mat
   // Reset match filters on league change
   useEffect(() => { setSelectedMatchFilters([]); }, [league]);
 
+  // ═══ Standings (classement officiel) — football-data.org via fetch_standings.py ═══
+  // Source unique : standings.json. Pas de fallback — si vide on n'affiche rien.
+  // Highlight : le club est highlight s'il fait partie d'un match selectionne dans le filtre.
+  const currentStandings = useMemo(() => {
+    return standings?.leagues?.[league] || [];
+  }, [standings, league]);
+
+  const highlightedClubs = useMemo(() => {
+    if (!selectedMatchFilters.length) return new Set();
+    const set = new Set();
+    for (const m of selectedMatchFilters) { set.add(normClub(m.home)); set.add(normClub(m.away)); }
+    return set;
+  }, [selectedMatchFilters]);
+
   // ═══ RENDER ═══
   const POS_SLOT_COLORS = { GK: "#4FC3F7", DEF: "#818CF8", MIL: "#C084FC", FLEX: "#A78BFA", ATT: "#F87171" };
   const rarityColor = rarity === "rare" ? "#EF4444" : "#F59E0B";
@@ -1554,6 +1568,120 @@ export default function SorareProTab({ players, teams, fixtures, logos = {}, mat
               </div>
             );
           })()}
+
+          {/* ─── Classement officiel de la ligue (football-data.org) ─── */}
+          {currentStandings.length > 0 && (() => {
+            // Tiers europeens + relegation par ligue (saison 2025-26).
+            // Cf https://fr.wikipedia.org/wiki/Championnat_de_France_de_football_2025-2026 etc.
+            const LEAGUE_TIERS = {
+              L1:     { ucl: [1,2,3], uclPlay: [4],   uel: [5],     uecl: [6], relPlay: [16], rel: [17,18] },
+              PL:     { ucl: [1,2,3,4],                uel: [5],     uecl: [6],                rel: [18,19,20] },
+              Liga:   { ucl: [1,2,3,4],                uel: [5,6],   uecl: [7],                rel: [18,19,20] },
+              Bundes: { ucl: [1,2,3,4],                uel: [5],     uecl: [6], relPlay: [16], rel: [17,18] },
+            };
+            const TIER_COLORS = {
+              ucl:     "#22C55E",  // vert plein — Champions League directe
+              uclPlay: "#84CC16",  // lime — Champions League barrage
+              uel:     "#3B82F6",  // bleu — Europa League
+              uecl:    "#06B6D4",  // cyan — Conference League
+              relPlay: "#F59E0B",  // orange — Barrage de relegation
+              rel:     "#EF4444",  // rouge — Relegation directe
+            };
+            const TIER_LABELS_FR = {
+              ucl: "Ligue des Champions", uclPlay: "Ligue des Champions (barrage)",
+              uel: "Europa League", uecl: "Conference League",
+              relPlay: "Barrage de relegation", rel: "Relegation",
+            };
+            const TIER_LABELS_EN = {
+              ucl: "Champions League", uclPlay: "Champions League (playoff)",
+              uel: "Europa League", uecl: "Conference League",
+              relPlay: "Relegation playoff", rel: "Relegation",
+            };
+            const tierLabels = lang === "fr" ? TIER_LABELS_FR : TIER_LABELS_EN;
+            const tiers = LEAGUE_TIERS[league];
+            const tierOf = (rank) => {
+              if (!tiers) return null;
+              for (const k of ["ucl", "uclPlay", "uel", "uecl", "relPlay", "rel"]) {
+                if (tiers[k]?.includes(rank)) return k;
+              }
+              return null;
+            };
+            return (
+            <div style={{ marginTop: 12, padding: "10px 2px 6px" }}>
+              <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 6, padding: "0 2px" }}>
+                <div style={{ fontSize: 9, fontWeight: 800, color: "#fff", letterSpacing: "0.05em" }}>
+                  {lang === "fr" ? "CLASSEMENT" : "STANDINGS"}
+                </div>
+                <div style={{ fontSize: 7, fontWeight: 700, color: "rgba(255,255,255,0.35)", fontFamily: "'DM Mono',monospace" }}>
+                  {league === "L1" ? "LIGUE 1" : league === "PL" ? "PREMIER LEAGUE" : league === "Liga" ? "LA LIGA" : league === "Bundes" ? "BUNDESLIGA" : league}
+                </div>
+              </div>
+              {/* Header */}
+              <div style={{ display: "grid", gridTemplateColumns: "14px 14px 1fr 16px 16px 16px 22px 22px", columnGap: 3, alignItems: "center", padding: "0 2px 3px", borderBottom: "1px solid rgba(255,255,255,0.08)", fontSize: 6, fontWeight: 800, color: "rgba(255,255,255,0.35)", fontFamily: "'DM Mono',monospace", letterSpacing: "0.04em" }}>
+                <div style={{ textAlign: "center" }}>#</div>
+                <div></div>
+                <div>{lang === "fr" ? "CLUB" : "CLUB"}</div>
+                <div style={{ textAlign: "right" }}>MJ</div>
+                <div style={{ textAlign: "right" }}>BP</div>
+                <div style={{ textAlign: "right" }}>BC</div>
+                <div style={{ textAlign: "right" }}>+/-</div>
+                <div style={{ textAlign: "right" }}>PTS</div>
+              </div>
+              {/* Rows — pas de scroll : on rend tout en dur */}
+              <div style={{ marginTop: 2 }}>
+                {currentStandings.map((row) => {
+                  const isHi = highlightedClubs.has(normClub(row.club));
+                  const tier = tierOf(row.rank);
+                  const tierColor = tier ? TIER_COLORS[tier] : "rgba(255,255,255,0.5)";
+                  const nextTier = tierOf(row.rank + 1);
+                  const isLastInTier = !!tier && tier !== nextTier;
+                  const sepStyle = isLastInTier
+                    ? { borderBottom: `2px solid ${tierColor}55`, marginBottom: 2, paddingBottom: 4 }
+                    : {};
+                  const gd = row.gd > 0 ? `+${row.gd}` : `${row.gd}`;
+                  return (
+                    <div key={row.rank} title={tier ? tierLabels[tier] : undefined} style={{
+                      display: "grid", gridTemplateColumns: "14px 14px 1fr 16px 16px 16px 22px 22px", columnGap: 3, alignItems: "center",
+                      padding: "3px 2px", borderRadius: 3,
+                      background: isHi ? `${rarityColor}25` : "transparent",
+                      border: isHi ? `1px solid ${rarityColor}55` : "1px solid transparent",
+                      transition: "background 0.15s",
+                      ...sepStyle,
+                    }}>
+                      {/* Pastille rang : carre 14x14 avec chiffre centre via flex */}
+                      <div style={{ width: 14, height: 14, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 8, fontWeight: 900, color: tier ? "#fff" : "rgba(255,255,255,0.55)", background: tier ? tierColor : "transparent", fontFamily: "'DM Mono',monospace", borderRadius: 3, lineHeight: 1 }}>{row.rank}</div>
+                      {row.logo
+                        ? <img src={row.logo} alt="" style={{ width: 14, height: 14, objectFit: "contain" }} onError={(e) => { e.target.style.display = "none"; }} />
+                        : <div style={{ width: 14, height: 14 }} />}
+                      <div style={{ fontSize: 8, fontWeight: 700, color: isHi ? "#fff" : "rgba(255,255,255,0.85)", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>{row.club}</div>
+                      <div style={{ fontSize: 8, fontWeight: 600, color: "rgba(255,255,255,0.4)", fontFamily: "'DM Mono',monospace", textAlign: "right" }}>{row.played}</div>
+                      <div style={{ fontSize: 8, fontWeight: 600, color: "rgba(255,255,255,0.4)", fontFamily: "'DM Mono',monospace", textAlign: "right" }}>{row.gf}</div>
+                      <div style={{ fontSize: 8, fontWeight: 600, color: "rgba(255,255,255,0.4)", fontFamily: "'DM Mono',monospace", textAlign: "right" }}>{row.ga}</div>
+                      {/* Difference de but : neutre (pas vert/rouge) — les points priment */}
+                      <div style={{ fontSize: 8, fontWeight: 600, color: "rgba(255,255,255,0.4)", fontFamily: "'DM Mono',monospace", textAlign: "right" }}>{gd}</div>
+                      <div style={{ fontSize: 9, fontWeight: 900, color: "#fff", fontFamily: "'DM Mono',monospace", textAlign: "right" }}>{row.pts}</div>
+                    </div>
+                  );
+                })}
+              </div>
+              {/* Legende compact des tiers — uniquement si la ligue a un mapping */}
+              {tiers && (
+                <div style={{ marginTop: 8, paddingTop: 6, borderTop: "1px solid rgba(255,255,255,0.06)", display: "flex", flexDirection: "column", gap: 2 }}>
+                  {Object.keys(tiers).map((k) => (
+                    <div key={k} style={{ display: "flex", alignItems: "center", gap: 5, fontSize: 6, color: "rgba(255,255,255,0.5)", fontFamily: "Outfit" }}>
+                      <span style={{ width: 8, height: 8, borderRadius: 2, background: TIER_COLORS[k], flexShrink: 0 }} />
+                      <span>{tierLabels[k]}</span>
+                    </div>
+                  ))}
+                </div>
+              )}
+              <div style={{ marginTop: 6, fontSize: 6, color: "rgba(255,255,255,0.25)", textAlign: "right", fontFamily: "'DM Mono',monospace" }}>
+                via football-data.org
+              </div>
+            </div>
+            );
+          })()}
+
           </>)}
         </div>
 

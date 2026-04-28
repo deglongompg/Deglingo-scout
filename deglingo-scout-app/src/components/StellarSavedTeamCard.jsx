@@ -169,63 +169,115 @@ export default function StellarSavedTeamCard({ team, players = [], logos = {}, c
             }}>{p.sorare_starter_pct}%</span>
           )}
           {isDNP && <span style={{ position: "absolute", top: 2, right: 2, fontSize: 7, fontWeight: 800, padding: "1px 4px", borderRadius: 3, color: "#fff", zIndex: 2, background: "rgba(153,27,27,0.95)", letterSpacing: "0.5px" }}>DNP</span>}
-          {(p.isCaptain || slot === captainSlot) && (
-            <span style={{
-              position: "absolute", top: 3, left: 3, zIndex: 3,
-              width: 16, height: 16, borderRadius: "50%",
-              background: "linear-gradient(135deg, #F472B6, #E11D48)",
-              color: "#fff", fontSize: 9, fontWeight: 900,
-              display: "flex", alignItems: "center", justifyContent: "center",
-              fontFamily: "'Outfit', sans-serif",
-              boxShadow: "0 0 8px rgba(225,29,72,0.7), 0 0 2px rgba(0,0,0,0.6)",
-              border: "1px solid rgba(255,255,255,0.9)",
-            }}>C</span>
+          {/* Top-right : Captain Stellar (rose) a gauche du bonus gold (flex row-reverse) */}
+          {((p.isCaptain || slot === captainSlot) || (ownedCard && ownedCard.totalBonus > 0)) && (
+            <div style={{
+              position: "absolute", top: 2, right: 2, zIndex: 3,
+              display: "flex", flexDirection: "row-reverse", alignItems: "center", gap: 2,
+            }}>
+              {ownedCard && ownedCard.totalBonus > 0 && (
+                <span style={{
+                  fontSize: 7, fontWeight: 700,
+                  color: "#fff",
+                  fontFamily: "Outfit", letterSpacing: "0.04em",
+                  background: "linear-gradient(135deg, #FFE066 0%, #FFD700 50%, #DAA520 100%)",
+                  border: "1px solid rgba(255,255,255,0.5)",
+                  borderRadius: 3,
+                  padding: "1px 3px",
+                  boxShadow: "0 0 6px rgba(255,215,0,0.5), inset 0 1px 0 rgba(255,255,255,0.4)",
+                  textShadow: "0 1px 1px rgba(0,0,0,0.5)",
+                  whiteSpace: "nowrap", lineHeight: 1,
+                }}>+{ownedCard.totalBonus}%</span>
+              )}
+              {(p.isCaptain || slot === captainSlot) && (
+                <span style={{
+                  width: 12, height: 12, borderRadius: "50%",
+                  background: "linear-gradient(135deg, #F472B6, #E11D48)",
+                  color: "#fff", fontSize: 7, fontWeight: 900,
+                  display: "flex", alignItems: "center", justifyContent: "center",
+                  fontFamily: "'Outfit', sans-serif",
+                  boxShadow: "0 0 5px rgba(225,29,72,0.7)",
+                  border: "1px solid rgba(255,255,255,0.9)",
+                  flexShrink: 0,
+                }}>C</span>
+              )}
+            </div>
           )}
-          {ownedCard && ownedCard.totalBonus > 0 && (
-            <span style={{ position: "absolute", bottom: 34, right: 4, fontSize: 8, fontWeight: 900, color: "#4ADE80", background: "rgba(0,0,0,0.7)", borderRadius: 3, padding: "1px 4px", zIndex: 3 }}>+{ownedCard.totalBonus}%</span>
-          )}
+          {/* Decisives : ballon dans cercle gold premium, deborde sur le bord bas */}
           {hasRealScore && (() => {
-            const icons = flattenDecisivesPositive(p.last_so5_decisives, 4);
+            const icons = flattenDecisivesPositive(p.last_so5_decisives, 3);
             if (icons.length === 0) return null;
+            const size = icons.length === 1 ? 22 : icons.length === 2 ? 26 : 30;
             return (
-              <div style={{ position: "absolute", bottom: 0, left: "50%", transform: "translate(-50%, 50%)", zIndex: 3, display: "flex", gap: 0, lineHeight: 1, filter: "drop-shadow(0 2px 3px rgba(0,0,0,0.9))" }}>
-                {icons.map((emoji, i) => <span key={i} style={{ fontSize: 11 }}>{emoji}</span>)}
+              <div style={{
+                position: "absolute", bottom: 0, left: "50%", transform: "translate(-50%, 50%)",
+                zIndex: 4,
+                width: size, height: size, borderRadius: "50%",
+                background: "radial-gradient(circle at 35% 30%, #2A1A00 0%, #0D0700 100%)",
+                border: "1.5px solid #FFD700",
+                boxShadow: "0 0 10px rgba(255,215,0,0.8), inset 0 0 4px rgba(255,215,0,0.35)",
+                display: "flex", alignItems: "center", justifyContent: "center", gap: 0,
+                fontSize: icons.length === 1 ? 12 : icons.length === 2 ? 10 : 9,
+                lineHeight: 1,
+                filter: "drop-shadow(0 1px 2px rgba(0,0,0,0.8))",
+              }}>
+                {icons.map((emoji, i) => <span key={i} style={{ display: "inline-block", transform: emoji === "👟" ? "translateY(-1.5px)" : "none", lineHeight: 1 }}>{emoji}</span>)}
               </div>
             );
           })()}
-          <div style={{
-            position: "absolute", bottom: 0, right: 8, zIndex: 2,
-            width: 32, height: 32, borderRadius: "50%",
-            display: "flex", alignItems: "center", justifyContent: "center",
-            fontFamily: "'DM Mono',monospace", fontSize: 13, fontWeight: 900,
-            color: hasRealScore ? "#fff" : isDNP ? "#fff" : dsColor(playerScore),
-            background: hasRealScore ? dsBg(playerScore) : isDNP ? "rgba(127,29,29,0.9)" : "rgba(0,0,0,0.6)",
-            border: hasRealScore ? "none" : isDNP ? "1px solid rgba(220,38,38,0.8)" : `1px dashed ${dsColor(playerScore)}60`,
-            boxShadow: hasRealScore ? `0 0 8px ${dsColor(playerScore)}50` : isDNP ? "0 0 6px rgba(220,38,38,0.4)" : `0 0 6px ${dsColor(playerScore)}30`,
-          }}>{playerScore}</div>
-        </div>
-        </div>
-        <div style={{
-          marginTop: 3, padding: "3px 8px", borderRadius: 6,
-          background: "rgba(255,255,255,0.03)",
-          border: "1px solid rgba(255,255,255,0.06)",
-          textAlign: "center",
-        }}>
-          <div style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: 4, flexWrap: "nowrap", whiteSpace: "nowrap" }}>
-            {homeLogo && <img src={`/data/logos/${homeLogo}`} alt="" style={{ width: 14, height: 14, objectFit: "contain", flexShrink: 0 }} />}
-            {matchScore ? (
-              <span style={{ fontSize: 11, fontWeight: 900, color: "#fff", fontFamily: "'DM Mono',monospace", letterSpacing: "-0.3px", whiteSpace: "nowrap", flexShrink: 0 }}>{matchScore}</span>
-            ) : (
-              <span style={{ fontSize: 7, color: "rgba(255,255,255,0.25)", flexShrink: 0 }}>vs</span>
-            )}
-            {awayLogo && <img src={`/data/logos/${awayLogo}`} alt="" style={{ width: 14, height: 14, objectFit: "contain", flexShrink: 0 }} />}
-          </div>
-          {!matchScore && (
-            <div style={{ fontSize: 7, fontWeight: 700, color: "#fff", fontFamily: "'DM Mono',monospace", marginTop: 1, whiteSpace: "nowrap" }}>
-              {dateLabel}{parisTime ? ` - ${parisTime}` : ""}
+          {/* Score : cercle premium gold (hasRealScore) ou bubble classique (proj/DNP) */}
+          {hasRealScore ? (
+            <div className="circle-premium" style={{ position: "absolute", bottom: 0, right: 0, zIndex: 3 }}>
+              <div className="circle-premium__outer">
+                <div className="circle-premium__inner-wrapper">
+                  <div className="circle-premium__inner" style={{ background: dsBg(playerScore) }} />
+                  <div className="circle-premium__highlight" />
+                  <div className="circle-premium__edge-shine" />
+                </div>
+              </div>
+              <div className="circle-premium__score">{playerScore}</div>
             </div>
+          ) : (
+            <div style={{
+              position: "absolute", bottom: 0, right: 8, zIndex: 2,
+              width: 32, height: 32, borderRadius: "50%",
+              display: "flex", alignItems: "center", justifyContent: "center",
+              fontFamily: "'DM Mono',monospace", fontSize: 13, fontWeight: 900,
+              color: isDNP ? "#fff" : dsColor(playerScore),
+              background: isDNP ? "rgba(127,29,29,0.9)" : "rgba(0,0,0,0.6)",
+              border: isDNP ? "1px solid rgba(220,38,38,0.8)" : `1px dashed ${dsColor(playerScore)}60`,
+              boxShadow: isDNP ? "0 0 6px rgba(220,38,38,0.4)" : `0 0 6px ${dsColor(playerScore)}30`,
+            }}>{playerScore}</div>
           )}
         </div>
+        </div>
+        {/* Match info box : premium gold avec bevel + reflets si match joue, neutre sinon */}
+        {matchScore ? (
+          <div className="matchscore-premium">
+            <div className="matchscore-premium__inner">
+              <div className="matchscore-premium__highlight" />
+              <div className="matchscore-premium__edge-shine" />
+              <div className="matchscore-premium__content">
+                <span className="matchscore-premium__sparkle">✦</span>
+                {homeLogo && <img src={`/data/logos/${homeLogo}`} alt="" style={{ width: 14, height: 14, objectFit: "contain", flexShrink: 0 }} />}
+                <span className="matchscore-premium__score-text">{matchScore}</span>
+                {awayLogo && <img src={`/data/logos/${awayLogo}`} alt="" style={{ width: 14, height: 14, objectFit: "contain", flexShrink: 0 }} />}
+                <span className="matchscore-premium__sparkle">✦</span>
+              </div>
+            </div>
+          </div>
+        ) : (
+          <div style={{ marginTop: 6, padding: "3px 8px", borderRadius: 6, background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.06)", textAlign: "center" }}>
+            <div style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: 4, flexWrap: "nowrap", whiteSpace: "nowrap" }}>
+              {homeLogo && <img src={`/data/logos/${homeLogo}`} alt="" style={{ width: 14, height: 14, objectFit: "contain", flexShrink: 0 }} />}
+              <span style={{ fontSize: 7, color: "rgba(255,255,255,0.25)", flexShrink: 0 }}>vs</span>
+              {awayLogo && <img src={`/data/logos/${awayLogo}`} alt="" style={{ width: 14, height: 14, objectFit: "contain", flexShrink: 0 }} />}
+            </div>
+            <div style={{ fontSize: 7, fontWeight: 700, color: "#fff", fontFamily: "'DM Mono',monospace", marginTop: 1, whiteSpace: "nowrap", textAlign: "center" }}>
+              {dateLabel}{parisTime ? ` - ${parisTime}` : ""}
+            </div>
+          </div>
+        )}
       </div>
     );
   };

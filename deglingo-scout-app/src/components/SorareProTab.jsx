@@ -2204,43 +2204,18 @@ export default function SorareProTab({ players, teams, fixtures, logos = {}, mat
                               </div>
                             );
                           })()}
-                          {/* Score : bottom-right card — TEST 3 formes : L1+Limited=rect, PL+Limited=cercle, sinon hex */}
+                          {/* Score : cercle premium gold (Limited) ou silver (Rare) — bottom-right card */}
                           {hasRealScore ? (
-                            (league === "L1" && rarity === "limited") ? (
-                              <div className="rect-premium" style={{ position: "absolute", bottom: 0, right: 0, zIndex: 3 }}>
-                                <div className="rect-premium__outer">
-                                  <div className="rect-premium__inner-wrapper">
-                                    <div className="rect-premium__inner" style={{ background: dsBg(playerScore) }} />
-                                    <div className="rect-premium__highlight" />
-                                    <div className="rect-premium__edge-shine" />
-                                  </div>
-                                </div>
-                                <div className="rect-premium__score">{playerScore}</div>
-                              </div>
-                            ) : (league === "PL" && rarity === "limited") ? (
-                              <div className="circle-premium" style={{ position: "absolute", bottom: 0, right: 0, zIndex: 3 }}>
-                                <div className="circle-premium__outer">
-                                  <div className="circle-premium__inner-wrapper">
-                                    <div className="circle-premium__inner" style={{ background: dsBg(playerScore) }} />
-                                    <div className="circle-premium__highlight" />
-                                    <div className="circle-premium__edge-shine" />
-                                  </div>
-                                </div>
-                                <div className="circle-premium__score">{playerScore}</div>
-                              </div>
-                            ) : (
-                            <div className={`hex-premium${rarity === "rare" ? " hex-premium--silver" : ""}`} style={{ position: "absolute", bottom: 0, right: -2, zIndex: 3 }}>
-                              <div className="hex-premium__outer">
-                                <div className="hex-premium__inner-wrapper">
-                                  <div className="hex-premium__inner" style={{ background: dsBg(playerScore) }} />
-                                  <div className="hex-premium__highlight" />
-                                  <div className="hex-premium__glass-reflection" />
-                                  <div className="hex-premium__edge-shine" />
+                            <div className={`circle-premium${rarity === "rare" ? " circle-premium--silver" : ""}`} style={{ position: "absolute", bottom: 0, right: 0, zIndex: 3 }}>
+                              <div className="circle-premium__outer">
+                                <div className="circle-premium__inner-wrapper">
+                                  <div className="circle-premium__inner" style={{ background: dsBg(playerScore) }} />
+                                  <div className="circle-premium__highlight" />
+                                  <div className="circle-premium__edge-shine" />
                                 </div>
                               </div>
-                              <div className="hex-premium__score">{playerScore}</div>
+                              <div className="circle-premium__score">{playerScore}</div>
                             </div>
-                            )
                           ) : (
                             <div style={{
                               position: "absolute", bottom: 0, right: -2, zIndex: 3,

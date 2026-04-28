@@ -525,6 +525,17 @@ select option {
   line-height: 1;
   z-index: 10;
 }
+/* Variante silver/chrome pour cercle Pro Rare */
+.circle-premium--silver { animation-name: hexGlowPulseSilver; }
+.circle-premium--silver .circle-premium__outer {
+  background: conic-gradient(
+    from 145deg,
+    #4A4D55 0%, #6C6F7A 6%, #8A9098 12%, #B8BCC4 18%, #FAFAFE 22%,
+    #B8BCC4 26%, #8A9098 32%, #6C6F7A 42%, #4A4D55 50%, #6C6F7A 58%,
+    #8A9098 68%, #B8BCC4 74%, #FAFAFE 78%, #B8BCC4 82%, #8A9098 88%,
+    #6C6F7A 94%, #4A4D55 100%
+  );
+}
 
 /* Variante silver/chrome pour cartes Pro Rare */
 .hex-premium--silver { animation-name: hexGlowPulseSilver; }

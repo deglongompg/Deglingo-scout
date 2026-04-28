@@ -1,5 +1,5 @@
 {
-  "generated": "2026-04-28T07:55:58.066921",
+  "generated": "2026-04-28T16:03:44.139738",
   "matchdays": {
     "L1": 34,
     "PL": 37,
@@ -300,61 +300,6 @@
       "league": "L1",
       "home_api": "Stade Brestois 29",
       "away_api": "Angers SCO"
-    },
-    {
-      "home": "Monaco",
-      "away": "Auxerre",
-      "date": "2026-04-19",
-      "kickoff": "13:00",
-      "matchday": 30,
-      "league": "L1",
-      "home_api": "AS Monaco",
-      "away_api": "AJ Auxerre",
-      "finished": true
-    },
-    {
-      "home": "Metz",
-      "away": "Paris FC",
-      "date": "2026-04-19",
-      "kickoff": "15:15",
-      "matchday": 30,
-      "league": "L1",
-      "home_api": "FC Metz",
-      "away_api": "Paris FC",
-      "finished": true
-    },
-    {
-      "home": "Nantes",
-      "away": "Brest",
-      "date": "2026-04-19",
-      "kickoff": "15:15",
-      "matchday": 30,
-      "league": "L1",
-      "home_api": "FC Nantes",
-      "away_api": "Stade Brestois 29",
-      "finished": true
-    },
-    {
-      "home": "Strasbourg",
-      "away": "Rennes",
-      "date": "2026-04-19",
-      "kickoff": "15:15",
-      "matchday": 30,
-      "league": "L1",
-      "home_api": "RC Strasbourg Alsace",
-      "away_api": "Stade Rennais F.C.",
-      "finished": true
-    },
-    {
-      "home": "Paris Saint Germain",
-      "away": "Lyon",
-      "date": "2026-04-19",
-      "kickoff": "18:45",
-      "matchday": 30,
-      "league": "L1",
-      "home_api": "Paris Saint-Germain",
-      "away_api": "Olympique Lyonnais",
-      "finished": true
     },
     {
       "home": "Paris Saint Germain",
@@ -745,50 +690,6 @@
       "league": "PL",
       "home_api": "Wolverhampton Wanderers FC",
       "away_api": "Fulham FC"
-    },
-    {
-      "home": "Nottingham Forest",
-      "away": "Burnley",
-      "date": "2026-04-19",
-      "kickoff": "13:00",
-      "matchday": 33,
-      "league": "PL",
-      "home_api": "Nottingham Forest FC",
-      "away_api": "Burnley FC",
-      "finished": true
-    },
-    {
-      "home": "Aston Villa",
-      "away": "Sunderland",
-      "date": "2026-04-19",
-      "kickoff": "13:00",
-      "matchday": 33,
-      "league": "PL",
-      "home_api": "Aston Villa FC",
-      "away_api": "Sunderland AFC",
-      "finished": true
-    },
-    {
-      "home": "Everton",
-      "away": "Liverpool",
-      "date": "2026-04-19",
-      "kickoff": "13:00",
-      "matchday": 33,
-      "league": "PL",
-      "home_api": "Everton FC",
-      "away_api": "Liverpool FC",
-      "finished": true
-    },
-    {
-      "home": "Manchester City",
-      "away": "Arsenal",
-      "date": "2026-04-19",
-      "kickoff": "15:30",
-      "matchday": 33,
-      "league": "PL",
-      "home_api": "Manchester City FC",
-      "away_api": "Arsenal FC",
-      "finished": true
     },
     {
       "home": "Crystal Palace",
@@ -1802,39 +1703,6 @@
       "away_api": "Hamburger SV"
     },
     {
-      "home": "Freiburg",
-      "away": "FC Heidenheim",
-      "date": "2026-04-19",
-      "kickoff": "13:30",
-      "matchday": 30,
-      "league": "Bundes",
-      "home_api": "Sport-Club Freiburg",
-      "away_api": "1. FC Heidenheim 1846",
-      "finished": true
-    },
-    {
-      "home": "Bayern Munich",
-      "away": "VfB Stuttgart",
-      "date": "2026-04-19",
-      "kickoff": "15:30",
-      "matchday": 30,
-      "league": "Bundes",
-      "home_api": "FC Bayern München",
-      "away_api": "VfB Stuttgart",
-      "finished": true
-    },
-    {
-      "home": "Borussia M.Gladbach",
-      "away": "Mainz 05",
-      "date": "2026-04-19",
-      "kickoff": "17:30",
-      "matchday": 30,
-      "league": "Bundes",
-      "home_api": "Borussia Mönchengladbach",
-      "away_api": "1. FSV Mainz 05",
-      "finished": true
-    },
-    {
       "home": "RasenBallsport Leipzig",
       "away": "Union Berlin",
       "date": "2026-04-24",
@@ -1934,48 +1802,48 @@
       "finished": true
     },
     {
-      "home": "Paris Saint Germain",
-      "away": "Bayern Munich",
+      "home": "Unknown",
+      "away": "Unknown",
       "date": "2026-04-28",
       "kickoff": "19:00",
       "matchday": "SEMI_FINALS",
       "league": "UCL",
       "competition": "UCL",
-      "home_api": "Paris Saint-Germain",
-      "away_api": "FC Bayern München"
+      "home_api": null,
+      "away_api": null
     },
     {
-      "home": "Atletico Madrid",
-      "away": "Arsenal",
+      "home": "Unknown",
+      "away": "Unknown",
       "date": "2026-04-29",
       "kickoff": "19:00",
       "matchday": "SEMI_FINALS",
       "league": "UCL",
       "competition": "UCL",
-      "home_api": "Atlético de Madrid",
-      "away_api": "Arsenal FC"
+      "home_api": null,
+      "away_api": null
     },
     {
-      "home": "Arsenal",
-      "away": "Atletico Madrid",
+      "home": "Unknown",
+      "away": "Unknown",
       "date": "2026-05-05",
       "kickoff": "19:00",
       "matchday": "SEMI_FINALS",
       "league": "UCL",
       "competition": "UCL",
-      "home_api": "Arsenal FC",
-      "away_api": "Atlético de Madrid"
+      "home_api": null,
+      "away_api": null
     },
     {
-      "home": "Bayern Munich",
-      "away": "Paris Saint Germain",
+      "home": "Unknown",
+      "away": "Unknown",
       "date": "2026-05-06",
       "kickoff": "19:00",
       "matchday": "SEMI_FINALS",
       "league": "UCL",
       "competition": "UCL",
-      "home_api": "FC Bayern München",
-      "away_api": "Paris Saint-Germain"
+      "home_api": null,
+      "away_api": null
     },
     {
       "home": "Sporting",
@@ -2582,17 +2450,6 @@
     },
     {
       "home": "FC Dallas",
-      "away": "LA Galaxy",
-      "date": "2026-04-19",
-      "kickoff": "00:30",
-      "matchday": "MLS",
-      "league": "MLS",
-      "home_api": "FC Dallas",
-      "away_api": "LA Galaxy",
-      "finished": true
-    },
-    {
-      "home": "FC Dallas",
       "away": "Minnesota United",
       "date": "2026-04-23",
       "kickoff": "00:30",
@@ -2788,17 +2645,6 @@
       "away_api": "LA Galaxy"
     },
     {
-      "home": "Los Angeles FC",
-      "away": "San Jose Earthquakes",
-      "date": "2026-04-19",
-      "kickoff": "23:00",
-      "matchday": "MLS",
-      "league": "MLS",
-      "home_api": "Los Angeles FC",
-      "away_api": "San Jose Earthquakes",
-      "finished": true
-    },
-    {
       "home": "Minnesota United",
       "away": "Los Angeles FC",
       "date": "2026-04-25",
@@ -2858,17 +2704,6 @@
       "league": "MLS",
       "home_api": "Nashville SC",
       "away_api": "Los Angeles FC"
-    },
-    {
-      "home": "Minnesota United",
-      "away": "Portland Timbers",
-      "date": "2026-04-19",
-      "kickoff": "00:30",
-      "matchday": "MLS",
-      "league": "MLS",
-      "home_api": "Minnesota United",
-      "away_api": "Portland Timbers",
-      "finished": true
     },
     {
       "home": "New England Revolution",
@@ -3024,17 +2859,6 @@
       "away_api": "Sporting Kansas City "
     },
     {
-      "home": "Real Salt Lake",
-      "away": "San Diego FC",
-      "date": "2026-04-19",
-      "kickoff": "01:30",
-      "matchday": "MLS",
-      "league": "MLS",
-      "home_api": "Real Salt Lake",
-      "away_api": "San Diego FC",
-      "finished": true
-    },
-    {
       "home": "St. Louis City SC",
       "away": "San Jose Earthquakes",
       "date": "2026-04-26",
@@ -3084,17 +2908,6 @@
       "league": "MLS",
       "home_api": "Seattle Sounders FC",
       "away_api": "San Diego FC"
-    },
-    {
-      "home": "Seattle Sounders FC",
-      "away": "St. Louis City SC",
-      "date": "2026-04-19",
-      "kickoff": "01:30",
-      "matchday": "MLS",
-      "league": "MLS",
-      "home_api": "Seattle Sounders FC",
-      "away_api": "St. Louis City SC",
-      "finished": true
     },
     {
       "home": "Sporting Kansas City ",

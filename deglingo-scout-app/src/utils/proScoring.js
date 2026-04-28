@@ -238,36 +238,5 @@ export function computeTeamScores(team, players) {
   const liveTotal = Math.floor(liveRaw * (1 + compoPct / 100));
   const bonusPts = Math.floor(rawFull - rawBase);
 
-  // ===== DEBUG TEMPORAIRE (a retirer) — diag Equipe 3 Cubarsí captain =====
-  if (typeof window !== "undefined") {
-    // eslint-disable-next-line no-console
-    console.log("[DEBUG_SCORE]", team.label, {
-      captainSlot, captainId,
-      picks_detail: infos.map(x => {
-        const card = getPickCard(x.p);
-        const pw = (card?.power && card.power > 1) ? card.power : 1;
-        const liveRaw_pick = x.p?.last_so5_score;
-        const ds_pick = x.p?.ds;
-        const usedRaw = x.isLive ? Math.floor(liveRaw_pick) : ds_pick;
-        const postBonus = (usedRaw || 0) * pw;
-        const capBonus = x.isCap ? (usedRaw || 0) * 0.5 : 0;
-        return {
-          slot: x.p._slot, name: x.p.name,
-          ds: ds_pick, last_so5_raw: liveRaw_pick, last_so5_floor: x.isLive ? Math.floor(liveRaw_pick) : null,
-          last_date: x.p?.last_so5_date, matchDate: x.p?.matchDate,
-          power: pw, isCap: x.isCap, isLive: x.isLive,
-          postBonus: Math.round(postBonus * 100) / 100,
-          capBonus: Math.round(capBonus * 100) / 100,
-          full: Math.round(x.full * 100) / 100,
-          l10: x.p?.l10, club: x.p?.club,
-        };
-      }),
-      multiClub, cap260, compoPct, sumL10: Math.round(sumL10 * 100) / 100,
-      rawFull: Math.round(rawFull * 100) / 100,
-      projectedTotal,
-    });
-  }
-  // ===== FIN DEBUG =====
-
   return { picks, infos, captainId, multiClub, cap260, compoPct, projectedTotal, liveTotal, bonusPts };
 }

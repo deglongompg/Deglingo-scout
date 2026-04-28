@@ -82,9 +82,8 @@ export default function ProSavedTeamCard({
               <span style={{ fontSize: 6, fontWeight: 800, color: pc }}>{slot}</span>
             </div>
           )}
-          {isCap && <span style={{ position: "absolute", top: 2, right: 12, width: 12, height: 12, borderRadius: "50%", background: "#FBBF24", color: "#000", fontSize: 7, fontWeight: 900, display: "flex", alignItems: "center", justifyContent: "center", zIndex: 2 }}>C</span>}
           {p.sorare_starter_pct != null && !hasRealScore && !isDNP && (
-            <span style={{ position: "absolute", top: isCap ? 16 : 2, right: 2, fontSize: 7, fontWeight: 700, padding: "1px 3px", borderRadius: 3, color: "#fff", zIndex: 2,
+            <span style={{ position: "absolute", top: 2, right: 2, fontSize: 7, fontWeight: 700, padding: "1px 3px", borderRadius: 3, color: "#fff", zIndex: 2,
               background: p.sorare_starter_pct >= 70 ? "rgba(22,101,52,0.9)" : p.sorare_starter_pct >= 50 ? "rgba(133,77,14,0.9)" : "rgba(153,27,27,0.9)",
             }}>{p.sorare_starter_pct}%</span>
           )}
@@ -118,29 +117,44 @@ export default function ProSavedTeamCard({
               </div>
             );
           })()}
-          {/* Bonus +X% : ancre bottom-left card (corner-to-corner) */}
-          {bonusPct > 0 && (() => {
+          {/* Top-right : Captain a gauche du bonus (flex row-reverse) */}
+          {(isCap || bonusPct > 0) && (() => {
             const isRareBonus = rarity === "rare";
             return (
-              <span style={{
-                position: "absolute", top: isCap ? 16 : 2, right: 2, zIndex: 3,
-                fontSize: 7, fontWeight: 700,
-                color: isRareBonus ? "#1A1A1F" : "#fff",
-                fontFamily: "Outfit", letterSpacing: "0.04em",
-                background: isRareBonus
-                  ? "linear-gradient(135deg, #FAFAFE 0%, #E0E2E8 50%, #B8BCC4 100%)"
-                  : "linear-gradient(135deg, #FFE066 0%, #FFD700 50%, #DAA520 100%)",
-                border: "1px solid rgba(255,255,255,0.5)",
-                borderRadius: 3,
-                padding: "1px 3px",
-                boxShadow: isRareBonus
-                  ? "0 0 6px rgba(229,231,235,0.5), inset 0 1px 0 rgba(255,255,255,0.6)"
-                  : "0 0 6px rgba(255,215,0,0.5), inset 0 1px 0 rgba(255,255,255,0.4)",
-                textShadow: isRareBonus
-                  ? "0 1px 0 rgba(255,255,255,0.4)"
-                  : "0 1px 1px rgba(0,0,0,0.5)",
-                whiteSpace: "nowrap", lineHeight: 1,
-              }}>+{bonusPct}%</span>
+              <div style={{
+                position: "absolute", top: 2, right: 2, zIndex: 3,
+                display: "flex", flexDirection: "row-reverse", alignItems: "center", gap: 2,
+              }}>
+                {bonusPct > 0 && (
+                  <span style={{
+                    fontSize: 7, fontWeight: 700,
+                    color: isRareBonus ? "#1A1A1F" : "#fff",
+                    fontFamily: "Outfit", letterSpacing: "0.04em",
+                    background: isRareBonus
+                      ? "linear-gradient(135deg, #FAFAFE 0%, #E0E2E8 50%, #B8BCC4 100%)"
+                      : "linear-gradient(135deg, #FFE066 0%, #FFD700 50%, #DAA520 100%)",
+                    border: "1px solid rgba(255,255,255,0.5)",
+                    borderRadius: 3,
+                    padding: "1px 3px",
+                    boxShadow: isRareBonus
+                      ? "0 0 6px rgba(229,231,235,0.5), inset 0 1px 0 rgba(255,255,255,0.6)"
+                      : "0 0 6px rgba(255,215,0,0.5), inset 0 1px 0 rgba(255,255,255,0.4)",
+                    textShadow: isRareBonus
+                      ? "0 1px 0 rgba(255,255,255,0.4)"
+                      : "0 1px 1px rgba(0,0,0,0.5)",
+                    whiteSpace: "nowrap", lineHeight: 1,
+                  }}>+{bonusPct}%</span>
+                )}
+                {isCap && (
+                  <span style={{
+                    width: 12, height: 12, borderRadius: "50%",
+                    background: "#FBBF24", color: "#000",
+                    fontSize: 7, fontWeight: 900,
+                    display: "flex", alignItems: "center", justifyContent: "center",
+                    flexShrink: 0,
+                  }}>C</span>
+                )}
+              </div>
             );
           })()}
           {/* Score : bottom-right card */}

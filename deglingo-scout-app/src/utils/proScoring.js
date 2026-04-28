@@ -241,18 +241,5 @@ export function computeTeamScores(team, players) {
   const liveTotal = Math.floor(liveRaw * (1 + compoPct / 100));
   const bonusPts = Math.floor(rawFull - rawBase);
 
-  // ===== DEBUG TEMPORAIRE — diag teams =====
-  if (typeof window !== "undefined") {
-    const flatPicks = infos.map(x => {
-      const card = getPickCard(x.p);
-      const pw = (card?.power != null && card.power > 0) ? card.power : 1;
-      const lr = x.p?.last_so5_score;
-      return `${x.p._slot}:${x.p.name} so5=${lr} floor=${Math.floor(lr || 0)} power=${pw} cap=${x.isCap} full=${Math.round(x.full * 100) / 100}`;
-    }).join(" || ");
-    // eslint-disable-next-line no-console
-    console.log(`[DEBUG_SCORE] ${team.label} compo=${compoPct} cap260=${cap260} sumL10=${Math.round(sumL10 * 100) / 100} rawFull=${Math.round(rawFull * 100) / 100} total=${projectedTotal} || ${flatPicks}`);
-  }
-  // ===== FIN DEBUG =====
-
   return { picks, infos, captainId, multiClub, cap260, compoPct, projectedTotal, liveTotal, bonusPts };
 }

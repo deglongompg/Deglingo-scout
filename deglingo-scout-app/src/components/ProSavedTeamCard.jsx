@@ -123,8 +123,8 @@ export default function ProSavedTeamCard({
             const isRareBonus = rarity === "rare";
             return (
               <span style={{
-                position: "absolute", top: 0, left: -2, zIndex: 3,
-                fontSize: 8, fontWeight: 900,
+                position: "absolute", top: isCap ? 16 : 2, right: 2, zIndex: 3,
+                fontSize: 7, fontWeight: 700,
                 color: isRareBonus ? "#1A1A1F" : "#fff",
                 fontFamily: "Outfit", letterSpacing: "0.04em",
                 background: isRareBonus
@@ -132,13 +132,13 @@ export default function ProSavedTeamCard({
                   : "linear-gradient(135deg, #FFE066 0%, #FFD700 50%, #DAA520 100%)",
                 border: "1px solid rgba(255,255,255,0.5)",
                 borderRadius: 3,
-                padding: "2px 5px",
+                padding: "1px 3px",
                 boxShadow: isRareBonus
-                  ? "0 0 8px rgba(229,231,235,0.6), inset 0 1px 0 rgba(255,255,255,0.7)"
-                  : "0 0 8px rgba(255,215,0,0.55), inset 0 1px 0 rgba(255,255,255,0.5)",
+                  ? "0 0 6px rgba(229,231,235,0.5), inset 0 1px 0 rgba(255,255,255,0.6)"
+                  : "0 0 6px rgba(255,215,0,0.5), inset 0 1px 0 rgba(255,255,255,0.4)",
                 textShadow: isRareBonus
                   ? "0 1px 0 rgba(255,255,255,0.4)"
-                  : "0 1px 2px rgba(0,0,0,0.55), 0 0 3px rgba(0,0,0,0.4)",
+                  : "0 1px 1px rgba(0,0,0,0.5)",
                 whiteSpace: "nowrap", lineHeight: 1,
               }}>+{bonusPct}%</span>
             );

@@ -540,7 +540,7 @@ export default function FightTab({ players, teams, fixtures, logos = {}, lang = 
       <div style={{ background: "linear-gradient(135deg,rgba(99,102,241,0.06),rgba(239,68,68,0.04))", border: "1px solid rgba(99,102,241,0.12)", borderRadius: 12, padding: "12px 14px", marginBottom: 16 }}>
         <div style={{ fontSize: 11, fontWeight: 700, color: "#A5B4FC", marginBottom: 6 }}>{t(lang, "howItWorks")}</div>
         <div style={{ fontSize: 11, lineHeight: 1.7, color: "rgba(255,255,255,0.5)" }}>
-          Notre <span style={{ color: "#FBBF24", fontWeight: 700 }}>D-Score</span> {lang === "en" ? "evaluates" : "evalue"} <span style={{ color: "#fff", fontWeight: 600 }}>{players.length}+ {lang === "en" ? "players" : "joueurs"}</span> {lang === "en" ? "across 4 leagues and estimates their potential for" : "sur 4 ligues et estime leur potentiel pour"} <span style={{ color: "#fff", fontWeight: 600 }}>{lang === "en" ? "the next match" : "le prochain match"}</span>.
+          Notre <span style={{ color: "#FBBF24", fontWeight: 700 }}>D-Score</span> {lang === "en" ? "evaluates" : "evalue"} <span style={{ color: "#fff", fontWeight: 600 }}>{players.length}+ {lang === "en" ? "players" : "joueurs"}</span> {lang === "en" ? `across ${new Set(players.map(p => p.league).filter(Boolean)).size} leagues and estimates their potential for` : `sur ${new Set(players.map(p => p.league).filter(Boolean)).size} ligues et estime leur potentiel pour`} <span style={{ color: "#fff", fontWeight: 600 }}>{lang === "en" ? "the next match" : "le prochain match"}</span>.
         </div>
         <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 6, marginTop: 8 }}>
           <div style={{ background: "rgba(255,255,255,0.03)", borderRadius: 8, padding: "6px 8px" }}>

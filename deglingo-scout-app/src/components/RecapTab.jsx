@@ -477,6 +477,29 @@ function RecapTabInner({ players, logos, lang }) {
       <style>{`
 @keyframes recapThemeFadeIn { 0%{opacity:0} 100%{opacity:1} }
 @keyframes recapThemeBgFadeIn { 0%{opacity:0} 100%{opacity:0.55} }
+/* Recap league chips — single line responsive sur toutes tailles */
+.recap-league-btns { display: flex; gap: 8px; flex-wrap: nowrap; overflow-x: auto; -webkit-overflow-scrolling: touch; }
+.recap-league-btns::-webkit-scrollbar { height: 4px; }
+.recap-league-btns::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.12); border-radius: 4px; }
+.recap-league-btns::-webkit-scrollbar-track { background: transparent; }
+.recap-league-btns > button { flex-shrink: 0; }
+/* Defaut : 9 chips x 150 = 1350px. Reduit selon la largeur dispo. */
+@media (max-width: 1400px) {
+  .recap-league-btns { gap: 6px; }
+  .recap-league-btns > button { width: 132px !important; height: 46px !important; }
+}
+@media (max-width: 1200px) {
+  .recap-league-btns { gap: 5px; }
+  .recap-league-btns > button { width: 112px !important; height: 42px !important; }
+}
+@media (max-width: 1024px) {
+  .recap-league-btns { gap: 4px; }
+  .recap-league-btns > button { width: 96px !important; height: 38px !important; }
+}
+@media (max-width: 768px) {
+  .recap-league-btns > button { width: 80px !important; height: 34px !important; }
+  .recap-league-btns > button img[src*="logo"] { display: none; } /* drop le logo en plus petit, garde le bg + count */
+}
       `}</style>
 
       {/* ═══ Theme layer — bg de la ligue (ou Stellar), texture visible + screen blend ═══ */}
@@ -535,8 +558,8 @@ function RecapTabInner({ players, logos, lang }) {
 
       {hasAny && (
         <>
-          {/* Ligne 1 — filtre principal : [Stellar] + ligues Pro */}
-          <div style={{ display: "flex", gap: 8, marginTop: 0, marginBottom: 8, flexWrap: "wrap" }}>
+          {/* Ligne 1 — filtre principal : [Stellar] + ligues Pro — single line responsive */}
+          <div className="recap-league-btns" style={{ marginTop: 0, marginBottom: 8 }}>
             <button key="stellar" onClick={() => setActiveLeague("stellar")}
               className={`aurora-chip${isStellarActive ? " is-active" : ""}`}
               style={{

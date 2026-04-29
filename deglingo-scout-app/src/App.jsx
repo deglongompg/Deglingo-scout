@@ -301,7 +301,7 @@ export default function App() {
         color: "rgba(255,255,255,0.2)", borderTop: "1px solid rgba(255,255,255,0.03)",
         marginTop: 40,
       }}>
-        Deglingo Scout · deglingosorare.com · {players.length} joueurs · 4 ligues
+        Deglingo Scout · deglingosorare.com · {players.length} joueurs · {new Set(players.map(p => p.league).filter(Boolean)).size} ligues
       </footer>
     </div>
     </>

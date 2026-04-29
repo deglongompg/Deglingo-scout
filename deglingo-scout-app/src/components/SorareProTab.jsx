@@ -179,9 +179,79 @@ const proKeyframes = `
 @keyframes neonPulse { 0%,100%{filter:brightness(1)} 50%{filter:brightness(1.15)} }
 @keyframes stellarLivePulse { 0%,100%{opacity:0.85;box-shadow:0 0 4px rgba(248,113,113,0.4)} 50%{opacity:1;box-shadow:0 0 10px rgba(248,113,113,0.85)} }
 @keyframes leftCollapsePulse { 0%,100%{filter:brightness(1) saturate(1)} 50%{filter:brightness(1.25) saturate(1.2)} }
+@keyframes tabUnderlinePulse { 0%,100%{opacity:0.65;transform:scaleX(1)} 50%{opacity:1;transform:scaleX(1.15)} }
 .pro-player-list ::-webkit-scrollbar { height: 4px; }
 .pro-player-list ::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.1); border-radius: 4px; }
 .pro-player-list ::-webkit-scrollbar-track { background: transparent; }
+/* Premium pill buttons builder — meme design que header tabs + DbTab */
+.pro-pill {
+  position: relative;
+  padding: 5px 11px;
+  border-radius: 8px;
+  font-family: Outfit;
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  border: 1px solid transparent;
+  background: rgba(255,255,255,0.04);
+  color: rgba(255,255,255,0.5);
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  white-space: nowrap;
+  transition: all 0.2s ease;
+  will-change: transform, box-shadow;
+  height: 26px;
+  box-sizing: border-box;
+}
+.pro-pill:hover:not(:disabled):not(.is-active) {
+  background: linear-gradient(135deg, rgba(255,255,255,0.08), rgba(255,255,255,0.02));
+  color: rgba(255,255,255,0.85);
+  transform: translateY(-1px);
+}
+.pro-pill.is-active {
+  color: #fff;
+  background: linear-gradient(135deg, var(--pill-c-strong) 0%, var(--pill-c-mid) 50%, var(--pill-c-soft) 100%);
+  border-color: var(--pill-c-border);
+  box-shadow:
+    0 0 14px var(--pill-c-glow),
+    0 0 4px var(--pill-c-halo),
+    inset 0 1px 0 rgba(255,255,255,0.12),
+    inset 0 -1px 0 var(--pill-c-bottom);
+  text-shadow: 0 0 8px var(--pill-c-text-shadow), 0 1px 2px rgba(0,0,0,0.45);
+}
+.pro-pill.is-active:hover:not(:disabled) {
+  transform: translateY(-1px);
+  box-shadow:
+    0 0 22px var(--pill-c-glow),
+    0 0 6px var(--pill-c-halo),
+    inset 0 1px 0 rgba(255,255,255,0.18);
+}
+.pro-pill-underline {
+  position: absolute;
+  bottom: 1px; left: 22%; right: 22%;
+  height: 1.5px;
+  border-radius: 2px;
+  background: linear-gradient(90deg, transparent, var(--pill-c-strong-solid), transparent);
+  box-shadow: 0 0 5px var(--pill-c-strong-solid);
+  animation: tabUnderlinePulse 2.4s ease-in-out infinite;
+  pointer-events: none;
+}
+/* Variant action (Algo Magique) — toujours en relief */
+.pro-pill-action {
+  color: #fff;
+  background: linear-gradient(135deg, var(--pill-c-strong) 0%, var(--pill-c-mid) 60%, var(--pill-c-soft) 100%);
+  border-color: var(--pill-c-border);
+  box-shadow: 0 0 12px var(--pill-c-glow), inset 0 1px 0 rgba(255,255,255,0.18);
+  font-weight: 800;
+}
+.pro-pill-action:hover:not(:disabled) {
+  transform: translateY(-1px);
+  box-shadow: 0 0 22px var(--pill-c-glow), 0 0 4px var(--pill-c-halo), inset 0 1px 0 rgba(255,255,255,0.25);
+  filter: brightness(1.08);
+}
 /* Tablette / petits laptops (~13" MacBook Pro) : compresse le header pour tenir sur 1 ligne */
 @media(max-width:1280px){
   .pro-header-row { gap: 8px !important; }
@@ -1759,21 +1829,55 @@ export default function SorareProTab({ players, teams, fixtures, standings = nul
             {/* Header */}
             <div className="pro-algo-header" style={{ padding: "8px 14px", borderBottom: "1px solid rgba(255,255,255,0.06)", display: "flex", alignItems: "center", justifyContent: "space-between", gap: 8 }}>
               <div style={{ display: "flex", alignItems: "center", gap: 6, flexWrap: "wrap" }}>
-                <button onClick={() => setAlgoMultiClub(v => !v)} style={{ fontSize: 7, fontWeight: 800, padding: "3px 6px", borderRadius: 5, border: `1px solid ${algoMultiClub ? "rgba(74,222,128,0.5)" : "rgba(255,255,255,0.1)"}`, background: algoMultiClub ? "rgba(74,222,128,0.12)" : "transparent", color: algoMultiClub ? "#4ADE80" : "rgba(255,255,255,0.3)", cursor: "pointer", fontFamily: "Outfit" }}>
-                  MC +2%
+                {(() => {
+                  // CSS variables helpers — couleur thematique → palette pour pro-pill
+                  const pillVars = (c) => ({
+                    "--pill-c-strong": `${c}38`, "--pill-c-mid": `${c}18`, "--pill-c-soft": `${c}10`,
+                    "--pill-c-border": `${c}55`, "--pill-c-glow": `${c}40`, "--pill-c-halo": `${c}30`,
+                    "--pill-c-bottom": `${c}20`, "--pill-c-text-shadow": `${c}80`, "--pill-c-strong-solid": c,
+                  });
+                  return null;
+                })()}
+                <button onClick={() => setAlgoMultiClub(v => !v)}
+                  className={`pro-pill${algoMultiClub ? " is-active" : ""}`}
+                  style={{
+                    "--pill-c-strong": "#4ADE8038", "--pill-c-mid": "#4ADE8018", "--pill-c-soft": "#4ADE8010",
+                    "--pill-c-border": "#4ADE8055", "--pill-c-glow": "#4ADE8040", "--pill-c-halo": "#4ADE8030",
+                    "--pill-c-bottom": "#4ADE8020", "--pill-c-text-shadow": "#4ADE8080", "--pill-c-strong-solid": "#4ADE80",
+                  }}>
+                  MC +2%{algoMultiClub && <span className="pro-pill-underline" aria-hidden />}
                 </button>
-                <button onClick={() => setAlgoCap260(v => !v)} style={{ fontSize: 7, fontWeight: 800, padding: "3px 6px", borderRadius: 5, border: `1px solid ${algoCap260 ? "rgba(139,92,246,0.5)" : "rgba(255,255,255,0.1)"}`, background: algoCap260 ? "rgba(139,92,246,0.12)" : "transparent", color: algoCap260 ? "#A78BFA" : "rgba(255,255,255,0.3)", cursor: "pointer", fontFamily: "Outfit" }}>
-                  CAP +4%
+                <button onClick={() => setAlgoCap260(v => !v)}
+                  className={`pro-pill${algoCap260 ? " is-active" : ""}`}
+                  style={{
+                    "--pill-c-strong": "#A78BFA38", "--pill-c-mid": "#A78BFA18", "--pill-c-soft": "#A78BFA10",
+                    "--pill-c-border": "#A78BFA55", "--pill-c-glow": "#A78BFA40", "--pill-c-halo": "#A78BFA30",
+                    "--pill-c-bottom": "#A78BFA20", "--pill-c-text-shadow": "#A78BFA80", "--pill-c-strong-solid": "#A78BFA",
+                  }}>
+                  CAP +4%{algoCap260 && <span className="pro-pill-underline" aria-hidden />}
                 </button>
                 <div style={{ fontSize: 6, color: "rgba(255,255,255,0.45)", lineHeight: 1.3 }}>
                   <div>MC = max 2/{lang === "fr" ? "club" : "club"} (+2%)</div>
                   <div>CAP = L10 total &lt; {capThreshold} (+4%)</div>
                 </div>
-                <button onClick={generateMagicTeam} style={{ padding: "5px 10px", borderRadius: 6, border: "none", cursor: "pointer", fontFamily: "Outfit", background: rarityBg, color: "#fff", fontSize: 9, fontWeight: 800 }}>
+                <button onClick={generateMagicTeam}
+                  className="pro-pill pro-pill-action"
+                  style={{
+                    "--pill-c-strong": `${rarityColor}66`, "--pill-c-mid": `${rarityColor}44`, "--pill-c-soft": `${rarityColor}22`,
+                    "--pill-c-border": `${rarityColor}88`, "--pill-c-glow": `${rarityColor}66`, "--pill-c-halo": `${rarityColor}44`,
+                    "--pill-c-bottom": `${rarityColor}33`, "--pill-c-text-shadow": `${rarityColor}99`, "--pill-c-strong-solid": rarityColor,
+                    fontSize: 10, fontWeight: 800, padding: "5px 14px",
+                  }}>
                   {t(lang, "proAlgo")}
                 </button>
                 {filledCount > 0 && (
-                  <button onClick={resetTeam} style={{ fontSize: 7, fontWeight: 700, padding: "2px 6px", borderRadius: 4, border: "1px solid rgba(255,255,255,0.1)", background: "rgba(255,255,255,0.05)", color: "rgba(255,255,255,0.4)", cursor: "pointer", fontFamily: "Outfit" }}>{t(lang, "proReset")}</button>
+                  <button onClick={resetTeam}
+                    className="pro-pill"
+                    style={{
+                      "--pill-c-strong": "#71717A38", "--pill-c-mid": "#71717A18", "--pill-c-soft": "#71717A10",
+                      "--pill-c-border": "#71717A55", "--pill-c-glow": "#71717A40", "--pill-c-halo": "#71717A30",
+                      "--pill-c-bottom": "#71717A20", "--pill-c-text-shadow": "#71717A80", "--pill-c-strong-solid": "#71717A",
+                    }}>{t(lang, "proReset")}</button>
                 )}
                 {filledCount > 0 && (
                   <div style={{ fontSize: 8, fontWeight: 700, fontFamily: "'DM Mono',monospace", color: filledCount === expectedPicks && sumL10 < capThreshold ? "#A78BFA" : sumL10 >= capThreshold ? "#EF4444" : "rgba(255,255,255,0.4)" }}>
@@ -1940,30 +2044,64 @@ export default function SorareProTab({ players, teams, fixtures, standings = nul
               {/* Player list (right) */}
               <div className="pro-player-list" style={{ flex: 1, minWidth: 0, maxWidth: "100%", display: "flex", flexDirection: "column", overflow: "hidden" }}>
                 {/* Filters */}
-                <div className="pro-filters-bar" style={{ display: "flex", alignItems: "center", gap: 4, padding: "4px 10px", borderBottom: "1px solid rgba(255,255,255,0.07)", background: "rgba(0,0,0,0.3)", flexShrink: 0 }}>
-                  <button onClick={() => setHideUsed(v => !v)} style={{ fontSize: 7, fontWeight: 700, padding: "3px 8px", borderRadius: 6, border: `1px solid ${hideUsed ? "rgba(251,191,36,0.5)" : "rgba(255,255,255,0.1)"}`, background: hideUsed ? "rgba(251,191,36,0.12)" : "transparent", color: hideUsed ? "#FBBF24" : "rgba(255,255,255,0.3)", cursor: "pointer", fontFamily: "Outfit" }}>
-                    {t(lang, "proDispo")}
+                <div className="pro-filters-bar" style={{ display: "flex", alignItems: "center", gap: 5, padding: "6px 10px", borderBottom: "1px solid rgba(255,255,255,0.07)", background: "rgba(0,0,0,0.3)", flexShrink: 0 }}>
+                  <button onClick={() => setHideUsed(v => !v)}
+                    className={`pro-pill${hideUsed ? " is-active" : ""}`}
+                    style={{
+                      "--pill-c-strong": "#FBBF2438", "--pill-c-mid": "#FBBF2418", "--pill-c-soft": "#FBBF2410",
+                      "--pill-c-border": "#FBBF2455", "--pill-c-glow": "#FBBF2440", "--pill-c-halo": "#FBBF2430",
+                      "--pill-c-bottom": "#FBBF2420", "--pill-c-text-shadow": "#FBBF2480", "--pill-c-strong-solid": "#FBBF24",
+                    }}>
+                    {t(lang, "proDispo")}{hideUsed && <span className="pro-pill-underline" aria-hidden />}
                   </button>
                   {sorareConnected && (
-                    <button onClick={() => setMyCardsMode(v => !v)} style={{ fontSize: 7, fontWeight: 700, padding: "3px 8px", borderRadius: 6, border: `1px solid ${myCardsMode ? `${rarityColor}80` : "rgba(255,255,255,0.1)"}`, background: myCardsMode ? `${rarityColor}15` : "transparent", color: myCardsMode ? rarityColor : "rgba(255,255,255,0.3)", cursor: "pointer", fontFamily: "Outfit" }}>
-                      {t(lang, "proMesCartes")}
+                    <button onClick={() => setMyCardsMode(v => !v)}
+                      className={`pro-pill${myCardsMode ? " is-active" : ""}`}
+                      style={{
+                        "--pill-c-strong": `${rarityColor}38`, "--pill-c-mid": `${rarityColor}18`, "--pill-c-soft": `${rarityColor}10`,
+                        "--pill-c-border": `${rarityColor}55`, "--pill-c-glow": `${rarityColor}40`, "--pill-c-halo": `${rarityColor}30`,
+                        "--pill-c-bottom": `${rarityColor}20`, "--pill-c-text-shadow": `${rarityColor}80`, "--pill-c-strong-solid": rarityColor,
+                      }}>
+                      {t(lang, "proMesCartes")}{myCardsMode && <span className="pro-pill-underline" aria-hidden />}
                     </button>
                   )}
                   {sorareConnected && rarity === "limited" && (
-                    <button onClick={() => setIncludeRare(v => !v)} style={{ fontSize: 7, fontWeight: 700, padding: "3px 8px", borderRadius: 6, border: `1px solid ${includeRare ? "#EF444480" : "rgba(255,255,255,0.1)"}`, background: includeRare ? "rgba(239,68,68,0.12)" : "transparent", color: includeRare ? "#EF4444" : "rgba(255,255,255,0.3)", cursor: "pointer", fontFamily: "Outfit" }}>
-                      + Rare
+                    <button onClick={() => setIncludeRare(v => !v)}
+                      className={`pro-pill${includeRare ? " is-active" : ""}`}
+                      style={{
+                        "--pill-c-strong": "#EF444438", "--pill-c-mid": "#EF444418", "--pill-c-soft": "#EF444410",
+                        "--pill-c-border": "#EF444455", "--pill-c-glow": "#EF444440", "--pill-c-halo": "#EF444430",
+                        "--pill-c-bottom": "#EF444420", "--pill-c-text-shadow": "#EF444480", "--pill-c-strong-solid": "#EF4444",
+                      }}>
+                      + Rare{includeRare && <span className="pro-pill-underline" aria-hidden />}
                     </button>
                   )}
                   {sorareConnected && (
-                    <button onClick={() => setBonusEnabled(v => !v)} style={{ fontSize: 7, fontWeight: 700, padding: "3px 8px", borderRadius: 6, border: `1px solid ${bonusEnabled ? "rgba(74,222,128,0.5)" : "rgba(255,255,255,0.1)"}`, background: bonusEnabled ? "rgba(74,222,128,0.12)" : "transparent", color: bonusEnabled ? "#4ADE80" : "rgba(255,255,255,0.3)", cursor: "pointer", fontFamily: "Outfit" }}>
-                      Bonus {bonusEnabled ? "ON" : "OFF"}
+                    <button onClick={() => setBonusEnabled(v => !v)}
+                      className={`pro-pill${bonusEnabled ? " is-active" : ""}`}
+                      style={{
+                        "--pill-c-strong": "#4ADE8038", "--pill-c-mid": "#4ADE8018", "--pill-c-soft": "#4ADE8010",
+                        "--pill-c-border": "#4ADE8055", "--pill-c-glow": "#4ADE8040", "--pill-c-halo": "#4ADE8030",
+                        "--pill-c-bottom": "#4ADE8020", "--pill-c-text-shadow": "#4ADE8080", "--pill-c-strong-solid": "#4ADE80",
+                      }}>
+                      Bonus {bonusEnabled ? "ON" : "OFF"}{bonusEnabled && <span className="pro-pill-underline" aria-hidden />}
                     </button>
                   )}
-                  {sorareConnected && (
-                    <button onClick={() => setSeasonFilter(v => v === "all" ? "in" : v === "in" ? "off" : "all")} style={{ fontSize: 7, fontWeight: 700, padding: "3px 8px", borderRadius: 6, border: `1px solid ${seasonFilter === "in" ? "rgba(74,222,128,0.5)" : seasonFilter === "off" ? "rgba(139,92,246,0.5)" : "rgba(255,255,255,0.1)"}`, background: seasonFilter === "in" ? "rgba(74,222,128,0.12)" : seasonFilter === "off" ? "rgba(139,92,246,0.12)" : "transparent", color: seasonFilter === "in" ? "#4ADE80" : seasonFilter === "off" ? "#A78BFA" : "rgba(255,255,255,0.3)", cursor: "pointer", fontFamily: "Outfit" }}>
-                      {seasonFilter === "in" ? "In-Season" : seasonFilter === "off" ? "Off-Season" : "All Season"}
-                    </button>
-                  )}
+                  {sorareConnected && (() => {
+                    const seasonColor = seasonFilter === "in" ? "#4ADE80" : seasonFilter === "off" ? "#A78BFA" : null;
+                    const isSeasonActive = seasonFilter !== "all";
+                    return (
+                      <button onClick={() => setSeasonFilter(v => v === "all" ? "in" : v === "in" ? "off" : "all")}
+                        className={`pro-pill${isSeasonActive ? " is-active" : ""}`}
+                        style={{
+                          "--pill-c-strong": `${seasonColor || "#71717A"}38`, "--pill-c-mid": `${seasonColor || "#71717A"}18`, "--pill-c-soft": `${seasonColor || "#71717A"}10`,
+                          "--pill-c-border": `${seasonColor || "#71717A"}55`, "--pill-c-glow": `${seasonColor || "#71717A"}40`, "--pill-c-halo": `${seasonColor || "#71717A"}30`,
+                          "--pill-c-bottom": `${seasonColor || "#71717A"}20`, "--pill-c-text-shadow": `${seasonColor || "#71717A"}80`, "--pill-c-strong-solid": seasonColor || "#71717A",
+                        }}>
+                        {seasonFilter === "in" ? "In-Season" : seasonFilter === "off" ? "Off-Season" : "All Season"}{isSeasonActive && <span className="pro-pill-underline" aria-hidden />}
+                      </button>
+                    );
+                  })()}
                   <div style={{ display: "flex", alignItems: "center", gap: 4 }}>
                     <span style={{ fontSize: 7, fontWeight: 700, color: filterTitu ? "#4ADE80" : "rgba(255,255,255,0.3)", fontFamily: "Outfit" }}>
                       Titu {filterTitu > 0 ? `≥${filterTitu}%` : "All"}

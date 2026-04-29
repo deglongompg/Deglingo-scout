@@ -735,6 +735,71 @@ export default function LandingPage({ players, onEnter, onNavigate }) {
             })}
           </div>
 
+          {/* Ligues supplementaires — chips discrets sous les cartes Stellar.
+             MLS / Jupiler Pro League / Eredivisie / Champion — lien direct vers Builder. */}
+          <div className="landing-extra-leagues" style={{
+            display: "flex", gap: 10, justifyContent: "center", alignItems: "center",
+            flexWrap: "wrap", marginTop: 22, marginBottom: 8,
+          }}>
+            {[
+              { code: "MLS",      label: null,         logo: "/mls.png",            bg: "/mls-bg.png",        color: "#66BB6A", whiteLogo: false, logoH: "70%" },
+              { code: "JPL",      label: null,         logo: "/jupiler-logo.png",   bg: "/jupiler-bg.png",    color: "#FFCB05", whiteLogo: false, logoH: "115%" },
+              { code: "Ere",      label: null,         logo: "/eredivisie-logo.png", bg: "/eredivisie-bg.png", color: "#FF6B35", whiteLogo: true,  logoH: "78%" },
+              { code: "Champion", label: "CHAMPION",   logo: null,                  bg: "/champion-bg.png",   color: "#EC4899", whiteLogo: false, logoH: 0 },
+            ].map(l => (
+              <button key={l.code} type="button" title={l.code}
+                onClick={() => {
+                  try { sessionStorage.setItem("pro_preselect_league", l.code); } catch (_) {}
+                  if (onNavigate) onNavigate("pro"); else onEnter();
+                }}
+                className="aurora-chip"
+                style={{
+                  position: "relative", overflow: "hidden",
+                  width: 118, height: 38, padding: 0, borderRadius: 99,
+                  cursor: "pointer",
+                  border: `1px solid ${l.color}55`,
+                  backgroundColor: "rgba(10,5,25,0.6)",
+                  boxShadow: `0 0 12px ${l.color}28, 0 0 2px ${l.color}30`,
+                  opacity: 0.92,
+                  "--chip-accent": l.color,
+                }}>
+                <img src={l.bg} alt="" style={{
+                  width: "100%", height: "100%", objectFit: "cover",
+                  objectPosition: "center center",
+                  display: "block", pointerEvents: "none",
+                }} />
+                {l.code === "Champion" && (
+                  <div style={{
+                    position: "absolute", top: "50%", left: "50%",
+                    transform: "translate(-50%, -50%)",
+                    display: "flex", alignItems: "center", gap: 4,
+                    pointerEvents: "none",
+                  }}>
+                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" style={{ filter: "drop-shadow(0 1px 3px rgba(0,0,0,0.8))" }}>
+                      <path d="M6 4h12v3a6 6 0 0 1-12 0V4z M4 5h2v2a2 2 0 0 0 2 2V7H4V5z M18 5h2v2h-4v2a2 2 0 0 0 2-2V5z M10 13h4v3h2v2H8v-2h2v-3z" fill="#fff"/>
+                    </svg>
+                    <span style={{
+                      fontFamily: "'Barlow Condensed', 'Outfit', sans-serif",
+                      fontWeight: 500, fontSize: 12,
+                      color: "#fff", letterSpacing: "0.04em",
+                      textShadow: "0 1px 3px rgba(0,0,0,0.8)",
+                      lineHeight: 1,
+                    }}>{l.label}</span>
+                  </div>
+                )}
+                {l.logo && (
+                  <img src={l.logo} alt={l.code} style={{
+                    position: "absolute", top: "50%", left: "50%",
+                    transform: "translate(-50%, -50%)",
+                    height: l.logoH, width: "auto",
+                    objectFit: "contain", pointerEvents: "none",
+                    filter: `${l.whiteLogo ? "brightness(0) invert(1) " : ""}drop-shadow(0 1px 3px rgba(0,0,0,0.7))`,
+                  }} />
+                )}
+              </button>
+            ))}
+          </div>
+
         </section>
 
 

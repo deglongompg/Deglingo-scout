@@ -218,6 +218,123 @@ const starsKeyframes = `
 @keyframes stellarLivePulse { 0%,100%{opacity:0.85;box-shadow:0 0 4px rgba(248,113,113,0.4)} 50%{opacity:1;box-shadow:0 0 10px rgba(248,113,113,0.85)} }
 @keyframes spin { 0%{transform:rotate(0deg)} 100%{transform:rotate(360deg)} }
 @keyframes loadBar { 0%{transform:translateX(-100%)} 50%{transform:translateX(60%)} 100%{transform:translateX(200%)} }
+/* ═══ Calendar day buttons — premium ice-green glass ═══ */
+@keyframes stCalSelectedPulse {
+  0%,100% { box-shadow:
+    0 0 18px rgba(110,231,183,0.45),
+    0 0 4px rgba(94,234,212,0.4),
+    inset 0 2px 1px rgba(255,255,255,0.28),
+    inset 0 -2px 2px rgba(0,0,0,0.35),
+    inset 0 0 0 1px rgba(255,255,255,0.12); }
+  50%     { box-shadow:
+    0 0 30px rgba(110,231,183,0.75),
+    0 0 8px rgba(94,234,212,0.6),
+    inset 0 2px 1px rgba(255,255,255,0.4),
+    inset 0 -2px 2px rgba(0,0,0,0.4),
+    inset 0 0 0 1px rgba(255,255,255,0.2); }
+}
+@keyframes stCalShineSweep {
+  0%   { transform: translateX(-180%) skewX(-22deg); opacity: 0; }
+  20%  { opacity: 0.7; }
+  60%  { opacity: 0.7; }
+  100% { transform: translateX(180%) skewX(-22deg); opacity: 0; }
+}
+@keyframes stCalBurst {
+  0%   { transform: scale(0); opacity: 1; }
+  100% { transform: scale(2.6); opacity: 0; }
+}
+@keyframes stCalSparkleFly {
+  0%   { transform: translate(0, 0) scale(0.4); opacity: 0; }
+  20%  { opacity: 1; }
+  100% { transform: translate(var(--sx), var(--sy)) scale(1.2); opacity: 0; }
+}
+.st-cal-day {
+  position: relative;
+  overflow: hidden;
+  transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1), background 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+  will-change: transform, box-shadow;
+}
+/* Inactif avec matchs — glass tres subtil pourpre */
+.st-cal-day.has-matches:not(.is-selected) {
+  background:
+    linear-gradient(135deg, rgba(255,255,255,0.04) 0%, rgba(167,139,250,0.06) 100%),
+    rgba(15,8,40,0.7);
+  border: 1px solid rgba(180,140,255,0.18);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+}
+/* Hover sur jour avec matchs — relief vert glace */
+.st-cal-day.has-matches:not(.is-selected):hover {
+  transform: translateY(-3px) scale(1.025);
+  background:
+    radial-gradient(circle at 30% 20%, rgba(255,255,255,0.18) 0%, transparent 45%),
+    linear-gradient(135deg, rgba(110,231,183,0.22) 0%, rgba(94,234,212,0.12) 50%, rgba(167,139,250,0.08) 100%),
+    rgba(15,8,40,0.85);
+  border-color: rgba(110,231,183,0.55);
+  box-shadow:
+    0 6px 18px rgba(110,231,183,0.25),
+    0 0 12px rgba(94,234,212,0.22),
+    inset 0 1px 0 rgba(255,255,255,0.18),
+    inset 0 -1px 0 rgba(0,0,0,0.25);
+}
+.st-cal-day.has-matches:not(.is-selected):hover .cal-day-num {
+  color: #fff !important;
+  text-shadow: 0 0 8px rgba(110,231,183,0.7);
+}
+/* Selectionne — ice-green stellar premium avec pulse */
+.st-cal-day.is-selected {
+  background:
+    radial-gradient(circle at 25% 15%, rgba(255,255,255,0.28) 0%, rgba(255,255,255,0) 42%),
+    linear-gradient(180deg, rgba(255,255,255,0.16) 0%, rgba(255,255,255,0.04) 45%, transparent 50%),
+    linear-gradient(135deg, rgba(110,231,183,0.45) 0%, rgba(94,234,212,0.30) 45%, rgba(167,139,250,0.25) 100%);
+  border: 1px solid rgba(167,243,213,0.7);
+  animation: stCalSelectedPulse 2.6s ease-in-out infinite;
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  transform: translateY(-2px);
+}
+.st-cal-day.is-selected .cal-day-name { color: #ECFDF5 !important; }
+.st-cal-day.is-selected .cal-day-num  { color: #fff !important; text-shadow: 0 0 10px rgba(110,231,183,0.85), 0 0 4px rgba(255,255,255,0.6); }
+.st-cal-day.is-selected .cal-day-month { color: #6EE7B7 !important; }
+.st-cal-day.is-selected .cal-match-count { color: #A7F3D0 !important; }
+/* Sweep glass passant sur le jour selectionne */
+.st-cal-day .st-cal-shine {
+  position: absolute; top: -30%; left: -20%;
+  width: 35%; height: 160%;
+  background: linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.55) 50%, transparent 100%);
+  filter: blur(4px);
+  pointer-events: none;
+  opacity: 0;
+}
+.st-cal-day.is-selected .st-cal-shine {
+  animation: stCalShineSweep 3.8s ease-in-out infinite;
+  animation-delay: 0.6s;
+}
+/* Burst au moment du clic — un cercle qui s'etend + 6 sparkles qui partent en etoile */
+.st-cal-day .st-cal-burst {
+  position: absolute; top: 50%; left: 50%;
+  width: 36px; height: 36px; margin: -18px 0 0 -18px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(110,231,183,0.6) 0%, rgba(94,234,212,0.4) 40%, transparent 70%);
+  pointer-events: none;
+  opacity: 0;
+}
+.st-cal-day.is-bursting .st-cal-burst {
+  animation: stCalBurst 0.65s ease-out forwards;
+}
+.st-cal-day .st-cal-sparkle-fly {
+  position: absolute; top: 50%; left: 50%;
+  width: 4px; height: 4px; margin: -2px 0 0 -2px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(255,255,255,1) 0%, rgba(167,243,213,0.6) 40%, transparent 70%);
+  filter: drop-shadow(0 0 3px rgba(255,255,255,0.9));
+  pointer-events: none;
+  opacity: 0;
+}
+.st-cal-day.is-bursting .st-cal-sparkle-fly { animation: stCalSparkleFly 0.7s ease-out forwards; }
+.st-cal-day.is-bursting { transform: scale(0.96) translateY(-2px); transition: transform 0.08s ease-out; }
+/* Click feedback rapide */
+.st-cal-day.has-matches:active:not(.is-selected) { transform: translateY(-1px) scale(0.98); }
 /* Auto-zoom selon la taille d'ecran — evite de passer en 125% manuellement sur grand ecran */
 @media (min-width: 1600px) { .st-root { zoom: 1.10; } }
 @media (min-width: 1920px) { .st-root { zoom: 1.20; } }
@@ -679,6 +796,12 @@ export default function StellarTab({ players, teams, fixtures, logos = {}, match
   const [weekOffset, setWeekOffset] = useState(0);
   // Multi-selection : array de date strings "YYYY-MM-DD" (max 4), permet selection cross-semaines
   const [selectedDays, setSelectedDays] = useState(() => [getParisTodayStr()]);
+  // Burst feedback au clic — { dateStr: true } pour anim 0.7s
+  const [burstingDay, setBurstingDay] = useState(null);
+  const triggerCalBurst = (dateStr) => {
+    setBurstingDay(dateStr);
+    setTimeout(() => setBurstingDay(prev => prev === dateStr ? null : prev), 700);
+  };
   // Helper : key stable pour useMemo deps
   const selectedDaysKey = selectedDays.join(",");
   const [expandedFixture, setExpandedFixture] = useState(null); // { key, side: "home"|"away" }
@@ -1546,10 +1669,18 @@ export default function StellarTab({ players, teams, fixtures, logos = {}, match
           const isSelected = selectedDays.includes(dateStr);
           const isToday = dateStr === isoDate(today);
 
+          const isBursting = burstingDay === dateStr;
+          const cls = [
+            "st-cal-day",
+            hasMatches ? "has-matches" : "",
+            isSelected ? "is-selected" : "",
+            isBursting ? "is-bursting" : "",
+          ].filter(Boolean).join(" ");
           return (
-            <div key={dateStr} className="st-cal-day"
+            <div key={dateStr} className={cls}
               onClick={() => {
                 if (!hasMatches) return;
+                triggerCalBurst(dateStr);
                 // Clic simple = ajoute ce jour (max 4), re-clic = retire
                 setSelectedDays(prev => {
                   if (prev.includes(dateStr)) return prev.filter(x => x !== dateStr);
@@ -1563,28 +1694,37 @@ export default function StellarTab({ players, teams, fixtures, logos = {}, match
                 setSelectedDays([dateStr]);
               }}
               style={{
-                background: isSelected ? "rgba(120,60,240,0.40)" : hasMatches ? "rgba(15,8,40,0.70)" : "rgba(8,4,25,0.55)",
-                border: isSelected ? "1px solid rgba(196,181,253,0.7)" : isToday ? "1px solid rgba(180,140,255,0.4)" : "1px solid rgba(100,70,200,0.18)",
-                backdropFilter: "blur(10px)",
                 borderRadius: 8, padding: "5px 3px", textAlign: "center",
                 cursor: hasMatches ? "pointer" : "default",
                 opacity: hasMatches ? 1 : 0.4,
-                transition: "all 0.2s",
-                boxShadow: isSelected ? "0 0 24px rgba(160,80,255,0.25), inset 0 0 12px rgba(140,60,255,0.1)" : "none",
+                // Fallback inactif sans match (les classes CSS gerent le reste)
+                ...(hasMatches || isSelected ? {} : { background: "rgba(8,4,25,0.55)", border: isToday ? "1px solid rgba(180,140,255,0.4)" : "1px solid rgba(100,70,200,0.18)" }),
               }}>
-              <div style={{ display: "flex", alignItems: "baseline", justifyContent: "center", gap: 5 }}>
-                <div className="cal-day-name" style={{ fontSize: 10, fontWeight: 800, color: isSelected ? "#C4B5FD" : "rgba(255,255,255,0.7)", letterSpacing: "0.05em" }}>{S.stellarDays[i]}</div>
+              {/* Sweep glass quand selectionne */}
+              <span className="st-cal-shine" aria-hidden />
+              {/* Burst au clic : cercle qui s'etend + 6 sparkles en etoile */}
+              {isBursting && (<>
+                <span className="st-cal-burst" aria-hidden />
+                <span className="st-cal-sparkle-fly" aria-hidden style={{ "--sx": "14px",  "--sy": "-14px" }} />
+                <span className="st-cal-sparkle-fly" aria-hidden style={{ "--sx": "-14px", "--sy": "-14px" }} />
+                <span className="st-cal-sparkle-fly" aria-hidden style={{ "--sx": "16px",  "--sy":   "0px" }} />
+                <span className="st-cal-sparkle-fly" aria-hidden style={{ "--sx": "-16px", "--sy":   "0px" }} />
+                <span className="st-cal-sparkle-fly" aria-hidden style={{ "--sx": "10px",  "--sy":  "16px" }} />
+                <span className="st-cal-sparkle-fly" aria-hidden style={{ "--sx": "-10px", "--sy":  "16px" }} />
+              </>)}
+              <div style={{ display: "flex", alignItems: "baseline", justifyContent: "center", gap: 5, position: "relative", zIndex: 2 }}>
+                <div className="cal-day-name" style={{ fontSize: 10, fontWeight: 800, color: "rgba(255,255,255,0.7)", letterSpacing: "0.05em" }}>{S.stellarDays[i]}</div>
                 <div className="cal-day-num" style={{ fontSize: 14, fontWeight: 700, color: "#fff" }}>{day.getDate()}</div>
-                <div className="cal-day-month" style={{ fontSize: 8, fontWeight: 600, color: isSelected ? "#A78BFA" : "rgba(255,255,255,0.35)", letterSpacing: "0.04em" }}>{day.toLocaleDateString(S.stellarDateLocale, { timeZone: TZ, month: "short" }).toUpperCase().replace(".","")}</div>
+                <div className="cal-day-month" style={{ fontSize: 8, fontWeight: 600, color: "rgba(255,255,255,0.35)", letterSpacing: "0.04em" }}>{day.toLocaleDateString(S.stellarDateLocale, { timeZone: TZ, month: "short" }).toUpperCase().replace(".","")}</div>
               </div>
               {hasMatches ? (
-                <div className="cal-match-count" style={{ fontSize: 9, color: isSelected ? "#C4B5FD" : "#A78BFA", fontWeight: 600 }}>{dayFixtures.length} {dayFixtures.length > 1 ? S.stellarMatches : S.stellarMatch}</div>
+                <div className="cal-match-count" style={{ fontSize: 9, color: "#A78BFA", fontWeight: 600, position: "relative", zIndex: 2 }}>{dayFixtures.length} {dayFixtures.length > 1 ? S.stellarMatches : S.stellarMatch}</div>
               ) : (
                 <div style={{ fontSize: 9, color: "rgba(255,255,255,0.2)" }}>—</div>
               )}
               {/* League dots */}
               {hasMatches && (
-                <div style={{ display: "flex", justifyContent: "center", gap: 3, marginTop: 3 }}>
+                <div style={{ display: "flex", justifyContent: "center", gap: 3, marginTop: 3, position: "relative", zIndex: 2 }}>
                   {[...new Set(dayFixtures.map(f => f.league))].map(lg => (
                     <div key={lg} style={{ width: 6, height: 6, borderRadius: "50%", background: lg === "L1" ? "#4FC3F7" : lg === "PL" ? "#B388FF" : lg === "Bundes" ? "#FFD180" : "#FF8A80" }} />
                   ))}

@@ -1329,9 +1329,10 @@ export default function SorareProTab({ players, teams, fixtures, standings = nul
                   <img src={logoUrl} alt={lg} style={{
                     position: "absolute", top: "50%", left: "50%",
                     transform: "translate(-50%, -50%)",
-                    height: "74%", width: "auto",
+                    height: isJPL ? "110%" : isEre ? "82%" : "74%",
+                    width: "auto",
                     objectFit: "contain", pointerEvents: "none",
-                    filter: `${whiteLogo ? "brightness(0) invert(1) " : ""}drop-shadow(0 1px 3px rgba(0,0,0,0.7))`,
+                    filter: `${whiteLogo || isEre ? "brightness(0) invert(1) " : ""}drop-shadow(0 1px 3px rgba(0,0,0,0.7))`,
                   }} />
                 ))}
               </button>

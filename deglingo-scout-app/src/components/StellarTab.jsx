@@ -2689,6 +2689,7 @@ export default function StellarTab({ players, teams, fixtures, logos = {}, match
                     // Colonnes header : [col, label, title]
                     const COLS = [
                       ["ds","D-Score","D-Score Deglingo"],
+                      ["l5h", "L5", "Histogramme des 5 derniers scores SO5"],
                       ["opp", S.myTeamColAdv, S.myTeamTitleAdv],
                       ["titu_s", S.myTeamColTituS, S.myTeamTitleTituS],
                       ["cs", S.myTeamColCS, S.myTeamTitleCS],
@@ -2705,8 +2706,8 @@ export default function StellarTab({ players, teams, fixtures, logos = {}, match
                       ["ga", S.myTeamColGA, S.myTeamTitleGA],
                     ];
                     const thS = (col) => ({ fontSize: 8, fontWeight: 800, color: sortCol===col?"#C084FC":"rgba(255,255,255,0.3)", cursor:"pointer", userSelect:"none", whiteSpace:"nowrap", textAlign:"center", padding:"0 4px" });
-                    // Grid: +btn | pos+logo | nom | D-Score | L2 AA2 L5 AA5 | L10 DOM EXT AA10 Titu10 Reg10 L40 AA40 G+A
-                    const GRID = "28px 70px 80px 52px 80px 36px 36px 90px 30px 28px 30px 28px 46px 32px 32px 28px 30px 28px 30px 30px 44px";
+                    // Grid: +btn | pos+logo | nom | D-Score | L5histo | Adv | Titu | CS | Win | L2 AA2 L5 AA5 | L10 DOM EXT AA10 Titu10 Reg10 L40 AA40 G+A
+                    const GRID = "28px 70px 80px 52px 40px 80px 36px 36px 90px 30px 28px 30px 28px 46px 32px 32px 28px 30px 28px 30px 30px 44px";
 
                     // ── Badges rareté pour cartes possédées ────────────────
                     const RARITY_COLORS = { unique: "#FFD700", super_rare: "#E040FB", rare: "#42A5F5", limited: "#FF9800", common: "rgba(255,255,255,0.3)" };
@@ -2793,6 +2794,16 @@ export default function StellarTab({ players, teams, fixtures, logos = {}, match
                                   <span style={{ display:"inline-block", padding:"3px 7px", borderRadius:8, fontFamily:"'DM Mono',monospace", fontSize:14, fontWeight:700, color: isSilver(adjDs)?"#1a1a2e":"#fff", background: isSilver(adjDs)?"linear-gradient(90deg,#C0C0C0,#A8E8D0,#B0C4E8,#D4B0E8,#E0D0E8,#fff,#D4B0E8,#B0C4E8,#A8E8D0,#C0C0C0)":dsBg(adjDs), backgroundSize: isSilver(adjDs)?"200% 100%":"auto", animation: isSilver(adjDs)?"silverShine 3s linear infinite":"none", boxShadow: isSilver(adjDs)?"0 0 10px rgba(255,255,255,0.4)": `0 0 8px ${dsColor(adjDs)}30` }}>
                                     {adjDs}
                                   </span>
+                                </div>
+                                {/* L5 histogramme — 5 dernieres notes SO5 (meme rendu que SorareProTab) */}
+                                <div style={{ display:"flex", alignItems:"flex-end", justifyContent:"center", gap:1, height:20 }}>
+                                  {(() => {
+                                    const arr = (p.last_5 || []).slice(-5).reverse();
+                                    const pad = 5 - arr.length;
+                                    return Array.from({ length: 5 }, (_, j) => j < pad ? null : arr[j - pad]).map((v, j) => (
+                                      <div key={j} style={{ width:3, borderRadius:1, height: v != null && v > 0 ? Math.max(2, (v/100)*20) : v === 0 ? 2 : 0, background: v != null && v > 0 ? dc(v) : v === 0 ? "rgba(239,68,68,0.5)" : "transparent", opacity: v != null && v > 0 ? 0.85 : 0.7 }} />
+                                    ));
+                                  })()}
                                 </div>
                                 {/* Adv. — même format Database */}
                                 <div style={{ overflow:"hidden" }}>

@@ -239,32 +239,37 @@ const proKeyframes = `
   animation: tabUnderlinePulse 2.4s ease-in-out infinite;
   pointer-events: none;
 }
-/* Premium slider Titu — custom track + thumb gradient + glow */
+/* Premium slider Titu — custom track + thumb gradient + glow.
+   Couleur thematique pilotee par --slider-thumb-c1/c2/glow (suit rarityColor). */
 .pro-slider-titu {
   -webkit-appearance: none;
   appearance: none;
   width: 150px;
   height: 8px;
   border-radius: 4px;
-  background: var(--slider-bg, linear-gradient(90deg, #4ADE80 0%, #4ADE80 0%, rgba(255,255,255,0.08) 0%, rgba(255,255,255,0.08) 100%));
+  background: var(--slider-bg, rgba(255,255,255,0.08));
   outline: none;
   cursor: pointer;
   box-shadow: inset 0 1px 2px rgba(0,0,0,0.4), inset 0 -1px 0 rgba(255,255,255,0.04);
   transition: box-shadow 0.18s ease;
 }
-.pro-slider-titu:hover { box-shadow: inset 0 1px 2px rgba(0,0,0,0.4), 0 0 0 2px rgba(74,222,128,0.15); }
+.pro-slider-titu:hover {
+  box-shadow:
+    inset 0 1px 2px rgba(0,0,0,0.4),
+    0 0 0 2px var(--slider-thumb-glow, rgba(255,255,255,0.15));
+  filter: brightness(1.05);
+}
 .pro-slider-titu::-webkit-slider-thumb {
   -webkit-appearance: none;
   appearance: none;
   width: 18px;
   height: 18px;
   border-radius: 50%;
-  background:
-    radial-gradient(circle at 30% 25%, #6EE7A8 0%, #4ADE80 45%, #16A34A 100%);
+  background: radial-gradient(circle at 30% 25%, color-mix(in srgb, var(--slider-thumb-c1) 70%, white 30%) 0%, var(--slider-thumb-c1) 45%, color-mix(in srgb, var(--slider-thumb-c2) 70%, black 30%) 100%);
   border: 2px solid rgba(255,255,255,0.6);
   box-shadow:
-    0 0 10px rgba(74,222,128,0.7),
-    0 0 4px rgba(74,222,128,0.5),
+    0 0 10px var(--slider-thumb-glow),
+    0 0 4px var(--slider-thumb-glow),
     inset 0 1px 0 rgba(255,255,255,0.4),
     0 2px 4px rgba(0,0,0,0.4);
   cursor: grab;
@@ -273,17 +278,17 @@ const proKeyframes = `
 .pro-slider-titu::-webkit-slider-thumb:hover {
   transform: scale(1.12);
   box-shadow:
-    0 0 18px rgba(74,222,128,0.9),
-    0 0 6px rgba(74,222,128,0.7),
+    0 0 18px var(--slider-thumb-glow),
+    0 0 6px var(--slider-thumb-glow),
     inset 0 1px 0 rgba(255,255,255,0.5),
     0 3px 6px rgba(0,0,0,0.5);
 }
 .pro-slider-titu::-webkit-slider-thumb:active { cursor: grabbing; transform: scale(1.05); }
 .pro-slider-titu::-moz-range-thumb {
   width: 18px; height: 18px; border-radius: 50%;
-  background: radial-gradient(circle at 30% 25%, #6EE7A8 0%, #4ADE80 45%, #16A34A 100%);
+  background: radial-gradient(circle at 30% 25%, color-mix(in srgb, var(--slider-thumb-c1) 70%, white 30%) 0%, var(--slider-thumb-c1) 45%, color-mix(in srgb, var(--slider-thumb-c2) 70%, black 30%) 100%);
   border: 2px solid rgba(255,255,255,0.6);
-  box-shadow: 0 0 10px rgba(74,222,128,0.7), 0 0 4px rgba(74,222,128,0.5), inset 0 1px 0 rgba(255,255,255,0.4);
+  box-shadow: 0 0 10px var(--slider-thumb-glow), 0 0 4px var(--slider-thumb-glow), inset 0 1px 0 rgba(255,255,255,0.4);
   cursor: grab;
 }
 .pro-slider-titu::-moz-range-track { background: transparent; }
@@ -1944,7 +1949,17 @@ export default function SorareProTab({ players, teams, fixtures, standings = nul
               </div>
               <div style={{ display: "flex", gap: 6, alignItems: "center" }}>
                 {sorareConnected && (<>
-                  <button onClick={disconnectSorare} style={{ display: "flex", alignItems: "center", gap: 4, padding: "4px 8px", borderRadius: 6, border: "1px solid rgba(74,222,128,0.4)", background: "rgba(74,222,128,0.08)", color: "#4ADE80", fontSize: 8, fontWeight: 800, cursor: "pointer", fontFamily: "Outfit" }}>
+                  <button onClick={disconnectSorare} style={{
+                    display: "flex", alignItems: "center", gap: 4,
+                    padding: "4px 10px", borderRadius: 6,
+                    border: `1px solid ${rarityColor}55`,
+                    background: `linear-gradient(135deg, ${rarityColor}28, ${rarityColor}10)`,
+                    color: rarityColor,
+                    fontSize: 9, fontWeight: 800, cursor: "pointer", fontFamily: "Outfit",
+                    boxShadow: `0 0 10px ${rarityColor}30, inset 0 1px 0 rgba(255,255,255,0.08)`,
+                    textShadow: `0 0 6px ${rarityColor}66`,
+                    transition: "all 0.18s ease",
+                  }}>
                     {sorareUser?.nickname || "Sorare"} · {proCardCount} cards{loadingProgress.scanned > 0 ? ` (${loadingProgress.scanned}...)` : ""}
                   </button>
                   <button onClick={refreshCards} title="Refresh cartes (nouvelle carte achetee ?)" style={{ padding: "4px 6px", borderRadius: 6, border: "1px solid rgba(255,255,255,0.1)", background: "rgba(255,255,255,0.04)", color: "rgba(255,255,255,0.4)", fontSize: 10, cursor: "pointer" }}>↻</button>
@@ -2128,23 +2143,25 @@ export default function SorareProTab({ players, teams, fixtures, standings = nul
                     <button onClick={() => setBonusEnabled(v => !v)}
                       className={`pro-pill${bonusEnabled ? " is-active" : ""}`}
                       style={{
-                        "--pill-c-strong": "#4ADE8038", "--pill-c-mid": "#4ADE8018", "--pill-c-soft": "#4ADE8010",
-                        "--pill-c-border": "#4ADE8055", "--pill-c-glow": "#4ADE8040", "--pill-c-halo": "#4ADE8030",
-                        "--pill-c-bottom": "#4ADE8020", "--pill-c-text-shadow": "#4ADE8080", "--pill-c-strong-solid": "#4ADE80",
+                        "--pill-c-strong": `${rarityColor}38`, "--pill-c-mid": `${rarityColor}18`, "--pill-c-soft": `${rarityColor}10`,
+                        "--pill-c-border": `${rarityColor}55`, "--pill-c-glow": `${rarityColor}40`, "--pill-c-halo": `${rarityColor}30`,
+                        "--pill-c-bottom": `${rarityColor}20`, "--pill-c-text-shadow": `${rarityColor}80`, "--pill-c-strong-solid": rarityColor,
                       }}>
                       Bonus {bonusEnabled ? "ON" : "OFF"}{bonusEnabled && <span className="pro-pill-underline" aria-hidden />}
                     </button>
                   )}
                   {sorareConnected && (() => {
-                    const seasonColor = seasonFilter === "in" ? "#4ADE80" : seasonFilter === "off" ? "#A78BFA" : null;
+                    // Couleur thematique : suit la rarete (jaune Limited / rouge Rare)
+                    // pour homogeneite. Le mode All Season reste neutre.
                     const isSeasonActive = seasonFilter !== "all";
+                    const seasonColor = isSeasonActive ? rarityColor : "#71717A";
                     return (
                       <button onClick={() => setSeasonFilter(v => v === "all" ? "in" : v === "in" ? "off" : "all")}
                         className={`pro-pill${isSeasonActive ? " is-active" : ""}`}
                         style={{
-                          "--pill-c-strong": `${seasonColor || "#71717A"}38`, "--pill-c-mid": `${seasonColor || "#71717A"}18`, "--pill-c-soft": `${seasonColor || "#71717A"}10`,
-                          "--pill-c-border": `${seasonColor || "#71717A"}55`, "--pill-c-glow": `${seasonColor || "#71717A"}40`, "--pill-c-halo": `${seasonColor || "#71717A"}30`,
-                          "--pill-c-bottom": `${seasonColor || "#71717A"}20`, "--pill-c-text-shadow": `${seasonColor || "#71717A"}80`, "--pill-c-strong-solid": seasonColor || "#71717A",
+                          "--pill-c-strong": `${seasonColor}38`, "--pill-c-mid": `${seasonColor}18`, "--pill-c-soft": `${seasonColor}10`,
+                          "--pill-c-border": `${seasonColor}55`, "--pill-c-glow": `${seasonColor}40`, "--pill-c-halo": `${seasonColor}30`,
+                          "--pill-c-bottom": `${seasonColor}20`, "--pill-c-text-shadow": `${seasonColor}80`, "--pill-c-strong-solid": seasonColor,
                         }}>
                         {seasonFilter === "in" ? "In-Season" : seasonFilter === "off" ? "Off-Season" : "All Season"}{isSeasonActive && <span className="pro-pill-underline" aria-hidden />}
                       </button>
@@ -2153,9 +2170,9 @@ export default function SorareProTab({ players, teams, fixtures, standings = nul
                   <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
                     <span style={{
                       fontSize: 9, fontWeight: 800,
-                      color: filterTitu ? "#4ADE80" : "rgba(255,255,255,0.4)",
+                      color: filterTitu ? rarityColor : "rgba(255,255,255,0.4)",
                       fontFamily: "Outfit",
-                      textShadow: filterTitu ? "0 0 6px rgba(74,222,128,0.5)" : "none",
+                      textShadow: filterTitu ? `0 0 6px ${rarityColor}80` : "none",
                       letterSpacing: "0.02em",
                       whiteSpace: "nowrap",
                     }}>
@@ -2168,8 +2185,11 @@ export default function SorareProTab({ players, teams, fixtures, standings = nul
                         onChange={e => setFilterTitu(Number(e.target.value))}
                         className="pro-slider-titu"
                         style={{
-                          // Track gradient : portion verte 0->valeur, gris 0%->reste
-                          "--slider-bg": `linear-gradient(90deg, #4ADE80 0%, #16A34A ${(filterTitu/90)*100}%, rgba(255,255,255,0.08) ${(filterTitu/90)*100}%, rgba(255,255,255,0.08) 100%)`,
+                          // Track + thumb suivent la rarete (jaune Limited / rouge Rare)
+                          "--slider-bg": `linear-gradient(90deg, ${rarityColor} 0%, ${rarityColor}dd ${(filterTitu/90)*100}%, rgba(255,255,255,0.08) ${(filterTitu/90)*100}%, rgba(255,255,255,0.08) 100%)`,
+                          "--slider-thumb-c1": rarityColor,
+                          "--slider-thumb-c2": rarityColor,
+                          "--slider-thumb-glow": `${rarityColor}b3`,
                         }}
                       />
                       <div style={{ display: "flex", justifyContent: "space-between", width: 150, marginTop: 2 }}>
@@ -2177,7 +2197,7 @@ export default function SorareProTab({ players, teams, fixtures, standings = nul
                           <span key={v}
                             style={{
                               fontSize: 6, fontWeight: 700,
-                              color: filterTitu === v ? "#4ADE80" : v < filterTitu ? "rgba(74,222,128,0.4)" : "rgba(255,255,255,0.2)",
+                              color: filterTitu === v ? rarityColor : v < filterTitu ? `${rarityColor}66` : "rgba(255,255,255,0.2)",
                               fontFamily: "'DM Mono',monospace",
                               cursor: "pointer",
                               transition: "color 0.15s ease",

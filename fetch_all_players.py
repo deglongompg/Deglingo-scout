@@ -229,7 +229,7 @@ def fetch_batch_players(slugs):
 VALID_COMPS = {
     "premier-league-gb-eng", "laliga-es", "bundesliga-de",
     "ligue-1-fr", "serie-a-it", "mlspa",
-    "jupiler-pro-league", "eredivisie-nl",
+    "jupiler-pro-league", "eredivisie",
 }
 
 

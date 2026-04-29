@@ -227,11 +227,34 @@ with open(STATUS_FILE, "w", encoding="utf-8") as f:
 print(f"\n💾 player_status.json sauvegardé ({len(status)} joueurs)")
 
 # ── PATCH players.json ────────────────────────────────────────────────────────
+# Auto-recover : si un OUT_PATH est corrompu (JSONDecodeError "Extra data" venant
+# d'une ecriture interrompue), on le restore depuis le primary path qui vient
+# d'etre lu/patche. Empeche le crash en chaine de MAJ_turbo a [2/7].
+PRIMARY_PATH = OUT_PATHS[0]
 for path in OUT_PATHS:
     if not os.path.exists(path):
         continue
-    with open(path, encoding="utf-8") as f:
-        data = json.load(f)
+    try:
+        with open(path, encoding="utf-8") as f:
+            data = json.load(f)
+    except json.JSONDecodeError as e:
+        print(f"[WARN] {path} corrompu ({e}) — restore depuis {PRIMARY_PATH}")
+        if path == PRIMARY_PATH:
+            print(f"[ERREUR] primary path corrompu, impossible de restore. Skip.")
+            continue
+        # Copy from primary (already validated since it's path index 0 and we read it OK)
+        import shutil
+        shutil.copy(PRIMARY_PATH, path)
+        with open(path, encoding="utf-8") as f:
+            data = json.load(f)
+        print(f"[OK] {path} restore depuis primary")
+    except OSError as e:
+        # Lock par dev server / Vite preview / antivirus → skip ce path, pas critique
+        print(f"[WARN] {path} verrouille ({e}) — skip (secondary mirror non critique)")
+        if path == PRIMARY_PATH:
+            print(f"[ERREUR] primary path verrouille — impossible de patch.")
+            raise
+        continue
     patched = 0
     for p in data:
         s = status.get(p.get("slug", ""))
@@ -255,9 +278,17 @@ for path in OUT_PATHS:
             p.setdefault("suspended",          False)
             p.setdefault("sorare_proj",        None)
             p.setdefault("sorare_starter_pct", None)
-    with open(path, "w", encoding="utf-8") as f:
-        json.dump(data, f, ensure_ascii=False)
-    print(f"✅ {patched} joueurs patchés → {path}")
+    try:
+        with open(path, "w", encoding="utf-8") as f:
+            json.dump(data, f, ensure_ascii=False)
+        print(f"✅ {patched} joueurs patchés → {path}")
+    except OSError as e:
+        # Lock du file (Vite dev / antivirus / autre process). Le primary doit reussir
+        # mais le secondary mirror peut echouer — non critique.
+        if path == PRIMARY_PATH:
+            print(f"[ERREUR] impossible d'ecrire le primary path ({e}) — il faut fermer le process qui le tient")
+            raise
+        print(f"[WARN] {path} verrouille a l'ecriture ({e}) — skip (mirror non critique)")
 
 # ── RÉSUMÉ ───────────────────────────────────────────────────────────────────
 # Stats titu% et proj — par ligue pour verifier la couverture (surtout Liga qui bug parfois)

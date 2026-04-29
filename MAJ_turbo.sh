@@ -9,7 +9,7 @@ cd "$(dirname "$0")"
 
 START=$(date +%s)
 step() { echo; echo "───────── [$1/$TOTAL] $2 ─────────"; }
-TOTAL=7
+TOTAL=8
 
 echo "========================================================"
 echo "  DEGLINGO SCOUT — MAJ TURBO ($(date '+%Y-%m-%d %H:%M'))"
@@ -24,29 +24,34 @@ if ! grep -q "^SORARE_API_KEY=" .env; then
     echo "⚠️  SORARE_API_KEY absent du .env — batch limite (complexity 500 vs 30000)"
 fi
 
-# ---- [1/7] Fixtures (5 ligues, football-data.org) ----
+# ---- [1/8] Fixtures (5 ligues, football-data.org) ----
 step 1 "FIXTURES (~30s)"
 python3 fetch_fixtures.py
 
-# ---- [2/7] Statut joueurs (blessures, suspensions, enum titu% fallback) ----
-step 2 "STATUT JOUEURS (batch GraphQL, ~10s)"
+# ---- [2/8] Classements officiels (4 ligues EU, football-data.org) ----
+# Affiche dans le panneau Calendrier de Sorare Pro, sous les matchs joues.
+step 2 "STANDINGS (4 ligues, ~3s)"
+python3 fetch_standings.py || echo "  ⚠️  fetch_standings KO (non bloquant)"
+
+# ---- [3/8] Statut joueurs (blessures, suspensions, enum titu% fallback) ----
+step 3 "STATUT JOUEURS (batch GraphQL, ~10s)"
 python3 fetch_player_status.py
 
-# ---- [3/7] Scores SO5 des matchs joués (smart-skip) ----
-step 3 "SCORES SO5 (smart-skip, ~5-30s)"
+# ---- [4/8] Scores SO5 des matchs joués (smart-skip) ----
+step 4 "SCORES SO5 (smart-skip, ~5-30s)"
 python3 fetch_gw_scores.py
 
-# ---- [4/7] Merge data (agrege tout dans players.json) ----
+# ---- [5/8] Merge data (agrege tout dans players.json) ----
 # ⚠️  merge_data.py relit player_status.json et ecrase sorare_starter_pct !
 #     C'est pour ca que fetch_titu_fast.py tourne APRES, pas avant.
-step 4 "MERGE donnees (raw leagues + status + prices)"
+step 5 "MERGE donnees (raw leagues + status + prices)"
 python3 merge_data.py
 
-# ---- [5/7] Titu% précis via API Sorare (OVERRIDE des enum) ----
+# ---- [6/8] Titu% précis via API Sorare (OVERRIDE des enum) ----
 # Utilise game.playerGameScores.anyPlayerGameStats.footballPlayingStatusOdds
 # Schema complet : voir MEMOIRE.md. Marche weekend + mid-week.
 # DOIT TOURNER APRES merge_data.py pour que ses valeurs ne soient pas ecrasees.
-step 5 "TITU% PRECIS via API Sorare (~2min)"
+step 6 "TITU% PRECIS via API Sorare (~2min)"
 if [ ! -f sorare_club_slugs.json ]; then
     echo "  📦 sorare_club_slugs.json absent — génération..."
     python3 build_sorare_club_slugs.py
@@ -60,12 +65,12 @@ else
     echo "  ⚠️  fetch_titu_fast KO et pas de SORAREINSIDE_PASSWORD — on garde enum approx"
 fi
 
-# ---- [6/7] Build Vite ----
-step 6 "BUILD Vite"
+# ---- [7/8] Build Vite ----
+step 7 "BUILD Vite"
 (cd deglingo-scout-app && npm run build)
 
-# ---- [7/7] Deploy Cloudflare + mirror + git push ----
-step 7 "DEPLOY Cloudflare + git push"
+# ---- [8/8] Deploy Cloudflare + mirror + git push ----
+step 8 "DEPLOY Cloudflare + git push"
 (cd deglingo-scout-app && npx wrangler pages deploy dist \
     --project-name=deglingo-sorare \
     --branch=deglingo-sorare \

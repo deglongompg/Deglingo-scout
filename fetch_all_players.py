@@ -194,6 +194,7 @@ PLAYER_FRAGMENT = """{
     }
     sorare_l40:  averageScore(type: LAST_FORTY_SO5_AVERAGE_SCORE)
     sorare_aa40: averageScore(type: LAST_FORTY_AVERAGE_ALL_AROUND_SCORE)
+    sorare_l10:  averageScore(type: LAST_TEN_PLAYED_SO5_AVERAGE_SCORE)
     so5Scores(last: 40) {
         score
         allAroundStats { category totalScore }
@@ -220,7 +221,7 @@ def fetch_batch_players(slugs):
     football = (data.get("data") or {}).get("football") or {}
     return {slug: football.get(f"p{i}") for i, slug in enumerate(slugs)}
 
-# Championnats uniquement — Streak Ligue only (pas de CL, coupes, sélections)
+# Championnats uniquement — utilise pour les autres KPIs (l5/l15/aa/regularity, etc.)
 VALID_COMPS = {
     "premier-league-gb-eng", "laliga-es", "bundesliga-de",
     "ligue-1-fr", "serie-a-it", "mlspa",
@@ -248,6 +249,13 @@ def compute_player_kpis(player, slug, club_name, league):
             continue
         played.append(s)
     played = played[:25]
+
+    # ─── L10 OFFICIEL SORARE ────────────────────────────────────────────────
+    # Sorare expose le L10 directement via `averageScore(type:LAST_TEN_PLAYED_SO5_AVERAGE_SCORE)`.
+    # = moyenne SO5 sur les 10 derniers matchs JOUES toutes competitions, EXCLUANT la
+    # GW courante non validee. Decouvert via AdvancedPlayersSearchQuery (page Marche/Scout
+    # 2026-04-28). Verifie pile : Frenkie de Jong = 63, Trent Alexander-Arnold = 58.
+    sorare_l10 = player.get("sorare_l10")
 
     # detailedScore est dans le meme so5Scores maintenant — on reutilise played pour le profile
     # (filtre VALID_COMPS deja applique, on prend les 15 premiers pour AA profile)
@@ -432,7 +440,8 @@ def compute_player_kpis(player, slug, club_name, league):
         "l2": round(avg(scores[:2]), 1),
         "l3": round(avg(scores[:3]), 1),
         "l5": round(l5, 1),
-        "l10": round(avg(scores[:10]), 1) if len(scores) >= 10 else round(avg(scores), 1),
+        # l10 = OFFICIEL Sorare via API. Fallback sur calcul local (championnat) si null.
+        "l10": round(sorare_l10, 1) if sorare_l10 is not None else (round(avg(scores[:10]), 1) if len(scores) >= 10 else round(avg(scores), 1)),
         "l15": round(avg(scores[:15]), 1) if len(scores) >= 15 else round(avg(scores), 1),
         "l25": round(avg(scores[:25]), 1) if len(scores) >= 25 else round(avg(scores), 1),
         "l40":  round(player.get("sorare_l40") or 0, 1),

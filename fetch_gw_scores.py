@@ -281,7 +281,19 @@ for p in players:
     has_full_data = "last_so5_decisives" in p and "last_match_status" in p
     is_live = p.get("last_match_status") == "playing"
     is_stale_scheduled = p.get("last_match_status") == "scheduled" and latest and latest <= _utc_now.strftime("%Y-%m-%d")
-    if latest and last_so5 and last_so5 >= latest and has_full_data and not is_live and not is_stale_scheduled:
+    # Force refetch si le match est dans les 5 derniers jours : Sorare peut revalider
+    # le score apres coup (ajout decisives, correction stat). Cas Gerard Moreno
+    # passe de 69 a 74 le lendemain via revalidation Sorare.
+    is_recent_match = False
+    if latest:
+        try:
+            from datetime import date
+            latest_d = date.fromisoformat(latest)
+            today_d = date.fromisoformat(_utc_now.strftime("%Y-%m-%d"))
+            is_recent_match = (today_d - latest_d).days <= 5
+        except Exception:
+            is_recent_match = False
+    if latest and last_so5 and last_so5 >= latest and has_full_data and not is_live and not is_stale_scheduled and not is_recent_match:
         skipped_fresh += 1
         continue
     targets.append(p)

@@ -532,6 +532,14 @@ def get_manual_euro_fixtures():
         {"home": "Shakhtar",       "away": "AZ",             "date": "2026-04-09", "kickoff": "19:00", "matchday": "QUARTER_FINALS", "league": "UECL", "competition": "UECL", "home_api": "Shakhtar Donetsk",  "away_api": "AZ Alkmaar"},
         {"home": "Mainz",          "away": "Strasbourg",    "date": "2026-04-09", "kickoff": "19:00", "matchday": "QUARTER_FINALS", "league": "UECL", "competition": "UECL", "home_api": "1. FSV Mainz 05",    "away_api": "RC Strasbourg"},
         {"home": "Crystal Palace", "away": "Fiorentina",    "date": "2026-04-09", "kickoff": "19:00", "matchday": "QUARTER_FINALS", "league": "UECL", "competition": "UECL", "home_api": "Crystal Palace FC",  "away_api": "ACF Fiorentina"},
+
+        # ── UEL Semi-finale Leg 1 — Jeudi 30 avril 2026 ───────────────────
+        {"home": "Nottm Forest",   "away": "Aston Villa",   "date": "2026-04-30", "kickoff": "19:00", "matchday": "SEMI_FINALS",    "league": "UEL", "competition": "UEL",   "home_api": "Nottingham Forest FC", "away_api": "Aston Villa FC"},
+        {"home": "Braga",          "away": "Freiburg",      "date": "2026-04-30", "kickoff": "19:00", "matchday": "SEMI_FINALS",    "league": "UEL", "competition": "UEL",   "home_api": "SC Braga",             "away_api": "SC Freiburg"},
+
+        # ── UECL Semi-finale Leg 1 — Jeudi 30 avril 2026 ──────────────────
+        {"home": "Rayo Vallecano", "away": "Strasbourg",    "date": "2026-04-30", "kickoff": "19:00", "matchday": "SEMI_FINALS",    "league": "UECL", "competition": "UECL", "home_api": "Rayo Vallecano",       "away_api": "RC Strasbourg"},
+        {"home": "Shakhtar",       "away": "Crystal Palace", "date": "2026-04-30", "kickoff": "19:00", "matchday": "SEMI_FINALS",    "league": "UECL", "competition": "UECL", "home_api": "Shakhtar Donetsk",     "away_api": "Crystal Palace FC"},
     ]
     # Normalise les home_api/away_api vers les noms canoniques Sorare
     # (les clubs qu'on a dans players.json : Real Madrid CF -> Real Madrid, etc.)

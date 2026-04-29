@@ -5,6 +5,174 @@
 
 ---
 
+## 🥇 SORARE GRAPHQL — L10 officiel via averageScore enum (decouvert 2026-04-29, 3h de chasse)
+
+### La VERITE ultime
+
+Le L10 affiche par Sorare (page Marche/Scout, fiche joueur) est dispo via :
+
+```graphql
+sorare_l10: averageScore(type: LAST_TEN_PLAYED_SO5_AVERAGE_SCORE)
+```
+
+**Le mot `PLAYED` au milieu est la cle** — sans lui (`LAST_TEN_SO5_AVERAGE_SCORE`), l'enum n'existe pas. Decouvert via DevTools sur `AdvancedPlayersSearchQuery` (variables exposent les fields index `so5.last_ten_played_so5_average_score`).
+
+### Pourquoi c'est critique : CAP260 alignement Sorare
+
+`sumL10` (somme L10 des 5 picks d'une saved team) declenche le bonus CAP260 (+4%) si `<= 260`. Si notre l10 diverge du Sorare, on declenche CAP260 a tort/raison → score Mes Teams divergent +/- 4-10 pts vs Sorare.
+
+Avant fix : on calculait `l10` comme `avg(scores[:10])` filtre championnat-seul → frenkie 60 vs Sorare 63, Trent 57.2 vs 58, Cucho 39.9 vs 48. SumL10 251.7 → CAP applique a tort → score 296 (Sorare 286).
+
+Apres fix : on chope `sorare_l10` directement → SumL10 263 → CAP non applique → score 285 (Sorare 286, ecart 1pt = arrondi power, OK).
+
+### Chemins morts a NE PAS retenter
+
+| Tentative | Resultat |
+|---|---|
+| `LAST_TEN_SO5_AVERAGE_SCORE` (sans PLAYED) | ❌ enum invalide |
+| `LAST_TEN_AVG_SCORE`, `LAST_TEN_AVERAGE_SCORE`, `LAST_TWENTY_SO5_*` | ❌ enums invalides |
+| `LAST_TEN_SO5_PLAYED_AVERAGE_SCORE` (PLAYED apres SO5) | ❌ ordre des mots inverse |
+| Calcul local via `so5Scores(last:40)` | ⚠️ retourne **10 entries seulement** (cap Sorare cache) |
+| Calcul local via `allSo5Scores(first:40)` | ⚠️ marche solo mais explose la complexity en batch GraphQL → tous les batches retournent vide en silence → casse le fetch |
+| Filtrer par competitions (championnat seul, +UEFA, toutes-comp) | ❌ Sorare exclut Copa del Rey/FA Cup/DFB-Pokal/Coupe de France selon une regle qu'on ne peut pas reproduire |
+| Override `players.json` manuellement avec valeurs Sorare scrapees | ❌ trop fragile |
+
+### Comportement Sorare (pour reference)
+
+= moyenne SO5 sur 10 derniers matchs JOUES (`statusTyped="played"`, `score > 0`), TOUTES competitions sauf coupes nationales, **EXCLU la GW courante non validee** (GW Pro = ven 16h → mar 16h Paris). Mise a jour mardi 16h-19h Paris (3h post-lock).
+
+Bulles affichees Sorare = `Math.floor(score)` (ex: 94.98 → 94). Calcul interne aussi en floor.
+
+### Enums apparente confirmes
+
+- `LAST_FIVE_SO5_AVERAGE_SCORE` (L5)
+- **`LAST_TEN_PLAYED_SO5_AVERAGE_SCORE`** (L10 — PLAYED au milieu)
+- `LAST_FIFTEEN_SO5_AVERAGE_SCORE` (L15)
+- `LAST_FORTY_SO5_AVERAGE_SCORE` (L40)
+
+### Fichiers touches
+
+- `fetch_all_players.py` : ajout `sorare_l10` dans PLAYER_FRAGMENT, utilise comme `l10` dans `compute_player_kpis`
+- `proScoring.js::enrichPick` : refresh `l10` depuis `players.json` fresh (pour CAP260 correct), MAIS PAS `ds` (sinon captain auto bascule sur saves anciennes)
+
+---
+
+## 🎯 SCORING SAVED TEAMS — alignement Sorare au pixel pres (29/04/2026)
+
+Validation : Damien 1er Ligue 1 D3 + 80$ avec score Mes Teams = score Sorare a +/- 1pt pres sur ses 4 saved teams.
+
+### Les 5 regles inviolables (proScoring.js)
+
+1. **Power applique tant que > 0** (pas seulement > 1)
+   ```js
+   const power = (card?.power != null && card.power > 0) ? card.power : 1;
+   ```
+   Les Classics avec malus negatif (Trent fin de saison, power 0.88 = -12%) doivent etre appliques. NE PAS filtrer `> 1`.
+
+2. **Math.floor partout** (Sorare tronque, pas round)
+   ```js
+   // Total final
+   const projectedTotal = Math.floor(rawFull * (1 + compoPct / 100));
+   const liveTotal = Math.floor(liveRaw * (1 + compoPct / 100));
+   const bonusPts = Math.floor(rawFull - rawBase);
+   // Score per card
+   const raw = Math.floor(pick.last_so5_score);  // 71.7 → 71
+   ```
+
+3. **Captain bonus sur RAW** (pas post-power)
+   ```js
+   const captainBonus = isCap ? raw * 0.5 : 0;  // raw etant deja Math.floor
+   ```
+
+4. **CAP260 inclusif** : `<= 260` (pas `<`)
+   ```js
+   const cap260 = picks.length === expectedSize && sumL10 <= 260;
+   ```
+   Cas reproduit : sumL10 = 260 pile, Sorare applique CAP, nous on devait suivre.
+
+5. **Captain auto-DS fallback** pour les saves anciennes (`team.captain = null`)
+   - `team.captain` peut etre null sur les saves d'avant le fix `effectiveCaptainSlot`
+   - Fallback : pick avec `max(p.ds × power)`
+   - **MAIS** `enrichPick` ne refresh PAS `ds` → le fallback utilise les ds figes au save → captain stable (pas de basculement Pepe → Oblak quand ds Oblak monte)
+
+### Cas debug
+
+| Team | Compo | Notre | Sorare | Delta |
+|---|---|---|---|---|
+| Pepe team Liga | MC seul | 285 | 286 | -1 (arrondi power) |
+| Frenkie team Liga | MC seul | 285 | 286 | -1 |
+| Cubarsí team Liga (CAP) | MC + CAP | 486 | 486 | 0 ✓ |
+
+### Fichiers touches
+
+- `proScoring.js::getPickScore` : Math.floor + power > 0
+- `proScoring.js::computeTeamScores` : fallback captain auto, cap260 <=260, Math.floor au final
+- `proScoring.js::enrichPick` : refresh l10, pas ds
+- `SorareProTab.jsx::saveCurrentTeam` : `effectiveCaptainSlot` figé au save (evite team.captain=null sur les nouvelles saves)
+
+---
+
+## 🔄 fetch_gw_scores — refetch sur 5 derniers jours (revalidation Sorare)
+
+Sorare revalide les scores apres coup (mardi 16h-19h Paris, 3h post-lock GW). Ajout de decisives oubliees, correction de stats. Cas reproduit 29/04 : Gerard Moreno 69 stale → Sorare 74.
+
+**Fix dans le smart-skip :**
+```python
+is_recent_match = False
+if latest:
+    try:
+        from datetime import date
+        latest_d = date.fromisoformat(latest)
+        today_d = date.fromisoformat(_utc_now.strftime("%Y-%m-%d"))
+        is_recent_match = (today_d - latest_d).days <= 5
+    except Exception: pass
+if latest and last_so5 and last_so5 >= latest and has_full_data and not is_live and not is_stale_scheduled and not is_recent_match:
+    skipped_fresh += 1; continue
+```
+
+5 jours = couvre largement la fenetre cloture Sorare. Au-dela, score fige → smart-skip reprend → MAJ Turbo reste rapide.
+
+---
+
+## 🛡 fetch_player_status — try/except OSError sur le mirror
+
+`OSError [Errno 22] Invalid argument: 'public/data/players.json'` si le file est lock par un process (Vite dev en background, antivirus). Le mirror legacy faisait crasher MAJ Turbo entiere.
+
+**Fix :**
+```python
+try:
+    with open(path, "w", encoding="utf-8") as f:
+        json.dump(data, f, ensure_ascii=False)
+except OSError as e:
+    if path == PRIMARY_PATH:
+        raise  # primary doit reussir
+    print(f"[WARN] {path} verrouille — skip (mirror non critique)")
+```
+
+**Cleanup process si lock recurrent :**
+```cmd
+taskkill /F /IM node.exe
+taskkill /F /IM python.exe
+```
+
+---
+
+## 🌍 fetch_standings.py — classement live des ligues europeennes
+
+Nouveau script (29/04/2026). Recupere via football-data.org (cle deja dans `.env`) le classement des 4 ligues EU (L1, PL, Liga, Bundes — MLS pas dans free tier). Applique `club_aliases.json` → noms canoniques Sorare.
+
+Wired dans `MAJ_turbo.sh` etape `[2/8] STANDINGS` (~5s, non bloquant).
+
+Front : panneau classement dans Sorare Pro (sous le calendrier), 8 colonnes `# logo CLUB MJ BP BC +/- PTS`, tiers europeens colores (UCL vert, EL bleu, ECL cyan, relegation rouge), pas de scroll.
+
+`LEAGUE_TIERS` 2025-26 (verifie sources officielles UEFA) :
+- L1 : 1-3 UCL · 4 UCL barrage · 5 EL · 6 ECL · 16 barrage · 17-18 relegation
+- PL : 1-5 UCL (5e via European Performance Spot) · 6 EL · 7 ECL · 18-19-20 relegation
+- Liga : 1-5 UCL (5e via EPS) · 6 EL · 7 ECL · 18-19-20 relegation
+- Bundes : 1-4 UCL · 5 EL · 6 ECL · 16 barrage · 17-18 relegation
+
+---
+
 ## 🔥 SORARE GRAPHQL — schema titu% (decouvert 2026-04-22, 5h de chasse)
 
 ### La VERITE ultime

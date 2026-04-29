@@ -1593,8 +1593,14 @@ export default function StellarTab({ players, teams, fixtures, logos = {}, match
       if (!dateStr) continue;
 
       // Freeze check (single day only)
+      // Filtre defensif : si l'ancien cache contient des fixtures d'autres jours
+      // (cas multi-day select sauve par erreur), on garde uniquement la date demandee.
       if (selectedDates.length === 1 && dailyLockKey && dateStr === dailyLockKey && frozenDayData) {
-        return { ...frozenDayData, frozen: true };
+        return {
+          ...frozenDayData,
+          fixtures: (frozenDayData.fixtures || []).filter(f => f.date === dateStr),
+          frozen: true,
+        };
       }
 
       const dayFixtures = fixturesByDate[dateStr] || [];
@@ -1740,13 +1746,18 @@ export default function StellarTab({ players, teams, fixtures, logos = {}, match
   useEffect(() => {
     if (!stellarFreezeKey || frozenDayData) return; // déjà figé ou pas encore l'heure
     if (!dayData || dayData.frozen) return;
-    if (selectedDays.length === 0) return;
-    const dateStr = [...selectedDays].sort()[0];
+    // Le freeze ne fait sens qu'en mode 1 jour (Stellar quotidien). Si l'utilisateur a
+    // multi-selectionne, on ne sauve PAS (sinon on sauverait des fixtures d'autres jours
+    // qui se retrouvent affichees sous Wed 29 au prochain reload — bug fantome UEL/UECL).
+    if (selectedDays.length !== 1) return;
+    const dateStr = selectedDays[0];
     if (!dateStr) return;
     if (dateStr !== dailyLockKey) return;
     if (!dayData.players?.length) return;
+    // Filtre defensif sur ce qu'on sauve : uniquement les fixtures du jour cible
+    const fixturesForDay = (dayData.fixtures || []).filter(f => f.date === dateStr);
     saveFrozen(stellarFreezeKey, {
-      fixtures: dayData.fixtures,
+      fixtures: fixturesForDay,
       players: dayData.players,
       teams: dayData.teams || [],
       decisivePick: dayData.decisivePick,

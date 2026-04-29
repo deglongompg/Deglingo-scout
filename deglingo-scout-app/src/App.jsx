@@ -9,11 +9,11 @@ import LandingPage from "./components/LandingPage";
 import { t } from "./utils/i18n";
 
 const TABS = [
-  { id: "db", label: "Database", icon: "📊" },
-  { id: "pro", label: "Sorare Pro", icon: "⚙️" },
-  { id: "stellar", label: "Sorare Stellar", icon: "✨" },
-  { id: "recap", label: "Mes Teams", icon: "📋" },
-  { id: "fight", label: "Fight", icon: "🥊" },
+  { id: "db",      label: "Database",       icon: "📊", color: "#06B6D4" }, // cyan analytics
+  { id: "pro",     label: "Sorare Pro",     icon: "⚙️", color: "#F59E0B" }, // gold premium
+  { id: "stellar", label: "Sorare Stellar", icon: "✨", color: "#A78BFA" }, // violet holo
+  { id: "recap",   label: "Mes Teams",      icon: "📋", color: "#C0C0C0" }, // silver gestion
+  { id: "fight",   label: "Fight",          icon: "🥊", color: "#EF4444" }, // red combat
   // { id: "reco", label: "Best Pick", icon: "⚽" }, // ← Masque cote clients (code conserve dans RecoTab.jsx, re-activer en decommentant)
 ];
 
@@ -161,6 +161,23 @@ export default function App() {
       <style>{`
         @keyframes silverShine { 0%{background-position:200% center} 100%{background-position:-200% center} }
         @keyframes holoShift { 0%{filter:hue-rotate(0deg) brightness(1.4) saturate(1.2)} 50%{filter:hue-rotate(180deg) brightness(1.8) saturate(1.6)} 100%{filter:hue-rotate(360deg) brightness(1.4) saturate(1.2)} }
+        /* Premium tabs : underline pulse + hover lift */
+        @keyframes tabUnderlinePulse { 0%,100%{opacity:0.65;transform:scaleX(1)} 50%{opacity:1;transform:scaleX(1.15)} }
+        .ds-tab { will-change: transform, box-shadow; }
+        .ds-tab:hover:not(.is-active):not(:disabled) {
+          color: rgba(255,255,255,0.85) !important;
+          background: linear-gradient(135deg, rgba(255,255,255,0.06), rgba(255,255,255,0.02)) !important;
+          transform: translateY(-1px);
+        }
+        .ds-tab:hover:not(.is-active):not(:disabled) > span:first-child {
+          filter: saturate(1) opacity(1) !important;
+          transform: scale(1.05) !important;
+        }
+        .ds-tab.is-active:hover:not(:disabled) {
+          transform: translateY(-1px);
+          box-shadow: 0 0 28px var(--tab-accent), 0 0 6px var(--tab-accent), inset 0 1px 0 rgba(255,255,255,0.18) !important;
+        }
+        .ds-tabs-pill { transition: all 0.3s ease; }
         @media(max-width:768px){
           .ds-app-root { zoom: 1 !important; }
           .ds-header-inner { display: flex !important; flex-wrap: wrap !important; align-items: center !important; row-gap: 6px !important; }
@@ -205,44 +222,98 @@ export default function App() {
             </div>
           </div>
 
-          {/* Tabs centrés */}
-          <div className="ds-header-tabs" style={{ display: "flex", gap: 4, justifyContent: "center" }}>
-            {TABS.map(tab2 => (
-              <button
-                key={tab2.id}
-                onClick={() => !tab2.disabled && setTab(tab2.id)}
-                disabled={tab2.disabled}
-                style={{
-                  padding: "6px 14px", borderRadius: 10, fontSize: 12, fontWeight: 600,
-                  border: "none", fontFamily: "Outfit", position: "relative",
-                  cursor: tab2.disabled ? "not-allowed" : "pointer",
-                  display: "inline-flex", alignItems: "center", gap: 4,
-                  whiteSpace: "nowrap", flexShrink: 0,
-                  opacity: tab2.disabled ? 0.35 : 1,
-                  background: tab === tab2.id ? "rgba(99,102,241,0.12)" : "transparent",
-                  outline: tab === tab2.id ? "1px solid rgba(99,102,241,0.3)" : "none",
-                  transition: "all 0.2s",
-                  ...(tab === tab2.id && tab2.id === "reco" ? {
-                    ...silverShinyStyle,
-                    WebkitTextFillColor: "transparent",
-                  } : tab === tab2.id && tab2.id === "stellar" ? {
-                    background: "linear-gradient(90deg,#C4B5FD,#A78BFA,#8B5CF6,#7C3AED,#A78BFA,#C4B5FD)",
-                    backgroundSize: "200% 100%",
-                    WebkitBackgroundClip: "text",
-                    WebkitTextFillColor: "transparent",
-                    backgroundClip: "text",
-                    animation: "silverShine 3s linear infinite",
-                  } : {
-                    color: tab === tab2.id ? "#A5B4FC" : "rgba(255,255,255,0.4)",
-                  }),
-                }}
-              >
-                {tab2.id === "stellar"
-                  ? <img className="ds-stellar-icon" src="/Stellar.png" alt="" style={{ width: 16, height: 16, objectFit: "contain", mixBlendMode: "screen", animation: "holoShift 3s linear infinite", flexShrink: 0 }} />
-                  : <>{tab2.icon}{" "}</>
-                }{tab2.label}{tab2.disabled && <span style={{ fontSize: 7, color: "rgba(255,255,255,0.3)", marginLeft: 2 }}>soon</span>}
-              </button>
-            ))}
+          {/* Tabs centres — pill container glass premium avec couleur thematique par tab */}
+          <div className="ds-header-tabs ds-tabs-pill" style={{
+            display: "inline-flex",
+            gap: 2,
+            justifyContent: "center",
+            padding: 4,
+            borderRadius: 14,
+            background: "linear-gradient(180deg, rgba(255,255,255,0.05), rgba(255,255,255,0.015))",
+            border: "1px solid rgba(255,255,255,0.07)",
+            backdropFilter: "blur(20px) saturate(150%)",
+            WebkitBackdropFilter: "blur(20px) saturate(150%)",
+            boxShadow: "inset 0 1px 0 rgba(255,255,255,0.05), 0 8px 24px rgba(0,0,0,0.25)",
+          }}>
+            {TABS.map(tab2 => {
+              const isActive = tab === tab2.id;
+              const c = tab2.color;
+              const isStellar = tab2.id === "stellar";
+              return (
+                <button
+                  key={tab2.id}
+                  onClick={() => !tab2.disabled && setTab(tab2.id)}
+                  disabled={tab2.disabled}
+                  className={`ds-tab${isActive ? " is-active" : ""}`}
+                  style={{
+                    padding: "7px 16px", borderRadius: 11, fontSize: 12, fontWeight: 700,
+                    border: "1px solid transparent",
+                    fontFamily: "Outfit", position: "relative",
+                    cursor: tab2.disabled ? "not-allowed" : "pointer",
+                    display: "inline-flex", alignItems: "center", gap: 6,
+                    whiteSpace: "nowrap", flexShrink: 0,
+                    opacity: tab2.disabled ? 0.35 : 1,
+                    transition: "all 0.22s ease",
+                    color: isActive ? "#fff" : "rgba(255,255,255,0.55)",
+                    background: isActive
+                      ? `linear-gradient(135deg, ${c}38 0%, ${c}18 50%, ${c}10 100%)`
+                      : "transparent",
+                    borderColor: isActive ? `${c}55` : "transparent",
+                    boxShadow: isActive
+                      ? `0 0 20px ${c}40, 0 0 4px ${c}30, inset 0 1px 0 rgba(255,255,255,0.12), inset 0 -1px 0 ${c}20`
+                      : "none",
+                    textShadow: isActive ? `0 0 12px ${c}80, 0 1px 2px rgba(0,0,0,0.5)` : "none",
+                    "--tab-accent": c,
+                  }}
+                >
+                  {isStellar ? (
+                    <img className="ds-stellar-icon" src="/Stellar.png" alt="" style={{
+                      width: 16, height: 16, objectFit: "contain",
+                      mixBlendMode: "screen",
+                      animation: "holoShift 3s linear infinite",
+                      flexShrink: 0,
+                      filter: isActive ? `drop-shadow(0 0 8px ${c}99)` : "none",
+                    }} />
+                  ) : (
+                    <span style={{
+                      fontSize: 14, lineHeight: 1, flexShrink: 0,
+                      filter: isActive
+                        ? `drop-shadow(0 0 6px ${c}aa) saturate(1.3)`
+                        : `saturate(0.5) opacity(0.7)`,
+                      transform: isActive ? "scale(1.08)" : "scale(1)",
+                      transition: "all 0.22s ease",
+                    }}>{tab2.icon}</span>
+                  )}
+                  {/* Label : Stellar garde son effet holo gradient text */}
+                  {isStellar && isActive ? (
+                    <span style={{
+                      background: "linear-gradient(90deg,#C4B5FD,#A78BFA,#8B5CF6,#C4B5FD)",
+                      backgroundSize: "200% 100%",
+                      WebkitBackgroundClip: "text",
+                      WebkitTextFillColor: "transparent",
+                      backgroundClip: "text",
+                      animation: "silverShine 3s linear infinite",
+                      fontWeight: 800,
+                    }}>{tab2.label}</span>
+                  ) : (
+                    <span>{tab2.label}</span>
+                  )}
+                  {/* Underline neon anime sous l'actif */}
+                  {isActive && (
+                    <span aria-hidden style={{
+                      position: "absolute",
+                      bottom: 2, left: "20%", right: "20%",
+                      height: 2,
+                      borderRadius: 2,
+                      background: `linear-gradient(90deg, transparent, ${c}, transparent)`,
+                      boxShadow: `0 0 8px ${c}`,
+                      animation: "tabUnderlinePulse 2.4s ease-in-out infinite",
+                    }} />
+                  )}
+                  {tab2.disabled && <span style={{ fontSize: 7, color: "rgba(255,255,255,0.3)", marginLeft: 2 }}>soon</span>}
+                </button>
+              );
+            })}
           </div>
 
           {/* CTA + Lang toggle droite */}

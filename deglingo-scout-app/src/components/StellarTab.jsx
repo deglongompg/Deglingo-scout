@@ -2319,42 +2319,8 @@ export default function StellarTab({ players, teams, fixtures, logos = {}, match
                   </div>
                 )}
 
-                {/* ── Header ── */}
-                <div style={{ padding: "9px 14px", borderBottom: "1px solid rgba(255,255,255,0.06)", display: "flex", alignItems: "center", justifyContent: "space-between", gap: 8 }}>
-                  <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-                    <img src="/Stellar.png" alt="" style={{ width: 18, height: 18, objectFit: "contain" }} />
-                    <div>
-                      <div style={{ fontSize: 11, fontWeight: 900, color: "#C4B5FD", letterSpacing: "0.05em" }}>{t(lang,"myTeamTitle")}</div>
-                      <div style={{ fontSize: 8, color: "rgba(255,255,255,0.35)", marginTop: 1 }}>
-                        {filledCount < 5 ? S.myTeamSelect(5 - filledCount) : <span style={{ color: palier?.silver ? "#C0C0C0" : palier ? palier.color : "rgba(255,255,255,0.35)" }}>Score : {totalAdj} pts{palier ? ` · ${palier.reward}` : ""}</span>}
-                      </div>
-                    </div>
-                  </div>
-                  <div style={{ display: "flex", gap: 6, alignItems: "center" }}>
-                    {/* Boutons visibles UNIQUEMENT si connecté */}
-                    {sorareConnected && (
-                      <button onClick={disconnectSorare} title={`Connecté : ${sorareUser?.nickname || sorareUser?.slug || "Sorare"}`} style={{
-                        display: "flex", alignItems: "center", gap: 6,
-                        padding: "6px 12px", borderRadius: 8,
-                        border: "1px solid rgba(196,181,253,0.45)",
-                        background: "linear-gradient(135deg, rgba(167,139,250,0.22), rgba(110,231,183,0.10))",
-                        color: "#DDD6FE",
-                        fontSize: 9, fontWeight: 800, cursor: "pointer", fontFamily: "Outfit",
-                        boxShadow: "0 0 10px rgba(167,139,250,0.3), inset 0 1px 0 rgba(255,255,255,0.1)",
-                        textShadow: "0 0 6px rgba(196,181,253,0.6)",
-                        transition: "all 0.18s ease",
-                      }}>
-                        <div style={{ width: 20, height: 20, borderRadius: "50%", background: "rgba(167,139,250,0.3)", border: "1px solid rgba(196,181,253,0.5)", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 10, fontWeight: 900, color: "#DDD6FE", flexShrink: 0 }}>
-                          {(sorareUser?.nickname || "S").charAt(0).toUpperCase()}
-                        </div>
-                        <div style={{ display: "flex", flexDirection: "column", gap: 0 }}>
-                          <span>{sorareUser?.nickname || "Sorare"}</span>
-                          <span style={{ fontSize: 7, color: "rgba(196,181,253,0.7)" }}>{stellarCardCount} Stellar</span>
-                        </div>
-                      </button>
-                    )}
-                  </div>
-                </div>
+                {/* Header "MON EQUIPE STELLAIRE" + DeglingoMPG supprime — on gagne de la place
+                    en deplacant le bouton Sorare dans la barre de filtres ci-dessous */}
 
                 {/* ── Overlay FLOU + bouton CONNECTER si pas connecté ── */}
                 {!sorareConnected && (
@@ -2605,6 +2571,30 @@ export default function StellarTab({ players, teams, fixtures, logos = {}, match
                         }}
                       />
                     </div>
+                    {/* DeglingoMPG · Stellar count — descendu ici (header supprime pour gagner de la place) */}
+                    {sorareConnected && (
+                      <button onClick={disconnectSorare} title={`Connecté : ${sorareUser?.nickname || sorareUser?.slug || "Sorare"}`} style={{
+                        marginLeft: "auto",
+                        display: "flex", alignItems: "center", gap: 6,
+                        padding: "4px 10px", borderRadius: 8,
+                        border: "1px solid rgba(196,181,253,0.45)",
+                        background: "linear-gradient(135deg, rgba(167,139,250,0.22), rgba(110,231,183,0.10))",
+                        color: "#DDD6FE",
+                        fontSize: 9, fontWeight: 800, cursor: "pointer", fontFamily: "Outfit",
+                        boxShadow: "0 0 10px rgba(167,139,250,0.3), inset 0 1px 0 rgba(255,255,255,0.1)",
+                        textShadow: "0 0 6px rgba(196,181,253,0.6)",
+                        transition: "all 0.18s ease",
+                        height: 28,
+                      }}>
+                        <div style={{ width: 18, height: 18, borderRadius: "50%", background: "rgba(167,139,250,0.3)", border: "1px solid rgba(196,181,253,0.5)", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 9, fontWeight: 900, color: "#DDD6FE", flexShrink: 0 }}>
+                          {(sorareUser?.nickname || "S").charAt(0).toUpperCase()}
+                        </div>
+                        <div style={{ display: "flex", flexDirection: "column", gap: 0, lineHeight: 1.1 }}>
+                          <span>{sorareUser?.nickname || "Sorare"}</span>
+                          <span style={{ fontSize: 7, color: "rgba(196,181,253,0.7)" }}>{stellarCardCount} Stellar</span>
+                        </div>
+                      </button>
+                    )}
                   </div>
 
                   {/* ── LISTE JOUEURS SIMPLIFIEE ── */}

@@ -433,14 +433,18 @@ export default function SorareProTab({ players, teams, fixtures, standings = nul
 
   const disconnectSorare = () => {
     localStorage.removeItem("sorare_access_token");
-    localStorage.removeItem("pro_cards_cache");
-    localStorage.removeItem("pro_cards_cache_time");
+    localStorage.removeItem("pro_cards_cache");      // legacy
+    localStorage.removeItem("pro_cards_cache_time"); // legacy
+    localStorage.removeItem("pro_cards_cache_v2");
+    localStorage.removeItem("pro_cards_cache_time_v2");
     setSorareConnected(false); setSorareCards([]); setSorareUser(null); setMyCardsMode(false);
   };
 
   const refreshCards = () => {
-    localStorage.removeItem("pro_cards_cache");
-    localStorage.removeItem("pro_cards_cache_time");
+    localStorage.removeItem("pro_cards_cache");      // legacy
+    localStorage.removeItem("pro_cards_cache_time"); // legacy
+    localStorage.removeItem("pro_cards_cache_v2");
+    localStorage.removeItem("pro_cards_cache_time_v2");
     const token = localStorage.getItem("sorare_access_token");
     if (token) fetchCards(token);
   };

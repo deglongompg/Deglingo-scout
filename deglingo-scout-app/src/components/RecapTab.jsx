@@ -100,7 +100,9 @@ function groupTeamsByLeague(store) {
 function buildCardsBySlugFromCache() {
   const empty = { limited: {}, rare: {} };
   try {
-    const raw = localStorage.getItem("pro_cards_cache");
+    // SorareProTab ecrit dans pro_cards_cache_v2 (depuis ajout filtre Serie A).
+    // Fallback sur ancien pro_cards_cache pour migration douce.
+    const raw = localStorage.getItem("pro_cards_cache_v2") || localStorage.getItem("pro_cards_cache");
     if (!raw) return empty;
     const cards = JSON.parse(raw);
     if (!Array.isArray(cards)) return empty;
@@ -477,29 +479,16 @@ function RecapTabInner({ players, logos, lang }) {
       <style>{`
 @keyframes recapThemeFadeIn { 0%{opacity:0} 100%{opacity:1} }
 @keyframes recapThemeBgFadeIn { 0%{opacity:0} 100%{opacity:0.55} }
-/* Recap league chips — single line responsive sur toutes tailles */
-.recap-league-btns { display: flex; gap: 8px; flex-wrap: nowrap; overflow-x: auto; -webkit-overflow-scrolling: touch; }
-.recap-league-btns::-webkit-scrollbar { height: 4px; }
-.recap-league-btns::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.12); border-radius: 4px; }
-.recap-league-btns::-webkit-scrollbar-track { background: transparent; }
-.recap-league-btns > button { flex-shrink: 0; }
-/* Defaut : 9 chips x 150 = 1350px. Reduit selon la largeur dispo. */
-@media (max-width: 1400px) {
-  .recap-league-btns { gap: 6px; }
-  .recap-league-btns > button { width: 132px !important; height: 46px !important; }
-}
-@media (max-width: 1200px) {
-  .recap-league-btns { gap: 5px; }
-  .recap-league-btns > button { width: 112px !important; height: 42px !important; }
-}
-@media (max-width: 1024px) {
-  .recap-league-btns { gap: 4px; }
-  .recap-league-btns > button { width: 96px !important; height: 38px !important; }
-}
-@media (max-width: 768px) {
-  .recap-league-btns > button { width: 80px !important; height: 34px !important; }
-  .recap-league-btns > button img[src*="logo"] { display: none; } /* drop le logo en plus petit, garde le bg + count */
-}
+/* Recap league chips — single line responsive, NO SCROLL : on reduit la taille */
+.recap-league-btns { display: flex; gap: 6px; flex-wrap: nowrap; overflow: hidden; }
+.recap-league-btns > button { flex: 0 1 auto; min-width: 0; }
+/* Tailles graduees : 9 chips toujours visibles sur toute largeur d'ecran */
+@media (max-width: 1400px) { .recap-league-btns > button { width: 130px !important; height: 46px !important; } }
+@media (max-width: 1200px) { .recap-league-btns > button { width: 110px !important; height: 42px !important; } }
+@media (max-width: 1024px) { .recap-league-btns > button { width: 92px !important; height: 38px !important; } .recap-league-btns { gap: 4px; } }
+@media (max-width: 880px)  { .recap-league-btns > button { width: 78px !important; height: 34px !important; } }
+@media (max-width: 760px)  { .recap-league-btns > button { width: 64px !important; height: 32px !important; } }
+@media (max-width: 640px)  { .recap-league-btns > button { width: 52px !important; height: 30px !important; } .recap-league-btns { gap: 3px; } }
       `}</style>
 
       {/* ═══ Theme layer — bg de la ligue (ou Stellar), texture visible + screen blend ═══ */}

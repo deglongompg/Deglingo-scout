@@ -1894,18 +1894,18 @@ export default function SorareProTab({ players, teams, fixtures, standings = nul
                 <button onClick={() => setAlgoMultiClub(v => !v)}
                   className={`pro-pill${algoMultiClub ? " is-active" : ""}`}
                   style={{
-                    "--pill-c-strong": "#4ADE8038", "--pill-c-mid": "#4ADE8018", "--pill-c-soft": "#4ADE8010",
-                    "--pill-c-border": "#4ADE8055", "--pill-c-glow": "#4ADE8040", "--pill-c-halo": "#4ADE8030",
-                    "--pill-c-bottom": "#4ADE8020", "--pill-c-text-shadow": "#4ADE8080", "--pill-c-strong-solid": "#4ADE80",
+                    "--pill-c-strong": `${rarityColor}38`, "--pill-c-mid": `${rarityColor}18`, "--pill-c-soft": `${rarityColor}10`,
+                    "--pill-c-border": `${rarityColor}55`, "--pill-c-glow": `${rarityColor}40`, "--pill-c-halo": `${rarityColor}30`,
+                    "--pill-c-bottom": `${rarityColor}20`, "--pill-c-text-shadow": `${rarityColor}80`, "--pill-c-strong-solid": rarityColor,
                   }}>
                   MC +2%{algoMultiClub && <span className="pro-pill-underline" aria-hidden />}
                 </button>
                 <button onClick={() => setAlgoCap260(v => !v)}
                   className={`pro-pill${algoCap260 ? " is-active" : ""}`}
                   style={{
-                    "--pill-c-strong": "#A78BFA38", "--pill-c-mid": "#A78BFA18", "--pill-c-soft": "#A78BFA10",
-                    "--pill-c-border": "#A78BFA55", "--pill-c-glow": "#A78BFA40", "--pill-c-halo": "#A78BFA30",
-                    "--pill-c-bottom": "#A78BFA20", "--pill-c-text-shadow": "#A78BFA80", "--pill-c-strong-solid": "#A78BFA",
+                    "--pill-c-strong": `${rarityColor}38`, "--pill-c-mid": `${rarityColor}18`, "--pill-c-soft": `${rarityColor}10`,
+                    "--pill-c-border": `${rarityColor}55`, "--pill-c-glow": `${rarityColor}40`, "--pill-c-halo": `${rarityColor}30`,
+                    "--pill-c-bottom": `${rarityColor}20`, "--pill-c-text-shadow": `${rarityColor}80`, "--pill-c-strong-solid": rarityColor,
                   }}>
                   CAP +4%{algoCap260 && <span className="pro-pill-underline" aria-hidden />}
                 </button>
@@ -2111,9 +2111,9 @@ export default function SorareProTab({ players, teams, fixtures, standings = nul
                   <button onClick={() => setHideUsed(v => !v)}
                     className={`pro-pill${hideUsed ? " is-active" : ""}`}
                     style={{
-                      "--pill-c-strong": "#FBBF2438", "--pill-c-mid": "#FBBF2418", "--pill-c-soft": "#FBBF2410",
-                      "--pill-c-border": "#FBBF2455", "--pill-c-glow": "#FBBF2440", "--pill-c-halo": "#FBBF2430",
-                      "--pill-c-bottom": "#FBBF2420", "--pill-c-text-shadow": "#FBBF2480", "--pill-c-strong-solid": "#FBBF24",
+                      "--pill-c-strong": `${rarityColor}38`, "--pill-c-mid": `${rarityColor}18`, "--pill-c-soft": `${rarityColor}10`,
+                      "--pill-c-border": `${rarityColor}55`, "--pill-c-glow": `${rarityColor}40`, "--pill-c-halo": `${rarityColor}30`,
+                      "--pill-c-bottom": `${rarityColor}20`, "--pill-c-text-shadow": `${rarityColor}80`, "--pill-c-strong-solid": rarityColor,
                     }}>
                     {t(lang, "proDispo")}{hideUsed && <span className="pro-pill-underline" aria-hidden />}
                   </button>

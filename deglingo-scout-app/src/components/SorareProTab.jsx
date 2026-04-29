@@ -306,15 +306,25 @@ const proKeyframes = `
   filter: brightness(1.08);
 }
 
-/* ═══ BOUTON CREATION MAGIQUE — fiole d'apothicaire bouillonnante ═══ */
+/* ═══ BOUTON CREATION MAGIQUE — fiole d'apothicaire bouillonnante (glass + reflets) ═══ */
 @keyframes magicShimmer {
   0%   { background-position: 0% 50%; }
   50%  { background-position: 100% 50%; }
   100% { background-position: 0% 50%; }
 }
 @keyframes magicGlow {
-  0%,100% { box-shadow: 0 0 16px rgba(167,139,250,0.55), 0 0 4px rgba(236,72,153,0.4), inset 0 1px 0 rgba(255,255,255,0.3); }
-  50%     { box-shadow: 0 0 26px rgba(167,139,250,0.8),  0 0 8px rgba(236,72,153,0.6), inset 0 1px 0 rgba(255,255,255,0.45); }
+  0%,100% { box-shadow:
+    0 0 18px rgba(167,139,250,0.6),
+    0 0 4px rgba(236,72,153,0.45),
+    inset 0 2px 1px rgba(255,255,255,0.45),
+    inset 0 -2px 2px rgba(0,0,0,0.35),
+    inset 0 0 0 1px rgba(255,255,255,0.12); }
+  50%     { box-shadow:
+    0 0 30px rgba(167,139,250,0.85),
+    0 0 9px rgba(236,72,153,0.65),
+    inset 0 2px 1px rgba(255,255,255,0.55),
+    inset 0 -2px 2px rgba(0,0,0,0.4),
+    inset 0 0 0 1px rgba(255,255,255,0.18); }
 }
 @keyframes magicBubbleRise {
   0%   { transform: translateY(0) scale(0.4); opacity: 0; }
@@ -326,18 +336,24 @@ const proKeyframes = `
   0%,100% { transform: scale(0.5) rotate(0deg); opacity: 0.3; }
   50%     { transform: scale(1) rotate(180deg); opacity: 1; }
 }
+@keyframes magicShineSweep {
+  0%   { transform: translateX(-180%) skewX(-22deg); opacity: 0; }
+  20%  { opacity: 0.85; }
+  60%  { opacity: 0.85; }
+  100% { transform: translateX(180%) skewX(-22deg); opacity: 0; }
+}
 .pro-pill-magic {
   position: relative;
   overflow: hidden;
-  height: 26px;
-  padding: 5px 16px 5px 14px;
-  border-radius: 8px;
+  height: 30px;
+  padding: 6px 18px 6px 15px;
+  border-radius: 10px;
   font-family: Outfit;
-  font-size: 10px;
+  font-size: 11px;
   font-weight: 900;
-  letter-spacing: 0.04em;
+  letter-spacing: 0.05em;
   text-transform: uppercase;
-  border: 1px solid rgba(196,181,253,0.6);
+  border: 1px solid rgba(196,181,253,0.7);
   cursor: pointer;
   display: inline-flex;
   align-items: center;
@@ -345,14 +361,36 @@ const proKeyframes = `
   gap: 5px;
   white-space: nowrap;
   color: #fff;
-  /* Fond animé : violet-magenta-cyan-violet en mouvement perpetuel */
+  /* Fond animé : violet-magenta-rose-violet en mouvement perpetuel.
+     Couche 1 : grain bruite subtil pour la profondeur (radial blanc semi-transparent).
+     Couche 2 : reflet glass top (linear blanc translucide -> transparent).
+     Couche 3 : gradient principal anime. */
   background:
+    radial-gradient(circle at 20% 0%, rgba(255,255,255,0.32) 0%, rgba(255,255,255,0) 35%),
+    linear-gradient(180deg, rgba(255,255,255,0.18) 0%, rgba(255,255,255,0.04) 45%, transparent 50%),
     linear-gradient(105deg, #6D28D9 0%, #9333EA 18%, #C026D3 36%, #DB2777 54%, #9333EA 72%, #6D28D9 100%);
-  background-size: 280% 100%;
+  background-size: 100% 100%, 100% 100%, 280% 100%;
+  background-repeat: no-repeat;
   animation: magicShimmer 5s ease-in-out infinite, magicGlow 2.4s ease-in-out infinite;
-  text-shadow: 0 0 8px rgba(255,255,255,0.45), 0 1px 2px rgba(0,0,0,0.5);
+  text-shadow: 0 0 8px rgba(255,255,255,0.55), 0 1px 2px rgba(0,0,0,0.55);
   transition: transform 0.18s ease, filter 0.18s ease;
   box-sizing: border-box;
+  backdrop-filter: blur(3px);
+  -webkit-backdrop-filter: blur(3px);
+}
+/* Sweep de lumiere lateral qui passe regulierement (effet glass aile) */
+.pro-pill-magic .magic-shine {
+  position: absolute;
+  top: -30%;
+  left: -20%;
+  width: 35%;
+  height: 160%;
+  background: linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.55) 50%, transparent 100%);
+  filter: blur(4px);
+  animation: magicShineSweep 4.5s ease-in-out infinite;
+  animation-delay: 1.2s;
+  pointer-events: none;
+  z-index: 1;
 }
 .pro-pill-magic:hover:not(:disabled) {
   transform: translateY(-1px) scale(1.025);
@@ -1977,42 +2015,6 @@ export default function SorareProTab({ players, teams, fixtures, standings = nul
                   });
                   return null;
                 })()}
-                <button onClick={() => setAlgoMultiClub(v => !v)}
-                  className={`pro-pill${algoMultiClub ? " is-active" : ""}`}
-                  style={{
-                    "--pill-c-strong": `${rarityColor}38`, "--pill-c-mid": `${rarityColor}18`, "--pill-c-soft": `${rarityColor}10`,
-                    "--pill-c-border": `${rarityColor}55`, "--pill-c-glow": `${rarityColor}40`, "--pill-c-halo": `${rarityColor}30`,
-                    "--pill-c-bottom": `${rarityColor}20`, "--pill-c-text-shadow": `${rarityColor}80`, "--pill-c-strong-solid": rarityColor,
-                  }}>
-                  MC +2%{algoMultiClub && <span className="pro-pill-underline" aria-hidden />}
-                </button>
-                <button onClick={() => setAlgoCap260(v => !v)}
-                  className={`pro-pill${algoCap260 ? " is-active" : ""}`}
-                  style={{
-                    "--pill-c-strong": `${rarityColor}38`, "--pill-c-mid": `${rarityColor}18`, "--pill-c-soft": `${rarityColor}10`,
-                    "--pill-c-border": `${rarityColor}55`, "--pill-c-glow": `${rarityColor}40`, "--pill-c-halo": `${rarityColor}30`,
-                    "--pill-c-bottom": `${rarityColor}20`, "--pill-c-text-shadow": `${rarityColor}80`, "--pill-c-strong-solid": rarityColor,
-                  }}>
-                  CAP +4%{algoCap260 && <span className="pro-pill-underline" aria-hidden />}
-                </button>
-                <div style={{ fontSize: 6, color: "rgba(255,255,255,0.45)", lineHeight: 1.3 }}>
-                  <div>MC = max 2/{lang === "fr" ? "club" : "club"} (+2%)</div>
-                  <div>CAP = L10 total &lt; {capThreshold} (+4%)</div>
-                </div>
-                <button onClick={generateMagicTeam} className="pro-pill-magic" title={lang === "fr" ? "Génère ta team optimale" : "Generate your optimal team"}>
-                  {/* Bulles bouillonnantes */}
-                  <span className="magic-bubbles" aria-hidden>
-                    <span /><span /><span /><span /><span /><span /><span /><span />
-                  </span>
-                  {/* Sparkles */}
-                  <span className="magic-sparkle s1" aria-hidden />
-                  <span className="magic-sparkle s2" aria-hidden />
-                  {/* Texte + icone */}
-                  <span style={{ position: "relative", zIndex: 2, display: "inline-flex", alignItems: "center", gap: 4 }}>
-                    <span style={{ fontSize: 12, lineHeight: 1, filter: "drop-shadow(0 0 4px rgba(255,255,255,0.6))" }}>⚗️</span>
-                    {t(lang, "proAlgo")}
-                  </span>
-                </button>
                 {filledCount > 0 && (
                   <button onClick={resetTeam}
                     className="pro-pill"
@@ -2084,6 +2086,44 @@ export default function SorareProTab({ players, teams, fixtures, standings = nul
 
                 {/* Card slots : 5 pour SO5 (2+3) ou 7 pour Champion SO7 (4+3) */}
                 <div style={{ padding: isMobile ? "6px 12px" : "6px 8px", flex: "0 0 auto", display: "flex", flexDirection: "column", gap: 4, alignItems: "center", width: "100%", boxSizing: "border-box" }}>
+                  {/* Trio MC + Creation Magique + CAP — centre au-dessus du pitch */}
+                  <div className="pro-magic-row" style={{
+                    display: "flex", alignItems: "center", justifyContent: "center",
+                    gap: 8, marginBottom: 6, width: "100%",
+                  }}>
+                    <button onClick={() => setAlgoMultiClub(v => !v)}
+                      className={`pro-pill${algoMultiClub ? " is-active" : ""}`}
+                      title={lang === "fr" ? "Multi-Club : max 2 joueurs/club (+2%)" : "Multi-Club: max 2 players/club (+2%)"}
+                      style={{
+                        "--pill-c-strong": `${rarityColor}38`, "--pill-c-mid": `${rarityColor}18`, "--pill-c-soft": `${rarityColor}10`,
+                        "--pill-c-border": `${rarityColor}55`, "--pill-c-glow": `${rarityColor}40`, "--pill-c-halo": `${rarityColor}30`,
+                        "--pill-c-bottom": `${rarityColor}20`, "--pill-c-text-shadow": `${rarityColor}80`, "--pill-c-strong-solid": rarityColor,
+                      }}>
+                      MC +2%{algoMultiClub && <span className="pro-pill-underline" aria-hidden />}
+                    </button>
+                    <button onClick={generateMagicTeam} className="pro-pill-magic" title={lang === "fr" ? "Génère ta team optimale" : "Generate your optimal team"}>
+                      <span className="magic-bubbles" aria-hidden>
+                        <span /><span /><span /><span /><span /><span /><span /><span />
+                      </span>
+                      <span className="magic-sparkle s1" aria-hidden />
+                      <span className="magic-sparkle s2" aria-hidden />
+                      <span className="magic-shine" aria-hidden />
+                      <span style={{ position: "relative", zIndex: 2, display: "inline-flex", alignItems: "center", gap: 5 }}>
+                        <span style={{ fontSize: 13, lineHeight: 1, filter: "drop-shadow(0 0 4px rgba(255,255,255,0.7))" }}>⚗️</span>
+                        {t(lang, "proAlgo")}
+                      </span>
+                    </button>
+                    <button onClick={() => setAlgoCap260(v => !v)}
+                      className={`pro-pill${algoCap260 ? " is-active" : ""}`}
+                      title={lang === "fr" ? `CAP : L10 total <= ${capThreshold} (+4%)` : `CAP: L10 total <= ${capThreshold} (+4%)`}
+                      style={{
+                        "--pill-c-strong": `${rarityColor}38`, "--pill-c-mid": `${rarityColor}18`, "--pill-c-soft": `${rarityColor}10`,
+                        "--pill-c-border": `${rarityColor}55`, "--pill-c-glow": `${rarityColor}40`, "--pill-c-halo": `${rarityColor}30`,
+                        "--pill-c-bottom": `${rarityColor}20`, "--pill-c-text-shadow": `${rarityColor}80`, "--pill-c-strong-solid": rarityColor,
+                      }}>
+                      CAP +4%{algoCap260 && <span className="pro-pill-underline" aria-hidden />}
+                    </button>
+                  </div>
                   {(league === "Champion"
                       ? [["MIL1", "ATT", "FLEX", "MIL2"], ["DEF1", "GK", "DEF2"]]
                       : [["ATT", "FLEX"], ["DEF", "GK", "MIL"]]).map((row, rowIdx) => (

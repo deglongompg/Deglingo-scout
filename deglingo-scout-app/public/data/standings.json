@@ -1,12 +1,12 @@
 {
-  "updatedAt": 1777435100,
+  "updatedAt": 1777437295,
   "leagues": {
     "L1": [
       {
         "rank": 1,
         "club": "Paris Saint-Germain",
-        "club_api": "Paris Saint-Germain FC",
-        "logo": "https://crests.football-data.org/524.png",
+        "club_api": "Paris Saint Germain",
+        "logo": "https://media.api-sports.io/football/teams/85.png",
         "played": 30,
         "won": 22,
         "draw": 3,
@@ -15,13 +15,13 @@
         "ga": 25,
         "gd": 43,
         "pts": 69,
-        "form": ""
+        "form": "W,W,L,W,W"
       },
       {
         "rank": 2,
         "club": "RC Lens",
-        "club_api": "Racing Club de Lens",
-        "logo": "https://crests.football-data.org/546.png",
+        "club_api": "Lens",
+        "logo": "https://media.api-sports.io/football/teams/116.png",
         "played": 30,
         "won": 20,
         "draw": 3,
@@ -30,13 +30,13 @@
         "ga": 32,
         "gd": 28,
         "pts": 63,
-        "form": ""
+        "form": "D,W,L,W,L"
       },
       {
         "rank": 3,
         "club": "LOSC Lille",
-        "club_api": "Lille OSC",
-        "logo": "https://crests.football-data.org/521.png",
+        "club_api": "Lille",
+        "logo": "https://media.api-sports.io/football/teams/79.png",
         "played": 31,
         "won": 17,
         "draw": 6,
@@ -45,13 +45,13 @@
         "ga": 34,
         "gd": 16,
         "pts": 57,
-        "form": ""
+        "form": "W,D,W,W,W"
       },
       {
         "rank": 4,
-        "club": "Olympique Lyonnais",
-        "club_api": "Olympique Lyonnais",
-        "logo": "https://crests.football-data.org/523.png",
+        "club": "Lyon",
+        "club_api": "Lyon",
+        "logo": "https://media.api-sports.io/football/teams/80.png",
         "played": 31,
         "won": 17,
         "draw": 6,
@@ -60,13 +60,13 @@
         "ga": 32,
         "gd": 16,
         "pts": 57,
-        "form": ""
+        "form": "W,W,W,D,L"
       },
       {
         "rank": 5,
-        "club": "Stade Rennais F.C.",
-        "club_api": "Stade Rennais FC 1901",
-        "logo": "https://crests.football-data.org/529.png",
+        "club": "Rennes",
+        "club_api": "Rennes",
+        "logo": "https://media.api-sports.io/football/teams/94.png",
         "played": 31,
         "won": 16,
         "draw": 8,
@@ -75,13 +75,13 @@
         "ga": 42,
         "gd": 12,
         "pts": 56,
-        "form": ""
+        "form": "W,W,W,W,D"
       },
       {
         "rank": 6,
         "club": "Olympique de Marseille",
-        "club_api": "Olympique de Marseille",
-        "logo": "https://crests.football-data.org/516.png",
+        "club_api": "Marseille",
+        "logo": "https://media.api-sports.io/football/teams/81.png",
         "played": 31,
         "won": 16,
         "draw": 5,
@@ -90,13 +90,13 @@
         "ga": 41,
         "gd": 18,
         "pts": 53,
-        "form": ""
+        "form": "D,L,W,L,L"
       },
       {
         "rank": 7,
         "club": "AS Monaco",
-        "club_api": "AS Monaco FC",
-        "logo": "https://crests.football-data.org/548.png",
+        "club_api": "Monaco",
+        "logo": "https://media.api-sports.io/football/teams/91.png",
         "played": 31,
         "won": 15,
         "draw": 6,
@@ -105,13 +105,13 @@
         "ga": 47,
         "gd": 7,
         "pts": 51,
-        "form": ""
+        "form": "D,D,L,W,W"
       },
       {
         "rank": 8,
         "club": "RC Strasbourg Alsace",
-        "club_api": "RC Strasbourg Alsace",
-        "logo": "https://crests.football-data.org/576.png",
+        "club_api": "Strasbourg",
+        "logo": "https://media.api-sports.io/football/teams/95.png",
         "played": 30,
         "won": 13,
         "draw": 7,
@@ -120,13 +120,13 @@
         "ga": 39,
         "gd": 10,
         "pts": 46,
-        "form": ""
+        "form": "W,L,W,W,D"
       },
       {
         "rank": 9,
         "club": "FC Lorient",
-        "club_api": "FC Lorient",
-        "logo": "https://crests.football-data.org/525.png",
+        "club_api": "Lorient",
+        "logo": "https://media.api-sports.io/football/teams/97.png",
         "played": 31,
         "won": 10,
         "draw": 11,
@@ -135,13 +135,13 @@
         "ga": 47,
         "gd": -5,
         "pts": 41,
-        "form": ""
+        "form": "L,W,L,D,L"
       },
       {
         "rank": 10,
         "club": "Toulouse FC",
-        "club_api": "Toulouse FC",
-        "logo": "https://crests.football-data.org/511.png",
+        "club_api": "Toulouse",
+        "logo": "https://media.api-sports.io/football/teams/96.png",
         "played": 31,
         "won": 10,
         "draw": 8,
@@ -150,13 +150,13 @@
         "ga": 44,
         "gd": -1,
         "pts": 38,
-        "form": ""
+        "form": "D,L,L,L,W"
       },
       {
         "rank": 11,
         "club": "Stade Brestois 29",
         "club_api": "Stade Brestois 29",
-        "logo": "https://crests.football-data.org/512.png",
+        "logo": "https://media.api-sports.io/football/teams/106.png",
         "played": 30,
         "won": 10,
         "draw": 8,
@@ -165,13 +165,13 @@
         "ga": 47,
         "gd": -6,
         "pts": 38,
-        "form": ""
+        "form": "D,D,L,L,L"
       },
       {
         "rank": 12,
         "club": "Paris FC",
         "club_api": "Paris FC",
-        "logo": "https://crests.football-data.org/1045.png",
+        "logo": "https://media.api-sports.io/football/teams/114.png",
         "played": 31,
         "won": 9,
         "draw": 11,
@@ -180,13 +180,13 @@
         "ga": 47,
         "gd": -7,
         "pts": 38,
-        "form": ""
+        "form": "L,W,W,D,W"
       },
       {
         "rank": 13,
         "club": "Angers SCO",
-        "club_api": "Angers SCO",
-        "logo": "https://crests.football-data.org/532.png",
+        "club_api": "Angers",
+        "logo": "https://media.api-sports.io/football/teams/77.png",
         "played": 31,
         "won": 9,
         "draw": 7,
@@ -195,13 +195,13 @@
         "ga": 43,
         "gd": -17,
         "pts": 34,
-        "form": ""
+        "form": "L,D,L,D,L"
       },
       {
         "rank": 14,
         "club": "Le Havre AC",
-        "club_api": "Le Havre AC",
-        "logo": "https://crests.football-data.org/533.png",
+        "club_api": "Le Havre",
+        "logo": "https://media.api-sports.io/football/teams/111.png",
         "played": 31,
         "won": 6,
         "draw": 13,
@@ -210,13 +210,13 @@
         "ga": 42,
         "gd": -13,
         "pts": 31,
-        "form": ""
+        "form": "D,D,D,D,L"
       },
       {
         "rank": 15,
         "club": "OGC Nice",
-        "club_api": "OGC Nice",
-        "logo": "https://crests.football-data.org/522.png",
+        "club_api": "Nice",
+        "logo": "https://media.api-sports.io/football/teams/84.png",
         "played": 31,
         "won": 7,
         "draw": 9,
@@ -225,13 +225,13 @@
         "ga": 57,
         "gd": -22,
         "pts": 30,
-        "form": ""
+        "form": "D,D,D,L,L"
       },
       {
         "rank": 16,
         "club": "AJ Auxerre",
-        "club_api": "AJ Auxerre",
-        "logo": "https://crests.football-data.org/519.png",
+        "club_api": "Auxerre",
+        "logo": "https://media.api-sports.io/football/teams/108.png",
         "played": 31,
         "won": 5,
         "draw": 10,
@@ -240,13 +240,13 @@
         "ga": 42,
         "gd": -15,
         "pts": 25,
-        "form": ""
+        "form": "L,D,D,D,W"
       },
       {
         "rank": 17,
         "club": "FC Nantes",
-        "club_api": "FC Nantes",
-        "logo": "https://crests.football-data.org/543.png",
+        "club_api": "Nantes",
+        "logo": "https://media.api-sports.io/football/teams/83.png",
         "played": 31,
         "won": 4,
         "draw": 8,
@@ -255,13 +255,13 @@
         "ga": 51,
         "gd": -25,
         "pts": 20,
-        "form": ""
+        "form": "L,L,D,D,D"
       },
       {
         "rank": 18,
         "club": "FC Metz",
-        "club_api": "FC Metz",
-        "logo": "https://crests.football-data.org/545.png",
+        "club_api": "Metz",
+        "logo": "https://media.api-sports.io/football/teams/112.png",
         "played": 31,
         "won": 3,
         "draw": 7,
@@ -270,15 +270,15 @@
         "ga": 70,
         "gd": -39,
         "pts": 16,
-        "form": ""
+        "form": "D,L,L,D,D"
       }
     ],
     "PL": [
       {
         "rank": 1,
         "club": "Arsenal FC",
-        "club_api": "Arsenal FC",
-        "logo": "https://crests.football-data.org/57.png",
+        "club_api": "Arsenal",
+        "logo": "https://media.api-sports.io/football/teams/42.png",
         "played": 34,
         "won": 22,
         "draw": 7,
@@ -287,13 +287,13 @@
         "ga": 26,
         "gd": 38,
         "pts": 73,
-        "form": ""
+        "form": "W,L,L,W,W"
       },
       {
         "rank": 2,
         "club": "Manchester City FC",
-        "club_api": "Manchester City FC",
-        "logo": "https://crests.football-data.org/65.png",
+        "club_api": "Manchester City",
+        "logo": "https://media.api-sports.io/football/teams/50.png",
         "played": 33,
         "won": 21,
         "draw": 7,
@@ -302,13 +302,13 @@
         "ga": 29,
         "gd": 37,
         "pts": 70,
-        "form": ""
+        "form": "W,W,W,D,D"
       },
       {
         "rank": 3,
         "club": "Manchester United FC",
-        "club_api": "Manchester United FC",
-        "logo": "https://crests.football-data.org/66.png",
+        "club_api": "Manchester United",
+        "logo": "https://media.api-sports.io/football/teams/33.png",
         "played": 34,
         "won": 17,
         "draw": 10,
@@ -317,13 +317,13 @@
         "ga": 46,
         "gd": 14,
         "pts": 61,
-        "form": ""
+        "form": "W,W,L,D,W"
       },
       {
         "rank": 4,
         "club": "Liverpool FC",
-        "club_api": "Liverpool FC",
-        "logo": "https://crests.football-data.org/64.png",
+        "club_api": "Liverpool",
+        "logo": "https://media.api-sports.io/football/teams/40.png",
         "played": 34,
         "won": 17,
         "draw": 7,
@@ -332,13 +332,13 @@
         "ga": 44,
         "gd": 13,
         "pts": 58,
-        "form": ""
+        "form": "W,W,W,L,D"
       },
       {
         "rank": 5,
         "club": "Aston Villa FC",
-        "club_api": "Aston Villa FC",
-        "logo": "https://crests.football-data.org/58.png",
+        "club_api": "Aston Villa",
+        "logo": "https://media.api-sports.io/football/teams/66.png",
         "played": 34,
         "won": 17,
         "draw": 7,
@@ -347,13 +347,13 @@
         "ga": 42,
         "gd": 5,
         "pts": 58,
-        "form": ""
+        "form": "L,W,D,W,L"
       },
       {
         "rank": 6,
         "club": "Brighton & Hove Albion FC",
-        "club_api": "Brighton & Hove Albion FC",
-        "logo": "https://crests.football-data.org/397.png",
+        "club_api": "Brighton",
+        "logo": "https://media.api-sports.io/football/teams/51.png",
         "played": 34,
         "won": 13,
         "draw": 11,
@@ -362,13 +362,13 @@
         "ga": 39,
         "gd": 9,
         "pts": 50,
-        "form": ""
+        "form": "W,D,W,W,W"
       },
       {
         "rank": 7,
         "club": "AFC Bournemouth",
-        "club_api": "AFC Bournemouth",
-        "logo": "https://crests.football-data.org/bournemouth.png",
+        "club_api": "Bournemouth",
+        "logo": "https://media.api-sports.io/football/teams/35.png",
         "played": 34,
         "won": 11,
         "draw": 16,
@@ -377,13 +377,13 @@
         "ga": 52,
         "gd": 0,
         "pts": 49,
-        "form": ""
+        "form": "D,W,W,D,D"
       },
       {
         "rank": 8,
         "club": "Chelsea FC",
-        "club_api": "Chelsea FC",
-        "logo": "https://crests.football-data.org/61.png",
+        "club_api": "Chelsea",
+        "logo": "https://media.api-sports.io/football/teams/49.png",
         "played": 34,
         "won": 13,
         "draw": 9,
@@ -392,13 +392,13 @@
         "ga": 45,
         "gd": 8,
         "pts": 48,
-        "form": ""
+        "form": "L,L,L,L,L"
       },
       {
         "rank": 9,
         "club": "Brentford FC",
-        "club_api": "Brentford FC",
-        "logo": "https://crests.football-data.org/402.png",
+        "club_api": "Brentford",
+        "logo": "https://media.api-sports.io/football/teams/55.png",
         "played": 34,
         "won": 13,
         "draw": 9,
@@ -407,13 +407,13 @@
         "ga": 46,
         "gd": 3,
         "pts": 48,
-        "form": ""
+        "form": "L,D,D,D,D"
       },
       {
         "rank": 10,
         "club": "Fulham FC",
-        "club_api": "Fulham FC",
-        "logo": "https://crests.football-data.org/63.png",
+        "club_api": "Fulham",
+        "logo": "https://media.api-sports.io/football/teams/36.png",
         "played": 34,
         "won": 14,
         "draw": 6,
@@ -422,13 +422,13 @@
         "ga": 46,
         "gd": -2,
         "pts": 48,
-        "form": ""
+        "form": "W,D,L,W,D"
       },
       {
         "rank": 11,
         "club": "Everton FC",
-        "club_api": "Everton FC",
-        "logo": "https://crests.football-data.org/62.png",
+        "club_api": "Everton",
+        "logo": "https://media.api-sports.io/football/teams/45.png",
         "played": 34,
         "won": 13,
         "draw": 8,
@@ -437,13 +437,13 @@
         "ga": 41,
         "gd": 0,
         "pts": 47,
-        "form": ""
+        "form": "L,L,D,W,L"
       },
       {
         "rank": 12,
         "club": "Sunderland AFC",
-        "club_api": "Sunderland AFC",
-        "logo": "https://crests.football-data.org/71.png",
+        "club_api": "Sunderland",
+        "logo": "https://media.api-sports.io/football/teams/746.png",
         "played": 34,
         "won": 12,
         "draw": 10,
@@ -452,13 +452,13 @@
         "ga": 45,
         "gd": -9,
         "pts": 46,
-        "form": ""
+        "form": "L,L,W,W,L"
       },
       {
         "rank": 13,
         "club": "Crystal Palace FC",
-        "club_api": "Crystal Palace FC",
-        "logo": "https://crests.football-data.org/354.png",
+        "club_api": "Crystal Palace",
+        "logo": "https://media.api-sports.io/football/teams/52.png",
         "played": 33,
         "won": 11,
         "draw": 10,
@@ -467,13 +467,13 @@
         "ga": 39,
         "gd": -3,
         "pts": 43,
-        "form": ""
+        "form": "L,D,W,D,W"
       },
       {
         "rank": 14,
         "club": "Newcastle United FC",
-        "club_api": "Newcastle United FC",
-        "logo": "https://crests.football-data.org/67.png",
+        "club_api": "Newcastle",
+        "logo": "https://media.api-sports.io/football/teams/34.png",
         "played": 34,
         "won": 12,
         "draw": 6,
@@ -482,13 +482,13 @@
         "ga": 50,
         "gd": -4,
         "pts": 42,
-        "form": ""
+        "form": "L,L,L,L,W"
       },
       {
         "rank": 15,
         "club": "Leeds United FC",
-        "club_api": "Leeds United FC",
-        "logo": "https://crests.football-data.org/341.png",
+        "club_api": "Leeds",
+        "logo": "https://media.api-sports.io/football/teams/63.png",
         "played": 34,
         "won": 9,
         "draw": 13,
@@ -497,13 +497,13 @@
         "ga": 51,
         "gd": -7,
         "pts": 40,
-        "form": ""
+        "form": "D,W,W,D,D"
       },
       {
         "rank": 16,
         "club": "Nottingham Forest FC",
-        "club_api": "Nottingham Forest FC",
-        "logo": "https://crests.football-data.org/351.png",
+        "club_api": "Nottingham Forest",
+        "logo": "https://media.api-sports.io/football/teams/65.png",
         "played": 34,
         "won": 10,
         "draw": 9,
@@ -512,13 +512,13 @@
         "ga": 45,
         "gd": -4,
         "pts": 39,
-        "form": ""
+        "form": "W,W,D,W,D"
       },
       {
         "rank": 17,
         "club": "West Ham United FC",
-        "club_api": "West Ham United FC",
-        "logo": "https://crests.football-data.org/563.png",
+        "club_api": "West Ham",
+        "logo": "https://media.api-sports.io/football/teams/48.png",
         "played": 34,
         "won": 9,
         "draw": 9,
@@ -527,13 +527,13 @@
         "ga": 58,
         "gd": -16,
         "pts": 36,
-        "form": ""
+        "form": "W,D,W,L,D"
       },
       {
         "rank": 18,
         "club": "Tottenham Hotspur FC",
-        "club_api": "Tottenham Hotspur FC",
-        "logo": "https://crests.football-data.org/73.png",
+        "club_api": "Tottenham",
+        "logo": "https://media.api-sports.io/football/teams/47.png",
         "played": 34,
         "won": 8,
         "draw": 10,
@@ -542,13 +542,13 @@
         "ga": 53,
         "gd": -10,
         "pts": 34,
-        "form": ""
+        "form": "W,D,L,L,D"
       },
       {
         "rank": 19,
         "club": "Burnley FC",
-        "club_api": "Burnley FC",
-        "logo": "https://crests.football-data.org/328.png",
+        "club_api": "Burnley",
+        "logo": "https://media.api-sports.io/football/teams/44.png",
         "played": 34,
         "won": 4,
         "draw": 8,
@@ -557,13 +557,13 @@
         "ga": 68,
         "gd": -34,
         "pts": 20,
-        "form": ""
+        "form": "L,L,L,L,D"
       },
       {
         "rank": 20,
-        "club": "Wolverhampton Wanderers FC",
-        "club_api": "Wolverhampton Wanderers FC",
-        "logo": "https://crests.football-data.org/76.png",
+        "club": "Wolverhampton Wanderers",
+        "club_api": "Wolves",
+        "logo": "https://media.api-sports.io/football/teams/39.png",
         "played": 34,
         "won": 3,
         "draw": 8,
@@ -572,15 +572,15 @@
         "ga": 62,
         "gd": -38,
         "pts": 17,
-        "form": ""
+        "form": "L,L,L,D,W"
       }
     ],
     "Liga": [
       {
         "rank": 1,
         "club": "FC Barcelona",
-        "club_api": "FC Barcelona",
-        "logo": "https://crests.football-data.org/81.png",
+        "club_api": "Barcelona",
+        "logo": "https://media.api-sports.io/football/teams/529.png",
         "played": 33,
         "won": 28,
         "draw": 1,
@@ -589,13 +589,13 @@
         "ga": 30,
         "gd": 57,
         "pts": 85,
-        "form": ""
+        "form": "W,W,W,W,W"
       },
       {
         "rank": 2,
         "club": "Real Madrid",
-        "club_api": "Real Madrid CF",
-        "logo": "https://crests.football-data.org/86.png",
+        "club_api": "Real Madrid",
+        "logo": "https://media.api-sports.io/football/teams/541.png",
         "played": 33,
         "won": 23,
         "draw": 5,
@@ -604,13 +604,13 @@
         "ga": 31,
         "gd": 37,
         "pts": 74,
-        "form": ""
+        "form": "D,W,D,L,W"
       },
       {
         "rank": 3,
         "club": "Villarreal CF",
-        "club_api": "Villarreal CF",
-        "logo": "https://crests.football-data.org/94.png",
+        "club_api": "Villarreal",
+        "logo": "https://media.api-sports.io/football/teams/533.png",
         "played": 33,
         "won": 20,
         "draw": 5,
@@ -619,13 +619,13 @@
         "ga": 38,
         "gd": 21,
         "pts": 65,
-        "form": ""
+        "form": "W,D,W,L,W"
       },
       {
         "rank": 4,
         "club": "Atlético de Madrid",
-        "club_api": "Club Atlético de Madrid",
-        "logo": "https://crests.football-data.org/78.png",
+        "club_api": "Atletico Madrid",
+        "logo": "https://media.api-sports.io/football/teams/530.png",
         "played": 33,
         "won": 18,
         "draw": 6,
@@ -634,13 +634,13 @@
         "ga": 37,
         "gd": 19,
         "pts": 60,
-        "form": ""
+        "form": "W,L,L,L,L"
       },
       {
         "rank": 5,
         "club": "Real Betis",
-        "club_api": "Real Betis Balompié",
-        "logo": "https://crests.football-data.org/90.png",
+        "club_api": "Real Betis",
+        "logo": "https://media.api-sports.io/football/teams/543.png",
         "played": 33,
         "won": 12,
         "draw": 14,
@@ -649,13 +649,13 @@
         "ga": 41,
         "gd": 8,
         "pts": 50,
-        "form": ""
+        "form": "D,W,D,D,L"
       },
       {
         "rank": 6,
         "club": "Getafe CF",
-        "club_api": "Getafe CF",
-        "logo": "https://crests.football-data.org/82.png",
+        "club_api": "Getafe",
+        "logo": "https://media.api-sports.io/football/teams/546.png",
         "played": 33,
         "won": 13,
         "draw": 5,
@@ -664,13 +664,13 @@
         "ga": 34,
         "gd": -6,
         "pts": 44,
-        "form": ""
+        "form": "L,W,L,W,W"
       },
       {
         "rank": 7,
         "club": "RC Celta",
-        "club_api": "RC Celta de Vigo",
-        "logo": "https://crests.football-data.org/558.png",
+        "club_api": "Celta Vigo",
+        "logo": "https://media.api-sports.io/football/teams/538.png",
         "played": 33,
         "won": 11,
         "draw": 11,
@@ -679,13 +679,13 @@
         "ga": 43,
         "gd": 2,
         "pts": 44,
-        "form": ""
+        "form": "L,L,L,W,L"
       },
       {
         "rank": 8,
         "club": "Real Sociedad",
-        "club_api": "Real Sociedad de Fútbol",
-        "logo": "https://crests.football-data.org/92.png",
+        "club_api": "Real Sociedad",
+        "logo": "https://media.api-sports.io/football/teams/548.png",
         "played": 33,
         "won": 11,
         "draw": 10,
@@ -694,13 +694,13 @@
         "ga": 52,
         "gd": 0,
         "pts": 43,
-        "form": ""
+        "form": "D,L,D,W,L"
       },
       {
         "rank": 9,
         "club": "CA Osasuna",
-        "club_api": "CA Osasuna",
-        "logo": "https://crests.football-data.org/79.png",
+        "club_api": "Osasuna",
+        "logo": "https://media.api-sports.io/football/teams/727.png",
         "played": 33,
         "won": 11,
         "draw": 9,
@@ -709,13 +709,13 @@
         "ga": 40,
         "gd": -1,
         "pts": 42,
-        "form": ""
+        "form": "W,L,D,D,W"
       },
       {
         "rank": 10,
         "club": "Athletic Club",
         "club_api": "Athletic Club",
-        "logo": "https://crests.football-data.org/77.png",
+        "logo": "https://media.api-sports.io/football/teams/531.png",
         "played": 33,
         "won": 12,
         "draw": 5,
@@ -724,13 +724,13 @@
         "ga": 48,
         "gd": -12,
         "pts": 41,
-        "form": ""
+        "form": "L,W,L,L,W"
       },
       {
         "rank": 11,
         "club": "Rayo Vallecano",
-        "club_api": "Rayo Vallecano de Madrid",
-        "logo": "https://crests.football-data.org/87.png",
+        "club_api": "Rayo Vallecano",
+        "logo": "https://media.api-sports.io/football/teams/728.png",
         "played": 33,
         "won": 9,
         "draw": 12,
@@ -739,13 +739,13 @@
         "ga": 41,
         "gd": -8,
         "pts": 39,
-        "form": ""
+        "form": "D,W,L,W,L"
       },
       {
         "rank": 12,
         "club": "Valencia CF",
-        "club_api": "Valencia CF",
-        "logo": "https://crests.football-data.org/95.png",
+        "club_api": "Valencia",
+        "logo": "https://media.api-sports.io/football/teams/532.png",
         "played": 33,
         "won": 10,
         "draw": 9,
@@ -754,13 +754,13 @@
         "ga": 48,
         "gd": -11,
         "pts": 39,
-        "form": ""
+        "form": "W,D,L,L,W"
       },
       {
         "rank": 13,
         "club": "RCD Espanyol de Barcelona",
-        "club_api": "RCD Espanyol de Barcelona",
-        "logo": "https://crests.football-data.org/80.png",
+        "club_api": "Espanyol",
+        "logo": "https://media.api-sports.io/football/teams/540.png",
         "played": 33,
         "won": 10,
         "draw": 9,
@@ -769,13 +769,13 @@
         "ga": 49,
         "gd": -12,
         "pts": 39,
-        "form": ""
+        "form": "D,L,L,D,L"
       },
       {
         "rank": 14,
         "club": "Elche CF",
-        "club_api": "Elche CF",
-        "logo": "https://crests.football-data.org/285.png",
+        "club_api": "Elche",
+        "logo": "https://media.api-sports.io/football/teams/797.png",
         "played": 33,
         "won": 9,
         "draw": 11,
@@ -784,13 +784,13 @@
         "ga": 50,
         "gd": -6,
         "pts": 38,
-        "form": ""
+        "form": "W,W,W,L,W"
       },
       {
         "rank": 15,
         "club": "Girona FC",
-        "club_api": "Girona FC",
-        "logo": "https://crests.football-data.org/298.png",
+        "club_api": "Girona",
+        "logo": "https://media.api-sports.io/football/teams/547.png",
         "played": 33,
         "won": 9,
         "draw": 11,
@@ -799,13 +799,13 @@
         "ga": 50,
         "gd": -14,
         "pts": 38,
-        "form": ""
+        "form": "L,L,D,W,L"
       },
       {
         "rank": 16,
         "club": "D. Alavés",
-        "club_api": "Deportivo Alavés",
-        "logo": "https://crests.football-data.org/263.png",
+        "club_api": "Alaves",
+        "logo": "https://media.api-sports.io/football/teams/542.png",
         "played": 33,
         "won": 9,
         "draw": 9,
@@ -814,13 +814,13 @@
         "ga": 49,
         "gd": -11,
         "pts": 36,
-        "form": ""
+        "form": "W,L,D,D,W"
       },
       {
         "rank": 17,
         "club": "RCD Mallorca",
-        "club_api": "RCD Mallorca",
-        "logo": "https://crests.football-data.org/89.png",
+        "club_api": "Mallorca",
+        "logo": "https://media.api-sports.io/football/teams/798.png",
         "played": 33,
         "won": 9,
         "draw": 8,
@@ -829,13 +829,13 @@
         "ga": 51,
         "gd": -10,
         "pts": 35,
-        "form": ""
+        "form": "L,D,W,W,L"
       },
       {
         "rank": 18,
         "club": "Sevilla FC",
-        "club_api": "Sevilla FC",
-        "logo": "https://crests.football-data.org/559.png",
+        "club_api": "Sevilla",
+        "logo": "https://media.api-sports.io/football/teams/536.png",
         "played": 33,
         "won": 9,
         "draw": 7,
@@ -844,13 +844,13 @@
         "ga": 55,
         "gd": -15,
         "pts": 34,
-        "form": ""
+        "form": "L,L,W,L,L"
       },
       {
         "rank": 19,
         "club": "Levante UD",
-        "club_api": "Levante UD",
-        "logo": "https://crests.football-data.org/88.png",
+        "club_api": "Levante",
+        "logo": "https://media.api-sports.io/football/teams/539.png",
         "played": 33,
         "won": 8,
         "draw": 9,
@@ -859,13 +859,13 @@
         "ga": 50,
         "gd": -13,
         "pts": 33,
-        "form": ""
+        "form": "D,W,W,L,W"
       },
       {
         "rank": 20,
         "club": "Real Oviedo",
-        "club_api": "Real Oviedo",
-        "logo": "https://crests.football-data.org/1048.png",
+        "club_api": "Oviedo",
+        "logo": "https://media.api-sports.io/football/teams/718.png",
         "played": 33,
         "won": 6,
         "draw": 10,
@@ -874,15 +874,15 @@
         "ga": 51,
         "gd": -25,
         "pts": 28,
-        "form": ""
+        "form": "L,D,W,W,L"
       }
     ],
     "Bundes": [
       {
         "rank": 1,
         "club": "FC Bayern München",
-        "club_api": "FC Bayern München",
-        "logo": "https://crests.football-data.org/5.png",
+        "club_api": "Bayern München",
+        "logo": "https://media.api-sports.io/football/teams/157.png",
         "played": 31,
         "won": 26,
         "draw": 4,
@@ -891,13 +891,13 @@
         "ga": 32,
         "gd": 81,
         "pts": 82,
-        "form": ""
+        "form": "W,W,W,W,W"
       },
       {
         "rank": 2,
         "club": "Borussia Dortmund",
         "club_api": "Borussia Dortmund",
-        "logo": "https://crests.football-data.org/4.png",
+        "logo": "https://media.api-sports.io/football/teams/165.png",
         "played": 31,
         "won": 20,
         "draw": 7,
@@ -906,13 +906,13 @@
         "ga": 31,
         "gd": 34,
         "pts": 67,
-        "form": ""
+        "form": "W,L,L,W,W"
       },
       {
         "rank": 3,
-        "club": "RB Leipzig",
+        "club": "RasenBallsport Leipzig",
         "club_api": "RB Leipzig",
-        "logo": "https://crests.football-data.org/721.png",
+        "logo": "https://media.api-sports.io/football/teams/173.png",
         "played": 31,
         "won": 19,
         "draw": 5,
@@ -921,13 +921,13 @@
         "ga": 38,
         "gd": 24,
         "pts": 62,
-        "form": ""
+        "form": "W,W,W,W,W"
       },
       {
         "rank": 4,
         "club": "VfB Stuttgart",
         "club_api": "VfB Stuttgart",
-        "logo": "https://crests.football-data.org/10.png",
+        "logo": "https://media.api-sports.io/football/teams/172.png",
         "played": 31,
         "won": 17,
         "draw": 6,
@@ -936,13 +936,13 @@
         "ga": 43,
         "gd": 20,
         "pts": 57,
-        "form": ""
+        "form": "D,L,W,L,W"
       },
       {
         "rank": 5,
         "club": "TSG Hoffenheim",
-        "club_api": "TSG 1899 Hoffenheim",
-        "logo": "https://crests.football-data.org/2.png",
+        "club_api": "1899 Hoffenheim",
+        "logo": "https://media.api-sports.io/football/teams/167.png",
         "played": 31,
         "won": 17,
         "draw": 6,
@@ -951,13 +951,13 @@
         "ga": 45,
         "gd": 16,
         "pts": 57,
-        "form": ""
+        "form": "W,W,D,L,L"
       },
       {
         "rank": 6,
         "club": "Bayer 04 Leverkusen",
-        "club_api": "Bayer 04 Leverkusen",
-        "logo": "https://crests.football-data.org/3.png",
+        "club_api": "Bayer Leverkusen",
+        "logo": "https://media.api-sports.io/football/teams/168.png",
         "played": 31,
         "won": 16,
         "draw": 7,
@@ -966,13 +966,13 @@
         "ga": 42,
         "gd": 20,
         "pts": 55,
-        "form": ""
+        "form": "W,L,W,W,D"
       },
       {
         "rank": 7,
         "club": "Eintracht Frankfurt",
         "club_api": "Eintracht Frankfurt",
-        "logo": "https://crests.football-data.org/19.png",
+        "logo": "https://media.api-sports.io/football/teams/169.png",
         "played": 31,
         "won": 11,
         "draw": 10,
@@ -981,13 +981,13 @@
         "ga": 58,
         "gd": -2,
         "pts": 43,
-        "form": ""
+        "form": "D,L,W,D,L"
       },
       {
         "rank": 8,
         "club": "Sport-Club Freiburg",
         "club_api": "SC Freiburg",
-        "logo": "https://crests.football-data.org/17.png",
+        "logo": "https://media.api-sports.io/football/teams/160.png",
         "played": 31,
         "won": 12,
         "draw": 7,
@@ -996,13 +996,13 @@
         "ga": 52,
         "gd": -8,
         "pts": 43,
-        "form": ""
+        "form": "L,W,W,L,W"
       },
       {
         "rank": 9,
         "club": "FC Augsburg",
         "club_api": "FC Augsburg",
-        "logo": "https://crests.football-data.org/16.png",
+        "logo": "https://media.api-sports.io/football/teams/170.png",
         "played": 31,
         "won": 10,
         "draw": 7,
@@ -1011,13 +1011,13 @@
         "ga": 55,
         "gd": -16,
         "pts": 37,
-        "form": ""
+        "form": "D,W,D,D,L"
       },
       {
         "rank": 10,
         "club": "1. FSV Mainz 05",
-        "club_api": "1. FSV Mainz 05",
-        "logo": "https://crests.football-data.org/15.png",
+        "club_api": "FSV Mainz 05",
+        "logo": "https://media.api-sports.io/football/teams/164.png",
         "played": 31,
         "won": 8,
         "draw": 10,
@@ -1026,13 +1026,13 @@
         "ga": 49,
         "gd": -10,
         "pts": 34,
-        "form": ""
+        "form": "L,D,L,W,W"
       },
       {
         "rank": 11,
         "club": "Borussia Mönchengladbach",
         "club_api": "Borussia Mönchengladbach",
-        "logo": "https://crests.football-data.org/18.png",
+        "logo": "https://media.api-sports.io/football/teams/163.png",
         "played": 31,
         "won": 7,
         "draw": 11,
@@ -1041,13 +1041,13 @@
         "ga": 50,
         "gd": -14,
         "pts": 32,
-        "form": ""
+        "form": "D,D,L,D,D"
       },
       {
         "rank": 12,
         "club": "SV Werder Bremen",
-        "club_api": "SV Werder Bremen",
-        "logo": "https://crests.football-data.org/12.png",
+        "club_api": "Werder Bremen",
+        "logo": "https://media.api-sports.io/football/teams/162.png",
         "played": 31,
         "won": 8,
         "draw": 8,
@@ -1056,13 +1056,13 @@
         "ga": 54,
         "gd": -18,
         "pts": 32,
-        "form": ""
+        "form": "D,W,L,L,W"
       },
       {
         "rank": 13,
         "club": "1. FC Union Berlin",
-        "club_api": "1. FC Union Berlin",
-        "logo": "https://crests.football-data.org/28.png",
+        "club_api": "Union Berlin",
+        "logo": "https://media.api-sports.io/football/teams/182.png",
         "played": 31,
         "won": 8,
         "draw": 8,
@@ -1071,13 +1071,13 @@
         "ga": 55,
         "gd": -20,
         "pts": 32,
-        "form": ""
+        "form": "L,L,L,D,L"
       },
       {
         "rank": 14,
         "club": "1. FC Köln",
         "club_api": "1. FC Köln",
-        "logo": "https://crests.football-data.org/1.png",
+        "logo": "https://media.api-sports.io/football/teams/192.png",
         "played": 31,
         "won": 7,
         "draw": 10,
@@ -1086,13 +1086,13 @@
         "ga": 53,
         "gd": -8,
         "pts": 31,
-        "form": ""
+        "form": "L,D,W,D,D"
       },
       {
         "rank": 15,
         "club": "Hamburger SV",
         "club_api": "Hamburger SV",
-        "logo": "https://crests.football-data.org/7.png",
+        "logo": "https://media.api-sports.io/football/teams/175.png",
         "played": 31,
         "won": 7,
         "draw": 10,
@@ -1101,13 +1101,13 @@
         "ga": 50,
         "gd": -16,
         "pts": 31,
-        "form": ""
+        "form": "L,L,L,D,L"
       },
       {
         "rank": 16,
         "club": "FC St. Pauli",
-        "club_api": "FC St. Pauli 1910",
-        "logo": "https://crests.football-data.org/20.png",
+        "club_api": "FC St. Pauli",
+        "logo": "https://media.api-sports.io/football/teams/186.png",
         "played": 31,
         "won": 6,
         "draw": 8,
@@ -1116,13 +1116,13 @@
         "ga": 53,
         "gd": -27,
         "pts": 26,
-        "form": ""
+        "form": "L,D,L,D,L"
       },
       {
         "rank": 17,
         "club": "VfL Wolfsburg",
         "club_api": "VfL Wolfsburg",
-        "logo": "https://crests.football-data.org/11.png",
+        "logo": "https://media.api-sports.io/football/teams/161.png",
         "played": 31,
         "won": 6,
         "draw": 7,
@@ -1131,13 +1131,13 @@
         "ga": 66,
         "gd": -25,
         "pts": 25,
-        "form": ""
+        "form": "D,W,L,L,L"
       },
       {
         "rank": 18,
         "club": "1. FC Heidenheim 1846",
-        "club_api": "1. FC Heidenheim 1846",
-        "logo": "https://crests.football-data.org/44.png",
+        "club_api": "1. FC Heidenheim",
+        "logo": "https://media.api-sports.io/football/teams/180.png",
         "played": 31,
         "won": 5,
         "draw": 7,
@@ -1146,7 +1146,459 @@
         "ga": 66,
         "gd": -31,
         "pts": 22,
-        "form": ""
+        "form": "W,L,W,D,D"
+      }
+    ],
+    "MLS": [
+      {
+        "rank": 1,
+        "club": "Philadelphia Union",
+        "club_api": "Philadelphia Union",
+        "logo": "https://media.api-sports.io/football/teams/1599.png",
+        "played": 34,
+        "won": 20,
+        "draw": 6,
+        "lost": 8,
+        "gf": 57,
+        "ga": 35,
+        "gd": 22,
+        "pts": 66,
+        "form": "L,W,W,W,L"
+      },
+      {
+        "rank": 2,
+        "club": "Inter Miami CF",
+        "club_api": "Inter Miami",
+        "logo": "https://media.api-sports.io/football/teams/9568.png",
+        "played": 34,
+        "won": 19,
+        "draw": 8,
+        "lost": 7,
+        "gf": 81,
+        "ga": 55,
+        "gd": 26,
+        "pts": 65,
+        "form": "W,W,W,L,D"
+      },
+      {
+        "rank": 3,
+        "club": "FC Cincinnati",
+        "club_api": "FC Cincinnati",
+        "logo": "https://media.api-sports.io/football/teams/2242.png",
+        "played": 34,
+        "won": 20,
+        "draw": 5,
+        "lost": 9,
+        "gf": 52,
+        "ga": 40,
+        "gd": 12,
+        "pts": 65,
+        "form": "W,W,D,W,W"
+      },
+      {
+        "rank": 4,
+        "club": "Vancouver Whitecaps FC",
+        "club_api": "Vancouver Whitecaps",
+        "logo": "https://media.api-sports.io/football/teams/1603.png",
+        "played": 34,
+        "won": 18,
+        "draw": 9,
+        "lost": 7,
+        "gf": 66,
+        "ga": 38,
+        "gd": 28,
+        "pts": 63,
+        "form": "L,W,W,D,D"
+      },
+      {
+        "rank": 5,
+        "club": "San Diego FC",
+        "club_api": "San Diego",
+        "logo": "https://media.api-sports.io/football/teams/25484.png",
+        "played": 34,
+        "won": 19,
+        "draw": 6,
+        "lost": 9,
+        "gf": 64,
+        "ga": 41,
+        "gd": 23,
+        "pts": 63,
+        "form": "W,W,L,D,L"
+      },
+      {
+        "rank": 6,
+        "club": "Los Angeles FC",
+        "club_api": "Los Angeles FC",
+        "logo": "https://media.api-sports.io/football/teams/1616.png",
+        "played": 34,
+        "won": 17,
+        "draw": 9,
+        "lost": 8,
+        "gf": 65,
+        "ga": 40,
+        "gd": 25,
+        "pts": 60,
+        "form": "D,L,W,W,W"
+      },
+      {
+        "rank": 7,
+        "club": "Charlotte FC",
+        "club_api": "Charlotte",
+        "logo": "https://media.api-sports.io/football/teams/18310.png",
+        "played": 34,
+        "won": 19,
+        "draw": 2,
+        "lost": 13,
+        "gf": 55,
+        "ga": 46,
+        "gd": 9,
+        "pts": 59,
+        "form": "W,W,L,L,W"
+      },
+      {
+        "rank": 8,
+        "club": "Minnesota United",
+        "club_api": "Minnesota United FC",
+        "logo": "https://media.api-sports.io/football/teams/1612.png",
+        "played": 34,
+        "won": 16,
+        "draw": 10,
+        "lost": 8,
+        "gf": 56,
+        "ga": 39,
+        "gd": 17,
+        "pts": 58,
+        "form": "L,W,D,L,W"
+      },
+      {
+        "rank": 9,
+        "club": "New York City FC",
+        "club_api": "New York City FC",
+        "logo": "https://media.api-sports.io/football/teams/1604.png",
+        "played": 34,
+        "won": 17,
+        "draw": 5,
+        "lost": 12,
+        "gf": 50,
+        "ga": 44,
+        "gd": 6,
+        "pts": 56,
+        "form": "L,L,W,L,W"
+      },
+      {
+        "rank": 10,
+        "club": "Seattle Sounders FC",
+        "club_api": "Seattle Sounders",
+        "logo": "https://media.api-sports.io/football/teams/1595.png",
+        "played": 34,
+        "won": 15,
+        "draw": 10,
+        "lost": 9,
+        "gf": 58,
+        "ga": 48,
+        "gd": 10,
+        "pts": 55,
+        "form": "W,W,W,D,L"
+      },
+      {
+        "rank": 11,
+        "club": "Nashville SC",
+        "club_api": "Nashville SC",
+        "logo": "https://media.api-sports.io/football/teams/9569.png",
+        "played": 34,
+        "won": 16,
+        "draw": 6,
+        "lost": 12,
+        "gf": 58,
+        "ga": 45,
+        "gd": 13,
+        "pts": 54,
+        "form": "L,D,W,L,L"
+      },
+      {
+        "rank": 12,
+        "club": "Columbus Crew",
+        "club_api": "Columbus Crew",
+        "logo": "https://media.api-sports.io/football/teams/1613.png",
+        "played": 34,
+        "won": 14,
+        "draw": 12,
+        "lost": 8,
+        "gf": 55,
+        "ga": 51,
+        "gd": 4,
+        "pts": 54,
+        "form": "W,D,L,D,L"
+      },
+      {
+        "rank": 13,
+        "club": "Orlando City SC",
+        "club_api": "Orlando City SC",
+        "logo": "https://media.api-sports.io/football/teams/1598.png",
+        "played": 34,
+        "won": 14,
+        "draw": 11,
+        "lost": 9,
+        "gf": 63,
+        "ga": 51,
+        "gd": 12,
+        "pts": 53,
+        "form": "L,L,D,D,W"
+      },
+      {
+        "rank": 14,
+        "club": "Chicago Fire FC",
+        "club_api": "Chicago Fire",
+        "logo": "https://media.api-sports.io/football/teams/1607.png",
+        "played": 34,
+        "won": 15,
+        "draw": 8,
+        "lost": 11,
+        "gf": 68,
+        "ga": 60,
+        "gd": 8,
+        "pts": 53,
+        "form": "D,D,W,W,W"
+      },
+      {
+        "rank": 15,
+        "club": "Austin FC",
+        "club_api": "Austin",
+        "logo": "https://media.api-sports.io/football/teams/16489.png",
+        "played": 34,
+        "won": 13,
+        "draw": 8,
+        "lost": 13,
+        "gf": 37,
+        "ga": 45,
+        "gd": -8,
+        "pts": 47,
+        "form": "L,W,L,L,W"
+      },
+      {
+        "rank": 16,
+        "club": "FC Dallas",
+        "club_api": "FC Dallas",
+        "logo": "https://media.api-sports.io/football/teams/1597.png",
+        "played": 34,
+        "won": 11,
+        "draw": 11,
+        "lost": 12,
+        "gf": 52,
+        "ga": 55,
+        "gd": -3,
+        "pts": 44,
+        "form": "W,L,W,D,W"
+      },
+      {
+        "rank": 17,
+        "club": "Portland Timbers",
+        "club_api": "Portland Timbers",
+        "logo": "https://media.api-sports.io/football/teams/1617.png",
+        "played": 34,
+        "won": 11,
+        "draw": 11,
+        "lost": 12,
+        "gf": 41,
+        "ga": 48,
+        "gd": -7,
+        "pts": 44,
+        "form": "L,L,D,D,L"
+      },
+      {
+        "rank": 18,
+        "club": "New York Red Bulls",
+        "club_api": "New York Red Bulls",
+        "logo": "https://media.api-sports.io/football/teams/1602.png",
+        "played": 34,
+        "won": 12,
+        "draw": 7,
+        "lost": 15,
+        "gf": 48,
+        "ga": 47,
+        "gd": 1,
+        "pts": 43,
+        "form": "L,L,L,W,L"
+      },
+      {
+        "rank": 19,
+        "club": "San Jose Earthquakes",
+        "club_api": "San Jose Earthquakes",
+        "logo": "https://media.api-sports.io/football/teams/1596.png",
+        "played": 34,
+        "won": 11,
+        "draw": 8,
+        "lost": 15,
+        "gf": 60,
+        "ga": 63,
+        "gd": -3,
+        "pts": 41,
+        "form": "W,L,W,L,L"
+      },
+      {
+        "rank": 20,
+        "club": "Real Salt Lake",
+        "club_api": "Real Salt Lake",
+        "logo": "https://media.api-sports.io/football/teams/1606.png",
+        "played": 34,
+        "won": 12,
+        "draw": 5,
+        "lost": 17,
+        "gf": 38,
+        "ga": 49,
+        "gd": -11,
+        "pts": 41,
+        "form": "D,L,W,W,L"
+      },
+      {
+        "rank": 21,
+        "club": "Colorado Rapids",
+        "club_api": "Colorado Rapids",
+        "logo": "https://media.api-sports.io/football/teams/1610.png",
+        "played": 34,
+        "won": 11,
+        "draw": 8,
+        "lost": 15,
+        "gf": 44,
+        "ga": 56,
+        "gd": -12,
+        "pts": 41,
+        "form": "D,L,D,L,W"
+      },
+      {
+        "rank": 22,
+        "club": "Houston Dynamo FC",
+        "club_api": "Houston Dynamo",
+        "logo": "https://media.api-sports.io/football/teams/1600.png",
+        "played": 34,
+        "won": 9,
+        "draw": 10,
+        "lost": 15,
+        "gf": 43,
+        "ga": 56,
+        "gd": -13,
+        "pts": 37,
+        "form": "D,L,L,W,L"
+      },
+      {
+        "rank": 23,
+        "club": "New England Revolution",
+        "club_api": "New England Revolution",
+        "logo": "https://media.api-sports.io/football/teams/1609.png",
+        "played": 34,
+        "won": 9,
+        "draw": 9,
+        "lost": 16,
+        "gf": 44,
+        "ga": 51,
+        "gd": -7,
+        "pts": 36,
+        "form": "D,L,W,L,D"
+      },
+      {
+        "rank": 24,
+        "club": "Toronto FC",
+        "club_api": "Toronto FC",
+        "logo": "https://media.api-sports.io/football/teams/1601.png",
+        "played": 34,
+        "won": 6,
+        "draw": 14,
+        "lost": 14,
+        "gf": 37,
+        "ga": 44,
+        "gd": -7,
+        "pts": 32,
+        "form": "W,L,D,D,D"
+      },
+      {
+        "rank": 25,
+        "club": "St. Louis City SC",
+        "club_api": "St. Louis City",
+        "logo": "https://media.api-sports.io/football/teams/20787.png",
+        "played": 34,
+        "won": 8,
+        "draw": 8,
+        "lost": 18,
+        "gf": 44,
+        "ga": 58,
+        "gd": -14,
+        "pts": 32,
+        "form": "D,W,L,W,W"
+      },
+      {
+        "rank": 26,
+        "club": "LA Galaxy",
+        "club_api": "Los Angeles Galaxy",
+        "logo": "https://media.api-sports.io/football/teams/1605.png",
+        "played": 34,
+        "won": 7,
+        "draw": 9,
+        "lost": 18,
+        "gf": 46,
+        "ga": 66,
+        "gd": -20,
+        "pts": 30,
+        "form": "W,W,L,W,L"
+      },
+      {
+        "rank": 27,
+        "club": "Sporting Kansas City",
+        "club_api": "Sporting Kansas City",
+        "logo": "https://media.api-sports.io/football/teams/1611.png",
+        "played": 34,
+        "won": 7,
+        "draw": 7,
+        "lost": 20,
+        "gf": 46,
+        "ga": 70,
+        "gd": -24,
+        "pts": 28,
+        "form": "D,L,L,L,L"
+      },
+      {
+        "rank": 28,
+        "club": "Atlanta United",
+        "club_api": "Atlanta United FC",
+        "logo": "https://media.api-sports.io/football/teams/1608.png",
+        "played": 34,
+        "won": 5,
+        "draw": 13,
+        "lost": 16,
+        "gf": 38,
+        "ga": 63,
+        "gd": -25,
+        "pts": 28,
+        "form": "D,L,L,L,D"
+      },
+      {
+        "rank": 29,
+        "club": "CF Montréal",
+        "club_api": "CF Montreal",
+        "logo": "https://media.api-sports.io/football/teams/1614.png",
+        "played": 34,
+        "won": 6,
+        "draw": 10,
+        "lost": 18,
+        "gf": 34,
+        "ga": 60,
+        "gd": -26,
+        "pts": 28,
+        "form": "L,D,W,L,L"
+      },
+      {
+        "rank": 30,
+        "club": "D.C. United",
+        "club_api": "DC United",
+        "logo": "https://media.api-sports.io/football/teams/1615.png",
+        "played": 34,
+        "won": 5,
+        "draw": 11,
+        "lost": 18,
+        "gf": 30,
+        "ga": 66,
+        "gd": -36,
+        "pts": 26,
+        "form": "D,L,L,L,D"
       }
     ],
     "JPL": [

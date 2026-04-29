@@ -33,18 +33,20 @@ API_FOOTBALL_KEY = os.environ.get("API_FOOTBALL_KEY", "")
 BASE = "https://api.football-data.org/v4"
 APIFOOT_BASE = "https://v3.football.api-sports.io"
 
-# football-data.org competition codes -> nos codes ligue (memes que fetch_fixtures.py)
-COMPETITIONS = {
-    "FL1": "L1",      # Ligue 1
-    "PL":  "PL",      # Premier League
-    "PD":  "Liga",    # La Liga
-    "BL1": "Bundes",  # Bundesliga
-}
+# Source unique : API-Football Pro plan (decision 2026-04-29).
+# football-data.org abandonne — couverture limitee, format fragile, doublait l'effort.
+# Toutes les ligues passent par /standings + applique club_aliases.json.
+COMPETITIONS = {}  # legacy, vide
 
-# API-Football : ligues hors free tier de football-data.org -> source API-Sports
+# API-Football : SOURCE UNIQUE pour standings de toutes nos ligues.
 APISPORTS_COMPETITIONS = {
-    "JPL": (144, 2025),   # Jupiler Pro League (Belgique)
-    "Ere": (88,  2025),   # Eredivisie (Pays-Bas)
+    "L1":     (61,  2025),   # Ligue 1
+    "PL":     (39,  2025),   # Premier League
+    "Liga":   (140, 2025),   # La Liga
+    "Bundes": (78,  2025),   # Bundesliga
+    "MLS":    (253, 2025),   # MLS (saison cal en, 2025 = saison courante US)
+    "JPL":    (144, 2025),   # Jupiler Pro League (Belgique)
+    "Ere":    (88,  2025),   # Eredivisie (Pays-Bas)
 }
 
 # Mapping noms football-data -> noms canoniques Sorare (= ceux dans players.json).
@@ -135,10 +137,21 @@ def fetch_standings_apisports(league_id, season, our_league):
     if not standings_groups:
         print("KO (pas de table standings)")
         return None
-    # API-Football : standings est un array de groupes (Phase 1 / Champion Playoff / etc.)
-    # Belgique a 4 groupes (Championship Round 6, Relegation Round 4, Pro League 16, Qualifying 6).
-    # On prend le plus gros = saison reguliere complete.
-    table = max(standings_groups, key=len)
+    # API-Football : standings est un array de groupes (Phase 1 / Champion Playoff / Eastern / Western / etc.)
+    # Strategie selon le format :
+    # - Belgique (4 groupes : Championship Round 6, Relegation Round 4, Pro League 16, Qualifying 6)
+    #   -> on prend le plus gros = saison reguliere complete (Pro League 16)
+    # - MLS (2 conferences Eastern 15 + Western 15) -> fusion + reranking par points overall
+    if len(standings_groups) == 2 and len(standings_groups[0]) == len(standings_groups[1]):
+        # Probablement 2 conferences MLS -> fusion + tri par points
+        merged = standings_groups[0] + standings_groups[1]
+        merged.sort(key=lambda r: (-r.get("points", 0), -r.get("goalsDiff", 0), -((r.get("all") or {}).get("goals", {}) or {}).get("for", 0)))
+        # Reassign rank overall (1 .. 30)
+        for i, row in enumerate(merged, 1):
+            row["rank"] = i
+        table = merged
+    else:
+        table = max(standings_groups, key=len)
     rows = []
     for r2 in table:
         team = r2.get("team") or {}
@@ -166,25 +179,26 @@ def fetch_standings_apisports(league_id, season, our_league):
 
 
 def main():
-    print("CLASSEMENTS football-data.org + API-Football")
+    print("CLASSEMENTS API-Football (source unique)")
     print("=" * 50)
     output = {
         "updatedAt": int(time.time()),
         "leagues": {},
     }
 
-    for comp_code, our_league in COMPETITIONS.items():
-        rows = fetch_standings(comp_code, our_league)
-        if rows:
-            output["leagues"][our_league] = rows
-        time.sleep(0.5)  # politesse rate-limit (10 req/min en free tier)
-
-    # API-Football : Belgique + Pays-Bas
+    # API-Football : SOURCE UNIQUE pour toutes les ligues (decision 2026-04-29)
     for our_league, (league_id, season) in APISPORTS_COMPETITIONS.items():
         rows = fetch_standings_apisports(league_id, season, our_league)
         if rows:
             output["leagues"][our_league] = rows
         time.sleep(0.2)
+
+    # Legacy : football-data.org (vide, garde pour rollback eventuel)
+    for comp_code, our_league in COMPETITIONS.items():
+        rows = fetch_standings(comp_code, our_league)
+        if rows:
+            output["leagues"][our_league] = rows
+        time.sleep(0.5)
 
     script_dir = os.path.dirname(os.path.abspath(__file__))
     data_dir = os.path.join(script_dir, "deglingo-scout-app", "public", "data")

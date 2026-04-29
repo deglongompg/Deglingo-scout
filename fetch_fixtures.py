@@ -552,9 +552,11 @@ def get_manual_euro_fixtures():
     return fixtures
 
 
-def fetch_apisports_fixtures(api_league_id, season, our_league, days_back=8, days_ahead=21):
-    """Fetch fixtures via API-Football (Pro plan) pour ligues hors football-data.org free tier.
-    Couvre JPL (Belgique 144) et Ere (Pays-Bas 88). Fenetre 8j passes -> 21j futurs.
+def fetch_apisports_fixtures(api_league_id, season, our_league, days_back=8, days_ahead=21, is_euro=False):
+    """Fetch fixtures via API-Football (Pro plan) — SOURCE UNIQUE pour TOUTES les ligues.
+    Couvre Big-4 + MLS + JPL + Ere + UCL + UEL + UECL. Fenetre par defaut 8j passes -> 21j futurs.
+    Apply club_aliases.json sur home_api + away_api pour matcher noms canoniques Sorare.
+    Si is_euro=True, ajoute le champ `competition` ("UCL"/"UEL"/"UECL") pour StellarTab.
     """
     import urllib.request, urllib.parse
     KEY = os.environ.get("API_FOOTBALL_KEY", "")
@@ -588,6 +590,8 @@ def fetch_apisports_fixtures(api_league_id, season, our_league, days_back=8, day
     for fx in fix:
         fixture = fx.get("fixture") or {}
         teams_info = fx.get("teams") or {}
+        goals = fx.get("goals") or {}
+        league_meta = fx.get("league") or {}
         home = (teams_info.get("home") or {}).get("name") or ""
         away = (teams_info.get("away") or {}).get("name") or ""
         if not home or not away:
@@ -597,16 +601,35 @@ def fetch_apisports_fixtures(api_league_id, season, our_league, days_back=8, day
         kickoff = date_str[11:16] if len(date_str) >= 16 else ""
         status = (fixture.get("status") or {}).get("short") or ""
         is_finished = status in ("FT", "AET", "PEN")
+        is_live = status in ("1H", "2H", "ET", "P", "BT", "HT")
+        # matchday pour ligues domestiques = numero round / pour euro = stage (Group/QF/SF/F)
+        round_str = league_meta.get("round") or ""  # ex: "Regular Season - 32" ou "Quarter-finals"
+        if is_euro:
+            matchday = round_str.replace("Regular Season - ", "GS ").upper().replace("FINALS", "FINALS")
+        else:
+            # extrait le numero de journee si dispo
+            md = round_str.replace("Regular Season - ", "").strip()
+            matchday = md if md else our_league
         # Apply club aliases pour matcher noms canoniques Sorare/players.json
+        canon_home = to_sorare_canonical(home)
+        canon_away = to_sorare_canonical(away)
         f_out = {
-            "home": to_sorare_canonical(home), "away": to_sorare_canonical(away),
+            "home": canon_home, "away": canon_away,
             "date": date, "kickoff": kickoff,
-            "matchday": str(fixture.get("status", {}).get("long") or our_league),
+            "matchday": matchday,
             "league": our_league,
-            "home_api": to_sorare_canonical(home), "away_api": to_sorare_canonical(away),
+            "home_api": canon_home, "away_api": canon_away,
         }
+        if is_euro:
+            f_out["competition"] = our_league   # StellarTab utilise ce champ pour distinguer
         if is_finished:
             f_out["finished"] = True
+            if goals.get("home") is not None: f_out["score_home"] = goals.get("home")
+            if goals.get("away") is not None: f_out["score_away"] = goals.get("away")
+        elif is_live:
+            f_out["live"] = True
+            if goals.get("home") is not None: f_out["score_home"] = goals.get("home")
+            if goals.get("away") is not None: f_out["score_away"] = goals.get("away")
         fixtures.append(f_out)
     return fixtures
 
@@ -696,48 +719,38 @@ def main():
     print(f"   Date: {datetime.now().strftime('%Y-%m-%d %H:%M')}")
 
     all_fixtures = []
-    for comp_code, our_league in COMPETITIONS.items():
-        # Toutes les journées des 21 prochains jours (multi-GW pour Sorare Pro)
-        fixtures = fetch_upcoming_fixtures(comp_code, our_league, days_ahead=21)
-        all_fixtures.extend(fixtures)
-        time.sleep(6.5)
-        # Dernière journée terminée (résultats récents pour Stellar)
-        finished = fetch_recent_finished(comp_code, our_league, days_back=8)
-        # Dedup par (date, home_api, away_api) — pas juste par date.
-        # Why: si PSG-Angers est UPCOMING aujourd'hui et OL-Auxerre FINISHED aujourd'hui,
-        # un dedup par date virait OL-Auxerre du fixtures.json -> scores invisibles.
-        upcoming_keys = {(f["date"], f.get("home_api",""), f.get("away_api","")) for f in fixtures}
-        finished = [f for f in finished if (f["date"], f.get("home_api",""), f.get("away_api","")) not in upcoming_keys]
-        all_fixtures.extend(finished)
-        time.sleep(6.5)
+    # Big-4 + JPL + Ere via API-Football (SOURCE UNIQUE depuis 2026-04-29)
+    APISPORTS_DOMESTIC = {
+        "L1":     (61,  2025),
+        "PL":     (39,  2025),
+        "Liga":   (140, 2025),
+        "Bundes": (78,  2025),
+        "JPL":    (144, 2025),
+        "Ere":    (88,  2025),
+    }
+    for our_league, (api_id, season) in APISPORTS_DOMESTIC.items():
+        fx = fetch_apisports_fixtures(api_id, season, our_league, days_back=8, days_ahead=21)
+        all_fixtures.extend(fx)
+        time.sleep(0.2)
 
-    # Competitions europeennes — UCL via API, UEL/UECL hardcodées
-    print("\n--- Competitions europeennes ---")
-    for comp_code, comp_label in EURO_COMPETITIONS.items():
-        euro_fixtures = fetch_euro_fixtures(comp_code, comp_label, days_ahead=14)
-        all_fixtures.extend(euro_fixtures)
-        if euro_fixtures:
-            time.sleep(6.5)
+    # Competitions europeennes via API-Football (drop hardcode UEL/UECL)
+    print("\n--- Competitions europeennes via API-Football ---")
+    APISPORTS_EURO = {
+        "UCL":  (2,   2025),
+        "UEL":  (3,   2025),
+        "UECL": (848, 2025),
+    }
+    for our_league, (api_id, season) in APISPORTS_EURO.items():
+        fx = fetch_apisports_fixtures(api_id, season, our_league, days_back=14, days_ahead=21, is_euro=True)
+        all_fixtures.extend(fx)
+        time.sleep(0.2)
 
-    # UEL + UECL manuelles (football-data.org ne les inclut pas dans le plan gratuit)
-    manual_euro = get_manual_euro_fixtures()
-    all_fixtures.extend(manual_euro)
-
-    # MLS via Sorare API
+    # MLS via Sorare API (statusTyped=played/playing/scheduled — plus fiable que API-Football qui pre-charge des fixtures futurs)
     try:
         mls_fixtures = fetch_mls_fixtures()
         all_fixtures.extend(mls_fixtures)
     except Exception as e:
         print(f"⚠️ MLS fixtures skipped: {e}")
-
-    # JPL (Belgique) + Ere (Pays-Bas) via API-Football
-    APISPORTS_FIXTURES = {"JPL": (144, 2025), "Ere": (88, 2025)}
-    for our_league, (api_id, season) in APISPORTS_FIXTURES.items():
-        try:
-            fx = fetch_apisports_fixtures(api_id, season, our_league)
-            all_fixtures.extend(fx)
-        except Exception as e:
-            print(f"⚠️ {our_league} fixtures skipped: {e}")
 
     print(f"\n📋 Total: {len(all_fixtures)} matchs récupérés")
 

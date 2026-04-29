@@ -308,6 +308,65 @@ export default function DbTab({ players, teams, fixtures, logos = {}, lang = "fr
         @keyframes explosionPulse { 0%,100%{box-shadow:0 0 4px #4ADE8066,0 0 10px #4ADE8033} 50%{box-shadow:0 0 6px #4ADE8088,0 0 14px #4ADE8044} }
         @keyframes legendShimmer { 0%{background-position:-200% center} 100%{background-position:200% center} }
         @keyframes silverShine { 0%{background-position:200% center} 100%{background-position:-200% center} }
+        @keyframes tabUnderlinePulse { 0%,100%{opacity:0.65;transform:scaleX(1)} 50%{opacity:1;transform:scaleX(1.15)} }
+        /* Premium league pill (DbTab) — meme design que ds-tabs-pill du header */
+        .db-leagues-pill {
+          display: inline-flex;
+          gap: 2px;
+          padding: 4px;
+          border-radius: 12px;
+          background: linear-gradient(180deg, rgba(255,255,255,0.05), rgba(255,255,255,0.015));
+          border: 1px solid rgba(255,255,255,0.07);
+          backdrop-filter: blur(20px) saturate(150%);
+          -webkit-backdrop-filter: blur(20px) saturate(150%);
+          box-shadow: inset 0 1px 0 rgba(255,255,255,0.05), 0 4px 14px rgba(0,0,0,0.18);
+        }
+        .db-league-btn {
+          flex: 1 1 0;
+          min-width: 0;
+          padding: 5px 8px;
+          border-radius: 9px;
+          font-family: Outfit;
+          font-size: 11px;
+          font-weight: 700;
+          border: 1px solid transparent;
+          background: transparent;
+          color: rgba(255,255,255,0.55);
+          cursor: pointer;
+          display: inline-flex;
+          align-items: center;
+          justify-content: center;
+          gap: 4px;
+          white-space: nowrap;
+          transition: all 0.2s ease;
+          position: relative;
+          will-change: transform, box-shadow;
+        }
+        .db-league-btn img { transition: filter 0.2s ease, transform 0.2s ease; }
+        .db-league-btn:hover:not(.is-active) {
+          color: rgba(255,255,255,0.85);
+          background: linear-gradient(135deg, rgba(255,255,255,0.06), rgba(255,255,255,0.02));
+          transform: translateY(-1px);
+        }
+        .db-league-btn:hover:not(.is-active) img { filter: saturate(1.1) brightness(1.05); }
+        .db-league-btn.is-active {
+          color: #fff;
+          background: linear-gradient(135deg, var(--lg-c-strong) 0%, var(--lg-c-mid) 50%, var(--lg-c-soft) 100%);
+          border-color: var(--lg-c-border);
+          box-shadow: 0 0 18px var(--lg-c-glow), 0 0 4px var(--lg-c-halo), inset 0 1px 0 rgba(255,255,255,0.12), inset 0 -1px 0 var(--lg-c-bottom);
+          text-shadow: 0 0 10px var(--lg-c-text-shadow), 0 1px 2px rgba(0,0,0,0.5);
+        }
+        .db-league-btn.is-active img { filter: saturate(1.2) drop-shadow(0 0 4px var(--lg-c-glow)); transform: scale(1.05); }
+        .db-league-btn.is-active:hover { transform: translateY(-1px); box-shadow: 0 0 26px var(--lg-c-glow), 0 0 6px var(--lg-c-halo), inset 0 1px 0 rgba(255,255,255,0.18); }
+        .db-league-underline {
+          position: absolute;
+          bottom: 1px; left: 25%; right: 25%;
+          height: 2px;
+          border-radius: 2px;
+          background: linear-gradient(90deg, transparent, var(--lg-c-strong-solid), transparent);
+          box-shadow: 0 0 6px var(--lg-c-strong-solid);
+          animation: tabUnderlinePulse 2.4s ease-in-out infinite;
+        }
         @media(max-width:768px){
           .db-legend-detail { display: none !important; }
           .db-legend-socle { display: none !important; }
@@ -349,8 +408,17 @@ export default function DbTab({ players, teams, fixtures, logos = {}, lang = "fr
           value={search} onChange={e => { setSearch(e.target.value); setVisibleCount(30); }}
           style={{ ...sel({ flex: "1 1 140px", minWidth: 120 }) }}
         />
-        <div style={{ display: "flex", alignItems: "center", gap: 3, flexShrink: 0 }}>
-          {[["ALL", null], ["L1", "fr"], ["PL", "gb-eng"], ["Liga", "es"], ["Bundes", "de"], ["MLS", "us"], ["JPL", "be"], ["Ere", "nl"]].map(([k, fc]) => {
+        <div className="db-leagues-pill" style={{ flexShrink: 0 }}>
+          {[
+            ["ALL",    null,      "#6366F1"],   // indigo neutre
+            ["L1",     "fr",      "#3B82F6"],   // bleu Sorare Pro
+            ["PL",     "gb-eng",  "#D946EF"],   // magenta Sorare Pro
+            ["Liga",   "es",      "#EF4444"],   // rouge orange Sorare Pro
+            ["Bundes", "de",      "#DC2626"],   // rouge profond Sorare Pro
+            ["MLS",    "us",      "#22C55E"],   // vert Sorare Pro
+            ["JPL",    "be",      "#FFCB05"],   // jaune Jupiler
+            ["Ere",    "nl",      "#FF6B35"],   // orange Eredivisie
+          ].map(([k, fc, c]) => {
             const isAll = k === "ALL";
             const active = isAll ? leagues.size === 0 : leagues.has(k);
             const toggle = () => {
@@ -363,27 +431,43 @@ export default function DbTab({ players, teams, fixtures, logos = {}, lang = "fr
               });
             };
             return (
-              <button key={k} onClick={toggle} style={{
-                background: active ? (isAll ? "rgba(99,102,241,0.25)" : `${LEAGUE_COLORS[k]}25`) : "rgba(255,255,255,0.04)",
-                border: active ? `1px solid ${isAll ? "#6366f1" : LEAGUE_COLORS[k]}60` : "1px solid rgba(255,255,255,0.08)",
-                borderRadius: 6, padding: "4px 7px", cursor: "pointer", color: active ? "#fff" : "rgba(255,255,255,0.5)",
-                fontSize: 11, fontWeight: active ? 700 : 500, display: "flex", alignItems: "center", gap: 4, transition: "all 0.15s",
-              }}>
-                {fc ? <img src={`https://flagcdn.com/w40/${fc}.png`} alt={k} width={16} height={12} style={{ borderRadius: 2, objectFit: "cover" }} /> : null}
-                {isAll ? t(lang,"all") : k}
+              <button key={k} onClick={toggle}
+                className={`db-league-btn${active ? " is-active" : ""}`}
+                style={{
+                  "--lg-c-strong":     `${c}38`,
+                  "--lg-c-mid":        `${c}18`,
+                  "--lg-c-soft":       `${c}10`,
+                  "--lg-c-border":     `${c}55`,
+                  "--lg-c-glow":       `${c}40`,
+                  "--lg-c-halo":       `${c}30`,
+                  "--lg-c-bottom":     `${c}20`,
+                  "--lg-c-text-shadow": `${c}80`,
+                  "--lg-c-strong-solid": c,
+                }}>
+                {fc ? <img src={`https://flagcdn.com/w40/${fc}.png`} alt={k} width={14} height={11} style={{ borderRadius: 2, objectFit: "cover", flexShrink: 0 }} /> : null}
+                <span>{isAll ? t(lang,"all") : k}</span>
+                {active && <span className="db-league-underline" aria-hidden />}
               </button>
             );
           })}
+          {/* U23 toggle — separateur visuel + meme style premium pour homogeneite */}
+          <span aria-hidden style={{ width: 1, alignSelf: "stretch", margin: "2px 4px", background: "rgba(255,255,255,0.08)" }} />
           <button
             onClick={() => { setU23Only(v => !v); setVisibleCount(30); }}
+            className={`db-league-btn${u23Only ? " is-active" : ""}`}
             style={{
-              padding: "4px 7px", borderRadius: 6, fontSize: 11, fontWeight: 700,
-              fontFamily: "Outfit", cursor: "pointer", transition: "all 0.15s",
-              background: u23Only ? "rgba(251,191,36,0.2)" : "rgba(255,255,255,0.04)",
-              border: u23Only ? "1px solid rgba(251,191,36,0.5)" : "1px solid rgba(255,255,255,0.08)",
-              color: u23Only ? "#FBBF24" : "rgba(255,255,255,0.5)",
+              "--lg-c-strong":      "#FBBF2438",
+              "--lg-c-mid":         "#FBBF2418",
+              "--lg-c-soft":        "#FBBF2410",
+              "--lg-c-border":      "#FBBF2455",
+              "--lg-c-glow":        "#FBBF2440",
+              "--lg-c-halo":        "#FBBF2430",
+              "--lg-c-bottom":      "#FBBF2420",
+              "--lg-c-text-shadow": "#FBBF2480",
+              "--lg-c-strong-solid": "#FBBF24",
+              minWidth: 38,
             }}
-          >U23</button>
+          >U23{u23Only && <span className="db-league-underline" aria-hidden />}</button>
         </div>
         <select value={club} onChange={e => { setClub(e.target.value); setVisibleCount(30); }} style={sel({ flex: "1 1 0", minWidth: 0 })}>
           <option value="ALL">{t(lang,"club")}</option>

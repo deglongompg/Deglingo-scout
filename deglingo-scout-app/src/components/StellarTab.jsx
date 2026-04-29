@@ -2455,7 +2455,7 @@ export default function StellarTab({ players, teams, fixtures, logos = {}, match
                             <span className="magic-shine" aria-hidden />
                             <span style={{ position: "relative", zIndex: 2, display: "inline-flex", alignItems: "center", gap: 5 }}>
                               <span style={{ fontSize: 13, lineHeight: 1, filter: "drop-shadow(0 0 4px rgba(255,255,255,0.7))" }}>⚗️</span>
-                              {lang === "fr" ? "Création Magique" : "Magic Build"}
+                              {lang === "fr" ? "Création Stellaire" : "Stellar Build"}
                             </span>
                           </button>
                         </div>

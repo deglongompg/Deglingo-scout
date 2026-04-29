@@ -239,6 +239,54 @@ const proKeyframes = `
   animation: tabUnderlinePulse 2.4s ease-in-out infinite;
   pointer-events: none;
 }
+/* Premium slider Titu — custom track + thumb gradient + glow */
+.pro-slider-titu {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 150px;
+  height: 8px;
+  border-radius: 4px;
+  background: var(--slider-bg, linear-gradient(90deg, #4ADE80 0%, #4ADE80 0%, rgba(255,255,255,0.08) 0%, rgba(255,255,255,0.08) 100%));
+  outline: none;
+  cursor: pointer;
+  box-shadow: inset 0 1px 2px rgba(0,0,0,0.4), inset 0 -1px 0 rgba(255,255,255,0.04);
+  transition: box-shadow 0.18s ease;
+}
+.pro-slider-titu:hover { box-shadow: inset 0 1px 2px rgba(0,0,0,0.4), 0 0 0 2px rgba(74,222,128,0.15); }
+.pro-slider-titu::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background:
+    radial-gradient(circle at 30% 25%, #6EE7A8 0%, #4ADE80 45%, #16A34A 100%);
+  border: 2px solid rgba(255,255,255,0.6);
+  box-shadow:
+    0 0 10px rgba(74,222,128,0.7),
+    0 0 4px rgba(74,222,128,0.5),
+    inset 0 1px 0 rgba(255,255,255,0.4),
+    0 2px 4px rgba(0,0,0,0.4);
+  cursor: grab;
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+.pro-slider-titu::-webkit-slider-thumb:hover {
+  transform: scale(1.12);
+  box-shadow:
+    0 0 18px rgba(74,222,128,0.9),
+    0 0 6px rgba(74,222,128,0.7),
+    inset 0 1px 0 rgba(255,255,255,0.5),
+    0 3px 6px rgba(0,0,0,0.5);
+}
+.pro-slider-titu::-webkit-slider-thumb:active { cursor: grabbing; transform: scale(1.05); }
+.pro-slider-titu::-moz-range-thumb {
+  width: 18px; height: 18px; border-radius: 50%;
+  background: radial-gradient(circle at 30% 25%, #6EE7A8 0%, #4ADE80 45%, #16A34A 100%);
+  border: 2px solid rgba(255,255,255,0.6);
+  box-shadow: 0 0 10px rgba(74,222,128,0.7), 0 0 4px rgba(74,222,128,0.5), inset 0 1px 0 rgba(255,255,255,0.4);
+  cursor: grab;
+}
+.pro-slider-titu::-moz-range-track { background: transparent; }
 /* Variant action (Algo Magique) — toujours en relief */
 .pro-pill-action {
   color: #fff;
@@ -2102,16 +2150,39 @@ export default function SorareProTab({ players, teams, fixtures, standings = nul
                       </button>
                     );
                   })()}
-                  <div style={{ display: "flex", alignItems: "center", gap: 4 }}>
-                    <span style={{ fontSize: 7, fontWeight: 700, color: filterTitu ? "#4ADE80" : "rgba(255,255,255,0.3)", fontFamily: "Outfit" }}>
+                  <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+                    <span style={{
+                      fontSize: 9, fontWeight: 800,
+                      color: filterTitu ? "#4ADE80" : "rgba(255,255,255,0.4)",
+                      fontFamily: "Outfit",
+                      textShadow: filterTitu ? "0 0 6px rgba(74,222,128,0.5)" : "none",
+                      letterSpacing: "0.02em",
+                      whiteSpace: "nowrap",
+                    }}>
                       Titu {filterTitu > 0 ? `≥${filterTitu}%` : "All"}
                     </span>
-                    <div style={{ position: "relative", width: 100 }}>
-                      <input type="range" min={0} max={90} step={10} value={filterTitu} onChange={e => setFilterTitu(Number(e.target.value))}
-                        style={{ width: 100, height: 4, accentColor: "#4ADE80", cursor: "pointer" }} />
-                      <div style={{ display: "flex", justifyContent: "space-between", width: 100, marginTop: -2 }}>
+                    <div style={{ position: "relative", width: 150 }}>
+                      <input
+                        type="range" min={0} max={90} step={10}
+                        value={filterTitu}
+                        onChange={e => setFilterTitu(Number(e.target.value))}
+                        className="pro-slider-titu"
+                        style={{
+                          // Track gradient : portion verte 0->valeur, gris 0%->reste
+                          "--slider-bg": `linear-gradient(90deg, #4ADE80 0%, #16A34A ${(filterTitu/90)*100}%, rgba(255,255,255,0.08) ${(filterTitu/90)*100}%, rgba(255,255,255,0.08) 100%)`,
+                        }}
+                      />
+                      <div style={{ display: "flex", justifyContent: "space-between", width: 150, marginTop: 2 }}>
                         {[0,10,20,30,40,50,60,70,80,90].map(v => (
-                          <span key={v} style={{ fontSize: 5, color: filterTitu === v ? "#4ADE80" : "rgba(255,255,255,0.15)", fontFamily: "'DM Mono',monospace", cursor: "pointer" }} onClick={() => setFilterTitu(v)}>{v}</span>
+                          <span key={v}
+                            style={{
+                              fontSize: 6, fontWeight: 700,
+                              color: filterTitu === v ? "#4ADE80" : v < filterTitu ? "rgba(74,222,128,0.4)" : "rgba(255,255,255,0.2)",
+                              fontFamily: "'DM Mono',monospace",
+                              cursor: "pointer",
+                              transition: "color 0.15s ease",
+                            }}
+                            onClick={() => setFilterTitu(v)}>{v}</span>
                         ))}
                       </div>
                     </div>

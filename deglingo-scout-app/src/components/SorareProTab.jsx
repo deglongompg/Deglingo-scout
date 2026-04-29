@@ -305,6 +305,92 @@ const proKeyframes = `
   box-shadow: 0 0 22px var(--pill-c-glow), 0 0 4px var(--pill-c-halo), inset 0 1px 0 rgba(255,255,255,0.25);
   filter: brightness(1.08);
 }
+
+/* ═══ BOUTON CREATION MAGIQUE — fiole d'apothicaire bouillonnante ═══ */
+@keyframes magicShimmer {
+  0%   { background-position: 0% 50%; }
+  50%  { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+@keyframes magicGlow {
+  0%,100% { box-shadow: 0 0 16px rgba(167,139,250,0.55), 0 0 4px rgba(236,72,153,0.4), inset 0 1px 0 rgba(255,255,255,0.3); }
+  50%     { box-shadow: 0 0 26px rgba(167,139,250,0.8),  0 0 8px rgba(236,72,153,0.6), inset 0 1px 0 rgba(255,255,255,0.45); }
+}
+@keyframes magicBubbleRise {
+  0%   { transform: translateY(0) scale(0.4); opacity: 0; }
+  15%  { opacity: 0.9; }
+  85%  { opacity: 0.7; }
+  100% { transform: translateY(-26px) scale(1.1); opacity: 0; }
+}
+@keyframes magicSparkle {
+  0%,100% { transform: scale(0.5) rotate(0deg); opacity: 0.3; }
+  50%     { transform: scale(1) rotate(180deg); opacity: 1; }
+}
+.pro-pill-magic {
+  position: relative;
+  overflow: hidden;
+  height: 26px;
+  padding: 5px 16px 5px 14px;
+  border-radius: 8px;
+  font-family: Outfit;
+  font-size: 10px;
+  font-weight: 900;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  border: 1px solid rgba(196,181,253,0.6);
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  white-space: nowrap;
+  color: #fff;
+  /* Fond animé : violet-magenta-cyan-violet en mouvement perpetuel */
+  background:
+    linear-gradient(105deg, #6D28D9 0%, #9333EA 18%, #C026D3 36%, #DB2777 54%, #9333EA 72%, #6D28D9 100%);
+  background-size: 280% 100%;
+  animation: magicShimmer 5s ease-in-out infinite, magicGlow 2.4s ease-in-out infinite;
+  text-shadow: 0 0 8px rgba(255,255,255,0.45), 0 1px 2px rgba(0,0,0,0.5);
+  transition: transform 0.18s ease, filter 0.18s ease;
+  box-sizing: border-box;
+}
+.pro-pill-magic:hover:not(:disabled) {
+  transform: translateY(-1px) scale(1.025);
+  filter: brightness(1.12) saturate(1.15);
+  animation-duration: 1.8s, 1.4s;
+}
+.pro-pill-magic:active { transform: translateY(0) scale(0.98); }
+/* Bulles qui bouillonnent (8 bulles avec timings differents) */
+.pro-pill-magic .magic-bubbles {
+  position: absolute; inset: 0; pointer-events: none; overflow: hidden;
+}
+.pro-pill-magic .magic-bubbles span {
+  position: absolute; bottom: -3px;
+  width: 5px; height: 5px; border-radius: 50%;
+  background: radial-gradient(circle at 30% 30%, rgba(255,255,255,0.95), rgba(255,255,255,0.4) 60%, transparent 80%);
+  animation: magicBubbleRise 2.2s ease-in infinite;
+  filter: drop-shadow(0 0 2px rgba(255,255,255,0.6));
+}
+.pro-pill-magic .magic-bubbles span:nth-child(1) { left:  8%; width:4px; height:4px; animation-delay: 0s;    animation-duration: 2.4s; }
+.pro-pill-magic .magic-bubbles span:nth-child(2) { left: 22%; width:6px; height:6px; animation-delay: 0.4s;  animation-duration: 2.8s; }
+.pro-pill-magic .magic-bubbles span:nth-child(3) { left: 34%; width:3px; height:3px; animation-delay: 0.9s;  animation-duration: 1.9s; }
+.pro-pill-magic .magic-bubbles span:nth-child(4) { left: 48%; width:5px; height:5px; animation-delay: 0.2s;  animation-duration: 2.6s; }
+.pro-pill-magic .magic-bubbles span:nth-child(5) { left: 60%; width:4px; height:4px; animation-delay: 1.1s;  animation-duration: 2.2s; }
+.pro-pill-magic .magic-bubbles span:nth-child(6) { left: 72%; width:6px; height:6px; animation-delay: 0.6s;  animation-duration: 3.0s; }
+.pro-pill-magic .magic-bubbles span:nth-child(7) { left: 84%; width:3px; height:3px; animation-delay: 1.4s;  animation-duration: 2.0s; }
+.pro-pill-magic .magic-bubbles span:nth-child(8) { left: 92%; width:4px; height:4px; animation-delay: 0.8s;  animation-duration: 2.5s; }
+/* Sparkles : 2 etoiles qui scintillent */
+.pro-pill-magic .magic-sparkle {
+  position: absolute; pointer-events: none;
+  width: 6px; height: 6px;
+  background: radial-gradient(circle, rgba(255,255,255,1) 0%, rgba(255,255,255,0.6) 30%, transparent 70%);
+  border-radius: 50%;
+  animation: magicSparkle 1.8s ease-in-out infinite;
+}
+.pro-pill-magic .magic-sparkle.s1 { top: 4px;  right: 14px; animation-delay: 0s;   }
+.pro-pill-magic .magic-sparkle.s2 { bottom: 4px; left: 22px; animation-delay: 0.9s; }
+/* Hover : bulles plus rapides */
+.pro-pill-magic:hover .magic-bubbles span { animation-duration: 1.4s !important; }
 /* Tablette / petits laptops (~13" MacBook Pro) : compresse le header pour tenir sur 1 ligne */
 @media(max-width:1280px){
   .pro-header-row { gap: 8px !important; }
@@ -1913,15 +1999,19 @@ export default function SorareProTab({ players, teams, fixtures, standings = nul
                   <div>MC = max 2/{lang === "fr" ? "club" : "club"} (+2%)</div>
                   <div>CAP = L10 total &lt; {capThreshold} (+4%)</div>
                 </div>
-                <button onClick={generateMagicTeam}
-                  className="pro-pill pro-pill-action"
-                  style={{
-                    "--pill-c-strong": `${rarityColor}66`, "--pill-c-mid": `${rarityColor}44`, "--pill-c-soft": `${rarityColor}22`,
-                    "--pill-c-border": `${rarityColor}88`, "--pill-c-glow": `${rarityColor}66`, "--pill-c-halo": `${rarityColor}44`,
-                    "--pill-c-bottom": `${rarityColor}33`, "--pill-c-text-shadow": `${rarityColor}99`, "--pill-c-strong-solid": rarityColor,
-                    fontSize: 10, fontWeight: 800, padding: "5px 14px",
-                  }}>
-                  {t(lang, "proAlgo")}
+                <button onClick={generateMagicTeam} className="pro-pill-magic" title={lang === "fr" ? "Génère ta team optimale" : "Generate your optimal team"}>
+                  {/* Bulles bouillonnantes */}
+                  <span className="magic-bubbles" aria-hidden>
+                    <span /><span /><span /><span /><span /><span /><span /><span />
+                  </span>
+                  {/* Sparkles */}
+                  <span className="magic-sparkle s1" aria-hidden />
+                  <span className="magic-sparkle s2" aria-hidden />
+                  {/* Texte + icone */}
+                  <span style={{ position: "relative", zIndex: 2, display: "inline-flex", alignItems: "center", gap: 4 }}>
+                    <span style={{ fontSize: 12, lineHeight: 1, filter: "drop-shadow(0 0 4px rgba(255,255,255,0.6))" }}>⚗️</span>
+                    {t(lang, "proAlgo")}
+                  </span>
                 </button>
                 {filledCount > 0 && (
                   <button onClick={resetTeam}

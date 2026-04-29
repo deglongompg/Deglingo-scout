@@ -11,7 +11,9 @@ Usage:
   python3 fetch_prices.py PL --fresh  # Reset prices and re-fetch
 """
 
-import requests, json, time, sys, os
+import requests, json, time, sys, os, io
+sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding='utf-8', errors='replace')
+sys.stderr = io.TextIOWrapper(sys.stderr.buffer, encoding='utf-8', errors='replace')
 from dotenv import load_dotenv
 
 load_dotenv()
@@ -27,7 +29,7 @@ else:
     SLEEP = 6.0  # Safe: no rate limit, no VPN needed
     print(f"⚠️  Pas de clé API — mode lent (prix)")
 CURRENT_SEASON = 2025  # 2025-26 season (EU leagues)
-SEASON_BY_LEAGUE = {"L1": 2025, "PL": 2025, "Liga": 2025, "Bundes": 2025, "MLS": 2025}
+SEASON_BY_LEAGUE = {"L1": 2025, "PL": 2025, "Liga": 2025, "Bundes": 2025, "MLS": 2025, "JPL": 2025, "Ere": 2025}
 
 LEAGUE_FILES = {
     "L1":     "deglingo_ligue1_final.json",
@@ -35,6 +37,8 @@ LEAGUE_FILES = {
     "Liga":   "deglingo_la_liga_final.json",
     "Bundes": "deglingo_bundesliga_final.json",
     "MLS":    "deglingo_mls_final.json",
+    "JPL":    "deglingo_jupiler_final.json",
+    "Ere":    "deglingo_eredivisie_final.json",
 }
 
 def gql(query, variables=None):
@@ -264,12 +268,12 @@ if __name__ == "__main__":
     print("✅ API OK")
 
     if target == "ALL":
-        for lg in ["L1", "PL", "Liga", "Bundes"]:
+        for lg in ["L1", "PL", "Liga", "Bundes", "MLS", "JPL", "Ere"]:
             process_league(lg, fresh)
     elif target in LEAGUE_FILES:
         process_league(target, fresh)
     else:
-        print(f"❌ Usage: python3 fetch_prices.py [L1|PL|Liga|Bundes|ALL] [--fresh]")
+        print(f"❌ Usage: python3 fetch_prices.py [L1|PL|Liga|Bundes|MLS|JPL|Ere|ALL] [--fresh]")
         sys.exit(1)
 
     print("\n🏁 Done! Lance ensuite:")

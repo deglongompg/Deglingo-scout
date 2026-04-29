@@ -552,6 +552,65 @@ def get_manual_euro_fixtures():
     return fixtures
 
 
+def fetch_apisports_fixtures(api_league_id, season, our_league, days_back=8, days_ahead=21):
+    """Fetch fixtures via API-Football (Pro plan) pour ligues hors football-data.org free tier.
+    Couvre JPL (Belgique 144) et Ere (Pays-Bas 88). Fenetre 8j passes -> 21j futurs.
+    """
+    import urllib.request, urllib.parse
+    KEY = os.environ.get("API_FOOTBALL_KEY", "")
+    if not KEY:
+        print(f"  WARN API_FOOTBALL_KEY manquant, skip {our_league}")
+        return []
+
+    today = datetime.utcnow().date()
+    date_from = (today - timedelta(days=days_back)).strftime("%Y-%m-%d")
+    date_to   = (today + timedelta(days=days_ahead)).strftime("%Y-%m-%d")
+    print(f"\n--- {our_league} via API-Football (league {api_league_id}, {date_from} -> {date_to}) ---")
+
+    params = urllib.parse.urlencode({
+        "league": api_league_id, "season": season,
+        "from": date_from, "to": date_to,
+    })
+    req = urllib.request.Request(
+        f"https://v3.football.api-sports.io/fixtures?{params}",
+        headers={"x-apisports-key": KEY},
+    )
+    try:
+        with urllib.request.urlopen(req, timeout=30) as r:
+            j = json.loads(r.read())
+    except Exception as e:
+        print(f"  KO {e}")
+        return []
+
+    fix = j.get("response", []) or []
+    print(f"  {len(fix)} matchs trouves")
+    fixtures = []
+    for fx in fix:
+        fixture = fx.get("fixture") or {}
+        teams_info = fx.get("teams") or {}
+        home = (teams_info.get("home") or {}).get("name") or ""
+        away = (teams_info.get("away") or {}).get("name") or ""
+        if not home or not away:
+            continue
+        date_str = fixture.get("date") or ""
+        date = date_str[:10]
+        kickoff = date_str[11:16] if len(date_str) >= 16 else ""
+        status = (fixture.get("status") or {}).get("short") or ""
+        is_finished = status in ("FT", "AET", "PEN")
+        # Apply club aliases pour matcher noms canoniques Sorare/players.json
+        f_out = {
+            "home": to_sorare_canonical(home), "away": to_sorare_canonical(away),
+            "date": date, "kickoff": kickoff,
+            "matchday": str(fixture.get("status", {}).get("long") or our_league),
+            "league": our_league,
+            "home_api": to_sorare_canonical(home), "away_api": to_sorare_canonical(away),
+        }
+        if is_finished:
+            f_out["finished"] = True
+        fixtures.append(f_out)
+    return fixtures
+
+
 def fetch_mls_fixtures():
     """Fetch MLS fixtures from Sorare API via club.games(startDate,endDate).
 
@@ -670,6 +729,15 @@ def main():
         all_fixtures.extend(mls_fixtures)
     except Exception as e:
         print(f"⚠️ MLS fixtures skipped: {e}")
+
+    # JPL (Belgique) + Ere (Pays-Bas) via API-Football
+    APISPORTS_FIXTURES = {"JPL": (144, 2025), "Ere": (88, 2025)}
+    for our_league, (api_id, season) in APISPORTS_FIXTURES.items():
+        try:
+            fx = fetch_apisports_fixtures(api_id, season, our_league)
+            all_fixtures.extend(fx)
+        except Exception as e:
+            print(f"⚠️ {our_league} fixtures skipped: {e}")
 
     print(f"\n📋 Total: {len(all_fixtures)} matchs récupérés")
 

@@ -325,7 +325,7 @@ const T = {
     heroEyebrow: "Sorare SO7 · Saison 2025-26",
     heroTitle: "DEGLINGO SCOUT",
     heroHighlight: "Ton arme secrète sur SORARE",
-    heroSub: "Algo propriétaire · 5 ligues · 3 500+ joueurs",
+    heroSub: "Algo propriétaire · {leagues} ligues · {players}+ joueurs",
     heroSub2: "Pensé pour Manager Débutant (Stellar) et Manager Pro",
     ctaEnter: "Entrer dans le Scout",
     ctaDemo: "Voir ce que fait Scout",
@@ -363,7 +363,7 @@ const T = {
     proB1: "Best Pick SO5/SO7 : picks figés chaque GW",
     proB2: "Mission du jour : Decisive Picker, Essences, Craft",
     proB3: "Hot Streaks & Leaderboards par ligue",
-    proB4: "Database D-Score : 3 500+ joueurs, 5 ligues",
+    proB4: "Database D-Score : {players}+ joueurs, {leagues} ligues",
     proB5: "Stats détaillées : Titu%, AA, CS%, xG",
     proGo: "Ouvrir Sorare Pro",
     // Final CTA
@@ -388,7 +388,7 @@ const T = {
     heroEyebrow: "Sorare SO7 · Season 2025-26",
     heroTitle: "DEGLINGO SCOUT",
     heroHighlight: "Your secret weapon on SORARE",
-    heroSub: "Proprietary algo · 5 leagues · 3,500+ players",
+    heroSub: "Proprietary algo · {leagues} leagues · {players}+ players",
     heroSub2: "Built for Beginner Manager (Stellar) and Pro Manager",
     ctaEnter: "Open Scout",
     ctaDemo: "See what Scout does",
@@ -424,7 +424,7 @@ const T = {
     proB1: "Best Pick SO5/SO7: picks locked each GW",
     proB2: "Mission of the Day: Decisive Picker, Essences, Craft",
     proB3: "Hot Streaks & Leaderboards by league",
-    proB4: "D-Score database: 3,500+ players, 5 leagues",
+    proB4: "D-Score database: {players}+ players, {leagues} leagues",
     proB5: "Detailed stats: Titu%, AA, CS%, xG",
     proGo: "Open Sorare Pro",
     finalTitle: "Ready to master Sorare?",
@@ -496,6 +496,17 @@ export default function LandingPage({ players, onEnter, onNavigate }) {
   const [cardMode, setCardMode] = useState("stellar"); // "stellar" | "pro"
   const [lang, setLang] = useState("fr");
   const t = T[lang];
+
+  // Stats dynamiques depuis players.json (auto-update quand on ajoute des ligues)
+  const { playersCountStr, leaguesCount } = useMemo(() => {
+    const n = players?.length || 0;
+    // Round down to nearest 100 + suffix "+" pour eviter de claim un chiffre exact qui change a chaque fetch
+    const rounded = Math.floor(n / 100) * 100;
+    const fmt = (lang === "fr") ? rounded.toLocaleString("fr-FR").replace(/,/g, " ") : rounded.toLocaleString("en-US");
+    const lgs = new Set((players || []).map(p => p.league).filter(Boolean));
+    return { playersCountStr: fmt, leaguesCount: lgs.size };
+  }, [players, lang]);
+  const fillStats = (s) => (s || "").replace("{leagues}", String(leaguesCount)).replace("{players}", playersCountStr);
 
   const showcasePlayers = useMemo(() => {
     return SHOWCASE_CARDS.map(c => {
@@ -616,7 +627,7 @@ export default function LandingPage({ players, onEnter, onNavigate }) {
           </h1>
 
           <p style={{ fontSize: 15, color: "rgba(255,255,255,0.7)", lineHeight: 1.55, margin: "0 auto 22px", maxWidth: 580 }}>
-            {t.heroSub}<br />
+            {fillStats(t.heroSub)}<br />
             <span style={{ color: "rgba(255,255,255,0.5)" }}>{t.heroSub2}</span>
           </p>
 
@@ -936,7 +947,7 @@ export default function LandingPage({ players, onEnter, onNavigate }) {
                   <Bullet tone="gold" text={t.proB1} />
                   <Bullet tone="gold" text={t.proB2} />
                   <Bullet tone="gold" text={t.proB3} />
-                  <Bullet tone="gold" text={t.proB4} />
+                  <Bullet tone="gold" text={fillStats(t.proB4)} />
                   <Bullet tone="gold" text={t.proB5} />
                 </div>
 

@@ -57,6 +57,8 @@ LEAGUE_SLUGS = {
     "Liga":   "laliga-es",
     "Bundes": "bundesliga-de",
     "MLS":    "mlspa",
+    "JPL":    "jupiler-pro-league",
+    "Ere":    "eredivisie-nl",
 }
 LEAGUE_FILES = {
     "L1":     "deglingo_ligue1_final.json",
@@ -64,6 +66,8 @@ LEAGUE_FILES = {
     "Liga":   "deglingo_la_liga_final.json",
     "Bundes": "deglingo_bundesliga_final.json",
     "MLS":    "deglingo_mls_final.json",
+    "JPL":    "deglingo_jupiler_final.json",
+    "Ere":    "deglingo_eredivisie_final.json",
 }
 
 # ─── AA STAT CATEGORIES (for detailedScore profile) ─────────
@@ -225,6 +229,7 @@ def fetch_batch_players(slugs):
 VALID_COMPS = {
     "premier-league-gb-eng", "laliga-es", "bundesliga-de",
     "ligue-1-fr", "serie-a-it", "mlspa",
+    "jupiler-pro-league", "eredivisie-nl",
 }
 
 
@@ -651,7 +656,7 @@ if __name__ == "__main__":
         sys.exit(1)
 
     if target == "ALL":
-        for lg in ["L1", "PL", "Liga", "Bundes", "MLS"]:
+        for lg in ["L1", "PL", "Liga", "Bundes", "MLS", "JPL", "Ere"]:
             scrape_league(lg, fresh=fresh)
             pause = 5 if not LEGACY else 30
             print(f"\n⏸️  Pause {pause}s avant la prochaine ligue...")

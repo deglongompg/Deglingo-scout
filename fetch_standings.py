@@ -1,12 +1,13 @@
 #!/usr/bin/env python3
 """
-Fetch live standings for L1, PL, Liga, Bundesliga from football-data.org.
+Fetch live standings for L1, PL, Liga, Bundesliga from football-data.org
+                       + Belgique (JPL) + Pays-Bas (Ere) via API-Football (Pro).
 Generates standings.json for Deglingo Scout (affiche dans le panneau Calendrier).
 
 Usage:
   python3 fetch_standings.py
   # ou
-  FOOTBALL_DATA_API_KEY=xxx python3 fetch_standings.py
+  FOOTBALL_DATA_API_KEY=xxx API_FOOTBALL_KEY=yyy python3 fetch_standings.py
 
 Output: deglingo-scout-app/public/data/standings.json
 """
@@ -20,13 +21,17 @@ try:
     load_dotenv()
 except ImportError:
     pass
+import requests
 
 API_KEY = sys.argv[1] if len(sys.argv) > 1 else os.environ.get("FOOTBALL_DATA_API_KEY", "")
 if not API_KEY:
     print("Pas de cle API. FOOTBALL_DATA_API_KEY dans .env requise.")
     sys.exit(1)
 
+API_FOOTBALL_KEY = os.environ.get("API_FOOTBALL_KEY", "")
+
 BASE = "https://api.football-data.org/v4"
+APIFOOT_BASE = "https://v3.football.api-sports.io"
 
 # football-data.org competition codes -> nos codes ligue (memes que fetch_fixtures.py)
 COMPETITIONS = {
@@ -34,6 +39,12 @@ COMPETITIONS = {
     "PL":  "PL",      # Premier League
     "PD":  "Liga",    # La Liga
     "BL1": "Bundes",  # Bundesliga
+}
+
+# API-Football : ligues hors free tier de football-data.org -> source API-Sports
+APISPORTS_COMPETITIONS = {
+    "JPL": (144, 2025),   # Jupiler Pro League (Belgique)
+    "Ere": (88,  2025),   # Eredivisie (Pays-Bas)
 }
 
 # Mapping noms football-data -> noms canoniques Sorare (= ceux dans players.json).
@@ -95,8 +106,67 @@ def fetch_standings(comp_code, our_league):
     print(f"OK ({len(rows)} clubs)")
     return rows
 
+def fetch_standings_apisports(league_id, season, our_league):
+    """Fetch standings from API-Football v3 -> meme structure que football-data."""
+    print(f"  -> {our_league} (API-Football {league_id} season {season})...", end=" ", flush=True)
+    if not API_FOOTBALL_KEY:
+        print("KO (API_FOOTBALL_KEY manquant)")
+        return None
+    try:
+        r = requests.get(
+            f"{APIFOOT_BASE}/standings",
+            headers={"x-apisports-key": API_FOOTBALL_KEY},
+            params={"league": league_id, "season": season},
+            timeout=30,
+        )
+    except Exception as e:
+        print(f"KO ({e})")
+        return None
+    if r.status_code != 200:
+        print(f"KO HTTP {r.status_code}")
+        return None
+    j = r.json()
+    leagues = j.get("response", [])
+    if not leagues:
+        print("KO (pas de donnees)")
+        return None
+    league_obj = (leagues[0] or {}).get("league") or {}
+    standings_groups = league_obj.get("standings") or []
+    if not standings_groups:
+        print("KO (pas de table standings)")
+        return None
+    # API-Football : standings est un array de groupes (Phase 1 / Champion Playoff / etc.)
+    # Belgique a 4 groupes (Championship Round 6, Relegation Round 4, Pro League 16, Qualifying 6).
+    # On prend le plus gros = saison reguliere complete.
+    table = max(standings_groups, key=len)
+    rows = []
+    for r2 in table:
+        team = r2.get("team") or {}
+        api_name = team.get("name") or "?"
+        all_stats = r2.get("all") or {}
+        goals = all_stats.get("goals") or {}
+        rows.append({
+            "rank":   r2.get("rank"),
+            "club":   to_sorare_canonical(api_name),
+            "club_api": api_name,
+            "logo":   team.get("logo") or "",
+            "played": all_stats.get("played", 0),
+            "won":    all_stats.get("win",    0),
+            "draw":   all_stats.get("draw",   0),
+            "lost":   all_stats.get("lose",   0),
+            "gf":     goals.get("for",       0),
+            "ga":     goals.get("against",   0),
+            "gd":     r2.get("goalsDiff",    0),
+            "pts":    r2.get("points",       0),
+            # API-Football donne form en string ex "WLLDW" (5 derniers, sans virgules)
+            "form":   ",".join(list(r2.get("form") or "")) if r2.get("form") else "",
+        })
+    print(f"OK ({len(rows)} clubs)")
+    return rows
+
+
 def main():
-    print("CLASSEMENTS football-data.org")
+    print("CLASSEMENTS football-data.org + API-Football")
     print("=" * 50)
     output = {
         "updatedAt": int(time.time()),
@@ -108,6 +178,13 @@ def main():
         if rows:
             output["leagues"][our_league] = rows
         time.sleep(0.5)  # politesse rate-limit (10 req/min en free tier)
+
+    # API-Football : Belgique + Pays-Bas
+    for our_league, (league_id, season) in APISPORTS_COMPETITIONS.items():
+        rows = fetch_standings_apisports(league_id, season, our_league)
+        if rows:
+            output["leagues"][our_league] = rows
+        time.sleep(0.2)
 
     script_dir = os.path.dirname(os.path.abspath(__file__))
     data_dir = os.path.join(script_dir, "deglingo-scout-app", "public", "data")

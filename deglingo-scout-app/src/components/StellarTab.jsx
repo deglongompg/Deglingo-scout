@@ -2102,18 +2102,9 @@ export default function StellarTab({ players, teams, fixtures, logos = {}, match
                   lastDate.fixtures.push(f);
                 }
               }
-              const hasEuroMatches = sorted.some(f => EURO_LEAGUES.includes(f.league));
               return (
                 <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
-                  {hasEuroMatches && (
-                    <div style={{ padding: "6px 10px", borderRadius: 8, background: "linear-gradient(135deg, rgba(249,115,22,0.15), rgba(245,158,11,0.1))", border: "1px solid rgba(249,115,22,0.3)", display: "flex", alignItems: "center", gap: 6 }}>
-                      <span style={{ fontSize: 14 }}>&#9917;</span>
-                      <div>
-                        <div style={{ fontSize: 8, fontWeight: 800, color: "#F97316", letterSpacing: "0.05em" }}>UCL / UEL / UECL</div>
-                        <div style={{ fontSize: 7, color: "rgba(255,255,255,0.5)" }}>{lang === "fr" ? "Le D-Score n'est pas calibre pour les matchs europeens. Les predictions peuvent etre moins fiables." : "D-Score is not calibrated for European matches. Predictions may be less reliable."}</div>
-                      </div>
-                    </div>
-                  )}
+                  {/* Banner UCL/UEL/UECL D-Score warning supprime (Damien) */}
                   {dateGroups.map((dg, dgi) => {
                     // Sous-grouper par heure
                     const groups = [];

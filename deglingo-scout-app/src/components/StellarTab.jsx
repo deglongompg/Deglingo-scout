@@ -218,6 +218,194 @@ const starsKeyframes = `
 @keyframes stellarLivePulse { 0%,100%{opacity:0.85;box-shadow:0 0 4px rgba(248,113,113,0.4)} 50%{opacity:1;box-shadow:0 0 10px rgba(248,113,113,0.85)} }
 @keyframes spin { 0%{transform:rotate(0deg)} 100%{transform:rotate(360deg)} }
 @keyframes loadBar { 0%{transform:translateX(-100%)} 50%{transform:translateX(60%)} 100%{transform:translateX(200%)} }
+@keyframes tabUnderlinePulse { 0%,100%{opacity:0.65;transform:scaleX(1)} 50%{opacity:1;transform:scaleX(1.15)} }
+/* ═══ Stellar premium pill — violet stellar + reflet mint subtil (homogeneise tous les boutons) ═══ */
+.st-pill {
+  position: relative;
+  padding: 5px 12px;
+  border-radius: 8px;
+  font-family: Outfit;
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  border: 1px solid transparent;
+  background: rgba(255,255,255,0.04);
+  color: rgba(255,255,255,0.55);
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  white-space: nowrap;
+  transition: all 0.2s ease;
+  height: 28px;
+  box-sizing: border-box;
+}
+.st-pill:hover:not(:disabled):not(.is-active) {
+  background: linear-gradient(135deg, rgba(167,139,250,0.10), rgba(110,231,183,0.06));
+  color: rgba(255,255,255,0.9);
+  transform: translateY(-1px);
+  border-color: rgba(196,181,253,0.25);
+}
+.st-pill.is-active {
+  color: #fff;
+  background:
+    linear-gradient(135deg, rgba(167,139,250,0.40) 0%, rgba(139,92,246,0.25) 50%, rgba(110,231,183,0.18) 100%);
+  border-color: rgba(196,181,253,0.6);
+  box-shadow:
+    0 0 16px rgba(167,139,250,0.5),
+    0 0 4px rgba(110,231,183,0.35),
+    inset 0 1px 0 rgba(255,255,255,0.18),
+    inset 0 -1px 0 rgba(110,231,183,0.18);
+  text-shadow: 0 0 8px rgba(196,181,253,0.7), 0 1px 2px rgba(0,0,0,0.5);
+}
+.st-pill.is-active:hover:not(:disabled) {
+  transform: translateY(-1px);
+  box-shadow:
+    0 0 24px rgba(167,139,250,0.7),
+    0 0 6px rgba(110,231,183,0.5),
+    inset 0 1px 0 rgba(255,255,255,0.22);
+}
+.st-pill-underline {
+  position: absolute;
+  bottom: 1px; left: 22%; right: 22%;
+  height: 1.5px;
+  border-radius: 2px;
+  background: linear-gradient(90deg, transparent, #A78BFA 40%, #6EE7B7 60%, transparent);
+  box-shadow: 0 0 5px rgba(167,139,250,0.7);
+  animation: tabUnderlinePulse 2.4s ease-in-out infinite;
+  pointer-events: none;
+}
+/* Action button : Save (rouge stellar) */
+.st-pill-action-save {
+  color: #fff;
+  background: linear-gradient(135deg, #EF4444, #DC2626);
+  border-color: rgba(239,68,68,0.5);
+  box-shadow: 0 0 10px rgba(239,68,68,0.35), inset 0 1px 0 rgba(255,255,255,0.18);
+  font-weight: 800;
+}
+.st-pill-action-save:hover:not(:disabled) { transform: translateY(-1px); box-shadow: 0 0 18px rgba(239,68,68,0.55), inset 0 1px 0 rgba(255,255,255,0.22); filter: brightness(1.08); }
+.st-pill-action-save:disabled { background: rgba(255,255,255,0.05); color: rgba(255,255,255,0.2); border-color: rgba(255,255,255,0.08); box-shadow: none; cursor: not-allowed; }
+
+/* ═══ BOUTON CREATION MAGIQUE STELLAR — potion violet+mint scintillante ═══ */
+@keyframes stMagicShimmer { 0%{background-position: 0% 50%, 0% 0%, 0% 0%;} 50%{background-position: 100% 50%, 0% 0%, 0% 0%;} 100%{background-position: 0% 50%, 0% 0%, 0% 0%;} }
+@keyframes stMagicGlow {
+  0%,100% { box-shadow:
+    0 0 18px rgba(167,139,250,0.55),
+    0 0 6px rgba(110,231,183,0.4),
+    inset 0 2px 1px rgba(255,255,255,0.4),
+    inset 0 -2px 2px rgba(0,0,0,0.35),
+    inset 0 0 0 1px rgba(255,255,255,0.14); }
+  50%     { box-shadow:
+    0 0 32px rgba(167,139,250,0.85),
+    0 0 12px rgba(110,231,183,0.65),
+    inset 0 2px 1px rgba(255,255,255,0.5),
+    inset 0 -2px 2px rgba(0,0,0,0.4),
+    inset 0 0 0 1px rgba(255,255,255,0.2); }
+}
+@keyframes stMagicBubbleRise { 0%{transform:translateY(0) scale(0.4);opacity:0} 15%{opacity:0.95} 85%{opacity:0.75} 100%{transform:translateY(-26px) scale(1.1);opacity:0} }
+@keyframes stMagicSparkle    { 0%,100%{transform:scale(0.5) rotate(0deg);opacity:0.3} 50%{transform:scale(1) rotate(180deg);opacity:1} }
+@keyframes stMagicShineSweep { 0%{transform:translateX(-180%) skewX(-22deg);opacity:0} 20%{opacity:0.85} 60%{opacity:0.85} 100%{transform:translateX(180%) skewX(-22deg);opacity:0} }
+.st-pill-magic {
+  position: relative;
+  overflow: hidden;
+  height: 30px;
+  padding: 6px 18px 6px 15px;
+  border-radius: 10px;
+  font-family: Outfit;
+  font-size: 11px;
+  font-weight: 900;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  border: 1px solid rgba(196,181,253,0.7);
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  white-space: nowrap;
+  color: #fff;
+  background:
+    radial-gradient(circle at 20% 0%, rgba(255,255,255,0.32) 0%, rgba(255,255,255,0) 38%),
+    linear-gradient(180deg, rgba(255,255,255,0.20) 0%, rgba(255,255,255,0.04) 48%, transparent 52%),
+    linear-gradient(105deg, #4C1D95 0%, #7C3AED 18%, #A78BFA 36%, #6EE7B7 50%, #A78BFA 64%, #7C3AED 82%, #4C1D95 100%);
+  background-size: 100% 100%, 100% 100%, 280% 100%;
+  background-repeat: no-repeat;
+  animation: stMagicShimmer 5s ease-in-out infinite, stMagicGlow 2.4s ease-in-out infinite;
+  text-shadow: 0 0 8px rgba(255,255,255,0.55), 0 1px 2px rgba(0,0,0,0.55);
+  transition: transform 0.18s ease, filter 0.18s ease;
+  box-sizing: border-box;
+  backdrop-filter: blur(3px);
+  -webkit-backdrop-filter: blur(3px);
+}
+.st-pill-magic:hover:not(:disabled) { transform: translateY(-1px) scale(1.025); filter: brightness(1.12) saturate(1.18); animation-duration: 1.8s, 1.4s; }
+.st-pill-magic:active { transform: translateY(0) scale(0.98); }
+.st-pill-magic .magic-shine {
+  position: absolute; top: -30%; left: -20%;
+  width: 35%; height: 160%;
+  background: linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.55) 50%, transparent 100%);
+  filter: blur(4px);
+  animation: stMagicShineSweep 4.5s ease-in-out infinite;
+  animation-delay: 1.2s;
+  pointer-events: none;
+  z-index: 1;
+}
+.st-pill-magic .magic-bubbles { position: absolute; inset: 0; pointer-events: none; overflow: hidden; }
+.st-pill-magic .magic-bubbles span {
+  position: absolute; bottom: -3px;
+  width: 5px; height: 5px; border-radius: 50%;
+  background: radial-gradient(circle at 30% 30%, rgba(255,255,255,0.95), rgba(255,255,255,0.4) 60%, transparent 80%);
+  animation: stMagicBubbleRise 2.2s ease-in infinite;
+  filter: drop-shadow(0 0 2px rgba(255,255,255,0.6));
+}
+.st-pill-magic .magic-bubbles span:nth-child(1) { left:  8%; width:4px; height:4px; animation-delay: 0s;    animation-duration: 2.4s; }
+.st-pill-magic .magic-bubbles span:nth-child(2) { left: 22%; width:6px; height:6px; animation-delay: 0.4s;  animation-duration: 2.8s; }
+.st-pill-magic .magic-bubbles span:nth-child(3) { left: 34%; width:3px; height:3px; animation-delay: 0.9s;  animation-duration: 1.9s; }
+.st-pill-magic .magic-bubbles span:nth-child(4) { left: 48%; width:5px; height:5px; animation-delay: 0.2s;  animation-duration: 2.6s; }
+.st-pill-magic .magic-bubbles span:nth-child(5) { left: 60%; width:4px; height:4px; animation-delay: 1.1s;  animation-duration: 2.2s; }
+.st-pill-magic .magic-bubbles span:nth-child(6) { left: 72%; width:6px; height:6px; animation-delay: 0.6s;  animation-duration: 3.0s; }
+.st-pill-magic .magic-bubbles span:nth-child(7) { left: 84%; width:3px; height:3px; animation-delay: 1.4s;  animation-duration: 2.0s; }
+.st-pill-magic .magic-bubbles span:nth-child(8) { left: 92%; width:4px; height:4px; animation-delay: 0.8s;  animation-duration: 2.5s; }
+.st-pill-magic .magic-sparkle {
+  position: absolute; pointer-events: none;
+  width: 6px; height: 6px;
+  background: radial-gradient(circle, rgba(255,255,255,1) 0%, rgba(255,255,255,0.6) 30%, transparent 70%);
+  border-radius: 50%;
+  animation: stMagicSparkle 1.8s ease-in-out infinite;
+}
+.st-pill-magic .magic-sparkle.s1 { top: 5px;    right: 15px; animation-delay: 0s;   }
+.st-pill-magic .magic-sparkle.s2 { bottom: 5px; left: 22px;  animation-delay: 0.9s; }
+.st-pill-magic:hover .magic-bubbles span { animation-duration: 1.4s !important; }
+
+/* ═══ Slider Titu% Stellar — violet+mint glass premium ═══ */
+.st-slider-titu {
+  -webkit-appearance: none; appearance: none;
+  width: 150px; height: 8px; border-radius: 4px;
+  background: var(--st-slider-bg, rgba(255,255,255,0.08));
+  outline: none; cursor: pointer;
+  box-shadow: inset 0 1px 2px rgba(0,0,0,0.4), inset 0 -1px 0 rgba(255,255,255,0.04);
+  transition: box-shadow 0.18s ease;
+}
+.st-slider-titu:hover { box-shadow: inset 0 1px 2px rgba(0,0,0,0.4), 0 0 0 2px rgba(167,139,250,0.2); filter: brightness(1.05); }
+.st-slider-titu::-webkit-slider-thumb {
+  -webkit-appearance: none; appearance: none;
+  width: 18px; height: 18px; border-radius: 50%;
+  background: radial-gradient(circle at 30% 25%, #DDD6FE 0%, #A78BFA 45%, #6EE7B7 100%);
+  border: 2px solid rgba(255,255,255,0.6);
+  box-shadow: 0 0 10px rgba(167,139,250,0.7), 0 0 4px rgba(110,231,183,0.5), inset 0 1px 0 rgba(255,255,255,0.4), 0 2px 4px rgba(0,0,0,0.4);
+  cursor: grab;
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+.st-slider-titu::-webkit-slider-thumb:hover { transform: scale(1.12); box-shadow: 0 0 18px rgba(167,139,250,0.9), 0 0 6px rgba(110,231,183,0.7), inset 0 1px 0 rgba(255,255,255,0.5); }
+.st-slider-titu::-webkit-slider-thumb:active { cursor: grabbing; transform: scale(1.05); }
+.st-slider-titu::-moz-range-thumb {
+  width: 18px; height: 18px; border-radius: 50%;
+  background: radial-gradient(circle at 30% 25%, #DDD6FE 0%, #A78BFA 45%, #6EE7B7 100%);
+  border: 2px solid rgba(255,255,255,0.6);
+  box-shadow: 0 0 10px rgba(167,139,250,0.7), 0 0 4px rgba(110,231,183,0.5), inset 0 1px 0 rgba(255,255,255,0.4);
+  cursor: grab;
+}
+.st-slider-titu::-moz-range-track { background: transparent; }
 /* ═══ Calendar day buttons — premium ice-green glass ═══ */
 @keyframes stCalSelectedPulse {
   0%,100% { box-shadow:
@@ -2114,32 +2302,27 @@ export default function StellarTab({ players, teams, fixtures, logos = {}, match
                   </div>
                   <div style={{ display: "flex", gap: 6, alignItems: "center" }}>
                     {/* Boutons visibles UNIQUEMENT si connecté */}
-                    {sorareConnected && (<>
+                    {sorareConnected && (
                       <button onClick={disconnectSorare} title={`Connecté : ${sorareUser?.nickname || sorareUser?.slug || "Sorare"}`} style={{
                         display: "flex", alignItems: "center", gap: 6,
-                        padding: "6px 12px", borderRadius: 8, border: "1px solid rgba(74,222,128,0.4)",
-                        background: "rgba(74,222,128,0.08)", color: "#4ADE80",
+                        padding: "6px 12px", borderRadius: 8,
+                        border: "1px solid rgba(196,181,253,0.45)",
+                        background: "linear-gradient(135deg, rgba(167,139,250,0.22), rgba(110,231,183,0.10))",
+                        color: "#DDD6FE",
                         fontSize: 9, fontWeight: 800, cursor: "pointer", fontFamily: "Outfit",
+                        boxShadow: "0 0 10px rgba(167,139,250,0.3), inset 0 1px 0 rgba(255,255,255,0.1)",
+                        textShadow: "0 0 6px rgba(196,181,253,0.6)",
+                        transition: "all 0.18s ease",
                       }}>
-                        <div style={{ width: 20, height: 20, borderRadius: "50%", background: "rgba(74,222,128,0.25)", border: "1px solid rgba(74,222,128,0.4)", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 10, fontWeight: 900, color: "#4ADE80", flexShrink: 0 }}>
+                        <div style={{ width: 20, height: 20, borderRadius: "50%", background: "rgba(167,139,250,0.3)", border: "1px solid rgba(196,181,253,0.5)", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 10, fontWeight: 900, color: "#DDD6FE", flexShrink: 0 }}>
                           {(sorareUser?.nickname || "S").charAt(0).toUpperCase()}
                         </div>
                         <div style={{ display: "flex", flexDirection: "column", gap: 0 }}>
                           <span>{sorareUser?.nickname || "Sorare"}</span>
-                          <span style={{ fontSize: 7, color: "rgba(74,222,128,0.6)" }}>{stellarCardCount} Stellar</span>
+                          <span style={{ fontSize: 7, color: "rgba(196,181,253,0.7)" }}>{stellarCardCount} Stellar</span>
                         </div>
                       </button>
-                      <button onClick={generateMagicTeam} style={{
-                        display: "flex", alignItems: "center", gap: 5,
-                        padding: "6px 12px", borderRadius: 8, border: "none", cursor: "pointer", fontFamily: "Outfit",
-                        background: "linear-gradient(135deg,#7C3AED,#8B5CF6,#A78BFA)",
-                        color: "#fff", fontSize: 10, fontWeight: 800,
-                        boxShadow: "0 0 14px rgba(139,92,246,0.5)",
-                      }}>
-                        <span style={{ fontSize: 12 }}>⚡</span> {t(lang,"myTeamAlgo")}
-                      </button>
-{/* Sauvegarder + Reset dans SCORE PROJ uniquement */}
-                    </>)}
+                    )}
                   </div>
                 </div>
 
@@ -2181,7 +2364,7 @@ export default function StellarTab({ players, teams, fixtures, logos = {}, match
                     {/* Reset — visible dès qu'un joueur est sélectionné */}
                     {filledCount > 0 && filledCount < 5 && (
                       <div style={{ padding: "4px 14px", borderBottom: "1px solid rgba(255,255,255,0.05)", display: "flex", justifyContent: "flex-end" }}>
-                        <button onClick={resetTeam} style={{ fontSize: 8, fontWeight: 700, padding: "3px 8px", borderRadius: 6, border: "1px solid rgba(255,255,255,0.12)", background: "rgba(255,255,255,0.05)", color: "rgba(255,255,255,0.4)", cursor: "pointer", fontFamily: "Outfit" }}>Reset</button>
+                        <button onClick={resetTeam} className="st-pill" style={{ fontSize: 8, padding: "3px 8px" }}>Reset</button>
                       </div>
                     )}
                     {/* Score total — visible uniquement quand équipe complète */}
@@ -2189,30 +2372,19 @@ export default function StellarTab({ players, teams, fixtures, logos = {}, match
                       <div style={{ padding: "6px 14px", borderBottom: "1px solid rgba(255,255,255,0.05)", display: "flex", alignItems: "center", justifyContent: "space-between" }}>
                         <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
                           <div style={{ fontSize: 8, color: "rgba(255,255,255,0.35)", fontWeight: 600, letterSpacing: "0.08em" }}>SCORE PROJ.</div>
-                          {/* Bonus toggle inline */}
-                          <button onClick={() => setBonusEnabled(v => !v)} style={{
-                            fontSize: 7, fontWeight: 800, padding: "2px 6px", borderRadius: 4,
-                            border: `1px solid ${bonusEnabled ? "rgba(74,222,128,0.4)" : "rgba(255,255,255,0.1)"}`,
-                            background: bonusEnabled ? "rgba(74,222,128,0.08)" : "transparent",
-                            color: bonusEnabled ? "#4ADE80" : "rgba(255,255,255,0.25)", cursor: "pointer", fontFamily: "Outfit",
-                          }}>Bonus {bonusEnabled ? "ON" : "OFF"}</button>
-                          {/* Sauvegarder — bouton rouge gradient */}
+                          {/* Bonus toggle inline — pill stellar */}
+                          <button onClick={() => setBonusEnabled(v => !v)} className={`st-pill${bonusEnabled ? " is-active" : ""}`} style={{ fontSize: 8, padding: "3px 8px", height: 24 }}>
+                            Bonus {bonusEnabled ? "ON" : "OFF"}
+                            {bonusEnabled && <span className="st-pill-underline" aria-hidden />}
+                          </button>
+                          {/* Sauvegarder — pill stellar action save */}
                           <button onClick={() => saveCurrentTeam(myPicks, cardEditions, totalAdj)}
                             disabled={savedTeams.length >= 4}
-                            style={{
-                              fontSize: 8, fontWeight: 800, padding: "3px 10px", borderRadius: 6,
-                              border: "none", cursor: savedTeams.length >= 4 ? "not-allowed" : "pointer",
-                              background: savedTeams.length >= 4 ? "rgba(255,255,255,0.05)" : "linear-gradient(135deg, #EF4444, #DC2626)",
-                              color: savedTeams.length >= 4 ? "rgba(255,255,255,0.2)" : "#fff", fontFamily: "Outfit",
-                              boxShadow: savedTeams.length >= 4 ? "none" : "0 0 8px rgba(239,68,68,0.3)",
-                            }}>
+                            className="st-pill st-pill-action-save"
+                            style={{ fontSize: 8, padding: "3px 10px", height: 24 }}>
                             {savedTeams.length >= 4 ? "4/4" : (lang === "fr" ? "Sauvegarder" : "Save")}
                           </button>
-                          <button onClick={resetTeam} style={{
-                            fontSize: 8, fontWeight: 700, padding: "3px 8px", borderRadius: 6,
-                            border: "1px solid rgba(255,255,255,0.12)", background: "rgba(255,255,255,0.05)",
-                            color: "rgba(255,255,255,0.4)", cursor: "pointer", fontFamily: "Outfit",
-                          }}>Reset</button>
+                          <button onClick={resetTeam} className="st-pill" style={{ fontSize: 8, padding: "3px 8px", height: 24 }}>Reset</button>
                         </div>
                         <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
                           {palier && <div style={{ fontSize: 8, fontWeight: 700, color: palier.silver ? "#C0C0C0" : palier.color }}>→ {palier.reward}</div>}
@@ -2232,6 +2404,23 @@ export default function StellarTab({ players, teams, fixtures, logos = {}, match
 
                     {/* ── 5 CARTES STELLAIRES — layout 2 + 3 (style Sorare) ── */}
                     <div style={{ padding: "6px 8px 6px", flex: "0 0 auto", display: "flex", flexDirection: "column", gap: 5 }}>
+                      {/* Bouton Creation Magique — centre au-dessus du pitch */}
+                      {sorareConnected && (
+                        <div style={{ display: "flex", justifyContent: "center", marginBottom: 4 }}>
+                          <button onClick={generateMagicTeam} className="st-pill-magic" title={lang === "fr" ? "Génère ta team Stellar optimale" : "Generate your optimal Stellar team"}>
+                            <span className="magic-bubbles" aria-hidden>
+                              <span /><span /><span /><span /><span /><span /><span /><span />
+                            </span>
+                            <span className="magic-sparkle s1" aria-hidden />
+                            <span className="magic-sparkle s2" aria-hidden />
+                            <span className="magic-shine" aria-hidden />
+                            <span style={{ position: "relative", zIndex: 2, display: "inline-flex", alignItems: "center", gap: 5 }}>
+                              <span style={{ fontSize: 13, lineHeight: 1, filter: "drop-shadow(0 0 4px rgba(255,255,255,0.7))" }}>⚗️</span>
+                              {lang === "fr" ? "Création Magique" : "Magic Build"}
+                            </span>
+                          </button>
+                        </div>
+                      )}
                       {/* ── Rendu d'un slot carte (mutualisé ATT/FLEX et DEF/GK/MIL) ── */}
                       {[["ATT","FLEX"], ["DEF","GK","MIL"]].map((row, rowIdx) => (
                         <div key={rowIdx} style={{ display: "flex", gap: rowIdx === 0 ? 5 : 2, flex: "0 0 auto", justifyContent: "center", alignItems: "flex-start" }}>
@@ -2354,21 +2543,36 @@ export default function StellarTab({ players, teams, fixtures, logos = {}, match
 
                   {/* ── Filtres : Dispo - Mes Cartes - Bonus - Titu% ── */}
                   <div style={{ display: "flex", alignItems: "center", gap: 4, padding: "4px 10px", borderBottom: "1px solid rgba(255,255,255,0.07)", background: "rgba(0,0,0,0.3)", flexShrink: 0 }}>
-                    <button onClick={() => setHideUsed(v => !v)} style={{ fontSize: 7, fontWeight: 700, padding: "3px 8px", borderRadius: 6, border: `1px solid ${hideUsed ? "rgba(251,191,36,0.5)" : "rgba(255,255,255,0.1)"}`, background: hideUsed ? "rgba(251,191,36,0.12)" : "transparent", color: hideUsed ? "#FBBF24" : "rgba(255,255,255,0.3)", cursor: "pointer", fontFamily: "Outfit", transition: "all 0.15s" }}>
+                    <button onClick={() => setHideUsed(v => !v)} className={`st-pill${hideUsed ? " is-active" : ""}`}>
                       {hideUsed ? (lang === "fr" ? "Dispo" : "Avail.") : (lang === "fr" ? "Cacher" : "Hide")}
+                      {hideUsed && <span className="st-pill-underline" aria-hidden />}
                     </button>
-                    <button onClick={() => setMyCardsMode(true)} style={{ fontSize: 8, fontWeight: 700, padding: "3px 9px", borderRadius: 6, border: `1px solid ${myCardsMode ? "rgba(74,222,128,0.5)" : "rgba(255,255,255,0.1)"}`, background: myCardsMode ? "rgba(74,222,128,0.12)" : "transparent", color: myCardsMode ? "#4ADE80" : "rgba(255,255,255,0.35)", cursor: "pointer", fontFamily: "Outfit", transition: "all 0.15s" }}>{lang === "fr" ? `Mes cartes · ${myCardsDayPlayers.playing.length} ce soir` : `My cards · ${myCardsDayPlayers.playing.length} tonight`}</button>
-                    <button onClick={() => setBonusEnabled(v => !v)} style={{ fontSize: 7, fontWeight: 700, padding: "3px 8px", borderRadius: 6, border: `1px solid ${bonusEnabled ? "rgba(74,222,128,0.5)" : "rgba(255,255,255,0.1)"}`, background: bonusEnabled ? "rgba(74,222,128,0.12)" : "transparent", color: bonusEnabled ? "#4ADE80" : "rgba(255,255,255,0.3)", cursor: "pointer", fontFamily: "Outfit", transition: "all 0.15s" }}>
+                    <button onClick={() => setMyCardsMode(true)} className={`st-pill${myCardsMode ? " is-active" : ""}`}>
+                      {lang === "fr" ? `Mes cartes · ${myCardsDayPlayers.playing.length} ce soir` : `My cards · ${myCardsDayPlayers.playing.length} tonight`}
+                      {myCardsMode && <span className="st-pill-underline" aria-hidden />}
+                    </button>
+                    <button onClick={() => setBonusEnabled(v => !v)} className={`st-pill${bonusEnabled ? " is-active" : ""}`}>
                       {bonusEnabled ? "Bonus ON" : "Bonus OFF"}
+                      {bonusEnabled && <span className="st-pill-underline" aria-hidden />}
                     </button>
-                    {/* Slider Titu% */}
-                    <div style={{ display: "flex", alignItems: "center", gap: 4 }}>
-                      <span style={{ fontSize: 7, fontWeight: 700, color: filterTitu ? "#4ADE80" : "rgba(255,255,255,0.3)", fontFamily: "Outfit", whiteSpace: "nowrap" }}>
-                        {filterTitu ? `Titu \u2265${filterTitu}%` : "Titu%"}
+                    {/* Slider Titu% premium violet+mint */}
+                    <div style={{ display: "flex", alignItems: "center", gap: 8, marginLeft: 4 }}>
+                      <span style={{
+                        fontSize: 9, fontWeight: 800,
+                        color: filterTitu ? "#A78BFA" : "rgba(255,255,255,0.4)",
+                        fontFamily: "Outfit",
+                        textShadow: filterTitu ? "0 0 6px rgba(167,139,250,0.6)" : "none",
+                        whiteSpace: "nowrap",
+                      }}>
+                        {filterTitu ? `Titu \u2265${filterTitu}%` : "Titu All"}
                       </span>
                       <input type="range" min={0} max={90} step={10} value={filterTitu}
                         onChange={e => setFilterTitu(Number(e.target.value))}
-                        style={{ width: 70, height: 4, accentColor: "#4ADE80", cursor: "pointer" }}
+                        className="st-slider-titu"
+                        style={{
+                          "--st-slider-bg": `linear-gradient(90deg, #A78BFA 0%, #6EE7B7 ${(filterTitu/90)*100}%, rgba(255,255,255,0.08) ${(filterTitu/90)*100}%, rgba(255,255,255,0.08) 100%)`,
+                          width: 130,
+                        }}
                       />
                     </div>
                   </div>

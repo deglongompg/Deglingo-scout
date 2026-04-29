@@ -475,20 +475,25 @@ function RecapTabInner({ players, logos, lang }) {
   const lastSync = d._updatedAt;
 
   return (
-    <div style={{ position: "relative", maxWidth: 1400, margin: "0 auto", padding: "12px 16px", fontFamily: "Outfit", minHeight: "80vh" }}>
+    <div style={{ position: "relative", width: "100%", margin: "0 auto", padding: "12px 12px", fontFamily: "Outfit", minHeight: "80vh" }}>
       <style>{`
 @keyframes recapThemeFadeIn { 0%{opacity:0} 100%{opacity:1} }
 @keyframes recapThemeBgFadeIn { 0%{opacity:0} 100%{opacity:0.55} }
-/* Recap league chips — single line responsive, NO SCROLL : on reduit la taille */
-.recap-league-btns { display: flex; gap: 6px; flex-wrap: nowrap; overflow: hidden; }
-.recap-league-btns > button { flex: 0 1 auto; min-width: 0; }
-/* Tailles graduees : 9 chips toujours visibles sur toute largeur d'ecran */
-@media (max-width: 1400px) { .recap-league-btns > button { width: 130px !important; height: 46px !important; } }
-@media (max-width: 1200px) { .recap-league-btns > button { width: 110px !important; height: 42px !important; } }
-@media (max-width: 1024px) { .recap-league-btns > button { width: 92px !important; height: 38px !important; } .recap-league-btns { gap: 4px; } }
-@media (max-width: 880px)  { .recap-league-btns > button { width: 78px !important; height: 34px !important; } }
-@media (max-width: 760px)  { .recap-league-btns > button { width: 64px !important; height: 32px !important; } }
-@media (max-width: 640px)  { .recap-league-btns > button { width: 52px !important; height: 30px !important; } .recap-league-btns { gap: 3px; } }
+/* Recap league chips — single line responsive, NO SCROLL : occupe toute la largeur dispo */
+.recap-league-btns {
+  display: grid;
+  grid-template-columns: repeat(9, 1fr);
+  gap: 8px;
+  width: 100%;
+  overflow: hidden;
+}
+.recap-league-btns > button { width: 100% !important; min-width: 0; }
+/* Sur petits ecrans : on reduit la hauteur uniquement (chips remplissent toujours toute la ligne) */
+@media (max-width: 1200px) { .recap-league-btns > button { height: 44px !important; } .recap-league-btns { gap: 6px; } }
+@media (max-width: 1024px) { .recap-league-btns > button { height: 40px !important; } .recap-league-btns { gap: 5px; } }
+@media (max-width: 880px)  { .recap-league-btns > button { height: 36px !important; } .recap-league-btns { gap: 4px; } }
+@media (max-width: 760px)  { .recap-league-btns > button { height: 32px !important; } .recap-league-btns { gap: 3px; } }
+@media (max-width: 640px)  { .recap-league-btns > button { height: 30px !important; } .recap-league-btns { gap: 2px; } }
       `}</style>
 
       {/* ═══ Theme layer — bg de la ligue (ou Stellar), texture visible + screen blend ═══ */}

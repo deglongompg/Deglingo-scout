@@ -2011,60 +2011,8 @@ export default function SorareProTab({ players, teams, fixtures, standings = nul
             )}
 
             {/* Header */}
-            <div className="pro-algo-header" style={{ padding: "8px 14px", borderBottom: "1px solid rgba(255,255,255,0.06)", display: "flex", alignItems: "center", justifyContent: "space-between", gap: 8 }}>
-              <div style={{ display: "flex", alignItems: "center", gap: 6, flexWrap: "wrap" }}>
-                {(() => {
-                  // CSS variables helpers — couleur thematique → palette pour pro-pill
-                  const pillVars = (c) => ({
-                    "--pill-c-strong": `${c}38`, "--pill-c-mid": `${c}18`, "--pill-c-soft": `${c}10`,
-                    "--pill-c-border": `${c}55`, "--pill-c-glow": `${c}40`, "--pill-c-halo": `${c}30`,
-                    "--pill-c-bottom": `${c}20`, "--pill-c-text-shadow": `${c}80`, "--pill-c-strong-solid": c,
-                  });
-                  return null;
-                })()}
-                {filledCount > 0 && (
-                  <button onClick={resetTeam}
-                    className="pro-pill"
-                    style={{
-                      "--pill-c-strong": "#71717A38", "--pill-c-mid": "#71717A18", "--pill-c-soft": "#71717A10",
-                      "--pill-c-border": "#71717A55", "--pill-c-glow": "#71717A40", "--pill-c-halo": "#71717A30",
-                      "--pill-c-bottom": "#71717A20", "--pill-c-text-shadow": "#71717A80", "--pill-c-strong-solid": "#71717A",
-                    }}>{t(lang, "proReset")}</button>
-                )}
-                {filledCount > 0 && (
-                  <div style={{ fontSize: 8, fontWeight: 700, fontFamily: "'DM Mono',monospace", color: filledCount === expectedPicks && sumL10 < capThreshold ? "#A78BFA" : sumL10 >= capThreshold ? "#EF4444" : "rgba(255,255,255,0.4)" }}>
-                    L10: {Math.round(sumL10)}/{capThreshold}
-                  </div>
-                )}
-                {isMobile && savedTeams.length > 0 && (
-                  <div style={{ display: "flex", gap: 3 }}>
-                    {savedTeams.map((st, i) => (
-                      <button key={st.id} onClick={() => loadSavedTeam(st)} style={{ fontSize: 7, fontWeight: 800, padding: "3px 6px", borderRadius: 4, border: `1px solid ${rarityColor}40`, background: `${rarityColor}10`, color: rarityColor, cursor: "pointer", fontFamily: "Outfit" }}>
-                        T{i + 1}
-                      </button>
-                    ))}
-                  </div>
-                )}
-              </div>
-              <div style={{ display: "flex", gap: 6, alignItems: "center" }}>
-                {sorareConnected && (<>
-                  <button onClick={disconnectSorare} style={{
-                    display: "flex", alignItems: "center", gap: 4,
-                    padding: "4px 10px", borderRadius: 6,
-                    border: `1px solid ${rarityColor}55`,
-                    background: `linear-gradient(135deg, ${rarityColor}28, ${rarityColor}10)`,
-                    color: rarityColor,
-                    fontSize: 9, fontWeight: 800, cursor: "pointer", fontFamily: "Outfit",
-                    boxShadow: `0 0 10px ${rarityColor}30, inset 0 1px 0 rgba(255,255,255,0.08)`,
-                    textShadow: `0 0 6px ${rarityColor}66`,
-                    transition: "all 0.18s ease",
-                  }}>
-                    {sorareUser?.nickname || "Sorare"} · {proCardCount} cards{loadingProgress.scanned > 0 ? ` (${loadingProgress.scanned}...)` : ""}
-                  </button>
-                  <button onClick={refreshCards} title="Refresh cartes (nouvelle carte achetee ?)" style={{ padding: "4px 6px", borderRadius: 6, border: "1px solid rgba(255,255,255,0.1)", background: "rgba(255,255,255,0.04)", color: "rgba(255,255,255,0.4)", fontSize: 10, cursor: "pointer" }}>↻</button>
-                </>)}
-              </div>
-            </div>
+            {/* Header pro-algo-header supprime — Reset/L10/T1-4 + DeglingoMPG migres dans la filter bar
+                pour gagner ~36px vertical (ligne quasi vide depuis que MC/CAP/Magic sont dans le pitch). */}
 
             {/* Body: Pitch + Player list */}
             <div className="pro-builder-body" style={{ display: "flex", flexDirection: isMobile ? "column" : "row", height: isMobile ? "auto" : 520, minHeight: 0, overflow: isMobile ? "auto" : "hidden", maxWidth: "100%" }}>
@@ -2364,6 +2312,51 @@ export default function SorareProTab({ players, teams, fixtures, standings = nul
                       </div>
                     </div>
                   </div>
+                  {/* L10 indicator + Reset + T1-4 mobile + DeglingoMPG (alignes a droite via marginLeft auto) */}
+                  {filledCount > 0 && (
+                    <div style={{ marginLeft: "auto", fontSize: 9, fontWeight: 800, fontFamily: "'DM Mono',monospace", color: filledCount === expectedPicks && sumL10 < capThreshold ? "#A78BFA" : sumL10 >= capThreshold ? "#EF4444" : "rgba(255,255,255,0.5)", whiteSpace: "nowrap" }}>
+                      L10: {Math.round(sumL10)}/{capThreshold}
+                    </div>
+                  )}
+                  {filledCount > 0 && (
+                    <button onClick={resetTeam}
+                      className="pro-pill"
+                      style={{
+                        "--pill-c-strong": "#71717A38", "--pill-c-mid": "#71717A18", "--pill-c-soft": "#71717A10",
+                        "--pill-c-border": "#71717A55", "--pill-c-glow": "#71717A40", "--pill-c-halo": "#71717A30",
+                        "--pill-c-bottom": "#71717A20", "--pill-c-text-shadow": "#71717A80", "--pill-c-strong-solid": "#71717A",
+                        marginLeft: filledCount > 0 ? 0 : "auto",
+                      }}>{t(lang, "proReset")}</button>
+                  )}
+                  {isMobile && savedTeams.length > 0 && (
+                    <div style={{ display: "flex", gap: 3 }}>
+                      {savedTeams.map((st, i) => (
+                        <button key={st.id} onClick={() => loadSavedTeam(st)} style={{ fontSize: 7, fontWeight: 800, padding: "3px 6px", borderRadius: 4, border: `1px solid ${rarityColor}40`, background: `${rarityColor}10`, color: rarityColor, cursor: "pointer", fontFamily: "Outfit" }}>
+                          T{i + 1}
+                        </button>
+                      ))}
+                    </div>
+                  )}
+                  {sorareConnected && (
+                    <button onClick={disconnectSorare} style={{
+                      marginLeft: filledCount > 0 ? 0 : "auto",
+                      display: "flex", alignItems: "center", gap: 4,
+                      padding: "4px 10px", borderRadius: 6,
+                      border: `1px solid ${rarityColor}55`,
+                      background: `linear-gradient(135deg, ${rarityColor}28, ${rarityColor}10)`,
+                      color: rarityColor,
+                      fontSize: 9, fontWeight: 800, cursor: "pointer", fontFamily: "Outfit",
+                      boxShadow: `0 0 10px ${rarityColor}30, inset 0 1px 0 rgba(255,255,255,0.08)`,
+                      textShadow: `0 0 6px ${rarityColor}66`,
+                      transition: "all 0.18s ease",
+                      height: 28,
+                    }}>
+                      {sorareUser?.nickname || "Sorare"} · {proCardCount} cards{loadingProgress.scanned > 0 ? ` (${loadingProgress.scanned}...)` : ""}
+                    </button>
+                  )}
+                  {sorareConnected && (
+                    <button onClick={refreshCards} title="Refresh cartes (nouvelle carte achetee ?)" style={{ padding: "4px 6px", borderRadius: 6, border: "1px solid rgba(255,255,255,0.1)", background: "rgba(255,255,255,0.04)", color: "rgba(255,255,255,0.4)", fontSize: 10, cursor: "pointer", height: 28 }}>↻</button>
+                  )}
                 </div>
 
                 {/* Player table — full stats like Database */}

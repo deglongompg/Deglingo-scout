@@ -9,7 +9,7 @@ import { flattenDecisivesPositive } from "../utils/decisives";
 import SkyrocketGauge from "./SkyrocketGauge";
 
 const PC = POSITION_COLORS;
-const PRO_LEAGUES = ["L1", "PL", "Liga", "Bundes", "MLS", "Champion"];
+const PRO_LEAGUES = ["L1", "PL", "Liga", "Bundes", "MLS", "JPL", "Ere", "Champion"];
 
 // Backgrounds officiels Sorare pour les boutons ligue (frontend-assets.sorare.com)
 const LEAGUE_BG_URL = {
@@ -18,6 +18,8 @@ const LEAGUE_BG_URL = {
   Liga:     "/liga-bg.png",
   Bundes:   "/bundes-bg.png",
   MLS:      "/mls-bg.png",
+  JPL:      "/jupiler-bg.png",
+  Ere:      "/eredivisie-bg.png",
   Champion: "/champion-bg.png",
 };
 const LEAGUE_LOGO_URL = {
@@ -26,6 +28,8 @@ const LEAGUE_LOGO_URL = {
   Liga:   "/liga.png",
   Bundes: "/bundes.png",
   MLS:    "/mls.png",
+  JPL:    "/jupiler-logo.png",
+  Ere:    "/eredivisie-logo.png",
 };
 
 // Couleurs dominantes des backgrounds Sorare (pour bordure active + glow)
@@ -35,10 +39,12 @@ const LEAGUE_ACCENT = {
   Liga:     "#EF4444", // rouge orange
   Bundes:   "#DC2626", // rouge profond
   MLS:      "#22C55E", // vert (fallback, image peut varier)
+  JPL:      "#FFCB05", // jaune Jupiler
+  Ere:      "#FF6B35", // orange Eredivisie
   Champion: "#EC4899", // fuchsia
 };
 const TEAM_SLOTS = ["GK", "DEF", "MIL", "ATT", "FLEX"];
-const MAX_SAVED = { L1: 4, PL: 4, Liga: 4, Bundes: 4, MLS: 5, Champion: 4 };
+const MAX_SAVED = { L1: 4, PL: 4, Liga: 4, Bundes: 4, MLS: 5, JPL: 4, Ere: 4, Champion: 4 };
 
 /** Cree un objet picks vide avec les slots correspondants a la ligue (5 ou 7). */
 const emptyPicks = (league) => Object.fromEntries(getTeamSlots(league).map(s => [s, null]));
@@ -230,7 +236,7 @@ export default function SorareProTab({ players, teams, fixtures, standings = nul
       const pre = sessionStorage.getItem("pro_preselect_league");
       if (pre) {
         sessionStorage.removeItem("pro_preselect_league");
-        if (["L1","PL","Liga","Bundes","MLS","Champion"].includes(pre)) return pre;
+        if (["L1","PL","Liga","Bundes","MLS","JPL","Ere","Champion"].includes(pre)) return pre;
       }
     } catch (_) {}
     return "L1";
@@ -1259,6 +1265,8 @@ export default function SorareProTab({ players, teams, fixtures, standings = nul
             const isLiga = lg === "Liga";
             const isBundes = lg === "Bundes";
             const isChampion = lg === "Champion";
+            const isJPL = lg === "JPL";
+            const isEre = lg === "Ere";
             const whiteLogo = isL1 || isPL || isLiga;
             return (
               <button key={lg} onClick={() => setLeague(lg)} title={lg}
@@ -1590,6 +1598,10 @@ export default function SorareProTab({ players, teams, fixtures, standings = nul
               PL:     { ucl: [1,2,3,4,5],               uel: [6], uecl: [7],                 rel: [18,19,20] },
               Liga:   { ucl: [1,2,3,4,5],               uel: [6], uecl: [7],                 rel: [18,19,20] },
               Bundes: { ucl: [1,2,3,4],                 uel: [5], uecl: [6], relPlay: [16], rel: [17,18] },
+              // Belgique 2025-26 : champion -> UCL barrage, 2-3 -> UEL/UECL qualifs (champion playoffs decident in fine)
+              JPL:    {                   uclPlay: [1], uel: [2], uecl: [3,4],              relPlay: [15], rel: [16] },
+              // Pays-Bas 2025-26 : 1er UCL groupe direct, 2e UCL barrage, 3-4 UEL/UECL qualifs
+              Ere:    { ucl: [1],         uclPlay: [2], uel: [3], uecl: [4,5],              relPlay: [16], rel: [17,18] },
             };
             const TIER_COLORS = {
               ucl:     "#22C55E",  // vert plein — Champions League directe
@@ -1625,7 +1637,7 @@ export default function SorareProTab({ players, teams, fixtures, standings = nul
                   {lang === "fr" ? "CLASSEMENT" : "STANDINGS"}
                 </div>
                 <div style={{ fontSize: 7, fontWeight: 700, color: "rgba(255,255,255,0.35)", fontFamily: "'DM Mono',monospace" }}>
-                  {league === "L1" ? "LIGUE 1" : league === "PL" ? "PREMIER LEAGUE" : league === "Liga" ? "LA LIGA" : league === "Bundes" ? "BUNDESLIGA" : league}
+                  {league === "L1" ? "LIGUE 1" : league === "PL" ? "PREMIER LEAGUE" : league === "Liga" ? "LA LIGA" : league === "Bundes" ? "BUNDESLIGA" : league === "JPL" ? "JUPILER PRO LEAGUE" : league === "Ere" ? "EREDIVISIE" : league}
                 </div>
               </div>
               {/* Header */}

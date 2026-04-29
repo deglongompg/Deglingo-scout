@@ -350,7 +350,7 @@ export default function DbTab({ players, teams, fixtures, logos = {}, lang = "fr
           style={{ ...sel({ flex: "1 1 140px", minWidth: 120 }) }}
         />
         <div style={{ display: "flex", alignItems: "center", gap: 3, flexShrink: 0 }}>
-          {[["ALL", null], ["L1", "fr"], ["PL", "gb-eng"], ["Liga", "es"], ["Bundes", "de"], ["MLS", "us"]].map(([k, fc]) => {
+          {[["ALL", null], ["L1", "fr"], ["PL", "gb-eng"], ["Liga", "es"], ["Bundes", "de"], ["MLS", "us"], ["JPL", "be"], ["Ere", "nl"]].map(([k, fc]) => {
             const isAll = k === "ALL";
             const active = isAll ? leagues.size === 0 : leagues.has(k);
             const toggle = () => {

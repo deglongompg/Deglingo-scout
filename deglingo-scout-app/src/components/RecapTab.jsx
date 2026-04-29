@@ -35,6 +35,8 @@ const LEAGUE_BG_URL = {
   Liga:     "/liga-bg.png",
   Bundes:   "/bundes-bg.png",
   MLS:      "/mls-bg.png",
+  JPL:      "/jupiler-bg.png",
+  Ere:      "/eredivisie-bg.png",
   Champion: "/champion-bg.png",
 };
 const LEAGUE_LOGO_URL = {
@@ -43,9 +45,11 @@ const LEAGUE_LOGO_URL = {
   Liga:   "/liga.png",
   Bundes: "/bundes.png",
   MLS:    "/mls.png",
+  JPL:    "/jupiler-logo.png",
+  Ere:    "/eredivisie-logo.png",
 };
 const LEAGUE_ACCENT_BG = {
-  L1: "#3B82F6", PL: "#D946EF", Liga: "#EF4444", Bundes: "#DC2626", MLS: "#3B82F6", Champion: "#EC4899",
+  L1: "#3B82F6", PL: "#D946EF", Liga: "#EF4444", Bundes: "#DC2626", MLS: "#3B82F6", JPL: "#FFCB05", Ere: "#FF6B35", Champion: "#EC4899",
 };
 // Position X% du centre visuel du logo dans chaque image Sorare source.
 // Mesures visuelles des banniers officielles (L1="1" compact gauche, PL crown+text
@@ -580,6 +584,8 @@ function RecapTabInner({ players, logos, lang }) {
               const isLiga = lg === "Liga";
               const isBundes = lg === "Bundes";
               const isChampion = lg === "Champion";
+              const isJPL = lg === "JPL";
+              const isEre = lg === "Ere";
               const whiteLogo = isL1 || isPL || isLiga;
               return (
                 <button key={lg} onClick={() => setActiveLeague(lg)} title={LEAGUE_NAMES[lg] || lg}

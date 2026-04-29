@@ -14,10 +14,10 @@ export const ARCHETYPE_COLORS = {
 };
 
 export const POSITION_COLORS = { GK: "#06B6D4", DEF: "#3B82F6", MIL: "#8B5CF6", ATT: "#EF4444" };
-export const LEAGUE_COLORS   = { L1: "#4FC3F7", PL: "#B388FF", Liga: "#FF8A80", Bundes: "#FFD180", MLS: "#66BB6A" };
-export const LEAGUE_FLAGS    = { L1: "🇫🇷", PL: "🏴󠁧󠁢󠁥󠁮󠁧󠁿", Liga: "🇪🇸", Bundes: "🇩🇪", MLS: "🇺🇸" };
-export const LEAGUE_FLAG_CODES = { L1: "fr", PL: "gb-eng", Liga: "es", Bundes: "de", MLS: "us" };
-export const LEAGUE_NAMES    = { L1: "Ligue 1", PL: "Premier League", Liga: "La Liga", Bundes: "Bundesliga", MLS: "MLS" };
+export const LEAGUE_COLORS   = { L1: "#4FC3F7", PL: "#B388FF", Liga: "#FF8A80", Bundes: "#FFD180", MLS: "#66BB6A", JPL: "#FFCB05", Ere: "#FF6B35" };
+export const LEAGUE_FLAGS    = { L1: "🇫🇷", PL: "🏴󠁧󠁢󠁥󠁮󠁧󠁿", Liga: "🇪🇸", Bundes: "🇩🇪", MLS: "🇺🇸", JPL: "🇧🇪", Ere: "🇳🇱" };
+export const LEAGUE_FLAG_CODES = { L1: "fr", PL: "gb-eng", Liga: "es", Bundes: "de", MLS: "us", JPL: "be", Ere: "nl" };
+export const LEAGUE_NAMES    = { L1: "Ligue 1", PL: "Premier League", Liga: "La Liga", Bundes: "Bundesliga", MLS: "MLS", JPL: "Jupiler Pro", Ere: "Eredivisie" };
 
 export function dsColor(d) {
   return d >= 75 ? "#E8E8E8" : d >= 65 ? "#06D6A0" : d >= 60 ? "#2EC4B6" : d >= 50 ? "#E9C46A" : d >= 40 ? "#F4A261" : "#E76F51";

@@ -3,7 +3,7 @@
  * Utilisés par SorareProTab (section Recap) et RecapTab (onglet Mes Teams).
  */
 
-export const PRO_LEAGUES = ["L1", "PL", "Liga", "Bundes", "MLS", "Champion"];
+export const PRO_LEAGUES = ["L1", "PL", "Liga", "Bundes", "MLS", "JPL", "Ere", "Champion"];
 // Standard Sorare Pro SO5 : 5 joueurs (1 GK + 1 DEF + 1 MIL + 1 ATT + 1 FLEX)
 export const TEAM_SLOTS = ["GK", "DEF", "MIL", "ATT", "FLEX"];
 // Champion SO7 : 7 joueurs (1 GK + 2 DEF + 2 MIL + 1 ATT + 1 FLEX)

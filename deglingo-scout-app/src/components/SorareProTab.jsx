@@ -1413,7 +1413,7 @@ export default function SorareProTab({ players, teams, fixtures, standings = nul
                   <button key={i} onClick={() => setSelectedGwIdx(i)} style={{
                     padding: "3px 6px", borderRadius: 6, cursor: "pointer", fontFamily: "Outfit", border: "none",
                     background: isActive ? `${rarityColor}30` : "rgba(255,255,255,0.04)",
-                    outline: isActive ? `2px solid ${rarityColor}` : "none",
+                    boxShadow: isActive ? `inset 0 0 0 2px ${rarityColor}, 0 0 10px ${rarityColor}55` : "none",
                     opacity: isPast && !isActive ? 0.55 : 1,
                     transition: "all 0.15s",
                     flexShrink: 0,

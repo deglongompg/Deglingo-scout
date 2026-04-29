@@ -1465,13 +1465,35 @@ export default function StellarTab({ players, teams, fixtures, logos = {}, match
     const cached = loadFrozen(stellarFreezeKey);
     if (!cached) return null;
     const fixturesGenAt = fixtures?.generated || "";
-    if (cached._fixturesGeneratedAt && cached._fixturesGeneratedAt !== fixturesGenAt) {
-      // Stale : on supprime le cache obsolete pour forcer une re-creation propre
+    // Invalidation stricte :
+    //  - cache sans _fixturesGeneratedAt (legacy, sauve avant le fix) -> drop
+    //  - cache avec marqueur different de fixtures.generated actuel -> drop
+    if (!cached._fixturesGeneratedAt || cached._fixturesGeneratedAt !== fixturesGenAt) {
       try { localStorage.removeItem(stellarFreezeKey); } catch (_) {}
       return null;
     }
     return cached;
   }, [stellarFreezeKey, fixtures?.generated]);
+
+  // Purge auto au load des cles `stellar_*` qui n'ont pas le marqueur _fixturesGeneratedAt
+  // (legacy ou pre-fix). Une seule passe au mount.
+  useEffect(() => {
+    try {
+      const keysToCheck = [];
+      for (let i = 0; i < localStorage.length; i++) {
+        const k = localStorage.key(i);
+        if (k && k.startsWith("stellar_") && /^stellar_\d{4}-\d{2}-\d{2}$/.test(k)) keysToCheck.push(k);
+      }
+      for (const k of keysToCheck) {
+        try {
+          const raw = localStorage.getItem(k);
+          if (!raw) continue;
+          const obj = JSON.parse(raw);
+          if (!obj?._fixturesGeneratedAt) localStorage.removeItem(k);
+        } catch (_) { localStorage.removeItem(k); }
+      }
+    } catch (_) {}
+  }, []);
 
   const wednesday = useMemo(() => {
     const w = getWednesday(today);

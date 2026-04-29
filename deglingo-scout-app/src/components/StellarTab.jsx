@@ -2725,9 +2725,14 @@ export default function StellarTab({ players, teams, fixtures, logos = {}, match
                     const RARITY_LABELS = { unique: "U", super_rare: "SR", rare: "R", limited: "L" };
 
                     return (
-                      <div style={{ flex: 1, display: "flex", flexDirection: "column", minWidth: 0, overflowX: "auto" }}>
+                      <div style={{ flex: 1, display: "flex", flexDirection: "column", minWidth: 0, overflow: "hidden" }}>
+                        {/* Container scroll unique : X horizontal + Y vertical sur le meme element.
+                            Header sticky top:0 reste visible quand on scroll Y. La barre X en bas
+                            permet d'atteindre les colonnes apres L10 sur grand ecran. */}
+                        <div className="st-db-scroll" style={{ flex: 1, overflowX: "auto", overflowY: "auto", minHeight: 0 }}>
+                          <div style={{ minWidth: "max-content" }}>
                         {/* Header */}
-                        <div style={{ display: "grid", gridTemplateColumns: GRID, alignItems: "center", gap: 2, padding: "3px 8px 3px", borderBottom: "1px solid rgba(255,255,255,0.07)", background: "rgba(0,0,0,0.4)", position: "sticky", top: 0, zIndex: 2, minWidth: "max-content" }}>
+                        <div style={{ display: "grid", gridTemplateColumns: GRID, alignItems: "center", gap: 2, padding: "3px 8px 3px", borderBottom: "1px solid rgba(255,255,255,0.07)", background: "rgba(0,0,0,0.4)", position: "sticky", top: 0, zIndex: 2 }}>
                           <span />
                           <span style={{ fontSize: 7, color: "rgba(255,255,255,0.3)", fontWeight: 700 }}>Pos</span>
                           <span style={{ fontSize: 7, color: "rgba(255,255,255,0.3)", fontWeight: 700 }}>Joueur</span>
@@ -2745,9 +2750,8 @@ export default function StellarTab({ players, teams, fixtures, logos = {}, match
                             );
                           })}
                         </div>
-                        {/* Rows — 11 visibles max (~meme hauteur que pick zone), scroll pour le reste */}
-                        <div style={{ overflowY: "auto", flex: 1, minHeight: 0 }}>
-                          <div style={{ minWidth: "max-content" }}>
+                        {/* Rows */}
+                        <div>
                           {sortedPool.map(p => {
                             const slug = p.slug || p.name;
                             const rowKey = p._cardSlug || slug;
@@ -2895,6 +2899,7 @@ export default function StellarTab({ players, teams, fixtures, logos = {}, match
                               </div>
                             );
                           })}
+                          </div>
                           </div>
                         </div>
                       </div>

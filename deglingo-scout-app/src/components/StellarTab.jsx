@@ -1457,7 +1457,21 @@ export default function StellarTab({ players, teams, fixtures, logos = {}, match
   // dailyLockKey = "YYYY-MM-DD" si Paris >= 12h00, sinon null
   const dailyLockKey = useMemo(() => getDailyLockKey(), []);
   const stellarFreezeKey = dailyLockKey ? `stellar_${dailyLockKey}` : null;
-  const frozenDayData   = useMemo(() => (stellarFreezeKey ? loadFrozen(stellarFreezeKey) : null), [stellarFreezeKey]);
+  // Invalidation : si le freeze a ete sauve avant la derniere generation
+  // de fixtures.json, on l'ignore (donnees obsoletes -> re-freeze a partir des
+  // donnees actuelles). Evite les UEL/UECL fantomes apres MAJ_turbo.
+  const frozenDayData = useMemo(() => {
+    if (!stellarFreezeKey) return null;
+    const cached = loadFrozen(stellarFreezeKey);
+    if (!cached) return null;
+    const fixturesGenAt = fixtures?.generated || "";
+    if (cached._fixturesGeneratedAt && cached._fixturesGeneratedAt !== fixturesGenAt) {
+      // Stale : on supprime le cache obsolete pour forcer une re-creation propre
+      try { localStorage.removeItem(stellarFreezeKey); } catch (_) {}
+      return null;
+    }
+    return cached;
+  }, [stellarFreezeKey, fixtures?.generated]);
 
   const wednesday = useMemo(() => {
     const w = getWednesday(today);
@@ -1714,8 +1728,11 @@ export default function StellarTab({ players, teams, fixtures, logos = {}, match
       players: dayData.players,
       teams: dayData.teams || [],
       decisivePick: dayData.decisivePick,
+      // Marqueur d'invalidation : si fixtures.json regenere par MAJ_turbo,
+      // ce timestamp ne matchera plus -> cache reset auto.
+      _fixturesGeneratedAt: fixtures?.generated || "",
     });
-  }, [stellarFreezeKey, frozenDayData, dayData, selectedDaysKey, dailyLockKey]);
+  }, [stellarFreezeKey, frozenDayData, dayData, selectedDaysKey, dailyLockKey, fixtures?.generated]);
 
   // Auto-select first day with matches (si aucun jour selectionne)
   useEffect(() => {

@@ -306,25 +306,27 @@ const proKeyframes = `
   filter: brightness(1.08);
 }
 
-/* ═══ BOUTON CREATION MAGIQUE — fiole d'apothicaire bouillonnante (glass + reflets) ═══ */
+/* ═══ BOUTON CREATION MAGIQUE — premium rarityColor pousse + bulles + reflets glass ═══
+   Couleur thematique pilotee par variables CSS --magic-c1/c2/c3 (definies inline
+   selon Limited or / Rare rouge), avec stops intensifies pour effet potion premium. */
 @keyframes magicShimmer {
-  0%   { background-position: 0% 50%; }
-  50%  { background-position: 100% 50%; }
-  100% { background-position: 0% 50%; }
+  0%   { background-position: 0% 50%, 0% 0%, 0% 0%; }
+  50%  { background-position: 100% 50%, 0% 0%, 0% 0%; }
+  100% { background-position: 0% 50%, 0% 0%, 0% 0%; }
 }
 @keyframes magicGlow {
   0%,100% { box-shadow:
-    0 0 18px rgba(167,139,250,0.6),
-    0 0 4px rgba(236,72,153,0.45),
+    0 0 16px var(--magic-glow-soft),
+    0 0 4px var(--magic-glow-strong),
     inset 0 2px 1px rgba(255,255,255,0.45),
-    inset 0 -2px 2px rgba(0,0,0,0.35),
-    inset 0 0 0 1px rgba(255,255,255,0.12); }
-  50%     { box-shadow:
-    0 0 30px rgba(167,139,250,0.85),
-    0 0 9px rgba(236,72,153,0.65),
-    inset 0 2px 1px rgba(255,255,255,0.55),
     inset 0 -2px 2px rgba(0,0,0,0.4),
-    inset 0 0 0 1px rgba(255,255,255,0.18); }
+    inset 0 0 0 1px rgba(255,255,255,0.14); }
+  50%     { box-shadow:
+    0 0 28px var(--magic-glow-strong),
+    0 0 8px var(--magic-glow-soft),
+    inset 0 2px 1px rgba(255,255,255,0.55),
+    inset 0 -2px 2px rgba(0,0,0,0.45),
+    inset 0 0 0 1px rgba(255,255,255,0.2); }
 }
 @keyframes magicBubbleRise {
   0%   { transform: translateY(0) scale(0.4); opacity: 0; }
@@ -353,7 +355,7 @@ const proKeyframes = `
   font-weight: 900;
   letter-spacing: 0.05em;
   text-transform: uppercase;
-  border: 1px solid rgba(196,181,253,0.7);
+  border: 1px solid var(--magic-border, rgba(255,255,255,0.4));
   cursor: pointer;
   display: inline-flex;
   align-items: center;
@@ -361,18 +363,23 @@ const proKeyframes = `
   gap: 5px;
   white-space: nowrap;
   color: #fff;
-  /* Fond animé : violet-magenta-rose-violet en mouvement perpetuel.
-     Couche 1 : grain bruite subtil pour la profondeur (radial blanc semi-transparent).
-     Couche 2 : reflet glass top (linear blanc translucide -> transparent).
-     Couche 3 : gradient principal anime. */
+  /* Couches superposees pour vrai effet potion premium :
+     1. Radial blanc top-left (highlight glass)
+     2. Linear blanc translucide top -> transparent (reflet capsule)
+     3. Gradient principal rarityColor en 3 stops intensifies (var --magic-c-dark/c-mid/c-bright/c-dark) qui glisse en boucle */
   background:
-    radial-gradient(circle at 20% 0%, rgba(255,255,255,0.32) 0%, rgba(255,255,255,0) 35%),
-    linear-gradient(180deg, rgba(255,255,255,0.18) 0%, rgba(255,255,255,0.04) 45%, transparent 50%),
-    linear-gradient(105deg, #6D28D9 0%, #9333EA 18%, #C026D3 36%, #DB2777 54%, #9333EA 72%, #6D28D9 100%);
+    radial-gradient(circle at 20% 0%, rgba(255,255,255,0.35) 0%, rgba(255,255,255,0) 38%),
+    linear-gradient(180deg, rgba(255,255,255,0.22) 0%, rgba(255,255,255,0.05) 48%, transparent 52%),
+    linear-gradient(105deg,
+      var(--magic-c-dark) 0%,
+      var(--magic-c-mid) 22%,
+      var(--magic-c-bright) 42%,
+      var(--magic-c-mid) 62%,
+      var(--magic-c-dark) 100%);
   background-size: 100% 100%, 100% 100%, 280% 100%;
   background-repeat: no-repeat;
   animation: magicShimmer 5s ease-in-out infinite, magicGlow 2.4s ease-in-out infinite;
-  text-shadow: 0 0 8px rgba(255,255,255,0.55), 0 1px 2px rgba(0,0,0,0.55);
+  text-shadow: 0 0 8px rgba(255,255,255,0.55), 0 1px 2px rgba(0,0,0,0.6);
   transition: transform 0.18s ease, filter 0.18s ease;
   box-sizing: border-box;
   backdrop-filter: blur(3px);
@@ -2101,7 +2108,27 @@ export default function SorareProTab({ players, teams, fixtures, standings = nul
                       }}>
                       MC +2%{algoMultiClub && <span className="pro-pill-underline" aria-hidden />}
                     </button>
-                    <button onClick={generateMagicTeam} className="pro-pill-magic" title={lang === "fr" ? "Génère ta team optimale" : "Generate your optimal team"}>
+                    <button onClick={generateMagicTeam} className="pro-pill-magic"
+                      title={lang === "fr" ? "Génère ta team optimale" : "Generate your optimal team"}
+                      style={(() => {
+                        // Palette intensifiee (3 stops) derivee de rarityColor :
+                        // - dark : version foncee (#7C2D12 rare / #78350F limited)
+                        // - mid  : rarityColor exact (red ou or)
+                        // - bright : highlight clair pour le glow central
+                        const isRare = rarity === "rare";
+                        const palette = isRare
+                          ? { dark: "#7F1D1D", mid: "#DC2626", bright: "#EF4444", border: "rgba(254,202,202,0.5)", glowSoft: "rgba(239,68,68,0.55)", glowStrong: "rgba(239,68,68,0.9)" }
+                          : { dark: "#78350F", mid: "#D97706", bright: "#FBBF24", border: "rgba(253,230,138,0.55)", glowSoft: "rgba(245,158,11,0.55)", glowStrong: "rgba(251,191,36,0.85)" };
+                        return {
+                          "--magic-c-dark":   palette.dark,
+                          "--magic-c-mid":    palette.mid,
+                          "--magic-c-bright": palette.bright,
+                          "--magic-border":   palette.border,
+                          "--magic-glow-soft":   palette.glowSoft,
+                          "--magic-glow-strong": palette.glowStrong,
+                        };
+                      })()}
+                    >
                       <span className="magic-bubbles" aria-hidden>
                         <span /><span /><span /><span /><span /><span /><span /><span />
                       </span>

@@ -27,22 +27,23 @@ const ENIGMAS = [
     answer: "GOAT",
   },
   {
-    id: 2, icon: "⚙️",
-    tab: { fr: "Sorare Pro", en: "Sorare Pro" },
-    title: { fr: "Le réveil américain", en: "American sunrise" },
+    id: 2, icon: "🛡",
+    tab: { fr: "Database", en: "Database" },
+    title: { fr: "Le rempart belge", en: "The Belgian wall" },
     intro: {
-      fr: "Outre-Atlantique, deux empires se font face. Compte ceux où le soleil se lève...",
-      en: "Across the Atlantic, two empires face each other. Count the clubs where the sun rises...",
+      fr: "Dans la toute première ligue couverte par Sorare, un jeune mur se dresse...",
+      en: "In the very first league ever covered by Sorare, a young wall rises...",
     },
     question: {
-      fr: "Dans la ligue où le foot porte des étoiles et des bandes, le ciel se divise en deux conférences. Combien de clubs forment celle qui voit l'aurore ?",
-      en: "In the league of stars and stripes, the sky splits into two conferences. How many clubs make up the one that greets the dawn?",
+      fr: "Dans la première ligue qui apparut sur Sorare au lancement, fouille parmi les U23. Quel est le nom de famille du jeune Belge qui dégage le plus de ballons par match (le roi du Clr) ? Attention : le tout premier au classement n'est pas belge — il faut le suivant.",
+      en: "In the very first league Sorare ever covered at launch, dig through the U23s. What is the surname of the young Belgian player who clears the most balls per match (the King of Clr)? Careful: the very first in the ranking is not Belgian — you'll need the next one.",
     },
     hint: {
-      fr: "Indice : Sorare Pro → ligue américaine MLS → descends voir le classement. Deux conférences : Est (lever) et Ouest (coucher). Compte celle de l'Est.",
-      en: "Hint: Sorare Pro → American league MLS → scroll down to the standings. Two conferences: East (sunrise) and West (sunset). Count the Eastern one.",
+      fr: "Indice : la première ligue Sorare = la Jupiler Pro League belge (JPL). Database → filtre JPL + U23 → ouvre les Stats AA (toutes) → trie par 'Clr' (Dégagements/match). Le premier est Serbe, le second est Belge — c'est lui ta réponse. 5 lettres.",
+      en: "Hint: the first Sorare league = the Belgian Jupiler Pro League (JPL). Database → filter JPL + U23 → open all AA Stats → sort by 'Clr' (Clearances/match). The first one is Serbian, the second is Belgian — that's your answer. 5 letters.",
     },
-    answer: "15",
+    answer: "Smets",
+    altAnswers: ["smets", "SMETS", "Matte Smets", "matte smets"],
   },
   {
     id: 3, icon: "✨",
@@ -176,7 +177,7 @@ const T = {
   },
 };
 
-const FINAL_CODE = "GOAT-15-5-1000-61-8";
+const FINAL_CODE = "GOAT-SMETS-5-1000-61-8";
 const STORAGE_KEY = "deglingo_treasure_v2";
 
 const LAUNCH_TWEET = {

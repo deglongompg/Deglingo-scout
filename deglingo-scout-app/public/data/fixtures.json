@@ -1,11 +1,11 @@
 {
-  "generated": "2026-04-30T07:53:45.972753",
+  "generated": "2026-04-30T17:41:58.954195",
   "matchdays": {
     "L1": "34",
     "PL": "37",
     "Liga": "37",
     "Bundes": "34",
-    "JPL": "Conference League Group - 39",
+    "JPL": "Championship Group - 39",
     "Ere": "34",
     "UCL": "SEMI-FINALS",
     "UEL": "SEMI-FINALS",
@@ -434,19 +434,6 @@
       "away_api": "Paris Saint-Germain"
     },
     {
-      "home": "Brighton & Hove Albion FC",
-      "away": "Chelsea FC",
-      "date": "2026-04-21",
-      "kickoff": "19:00",
-      "matchday": "34",
-      "league": "PL",
-      "home_api": "Brighton & Hove Albion FC",
-      "away_api": "Chelsea FC",
-      "finished": true,
-      "score_home": 3,
-      "score_away": 0
-    },
-    {
       "home": "AFC Bournemouth",
       "away": "Leeds United FC",
       "date": "2026-04-22",
@@ -872,58 +859,6 @@
       "league": "PL",
       "home_api": "Chelsea FC",
       "away_api": "Tottenham Hotspur FC"
-    },
-    {
-      "home": "Athletic Club",
-      "away": "CA Osasuna",
-      "date": "2026-04-21",
-      "kickoff": "17:00",
-      "matchday": "33",
-      "league": "Liga",
-      "home_api": "Athletic Club",
-      "away_api": "CA Osasuna",
-      "finished": true,
-      "score_home": 1,
-      "score_away": 0
-    },
-    {
-      "home": "RCD Mallorca",
-      "away": "Valencia CF",
-      "date": "2026-04-21",
-      "kickoff": "17:00",
-      "matchday": "33",
-      "league": "Liga",
-      "home_api": "RCD Mallorca",
-      "away_api": "Valencia CF",
-      "finished": true,
-      "score_home": 1,
-      "score_away": 1
-    },
-    {
-      "home": "Real Madrid",
-      "away": "D. Alavés",
-      "date": "2026-04-21",
-      "kickoff": "19:30",
-      "matchday": "33",
-      "league": "Liga",
-      "home_api": "Real Madrid",
-      "away_api": "D. Alavés",
-      "finished": true,
-      "score_home": 2,
-      "score_away": 1
-    },
-    {
-      "home": "Girona FC",
-      "away": "Real Betis",
-      "date": "2026-04-21",
-      "kickoff": "19:30",
-      "matchday": "33",
-      "league": "Liga",
-      "home_api": "Girona FC",
-      "away_api": "Real Betis",
-      "finished": true,
-      "score_home": 2,
-      "score_away": 3
     },
     {
       "home": "Elche CF",
@@ -1921,45 +1856,6 @@
       "away_api": "VfL Wolfsburg"
     },
     {
-      "home": "Oud-Heverlee Leuven",
-      "away": "KVC Westerlo",
-      "date": "2026-04-21",
-      "kickoff": "18:30",
-      "matchday": "Conference League Group - 34",
-      "league": "JPL",
-      "home_api": "Oud-Heverlee Leuven",
-      "away_api": "KVC Westerlo",
-      "finished": true,
-      "score_home": 0,
-      "score_away": 2
-    },
-    {
-      "home": "Standard de Liège",
-      "away": "Royal Antwerp FC",
-      "date": "2026-04-21",
-      "kickoff": "18:30",
-      "matchday": "Conference League Group - 34",
-      "league": "JPL",
-      "home_api": "Standard de Liège",
-      "away_api": "Royal Antwerp FC",
-      "finished": true,
-      "score_home": 1,
-      "score_away": 2
-    },
-    {
-      "home": "KRC Genk",
-      "away": "Royal Charleroi S.C.",
-      "date": "2026-04-21",
-      "kickoff": "18:30",
-      "matchday": "Conference League Group - 34",
-      "league": "JPL",
-      "home_api": "KRC Genk",
-      "away_api": "Royal Charleroi S.C.",
-      "finished": true,
-      "score_home": 1,
-      "score_away": 1
-    },
-    {
       "home": "Club Brugge KV",
       "away": "YR KV Mechelen",
       "date": "2026-04-22",
@@ -2425,6 +2321,36 @@
       "away_api": "Royal Antwerp FC"
     },
     {
+      "home": "YR KV Mechelen",
+      "away": "Club Brugge KV",
+      "date": "2026-05-21",
+      "kickoff": "18:30",
+      "matchday": "Championship Group - 39",
+      "league": "JPL",
+      "home_api": "YR KV Mechelen",
+      "away_api": "Club Brugge KV"
+    },
+    {
+      "home": "RSC Anderlecht",
+      "away": "Sint-Truidense VV",
+      "date": "2026-05-21",
+      "kickoff": "18:30",
+      "matchday": "Championship Group - 39",
+      "league": "JPL",
+      "home_api": "RSC Anderlecht",
+      "away_api": "Sint-Truidense VV"
+    },
+    {
+      "home": "KAA Gent",
+      "away": "Royal Union Saint-Gilloise",
+      "date": "2026-05-21",
+      "kickoff": "18:30",
+      "matchday": "Championship Group - 39",
+      "league": "JPL",
+      "home_api": "KAA Gent",
+      "away_api": "Royal Union Saint-Gilloise"
+    },
+    {
       "home": "SC Telstar",
       "away": "Sparta Rotterdam",
       "date": "2026-04-22",
@@ -2856,34 +2782,6 @@
       "league": "Ere",
       "home_api": "Sparta Rotterdam",
       "away_api": "Excelsior Rotterdam"
-    },
-    {
-      "home": "Arsenal FC",
-      "away": "Sporting CP",
-      "date": "2026-04-15",
-      "kickoff": "19:00",
-      "matchday": "QUARTER-FINALS",
-      "league": "UCL",
-      "home_api": "Arsenal FC",
-      "away_api": "Sporting CP",
-      "competition": "UCL",
-      "finished": true,
-      "score_home": 0,
-      "score_away": 0
-    },
-    {
-      "home": "FC Bayern München",
-      "away": "Real Madrid",
-      "date": "2026-04-15",
-      "kickoff": "19:00",
-      "matchday": "QUARTER-FINALS",
-      "league": "UCL",
-      "home_api": "FC Bayern München",
-      "away_api": "Real Madrid",
-      "competition": "UCL",
-      "finished": true,
-      "score_home": 4,
-      "score_away": 3
     },
     {
       "home": "Paris Saint-Germain",
@@ -3795,7 +3693,8 @@
       "matchday": "MLS",
       "league": "MLS",
       "home_api": "Los Angeles FC",
-      "away_api": "Deportivo Toluca FC"
+      "away_api": "Deportivo Toluca FC",
+      "finished": true
     },
     {
       "home": "San Diego FC",

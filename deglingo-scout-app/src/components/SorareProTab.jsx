@@ -2467,9 +2467,12 @@ export default function SorareProTab({ players, teams, fixtures, standings = nul
                   const thS = (col) => ({ fontSize: 8, fontWeight: 800, color: sortCol===col ? rarityColor : "rgba(255,255,255,0.3)", cursor: "pointer", userSelect: "none", whiteSpace: "nowrap", textAlign: "center", padding: "0 4px" });
 
                   return (
-                    <div style={{ flex: 1, display: "flex", flexDirection: "column", minWidth: 0, overflowX: "auto" }}>
+                    <div style={{ flex: 1, display: "flex", flexDirection: "column", minWidth: 0, minHeight: 0, overflow: "auto" }}>
+                      {/* Wrapper interne a la largeur totale : header + rows scrollent ensemble horizontalement,
+                          le header reste sticky-top pendant le scroll vertical. */}
+                      <div style={{ minWidth: "max-content" }}>
                       {/* Header */}
-                      <div style={{ display: "grid", gridTemplateColumns: GRID, alignItems: "center", gap: 2, padding: "3px 8px", borderBottom: "1px solid rgba(255,255,255,0.07)", background: "rgba(0,0,0,0.4)", position: "sticky", top: 0, zIndex: 2, minWidth: "max-content" }}>
+                      <div style={{ display: "grid", gridTemplateColumns: GRID, alignItems: "center", gap: 2, padding: "3px 8px", borderBottom: "1px solid rgba(255,255,255,0.07)", background: "rgba(6,3,20,0.95)", backdropFilter: "blur(6px)", position: "sticky", top: 0, zIndex: 2 }}>
                         <span />
                         <span style={{ fontSize: 7, color: "rgba(255,255,255,0.3)", fontWeight: 700 }}>Pos</span>
                         <span style={{ fontSize: 7, color: "rgba(255,255,255,0.3)", fontWeight: 700 }}>Joueur</span>
@@ -2482,9 +2485,8 @@ export default function SorareProTab({ players, teams, fixtures, standings = nul
                           );
                         })}
                       </div>
-                      {/* Rows */}
-                      <div style={{ overflowY: "auto", flex: 1, minHeight: 0 }}>
-                        <div style={{ minWidth: "max-content" }}>
+                      {/* Rows — directement enfants du wrapper, plus de double-overflow */}
+                      <div>
                         {sortedPool.map(p => {
                           const slug = p.slug || p.name;
                           const rowKey = p._cardKey || slug;

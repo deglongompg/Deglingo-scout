@@ -331,9 +331,9 @@ export default function DbTab({ players, teams, fixtures, logos = {}, lang = "fr
           box-shadow: inset 0 1px 0 rgba(255,255,255,0.05), 0 4px 14px rgba(0,0,0,0.18);
         }
         .db-league-btn {
-          flex: 1 1 0;
+          flex: 0 0 64px;       /* Largeur fixe identique pour tous les boutons */
           min-width: 0;
-          padding: 5px 8px;
+          padding: 5px 6px;
           border-radius: 9px;
           font-family: Outfit;
           font-size: 11px;
@@ -350,6 +350,7 @@ export default function DbTab({ players, teams, fixtures, logos = {}, lang = "fr
           transition: all 0.2s ease;
           position: relative;
           will-change: transform, box-shadow;
+          overflow: hidden;
         }
         .db-league-btn img { transition: filter 0.2s ease, transform 0.2s ease; }
         .db-league-btn:hover:not(.is-active) {
@@ -454,7 +455,7 @@ export default function DbTab({ players, teams, fixtures, logos = {}, lang = "fr
                   "--lg-c-strong-solid": c,
                 }}>
                 {fc ? <img src={`https://flagcdn.com/w40/${fc}.png`} alt={k} width={14} height={11} style={{ borderRadius: 2, objectFit: "cover", flexShrink: 0 }} /> : null}
-                <span>{isAll ? t(lang,"all") : k}</span>
+                <span>{isAll ? t(lang,"all") : k === "Bundes" ? "BL" : k}</span>
                 {active && <span className="db-league-underline" aria-hidden />}
               </button>
             );

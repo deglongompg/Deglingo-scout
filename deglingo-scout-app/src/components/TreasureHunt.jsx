@@ -35,12 +35,8 @@ const ENIGMAS = [
       en: "In the very first league ever covered by Sorare, a young wall rises...",
     },
     question: {
-      fr: "Dans la première ligue qui apparut sur Sorare au lancement, fouille parmi les U23. Quel est le nom de famille du jeune Belge qui dégage le plus de ballons par match (le roi du Clr) ? Attention : le tout premier au classement n'est pas belge — il faut le suivant.",
-      en: "In the very first league Sorare ever covered at launch, dig through the U23s. What is the surname of the young Belgian player who clears the most balls per match (the King of Clr)? Careful: the very first in the ranking is not Belgian — you'll need the next one.",
-    },
-    hint: {
-      fr: "Indice : la première ligue Sorare = la Jupiler Pro League belge (JPL). Database → filtre JPL + U23 → ouvre les Stats AA (toutes) → trie par 'Clr' (Dégagements/match). Le premier est Serbe, le second est Belge — c'est lui ta réponse. 5 lettres.",
-      en: "Hint: the first Sorare league = the Belgian Jupiler Pro League (JPL). Database → filter JPL + U23 → open all AA Stats → sort by 'Clr' (Clearances/match). The first one is Serbian, the second is Belgian — that's your answer. 5 letters.",
+      fr: "Dans la première ligue qui apparut sur Sorare au lancement, fouille parmi les U23. Quel est le nom de famille du jeune Belge qui dégage le plus de ballons par match ?",
+      en: "In the very first league Sorare ever covered at launch, dig through the U23s. What is the surname of the young Belgian player who clears the most balls per match?",
     },
     answer: "Smets",
     altAnswers: ["smets", "SMETS", "Matte Smets", "matte smets"],
@@ -222,7 +218,6 @@ export default function TreasureHunt({ open, onClose, lang: langProp = "fr" }) {
   });
   const [currentIdx, setCurrentIdx] = useState(0);
   const [errorShake, setErrorShake] = useState(null);
-  const [showHint, setShowHint] = useState(false);
 
   // Synchronise currentIdx avec la 1ere enigme non resolue a l'ouverture
   useEffect(() => {
@@ -245,7 +240,6 @@ export default function TreasureHunt({ open, onClose, lang: langProp = "fr" }) {
     const input = inputs[enigma.id] || "";
     if (checkAnswer(input, enigma)) {
       if (idx + 1 > solved) setSolved(idx + 1);
-      setShowHint(false);
       if (idx < ENIGMAS.length - 1) setCurrentIdx(idx + 1);
     } else {
       setErrorShake(idx);
@@ -506,7 +500,6 @@ export default function TreasureHunt({ open, onClose, lang: langProp = "fr" }) {
             const title = eg.title[lang] || eg.title.fr;
             const intro = eg.intro[lang] || eg.intro.fr;
             const question = eg.question[lang] || eg.question.fr;
-            const hint = eg.hint[lang] || eg.hint.fr;
 
             // Mode mini-row pour locked + solved
             if (!isActive) {
@@ -548,7 +541,7 @@ export default function TreasureHunt({ open, onClose, lang: langProp = "fr" }) {
                 <div style={{ fontSize: 12.5, color: "#fff", marginBottom: 8, lineHeight: 1.5 }}>
                   {question}
                 </div>
-                <div style={{ display: "flex", gap: 6, marginBottom: 6 }}>
+                <div style={{ display: "flex", gap: 6 }}>
                   <input
                     className="treasure-input"
                     placeholder={tr.placeholder}
@@ -561,21 +554,6 @@ export default function TreasureHunt({ open, onClose, lang: langProp = "fr" }) {
                     {tr.validate}
                   </button>
                 </div>
-                <button
-                  onClick={() => setShowHint(s => !s)}
-                  style={{
-                    background: "transparent", border: "none", color: "rgba(255,255,255,0.45)",
-                    fontSize: 10, cursor: "pointer", textDecoration: "underline", padding: 0,
-                    fontFamily: "Outfit",
-                  }}
-                >
-                  {showHint ? tr.hideHint : tr.showHint}
-                </button>
-                {showHint && (
-                  <div style={{ marginTop: 5, fontSize: 10.5, color: "rgba(255,255,255,0.55)", fontStyle: "italic", padding: "5px 9px", background: "rgba(255,255,255,0.03)", borderRadius: 6, borderLeft: "2px solid #FBBF24", lineHeight: 1.4 }}>
-                    {hint}
-                  </div>
-                )}
               </div>
             );
           })}

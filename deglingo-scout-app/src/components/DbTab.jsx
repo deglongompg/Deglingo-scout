@@ -194,25 +194,28 @@ export default function DbTab({ players, teams, fixtures, logos = {}, lang = "fr
     else { setSortKey(key); setSortDir(-1); }
   };
 
-  // Cycle filter : off -> >=10 -> >=20 -> ... -> >=90 -> off (recherche meilleurs joueurs).
-  // Sauf l10 qui garde la semantique <= pour la construction CAP260.
-  const CYCLE    = [100, 10, 20, 30, 40, 50, 60, 70, 80, 90];
-  const CYCLE_AA = [100, 5, 10, 15, 20, 25, 30, 35, 40];
+  // Cycle filter ordonne du seuil le plus EXIGEANT au moins exigeant pour ">=" (recherche
+  // des meilleurs joueurs). Premier clic = ">=80" (elite), puis assoupli a chaque clic.
+  // L10 utilise une cycle dediee dans l'ordre INVERSE (low scores prioritaires pour CAP260).
+  const CYCLE     = [100, 80, 70, 60, 50, 40, 30, 20, 10];   // L scores, score, ds, dsMatch
+  const CYCLE_AA  = [100, 25, 20, 15, 10, 5];                 // AA scores (echelle plus serree)
+  const CYCLE_PCT = [100, 90, 80, 70, 60, 50, 40, 30];        // % (Titu, Reg10, CS)
+  const CYCLE_L10 = [100, 50, 40, 30, 20, 10];                // <= pour CAP260 (low L10 = elites)
   const FILTER_CFG = {
     l2:                 { val: maxL2,    set: setMaxL2,    color: "#4ADE80" },
     aa2:                { val: maxAA2,   set: setMaxAA2,   color: "#34D399", cycle: CYCLE_AA },
     l5:                 { val: maxL5,    set: setMaxL5,    color: "#4ADE80" },
     aa5:                { val: maxAA5,   set: setMaxAA5,   color: "#34D399", cycle: CYCLE_AA },
-    l10:                { val: maxL10s,  set: setMaxL10s,  color: "#4ADE80" },
+    l10:                { val: maxL10s,  set: setMaxL10s,  color: "#4ADE80", cycle: CYCLE_L10 },
     aa10:               { val: maxAA10,  set: setMaxAA10,  color: "#34D399", cycle: CYCLE_AA },
     aa40:               { val: maxAA40,  set: setMaxAA40,  color: "#34D399", cycle: CYCLE_AA },
     l40:                { val: maxL40,   set: setMaxL40,   color: "#4ADE80" },
-    reg10:              { val: maxReg10, set: setMaxReg10, color: "#60A5FA" },
-    titu_pct:           { val: maxTitu10,set: setMaxTitu10,color: "#FBBF24" },
+    reg10:              { val: maxReg10, set: setMaxReg10, color: "#60A5FA", cycle: CYCLE_PCT },
+    titu_pct:           { val: maxTitu10,set: setMaxTitu10,color: "#FBBF24", cycle: CYCLE_PCT },
     dsMatch:            { val: maxDs,    set: setMaxDs,    color: "#A5B4FC" },
     last_so5_score:     { val: maxScore, set: setMaxScore, color: "#FBBF24" },
-    sorare_starter_pct: { val: maxTitu,  set: setMaxTitu,  color: "#C084FC" },
-    csPercent:          { val: maxCS,    set: setMaxCS,    color: "#38BDF8" },
+    sorare_starter_pct: { val: maxTitu,  set: setMaxTitu,  color: "#C084FC", cycle: CYCLE_PCT },
+    csPercent:          { val: maxCS,    set: setMaxCS,    color: "#38BDF8", cycle: CYCLE_PCT },
   };
 
   const FilterBtn = ({ colKey }) => {

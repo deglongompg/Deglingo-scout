@@ -560,14 +560,14 @@ export default function FightTab({ players, teams, fixtures, logos = {}, lang = 
           [lg2, setLg2, c2, setC2, pn2, setPn2, o2, setO2, h2, setH2, clubs2, pls2, opps2, `🔴 ${t(lang,"player2")}`, "#F87171", "rgba(239,68,68,0.2)"]].map(([lg, sLg, c, sC, pn, sPn, o, sO, h, sH, clubs, pls, opps, label, col, bgCol], idx) => (
           <div key={idx} style={{ display: "flex", flexDirection: "column", gap: 5 }}>
             <div style={{ fontSize: 9, color: col, fontWeight: 700, textAlign: "center", letterSpacing: "0.1em" }}>{label}</div>
-            <div style={{ display: "flex", gap: 3 }}>
-              {["L1", "PL", "Liga", "Bundes"].map(l => (
+            <div style={{ display: "flex", gap: 3, flexWrap: "wrap" }}>
+              {["L1", "PL", "Liga", "Bundes", "MLS", "JPL", "Ere"].map(l => (
                 <button key={l} onClick={() => { sLg(l); sC(""); sPn(""); sO(""); resetFight(); }} style={{
-                  flex: 1, padding: "7px 3px", borderRadius: 6, border: "none", cursor: "pointer",
+                  flex: "1 1 calc(25% - 3px)", minWidth: 0, padding: "7px 3px", borderRadius: 6, border: "none", cursor: "pointer",
                   background: lg === l ? bgCol : "rgba(255,255,255,0.03)",
                   color: lg === l ? col : "rgba(255,255,255,0.25)", fontSize: 10, fontWeight: 700, fontFamily: "Outfit",
                   display: "flex", alignItems: "center", justifyContent: "center", gap: 4,
-                }}><img src={`https://flagcdn.com/w40/${LEAGUE_FLAG_CODES[l]}.png`} alt={l} width={14} height={10} style={{ borderRadius: 2, objectFit: "cover" }} />{l}</button>
+                }}><img src={`https://flagcdn.com/w40/${LEAGUE_FLAG_CODES[l]}.png`} alt={l} width={14} height={10} style={{ borderRadius: 2, objectFit: "cover" }} />{l === "Bundes" ? "BL" : l}</button>
               ))}
             </div>
             <Sel value={c} onChange={v => { sC(v); sPn(""); resetFight(); }} options={clubs} placeholder={t(lang,"clubPlaceholder")} />

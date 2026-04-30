@@ -117,13 +117,18 @@ const T = {
     doneEyebrow: "✅ CHASSE TERMINÉE",
     doneTitle: "Voici le Code Bruno 🐐",
     tweetBtn: "𝕏 Tweeter le Code Bruno",
-    tweetFooter: <><b style={{color:"#FBBF24"}}>Seul le tout premier à terminer la chasse</b> remporte la carte Bruno Fernandes 🐐<br/>Tu peux tweeter même sans avoir gagné — partage l'expérience !</>,
+    tweetFooter: <>
+      <b style={{color:"#FBBF24"}}>Seul le tout premier à terminer la chasse</b> remporte la carte Bruno Fernandes 🐐<br/>
+      <span style={{color:"#F87171", fontWeight: 700}}>📸 Pour valider ta victoire, joins 2 screenshots à ton tweet :</span><br/>
+      1️⃣ Cette page de fin avec ta position · 2️⃣ Le Code Bruno doré dans la modal<br/>
+      <span style={{opacity: 0.7, fontStyle:"italic"}}>Sans preuves = pas de tirage. Anti-triche.</span>
+    </>,
     reset: "Recommencer la chasse",
     closeAria: "Fermer",
     tweetText: (pos) => {
       // Seul le 1er gagne — message triomphant. Les autres : message fair-play.
       if (pos === 1) {
-        return `🏆 J'AI GAGNÉ LA CHASSE AU TRÉSOR @DeglingoMPG 🐐\n\nPremier à boucler les 6 énigmes ! La carte Bruno Fernandes Limited #61 @Sorare est pour moi 🎁\n\ndeglingosorare.com\n\n#ChasseDeglingo`;
+        return `🏆 J'AI GAGNÉ LA CHASSE AU TRÉSOR @DeglingoMPG 🐐\n\nPremier à boucler les 6 énigmes ! La carte Bruno Fernandes Limited #61 @Sorare est pour moi 🎁\n\n📸 Screenshots de preuve ci-joints ⬇️\n\n#ChasseDeglingo`;
       }
       return `🎁 J'ai résolu la Chasse au Trésor de @DeglingoMPG, c'était top sur son site ! 🐐\n\nMerci pour le jeu, vivement la suite !\n\ndeglingosorare.com\n\n#ChasseDeglingo`;
     },
@@ -150,13 +155,18 @@ const T = {
     doneEyebrow: "✅ HUNT COMPLETE",
     doneTitle: "Here is the Bruno Code 🐐",
     tweetBtn: "𝕏 Tweet the Bruno Code",
-    tweetFooter: <><b style={{color:"#FBBF24"}}>Only the very first to finish the hunt</b> wins the Bruno Fernandes card 🐐<br/>You can still tweet even if you didn't win — share the experience!</>,
+    tweetFooter: <>
+      <b style={{color:"#FBBF24"}}>Only the very first to finish the hunt</b> wins the Bruno Fernandes card 🐐<br/>
+      <span style={{color:"#F87171", fontWeight: 700}}>📸 To validate your win, attach 2 screenshots to your tweet:</span><br/>
+      1️⃣ This end page with your position · 2️⃣ The golden Bruno Code in the modal<br/>
+      <span style={{opacity: 0.7, fontStyle:"italic"}}>No proof = no draw. Anti-cheat.</span>
+    </>,
     reset: "Restart the hunt",
     closeAria: "Close",
     tweetText: (pos) => {
       // Only the 1st wins — triumphant message. Others : fair-play.
       if (pos === 1) {
-        return `🏆 I WON THE TREASURE HUNT @DeglingoMPG 🐐\n\nFirst to crack all 6 riddles! The Bruno Fernandes Limited #61 @Sorare card is mine 🎁\n\ndeglingosorare.com\n\n#ChasseDeglingo`;
+        return `🏆 I WON THE TREASURE HUNT @DeglingoMPG 🐐\n\nFirst to crack all 6 riddles! The Bruno Fernandes Limited #61 @Sorare card is mine 🎁\n\n📸 Proof screenshots attached ⬇️\n\n#ChasseDeglingo`;
       }
       return `🎁 I cracked the Treasure Hunt by @DeglingoMPG — top experience on his site! 🐐\n\nThanks for the game, can't wait for the next one!\n\ndeglingosorare.com\n\n#ChasseDeglingo`;
     },

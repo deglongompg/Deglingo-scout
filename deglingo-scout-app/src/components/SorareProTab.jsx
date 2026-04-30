@@ -516,9 +516,33 @@ export default function SorareProTab({ players, teams, fixtures, standings = nul
   const gwList = useMemo(() => getProGwList(5), []);
   // Index de la GW LIVE dans la liste (0 = GW passee, 1 = LIVE, 2+ = futures)
   const liveIdx = useMemo(() => gwList.findIndex(gw => gw.isLive), [gwList]);
-  // Defaut = GW LIVE
+  // Defaut = GW LIVE (sera ajuste par le useEffect ci-dessous selon la ligue)
   const [selectedGwIdx, setSelectedGwIdx] = useState(liveIdx >= 0 ? liveIdx : 0);
   const gwInfo = gwList[selectedGwIdx] || null;
+
+  // ── Auto-resync GW par ligue : si la GW LIVE est vide pour la ligue selectionnee,
+  //    on bascule automatiquement sur la prochaine GW avec des matchs.
+  //    Declenche au mount et a chaque changement de ligue (pas sur clic manuel GW).
+  useEffect(() => {
+    if (!fixtures?.fixtures || !gwList.length) return;
+    const accepts = league === "Champion" ? new Set(CHAMPION_SOURCE_LEAGUES) : new Set([league]);
+    const hasMatches = (gw) => fixtures.fixtures.some(f => {
+      if (!accepts.has(f.league)) return false;
+      if (f.date < gw.startDateStr || f.date > gw.endDateStr) return false;
+      if (f.date === gw.startDateStr && f.kickoff && f.kickoff < "14:00") return false;
+      if (f.date === gw.endDateStr && f.kickoff && f.kickoff >= "14:00") return false;
+      return true;
+    });
+    // Recherche a partir de la GW LIVE (skip la GW passee a l'index 0)
+    const startIdx = liveIdx >= 0 ? liveIdx : 0;
+    for (let i = startIdx; i < gwList.length; i++) {
+      if (hasMatches(gwList[i])) {
+        setSelectedGwIdx(i);
+        return;
+      }
+    }
+    // Aucune GW future avec matchs trouvee : on laisse la LIVE par defaut.
+  }, [league, fixtures, gwList, liveIdx]);
   const [countdown, setCountdown] = useState("");
   const [teamSort, setTeamSort] = useState("ds");
   useEffect(() => {

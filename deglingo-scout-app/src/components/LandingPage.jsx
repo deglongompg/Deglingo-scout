@@ -1,6 +1,7 @@
 import { useMemo, useState, useEffect, useRef } from "react";
 import { createPortal } from "react-dom";
 import { dScoreMatch } from "../utils/dscore";
+import TreasureHunt from "./TreasureHunt";
 
 // Trainee d'etoiles stellaires qui suit la souris (landing uniquement).
 // IMPORTANT : monte via portal sur document.body pour echapper au zoom: 1.25
@@ -497,6 +498,25 @@ export default function LandingPage({ players, onEnter, onNavigate }) {
   const [lang, setLang] = useState("fr");
   const t = T[lang];
 
+  // ═══ Chasse au Trésor (modal) ═══
+  const [showTreasure, setShowTreasure] = useState(false);
+
+  // ═══ EASTER EGG — clin d'œil rigolo (pas la réponse) ═══
+  // 7 clicks rapides sur le logo → message bonus
+  const eggClicksRef = useRef(0);
+  const eggTimerRef = useRef(null);
+  const [showEgg, setShowEgg] = useState(false);
+  const handleLogoClick = () => {
+    eggClicksRef.current++;
+    if (eggTimerRef.current) clearTimeout(eggTimerRef.current);
+    if (eggClicksRef.current >= 7) {
+      eggClicksRef.current = 0;
+      setShowEgg(true);
+      return;
+    }
+    eggTimerRef.current = setTimeout(() => { eggClicksRef.current = 0; }, 1800);
+  };
+
   // Stats dynamiques depuis players.json (auto-update quand on ajoute des ligues)
   const { playersCountStr, leaguesCount } = useMemo(() => {
     const n = players?.length || 0;
@@ -544,9 +564,9 @@ export default function LandingPage({ players, onEnter, onNavigate }) {
 
         {/* ==== HEADER ==== logo+titre / bouton Database / toggle langue, alignes sur 1 ligne */}
         <div style={{ padding: "14px 24px 0", display: "grid", gridTemplateColumns: "1fr auto 1fr", alignItems: "center", gap: 12, alignSelf: "stretch", maxWidth: 1200, width: "100%", margin: "0 auto" }}>
-          {/* Gauche : logo + DEGLINGO SCOUT */}
-          <div style={{ display: "flex", alignItems: "center", gap: 12, minWidth: 0 }}>
-            <img src="/logo.png" alt="Deglingo Scout" style={{ width: 40, height: 40, objectFit: "contain", flexShrink: 0 }} />
+          {/* Gauche : logo + DEGLINGO SCOUT — clickable Easter Egg (7 clicks rapides) */}
+          <div onClick={handleLogoClick} style={{ display: "flex", alignItems: "center", gap: 12, minWidth: 0, cursor: "pointer", userSelect: "none" }}>
+            <img src="/logo.png" alt="Deglingo Scout" style={{ width: 40, height: 40, objectFit: "contain", flexShrink: 0 }} draggable={false} />
             <div style={{ minWidth: 0 }}>
               <div style={{
                 fontSize: 17, fontWeight: 900, letterSpacing: "-0.5px",
@@ -626,10 +646,39 @@ export default function LandingPage({ players, onEnter, onNavigate }) {
             }}>{t.heroHighlight}</span>
           </h1>
 
-          <p style={{ fontSize: 15, color: "rgba(255,255,255,0.7)", lineHeight: 1.55, margin: "0 auto 22px", maxWidth: 580 }}>
+          <p style={{ fontSize: 15, color: "rgba(255,255,255,0.7)", lineHeight: 1.55, margin: "0 auto 14px", maxWidth: 580 }}>
             {fillStats(t.heroSub)}<br />
             <span style={{ color: "rgba(255,255,255,0.5)" }}>{t.heroSub2}</span>
           </p>
+
+          {/* ═══ CTA CHASSE AU TRÉSOR — Bruno Fernandes Limited 1/1000 à gagner ═══ */}
+          <button
+            onClick={() => setShowTreasure(true)}
+            style={{
+              display: "inline-flex", alignItems: "center", gap: 10,
+              margin: "0 auto 22px",
+              padding: "12px 24px", borderRadius: 999,
+              background: "linear-gradient(135deg, #FBBF24 0%, #F59E0B 50%, #FCD34D 100%)",
+              border: "1px solid rgba(251,191,36,0.7)",
+              color: "#1a0f00", fontWeight: 900, fontSize: 13, fontFamily: "Outfit",
+              letterSpacing: "0.06em", cursor: "pointer",
+              boxShadow: "0 0 28px rgba(251,191,36,0.55), 0 6px 20px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.3)",
+              animation: "treasureLandingPulse 2.4s ease-in-out infinite",
+              transition: "transform 0.2s",
+            }}
+            onMouseEnter={e => { e.currentTarget.style.transform = "translateY(-2px) scale(1.04)"; }}
+            onMouseLeave={e => { e.currentTarget.style.transform = "translateY(0) scale(1)"; }}
+          >
+            <span style={{ fontSize: 18 }}>🎁</span>
+            <span>{lang === "fr" ? "CHASSE AU TRÉSOR · BRUNO FERNANDES À GAGNER" : "TREASURE HUNT · WIN BRUNO FERNANDES"}</span>
+            <span style={{ fontSize: 18 }}>🐐</span>
+          </button>
+          <style>{`
+            @keyframes treasureLandingPulse {
+              0%,100% { box-shadow: 0 0 28px rgba(251,191,36,0.55), 0 6px 20px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.3); }
+              50%     { box-shadow: 0 0 48px rgba(251,191,36,0.85), 0 6px 20px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.3); }
+            }
+          `}</style>
 
           {/* League chips + cards — 5 colonnes (Stellar + 4 ligues EU), cartes Stellar uniquement */}
           <div className="landing-leagues" style={{ display: "flex", gap: 8, justifyContent: "center", alignItems: "flex-start", flexWrap: "wrap", marginBottom: 16, perspective: 1200 }}>
@@ -1150,6 +1199,95 @@ export default function LandingPage({ players, onEnter, onNavigate }) {
           .landing-affi, .landing-who { grid-template-columns: 1fr !important; }
         }
       `}</style>
+
+      {/* ═══ Chasse au Trésor (modal) ═══ */}
+      <TreasureHunt open={showTreasure} onClose={() => setShowTreasure(false)} />
+
+      {/* ═══ EASTER EGG OVERLAY — clin d'œil rigolo (pas la réponse) ═══ */}
+      {showEgg && createPortal(
+        <div
+          onClick={() => setShowEgg(false)}
+          style={{
+            position: "fixed", inset: 0, zIndex: 99999,
+            background: "rgba(2,1,15,0.96)", backdropFilter: "blur(14px)",
+            display: "flex", alignItems: "center", justifyContent: "center",
+            padding: 20, animation: "eggFadeIn 0.4s ease-out",
+          }}
+        >
+          <style>{`
+            @keyframes eggFadeIn { 0%{opacity:0} 100%{opacity:1} }
+            @keyframes eggBurst {
+              0% { opacity: 0; transform: scale(0.4) rotate(-12deg); }
+              60% { opacity: 1; transform: scale(1.08) rotate(2deg); }
+              100% { opacity: 1; transform: scale(1) rotate(0deg); }
+            }
+            @keyframes eggGoldPulse {
+              0%,100% { box-shadow: 0 0 30px rgba(251,191,36,0.5), 0 0 80px rgba(251,191,36,0.25); }
+              50%     { box-shadow: 0 0 50px rgba(251,191,36,0.8), 0 0 120px rgba(251,191,36,0.45); }
+            }
+            @keyframes eggSpin { from{transform:rotate(0)} to{transform:rotate(360deg)} }
+            @keyframes eggGoldShine {
+              0%   { background-position: 0% 50%; }
+              100% { background-position: 200% 50%; }
+            }
+          `}</style>
+
+          <div onClick={e => e.stopPropagation()} style={{
+            position: "relative",
+            padding: "36px 40px",
+            borderRadius: 20,
+            background: "linear-gradient(180deg, rgba(40,15,80,0.96), rgba(8,3,28,0.98))",
+            border: "2px solid rgba(251,191,36,0.6)",
+            animation: "eggBurst 0.6s cubic-bezier(.2,.8,.3,1) both, eggGoldPulse 2.4s ease-in-out 0.6s infinite",
+            textAlign: "center", color: "#fff", fontFamily: "Outfit",
+            maxWidth: 480,
+          }}>
+            {/* Étoiles décoratives qui tournent */}
+            <div aria-hidden style={{ position: "absolute", top: -22, left: -22, fontSize: 36, animation: "eggSpin 6s linear infinite" }}>✨</div>
+            <div aria-hidden style={{ position: "absolute", top: -22, right: -22, fontSize: 36, animation: "eggSpin 6s linear infinite reverse" }}>⭐</div>
+            <div aria-hidden style={{ position: "absolute", bottom: -22, left: -22, fontSize: 36, animation: "eggSpin 6s linear infinite reverse" }}>⭐</div>
+            <div aria-hidden style={{ position: "absolute", bottom: -22, right: -22, fontSize: 36, animation: "eggSpin 6s linear infinite" }}>✨</div>
+
+            <div style={{ fontSize: 56, marginBottom: 8 }}>🕵️</div>
+            <div style={{
+              fontSize: 13, fontWeight: 800, letterSpacing: "0.2em",
+              background: "linear-gradient(90deg,#FBBF24,#FCD34D,#F59E0B,#FCD34D,#FBBF24)",
+              backgroundSize: "200% 100%",
+              WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent", backgroundClip: "text",
+              animation: "eggGoldShine 3s linear infinite",
+              marginBottom: 12,
+            }}>
+              {lang === "fr" ? "EASTER EGG DÉBLOQUÉ" : "EASTER EGG UNLOCKED"}
+            </div>
+            <div style={{ fontSize: 22, fontWeight: 900, marginBottom: 8 }}>
+              {lang === "fr" ? "Œil de Lynx 👀" : "Eagle Eye 👀"}
+            </div>
+            <div style={{ fontSize: 13, color: "rgba(255,255,255,0.65)", marginBottom: 18, lineHeight: 1.5 }}>
+              {lang === "fr"
+                ? <>Bravo, tu fais partie du club des Scouts qui prennent le temps de tout explorer.<br/><b style={{color:"#FBBF24"}}>Ce n'est pas la réponse de la chasse au trésor</b>, juste un petit clin d'œil 😉</>
+                : <>Cheers, you belong to the club of Scouts who take time to explore everything.<br/><b style={{color:"#FBBF24"}}>This is not the treasure hunt answer</b>, just a wink 😉</>}
+            </div>
+            <div style={{ fontSize: 11, color: "rgba(255,255,255,0.55)", fontStyle: "italic", marginBottom: 18, padding: "8px 12px", background: "rgba(255,255,255,0.04)", borderRadius: 8, border: "1px dashed rgba(251,191,36,0.3)" }}>
+              {lang === "fr"
+                ? "💡 Pour le vrai trésor, file dans l'onglet Fight et oppose le Maestro à un certain prodige catalan..."
+                : "💡 For the real treasure, head to the Fight tab and pit the Maestro against a certain Catalan prodigy..."}
+            </div>
+            <button
+              onClick={() => setShowEgg(false)}
+              style={{
+                padding: "10px 24px", borderRadius: 10,
+                background: "linear-gradient(135deg,#FBBF24,#F59E0B)",
+                border: "none", color: "#1a0f00", fontWeight: 900, fontSize: 13,
+                cursor: "pointer", letterSpacing: "0.04em",
+                boxShadow: "0 0 16px rgba(251,191,36,0.4)",
+              }}
+            >
+              {lang === "fr" ? "Continuer la chasse" : "Resume the hunt"}
+            </button>
+          </div>
+        </div>,
+        document.body
+      )}
     </div>
   );
 }

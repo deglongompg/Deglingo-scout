@@ -6,6 +6,7 @@ import StellarTab from "./components/StellarTab";
 import SorareProTab from "./components/SorareProTab";
 import RecapTab from "./components/RecapTab";
 import LandingPage from "./components/LandingPage";
+import TreasureHunt from "./components/TreasureHunt";
 import { t } from "./utils/i18n";
 
 const TABS = [
@@ -19,6 +20,7 @@ const TABS = [
 ];
 
 export default function App() {
+  const [showTreasure, setShowTreasure] = useState(false);
   const [showLanding, setShowLanding] = useState(() => {
     // Skip landing if direct tab URL param, hash, or OAuth return
     const p = new URLSearchParams(window.location.search).get("tab");
@@ -375,6 +377,36 @@ export default function App() {
       }}>
         Deglingo Scout · deglingosorare.com · {players.length} joueurs · {new Set(players.map(p => p.league).filter(Boolean)).size} ligues
       </footer>
+
+      {/* ═══ Bouton flottant Chasse au Trésor — visible quand pas en landing ═══ */}
+      <button
+        onClick={() => setShowTreasure(true)}
+        title="Chasse au Trésor — Bruno Fernandes Limited 1/1000 à gagner"
+        style={{
+          position: "fixed", bottom: 18, right: 18, zIndex: 99,
+          padding: "12px 18px", borderRadius: 999, border: "1px solid rgba(251,191,36,0.6)",
+          background: "linear-gradient(135deg, #FBBF24, #F59E0B)",
+          color: "#1a0f00", fontWeight: 900, fontSize: 13, fontFamily: "Outfit",
+          letterSpacing: "0.04em", cursor: "pointer",
+          boxShadow: "0 0 24px rgba(251,191,36,0.55), 0 6px 18px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.3)",
+          display: "flex", alignItems: "center", gap: 8,
+          animation: "treasureBtnPulse 2.4s ease-in-out infinite",
+        }}
+        onMouseEnter={e => { e.currentTarget.style.transform = "translateY(-2px) scale(1.04)"; }}
+        onMouseLeave={e => { e.currentTarget.style.transform = "translateY(0) scale(1)"; }}
+      >
+        <span style={{ fontSize: 18 }}>🎁</span>
+        <span>Chasse au Trésor</span>
+      </button>
+      <style>{`
+        @keyframes treasureBtnPulse {
+          0%,100% { box-shadow: 0 0 24px rgba(251,191,36,0.55), 0 6px 18px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.3); }
+          50%     { box-shadow: 0 0 40px rgba(251,191,36,0.85), 0 6px 18px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.3); }
+        }
+      `}</style>
+
+      {/* Modal de la chasse au trésor */}
+      <TreasureHunt open={showTreasure} onClose={() => setShowTreasure(false)} />
     </div>
     </>
   );

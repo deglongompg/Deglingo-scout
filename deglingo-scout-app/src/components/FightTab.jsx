@@ -734,6 +734,77 @@ export default function FightTab({ players, teams, fixtures, logos = {}, lang = 
                     <div style={{ fontSize: 9, color: "rgba(255,255,255,0.35)" }}>{t(lang, delta > 12 ? "certForte" : delta > 6 ? "certMoyenne" : "certSerree")}</div>
                   </div>
                 </div>
+
+                {/* ═══ EASTER EGG — Chasse au Trésor : Bruno Fernandes vs Lamine Yamal ═══ */}
+                {(() => {
+                  const slugA = sel1?.slug || "";
+                  const slugB = sel2?.slug || "";
+                  const nameA = (sel1?.name || "").toLowerCase();
+                  const nameB = (sel2?.name || "").toLowerCase();
+                  const isBruno = (s, n) => s === "bruno-fernandes" || n.includes("bruno fernandes");
+                  const isYamal = (s, n) => s === "lamine-yamal" || n.includes("lamine yamal") || n.includes("yamal");
+                  const matched = (isBruno(slugA, nameA) && isYamal(slugB, nameB)) || (isBruno(slugB, nameB) && isYamal(slugA, nameA));
+                  if (!matched) return null;
+                  return (
+                    <div style={{
+                      marginTop: 14, padding: "14px 16px", borderRadius: 12,
+                      background: "linear-gradient(135deg, rgba(251,191,36,0.18), rgba(245,158,11,0.05))",
+                      border: "2px solid rgba(251,191,36,0.55)",
+                      boxShadow: "0 0 22px rgba(251,191,36,0.35), inset 0 1px 0 rgba(255,255,255,0.1)",
+                      position: "relative", overflow: "hidden",
+                      animation: "treasureEggPop 0.6s cubic-bezier(.2,.8,.3,1) both",
+                    }}>
+                      <style>{`
+                        @keyframes treasureEggPop {
+                          0% { opacity: 0; transform: scale(0.85); }
+                          60% { opacity: 1; transform: scale(1.04); }
+                          100% { opacity: 1; transform: scale(1); }
+                        }
+                        @keyframes treasureEggGoldShine {
+                          0% { background-position: 0% 50%; }
+                          100% { background-position: 200% 50%; }
+                        }
+                      `}</style>
+                      <div style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: 10, marginBottom: 8 }}>
+                        <span style={{ fontSize: 28 }}>🐐</span>
+                        <span style={{
+                          fontSize: 12, fontWeight: 900, letterSpacing: "0.2em",
+                          background: "linear-gradient(90deg,#FBBF24,#FCD34D,#F59E0B,#FCD34D,#FBBF24)",
+                          backgroundSize: "200% 100%",
+                          WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent", backgroundClip: "text",
+                          animation: "treasureEggGoldShine 3s linear infinite",
+                        }}>
+                          {lang === "fr" ? "FRAGMENT SECRET DÉBLOQUÉ" : "SECRET FRAGMENT UNLOCKED"}
+                        </span>
+                        <span style={{ fontSize: 28 }}>🐐</span>
+                      </div>
+                      <div style={{ textAlign: "center", fontSize: 12, color: "rgba(255,255,255,0.7)", marginBottom: 10, lineHeight: 1.5 }}>
+                        {lang === "fr"
+                          ? <>Tu as opposé le <b style={{color:"#FBBF24"}}>Maestro</b> au <b style={{color:"#FBBF24"}}>prodige catalan</b>. Bien joué Scout — voici le dernier fragment de la <b>Chasse au Trésor</b> :</>
+                          : <>You pitted the <b style={{color:"#FBBF24"}}>Maestro</b> against the <b style={{color:"#FBBF24"}}>Catalan prodigy</b>. Well played Scout — here is the last <b>Treasure Hunt</b> fragment:</>}
+                      </div>
+                      <div style={{ textAlign: "center" }}>
+                        <span style={{
+                          display: "inline-block",
+                          padding: "10px 32px", borderRadius: 10,
+                          background: "rgba(0,0,0,0.4)",
+                          border: "1px solid rgba(251,191,36,0.5)",
+                          fontFamily: "'DM Mono', monospace",
+                          fontSize: 36, fontWeight: 900, color: "#FBBF24",
+                          letterSpacing: "0.12em",
+                          boxShadow: "inset 0 1px 0 rgba(255,255,255,0.12)",
+                        }}>
+                          61
+                        </span>
+                      </div>
+                      <div style={{ textAlign: "center", fontSize: 10, color: "rgba(255,255,255,0.45)", marginTop: 10, fontStyle: "italic" }}>
+                        {lang === "fr"
+                          ? "Retourne sur la Chasse au Trésor pour valider ton Code Bruno 🎁"
+                          : "Head back to the Treasure Hunt to validate your Bruno Code 🎁"}
+                      </div>
+                    </div>
+                  );
+                })()}
                 <div style={{ fontSize: 12, color: "rgba(255,255,255,0.6)", marginTop: 12, lineHeight: 1.7, textAlign: "left" }}>
                   {(() => {
                     const __ = (fr, en) => lang === "en" ? en : fr;

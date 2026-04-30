@@ -197,6 +197,7 @@ export default function DbTab({ players, teams, fixtures, logos = {}, lang = "fr
   // Cycles definis par Damien selon les distributions Sorare reelles.
   const CYCLE     = [100, 80, 70, 60, 50, 40, 30, 10];               // L scores, score, ds, dsMatch
   const CYCLE_AA  = [100, 30, 25, 20, 15, 10, 5];                     // AA scores (max reel data ~37, on drop 40/35)
+  const CYCLE_AA40= [100, 35, 30, 25, 20, 15, 10, 5];                 // AA40 dedie : Damien veut 35 en premier clic
   const CYCLE_PCT = [100, 90, 80, 70, 60, 50, 30];                    // % (Titu, Reg10, CS, Titu10)
   const CYCLE_L10 = [100, 10, 20, 30, 40, 50, 60, 70, 80];            // <= pour CAP260 (ascending)
   const FILTER_CFG = {
@@ -206,7 +207,7 @@ export default function DbTab({ players, teams, fixtures, logos = {}, lang = "fr
     aa5:                { val: maxAA5,   set: setMaxAA5,   color: "#34D399", cycle: CYCLE_AA },
     l10:                { val: maxL10s,  set: setMaxL10s,  color: "#4ADE80", cycle: CYCLE_L10 },
     aa10:               { val: maxAA10,  set: setMaxAA10,  color: "#34D399", cycle: CYCLE_AA },
-    aa40:               { val: maxAA40,  set: setMaxAA40,  color: "#34D399", cycle: CYCLE_AA },
+    aa40:               { val: maxAA40,  set: setMaxAA40,  color: "#34D399", cycle: CYCLE_AA40 },
     l40:                { val: maxL40,   set: setMaxL40,   color: "#4ADE80" },
     reg10:              { val: maxReg10, set: setMaxReg10, color: "#60A5FA", cycle: CYCLE_PCT },
     titu_pct:           { val: maxTitu10,set: setMaxTitu10,color: "#FBBF24", cycle: CYCLE_PCT },

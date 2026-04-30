@@ -3064,15 +3064,33 @@ export default function StellarTab({ players, teams, fixtures, logos = {}, match
                           {ownedCard && ownedCard.totalBonus > 0 && (
                             <span style={{ position: "absolute", bottom: 34, right: 4, fontSize: 8, fontWeight: 900, color: "#4ADE80", background: "rgba(0,0,0,0.7)", borderRadius: 3, padding: "1px 4px", zIndex: 3 }}>+{ownedCard.totalBonus}%</span>
                           )}
-                          {/* D-Score / vrai score / DNP — bulle en bas a droite */}
-                          <div style={{ position: "absolute", bottom: 0, right: 8, zIndex: 2,
+                          {/* D-Score / vrai score / DNP — bulle en bas a droite.
+                              Pending (pas joue, pas DNP) : meme style que le score final
+                              (bg gradient + texte blanc) avec ring doré pointille en exterieur
+                              pour signaler "en attente" sans casser l'esthetique premium. */}
+                          <div style={{ position: "absolute", bottom: 1, right: 3, zIndex: 2,
                             width: 32, height: 32, borderRadius: "50%",
                             display: "flex", alignItems: "center", justifyContent: "center",
                             fontFamily: "'DM Mono',monospace", fontSize: 13, fontWeight: 900,
-                            color: hasRealScore ? "#fff" : isDNP ? "#fff" : dsColor(playerScore),
-                            background: hasRealScore ? dsBg(playerScore) : isDNP ? "rgba(127,29,29,0.9)" : "rgba(0,0,0,0.6)",
-                            border: hasRealScore ? "none" : isDNP ? "1px solid rgba(220,38,38,0.8)" : `1px dashed ${dsColor(playerScore)}60`,
-                            boxShadow: hasRealScore ? `0 0 8px ${dsColor(playerScore)}50` : isDNP ? "0 0 6px rgba(220,38,38,0.4)" : `0 0 6px ${dsColor(playerScore)}30`,
+                            color: "#fff",
+                            background: hasRealScore
+                              ? dsBg(playerScore)
+                              : isDNP
+                                ? "rgba(127,29,29,0.95)"
+                                : dsBg(playerScore),
+                            border: hasRealScore
+                              ? "none"
+                              : isDNP
+                                ? "1px solid rgba(220,38,38,0.8)"
+                                : "none",
+                            outline: hasRealScore || isDNP ? "none" : "2px dotted #FBBF24",
+                            outlineOffset: hasRealScore || isDNP ? 0 : 2,
+                            boxShadow: hasRealScore
+                              ? `0 0 8px ${dsColor(playerScore)}50`
+                              : isDNP
+                                ? "0 0 6px rgba(220,38,38,0.4)"
+                                : `0 0 12px rgba(251,191,36,0.6), 0 0 4px rgba(251,191,36,0.85), 0 0 8px ${dsColor(playerScore)}40, inset 0 1px 0 rgba(255,255,255,0.18)`,
+                            textShadow: "0 1px 2px rgba(0,0,0,0.55)",
                           }}>{playerScore}</div>
                         </div>
                         {/* Match info box — ordre HOME vs AWAY toujours respecte */}

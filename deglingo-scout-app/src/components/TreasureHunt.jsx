@@ -123,7 +123,7 @@ const T = {
   fr: {
     eyebrow: "🎁 GIVEAWAY",
     title: "La Chasse au Maestro",
-    subtitle: <>Résous les 5 énigmes cachées dans les onglets pour découvrir le <b style={{ color: "#FBBF24" }}>Code Bruno</b>.<br/>Tweete-le en RT pour gagner la carte <b style={{ color: "#FBBF24" }}>Bruno Fernandes Limited 1/1000</b> 🐐</>,
+    subtitle: <>Résous les 6 énigmes cachées sur le site pour découvrir le <b style={{ color: "#FBBF24" }}>Code Bruno</b>.<br/>Tweete-le en RT pour gagner la carte <b style={{ color: "#FBBF24" }}>Bruno Fernandes Limited #61</b> 🐐</>,
     progress: "énigmes résolues",
     enigmaPrefix: "ÉNIGME",
     placeholder: "Ta réponse…",
@@ -150,7 +150,7 @@ const T = {
   en: {
     eyebrow: "🎁 GIVEAWAY",
     title: "The Maestro Hunt",
-    subtitle: <>Solve the 5 riddles hidden in the tabs to uncover the <b style={{ color: "#FBBF24" }}>Bruno Code</b>.<br/>Tweet it as RT to win the <b style={{ color: "#FBBF24" }}>Bruno Fernandes Limited 1/1000</b> card 🐐</>,
+    subtitle: <>Solve the 6 riddles hidden across the site to uncover the <b style={{ color: "#FBBF24" }}>Bruno Code</b>.<br/>Tweet it as RT to win the <b style={{ color: "#FBBF24" }}>Bruno Fernandes Limited #61</b> card 🐐</>,
     progress: "riddles solved",
     enigmaPrefix: "RIDDLE",
     placeholder: "Your answer…",

@@ -598,6 +598,60 @@ export default function TreasureHunt({ open, onClose, lang: langProp = "fr" }) {
           {/* Final code section — visible quand allDone */}
           {allDone && (
             <div style={{ marginTop: 10, padding: "12px 14px", borderRadius: 12, background: "linear-gradient(135deg, rgba(251,191,36,0.12), rgba(74,222,128,0.06))", border: "1px solid rgba(251,191,36,0.4)" }}>
+              {/* ═══ Bandeau POSITION en gros — 1er = trophy, autres = position ═══ */}
+              {position != null && (
+                <div style={{
+                  marginBottom: 10, padding: "12px 14px", borderRadius: 10,
+                  background: position === 1
+                    ? "linear-gradient(135deg, rgba(251,191,36,0.35), rgba(245,158,11,0.18))"
+                    : "linear-gradient(135deg, rgba(167,139,250,0.18), rgba(139,92,246,0.08))",
+                  border: position === 1
+                    ? "2px solid rgba(251,191,36,0.7)"
+                    : "1px solid rgba(167,139,250,0.4)",
+                  boxShadow: position === 1
+                    ? "0 0 30px rgba(251,191,36,0.6), inset 0 1px 0 rgba(255,255,255,0.15)"
+                    : "0 0 16px rgba(167,139,250,0.25)",
+                  textAlign: "center",
+                  animation: position === 1 ? "treasurePulse 1.6s ease-in-out infinite" : undefined,
+                }}>
+                  {position === 1 ? (
+                    <>
+                      <div style={{ fontSize: 44, marginBottom: 2, lineHeight: 1 }}>🏆</div>
+                      <div style={{
+                        fontSize: 12, fontWeight: 900, letterSpacing: "0.22em",
+                        background: "linear-gradient(90deg,#FBBF24,#FCD34D,#F59E0B,#FCD34D,#FBBF24)",
+                        backgroundSize: "200% 100%",
+                        WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent", backgroundClip: "text",
+                        animation: "treasureGoldShine 3s linear infinite", marginBottom: 4,
+                      }}>{lang === "en" ? "VICTORY — 1ST PLACE" : "VICTOIRE — 1ER ARRIVÉ"}</div>
+                      <div style={{ fontSize: 26, fontWeight: 900, color: "#fff", lineHeight: 1.1, marginBottom: 4 }}>
+                        {lang === "en" ? "🐐 THE BRUNO IS YOURS 🐐" : "🐐 LE BRUNO EST POUR TOI 🐐"}
+                      </div>
+                      <div style={{ fontSize: 11, color: "rgba(255,255,255,0.75)", fontStyle: "italic" }}>
+                        {lang === "en"
+                          ? "Tweet your win with the 2 screenshots below to claim the card."
+                          : "Tweete ta victoire avec les 2 screenshots ci-dessous pour réclamer la carte."}
+                      </div>
+                    </>
+                  ) : (
+                    <>
+                      <div style={{ fontSize: 9, fontWeight: 800, color: "#A78BFA", letterSpacing: "0.18em", marginBottom: 3 }}>
+                        {lang === "en" ? "TOO LATE" : "TROP TARD"}
+                      </div>
+                      <div style={{ fontSize: 18, fontWeight: 900, color: "#fff", lineHeight: 1.2, marginBottom: 3 }}>
+                        {lang === "en" ? <>You are the <span style={{color:"#FBBF24"}}>{position}{position===2?"nd":position===3?"rd":"th"}</span> to crack the code</>
+                                       : <>Tu es le <span style={{color:"#FBBF24"}}>{position}{position===2?"e":position===3?"e":"e"}</span> à avoir trouvé</>}
+                      </div>
+                      <div style={{ fontSize: 11, color: "rgba(255,255,255,0.65)", fontStyle: "italic" }}>
+                        {lang === "en"
+                          ? "Only the 1st wins the card — but you can still tweet to share the experience 🎁"
+                          : "Seul le 1er gagne la carte — mais tu peux quand même tweeter pour partager 🎁"}
+                      </div>
+                    </>
+                  )}
+                </div>
+              )}
+
               <div style={{ textAlign: "center", marginBottom: 10 }}>
                 <div style={{ fontSize: 10, fontWeight: 800, color: "#4ADE80", letterSpacing: "0.16em", marginBottom: 3 }}>
                   {tr.doneEyebrow}

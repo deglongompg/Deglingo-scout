@@ -63,21 +63,18 @@ const ENIGMAS = [
   {
     id: 4, icon: "📋",
     tab: { fr: "Mes Teams", en: "My Teams" },
-    title: { fr: "L'éclair suprême", en: "The supreme bolt" },
+    title: { fr: "La couleur du roi", en: "The king's color" },
     intro: {
-      fr: "L'éclair stellaire culmine vers un trésor. Trouve son sommet en billets verts.",
-      en: "The Stellar bolt soars to a treasure. Find its peak in green bills.",
+      fr: "Sur les saved teams, le score brille comme un soleil. De quel métal précieux est son écrin ?",
+      en: "On the saved teams, the score shines like a sun. What precious metal frames it?",
     },
     question: {
-      fr: "La fusée Stellar a un palier ultime, le plus haut, brillant en lettres dorées. Un nombre précieux suivi de trois zéros. Donne-le entier, sans symbole, sans espace.",
-      en: "The Stellar rocket has an ultimate tier, the highest one, glowing in golden letters. A precious number followed by three zeros. Give it whole — no symbol, no space.",
+      fr: "Va dans Mes Teams. Sur chaque carte sauvegardée, regarde le cercle qui encadre le D-Score (ou le Score) du joueur en bas à droite. Quel est le nom de cette couleur précieuse, en un seul mot ?",
+      en: "Go to My Teams. On each saved card, look at the circle that frames the player's D-Score (or Score) at the bottom right. What's the name of this precious color, in a single word?",
     },
-    hint: {
-      fr: "Indice : Mes Teams → sauvegarde au moins une équipe Stellar (sinon la jauge n'apparaît pas) → tout en haut de la jauge dorée tu lis le palier max.",
-      en: "Hint: My Teams → save at least one Stellar team (else the gauge stays hidden) → at the very top of the golden gauge you'll read the max tier.",
-    },
-    answer: "1000",
-    altAnswers: ["1 000", "1.000"],
+    answer: "or",
+    altAnswers: ["gold", "GOLD", "Or", "OR", "Gold", "doré", "dore", "doree", "dorée", "golden"],
+    displayFragment: "GOLD",
   },
   {
     id: 5, icon: "🥊",
@@ -174,7 +171,7 @@ const T = {
   },
 };
 
-const FINAL_CODE = "GOAT-SMETS-BUILD-1000-61-8";
+const FINAL_CODE = "GOAT-SMETS-BUILD-GOLD-61-8";
 const STORAGE_KEY = "deglingo_treasure_v2";
 
 const LAUNCH_TWEET = {

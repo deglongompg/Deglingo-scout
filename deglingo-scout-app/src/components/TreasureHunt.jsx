@@ -136,7 +136,7 @@ const T = {
     tweetFooter: <>Le tirage au sort aura lieu parmi les RT du Tweet de lancement.<br/>Bonne chance ! 🎁</>,
     reset: "Recommencer la chasse",
     closeAria: "Fermer",
-    tweetText: (code) => `J'ai trouvé le Code Bruno : ${code}\n\n🐐 Bruno Fernandes Limited 61/1000 à gagner avec @DeglingoMPG sur @Sorare\n\nRT pour participer ! 🎁\n\nLance la chasse → deglingosorare.com\n\n#ChasseDeglingo`,
+    tweetText: (code) => `J'ai trouvé le Code Bruno : ${code}\n\n🐐 Bruno Fernandes Limited #61 à gagner avec @DeglingoMPG sur @Sorare\n\nRT pour participer ! 🎁\n\nLance la chasse → deglingosorare.com\n\n#ChasseDeglingo`,
     launchEyebrow: "📢 Lance la chasse",
     launchText: "Tweete pour annoncer que tu participes — fais découvrir le site à tes followers !",
     launchBtn: "𝕏 Tweeter le lancement",
@@ -163,7 +163,7 @@ const T = {
     tweetFooter: <>The draw will happen among the RTs of the launch tweet.<br/>Good luck! 🎁</>,
     reset: "Restart the hunt",
     closeAria: "Close",
-    tweetText: (code) => `I just cracked the Bruno Code: ${code}\n\n🐐 Bruno Fernandes Limited 61/1000 up for grabs with @DeglingoMPG on @Sorare\n\nRT to enter the giveaway! 🎁\n\nStart the hunt → deglingosorare.com\n\n#ChasseDeglingo`,
+    tweetText: (code) => `I just cracked the Bruno Code: ${code}\n\n🐐 Bruno Fernandes Limited #61 up for grabs with @DeglingoMPG on @Sorare\n\nRT to enter the giveaway! 🎁\n\nStart the hunt → deglingosorare.com\n\n#ChasseDeglingo`,
     launchEyebrow: "📢 Start the hunt",
     launchText: "Tweet that you're joining — make your followers discover the site!",
     launchBtn: "𝕏 Tweet the launch",
@@ -180,8 +180,8 @@ const FINAL_CODE = "GOAT-15-5-1000-61-8";
 const STORAGE_KEY = "deglingo_treasure_v2";
 
 const LAUNCH_TWEET = {
-  fr: `🎁 Je me lance dans la Chasse au Trésor @DeglingoMPG 🐐\n\nUne carte Bruno Fernandes Limited 61/1000 @Sorare attend son scout dans l'ombre...\n\n⚡ Viens vite rejoindre l'aventure avant que le trésor ne soit trouvé.\n\ndeglingosorare.com\n\n#ChasseDeglingo`,
-  en: `🎁 I'm entering the Treasure Hunt by @DeglingoMPG 🐐\n\nA Bruno Fernandes Limited 61/1000 @Sorare card waits for its scout in the shadows...\n\n⚡ Hurry — join the adventure before the treasure is found.\n\ndeglingosorare.com\n\n#ChasseDeglingo`,
+  fr: `🎁 Je me lance dans la Chasse au Trésor @DeglingoMPG 🐐\n\nUne carte Bruno Fernandes Limited #61 @Sorare attend son scout dans l'ombre...\n\n⚡ Viens vite rejoindre l'aventure avant que le trésor ne soit trouvé.\n\ndeglingosorare.com\n\n#ChasseDeglingo`,
+  en: `🎁 I'm entering the Treasure Hunt by @DeglingoMPG 🐐\n\nA Bruno Fernandes Limited #61 @Sorare card waits for its scout in the shadows...\n\n⚡ Hurry — join the adventure before the treasure is found.\n\ndeglingosorare.com\n\n#ChasseDeglingo`,
 };
 
 const norm = (s) => (s || "").trim().toLowerCase().replace(/\s+/g, "");

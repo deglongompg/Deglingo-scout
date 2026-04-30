@@ -114,7 +114,7 @@ const T = {
   fr: {
     eyebrow: "🎁 GIVEAWAY",
     title: "La Chasse au Maestro",
-    subtitle: <>Résous les 6 énigmes cachées sur le site pour découvrir le <b style={{ color: "#FBBF24" }}>Code Bruno</b>.<br/>Tweete-le en RT pour gagner la carte <b style={{ color: "#FBBF24" }}>Bruno Fernandes Limited #61</b> 🐐</>,
+    subtitle: <>Résous les 6 énigmes cachées sur le site avant tout le monde.<br/><b style={{ color: "#FBBF24" }}>Le tout premier à finir</b> gagne la carte <b style={{ color: "#FBBF24" }}>Bruno Fernandes Limited #61</b> 🐐</>,
     progress: "énigmes résolues",
     enigmaPrefix: "ÉNIGME",
     placeholder: "Ta réponse…",
@@ -124,13 +124,15 @@ const T = {
     doneEyebrow: "✅ CHASSE TERMINÉE",
     doneTitle: "Voici le Code Bruno 🐐",
     tweetBtn: "𝕏 Tweeter le Code Bruno",
-    tweetFooter: <>Le tirage au sort aura lieu parmi les RT du Tweet de lancement.<br/>Bonne chance ! 🎁</>,
+    tweetFooter: <><b style={{color:"#FBBF24"}}>Seul le tout premier à terminer la chasse</b> remporte la carte Bruno Fernandes 🐐<br/>Tu peux tweeter même sans avoir gagné — partage l'expérience !</>,
     reset: "Recommencer la chasse",
     closeAria: "Fermer",
     tweetText: (pos) => {
-      const ordinal = pos == null ? "" : pos === 1 ? "1er" : pos === 2 ? "2e" : pos === 3 ? "3e" : `${pos}e`;
-      const posLine = pos ? `J'ai résolu la Chasse au Trésor en ${ordinal} position 🐐` : `J'ai résolu la Chasse au Trésor 🐐`;
-      return `🎁 ${posLine}\n\nLet's go ! Bruno Fernandes Limited #61 @Sorare est peut-être pour moi !\n\nRT pour participer avec @DeglingoMPG → deglingosorare.com\n\n#ChasseDeglingo`;
+      // Seul le 1er gagne — message triomphant. Les autres : message fair-play.
+      if (pos === 1) {
+        return `🏆 J'AI GAGNÉ LA CHASSE AU TRÉSOR @DeglingoMPG 🐐\n\nPremier à boucler les 6 énigmes ! La carte Bruno Fernandes Limited #61 @Sorare est pour moi 🎁\n\ndeglingosorare.com\n\n#ChasseDeglingo`;
+      }
+      return `🎁 J'ai résolu la Chasse au Trésor de @DeglingoMPG, c'était top sur son site ! 🐐\n\nMerci pour le jeu, vivement la suite !\n\ndeglingosorare.com\n\n#ChasseDeglingo`;
     },
     launchEyebrow: "📢 Lance la chasse",
     launchText: "Tweete pour annoncer que tu participes — fais découvrir le site à tes followers !",
@@ -145,7 +147,7 @@ const T = {
   en: {
     eyebrow: "🎁 GIVEAWAY",
     title: "The Maestro Hunt",
-    subtitle: <>Solve the 6 riddles hidden across the site to uncover the <b style={{ color: "#FBBF24" }}>Bruno Code</b>.<br/>Tweet it as RT to win the <b style={{ color: "#FBBF24" }}>Bruno Fernandes Limited #61</b> card 🐐</>,
+    subtitle: <>Solve the 6 riddles hidden across the site before anyone else.<br/><b style={{ color: "#FBBF24" }}>Only the very first to finish</b> wins the <b style={{ color: "#FBBF24" }}>Bruno Fernandes Limited #61</b> card 🐐</>,
     progress: "riddles solved",
     enigmaPrefix: "RIDDLE",
     placeholder: "Your answer…",
@@ -155,13 +157,15 @@ const T = {
     doneEyebrow: "✅ HUNT COMPLETE",
     doneTitle: "Here is the Bruno Code 🐐",
     tweetBtn: "𝕏 Tweet the Bruno Code",
-    tweetFooter: <>The draw will happen among the RTs of the launch tweet.<br/>Good luck! 🎁</>,
+    tweetFooter: <><b style={{color:"#FBBF24"}}>Only the very first to finish the hunt</b> wins the Bruno Fernandes card 🐐<br/>You can still tweet even if you didn't win — share the experience!</>,
     reset: "Restart the hunt",
     closeAria: "Close",
     tweetText: (pos) => {
-      const ordinal = pos == null ? "" : pos === 1 ? "1st" : pos === 2 ? "2nd" : pos === 3 ? "3rd" : `${pos}th`;
-      const posLine = pos ? `I cracked the Treasure Hunt in ${ordinal} place 🐐` : `I cracked the Treasure Hunt 🐐`;
-      return `🎁 ${posLine}\n\nLet's go! Bruno Fernandes Limited #61 @Sorare might be mine!\n\nRT to enter with @DeglingoMPG → deglingosorare.com\n\n#ChasseDeglingo`;
+      // Only the 1st wins — triumphant message. Others : fair-play.
+      if (pos === 1) {
+        return `🏆 I WON THE TREASURE HUNT @DeglingoMPG 🐐\n\nFirst to crack all 6 riddles! The Bruno Fernandes Limited #61 @Sorare card is mine 🎁\n\ndeglingosorare.com\n\n#ChasseDeglingo`;
+      }
+      return `🎁 I cracked the Treasure Hunt by @DeglingoMPG — top experience on his site! 🐐\n\nThanks for the game, can't wait for the next one!\n\ndeglingosorare.com\n\n#ChasseDeglingo`;
     },
     launchEyebrow: "📢 Start the hunt",
     launchText: "Tweet that you're joining — make your followers discover the site!",

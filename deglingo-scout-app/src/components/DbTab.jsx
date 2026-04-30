@@ -476,6 +476,47 @@ export default function DbTab({ players, teams, fixtures, logos = {}, lang = "fr
               minWidth: 38,
             }}
           >U23{u23Only && <span className="db-league-underline" aria-hidden />}</button>
+          {/* Reset all filters — visible seulement si au moins un filtre est actif */}
+          {(() => {
+            const hasActive = leagues.size > 0 || pos !== "ALL" || club !== "ALL" || arch !== "ALL"
+              || u23Only || selectedDate !== null || (search && search.length > 0)
+              || maxDs < 100 || maxL2 < 100 || maxL5 < 100 || maxL10s < 100 || maxScore < 100
+              || maxTitu < 100 || maxAA2 < 100 || maxAA5 < 100 || maxAA10 < 100 || maxAA40 < 100
+              || maxL40 < 100 || maxReg10 < 100 || maxTitu10 < 100 || maxCS < 100;
+            if (!hasActive) return null;
+            const resetAll = () => {
+              setLeagues(new Set()); setPos("ALL"); setClub("ALL"); setArch("ALL");
+              setU23Only(false); setSelectedDate(null); setSearch("");
+              setMaxDs(100); setMaxL2(100); setMaxL5(100); setMaxL10s(100); setMaxScore(100);
+              setMaxTitu(100); setMaxAA2(100); setMaxAA5(100); setMaxAA10(100); setMaxAA40(100);
+              setMaxL40(100); setMaxReg10(100); setMaxTitu10(100); setMaxCS(100);
+              setVisibleCount(30);
+            };
+            return (
+              <>
+                <span aria-hidden style={{ width: 1, alignSelf: "stretch", margin: "2px 4px", background: "rgba(255,255,255,0.08)" }} />
+                <button
+                  onClick={resetAll}
+                  className="db-league-btn is-active"
+                  title={lang === "fr" ? "Réinitialiser tous les filtres (ligues, poste, club, archétype, U23, date, recherche, et tous les filtres colonnes)" : "Reset all filters"}
+                  style={{
+                    "--lg-c-strong":      "#EF444438",
+                    "--lg-c-mid":         "#EF444418",
+                    "--lg-c-soft":        "#EF444410",
+                    "--lg-c-border":      "#EF444455",
+                    "--lg-c-glow":        "#EF444440",
+                    "--lg-c-halo":        "#EF444430",
+                    "--lg-c-bottom":      "#EF444420",
+                    "--lg-c-text-shadow": "#EF444480",
+                    "--lg-c-strong-solid": "#EF4444",
+                  }}
+                >
+                  <span style={{ fontSize: 12, lineHeight: 1, fontWeight: 900 }}>✕</span>
+                  <span>{lang === "fr" ? "Reset" : "Reset"}</span>
+                </button>
+              </>
+            );
+          })()}
         </div>
         <select value={club} onChange={e => { setClub(e.target.value); setVisibleCount(30); }} style={sel({ flex: "1 1 0", minWidth: 0 })}>
           <option value="ALL">{t(lang,"club")}</option>

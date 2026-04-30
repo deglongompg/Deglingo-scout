@@ -238,15 +238,21 @@ export default function StellarSavedTeamCard({ team, players = [], logos = {}, c
               <div className="circle-premium__score">{playerScore}</div>
             </div>
           ) : (
+            // Pending : style premium full bg + ring or pointille (cf. ProSavedTeamCard)
             <div style={{
-              position: "absolute", bottom: 0, right: 8, zIndex: 2,
+              position: "absolute", bottom: 1, right: 3, zIndex: 2,
               width: 32, height: 32, borderRadius: "50%",
               display: "flex", alignItems: "center", justifyContent: "center",
               fontFamily: "'DM Mono',monospace", fontSize: 13, fontWeight: 900,
-              color: isDNP ? "#fff" : dsColor(playerScore),
-              background: isDNP ? "rgba(127,29,29,0.9)" : "rgba(0,0,0,0.6)",
-              border: isDNP ? "1px solid rgba(220,38,38,0.8)" : `1px dashed ${dsColor(playerScore)}60`,
-              boxShadow: isDNP ? "0 0 6px rgba(220,38,38,0.4)" : `0 0 6px ${dsColor(playerScore)}30`,
+              color: "#fff",
+              background: isDNP ? "rgba(127,29,29,0.95)" : dsBg(playerScore),
+              border: isDNP ? "1px solid rgba(220,38,38,0.8)" : "none",
+              outline: isDNP ? "none" : "2px dotted #FBBF24",
+              outlineOffset: isDNP ? 0 : 2,
+              boxShadow: isDNP
+                ? "0 0 6px rgba(220,38,38,0.4)"
+                : `0 0 12px rgba(251,191,36,0.6), 0 0 4px rgba(251,191,36,0.85), 0 0 8px ${dsColor(playerScore)}40, inset 0 1px 0 rgba(255,255,255,0.18)`,
+              textShadow: "0 1px 2px rgba(0,0,0,0.55)",
             }}>{playerScore}</div>
           )}
         </div>

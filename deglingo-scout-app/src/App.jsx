@@ -382,7 +382,7 @@ export default function App() {
       <button
         className="treasure-float-premium"
         onClick={() => setShowTreasure(true)}
-        title="Chasse au Trésor — Bruno Fernandes Limited 1/1000 à gagner"
+        title={lang === "en" ? "Treasure Hunt — Bruno Fernandes Limited #61 to win" : "Chasse au Trésor — Bruno Fernandes Limited #61 à gagner"}
         style={{
           position: "fixed", bottom: 18, right: 18, zIndex: 99,
           padding: "8px 16px 8px 8px", borderRadius: 999,
@@ -449,7 +449,7 @@ export default function App() {
           animation: "treasureCtaShineText 4s linear infinite",
           fontWeight: 900,
         }}>
-          Chasse au Trésor
+          {lang === "en" ? "Treasure Hunt" : "Chasse au Trésor"}
         </span>
       </button>
       <style>{`

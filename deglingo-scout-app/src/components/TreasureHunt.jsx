@@ -140,6 +140,12 @@ const T = {
     launchEyebrow: "📢 Lance la chasse",
     launchText: "Tweete pour annoncer que tu participes — fais découvrir le site à tes followers !",
     launchBtn: "𝕏 Tweeter le lancement",
+    gateEyebrow: "🔐 PORTE DU MAESTRO",
+    gateTitle: "Annonce ta quête",
+    gateText: "Le Maestro n'ouvre ses portes qu'à ceux qui annoncent leur quête au monde. Tweete ton lancement pour débloquer les 6 énigmes.",
+    gateBtn: "Tweeter et débloquer la chasse",
+    gateFooter: "(le tweet ouvre dans un nouvel onglet — la chasse se débloquera dès que tu auras lancé l'envoi)",
+    relaunch: "Re-tweeter le lancement",
   },
   en: {
     eyebrow: "🎁 GIVEAWAY",
@@ -161,6 +167,12 @@ const T = {
     launchEyebrow: "📢 Start the hunt",
     launchText: "Tweet that you're joining — make your followers discover the site!",
     launchBtn: "𝕏 Tweet the launch",
+    gateEyebrow: "🔐 THE MAESTRO'S GATE",
+    gateTitle: "Announce your quest",
+    gateText: "The Maestro only opens his gate to those who declare their quest to the world. Tweet your launch to unlock the 6 riddles.",
+    gateBtn: "Tweet and unlock the hunt",
+    gateFooter: "(the tweet opens in a new tab — the hunt unlocks as soon as you trigger the share)",
+    relaunch: "Re-tweet the launch",
   },
 };
 
@@ -199,6 +211,14 @@ export default function TreasureHunt({ open, onClose, lang: langProp = "fr" }) {
     } catch {}
     return {};
   });
+  // Gate viral : les enigmes ne s'ouvrent qu'apres tweet de lancement
+  const [launched, setLaunched] = useState(() => {
+    try {
+      const raw = localStorage.getItem(STORAGE_KEY);
+      if (raw) return !!JSON.parse(raw).launched;
+    } catch {}
+    return false;
+  });
   const [currentIdx, setCurrentIdx] = useState(0);
   const [errorShake, setErrorShake] = useState(null);
   const [showHint, setShowHint] = useState(false);
@@ -211,9 +231,9 @@ export default function TreasureHunt({ open, onClose, lang: langProp = "fr" }) {
   // Persiste le progress dans localStorage
   useEffect(() => {
     try {
-      localStorage.setItem(STORAGE_KEY, JSON.stringify({ solved, inputs }));
+      localStorage.setItem(STORAGE_KEY, JSON.stringify({ solved, inputs, launched }));
     } catch {}
-  }, [solved, inputs]);
+  }, [solved, inputs, launched]);
 
   if (!open) return null;
 
@@ -237,7 +257,16 @@ export default function TreasureHunt({ open, onClose, lang: langProp = "fr" }) {
     setInputs({});
     setCurrentIdx(0);
     setShowHint(false);
+    setLaunched(false);
     try { localStorage.removeItem(STORAGE_KEY); } catch {}
+  };
+
+  const triggerLaunch = () => {
+    // Mark as launched + open Twitter
+    setLaunched(true);
+    try {
+      window.open(launchTweetUrl, "_blank", "noopener,noreferrer");
+    } catch {}
   };
 
   const allDone = solved >= ENIGMAS.length;
@@ -404,46 +433,69 @@ export default function TreasureHunt({ open, onClose, lang: langProp = "fr" }) {
           {tr.subtitle}
         </div>
 
-        {/* ═══ BANNIERE TWEET DE LANCEMENT — visible quand on n'a pas encore termine ═══ */}
-        {!allDone && (
-          <a
-            href={launchTweetUrl}
-            target="_blank"
-            rel="noopener noreferrer"
-            style={{
-              display: "flex", alignItems: "center", gap: 10,
-              padding: "8px 12px", borderRadius: 10,
-              background: "linear-gradient(135deg, rgba(29,161,242,0.15), rgba(13,139,217,0.08))",
-              border: "1px solid rgba(29,161,242,0.4)",
-              boxShadow: "0 0 14px rgba(29,161,242,0.25)",
-              textDecoration: "none", marginBottom: 10,
-              transition: "transform 0.15s, box-shadow 0.15s",
-            }}
-            onMouseEnter={e => { e.currentTarget.style.transform = "translateY(-1px)"; e.currentTarget.style.boxShadow = "0 0 22px rgba(29,161,242,0.45)"; }}
-            onMouseLeave={e => { e.currentTarget.style.transform = "translateY(0)"; e.currentTarget.style.boxShadow = "0 0 14px rgba(29,161,242,0.25)"; }}
-          >
-            <span style={{ fontSize: 18, flexShrink: 0 }}>𝕏</span>
-            <div style={{ flex: 1, minWidth: 0 }}>
-              <div style={{ fontSize: 9, fontWeight: 800, color: "#1DA1F2", letterSpacing: "0.14em", marginBottom: 1 }}>
-                {tr.launchEyebrow}
-              </div>
-              <div style={{ fontSize: 11, color: "rgba(255,255,255,0.8)", lineHeight: 1.35 }}>
-                {tr.launchText}
+        {/* ═══ GATE — PORTE DU MAESTRO : faut tweeter pour debloquer ═══ */}
+        {!launched && (
+          <div className="treasure-scroll" style={{ display: "flex", alignItems: "center", justifyContent: "center" }}>
+            <div style={{
+              width: "100%", padding: "26px 22px",
+              borderRadius: 16,
+              background: "linear-gradient(135deg, rgba(29,161,242,0.12) 0%, rgba(167,139,250,0.08) 50%, rgba(29,161,242,0.12) 100%)",
+              border: "1px solid rgba(29,161,242,0.45)",
+              boxShadow: "0 0 30px rgba(29,161,242,0.3), inset 0 1px 0 rgba(255,255,255,0.08)",
+              textAlign: "center", position: "relative", overflow: "hidden",
+            }}>
+              {/* Halo en fond */}
+              <span aria-hidden style={{
+                position: "absolute", top: "-40%", left: "50%", transform: "translateX(-50%)",
+                width: 320, height: 320, borderRadius: "50%",
+                background: "radial-gradient(circle, rgba(29,161,242,0.25), transparent 60%)",
+                pointerEvents: "none", filter: "blur(8px)",
+              }} />
+              <div style={{ position: "relative", zIndex: 2 }}>
+                <div style={{ fontSize: 36, marginBottom: 6 }}>🔐</div>
+                <div style={{ fontSize: 10, fontWeight: 800, color: "#1DA1F2", letterSpacing: "0.2em", marginBottom: 8 }}>
+                  {tr.gateEyebrow}
+                </div>
+                <div style={{
+                  fontSize: 22, fontWeight: 900, marginBottom: 10, letterSpacing: "0.02em",
+                  background: "linear-gradient(90deg,#A7F3D0,#FFFFFF,#A7F3D0,#6EE7B7)",
+                  backgroundSize: "200% 100%",
+                  WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent", backgroundClip: "text",
+                  animation: "treasureCtaShineText 4s linear infinite",
+                }}>
+                  {tr.gateTitle}
+                </div>
+                <div style={{ fontSize: 12.5, color: "rgba(255,255,255,0.7)", lineHeight: 1.5, marginBottom: 18, maxWidth: 460, margin: "0 auto 18px" }}>
+                  {tr.gateText}
+                </div>
+                <button
+                  onClick={triggerLaunch}
+                  style={{
+                    padding: "13px 28px", borderRadius: 999, border: "none",
+                    background: "linear-gradient(135deg, #1DA1F2 0%, #0d8bd9 50%, #1DA1F2 100%)",
+                    backgroundSize: "200% 100%",
+                    color: "#fff", fontWeight: 900, fontSize: 14, letterSpacing: "0.05em",
+                    cursor: "pointer", fontFamily: "Outfit",
+                    boxShadow: "0 0 26px rgba(29,161,242,0.55), 0 6px 18px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.25)",
+                    display: "inline-flex", alignItems: "center", gap: 10,
+                    transition: "transform 0.2s, box-shadow 0.2s",
+                  }}
+                  onMouseEnter={e => { e.currentTarget.style.transform = "translateY(-2px) scale(1.03)"; e.currentTarget.style.boxShadow = "0 0 40px rgba(29,161,242,0.85), 0 6px 18px rgba(0,0,0,0.4)"; }}
+                  onMouseLeave={e => { e.currentTarget.style.transform = "translateY(0) scale(1)"; e.currentTarget.style.boxShadow = "0 0 26px rgba(29,161,242,0.55), 0 6px 18px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.25)"; }}
+                >
+                  <span style={{ fontSize: 18 }}>𝕏</span>
+                  <span>{tr.gateBtn}</span>
+                </button>
+                <div style={{ fontSize: 10, color: "rgba(255,255,255,0.4)", marginTop: 14, fontStyle: "italic" }}>
+                  {tr.gateFooter}
+                </div>
               </div>
             </div>
-            <span style={{
-              padding: "5px 12px", borderRadius: 7,
-              background: "linear-gradient(135deg,#1DA1F2,#0d8bd9)",
-              color: "#fff", fontWeight: 900, fontSize: 11, letterSpacing: "0.04em",
-              flexShrink: 0, boxShadow: "0 0 10px rgba(29,161,242,0.4)",
-              whiteSpace: "nowrap",
-            }}>
-              {tr.launchBtn}
-            </span>
-          </a>
+          </div>
         )}
 
-        {/* Enigmas — accordion : active en grand, locked/solved en mini-row */}
+        {/* Enigmas — accordion : active en grand, locked/solved en mini-row (visible APRES gate) */}
+        {launched && (
         <div className="treasure-scroll">
           {ENIGMAS.map((eg, i) => {
             const isSolved = i < solved;
@@ -548,6 +600,7 @@ export default function TreasureHunt({ open, onClose, lang: langProp = "fr" }) {
             </div>
           )}
         </div>
+        )}
 
         {/* Reset link */}
         {solved > 0 && !allDone && (

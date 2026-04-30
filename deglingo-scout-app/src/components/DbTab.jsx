@@ -655,6 +655,7 @@ export default function DbTab({ players, teams, fixtures, logos = {}, lang = "fr
                   {statCols.length === 0 && fc("aa5")}
                   {fc("l10")}
                   {statCols.length === 0 && fc("aa10")}
+                  {fd()}{fd()}{/* DOM, EXT — pas de filtres mais placeholders pour aligner */}
                   {fc("reg10")}
                   {fc("titu_pct")}
                   {fc("l40")}

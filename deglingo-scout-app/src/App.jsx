@@ -21,7 +21,6 @@ const TABS = [
 
 export default function App() {
   const [showTreasure, setShowTreasure] = useState(false);
-  const [showEgg, setShowEgg] = useState(false);
   const [showLanding, setShowLanding] = useState(() => {
     // Skip landing if direct tab URL param, hash, or OAuth return
     const p = new URLSearchParams(window.location.search).get("tab");
@@ -377,112 +376,7 @@ export default function App() {
         marginTop: 40,
       }}>
         Deglingo Scout · deglingosorare.com · {players.length} joueurs · {new Set(players.map(p => p.league).filter(Boolean)).size} ligues
-        {/* ═══ EASTER EGG — Eclair dore cache pour la 6e enigme de la chasse au tresor ═══ */}
-        {" "}
-        <span
-          onClick={() => setShowEgg(true)}
-          title=""
-          aria-hidden
-          style={{
-            display: "inline-block", marginLeft: 6, cursor: "pointer", userSelect: "none",
-            color: "rgba(251,191,36,0.55)",
-            animation: "eggSparkle 6s ease-in-out infinite",
-            textShadow: "0 0 6px rgba(251,191,36,0.35)",
-            fontSize: 11,
-          }}
-        >⚡</span>
       </footer>
-      <style>{`
-        @keyframes eggSparkle {
-          0%, 80%, 100% { opacity: 0.18; transform: scale(1); }
-          85%, 95%      { opacity: 1;    transform: scale(1.4); text-shadow: 0 0 14px rgba(251,191,36,0.9); }
-        }
-      `}</style>
-
-      {/* ═══ EASTER EGG OVERLAY — fragment 8 (numero de Bruno) pour la 6e enigme ═══ */}
-      {showEgg && (
-        <div
-          onClick={() => setShowEgg(false)}
-          style={{
-            position: "fixed", inset: 0, zIndex: 99999,
-            background: "rgba(2,1,15,0.96)", backdropFilter: "blur(14px)",
-            display: "flex", alignItems: "center", justifyContent: "center",
-            padding: 20, animation: "eggOverlayFade 0.4s ease-out",
-          }}
-        >
-          <style>{`
-            @keyframes eggOverlayFade { 0%{opacity:0} 100%{opacity:1} }
-            @keyframes eggBurst {
-              0% { opacity: 0; transform: scale(0.4) rotate(-10deg); }
-              60% { opacity: 1; transform: scale(1.06) rotate(2deg); }
-              100% { opacity: 1; transform: scale(1) rotate(0deg); }
-            }
-            @keyframes eggGoldShine { 0%{background-position:0% 50%} 100%{background-position:200% 50%} }
-            @keyframes eggSpin { from{transform:rotate(0)} to{transform:rotate(360deg)} }
-          `}</style>
-          <div onClick={e => e.stopPropagation()} style={{
-            position: "relative",
-            padding: "32px 36px",
-            borderRadius: 20,
-            background: "linear-gradient(180deg, rgba(40,15,80,0.96), rgba(8,3,28,0.98))",
-            border: "2px solid rgba(251,191,36,0.6)",
-            boxShadow: "0 0 50px rgba(251,191,36,0.5), 0 0 110px rgba(251,191,36,0.2)",
-            animation: "eggBurst 0.6s cubic-bezier(.2,.8,.3,1) both",
-            textAlign: "center", color: "#fff", fontFamily: "Outfit",
-            maxWidth: 460,
-          }}>
-            <div aria-hidden style={{ position: "absolute", top: -22, left: -22, fontSize: 32, animation: "eggSpin 6s linear infinite" }}>⚡</div>
-            <div aria-hidden style={{ position: "absolute", top: -22, right: -22, fontSize: 32, animation: "eggSpin 6s linear infinite reverse" }}>✨</div>
-            <div aria-hidden style={{ position: "absolute", bottom: -22, left: -22, fontSize: 32, animation: "eggSpin 6s linear infinite reverse" }}>✨</div>
-            <div aria-hidden style={{ position: "absolute", bottom: -22, right: -22, fontSize: 32, animation: "eggSpin 6s linear infinite" }}>⚡</div>
-
-            <div style={{ fontSize: 56, marginBottom: 6 }}>🐐</div>
-            <div style={{
-              fontSize: 12, fontWeight: 800, letterSpacing: "0.2em",
-              background: "linear-gradient(90deg,#FBBF24,#FCD34D,#F59E0B,#FCD34D,#FBBF24)",
-              backgroundSize: "200% 100%",
-              WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent", backgroundClip: "text",
-              animation: "eggGoldShine 3s linear infinite", marginBottom: 10,
-            }}>FRAGMENT SECRET TROUVÉ</div>
-            <div style={{ fontSize: 18, fontWeight: 900, marginBottom: 6 }}>
-              {lang === "en" ? "You found the hidden lightning ⚡" : "Tu as trouvé l'éclair caché ⚡"}
-            </div>
-            <div style={{ fontSize: 12, color: "rgba(255,255,255,0.6)", marginBottom: 18, lineHeight: 1.45 }}>
-              {lang === "en"
-                ? <>Voici ton fragment final pour le <b style={{color:"#FBBF24"}}>Code Bruno</b>:</>
-                : <>Voici ton fragment final pour le <b style={{color:"#FBBF24"}}>Code Bruno</b> :</>}
-            </div>
-            <div style={{
-              display: "inline-block",
-              padding: "12px 36px", borderRadius: 12,
-              background: "linear-gradient(135deg, rgba(251,191,36,0.18), rgba(245,158,11,0.08))",
-              border: "1px solid rgba(251,191,36,0.6)",
-              fontFamily: "'DM Mono', monospace",
-              fontSize: 38, fontWeight: 900, color: "#FBBF24",
-              letterSpacing: "0.1em",
-              boxShadow: "inset 0 1px 0 rgba(255,255,255,0.15), 0 0 20px rgba(251,191,36,0.35)",
-              marginBottom: 16,
-            }}>8</div>
-            <div style={{ fontSize: 10, color: "rgba(255,255,255,0.5)", fontStyle: "italic", marginBottom: 14 }}>
-              {lang === "en"
-                ? "The number worn by the Maestro at Old Trafford 🐐"
-                : "Le numéro que porte le Maestro à Old Trafford 🐐"}
-            </div>
-            <button
-              onClick={() => setShowEgg(false)}
-              style={{
-                padding: "9px 22px", borderRadius: 10,
-                background: "linear-gradient(135deg,#FBBF24,#F59E0B)",
-                border: "none", color: "#1a0f00", fontWeight: 900, fontSize: 12,
-                cursor: "pointer", letterSpacing: "0.04em",
-                boxShadow: "0 0 14px rgba(251,191,36,0.4)",
-              }}
-            >
-              {lang === "en" ? "Continue the hunt" : "Continuer la chasse"}
-            </button>
-          </div>
-        </div>
-      )}
 
       {/* ═══ Bouton flottant Chasse au Trésor — Glass Ice Green Premium ═══ */}
       <button

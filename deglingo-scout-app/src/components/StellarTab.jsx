@@ -1022,6 +1022,10 @@ export default function StellarTab({ players, teams, fixtures, logos = {}, match
   const [myCardsMode, setMyCardsMode] = useState(!!_cachedCards && _cachedCards.cards?.length > 0);
   const [bonusEnabled, setBonusEnabled] = useState(false); // Toggle bonus ON/OFF (OFF par défaut)
 
+  // ═══ EASTER EGG — fragment 8 cache dans le calendrier (chasse au tresor) ═══
+  // Le logo de Manchester United dans le match du 3 mai est remplace par un ⚡ cliquable.
+  const [showEgg, setShowEgg] = useState(false);
+
   // Map playerSlug → meilleure carte Stellar (rarity order: limited > rare > super_rare > unique)
   const RARITY_ORDER = { unique: 4, super_rare: 3, rare: 2, limited: 1, common: 0 };
   const sorareCardMap = useMemo(() => {
@@ -2224,7 +2228,21 @@ export default function StellarTab({ players, teams, fixtures, logos = {}, match
                                 <span className="st-match-time-inline" style={{ visibility: "hidden", fontSize: 8, fontWeight: 900, color: "#A78BFA", fontFamily: "'DM Mono',monospace", flexShrink: 0 }}>{g.time}</span>
                               )}
                               <span style={{ fontSize: 8, fontWeight: 800, color: lgColor, minWidth: 32, paddingRight: 3, flexShrink: 0 }}>{f.league === "Bundes" ? "BL" : f.league}</span>
-                              <img src={logos[f.home] ? `/data/logos/${logos[f.home]}` : ""} alt="" style={{ width: 12, height: 12, objectFit: "contain", visibility: logos[f.home] ? "visible" : "hidden" }} />
+                              {/* ═══ EASTER EGG : Manchester United le 3 mai → eclair dore ═══ */}
+                              {(/manchester united/i.test(f.home || "") && f.date === "2026-05-03") ? (
+                                <span
+                                  onClick={(e) => { e.stopPropagation(); setShowEgg(true); }}
+                                  title=""
+                                  style={{
+                                    width: 12, height: 12, display: "inline-flex", alignItems: "center", justifyContent: "center",
+                                    cursor: "pointer", color: "rgba(251,191,36,0.7)", fontSize: 12, lineHeight: 1,
+                                    animation: "stellarEggSparkle 5s ease-in-out infinite",
+                                    textShadow: "0 0 5px rgba(251,191,36,0.5)",
+                                  }}
+                                >⚡</span>
+                              ) : (
+                                <img src={logos[f.home] ? `/data/logos/${logos[f.home]}` : ""} alt="" style={{ width: 12, height: 12, objectFit: "contain", visibility: logos[f.home] ? "visible" : "hidden" }} />
+                              )}
                               <span className="mc-home" onClick={() => hasHomePlayers && toggleSide("home")} style={{ fontSize: 9, fontWeight: scoreStr ? 700 : 600, color: isOpenHome ? "#C4B5FD" : (scoreStr && sc && sc.home > sc.away ? "#C4B5FD" : "#fff"), cursor: hasHomePlayers ? "pointer" : "default", textDecoration: isOpenHome ? "underline" : "none", transition: "color 0.15s", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>{sn(f.home)}</span>
                               {scoreStr ? (
                                 <span className="mc-vs" style={{ fontSize: 11, fontWeight: 900, color: "#fff", fontFamily: "'DM Mono',monospace", textAlign: "center", whiteSpace: "nowrap", letterSpacing: "-0.5px" }}>{scoreStr}</span>
@@ -3204,6 +3222,95 @@ export default function StellarTab({ players, teams, fixtures, logos = {}, match
         <div style={{ textAlign: "center", padding: "50px 0", color: "rgba(255,255,255,0.2)" }}>
           <div style={{ fontSize: 40, marginBottom: 8 }}>✨</div>
           <div style={{ fontSize: 14 }}>{S.stellarSelectDay}</div>
+        </div>
+      )}
+
+      {/* ═══ EASTER EGG OVERLAY — fragment 8 (chasse au tresor) ═══ */}
+      <style>{`
+        @keyframes stellarEggSparkle {
+          0%, 78%, 100% { opacity: 0.25; transform: scale(1); }
+          85%, 92%      { opacity: 1;    transform: scale(1.4); text-shadow: 0 0 12px rgba(251,191,36,0.95); }
+        }
+        @keyframes stellarEggFade { 0%{opacity:0} 100%{opacity:1} }
+        @keyframes stellarEggBurst {
+          0% { opacity: 0; transform: scale(0.4) rotate(-10deg); }
+          60% { opacity: 1; transform: scale(1.06) rotate(2deg); }
+          100% { opacity: 1; transform: scale(1) rotate(0deg); }
+        }
+        @keyframes stellarEggGoldShine { 0%{background-position:0% 50%} 100%{background-position:200% 50%} }
+        @keyframes stellarEggSpin { from{transform:rotate(0)} to{transform:rotate(360deg)} }
+      `}</style>
+      {showEgg && (
+        <div
+          onClick={() => setShowEgg(false)}
+          style={{
+            position: "fixed", inset: 0, zIndex: 99999,
+            background: "rgba(2,1,15,0.96)", backdropFilter: "blur(14px)",
+            display: "flex", alignItems: "center", justifyContent: "center",
+            padding: 20, animation: "stellarEggFade 0.4s ease-out",
+          }}
+        >
+          <div onClick={e => e.stopPropagation()} style={{
+            position: "relative",
+            padding: "32px 36px",
+            borderRadius: 20,
+            background: "linear-gradient(180deg, rgba(40,15,80,0.96), rgba(8,3,28,0.98))",
+            border: "2px solid rgba(251,191,36,0.6)",
+            boxShadow: "0 0 50px rgba(251,191,36,0.5), 0 0 110px rgba(251,191,36,0.2)",
+            animation: "stellarEggBurst 0.6s cubic-bezier(.2,.8,.3,1) both",
+            textAlign: "center", color: "#fff", fontFamily: "Outfit",
+            maxWidth: 460,
+          }}>
+            <div aria-hidden style={{ position: "absolute", top: -22, left: -22, fontSize: 32, animation: "stellarEggSpin 6s linear infinite" }}>⚡</div>
+            <div aria-hidden style={{ position: "absolute", top: -22, right: -22, fontSize: 32, animation: "stellarEggSpin 6s linear infinite reverse" }}>✨</div>
+            <div aria-hidden style={{ position: "absolute", bottom: -22, left: -22, fontSize: 32, animation: "stellarEggSpin 6s linear infinite reverse" }}>✨</div>
+            <div aria-hidden style={{ position: "absolute", bottom: -22, right: -22, fontSize: 32, animation: "stellarEggSpin 6s linear infinite" }}>⚡</div>
+
+            <div style={{ fontSize: 56, marginBottom: 6 }}>🐐</div>
+            <div style={{
+              fontSize: 12, fontWeight: 800, letterSpacing: "0.2em",
+              background: "linear-gradient(90deg,#FBBF24,#FCD34D,#F59E0B,#FCD34D,#FBBF24)",
+              backgroundSize: "200% 100%",
+              WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent", backgroundClip: "text",
+              animation: "stellarEggGoldShine 3s linear infinite", marginBottom: 10,
+            }}>{lang === "en" ? "SECRET FRAGMENT FOUND" : "FRAGMENT SECRET TROUVÉ"}</div>
+            <div style={{ fontSize: 18, fontWeight: 900, marginBottom: 6 }}>
+              {lang === "en" ? "You found the hidden lightning ⚡" : "Tu as trouvé l'éclair caché ⚡"}
+            </div>
+            <div style={{ fontSize: 12, color: "rgba(255,255,255,0.6)", marginBottom: 18, lineHeight: 1.45 }}>
+              {lang === "en"
+                ? <>Here is your final fragment for the <b style={{color:"#FBBF24"}}>Bruno Code</b>:</>
+                : <>Voici ton fragment final pour le <b style={{color:"#FBBF24"}}>Code Bruno</b> :</>}
+            </div>
+            <div style={{
+              display: "inline-block",
+              padding: "12px 36px", borderRadius: 12,
+              background: "linear-gradient(135deg, rgba(251,191,36,0.18), rgba(245,158,11,0.08))",
+              border: "1px solid rgba(251,191,36,0.6)",
+              fontFamily: "'DM Mono', monospace",
+              fontSize: 38, fontWeight: 900, color: "#FBBF24",
+              letterSpacing: "0.1em",
+              boxShadow: "inset 0 1px 0 rgba(255,255,255,0.15), 0 0 20px rgba(251,191,36,0.35)",
+              marginBottom: 16,
+            }}>8</div>
+            <div style={{ fontSize: 10, color: "rgba(255,255,255,0.5)", fontStyle: "italic", marginBottom: 14 }}>
+              {lang === "en"
+                ? "The number worn by the Maestro at Old Trafford 🐐"
+                : "Le numéro que porte le Maestro à Old Trafford 🐐"}
+            </div>
+            <button
+              onClick={() => setShowEgg(false)}
+              style={{
+                padding: "9px 22px", borderRadius: 10,
+                background: "linear-gradient(135deg,#FBBF24,#F59E0B)",
+                border: "none", color: "#1a0f00", fontWeight: 900, fontSize: 12,
+                cursor: "pointer", letterSpacing: "0.04em",
+                boxShadow: "0 0 14px rgba(251,191,36,0.4)",
+              }}
+            >
+              {lang === "en" ? "Continue the hunt" : "Continuer la chasse"}
+            </button>
+          </div>
         </div>
       )}
     </div>

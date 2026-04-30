@@ -92,19 +92,15 @@ const ENIGMAS = [
   },
   {
     id: 6, icon: "⚡",
-    tab: { fr: "Easter Egg", en: "Easter Egg" },
-    title: { fr: "L'éclair caché", en: "The hidden lightning" },
+    tab: { fr: "Sorare Stellar", en: "Sorare Stellar" },
+    title: { fr: "L'éclair du Maestro", en: "The Maestro's lightning" },
     intro: {
-      fr: "Quelque part sur le site, un éclair doré scintille discrètement. Trouve-le — il garde le numéro du Maestro.",
-      en: "Somewhere on the site, a golden bolt gleams discreetly. Find it — it holds the Maestro's number.",
+      fr: "Le Maestro a glissé son numéro porte-bonheur quelque part dans l'agenda stellaire...",
+      en: "The Maestro slipped his lucky number somewhere in the Stellar agenda...",
     },
     question: {
-      fr: "Un éclair doré (⚡) clignote très, très subtilement quelque part dans l'application. Pas dans la landing — il faut entrer dans l'app. Quand tu cliqueras dessus, il te dévoilera un nombre. Quel est-il ?",
-      en: "A golden lightning (⚡) twinkles very, very subtly somewhere in the application. Not on the landing — you must enter the app. Click it, and it will reveal a number. What is it?",
-    },
-    hint: {
-      fr: "Indice : descends, descends... tout en bas. Le pied de la maison cache un secret. Et si rien ne brille, attends quelques secondes — l'éclair ne se montre que par éclats.",
-      en: "Hint: scroll down, down... to the very bottom. The foot of the house hides a secret. And if nothing shines, wait a few seconds — the bolt only flashes in bursts.",
+      fr: "Va dans Sorare Stellar. Ouvre le calendrier des matchs et cherche celui qui se joue à Old Trafford. À la place du blason habituel, un éclair doré attend. Clique-le, il te révèlera le numéro fétiche du Maestro.",
+      en: "Open Sorare Stellar. Browse the match calendar and find the one played at Old Trafford. Instead of the usual crest, a golden bolt awaits. Click it — it will reveal the Maestro's lucky number.",
     },
     answer: "8",
   },

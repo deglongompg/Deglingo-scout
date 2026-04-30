@@ -44,7 +44,7 @@ APISPORTS_COMPETITIONS = {
     "PL":     (39,  2025),   # Premier League
     "Liga":   (140, 2025),   # La Liga
     "Bundes": (78,  2025),   # Bundesliga
-    "MLS":    (253, 2025),   # MLS (saison cal en, 2025 = saison courante US)
+    "MLS":    (253, 2026),   # MLS (saison cal en, 2026 = saison courante US)
     "JPL":    (144, 2025),   # Jupiler Pro League (Belgique)
     "Ere":    (88,  2025),   # Eredivisie (Pays-Bas)
 }
@@ -141,24 +141,19 @@ def fetch_standings_apisports(league_id, season, our_league):
     # Strategie selon le format :
     # - Belgique (4 groupes : Championship Round 6, Relegation Round 4, Pro League 16, Qualifying 6)
     #   -> on prend le plus gros = saison reguliere complete (Pro League 16)
-    # - MLS (2 conferences Eastern 15 + Western 15) -> fusion + reranking par points overall
-    if len(standings_groups) == 2 and len(standings_groups[0]) == len(standings_groups[1]):
-        # Probablement 2 conferences MLS -> fusion + tri par points
-        merged = standings_groups[0] + standings_groups[1]
-        merged.sort(key=lambda r: (-r.get("points", 0), -r.get("goalsDiff", 0), -((r.get("all") or {}).get("goals", {}) or {}).get("for", 0)))
-        # Reassign rank overall (1 .. 30)
-        for i, row in enumerate(merged, 1):
-            row["rank"] = i
-        table = merged
-    else:
-        table = max(standings_groups, key=len)
-    rows = []
-    for r2 in table:
+    # - MLS (2 conferences Eastern 15 + Western 15) -> CONSERVE les 2 conferences avec champ `conference`
+    #   (Damien veut voir Est/Ouest separes, pas un classement fusionne)
+    is_mls_conferences = (
+        len(standings_groups) == 2
+        and len(standings_groups[0]) == len(standings_groups[1])
+        and our_league == "MLS"
+    )
+    def row_to_dict(r2, conference=None):
         team = r2.get("team") or {}
         api_name = team.get("name") or "?"
         all_stats = r2.get("all") or {}
         goals = all_stats.get("goals") or {}
-        rows.append({
+        out = {
             "rank":   r2.get("rank"),
             "club":   to_sorare_canonical(api_name),
             "club_api": api_name,
@@ -173,9 +168,38 @@ def fetch_standings_apisports(league_id, season, our_league):
             "pts":    r2.get("points",       0),
             # API-Football donne form en string ex "WLLDW" (5 derniers, sans virgules)
             "form":   ",".join(list(r2.get("form") or "")) if r2.get("form") else "",
-        })
-    print(f"OK ({len(rows)} clubs)")
-    return rows
+        }
+        if conference:
+            out["conference"] = conference
+        return out
+
+    if is_mls_conferences:
+        # Detection conf via le champ "group" sur la 1ere equipe de chaque groupe
+        # API-Football : group = "Western Conference" ou "Eastern Conference"
+        rows = []
+        for grp in standings_groups:
+            if not grp:
+                continue
+            grp_label = (grp[0].get("group") or "").strip()
+            if "West" in grp_label:
+                conf = "West"
+            elif "East" in grp_label:
+                conf = "East"
+            else:
+                conf = grp_label or "?"
+            for r2 in grp:
+                rows.append(row_to_dict(r2, conference=conf))
+        # Tri global pour avoir une liste exploitable :
+        # 1. par conference (East d'abord, puis West)
+        # 2. dans chaque conf, par rank ascendant
+        rows.sort(key=lambda x: (0 if x.get("conference") == "East" else 1, x.get("rank") or 999))
+        print(f"OK ({len(rows)} clubs, 2 conferences East/West preservees)")
+        return rows
+    else:
+        table = max(standings_groups, key=len)
+        rows = [row_to_dict(r2) for r2 in table]
+        print(f"OK ({len(rows)} clubs)")
+        return rows
 
 
 def main():

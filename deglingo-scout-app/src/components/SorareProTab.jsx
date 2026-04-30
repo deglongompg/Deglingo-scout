@@ -1918,33 +1918,32 @@ export default function SorareProTab({ players, teams, fixtures, standings = nul
                   {lang === "fr" ? "CLASSEMENT" : "STANDINGS"}
                 </div>
                 <div style={{ fontSize: 7, fontWeight: 700, color: "rgba(255,255,255,0.35)", fontFamily: "'DM Mono',monospace" }}>
-                  {league === "L1" ? "LIGUE 1" : league === "PL" ? "PREMIER LEAGUE" : league === "Liga" ? "LA LIGA" : league === "Bundes" ? "BUNDESLIGA" : league === "JPL" ? "JUPILER PRO LEAGUE" : league === "Ere" ? "EREDIVISIE" : league}
+                  {league === "L1" ? "LIGUE 1" : league === "PL" ? "PREMIER LEAGUE" : league === "Liga" ? "LA LIGA" : league === "Bundes" ? "BUNDESLIGA" : league === "JPL" ? "JUPILER PRO LEAGUE" : league === "Ere" ? "EREDIVISIE" : league === "MLS" ? "MAJOR LEAGUE SOCCER" : league}
                 </div>
               </div>
-              {/* Header */}
-              <div style={{ display: "grid", gridTemplateColumns: "14px 14px 1fr 16px 16px 16px 22px 22px", columnGap: 3, alignItems: "center", padding: "0 2px 3px", borderBottom: "1px solid rgba(255,255,255,0.08)", fontSize: 6, fontWeight: 800, color: "rgba(255,255,255,0.35)", fontFamily: "'DM Mono',monospace", letterSpacing: "0.04em" }}>
-                <div style={{ textAlign: "center" }}>#</div>
-                <div></div>
-                <div>{lang === "fr" ? "CLUB" : "CLUB"}</div>
-                <div style={{ textAlign: "right" }}>MJ</div>
-                <div style={{ textAlign: "right" }}>BP</div>
-                <div style={{ textAlign: "right" }}>BC</div>
-                <div style={{ textAlign: "right" }}>+/-</div>
-                <div style={{ textAlign: "right" }}>PTS</div>
-              </div>
-              {/* Rows — pas de scroll : on rend tout en dur */}
-              <div style={{ marginTop: 2 }}>
-                {currentStandings.map((row) => {
+              {/* Helper : rend l'header + la liste de rows pour une conference (ou la ligue entiere) */}
+              {(() => {
+                const renderHeader = () => (
+                  <div style={{ display: "grid", gridTemplateColumns: "14px 14px 1fr 16px 16px 16px 22px 22px", columnGap: 3, alignItems: "center", padding: "0 2px 3px", borderBottom: "1px solid rgba(255,255,255,0.08)", fontSize: 6, fontWeight: 800, color: "rgba(255,255,255,0.35)", fontFamily: "'DM Mono',monospace", letterSpacing: "0.04em" }}>
+                    <div style={{ textAlign: "center" }}>#</div>
+                    <div></div>
+                    <div>{lang === "fr" ? "CLUB" : "CLUB"}</div>
+                    <div style={{ textAlign: "right" }}>MJ</div>
+                    <div style={{ textAlign: "right" }}>BP</div>
+                    <div style={{ textAlign: "right" }}>BC</div>
+                    <div style={{ textAlign: "right" }}>+/-</div>
+                    <div style={{ textAlign: "right" }}>PTS</div>
+                  </div>
+                );
+                const renderRow = (row) => {
                   const isHi = highlightedClubs.has(normClub(row.club));
                   const tier = tierOf(row.rank);
                   const tierColor = tier ? TIER_COLORS[tier] : "rgba(255,255,255,0.5)";
                   const nextTier = tierOf(row.rank + 1);
                   const isLastInTier = !!tier && tier !== nextTier;
                   const gd = row.gd > 0 ? `+${row.gd}` : `${row.gd}`;
-                  // Tout en padding/border longhand pour eviter le warning React
-                  // "mixing shorthand and non-shorthand styling" (cf bug rerender).
                   return (
-                    <div key={row.rank} title={tier ? tierLabels[tier] : undefined} style={{
+                    <div key={`${row.conference || ""}-${row.rank}`} title={tier ? tierLabels[tier] : undefined} style={{
                       display: "grid", gridTemplateColumns: "14px 14px 1fr 16px 16px 16px 22px 22px", columnGap: 3, alignItems: "center",
                       paddingTop: 3, paddingRight: 2, paddingBottom: isLastInTier ? 4 : 3, paddingLeft: 2,
                       borderRadius: 3,
@@ -1958,7 +1957,6 @@ export default function SorareProTab({ players, teams, fixtures, standings = nul
                       marginBottom: isLastInTier ? 2 : 0,
                       transition: "background 0.15s",
                     }}>
-                      {/* Pastille rang : carre 14x14 avec chiffre centre via flex */}
                       <div style={{ width: 14, height: 14, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 8, fontWeight: 900, color: tier ? "#fff" : "rgba(255,255,255,0.55)", background: tier ? tierColor : "transparent", fontFamily: "'DM Mono',monospace", borderRadius: 3, lineHeight: 1 }}>{row.rank}</div>
                       {row.logo
                         ? <img src={row.logo} alt="" style={{ width: 14, height: 14, objectFit: "contain" }} onError={(e) => { e.target.style.display = "none"; }} />
@@ -1967,13 +1965,47 @@ export default function SorareProTab({ players, teams, fixtures, standings = nul
                       <div style={{ fontSize: 8, fontWeight: 600, color: "rgba(255,255,255,0.4)", fontFamily: "'DM Mono',monospace", textAlign: "right" }}>{row.played}</div>
                       <div style={{ fontSize: 8, fontWeight: 600, color: "rgba(255,255,255,0.4)", fontFamily: "'DM Mono',monospace", textAlign: "right" }}>{row.gf}</div>
                       <div style={{ fontSize: 8, fontWeight: 600, color: "rgba(255,255,255,0.4)", fontFamily: "'DM Mono',monospace", textAlign: "right" }}>{row.ga}</div>
-                      {/* Difference de but : neutre (pas vert/rouge) — les points priment */}
                       <div style={{ fontSize: 8, fontWeight: 600, color: "rgba(255,255,255,0.4)", fontFamily: "'DM Mono',monospace", textAlign: "right" }}>{gd}</div>
                       <div style={{ fontSize: 9, fontWeight: 900, color: "#fff", fontFamily: "'DM Mono',monospace", textAlign: "right" }}>{row.pts}</div>
                     </div>
                   );
-                })}
-              </div>
+                };
+
+                // MLS : 2 conferences East/West affichees en sections separees
+                if (league === "MLS") {
+                  const east = currentStandings.filter(r => r.conference === "East");
+                  const west = currentStandings.filter(r => r.conference === "West");
+                  const renderSection = (rows, label, color) => (
+                    <div style={{ marginTop: 6 }}>
+                      <div style={{ display: "flex", alignItems: "center", gap: 5, marginBottom: 4, padding: "3px 4px", borderRadius: 4, background: `${color}15`, border: `1px solid ${color}40` }}>
+                        <span style={{ width: 6, height: 6, borderRadius: "50%", background: color, flexShrink: 0, boxShadow: `0 0 6px ${color}` }} />
+                        <span style={{ fontSize: 8, fontWeight: 900, color, letterSpacing: "0.08em", fontFamily: "'DM Mono',monospace" }}>{label}</span>
+                        <span style={{ fontSize: 6, fontWeight: 700, color: "rgba(255,255,255,0.35)", marginLeft: "auto", fontFamily: "'DM Mono',monospace" }}>{rows.length} clubs</span>
+                      </div>
+                      {renderHeader()}
+                      <div style={{ marginTop: 2 }}>
+                        {rows.map(renderRow)}
+                      </div>
+                    </div>
+                  );
+                  return (
+                    <>
+                      {renderSection(east, lang === "fr" ? "CONFERENCE EST" : "EASTERN CONFERENCE", "#22D3EE")}
+                      {renderSection(west, lang === "fr" ? "CONFERENCE OUEST" : "WESTERN CONFERENCE", "#F472B6")}
+                    </>
+                  );
+                }
+
+                // Autres ligues : tableau unique inchange
+                return (
+                  <>
+                    {renderHeader()}
+                    <div style={{ marginTop: 2 }}>
+                      {currentStandings.map(renderRow)}
+                    </div>
+                  </>
+                );
+              })()}
               {/* Legende compact des tiers — uniquement si la ligue a un mapping */}
               {tiers && (
                 <div style={{ marginTop: 8, paddingTop: 6, borderTop: "1px solid rgba(255,255,255,0.06)", display: "flex", flexDirection: "column", gap: 2 }}>

@@ -194,13 +194,15 @@ export default function DbTab({ players, teams, fixtures, logos = {}, lang = "fr
     else { setSortKey(key); setSortDir(-1); }
   };
 
-  // Cycle filter ordonne du seuil le plus EXIGEANT au moins exigeant pour ">=" (recherche
-  // des meilleurs joueurs). Premier clic = ">=80" (elite), puis assoupli a chaque clic.
-  // L10 utilise une cycle dediee dans l'ordre INVERSE (low scores prioritaires pour CAP260).
-  const CYCLE     = [100, 80, 70, 60, 50, 40, 30, 20, 10];   // L scores, score, ds, dsMatch
-  const CYCLE_AA  = [100, 25, 20, 15, 10, 5];                 // AA scores (echelle plus serree)
+  // Cycles calibrees aux distributions reelles des stats Sorare.
+  // L scores (L2/L5/L40, score, ds) : top players ~40-50, moyenne ~30. Premier clic = ">=40".
+  // AA scores : top ~25, moyenne ~10. Premier clic = ">=15".
+  // Pourcentages (Titu, Reg10, CS, Titu10) : large echelle 0-100. Premier clic = ">=90".
+  // L10 (<= pour CAP260) : on cherche des LOW scorers donc cycle ASCENDING premier clic = "<=10".
+  const CYCLE     = [100, 40, 35, 30, 25, 20, 15, 10];        // L scores, score, ds, dsMatch
+  const CYCLE_AA  = [100, 15, 10, 8, 5, 3];                   // AA scores
   const CYCLE_PCT = [100, 90, 80, 70, 60, 50, 40, 30];        // % (Titu, Reg10, CS)
-  const CYCLE_L10 = [100, 50, 40, 30, 20, 10];                // <= pour CAP260 (low L10 = elites)
+  const CYCLE_L10 = [100, 10, 20, 30, 40, 50, 60];            // <= pour CAP260 (low L10 d'abord)
   const FILTER_CFG = {
     l2:                 { val: maxL2,    set: setMaxL2,    color: "#4ADE80" },
     aa2:                { val: maxAA2,   set: setMaxAA2,   color: "#34D399", cycle: CYCLE_AA },

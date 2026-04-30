@@ -44,20 +44,21 @@ const ENIGMAS = [
   {
     id: 3, icon: "✨",
     tab: { fr: "Sorare Stellar", en: "Sorare Stellar" },
-    title: { fr: "Le pacte de l'étoile", en: "The pact of the star" },
+    title: { fr: "Le sortilège de l'algo", en: "The algo spell" },
     intro: {
-      fr: "Stellar te demande un pacte précis. Combien de pierres pour bâtir le temple ?",
-      en: "Stellar asks for a precise pact. How many stones to build the temple?",
+      fr: "Connecte-toi à ta réserve Sorare. L'algo magique attend ton invocation...",
+      en: "Connect to your Sorare wallet. The magic algorithm awaits your invocation...",
     },
     question: {
-      fr: "L'étoile filante n'attend que tes choix. Sur le pré stellaire, compte tous les emplacements vides où poser une carte — du gardien jusqu'au joker.",
-      en: "The shooting star awaits your picks. On the Stellar pitch, count every empty slot where a card may rest — from keeper to joker.",
+      fr: "Connecte ta carte Sorare dans Stellar pour charger ton coffre. Une fois tes cartes en main, un bouton magique scintille au-dessus du pitch — il bâtit AUTOMATIQUEMENT ton équipe optimale du jour. Quel est son nom exact ?",
+      en: "Connect your Sorare account in Stellar to load your vault. Once your cards are loaded, a magic button shimmers above the pitch — it AUTOMATICALLY builds your optimal team of the day. What is its exact name?",
     },
-    hint: {
-      fr: "Indice : ouvre Sorare Stellar. Tu vois un pitch vide avec des emplacements (GK, DEF, MIL, ATT, FLEX). Compte-les.",
-      en: "Hint: open Sorare Stellar. You see an empty pitch with slots (GK, DEF, MIL, ATT, FLEX). Count them.",
-    },
-    answer: "5",
+    answer: "Création Stellaire",
+    altAnswers: [
+      "creation stellaire", "Creation Stellaire", "création stellaire",
+      "Stellar Build", "stellar build", "stellarbuild", "creationstellaire",
+    ],
+    displayFragment: "BUILD",
   },
   {
     id: 4, icon: "📋",
@@ -173,7 +174,7 @@ const T = {
   },
 };
 
-const FINAL_CODE = "GOAT-SMETS-5-1000-61-8";
+const FINAL_CODE = "GOAT-SMETS-BUILD-1000-61-8";
 const STORAGE_KEY = "deglingo_treasure_v2";
 
 const LAUNCH_TWEET = {
@@ -181,7 +182,9 @@ const LAUNCH_TWEET = {
   en: `🎁 I'm entering the Treasure Hunt by @DeglingoMPG 🐐\n\nA Bruno Fernandes Limited #61 @Sorare card waits for its scout in the shadows...\n\n⚡ Hurry — join the adventure before the treasure is found.\n\ndeglingosorare.com\n\n#ChasseDeglingo`,
 };
 
-const norm = (s) => (s || "").trim().toLowerCase().replace(/\s+/g, "");
+const norm = (s) => (s || "")
+  .normalize("NFD").replace(/[̀-ͯ]/g, "")  // retire accents (combining marks)
+  .trim().toLowerCase().replace(/\s+/g, "");
 const checkAnswer = (input, enigma) => {
   const ni = norm(input);
   if (ni === norm(enigma.answer)) return true;
@@ -516,7 +519,7 @@ export default function TreasureHunt({ open, onClose, lang: langProp = "fr" }) {
                       {title}
                     </span>
                   </div>
-                  {isSolved && <span className="treasure-fragment">{eg.answer}</span>}
+                  {isSolved && <span className="treasure-fragment">{eg.displayFragment || eg.answer}</span>}
                 </div>
               );
             }

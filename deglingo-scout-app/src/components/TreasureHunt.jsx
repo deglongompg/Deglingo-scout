@@ -92,15 +92,12 @@ const ENIGMAS = [
   },
   {
     id: 6, icon: "⚡",
-    tab: { fr: "Sorare Stellar", en: "Sorare Stellar" },
+    tab: { fr: "Mystère", en: "Mystery" },
     title: { fr: "L'éclair du Maestro", en: "The Maestro's lightning" },
-    intro: {
-      fr: "Le Maestro a glissé son numéro porte-bonheur quelque part dans l'agenda stellaire...",
-      en: "The Maestro slipped his lucky number somewhere in the Stellar agenda...",
-    },
+    intro: { fr: "", en: "" },
     question: {
-      fr: "Va dans Sorare Stellar. Ouvre le calendrier des matchs et cherche celui qui se joue à Old Trafford. À la place du blason habituel, un éclair doré attend. Clique-le, il te révèlera le numéro fétiche du Maestro.",
-      en: "Open Sorare Stellar. Browse the match calendar and find the one played at Old Trafford. Instead of the usual crest, a golden bolt awaits. Click it — it will reveal the Maestro's lucky number.",
+      fr: "Le Maestro a caché un éclair sur le site qui t'ouvrira le chemin vers le trésor.",
+      en: "The Maestro has hidden a lightning bolt on the site that will open the path to the treasure.",
     },
     answer: "8",
   },
@@ -563,9 +560,11 @@ export default function TreasureHunt({ open, onClose, lang: langProp = "fr" }) {
                     </div>
                   </div>
                 </div>
-                <div style={{ fontSize: 11, color: "rgba(255,255,255,0.5)", marginBottom: 6, fontStyle: "italic", lineHeight: 1.4 }}>
-                  {intro}
-                </div>
+                {intro && (
+                  <div style={{ fontSize: 11, color: "rgba(255,255,255,0.5)", marginBottom: 6, fontStyle: "italic", lineHeight: 1.4 }}>
+                    {intro}
+                  </div>
+                )}
                 <div style={{ fontSize: 12.5, color: "#fff", marginBottom: 8, lineHeight: 1.5 }}>
                   {question}
                 </div>

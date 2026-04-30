@@ -11,6 +11,7 @@ import { t } from "./utils/i18n";
 const TABS = [
   { id: "db",      label: "Database",       icon: "📊", color: "#06B6D4" }, // cyan analytics
   { id: "pro",     label: "Sorare Pro",     icon: "⚙️", color: "#F59E0B" }, // gold premium
+  { id: "mission", label: "Mission Pro",    icon: "🎯", color: "#F97316", disabled: true }, // orange — soon
   { id: "stellar", label: "Sorare Stellar", icon: "✨", color: "#A78BFA" }, // violet holo
   { id: "recap",   label: "Mes Teams",      icon: "📋", color: "#C0C0C0" }, // silver gestion
   { id: "fight",   label: "Fight",          icon: "🥊", color: "#EF4444" }, // red combat
@@ -23,14 +24,14 @@ export default function App() {
     const p = new URLSearchParams(window.location.search).get("tab");
     const h = window.location.hash.replace("#", "");
     const rt = sessionStorage.getItem("sorare_return_tab");
-    return !["db","fight","reco","stellar","pro","recap"].includes(p) && !["db","fight","reco","stellar","pro","recap"].includes(h) && !rt;
+    return !["db","fight","reco","stellar","pro","recap","mission"].includes(p) && !["db","fight","reco","stellar","pro","recap","mission"].includes(h) && !rt;
   });
   const [tab, setTab] = useState(() => {
     const p = new URLSearchParams(window.location.search).get("tab");
     const h = window.location.hash.replace("#", "");
     const rt = sessionStorage.getItem("sorare_return_tab");
     if (rt) sessionStorage.removeItem("sorare_return_tab");
-    const valid = ["db","fight","reco","stellar","pro","recap"];
+    const valid = ["db","fight","reco","stellar","pro","recap","mission"];
     return valid.includes(rt) ? rt : valid.includes(p) ? p : valid.includes(h) ? h : "db";
   });
   // Sync hash avec l'onglet actif (persist au refresh)

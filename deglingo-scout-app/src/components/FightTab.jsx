@@ -735,15 +735,15 @@ export default function FightTab({ players, teams, fixtures, logos = {}, lang = 
                   </div>
                 </div>
 
-                {/* ═══ EASTER EGG — Chasse au Trésor : Bruno Fernandes vs Lamine Yamal ═══ */}
+                {/* ═══ EASTER EGG — Chasse au Trésor : Bruno Fernandes vs Tzolis (GOATs PL/JPL) ═══ */}
                 {(() => {
                   const slugA = sel1?.slug || "";
                   const slugB = sel2?.slug || "";
                   const nameA = (sel1?.name || "").toLowerCase();
                   const nameB = (sel2?.name || "").toLowerCase();
                   const isBruno = (s, n) => s === "bruno-fernandes" || n.includes("bruno fernandes");
-                  const isYamal = (s, n) => s === "lamine-yamal" || n.includes("lamine yamal") || n.includes("yamal");
-                  const matched = (isBruno(slugA, nameA) && isYamal(slugB, nameB)) || (isBruno(slugB, nameB) && isYamal(slugA, nameA));
+                  const isTzolis = (s, n) => s.includes("tzolis") || n.includes("tzolis");
+                  const matched = (isBruno(slugA, nameA) && isTzolis(slugB, nameB)) || (isBruno(slugB, nameB) && isTzolis(slugA, nameA));
                   if (!matched) return null;
                   return (
                     <div style={{
@@ -780,8 +780,8 @@ export default function FightTab({ players, teams, fixtures, logos = {}, lang = 
                       </div>
                       <div style={{ textAlign: "center", fontSize: 12, color: "rgba(255,255,255,0.7)", marginBottom: 10, lineHeight: 1.5 }}>
                         {lang === "fr"
-                          ? <>Tu as opposé le <b style={{color:"#FBBF24"}}>Maestro</b> au <b style={{color:"#FBBF24"}}>prodige catalan</b>. Bien joué Scout — voici le dernier fragment de la <b>Chasse au Trésor</b> :</>
-                          : <>You pitted the <b style={{color:"#FBBF24"}}>Maestro</b> against the <b style={{color:"#FBBF24"}}>Catalan prodigy</b>. Well played Scout — here is the last <b>Treasure Hunt</b> fragment:</>}
+                          ? <>Tu as opposé le <b style={{color:"#FBBF24"}}>GOAT de Premier League</b> au <b style={{color:"#FBBF24"}}>GOAT de Jupiler Pro League</b>. Bien joué Scout — voici un fragment de la <b>Chasse au Trésor</b> :</>
+                          : <>You pitted the <b style={{color:"#FBBF24"}}>Premier League GOAT</b> against the <b style={{color:"#FBBF24"}}>Jupiler Pro League GOAT</b>. Well played Scout — here is a <b>Treasure Hunt</b> fragment:</>}
                       </div>
                       <div style={{ textAlign: "center" }}>
                         <span style={{

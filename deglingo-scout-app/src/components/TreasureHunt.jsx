@@ -79,18 +79,14 @@ const ENIGMAS = [
   {
     id: 5, icon: "🥊",
     tab: { fr: "Fight", en: "Fight" },
-    title: { fr: "Le duel des couronnes", en: "Duel of the crowns" },
+    title: { fr: "Le choc des GOATs", en: "Clash of the GOATs" },
     intro: {
-      fr: "Le Maestro descend dans l'arène. Qui ose défier sa couronne ? Trouve-le, et un secret se dévoilera...",
-      en: "The Maestro steps into the arena. Who dares to challenge his crown? Find him — and a secret shall reveal itself...",
+      fr: "Deux ligues, deux rois. Que le meilleur D-Score de chacun se rencontre dans l'arène...",
+      en: "Two leagues, two kings. Let each one's top D-Score meet in the arena...",
     },
     question: {
-      fr: "Sur Fight, oppose le Maestro à son rival le plus jeune et le plus brillant — un prodige catalan de 18 ans qui n'a peur de rien et qui rêve de prendre la couronne. Si le bon duel est lancé, un trésor doré apparaît dans le verdict.",
-      en: "In Fight, pit the Maestro against his youngest, brightest rival — an 18-year-old Catalan prodigy who fears no one and dreams of stealing the crown. If the right duel is launched, a golden treasure appears in the verdict.",
-    },
-    hint: {
-      fr: "Indice : son prénom commence par L, son nom rime avec 'Carnaval'. FC Barcelona, futur n°10. Lance le Fight Bruno Fernandes (Man Utd) vs lui, un fragment doré apparaîtra dans le résultat.",
-      en: "Hint: his first name starts with L, his last rhymes with 'Carnaval'. FC Barcelona, future #10. Launch Fight Bruno Fernandes (Man Utd) vs him — a golden fragment appears in the verdict.",
+      fr: "Dans Fight, oppose le GOAT de la prochaine journée de Première Ligue anglaise au GOAT de la prochaine journée de Jupiler Pro League. Lance la database, classe par D-Score, prends le n°1 de chaque ligue. Si le bon duel est lancé, un trésor doré apparaît dans le verdict.",
+      en: "In Fight, pit the GOAT of the next Premier League matchday against the GOAT of the next Jupiler Pro League matchday. Open the Database, sort by D-Score, take #1 of each league. If the right duel is launched, a golden treasure appears in the verdict.",
     },
     answer: "61",
   },

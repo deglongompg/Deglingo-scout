@@ -3072,12 +3072,14 @@ export default function StellarTab({ players, teams, fixtures, logos = {}, match
                             width: 32, height: 32, borderRadius: "50%",
                             display: "flex", alignItems: "center", justifyContent: "center",
                             fontFamily: "'DM Mono',monospace", fontSize: 13, fontWeight: 900,
-                            color: "#fff",
+                            color: hasRealScore ? "#fff" : isDNP ? "#fff" : dsColor(playerScore),
                             background: hasRealScore
                               ? dsBg(playerScore)
                               : isDNP
                                 ? "rgba(127,29,29,0.95)"
-                                : dsBg(playerScore),
+                                : "rgba(0,0,0,0.35)",
+                            backdropFilter: hasRealScore || isDNP ? "none" : "blur(2px)",
+                            WebkitBackdropFilter: hasRealScore || isDNP ? "none" : "blur(2px)",
                             border: hasRealScore
                               ? "none"
                               : isDNP
@@ -3089,8 +3091,10 @@ export default function StellarTab({ players, teams, fixtures, logos = {}, match
                               ? `0 0 8px ${dsColor(playerScore)}50`
                               : isDNP
                                 ? "0 0 6px rgba(220,38,38,0.4)"
-                                : `0 0 12px rgba(251,191,36,0.6), 0 0 4px rgba(251,191,36,0.85), 0 0 8px ${dsColor(playerScore)}40, inset 0 1px 0 rgba(255,255,255,0.18)`,
-                            textShadow: "0 1px 2px rgba(0,0,0,0.55)",
+                                : "0 0 10px rgba(251,191,36,0.55), 0 0 4px rgba(251,191,36,0.7), inset 0 1px 0 rgba(255,255,255,0.08)",
+                            textShadow: hasRealScore
+                              ? "0 1px 2px rgba(0,0,0,0.55)"
+                              : "0 1px 3px rgba(0,0,0,0.85), 0 0 6px rgba(0,0,0,0.6)",
                           }}>{playerScore}</div>
                         </div>
                         {/* Match info box — ordre HOME vs AWAY toujours respecte */}

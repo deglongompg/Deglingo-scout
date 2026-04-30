@@ -578,23 +578,60 @@ export default function LandingPage({ players, onEnter, onNavigate }) {
               <div style={{ fontSize: 9, color: "rgba(255,255,255,0.35)", letterSpacing: "2px", textTransform: "uppercase" }}>Sorare Analytics</div>
             </div>
           </div>
-          {/* Centre : bouton Database (taille -20% par rapport a la version haute) */}
-          <button onClick={() => onNavigate ? onNavigate("db") : onEnter()}
-            className="aurora-chip landing-db-cta"
+          {/* Centre : bouton Database — Glass Ice Green Premium (meme style que la chasse au tresor) */}
+          <button
+            className="treasure-cta-premium landing-db-cta-premium"
+            onClick={() => onNavigate ? onNavigate("db") : onEnter()}
             style={{
               position: "relative", overflow: "hidden",
-              padding: "13px 38px", borderRadius: 99,
-              cursor: "pointer", fontSize: 14, fontWeight: 800, fontFamily: "Outfit",
-              color: "#fff", letterSpacing: "0.07em", textTransform: "uppercase",
-              border: "1px solid rgba(196,181,253,0.55)",
-              background: "linear-gradient(135deg, #7C3AED 0%, #A78BFA 40%, #EC4899 100%)",
-              boxShadow: "0 0 24px rgba(167,139,250,0.5), 0 0 2px rgba(236,72,153,0.5), inset 0 1px 0 rgba(255,255,255,0.18)",
               display: "inline-flex", alignItems: "center", justifyContent: "center",
+              padding: "16px 52px", borderRadius: 999,
+              background: "linear-gradient(135deg, rgba(16,185,129,0.18) 0%, rgba(52,211,153,0.10) 50%, rgba(16,185,129,0.18) 100%)",
+              border: "1px solid rgba(110,231,183,0.55)",
+              color: "#fff", fontWeight: 900, fontSize: 17, fontFamily: "Outfit",
+              letterSpacing: "0.1em", cursor: "pointer", textTransform: "uppercase",
+              backdropFilter: "blur(14px) saturate(160%)",
+              WebkitBackdropFilter: "blur(14px) saturate(160%)",
+              boxShadow:
+                "0 0 32px rgba(52,211,153,0.5)," +
+                " 0 0 4px rgba(110,231,183,0.55)," +
+                " inset 0 1px 0 rgba(255,255,255,0.25)," +
+                " inset 0 -1px 0 rgba(16,185,129,0.3)," +
+                " 0 8px 24px rgba(0,0,0,0.35)",
+              transition: "transform 0.25s ease",
               justifySelf: "center",
-              "--chip-accent": "#C4B5FD",
+            }}
+            onMouseEnter={e => { e.currentTarget.style.transform = "translateY(-2px) scale(1.03)"; }}
+            onMouseLeave={e => { e.currentTarget.style.transform = "translateY(0) scale(1)"; }}
+          >
+            {/* Sweep brillant */}
+            <span aria-hidden className="treasure-cta-shine" />
+            {/* Reflet glass haut */}
+            <span aria-hidden style={{
+              position: "absolute", top: 0, left: "8%", right: "8%", height: "45%",
+              borderRadius: "999px 999px 50% 50%",
+              background: "linear-gradient(180deg, rgba(255,255,255,0.22), rgba(255,255,255,0.04) 60%, transparent)",
+              pointerEvents: "none",
+            }} />
+            {/* Edge shine vert */}
+            <span aria-hidden style={{
+              position: "absolute", inset: -1, borderRadius: 999,
+              background: "linear-gradient(135deg, transparent 30%, rgba(110,231,183,0.4) 50%, transparent 70%)",
+              opacity: 0.5, filter: "blur(2px)", pointerEvents: "none",
+            }} />
+
+            {/* Texte */}
+            <span style={{
+              position: "relative", zIndex: 2,
+              background: "linear-gradient(90deg,#A7F3D0,#FFFFFF,#A7F3D0,#6EE7B7)",
+              backgroundSize: "200% 100%",
+              WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent", backgroundClip: "text",
+              animation: "treasureCtaShineText 4s linear infinite",
+              textShadow: "0 0 12px rgba(110,231,183,0.4)",
+              fontWeight: 900,
             }}>
-            <span aria-hidden className="landing-db-sparkle" />
-            <span style={{ position: "relative", zIndex: 4 }}>Database</span>
+              Database
+            </span>
           </button>
           {/* Droite : toggle FR/EN */}
           <button
@@ -651,32 +688,133 @@ export default function LandingPage({ players, onEnter, onNavigate }) {
             <span style={{ color: "rgba(255,255,255,0.5)" }}>{t.heroSub2}</span>
           </p>
 
-          {/* ═══ CTA CHASSE AU TRÉSOR — Bruno Fernandes Limited 1/1000 à gagner ═══ */}
+          {/* ═══ CTA CHASSE AU TRÉSOR — Glass Ice Green Premium + miniature carte Bruno ═══ */}
           <button
+            className="treasure-cta-premium"
             onClick={() => setShowTreasure(true)}
             style={{
-              display: "inline-flex", alignItems: "center", gap: 10,
+              position: "relative", overflow: "hidden",
+              display: "inline-flex", alignItems: "center", gap: 12,
               margin: "0 auto 22px",
-              padding: "12px 24px", borderRadius: 999,
-              background: "linear-gradient(135deg, #FBBF24 0%, #F59E0B 50%, #FCD34D 100%)",
-              border: "1px solid rgba(251,191,36,0.7)",
-              color: "#1a0f00", fontWeight: 900, fontSize: 13, fontFamily: "Outfit",
+              padding: "9px 20px 9px 9px", borderRadius: 999,
+              background: "linear-gradient(135deg, rgba(16,185,129,0.18) 0%, rgba(52,211,153,0.10) 50%, rgba(16,185,129,0.18) 100%)",
+              border: "1px solid rgba(110,231,183,0.55)",
+              color: "#fff", fontWeight: 800, fontSize: 13, fontFamily: "Outfit",
               letterSpacing: "0.06em", cursor: "pointer",
-              boxShadow: "0 0 28px rgba(251,191,36,0.55), 0 6px 20px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.3)",
-              animation: "treasureLandingPulse 2.4s ease-in-out infinite",
-              transition: "transform 0.2s",
+              backdropFilter: "blur(14px) saturate(160%)",
+              WebkitBackdropFilter: "blur(14px) saturate(160%)",
+              boxShadow:
+                "0 0 28px rgba(52,211,153,0.45)," +
+                " 0 0 4px rgba(110,231,183,0.5)," +
+                " inset 0 1px 0 rgba(255,255,255,0.25)," +
+                " inset 0 -1px 0 rgba(16,185,129,0.3)," +
+                " 0 8px 22px rgba(0,0,0,0.35)",
+              transition: "transform 0.25s ease, box-shadow 0.25s ease",
             }}
-            onMouseEnter={e => { e.currentTarget.style.transform = "translateY(-2px) scale(1.04)"; }}
+            onMouseEnter={e => { e.currentTarget.style.transform = "translateY(-2px) scale(1.03)"; }}
             onMouseLeave={e => { e.currentTarget.style.transform = "translateY(0) scale(1)"; }}
           >
-            <span style={{ fontSize: 18 }}>🎁</span>
-            <span>{lang === "fr" ? "CHASSE AU TRÉSOR · BRUNO FERNANDES À GAGNER" : "TREASURE HUNT · WIN BRUNO FERNANDES"}</span>
-            <span style={{ fontSize: 18 }}>🐐</span>
+            {/* Reflet glass top — bandeau brillant qui glisse en boucle */}
+            <span aria-hidden className="treasure-cta-shine" />
+            {/* Reflet glass haut statique — top highlight */}
+            <span aria-hidden style={{
+              position: "absolute", top: 0, left: "8%", right: "8%", height: "45%",
+              borderRadius: "999px 999px 50% 50%",
+              background: "linear-gradient(180deg, rgba(255,255,255,0.22), rgba(255,255,255,0.04) 60%, transparent)",
+              pointerEvents: "none",
+            }} />
+            {/* Edge shine — pulse vert */}
+            <span aria-hidden style={{
+              position: "absolute", inset: -1, borderRadius: 999,
+              background: "linear-gradient(135deg, transparent 30%, rgba(110,231,183,0.4) 50%, transparent 70%)",
+              opacity: 0.5,
+              filter: "blur(2px)",
+              pointerEvents: "none",
+            }} />
+
+            {/* Miniature carte Bruno — slight tilt 3D */}
+            <span style={{
+              position: "relative", zIndex: 2,
+              display: "inline-flex", alignItems: "center", justifyContent: "center",
+              width: 36, height: 48,
+              borderRadius: 5,
+              overflow: "hidden",
+              background: "linear-gradient(180deg,#FBBF24,#F59E0B)",
+              boxShadow: "0 4px 10px rgba(0,0,0,0.4), 0 0 0 1px rgba(255,255,255,0.18), inset 0 1px 0 rgba(255,255,255,0.3)",
+              transform: "rotate(-6deg)",
+              transition: "transform 0.3s ease",
+              flexShrink: 0,
+            }}>
+              <img
+                src="/bruno-card.png"
+                alt="Bruno Fernandes Limited"
+                onError={(e) => { e.currentTarget.style.display = "none"; }}
+                style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }}
+                draggable={false}
+              />
+              {/* Reflet en diagonale sur la mini carte */}
+              <span aria-hidden style={{
+                position: "absolute", inset: 0,
+                background: "linear-gradient(125deg, transparent 30%, rgba(255,255,255,0.35) 50%, transparent 70%)",
+                pointerEvents: "none",
+              }} />
+            </span>
+
+            {/* Texte */}
+            <span style={{
+              position: "relative", zIndex: 2,
+              background: "linear-gradient(90deg,#A7F3D0,#FFFFFF,#A7F3D0,#6EE7B7)",
+              backgroundSize: "200% 100%",
+              WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent", backgroundClip: "text",
+              animation: "treasureCtaShineText 4s linear infinite",
+              textShadow: "0 0 12px rgba(110,231,183,0.4)",
+              fontWeight: 900,
+            }}>
+              {lang === "fr" ? "CHASSE AU TRÉSOR · BRUNO FERNANDES À GAGNER" : "TREASURE HUNT · WIN BRUNO FERNANDES"}
+            </span>
           </button>
           <style>{`
-            @keyframes treasureLandingPulse {
-              0%,100% { box-shadow: 0 0 28px rgba(251,191,36,0.55), 0 6px 20px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.3); }
-              50%     { box-shadow: 0 0 48px rgba(251,191,36,0.85), 0 6px 20px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.3); }
+            @keyframes treasureCtaShineText {
+              0%   { background-position: 0% 50%; }
+              100% { background-position: 200% 50%; }
+            }
+            @keyframes treasureCtaSweep {
+              0%   { transform: translateX(-130%) skewX(-18deg); opacity: 0; }
+              20%  { opacity: 1; }
+              80%  { opacity: 1; }
+              100% { transform: translateX(230%) skewX(-18deg); opacity: 0; }
+            }
+            @keyframes treasureCtaGlow {
+              0%,100% {
+                box-shadow:
+                  0 0 28px rgba(52,211,153,0.45),
+                  0 0 4px rgba(110,231,183,0.5),
+                  inset 0 1px 0 rgba(255,255,255,0.25),
+                  inset 0 -1px 0 rgba(16,185,129,0.3),
+                  0 8px 22px rgba(0,0,0,0.35);
+              }
+              50% {
+                box-shadow:
+                  0 0 50px rgba(52,211,153,0.75),
+                  0 0 8px rgba(110,231,183,0.7),
+                  inset 0 1px 0 rgba(255,255,255,0.3),
+                  inset 0 -1px 0 rgba(16,185,129,0.35),
+                  0 8px 22px rgba(0,0,0,0.35);
+              }
+            }
+            .treasure-cta-premium {
+              animation: treasureCtaGlow 2.6s ease-in-out infinite;
+            }
+            .treasure-cta-premium:hover .treasure-cta-shine {
+              animation-duration: 1.4s;
+            }
+            .treasure-cta-shine {
+              position: absolute;
+              top: 0; bottom: 0; left: 0; width: 35%;
+              background: linear-gradient(110deg, transparent 0%, rgba(255,255,255,0.4) 50%, transparent 100%);
+              pointer-events: none;
+              animation: treasureCtaSweep 3.2s ease-in-out infinite;
+              z-index: 1;
             }
           `}</style>
 
@@ -1201,7 +1339,7 @@ export default function LandingPage({ players, onEnter, onNavigate }) {
       `}</style>
 
       {/* ═══ Chasse au Trésor (modal) ═══ */}
-      <TreasureHunt open={showTreasure} onClose={() => setShowTreasure(false)} />
+      <TreasureHunt open={showTreasure} onClose={() => setShowTreasure(false)} lang={lang} />
 
       {/* ═══ EASTER EGG OVERLAY — clin d'œil rigolo (pas la réponse) ═══ */}
       {showEgg && createPortal(

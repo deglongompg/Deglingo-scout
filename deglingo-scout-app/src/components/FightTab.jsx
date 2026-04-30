@@ -456,7 +456,26 @@ export default function FightTab({ players, teams, fixtures, logos = {}, lang = 
   }, []);
 
   const pf = fixtures?.player_fixtures || {};
-  const autoFill = (name, setO, setH) => { const fx = pf[name]; if (fx) { setO(fx.opp); setH(fx.isHome); } };
+  // Fuzzy match : matche 'Liverpool FC' (fixtures) sur 'Liverpool' (teams) en virant les suffixes
+  // FC/AFC/CF/SC/FK/FA et en faisant lowercase. Indispensable car les 2 sources ne sont pas
+  // toujours synchronisees (PL = 'Liverpool', JPL = 'RSC Anderlecht' identique partout).
+  const cleanClub = (s) => (s || "").toLowerCase().replace(/\s+(fc|afc|cf|sc|fk|fa)\b/gi, "").trim();
+  const autoFill = (name, setO, setH, opps = []) => {
+    const fx = pf[name];
+    if (!fx) return;
+    setH(fx.isHome);
+    // 1) Match exact
+    if (opps.includes(fx.opp)) { setO(fx.opp); return; }
+    // 2) Match en retirant les suffixes club (FC/AFC/CF/SC/FK/FA)
+    const target = cleanClub(fx.opp);
+    let found = opps.find(o => cleanClub(o) === target);
+    if (found) { setO(found); return; }
+    // 3) Partial match (preserve la racine du nom)
+    found = opps.find(o => { const c = cleanClub(o); return c && (c.startsWith(target) || target.startsWith(c)); });
+    if (found) { setO(found); return; }
+    // 4) Fallback : pose la valeur brute (si la team n'existe pas dans la ligue selectionnee)
+    setO(fx.opp);
+  };
   const resetFight = () => { setLaunched(false); setAnimPhase(0); };
 
   const clubs1 = useMemo(() => [...new Set(players.filter(p => p.league === lg1).map(p => p.club))].sort(), [players, lg1]);
@@ -571,7 +590,7 @@ export default function FightTab({ players, teams, fixtures, logos = {}, lang = 
               ))}
             </div>
             <Sel value={c} onChange={v => { sC(v); sPn(""); resetFight(); }} options={clubs} placeholder={t(lang,"clubPlaceholder")} />
-            {c && <Sel value={pn} onChange={v => { sPn(v); autoFill(v, sO, sH); resetFight(); }} options={pls.map(x => ({ value: x.name, label: x.sorare_starter_pct != null ? `${x.name}  ·  ${x.sorare_starter_pct}%` : x.name }))} placeholder={t(lang,"playerPlaceholder")} />}
+            {c && <Sel value={pn} onChange={v => { sPn(v); autoFill(v, sO, sH, opps); resetFight(); }} options={pls.map(x => ({ value: x.name, label: x.sorare_starter_pct != null ? `${x.name}  ·  ${x.sorare_starter_pct}%` : x.name }))} placeholder={t(lang,"playerPlaceholder")} />}
             {pn && <Sel value={o} onChange={v => { sO(v); resetFight(); }} options={opps} placeholder={t(lang,"oppPlaceholder")} />}
             {pn && !pf[pn] && <div style={{ fontSize: 9, color: "rgba(255,150,50,0.6)", marginTop: -4 }}>{t(lang,"noMatchScheduled")}</div>}
             {o && (

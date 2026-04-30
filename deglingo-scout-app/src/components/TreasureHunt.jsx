@@ -168,8 +168,8 @@ const FINAL_CODE = "GOAT-15-5-1000-61-8";
 const STORAGE_KEY = "deglingo_treasure_v2";
 
 const LAUNCH_TWEET = {
-  fr: `🎁 Je participe à la Chasse au Trésor @deglingosorare pour gagner Bruno Fernandes Limited 61/1000 🐐\n\nLance la chasse → deglingosorare.com\n\n#ChasseDeglingo`,
-  en: `🎁 I'm joining the Treasure Hunt by @deglingosorare to win Bruno Fernandes Limited 61/1000 🐐\n\nStart the hunt → deglingosorare.com\n\n#ChasseDeglingo`,
+  fr: `🎁 Je me lance dans la Chasse au Trésor @deglingosorare 🐐\n\nUne carte Bruno Fernandes Limited 61/1000 @Sorare attend son scout dans l'ombre...\n\n⚡ Viens vite rejoindre l'aventure avant que le trésor ne soit trouvé.\n\ndeglingosorare.com\n\n#ChasseDeglingo`,
+  en: `🎁 I'm entering the Treasure Hunt by @deglingosorare 🐐\n\nA Bruno Fernandes Limited 61/1000 @Sorare card waits for its scout in the shadows...\n\n⚡ Hurry — join the adventure before the treasure is found.\n\ndeglingosorare.com\n\n#ChasseDeglingo`,
 };
 
 const norm = (s) => (s || "").trim().toLowerCase().replace(/\s+/g, "");

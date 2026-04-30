@@ -127,7 +127,11 @@ const T = {
     tweetFooter: <>Le tirage au sort aura lieu parmi les RT du Tweet de lancement.<br/>Bonne chance ! 🎁</>,
     reset: "Recommencer la chasse",
     closeAria: "Fermer",
-    tweetText: (code) => `J'ai trouvé le Code Bruno : ${code}\n\n🐐 Bruno Fernandes Limited #61 à gagner avec @DeglingoMPG sur @Sorare\n\nRT pour participer ! 🎁\n\nLance la chasse → deglingosorare.com\n\n#ChasseDeglingo`,
+    tweetText: (pos) => {
+      const ordinal = pos == null ? "" : pos === 1 ? "1er" : pos === 2 ? "2e" : pos === 3 ? "3e" : `${pos}e`;
+      const posLine = pos ? `J'ai résolu la Chasse au Trésor en ${ordinal} position 🐐` : `J'ai résolu la Chasse au Trésor 🐐`;
+      return `🎁 ${posLine}\n\nLet's go ! Bruno Fernandes Limited #61 @Sorare est peut-être pour moi !\n\nRT pour participer avec @DeglingoMPG → deglingosorare.com\n\n#ChasseDeglingo`;
+    },
     launchEyebrow: "📢 Lance la chasse",
     launchText: "Tweete pour annoncer que tu participes — fais découvrir le site à tes followers !",
     launchBtn: "𝕏 Tweeter le lancement",
@@ -154,7 +158,11 @@ const T = {
     tweetFooter: <>The draw will happen among the RTs of the launch tweet.<br/>Good luck! 🎁</>,
     reset: "Restart the hunt",
     closeAria: "Close",
-    tweetText: (code) => `I just cracked the Bruno Code: ${code}\n\n🐐 Bruno Fernandes Limited #61 up for grabs with @DeglingoMPG on @Sorare\n\nRT to enter the giveaway! 🎁\n\nStart the hunt → deglingosorare.com\n\n#ChasseDeglingo`,
+    tweetText: (pos) => {
+      const ordinal = pos == null ? "" : pos === 1 ? "1st" : pos === 2 ? "2nd" : pos === 3 ? "3rd" : `${pos}th`;
+      const posLine = pos ? `I cracked the Treasure Hunt in ${ordinal} place 🐐` : `I cracked the Treasure Hunt 🐐`;
+      return `🎁 ${posLine}\n\nLet's go! Bruno Fernandes Limited #61 @Sorare might be mine!\n\nRT to enter with @DeglingoMPG → deglingosorare.com\n\n#ChasseDeglingo`;
+    },
     launchEyebrow: "📢 Start the hunt",
     launchText: "Tweet that you're joining — make your followers discover the site!",
     launchBtn: "𝕏 Tweet the launch",
@@ -212,6 +220,14 @@ export default function TreasureHunt({ open, onClose, lang: langProp = "fr" }) {
     } catch {}
     return false;
   });
+  // Position dans le classement (1er, 2e, ... a avoir resolu la chasse)
+  const [position, setPosition] = useState(() => {
+    try {
+      const raw = localStorage.getItem(STORAGE_KEY);
+      if (raw) return JSON.parse(raw).position || null;
+    } catch {}
+    return null;
+  });
   const [currentIdx, setCurrentIdx] = useState(0);
   const [errorShake, setErrorShake] = useState(null);
 
@@ -223,9 +239,25 @@ export default function TreasureHunt({ open, onClose, lang: langProp = "fr" }) {
   // Persiste le progress dans localStorage
   useEffect(() => {
     try {
-      localStorage.setItem(STORAGE_KEY, JSON.stringify({ solved, inputs, launched }));
+      localStorage.setItem(STORAGE_KEY, JSON.stringify({ solved, inputs, launched, position }));
     } catch {}
-  }, [solved, inputs, launched]);
+  }, [solved, inputs, launched, position]);
+
+  // Quand toutes les enigmes sont resolues -> increment le compteur global
+  // pour recuperer la position du joueur dans le classement.
+  // Service public anonyme (abacus.jasoncameron.dev) — pas de backend a maintenir.
+  useEffect(() => {
+    if (solved < ENIGMAS.length || position != null) return;
+    let cancel = false;
+    fetch("https://abacus.jasoncameron.dev/hit/deglingo-treasure/bruno-giveaway-2026")
+      .then(r => r.json())
+      .then(d => {
+        if (cancel) return;
+        if (typeof d?.value === "number") setPosition(d.value);
+      })
+      .catch(() => {});
+    return () => { cancel = true; };
+  }, [solved, position]);
 
   if (!open) return null;
 
@@ -263,7 +295,7 @@ export default function TreasureHunt({ open, onClose, lang: langProp = "fr" }) {
   const allDone = solved >= ENIGMAS.length;
   const activeIdx = allDone ? -1 : Math.min(currentIdx, solved);
 
-  const tweetText = encodeURIComponent(tr.tweetText(FINAL_CODE));
+  const tweetText = encodeURIComponent(tr.tweetText(position));
   const tweetUrl = `https://twitter.com/intent/tweet?text=${tweetText}`;
   const launchTweetUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(LAUNCH_TWEET[lang] || LAUNCH_TWEET.fr)}`;
 

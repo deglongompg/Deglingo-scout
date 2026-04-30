@@ -246,7 +246,7 @@ export default function TreasureHunt({ open, onClose, lang: langProp = "fr" }) {
   useEffect(() => {
     if (solved < ENIGMAS.length || position != null) return;
     let cancel = false;
-    fetch("https://abacus.jasoncameron.dev/hit/deglingo-treasure/bruno-giveaway-2026")
+    fetch("https://abacus.jasoncameron.dev/hit/deglingo-treasure/bruno-launch-2026-04-30")
       .then(r => r.json())
       .then(d => {
         if (cancel) return;

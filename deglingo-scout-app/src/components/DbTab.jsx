@@ -196,7 +196,7 @@ export default function DbTab({ players, teams, fixtures, logos = {}, lang = "fr
 
   // Cycles definis par Damien selon les distributions Sorare reelles.
   const CYCLE     = [100, 80, 70, 60, 50, 40, 30, 10];               // L scores, score, ds, dsMatch
-  const CYCLE_AA  = [100, 40, 35, 30, 25, 20, 15, 10, 5];             // AA scores
+  const CYCLE_AA  = [100, 30, 25, 20, 15, 10, 5];                     // AA scores (max reel data ~37, on drop 40/35)
   const CYCLE_PCT = [100, 90, 80, 70, 60, 50, 30];                    // % (Titu, Reg10, CS, Titu10)
   const CYCLE_L10 = [100, 10, 20, 30, 40, 50, 60, 70, 80];            // <= pour CAP260 (ascending)
   const FILTER_CFG = {

@@ -135,20 +135,23 @@ export default function DbTab({ players, teams, fixtures, logos = {}, lang = "fr
     if (arch !== "ALL") list = list.filter(p => p.archetype === arch);
     if (u23Only) list = list.filter(p => (p.age || 0) > 0 && p.age <= 24);
     if (selectedDate) list = list.filter(p => p.matchDate === selectedDate);
-    if (maxDs < 100) list = list.filter(p => (p.ds ?? 0) <= maxDs);
-    if (maxL2 < 100) list = list.filter(p => (p.l2 ?? 0) <= maxL2);
-    if (maxL5 < 100) list = list.filter(p => (p.l5 ?? 0) <= maxL5);
-    if (maxL10s < 100) list = list.filter(p => (p.l10 ?? 0) <= maxL10s);
-    if (maxScore < 100) list = list.filter(p => (p.last_so5_score ?? 0) <= maxScore);
-    if (maxTitu < 100) list = list.filter(p => (p.sorare_starter_pct ?? 0) <= maxTitu);
-    if (maxAA2 < 100) list = list.filter(p => (p.aa2 ?? 0) <= maxAA2);
-    if (maxAA5 < 100) list = list.filter(p => (p.aa5 ?? 0) <= maxAA5);
-    if (maxAA10 < 100) list = list.filter(p => (p.aa10 ?? 0) <= maxAA10);
-    if (maxAA40 < 100) list = list.filter(p => (p.aa40 ?? 0) <= maxAA40);
-    if (maxL40 < 100) list = list.filter(p => (p.l40 ?? 0) <= maxL40);
-    if (maxReg10 < 100) list = list.filter(p => (p.reg10 ?? 0) <= maxReg10);
+    // Filtres inverses : >= partout (recherche des MEILLEURS joueurs).
+    // EXCEPTION : maxL10s reste <= car utilise pour composer des equipes CAP260
+    // (somme L10 < 260) - on cherche des L10 BAS, pas hauts.
+    if (maxDs < 100) list = list.filter(p => (p.ds ?? 0) >= maxDs);
+    if (maxL2 < 100) list = list.filter(p => (p.l2 ?? 0) >= maxL2);
+    if (maxL5 < 100) list = list.filter(p => (p.l5 ?? 0) >= maxL5);
+    if (maxL10s < 100) list = list.filter(p => (p.l10 ?? 0) <= maxL10s); // CAP260 — keep <=
+    if (maxScore < 100) list = list.filter(p => (p.last_so5_score ?? 0) >= maxScore);
+    if (maxTitu < 100) list = list.filter(p => (p.sorare_starter_pct ?? 0) >= maxTitu);
+    if (maxAA2 < 100) list = list.filter(p => (p.aa2 ?? 0) >= maxAA2);
+    if (maxAA5 < 100) list = list.filter(p => (p.aa5 ?? 0) >= maxAA5);
+    if (maxAA10 < 100) list = list.filter(p => (p.aa10 ?? 0) >= maxAA10);
+    if (maxAA40 < 100) list = list.filter(p => (p.aa40 ?? 0) >= maxAA40);
+    if (maxL40 < 100) list = list.filter(p => (p.l40 ?? 0) >= maxL40);
+    if (maxReg10 < 100) list = list.filter(p => (p.reg10 ?? 0) >= maxReg10);
     if (maxTitu10 < 100) list = list.filter(p => (p.titu_pct ?? 0) >= maxTitu10);
-    if (maxCS < 100) list = list.filter(p => (p.csPercent ?? 0) <= maxCS);
+    if (maxCS < 100) list = list.filter(p => (p.csPercent ?? 0) >= maxCS);
     if (search) {
       const q = search.toLowerCase();
       list = list.filter(p => p.name.toLowerCase().includes(q) || p.club.toLowerCase().includes(q));
@@ -191,7 +194,8 @@ export default function DbTab({ players, teams, fixtures, logos = {}, lang = "fr
     else { setSortKey(key); setSortDir(-1); }
   };
 
-  // Cycle filter: off → ≤40 → ≤50 → ≤60 → ≤70 → ≤80 → off
+  // Cycle filter : off -> >=10 -> >=20 -> ... -> >=90 -> off (recherche meilleurs joueurs).
+  // Sauf l10 qui garde la semantique <= pour la construction CAP260.
   const CYCLE    = [100, 10, 20, 30, 40, 50, 60, 70, 80, 90];
   const CYCLE_AA = [100, 5, 10, 15, 20, 25, 30, 35, 40];
   const FILTER_CFG = {
@@ -215,6 +219,8 @@ export default function DbTab({ players, teams, fixtures, logos = {}, lang = "fr
     const cfg = FILTER_CFG[colKey];
     if (!cfg) return null;
     const isActive = cfg.val < 100;
+    // L10 garde la semantique inferieur (CAP260). Tous les autres : superieur ou egal.
+    const op = colKey === "l10" ? "≤" : "≥";
     const cycle = () => {
       const cyc = cfg.cycle || CYCLE;
       const idx = cyc.indexOf(cfg.val);
@@ -224,7 +230,7 @@ export default function DbTab({ players, teams, fixtures, logos = {}, lang = "fr
     return (
       <button
         onClick={e => { e.stopPropagation(); cycle(); }}
-        title={isActive ? `≤${cfg.val} — clic pour changer` : "Clic pour filtrer"}
+        title={isActive ? `${op}${cfg.val} — clic pour changer` : "Clic pour filtrer"}
         style={{
           marginLeft: 3, padding: "1px 4px", fontSize: 8, lineHeight: "11px",
           background: isActive ? `${cfg.color}25` : "transparent",
@@ -234,7 +240,7 @@ export default function DbTab({ players, teams, fixtures, logos = {}, lang = "fr
           fontFamily: "'DM Mono',monospace", fontWeight: 800,
           verticalAlign: "middle", whiteSpace: "nowrap",
         }}
-      >{isActive ? `≤${cfg.val}` : "▾"}</button>
+      >{isActive ? `${op}${cfg.val}` : "▾"}</button>
     );
   };
 
